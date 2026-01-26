@@ -18,8 +18,8 @@ export interface SlidePanelProps {
   children: React.ReactNode;
   /** Optional footer content (e.g., action buttons) */
   footer?: React.ReactNode;
-  /** Panel width on desktop: sm (320px), md (384px), lg (448px) */
-  size?: 'sm' | 'md' | 'lg';
+  /** Panel width on desktop: sm (320px), md (384px), lg (448px), xl (560px) */
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   /** Additional class names for the panel */
   className?: string;
   /** Whether to show the close button (default: true) */
@@ -31,6 +31,7 @@ const SIZE_CONFIG = {
   sm: '320px',
   md: '384px',
   lg: '448px',
+  xl: '560px',
 } as const;
 
 // CSS keyframe animations as a string (injected once)

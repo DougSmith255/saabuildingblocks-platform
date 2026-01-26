@@ -2554,7 +2554,7 @@ function AgentPortal() {
       </nav>
 
       {/* Main Dashboard Layout */}
-      <div className="max-w-[2500px] mx-auto px-3 sm:px-6 md:px-8 min-[950px]:px-12 pb-20 md:pb-8 pt-20 md:pt-28">
+      <div className="max-w-[2500px] mx-auto px-3 sm:px-6 md:px-8 min-[950px]:px-12 pb-4 min-[950px]:pb-8 pt-20 md:pt-28">
         <div className="flex flex-col min-[950px]:flex-row gap-6">
 
           {/* Sidebar Navigation - Desktop only (1200px+) */}
@@ -2572,9 +2572,9 @@ function AgentPortal() {
                 <div className="flex flex-col items-center mb-4">
                   <button
                     onClick={handleProfilePictureClick}
-                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-[3px] transition-colors mb-3 bg-white/5"
+                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden transition-colors mb-3 bg-white/5"
                     style={{
-                      borderColor: dashboardAccentColor,
+                      border: `3px solid ${dashboardAccentColor}`,
                       boxShadow: `0 0 16px ${dashboardAccentColor}40`,
                     }}
                     title="Click to change profile picture"
@@ -2847,9 +2847,9 @@ function AgentPortal() {
                   <button
                     type="button"
                     onClick={handleProfilePictureClick}
-                    className="relative group w-32 h-32 rounded-full overflow-hidden border-[3px] transition-colors bg-white/5"
+                    className="relative group w-32 h-32 rounded-full overflow-hidden transition-colors bg-white/5"
                     style={{
-                      borderColor: dashboardAccentColor,
+                      border: `3px solid ${dashboardAccentColor}`,
                       boxShadow: `0 0 16px ${dashboardAccentColor}40`,
                     }}
                   >
@@ -3262,7 +3262,7 @@ function AgentPortal() {
         title="Edit Profile"
         subtitle="Update your profile information"
         icon={<User className="w-5 h-5 text-[#ffd700]" />}
-        size="md"
+        size="xl"
         footer={
           <div className="flex gap-3">
             <button
@@ -3283,27 +3283,27 @@ function AgentPortal() {
           </div>
         }
       >
-        {/* Form */}
-        <form id="edit-profile-form" onSubmit={handleEditProfileSubmit} className="space-y-5">
+        {/* Form - 2-column layout on desktop */}
+        <form id="edit-profile-form" onSubmit={handleEditProfileSubmit} className="space-y-4">
               {/* Profile Picture Section - uses selected accent color for live preview */}
               {(() => {
                 const selectedAccentColor = DASHBOARD_ACCENT_COLORS.find(c => c.id === editFormData.dashboardAccent)?.color || '#ffd700';
                 return (
-              <div className="flex flex-col items-center mb-6">
+              <div className="flex flex-col items-center mb-4">
                 <button
                   type="button"
                   onClick={handleProfilePictureClick}
-                  className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-[3px] transition-colors bg-white/5"
+                  className="relative group w-[120px] h-[120px] min-[950px]:w-[100px] min-[950px]:h-[100px] rounded-full overflow-hidden transition-colors bg-white/5"
                   style={{
-                    borderColor: selectedAccentColor,
-                    boxShadow: `0 0 20px ${selectedAccentColor}40`,
+                    border: `3px solid ${selectedAccentColor}`,
+                    boxShadow: `0 0 16px ${selectedAccentColor}40`,
                   }}
                 >
                   {/* Upload spinner - shows while uploading */}
                   {isUploadingDashboardImage && (
                     <div className="absolute inset-0 bg-[#0a0a0a]/90 flex items-center justify-center z-20">
                       <div
-                        className="w-12 h-12 border-[3px] rounded-full animate-spin"
+                        className="w-8 h-8 border-2 rounded-full animate-spin"
                         style={{ borderColor: `${selectedAccentColor}30`, borderTopColor: selectedAccentColor }}
                       />
                     </div>
@@ -3314,7 +3314,7 @@ function AgentPortal() {
                       {profileImageLoading && (
                         <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center z-10">
                           <div
-                            className="w-10 h-10 border-2 rounded-full animate-spin"
+                            className="w-7 h-7 border-2 rounded-full animate-spin"
                             style={{ borderColor: `${selectedAccentColor}30`, borderTopColor: selectedAccentColor }}
                           />
                         </div>
@@ -3338,28 +3338,28 @@ function AgentPortal() {
                       className="w-full h-full flex items-center justify-center"
                       style={{ backgroundColor: `${selectedAccentColor}15` }}
                     >
-                      <span className="text-4xl" style={{ color: selectedAccentColor }}>
+                      <span className="text-2xl min-[950px]:text-xl" style={{ color: selectedAccentColor }}>
                         {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
                       </span>
                     </div>
                   )}
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                   </div>
                 </button>
-                <p className="mt-2 text-sm text-[#e5e4dd]/60">Click to change photo</p>
+                <p className="mt-1 text-xs text-[#e5e4dd]/60">Click to change</p>
 
                 {/* Dashboard Upload Status in Modal - only show completion message */}
                 {dashboardUploadStatus && !isUploadingDashboardImage && (
-                  <div className="mt-3 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs text-center w-full">
+                  <div className="mt-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs text-center w-full max-w-[200px]">
                     {dashboardUploadStatus}
                   </div>
                 )}
                 {dashboardUploadError && (
-                  <div className="mt-3 p-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs w-full">
+                  <div className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs w-full max-w-[200px]">
                     {dashboardUploadError}
                   </div>
                 )}
@@ -3367,74 +3367,76 @@ function AgentPortal() {
                 );
               })()}
 
-              {/* Display Name */}
-              <div>
-                <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
-                  Display Name
-                </label>
-                <p className="text-xs text-[#e5e4dd]/50 mb-3">This name will appear on your Agent Attraction Page</p>
-                <div className="grid grid-cols-2 gap-3">
+              {/* 2-column grid on desktop for form fields */}
+              <div className="grid grid-cols-1 min-[950px]:grid-cols-2 gap-4">
+                {/* Display Name */}
+                <div>
+                  <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-1.5">
+                    Display Name
+                  </label>
+                  <p className="text-xs text-[#e5e4dd]/50 mb-2">Shown on your Agent Page</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      value={editFormData.displayFirstName}
+                      onChange={(e) => setEditFormData({ ...editFormData, displayFirstName: e.target.value })}
+                      className="w-full px-3 py-2.5 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                      placeholder="First"
+                    />
+                    <input
+                      type="text"
+                      value={editFormData.displayLastName}
+                      onChange={(e) => setEditFormData({ ...editFormData, displayLastName: e.target.value })}
+                      className="w-full px-3 py-2.5 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                      placeholder="Last"
+                    />
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-1.5">
+                    Email Address
+                  </label>
+                  <p className="text-xs text-[#e5e4dd]/50 mb-2">For login & communications</p>
                   <input
-                    type="text"
-                    value={editFormData.displayFirstName}
-                    onChange={(e) => setEditFormData({ ...editFormData, displayFirstName: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                    placeholder="First Name"
-                  />
-                  <input
-                    type="text"
-                    value={editFormData.displayLastName}
-                    onChange={(e) => setEditFormData({ ...editFormData, displayLastName: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                    placeholder="Last Name"
+                    type="email"
+                    value={editFormData.email}
+                    onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                    className="w-full px-3 py-2.5 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                    placeholder="your@email.com"
                   />
                 </div>
               </div>
 
-              {/* Email */}
+              {/* Dashboard Accent Color - full width */}
               <div>
-                <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
-                  Email Address
-                </label>
-                <p className="text-xs text-[#e5e4dd]/50 mb-3">Used for login and communications</p>
-                <input
-                  type="email"
-                  value={editFormData.email}
-                  onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                  placeholder="your@email.com"
-                />
-              </div>
-
-              {/* Dashboard Accent Color */}
-              <div>
-                <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
+                <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-1.5">
                   Dashboard Accent Color
                 </label>
-                <p className="text-xs text-[#e5e4dd]/50 mb-3">Personalize your dashboard with a theme color</p>
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   {DASHBOARD_ACCENT_COLORS.map((accent) => (
                     <button
                       key={accent.id}
                       type="button"
                       onClick={() => setEditFormData({ ...editFormData, dashboardAccent: accent.id })}
-                      className={`flex-1 flex flex-col items-center gap-2 py-3 px-2 rounded-lg border-2 transition-all ${
+                      className={`flex-1 flex flex-col items-center gap-1.5 py-2 px-1.5 rounded-lg border-2 transition-all ${
                         editFormData.dashboardAccent === accent.id
                           ? 'border-white/40 bg-white/10'
                           : 'border-white/10 bg-black/20 hover:border-white/20'
                       }`}
                     >
                       <div
-                        className="w-8 h-8 rounded-full"
+                        className="w-6 h-6 rounded-full"
                         style={{
                           backgroundColor: accent.color,
                           boxShadow: editFormData.dashboardAccent === accent.id
-                            ? `0 0 12px ${accent.color}80, 0 0 24px ${accent.color}40`
+                            ? `0 0 10px ${accent.color}80, 0 0 20px ${accent.color}40`
                             : 'none',
                         }}
                       />
                       <span
-                        className="text-xs font-medium"
+                        className="text-[10px] font-medium"
                         style={{
                           color: editFormData.dashboardAccent === accent.id ? accent.color : 'rgba(229,228,221,0.6)',
                         }}
@@ -3446,103 +3448,106 @@ function AgentPortal() {
                 </div>
               </div>
 
-              {/* Password Change Section */}
-              <div className="pt-4 border-t border-white/10">
-                <p className="text-sm font-medium text-[#e5e4dd]/80 mb-4">Change Password (optional)</p>
+              {/* Password Change Section - 2-column on desktop */}
+              <div className="pt-3 border-t border-white/10">
+                <p className="text-sm font-medium text-[#e5e4dd]/80 mb-3">Change Password <span className="text-[#e5e4dd]/50 font-normal">(optional)</span></p>
 
-                {/* New Password */}
-                <div className="mb-4">
-                  <label className="block text-sm text-[#e5e4dd]/60 mb-2">
-                    New Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showNewPassword ? 'text' : 'password'}
-                      value={editFormData.newPassword}
-                      onChange={(e) => setEditFormData({ ...editFormData, newPassword: e.target.value })}
-                      autoComplete="new-password"
-                      className="w-full px-4 py-3 pr-12 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                      placeholder="Enter new password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#e5e4dd]/50 hover:text-[#ffd700] transition-colors"
-                      aria-label={showNewPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showNewPassword ? (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                        </svg>
-                      ) : (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                      )}
-                    </button>
-                  </div>
-                  {/* Password requirements - only show when user starts typing */}
-                  {editFormData.newPassword && (
-                    <div className="text-xs text-[#e5e4dd]/50 space-y-1 pt-2">
-                      <p className={editFormData.newPassword.length >= 8 ? 'text-green-400' : ''}>
-                        {editFormData.newPassword.length >= 8 ? '✓' : '○'} At least 8 characters
-                      </p>
-                      <p className={/[A-Z]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
-                        {/[A-Z]/.test(editFormData.newPassword) ? '✓' : '○'} One uppercase letter
-                      </p>
-                      <p className={/[a-z]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
-                        {/[a-z]/.test(editFormData.newPassword) ? '✓' : '○'} One lowercase letter
-                      </p>
-                      <p className={/[0-9]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
-                        {/[0-9]/.test(editFormData.newPassword) ? '✓' : '○'} One number
-                      </p>
-                      <p className={/[^A-Za-z0-9]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
-                        {/[^A-Za-z0-9]/.test(editFormData.newPassword) ? '✓' : '○'} One special character
-                      </p>
+                <div className="grid grid-cols-1 min-[950px]:grid-cols-2 gap-3">
+                  {/* New Password */}
+                  <div>
+                    <label className="block text-xs text-[#e5e4dd]/60 mb-1.5">
+                      New Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        value={editFormData.newPassword}
+                        onChange={(e) => setEditFormData({ ...editFormData, newPassword: e.target.value })}
+                        autoComplete="new-password"
+                        className="w-full px-3 py-2.5 pr-10 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                        placeholder="New password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#e5e4dd]/50 hover:text-[#ffd700] transition-colors"
+                        aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                      >
+                        {showNewPassword ? (
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                          </svg>
+                        ) : (
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        )}
+                      </button>
                     </div>
-                  )}
+                  </div>
+
+                  {/* Confirm New Password */}
+                  <div>
+                    <label className="block text-xs text-[#e5e4dd]/60 mb-1.5">
+                      Confirm Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        value={editFormData.confirmPassword}
+                        onChange={(e) => setEditFormData({ ...editFormData, confirmPassword: e.target.value })}
+                        autoComplete="new-password"
+                        className="w-full px-3 py-2.5 pr-10 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                        placeholder="Confirm password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#e5e4dd]/50 hover:text-[#ffd700] transition-colors"
+                        aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                      >
+                        {showConfirmPassword ? (
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                          </svg>
+                        ) : (
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                    {/* Password match indicator */}
+                    {editFormData.confirmPassword && (
+                      <p className={`text-[10px] pt-1.5 ${editFormData.newPassword === editFormData.confirmPassword ? 'text-green-400' : 'text-red-400'}`}>
+                        {editFormData.newPassword === editFormData.confirmPassword ? '✓ Passwords match' : '✗ Passwords do not match'}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                {/* Confirm New Password */}
-                <div>
-                  <label className="block text-sm text-[#e5e4dd]/60 mb-2">
-                    Confirm New Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      value={editFormData.confirmPassword}
-                      onChange={(e) => setEditFormData({ ...editFormData, confirmPassword: e.target.value })}
-                      autoComplete="new-password"
-                      className="w-full px-4 py-3 pr-12 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                      placeholder="Confirm new password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#e5e4dd]/50 hover:text-[#ffd700] transition-colors"
-                      aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showConfirmPassword ? (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                        </svg>
-                      ) : (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                      )}
-                    </button>
+                {/* Password requirements - compact, below both fields */}
+                {editFormData.newPassword && (
+                  <div className="text-[10px] text-[#e5e4dd]/50 flex flex-wrap gap-x-3 gap-y-0.5 pt-2 mt-2 border-t border-white/5">
+                    <span className={editFormData.newPassword.length >= 8 ? 'text-green-400' : ''}>
+                      {editFormData.newPassword.length >= 8 ? '✓' : '○'} 8+ chars
+                    </span>
+                    <span className={/[A-Z]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                      {/[A-Z]/.test(editFormData.newPassword) ? '✓' : '○'} Uppercase
+                    </span>
+                    <span className={/[a-z]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                      {/[a-z]/.test(editFormData.newPassword) ? '✓' : '○'} Lowercase
+                    </span>
+                    <span className={/[0-9]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                      {/[0-9]/.test(editFormData.newPassword) ? '✓' : '○'} Number
+                    </span>
+                    <span className={/[^A-Za-z0-9]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                      {/[^A-Za-z0-9]/.test(editFormData.newPassword) ? '✓' : '○'} Special
+                    </span>
                   </div>
-                  {/* Password match indicator */}
-                  {editFormData.confirmPassword && (
-                    <p className={`text-xs pt-2 ${editFormData.newPassword === editFormData.confirmPassword ? 'text-green-400' : 'text-red-400'}`}>
-                      {editFormData.newPassword === editFormData.confirmPassword ? '✓ Passwords match' : '✗ Passwords do not match'}
-                    </p>
-                  )}
-                </div>
+                )}
               </div>
 
               {/* Error/Success Messages */}
@@ -9383,21 +9388,27 @@ function AgentPagesSection({
   };
 
   // Compute background gradient colors from backgroundColor setting
+  // Gradient goes from selected color to LIGHTER variant (user requirement)
   const bgRgb = hexToRgb(linksSettings.backgroundColor || '#ffd700');
-  // Very dark version for top of gradient (15% of the color)
-  const bgGradientTop = `rgb(${Math.round(bgRgb.r * 0.15)}, ${Math.round(bgRgb.g * 0.15)}, ${Math.round(bgRgb.b * 0.15)})`;
-  // Very dark version for bottom (5% of the color, almost black but with hue)
-  const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.05)}, ${Math.round(bgRgb.g * 0.05)}, ${Math.round(bgRgb.b * 0.05)})`;
+  // Selected color (darker, ~10% brightness) at center
+  const bgGradientCenter = `rgb(${Math.round(bgRgb.r * 0.10)}, ${Math.round(bgRgb.g * 0.10)}, ${Math.round(bgRgb.b * 0.10)})`;
+  // Lighter version (~25% brightness + tinted toward white) at edges
+  const bgGradientEdge = `rgb(${Math.round(bgRgb.r * 0.25 + 20)}, ${Math.round(bgRgb.g * 0.25 + 20)}, ${Math.round(bgRgb.b * 0.25 + 20)})`;
+  // Legacy variable names for compatibility
+  const bgGradientTop = bgGradientCenter;
+  const bgGradientBottom = bgGradientEdge;
 
-  // Higher threshold for button icons (switches to white earlier)
+  // FIX-008: Unified threshold for button icons - matches isColorDark threshold (140/255 = ~0.549)
+  // All elements (button text, S icon, contact icons) now use the same luminance threshold
   const getButtonIconColor = (hex: string): string => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (!result) return '#ffffff';
-    const r = parseInt(result[1], 16) / 255;
-    const g = parseInt(result[2], 16) / 255;
-    const b = parseInt(result[3], 16) / 255;
+    const r = parseInt(result[1], 16);
+    const g = parseInt(result[2], 16);
+    const b = parseInt(result[3], 16);
+    // Use same luminance calculation and threshold as isColorDark (140 out of 255)
     const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-    return luminance < 0.6 ? '#ffffff' : '#1a1a1a';
+    return luminance < 140 ? '#ffffff' : '#1a1a1a';
   };
   const buttonIconColor = getButtonIconColor(linksSettings.accentColor);
 
@@ -10489,8 +10500,8 @@ function AgentPagesSection({
           </div>
         </div>
 
-        {/* Bottom spacer for mobile nav */}
-        <div className="h-20 min-[950px]:h-4 min-[1100px]:h-0" />
+        {/* Bottom spacer for mobile nav (h-16 = 64px matches nav height) */}
+        <div className="h-16 min-[950px]:h-0" />
       </div>
     );
   }
@@ -11267,7 +11278,7 @@ return (
                         setHasUnsavedChanges(true);
                         setAnimatingSwap(null);
                       }, 250); // Match the CSS transition duration
-                    } else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
+                    } else if (direction === 'down' && currentIndex < allLinkIds.length - 1 && allLinkIds[currentIndex + 1] !== 'learn-about') {
                       const swappingId = allLinkIds[currentIndex + 1];
                       // Trigger animation first
                       setAnimatingSwap({ movingId: linkId, swappingId, direction });
@@ -11353,7 +11364,7 @@ return (
                           className="w-full py-2.5 px-3 rounded-lg relative"
                           style={{
                             backgroundColor: isDefault
-                              ? `${linksSettings.accentColor}D9` // 85% opacity for default button (15% transparent)
+                              ? `${linksSettings.accentColor}40` // 25% opacity for default button (more transparent)
                               : linksSettings.accentColor,
                             border: isDefault
                               ? `2px solid ${linksSettings.accentColor}` // Solid border for default
@@ -11697,7 +11708,7 @@ return (
                     setHasUnsavedChanges(true);
                     setAnimatingSwap(null);
                   }, 250);
-                } else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
+                } else if (direction === 'down' && currentIndex < allLinkIds.length - 1 && allLinkIds[currentIndex + 1] !== 'learn-about') {
                   const swappingId = allLinkIds[currentIndex + 1];
                   // Trigger animation first
                   setAnimatingSwap({ movingId: linkId, swappingId, direction });
@@ -12589,8 +12600,8 @@ return (
         </div>
       </div>
 
-      {/* Bottom spacer for mobile nav */}
-      <div className="h-20 min-[950px]:h-4" />
+      {/* Bottom spacer - minimal on tablet since no mobile nav */}
+      <div className="h-4" />
     </div>
 
     {/* ====================================================================
@@ -12876,6 +12887,75 @@ return (
       {/* Links Tab Content */}
       {activeTab === 'links' && (
         <div className="space-y-4">
+          {/* Social Links & Bio Preview Card - FIX-007: Show social links and bio in mobile preview */}
+          {((() => {
+            const builtInSocialIconsMobile = [
+              { url: formData.facebook_url, icon: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' },
+              { url: formData.instagram_url, icon: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' },
+              { url: formData.twitter_url, icon: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
+              { url: formData.youtube_url, icon: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' },
+              { url: formData.tiktok_url, icon: 'M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z' },
+              { url: formData.linkedin_url, icon: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
+            ].filter(s => s.url);
+            const customSocialIconsMobile = customSocialLinks
+              .filter(link => link && link.url && link.icon && link.icon !== 'Globe')
+              .map(link => ({
+                url: link.url,
+                icon: LINK_ICONS.find(i => i.name === link.icon)?.path || ''
+              }))
+              .filter(s => s.icon);
+            const socialIconsMobile = [...builtInSocialIconsMobile, ...customSocialIconsMobile];
+            const hasSocialOrBio = socialIconsMobile.length > 0 || linksSettings.bio;
+            if (!hasSocialOrBio) return null;
+            const socialIconColor = getVisibleSocialIconColor(linksSettings.accentColor);
+            return (
+              <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 p-4">
+                <h3 className="text-sm font-medium text-emerald-400 flex items-center gap-2 mb-3">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                  Social & Bio Preview
+                </h3>
+                <div className="flex flex-col items-center gap-2">
+                  {/* Social Links Circles */}
+                  {socialIconsMobile.length > 0 && (
+                    <div className="flex justify-center gap-2 flex-wrap">
+                      {socialIconsMobile.map((social, idx) => {
+                        const isBuiltIn = idx < builtInSocialIconsMobile.length;
+                        return (
+                          <div
+                            key={idx}
+                            className="w-9 h-9 rounded-full flex items-center justify-center"
+                            style={{ backgroundColor: `${socialIconColor}20`, border: `1px solid ${socialIconColor}40` }}
+                          >
+                            {isBuiltIn ? (
+                              <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24">
+                                <path d={social.icon} />
+                              </svg>
+                            ) : (
+                              <svg className="w-4 h-4" fill="none" stroke={socialIconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                                <path d={social.icon} />
+                              </svg>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {/* Bio */}
+                  {linksSettings.bio && (
+                    <p className="text-xs text-center text-white/60 px-2 leading-relaxed max-w-[280px]" style={{ wordBreak: 'break-word' }}>
+                      {linksSettings.bio}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })())}
+
           {/* Preview Card with Button Editor */}
           <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 p-4">
             <h3 className="text-sm font-medium text-[#ffd700] flex items-center gap-2 mb-4">
@@ -12893,7 +12973,7 @@ return (
               <div
                 className="py-2.5 px-4 rounded-lg font-medium flex items-center gap-2"
                 style={{
-                  backgroundColor: `${linksSettings.accentColor}33`,
+                  backgroundColor: `${linksSettings.accentColor}40`, // 25% opacity - consistent with desktop
                   border: `2px solid ${linksSettings.accentColor}`,
                   color: isAccentDark ? '#ffffff' : '#1a1a1a',
                   fontSize: `${linksSettings.buttonTextSize ?? 14}px`,
@@ -12986,8 +13066,8 @@ return (
         </div>
       )}
 
-      {/* Bottom Spacer for mobile nav */}
-      <div className="h-20" />
+      {/* Bottom Spacer for mobile nav (h-16 = 64px matches nav height) */}
+      <div className="h-16" />
     </div>
 
     {/* Floating Help Button - Pixel Art Style */}
@@ -13707,86 +13787,114 @@ function DownloadSection() {
           <p className="text-sm text-[#e5e4dd]/60">Smart Agent Alliance</p>
         </div>
 
-        {/* Two Install Buttons */}
-        <div className="space-y-3">
-          {/* PC/Android Install Button - Yellow */}
-          <button
-            onClick={handleInstallClick}
-            className="w-full py-3.5 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 bg-[#ffd700] text-[#2a2a2a] hover:bg-[#ffed4a]"
-          >
-            <Download className="w-5 h-5" />
-            Install PC / Android
-          </button>
+        {/* FIX-009: Installation Instructions (always visible) */}
+        <div className="space-y-5">
+          <p className="text-center text-sm text-[#e5e4dd]/70 mb-4">
+            Install the SAA Portal as an app on your device for the best experience.
+          </p>
 
-          {/* iOS/Mac Install Button - Green */}
-          <button
-            onClick={handleIOSInstallClick}
-            className="w-full py-3.5 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 bg-[#22c55e] text-[#2a2a2a] hover:bg-[#16a34a]"
-          >
-            <Download className="w-5 h-5" />
-            Install iOS / Mac
-          </button>
-
-          {/* Having trouble? - Dropdown for Safari instructions */}
-          <div className="relative">
-            <button
-              onClick={() => setShowIOSInstructions(!showIOSInstructions)}
-              className="w-full py-2.5 px-4 rounded-lg text-sm transition-all flex items-center justify-center gap-2 bg-transparent text-[#e5e4dd]/60 hover:text-[#e5e4dd] hover:bg-white/5 border border-white/10"
-            >
-              Having trouble installing?
-              <svg
-                className={`w-4 h-4 transition-transform ${showIOSInstructions ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          {/* iOS/Safari Instructions */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 mb-2">
+              <svg className="w-5 h-5 text-[#22c55e]" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
               </svg>
-            </button>
+              <p className="text-sm text-[#22c55e] font-semibold" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
+                iPhone / iPad / Mac (Safari)
+              </p>
+            </div>
+            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+              <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">1</div>
+              <p className="text-sm text-[#e5e4dd]/80">Tap the <span className="text-[#007AFF] font-medium">Share</span> button <span className="text-[#007AFF]">⬆</span> at the bottom of Safari</p>
+            </div>
+            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+              <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">2</div>
+              <p className="text-sm text-[#e5e4dd]/80">Scroll down and select <span className="text-[#22c55e] font-medium">&quot;Add to Home Screen&quot;</span></p>
+            </div>
+            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+              <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">3</div>
+              <p className="text-sm text-[#e5e4dd]/80">Tap <span className="text-[#22c55e] font-medium">&quot;Add&quot;</span> in the top right corner</p>
+            </div>
+          </div>
 
-            {/* Manual Install Instructions Dropdown */}
-            {showIOSInstructions && (
-              <div className="mt-3 p-4 rounded-xl bg-white/5 border border-white/10 space-y-5">
+          <div className="border-t border-white/10" />
 
-                {/* iOS/Safari Instructions */}
-                <div className="space-y-3">
-                  <p className="text-sm text-[#22c55e] font-semibold" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
-                    iOS / Mac (Safari)
-                  </p>
-                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-                    <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">1</div>
-                    <p className="text-sm text-[#e5e4dd]/80">Tap the <span className="text-[#007AFF]">Share</span> button (square with arrow)</p>
-                  </div>
-                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-                    <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">2</div>
-                    <p className="text-sm text-[#e5e4dd]/80">Select &quot;Add to Home Screen&quot;</p>
-                  </div>
-                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-                    <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">3</div>
-                    <p className="text-sm text-[#e5e4dd]/80">Tap &quot;Add&quot; to confirm</p>
-                  </div>
-                </div>
+          {/* Android/PC Chrome/Edge Instructions */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 mb-2">
+              <svg className="w-5 h-5 text-[#ffd700]" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+              </svg>
+              <p className="text-sm text-[#ffd700] font-semibold" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
+                Android / Windows / Linux (Chrome / Edge)
+              </p>
+            </div>
+            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+              <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">1</div>
+              <p className="text-sm text-[#e5e4dd]/80">Look for the <span className="text-[#ffd700] font-medium">install icon</span> <span className="text-[#ffd700]">⊕</span> in the address bar (right side)</p>
+            </div>
+            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+              <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">2</div>
+              <p className="text-sm text-[#e5e4dd]/80">Or tap the <span className="text-[#ffd700] font-medium">menu</span> <span className="text-[#ffd700]">⋮</span> → <span className="text-[#ffd700] font-medium">&quot;Install app&quot;</span></p>
+            </div>
+            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+              <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">3</div>
+              <p className="text-sm text-[#e5e4dd]/80">Click <span className="text-[#ffd700] font-medium">&quot;Install&quot;</span> to confirm</p>
+            </div>
+          </div>
+        </div>
+      </GenericCard>
 
-                <div className="border-t border-white/10" />
+      {/* Coming Soon - Native Apps */}
+      <GenericCard padding="md">
+        <h4 className="text-sm font-semibold text-[#e5e4dd]/50 uppercase tracking-wider mb-4">Native Apps Coming Soon</h4>
+        <div className="grid gap-3">
+          {/* App Store */}
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#007AFF] to-[#5856D6] flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-[#e5e4dd] text-sm">Apple App Store</p>
+              <p className="text-xs text-[#e5e4dd]/50">iPhone & iPad</p>
+            </div>
+            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/30">
+              Coming Soon
+            </span>
+          </div>
 
-                {/* Android/PC Chrome/Edge Instructions */}
-                <div className="space-y-3">
-                  <p className="text-sm text-[#ffd700] font-semibold" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
-                    Android / PC (Chrome / Edge)
-                  </p>
-                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-                    <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">1</div>
-                    <p className="text-sm text-[#e5e4dd]/80">Click the <span className="text-[#ffd700]">install icon</span> in the address bar, or tap <span className="text-[#ffd700]">menu</span> (⋮) → &quot;Install app&quot;</p>
-                  </div>
-                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-                    <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">2</div>
-                    <p className="text-sm text-[#e5e4dd]/80">Click &quot;Install&quot; to confirm</p>
-                  </div>
-                </div>
+          {/* Google Play */}
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#34A853] via-[#FBBC05] to-[#EA4335] flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-[#e5e4dd] text-sm">Google Play Store</p>
+              <p className="text-xs text-[#e5e4dd]/50">Android devices</p>
+            </div>
+            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/30">
+              Coming Soon
+            </span>
+          </div>
 
-              </div>
-            )}
+          {/* Microsoft Store */}
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F25022] via-[#7FBA00] to-[#00A4EF] flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z"/>
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-[#e5e4dd] text-sm">Microsoft Store</p>
+              <p className="text-xs text-[#e5e4dd]/50">Windows PCs</p>
+            </div>
+            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/30">
+              Coming Soon
+            </span>
           </div>
         </div>
       </GenericCard>

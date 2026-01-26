@@ -103,7 +103,8 @@ Phase 2: Completed (8 fixes)
 Phase 3: Completed (9 fixes - UI Polish)
 Phase 4: Completed (9 fixes - Final Polish)
 Phase 5: Completed (7 fixes - Final UI Refinements)
-Phase 6: In Progress (11 fixes - Layout & Functionality)
+Phase 6: Completed (11 fixes - Layout & Functionality)
+Phase 7: Completed (9 fixes - Dashboard & Mobile Preview)
 
 ---
 
@@ -447,79 +448,94 @@ Phase 6: In Progress (11 fixes - Layout & Functionality)
 
 ---
 
-## Phase 7 Fixes (Current)
+## Phase 7 Fixes (COMPLETED)
 
 | # | Fix | Status | Details |
 |---|-----|--------|---------|
-| 1 | Dashboard profile container border | PENDING | Has glow but NO hard visible border line - see TROUBLESHOOTING section below |
-| 2 | Edit Profile SlidePanel 2-column layout | PENDING | Desktop has scrollbar but shouldn't need to scroll - use 2 columns |
-| 3 | Tab scrollable space excess | PENDING | All tab UIs fit above fold but page still scrolls to empty space |
-| 4 | Star gradient direction | PENDING | Should go from selected color to LIGHTER variant (not darker) |
-| 5 | Down arrow switch disabled state | PENDING | Still not working on page load - see TROUBLESHOOTING section in code |
-| 6 | Default button inner color transparency | PENDING | Make slightly more transparent (currently 85% opacity) |
-| 7 | Social links and bio missing from preview | PENDING | Shows on actual link page but not in preview section |
-| 8 | Color switch threshold unification | PENDING | Button text, S icon, contact icons all switch at different luminance thresholds |
+| 1 | Dashboard profile IMAGE CIRCLE border | DONE | Had glow but NO hard border - FIXED by using full inline border property |
+| 2 | Edit Profile SlidePanel 2-column layout | DONE | Added xl size (560px), 2-column grid for fields, smaller profile photo |
+| 3 | Tab scrollable space excess | DONE | Reduced bottom spacers from h-20 to h-16 (mobile) and h-4 (tablet), adjusted main container padding |
+| 4 | Star gradient direction | DONE | Changed from darker-to-darker to darker-to-lighter (center 10% → edge 25%+20 brightness) |
+| 5 | Down arrow switch disabled state | DONE | Added `allLinkIds[currentIndex + 1] !== 'learn-about'` check to prevent moving above default button |
+| 6 | Default button inner color transparency | DONE | Changed from D9 (85% opacity) to 40 (25% opacity) for better visual distinction |
+| 7 | Social links and bio missing from preview | DONE | Added "Social & Bio Preview" card to mobile Links tab showing social link circles and bio text |
+| 8 | Color switch threshold unification | DONE | Unified getButtonIconColor to use same 140/255 luminance threshold as isColorDark |
+| 9 | Download App UI redesign | DONE | Removed install buttons, added direct Chrome/Safari instructions, added Coming Soon badges for App Store/Play Store/Microsoft Store |
 
 ---
 
-## TROUBLESHOOTING: Dashboard Profile Image Container Border (Issue #1)
+## TROUBLESHOOTING: Dashboard Profile IMAGE CIRCLE Border (Issue #1) - FIXED
 
 **ISSUE (Reported 6+ times):**
-The profile image CONTAINER in the main dashboard sidebar is missing a hard visible border line.
-Currently only shows a subtle glow but no actual border.
+The profile image CIRCLE (the round photo) in the main dashboard sidebar was missing a hard visible border line.
+Only showed a glow effect, no solid border line around the circular image itself.
 
-**LOCATIONS:**
+**SCREENSHOT REFERENCE:**
+https://wp.saabuildingblocks.com/wp-content/uploads/2026/01/Screenshot-2026-01-25-173736.png
+- The outer card container HAS a border (visible gold line around the card)
+- The profile IMAGE CIRCLE only had a GLOW effect, NO hard border line
 
-1. **Desktop Sidebar Profile Container** - `page.tsx` line ~2564-2569:
-```tsx
-<div
-  className="rounded-xl p-4"
-  style={{
-    border: `1px solid ${dashboardAccentColor}30`,  // <-- 30% opacity = barely visible
-    boxShadow: `0 0 20px ${dashboardAccentColor}10, inset 0 1px 0 rgba(255,255,255,0.03)`,
-  }}
->
-```
+**LOCATIONS (BEFORE FIX):**
 
-2. **Desktop Sidebar Profile IMAGE** - `page.tsx` line ~2575-2579:
+1. **Desktop Sidebar Profile IMAGE Circle** - `page.tsx` line ~2573-2580:
 ```tsx
 <button
-  className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-[3px] transition-colors mb-3 bg-white/5"
+  className="... border-[3px] ..."  // <-- Tailwind border-width class
   style={{
-    borderColor: dashboardAccentColor,  // <-- THIS has hard border (3px)
+    borderColor: dashboardAccentColor,  // <-- Only sets color, NOT full border
     boxShadow: `0 0 16px ${dashboardAccentColor}40`,
   }}
 >
 ```
 
-3. **Mobile Profile Section** - Need to locate similar pattern
-
-**CURRENT STATE:**
-- Profile IMAGE button (line 2575): Has `border-[3px]` with `borderColor: dashboardAccentColor` ✓ CORRECT
-- Profile CONTAINER div (line 2564): Has `border: 1px solid ${dashboardAccentColor}30` ✗ TOO SUBTLE
-
-**THE PROBLEM:**
-The CONTAINER has `30` appended to the hex color which means 30% opacity (actually hex 30 = 48/255 = 18.8% opacity).
-This makes the border nearly invisible on dark backgrounds.
-
-**PROPOSED FIX:**
-Change the container border from 30% to higher opacity (60-80%):
+2. **Mobile Profile IMAGE Circle** - `page.tsx` line ~2847-2854:
 ```tsx
-// BEFORE (barely visible):
-border: `1px solid ${dashboardAccentColor}30`
-
-// AFTER (visible hard border):
-border: `1px solid ${dashboardAccentColor}80`  // or 60 for softer
+<button
+  className="... border-[3px] ..."  // <-- Same issue
+  style={{
+    borderColor: dashboardAccentColor,
+    boxShadow: `0 0 16px ${dashboardAccentColor}40`,
+  }}
+>
 ```
 
-**WHY THIS KEEPS GETTING MISSED:**
-1. The profile IMAGE has a proper border, so it looks "fixed" at first glance
-2. The CONTAINER border is so subtle it's easy to miss
-3. The glow effect creates an illusion of a border
-4. Code search for "border" returns many results, easy to fix wrong one
+**ROOT CAUSE DISCOVERED:**
+Using Tailwind `border-[3px]` class combined with inline `borderColor` style DOES NOT WORK.
+The Tailwind class sets border-width, but inline `borderColor` doesn't combine with it properly.
+The border was NOT rendering despite the code looking correct.
+
+**THE FIX (Applied 2026-01-26):**
+Use FULL inline `border` property instead of mixing Tailwind class + inline style:
+
+```tsx
+// BEFORE (BROKEN - border not visible):
+className="... border-[3px] ..."
+style={{
+  borderColor: dashboardAccentColor,
+  boxShadow: `0 0 16px ${dashboardAccentColor}40`,
+}}
+
+// AFTER (WORKS - border visible):
+className="..."  // REMOVED border-[3px]
+style={{
+  border: `3px solid ${dashboardAccentColor}`,  // FULL border property inline
+  boxShadow: `0 0 16px ${dashboardAccentColor}40`,
+}}
+```
+
+**WHY THIS KEPT GETTING MISSED (6+ TIMES):**
+1. The code LOOKED correct - `border-[3px]` + `borderColor` SHOULD work in theory
+2. The glow effect created an illusion that something was there
+3. Without visual verification (screenshot), the code appeared fine
+4. Confusion between outer CONTAINER (card box) and inner IMAGE (circle photo)
+5. The outer container DID have a visible border, leading to false "fixed" conclusions
+
+**KEY LESSON:**
+When using dynamic colors for borders, use the FULL `border` CSS property in inline styles,
+NOT a mix of Tailwind border-width class + inline borderColor.
 
 **VERIFICATION:**
-After fix, the outer rounded container should have a clearly visible border line (not just glow).
+After fix, the circular profile image should have a visible 3px solid border line in the accent color.
 
 ---
 
@@ -636,4 +652,55 @@ Based on user feedback, marking fixes that were not mentioned as issues:
 - Fix #1-7: All marked DONE in table above
 - Fix #8, #9: Still PENDING (profile upload notification, color image)
 - Fix #10, #11: Marked DONE
+
+---
+
+## TASK: Download App UI Redesign (Issue #9)
+
+**REQUIREMENTS:**
+
+1. **Remove Download Buttons**
+   - Remove all existing download buttons (iOS, Android, Windows, etc.)
+   - No direct download functionality for now
+
+2. **Add Browser Instructions**
+   - **Chrome/Chromium browsers:**
+     - Go to menu (⋮) → "Install app" or "Add to Home Screen"
+     - Or click the install icon in the address bar
+   - **Safari (iOS/macOS):**
+     - Tap the Share button (⬆️)
+     - Scroll down and tap "Add to Home Screen"
+     - Name the app and tap "Add"
+
+3. **Add "Coming Soon" Badges**
+   - Apple App Store badge with "Coming Soon" overlay
+   - Google Play Store badge with "Coming Soon" overlay
+   - Microsoft Store badge with "Coming Soon" overlay
+   - Badges should be subtle/faded to indicate not-yet-available
+
+**SUGGESTED DESIGN:**
+```
+┌─────────────────────────────────────────┐
+│         📱 Install the App              │
+├─────────────────────────────────────────┤
+│                                         │
+│  Chrome / Edge / Chromium:              │
+│  • Click menu (⋮) → "Install app"       │
+│  • Or click the install icon (⊕) in     │
+│    the address bar                      │
+│                                         │
+│  Safari (iPhone/iPad/Mac):              │
+│  • Tap Share button (⬆️)                 │
+│  • Tap "Add to Home Screen"             │
+│  • Name it and tap "Add"                │
+│                                         │
+├─────────────────────────────────────────┤
+│                                         │
+│  [App Store]  [Play Store]  [MS Store]  │
+│  Coming Soon   Coming Soon   Coming Soon│
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+**LOCATION:** Find the Download App section in the agent portal page
 
