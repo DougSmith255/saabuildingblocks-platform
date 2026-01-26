@@ -679,10 +679,10 @@ const shakeKeyframes = `
     /* Use viewport height for definite constraint - enables overflow scrolling */
     max-height: 100dvh;
     height: 100dvh;
-    /* Fit content width: slides in only as much as needed, up to 85% of screen */
-    width: fit-content;
-    min-width: 28rem;
-    max-width: 85vw;
+    /* Fixed 500px width for consistent desktop modal sizing */
+    width: 500px;
+    min-width: 500px;
+    max-width: 500px;
     /* Premium glass background with subtle gradient */
     background:
       linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 40%),
@@ -13794,6 +13794,13 @@ function DownloadSection() {
             Install the SAA Portal as an app on your device for the best experience.
           </p>
 
+          {/* Important note about installing from portal */}
+          <div className="mx-auto max-w-sm p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/20">
+            <p className="text-xs text-center text-[#ffd700]/90">
+              <span className="font-semibold">Important:</span> Install from this page to ensure the app opens directly to the SAA Portal login.
+            </p>
+          </div>
+
           {/* Browser Tab Selector - Animated Pill Style */}
           <div className="flex justify-center">
             <div className="relative inline-flex p-1 rounded-full bg-black/30 border border-white/10">
@@ -13801,15 +13808,15 @@ function DownloadSection() {
               <div
                 className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none"
                 style={{
-                  width: 'calc(50% - 4px)',
-                  left: showIOSInstructions ? 'calc(50% + 2px)' : '4px',
+                  width: '72px', // Fixed width matching button width
+                  left: showIOSInstructions ? 'calc(100% - 76px)' : '4px', // 72px + 4px padding
                   backgroundColor: showIOSInstructions ? '#007AFF' : '#ffd700',
                 }}
               />
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(false)}
-                className={`relative z-10 flex-1 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 text-center ${
+                className={`relative z-10 w-[72px] py-1.5 rounded-full text-sm font-medium transition-colors duration-300 text-center ${
                   !showIOSInstructions
                     ? 'text-[#1a1a1a]'
                     : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
@@ -13820,7 +13827,7 @@ function DownloadSection() {
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(true)}
-                className={`relative z-10 flex-1 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 text-center ${
+                className={`relative z-10 w-[72px] py-1.5 rounded-full text-sm font-medium transition-colors duration-300 text-center ${
                   showIOSInstructions
                     ? 'text-white'
                     : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'

@@ -1,9 +1,9 @@
 {
-  "name": "Smart Agent Alliance",
-  "short_name": "SAA",
-  "description": "Smart Agent Alliance - For Agents Who Want More. Elite systems, training, and community for eXp Realty agents.",
-  "start_url": "/",
-  "scope": "/",
+  "name": "SAA Portal",
+  "short_name": "SAA Portal",
+  "description": "Smart Agent Alliance Portal - For Agents Who Want More",
+  "start_url": "/agent-portal/login",
+  "scope": "/agent-portal",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#191919",
@@ -75,19 +75,19 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    },
-    {
-      "src": "/icons/apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
     }
   ],
-  "screenshots": [],
   "shortcuts": [
     {
-      "name": "Agent Portal",
-      "short_name": "Portal",
+      "name": "Login",
+      "short_name": "Login",
+      "description": "Sign in to your account",
+      "url": "/agent-portal/login",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
       "description": "Access your agent dashboard",
       "url": "/agent-portal",
       "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]

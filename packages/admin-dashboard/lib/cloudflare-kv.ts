@@ -24,11 +24,15 @@ const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_KV_API_TOKEN || process.env.
  */
 export interface LinksSettings {
   accentColor: string;      // Hex color for buttons, frame, social icons, name glow
+  backgroundColor?: string; // Background hue for star field (default: #ffd700)
   iconStyle: 'light' | 'dark';  // Light (white) or Dark (near-black) icons
   font: 'synonym' | 'taskor';   // Font for button text
+  nameWeight?: 'bold' | 'normal'; // Font weight for display name
+  nameGlow?: boolean;       // Show glow effect on name (default: true)
+  buttonTextSize?: number;  // Button text size in pixels (default: 14)
   bio: string;              // Bio text (max 150 chars)
   showColorPhoto?: boolean; // false = B&W (default), true = full color photo
-  nameWeight?: 'bold' | 'normal'; // Font weight for display name
+  linkOrder?: string[];     // Order of all links including default button
   showCallButton?: boolean; // Show phone call button
   showTextButton?: boolean; // Show text message button
 }

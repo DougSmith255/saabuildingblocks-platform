@@ -94,6 +94,22 @@ export default function AgentPortalLayout({
     }
   }, []);
 
+  // Override manifest for agent portal PWA installation
+  // This ensures installing from any agent portal page opens to /agent-portal/login
+  useEffect(() => {
+    const existingManifest = document.querySelector('link[rel="manifest"]');
+    if (existingManifest) {
+      existingManifest.setAttribute('href', '/manifest-portal.json');
+    }
+
+    // Cleanup: restore original manifest when leaving agent portal
+    return () => {
+      if (existingManifest) {
+        existingManifest.setAttribute('href', '/manifest.json');
+      }
+    };
+  }, []);
+
   return (
     <div id="agent-portal-wrapper">
       {children}
