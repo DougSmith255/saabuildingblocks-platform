@@ -13840,7 +13840,7 @@ function DownloadSection() {
               />
             </div>
             <div style={{ perspective: '1000px' }} className="relative">
-              <H1 disableCloseGlow={true} className="text-2xl sm:text-3xl mb-4">
+              <H1 disableCloseGlow={true} className="!text-2xl sm:!text-3xl mb-4" style={{ fontSize: 'clamp(1.5rem, 4vw, 1.875rem)' }}>
                 SAA Portal App
               </H1>
             </div>
@@ -13868,7 +13868,7 @@ function DownloadSection() {
                   className="absolute top-1.5 bottom-1.5 rounded-full transition-all duration-300 ease-out pointer-events-none"
                   style={{
                     width: '130px',
-                    left: showIOSInstructions ? 'calc(100% - 136px)' : '6px',
+                    left: showIOSInstructions ? '139px' : '6px',
                     backgroundColor: showIOSInstructions ? '#007AFF' : '#ffd700',
                   }}
                 />
