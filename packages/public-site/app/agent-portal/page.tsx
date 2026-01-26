@@ -8839,9 +8839,11 @@ const LINK_ICONS = [
 
 interface LinksSettings {
   accentColor: string;
+  backgroundColor: string; // Background hue for star field (default: #ffd700)
   iconStyle: 'light' | 'dark';
   font: 'synonym' | 'taskor';
   nameWeight: 'bold' | 'normal'; // Name text weight
+  nameGlow: boolean; // Show glow effect on name (default: true)
   buttonTextSize: number; // Button text size in pixels (default: 14)
   bio: string;
   showColorPhoto: boolean; // false = B&W (default), true = full color on Linktree
@@ -8852,9 +8854,11 @@ interface LinksSettings {
 
 const DEFAULT_LINKS_SETTINGS: LinksSettings = {
   accentColor: '#ffd700',
+  backgroundColor: '#ffd700', // Default gold hue for star background
   iconStyle: 'dark',
   font: 'synonym',
   nameWeight: 'bold', // Bold by default
+  nameGlow: true, // Glow on by default
   buttonTextSize: 14, // 14px default (equivalent to text-sm)
   bio: '',
   showColorPhoto: false, // B&W by default
@@ -9092,6 +9096,8 @@ function AgentPagesSection({
   // Links page global settings state - initialize from preloaded data if available
   const [linksSettings, setLinksSettings] = useState<LinksSettings>(preloadedPageData?.page?.links_settings || DEFAULT_LINKS_SETTINGS);
   const [showStylesModal, setShowStylesModal] = useState(false);
+  // Color edit mode: 'accent' for accent color, 'background' for star background hue
+  const [colorEditMode, setColorEditMode] = useState<'accent' | 'background'>('accent');
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   // Removed: showAttractionPreview state - preview now shows inline in UI
 
@@ -10449,29 +10455,53 @@ return (
 
         {/* Content */}
         <div className="p-4 space-y-4">
-          {/* Accent Color */}
+          {/* Color Mode Selector (Background / Accent) */}
           <div>
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Accent Color</label>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Color</label>
+            {/* Background / Accent pill selector with color indicator */}
+            <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative mb-3">
+              {/* Animated sliding pill indicator */}
+              <div
+                className="absolute top-0.5 bottom-0.5 w-1/2 rounded-full transition-transform duration-200 ease-out"
+                style={{
+                  transform: colorEditMode === 'accent' ? 'translateX(100%)' : 'translateX(0)',
+                  backgroundColor: colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700'),
+                }}
+              />
+              <button
+                onClick={() => setColorEditMode('background')}
+                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 flex items-center justify-center gap-1.5`}
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: colorEditMode === 'background' ? '#000000' : 'rgba(255,255,255,0.6)',
+                }}
+              >
+                <span>Background</span>
+              </button>
+              <button
+                onClick={() => setColorEditMode('accent')}
+                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 flex items-center justify-center gap-1.5`}
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: colorEditMode === 'accent' ? '#000000' : 'rgba(255,255,255,0.6)',
+                }}
+              >
+                <span>Accent</span>
+              </button>
+            </div>
+            {/* Context-aware color picker */}
             <HexColorPicker
-              color={linksSettings.accentColor}
+              color={colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700')}
               onChange={(color) => {
-                setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                if (colorEditMode === 'accent') {
+                  setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                } else {
+                  setLinksSettings(prev => ({ ...prev, backgroundColor: color }));
+                }
                 setHasUnsavedChanges(true);
               }}
               style={{ width: '100%', height: '100px' }}
             />
-            <div className="flex items-center gap-2 mt-2">
-              <div className="w-8 h-8 rounded border border-white/20" style={{ backgroundColor: linksSettings.accentColor }} />
-              <HexColorInput
-                color={linksSettings.accentColor}
-                onChange={(color) => {
-                  setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                  setHasUnsavedChanges(true);
-                }}
-                prefixed
-                className="flex-1 px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm font-mono uppercase focus:outline-none"
-              />
-            </div>
           </div>
 
           {/* Button Weight + Text Size - Side by side */}
@@ -10565,29 +10595,58 @@ return (
             </div>
           </div>
 
-          {/* Font */}
-          <div>
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Font</label>
-            <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
-              {/* Animated sliding pill indicator */}
-              <div
-                className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
-                style={{ transform: linksSettings.font === 'taskor' ? 'translateX(100%)' : 'translateX(0)' }}
-              />
-              <button
-                onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.font === 'synonym' ? 'text-black' : 'text-white/60 hover:text-white'}`}
-                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
-              >
-                Synonym
-              </button>
-              <button
-                onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.font === 'taskor' ? 'text-black' : 'text-white/60 hover:text-white'}`}
-                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
-              >
-                Taskor
-              </button>
+          {/* Font + Name Glow - Side by side */}
+          <div className="flex gap-3">
+            {/* Font */}
+            <div className="flex-1">
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Font</label>
+              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
+                {/* Animated sliding pill indicator */}
+                <div
+                  className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
+                  style={{ transform: linksSettings.font === 'taskor' ? 'translateX(100%)' : 'translateX(0)' }}
+                />
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.font === 'synonym' ? 'text-black' : 'text-white/60 hover:text-white'}`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                >
+                  Synonym
+                </button>
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.font === 'taskor' ? 'text-black' : 'text-white/60 hover:text-white'}`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                >
+                  Taskor
+                </button>
+              </div>
+            </div>
+
+            {/* Name Glow */}
+            <div className="flex-1">
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Name Glow</label>
+              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
+                {/* Animated sliding pill indicator */}
+                <div
+                  className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
+                  style={{ transform: linksSettings.nameGlow === false ? 'translateX(100%)' : 'translateX(0)' }}
+                />
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: true })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.nameGlow !== false ? 'text-black' : 'text-white/60 hover:text-white'}`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: false })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.nameGlow === false ? 'text-black' : 'text-white/60 hover:text-white'}`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                >
+                  No
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -10745,11 +10804,12 @@ return (
                 }
               }}
             >
-              {/* Star Field Background */}
+              {/* Star Field Background with customizable hue */}
               <div
                 className="absolute inset-0 overflow-hidden"
                 style={{
                   background: `
+                    radial-gradient(ellipse 120% 100% at 50% 20%, ${linksSettings.backgroundColor || '#ffd700'}15 0%, transparent 60%),
                     radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.4) 0%, transparent 100%),
                     radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.35) 0%, transparent 100%),
                     radial-gradient(1.5px 1.5px at 50px 160px, rgba(255,255,255,0.5) 0%, transparent 100%),
@@ -10811,7 +10871,7 @@ return (
                   )}
                 </div>
 
-                {/* Name with H1 Neon Effect - Auto-adapts based on accent color brightness */}
+                {/* Name with H1 Neon Effect - Auto-adapts based on accent color brightness, controllable via nameGlow setting */}
                 <span
                   className="text-lg text-center leading-tight font-bold mt-1.5 mb-2"
                   style={{
@@ -10819,11 +10879,15 @@ return (
                     fontFamily: 'var(--font-taskor, sans-serif)',
                     fontFeatureSettings: '"ss01" 1',
                     transform: 'perspective(800px) rotateX(12deg)',
-                    // Subtle outline via text-shadow for dark accents - barely visible, just adds definition
-                    textShadow: isAccentDark
-                      ? `-0.5px -0.5px 0 ${linksSettings.accentColor}40, 0.5px -0.5px 0 ${linksSettings.accentColor}40, -0.5px 0.5px 0 ${linksSettings.accentColor}40, 0.5px 0.5px 0 ${linksSettings.accentColor}40, 0 0 0.1em ${linksSettings.accentColor}60, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`
-                      : `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.13em ${linksSettings.accentColor}8C, 0 0 0.18em ${linksSettings.accentColor}59, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`,
-                    filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em ${linksSettings.accentColor}40)`,
+                    // Glow effect controllable via nameGlow setting
+                    textShadow: linksSettings.nameGlow !== false
+                      ? (isAccentDark
+                          ? `-0.5px -0.5px 0 ${linksSettings.accentColor}40, 0.5px -0.5px 0 ${linksSettings.accentColor}40, -0.5px 0.5px 0 ${linksSettings.accentColor}40, 0.5px 0.5px 0 ${linksSettings.accentColor}40, 0 0 0.1em ${linksSettings.accentColor}60, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`
+                          : `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.13em ${linksSettings.accentColor}8C, 0 0 0.18em ${linksSettings.accentColor}59, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`)
+                      : '0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f', // No glow - just subtle depth
+                    filter: linksSettings.nameGlow !== false
+                      ? `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em ${linksSettings.accentColor}40)`
+                      : 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7))', // No glow filter
                   }}
                 >
                   {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
@@ -12082,38 +12146,67 @@ return (
               <span className="text-sm font-medium text-purple-400" style={{ textShadow: '0 0 8px rgba(192, 132, 252, 0.5)' }}>Style</span>
             </div>
             <div className="p-4 space-y-4">
-              {/* Accent Color */}
+              {/* Color Mode Selector (Background / Accent) */}
               <div>
-                <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Accent Color</label>
+                <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Color</label>
+                {/* Background / Accent pill selector */}
+                <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative mb-3">
+                  <div
+                    className="absolute top-0.5 bottom-0.5 w-1/2 rounded-full transition-transform duration-200 ease-out"
+                    style={{
+                      transform: colorEditMode === 'accent' ? 'translateX(100%)' : 'translateX(0)',
+                      backgroundColor: colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700'),
+                    }}
+                  />
+                  <button
+                    onClick={() => setColorEditMode('background')}
+                    className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
+                    style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'background' ? '#000000' : 'rgba(255,255,255,0.6)' }}
+                  >
+                    Background
+                  </button>
+                  <button
+                    onClick={() => setColorEditMode('accent')}
+                    className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
+                    style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'accent' ? '#000000' : 'rgba(255,255,255,0.6)' }}
+                  >
+                    Accent
+                  </button>
+                </div>
                 <HexColorPicker
-                  color={linksSettings.accentColor}
-                  onChange={(color) => { setLinksSettings(prev => ({ ...prev, accentColor: color })); setHasUnsavedChanges(true); }}
+                  color={colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700')}
+                  onChange={(color) => {
+                    if (colorEditMode === 'accent') {
+                      setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                    } else {
+                      setLinksSettings(prev => ({ ...prev, backgroundColor: color }));
+                    }
+                    setHasUnsavedChanges(true);
+                  }}
                   style={{ width: '100%', height: '100px' }}
                 />
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="w-8 h-8 rounded border border-white/20" style={{ backgroundColor: linksSettings.accentColor }} />
-                  <HexColorInput
-                    color={linksSettings.accentColor}
-                    onChange={(color) => { setLinksSettings(prev => ({ ...prev, accentColor: color })); setHasUnsavedChanges(true); }}
-                    prefixed
-                    className="flex-1 px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white font-mono text-xs uppercase focus:outline-none"
-                  />
-                </div>
               </div>
-              {/* Weight/Font Toggles */}
-              <div className="grid grid-cols-2 gap-2">
+              {/* Weight/Font/Name Glow Toggles */}
+              <div className="grid grid-cols-3 gap-2">
                 <div>
                   <label className="block text-[10px] text-white/50 mb-1">Weight</label>
                   <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
-                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Bold</button>
-                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Normal</button>
+                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Bold</button>
+                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Norm</button>
                   </div>
                 </div>
                 <div>
                   <label className="block text-[10px] text-white/50 mb-1">Font</label>
                   <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
-                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Syn</button>
-                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Task</button>
+                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Syn</button>
+                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Task</button>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-white/50 mb-1">Glow</label>
+                  <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
+                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: true })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameGlow !== false ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Yes</button>
+                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: false })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameGlow === false ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>No</button>
                   </div>
                 </div>
               </div>
@@ -12423,39 +12516,68 @@ return (
               Style
             </h3>
 
-            {/* Accent Color */}
+            {/* Color Mode Selector (Background / Accent) */}
             <div>
-              <label className="block text-xs text-white/50 mb-2">Accent Color</label>
+              <label className="block text-xs text-white/50 mb-2">Color</label>
+              {/* Background / Accent pill selector */}
+              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative mb-3">
+                <div
+                  className="absolute top-0.5 bottom-0.5 w-1/2 rounded-full transition-transform duration-200 ease-out"
+                  style={{
+                    transform: colorEditMode === 'accent' ? 'translateX(100%)' : 'translateX(0)',
+                    backgroundColor: colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700'),
+                  }}
+                />
+                <button
+                  onClick={() => setColorEditMode('background')}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'background' ? '#000000' : 'rgba(255,255,255,0.6)' }}
+                >
+                  Background
+                </button>
+                <button
+                  onClick={() => setColorEditMode('accent')}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'accent' ? '#000000' : 'rgba(255,255,255,0.6)' }}
+                >
+                  Accent
+                </button>
+              </div>
               <HexColorPicker
-                color={linksSettings.accentColor}
-                onChange={(color) => { setLinksSettings(prev => ({ ...prev, accentColor: color })); setHasUnsavedChanges(true); }}
+                color={colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700')}
+                onChange={(color) => {
+                  if (colorEditMode === 'accent') {
+                    setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                  } else {
+                    setLinksSettings(prev => ({ ...prev, backgroundColor: color }));
+                  }
+                  setHasUnsavedChanges(true);
+                }}
                 style={{ width: '100%', height: '120px' }}
               />
-              <div className="flex items-center gap-2 mt-2">
-                <div className="w-10 h-10 rounded border border-white/20" style={{ backgroundColor: linksSettings.accentColor }} />
-                <HexColorInput
-                  color={linksSettings.accentColor}
-                  onChange={(color) => { setLinksSettings(prev => ({ ...prev, accentColor: color })); setHasUnsavedChanges(true); }}
-                  prefixed
-                  className="flex-1 px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white font-mono uppercase focus:outline-none"
-                />
-              </div>
             </div>
 
             {/* Toggle Options */}
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <div>
                 <label className="block text-[10px] text-white/50 mb-1">Weight</label>
                 <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
-                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Bold</button>
-                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Normal</button>
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Bold</button>
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Norm</button>
                 </div>
               </div>
               <div>
                 <label className="block text-[10px] text-white/50 mb-1">Font</label>
                 <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
-                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Syn</button>
-                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Task</button>
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Syn</button>
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Task</button>
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] text-white/50 mb-1">Glow</label>
+                <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: true })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameGlow !== false ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Yes</button>
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: false })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameGlow === false ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>No</button>
                 </div>
               </div>
             </div>
