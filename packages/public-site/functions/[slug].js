@@ -6109,6 +6109,26 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   const lighterRgb = `${Math.min(255, rgb.r + 80)}, ${Math.min(255, rgb.g + 80)}, ${Math.min(255, rgb.b + 80)}`;
   const darkerRgb = `${Math.max(0, rgb.r - 40)}, ${Math.max(0, rgb.g - 40)}, ${Math.max(0, rgb.b - 40)}`;
 
+  // Convert backgroundColor to RGB for gradient (star field background)
+  const bgRgb = hexToRgb(backgroundColor);
+  // Create very dark version for top of gradient (15% of the color)
+  const bgGradientTop = `rgb(${Math.round(bgRgb.r * 0.15)}, ${Math.round(bgRgb.g * 0.15)}, ${Math.round(bgRgb.b * 0.15)})`;
+  // Create very dark version for bottom (5% of the color, almost black but with hue)
+  const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.05)}, ${Math.round(bgRgb.g * 0.05)}, ${Math.round(bgRgb.b * 0.05)})`;
+
+  // Higher threshold version for button link icons (more likely to be white)
+  // Uses 0.6 luminance threshold instead of 0.5
+  const getButtonIconColor = (hexColor) => {
+    const hex = hexColor.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16) / 255;
+    const g = parseInt(hex.substring(2, 4), 16) / 255;
+    const b = parseInt(hex.substring(4, 6), 16) / 255;
+    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+    // Higher threshold (0.6) means icons switch to white earlier
+    return luminance < 0.6 ? '#ffffff' : '#1a1a1a';
+  };
+  const buttonIconColor = getButtonIconColor(accentColor);
+
   // Clamp dark accent colors at minimum lightness threshold for visibility
   // Instead of brightening, just stops getting darker at the threshold
   const getVisibleSocialIconColor = (hexColor) => {
@@ -6419,10 +6439,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       font-size: 16px;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      /* Star field background with customizable hue overlay */
-      background:
-        radial-gradient(ellipse 120% 100% at 50% 20%, ${backgroundColor}15 0%, transparent 60%),
-        radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
+      /* Star field background - backgroundColor completely replaces the grey gradient */
+      background: radial-gradient(at center bottom, ${bgGradientTop} 0%, ${bgGradientBottom} 100%);
       min-height: 100%;
     }
 
@@ -6648,16 +6666,22 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       border: none;
     }
 
+    /* Button link icons use higher threshold for visibility */
+    .link-button .link-icon {
+      color: ${buttonIconColor};
+      stroke: ${buttonIconColor};
+    }
+
     /* Default button - muted styling (transparent bg + solid border) */
     /* Text color uses same dark/light logic as other buttons for consistency */
     .link-button.default-muted {
-      background: ${accentColor}33;
+      background: ${accentColor}D9;
       color: ${iconColor};
       border: 2px solid ${accentColor};
     }
 
     .link-button.default-muted:hover {
-      background: ${accentColor}4d;
+      background: ${accentColor}E6;
     }
 
     /* Contact Buttons - Segmented Style */

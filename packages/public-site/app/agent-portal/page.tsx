@@ -9083,6 +9083,54 @@ function AgentPagesSection({
   const [animatingSwap, setAnimatingSwap] = useState<{ movingId: string, swappingId: string, direction: 'up' | 'down' } | null>(null); // Track button swap animation
   const [animatingInsert, setAnimatingInsert] = useState<string | null>(null); // Track new button insert animation (stores new link ID)
 
+  /**
+   * ====================================================================================
+   * TROUBLESHOOTING: Button Reorder Down Arrow Disabled State Issue
+   * ====================================================================================
+   *
+   * ISSUE (Reported 6+ times):
+   * The down arrow button for the button directly above "About My eXp Team" (learn-about)
+   * should be DISABLED on page load, preventing movement below the default button.
+   *
+   * OBSERVED BEHAVIOR:
+   * 1. On page load: Down arrow button appears ENABLED (clickable) instead of disabled
+   * 2. When clicked: Button visually moves down, then slides back up
+   * 3. After animation: Down arrow correctly becomes disabled
+   * 4. Adding new button: New button correctly has down arrow disabled
+   * 5. Deleting button above default: Button that moves down does NOT get down arrow disabled
+   *
+   * EXPECTED BEHAVIOR:
+   * - Down arrow should be disabled for ANY button directly above 'learn-about' at ALL times
+   * - This should apply on: initial load, after delete, after any state change
+   *
+   * CODE LOCATIONS:
+   * - Disabled condition (line ~11569):
+   *   `disabled={allLinkIds[index + 1] === 'learn-about' || index === allLinkIds.length - 1}`
+   * - moveLink function (line ~11490): Only checks `currentIndex < allLinkIds.length - 1`
+   *   ISSUE: Does NOT check if next item is 'learn-about' before allowing move
+   * - buttonPositions calculation (line ~9226): useLayoutEffect with multiple dependencies
+   *   ISSUE: Early return when buttonPositions is empty (line ~11521) delays control render
+   *
+   * POTENTIAL ROOT CAUSES:
+   * 1. Race condition: allLinkIds computed inline may use stale state on initial render
+   * 2. buttonPositions empty check: Controls don't render until positions calculated
+   * 3. moveLink missing check: Allows animation even when disabled should be true
+   * 4. Timing: useLayoutEffect dependencies [linksSettings.linkOrder, customLinks, editingLinkId,
+   *    addingNewLink, animatingSwap] may not trigger re-render in correct order
+   *
+   * INVESTIGATION NEEDED:
+   * 1. Add console.log to track allLinkIds on each render
+   * 2. Verify linksSettings.linkOrder is correctly populated from DB on initial load
+   * 3. Check if buttonPositions being empty causes timing issues
+   * 4. Add explicit check in moveLink to prevent move when next is 'learn-about'
+   *
+   * PROPOSED FIX (not yet implemented):
+   * In moveLink function, add check BEFORE triggering animation:
+   *   if (direction === 'down' && allLinkIds[currentIndex + 1] === 'learn-about') return;
+   *
+   * ====================================================================================
+   */
+
   // FIX-007/024: Refs for button position tracking (controls rendered OUTSIDE phone inner)
   const buttonRowRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const buttonLinksContainerRef = useRef<HTMLDivElement | null>(null);
@@ -9176,6 +9224,35 @@ function AgentPagesSection({
   // Auto-determine if accent color is dark (needs light/white text)
   // This replaces the manual iconStyle picker
   const isAccentDark = isColorDark(linksSettings.accentColor);
+
+  // Helper to convert hex to RGB
+  const hexToRgb = (hex: string) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 255, g: 215, b: 0 };
+  };
+
+  // Compute background gradient colors from backgroundColor setting
+  const bgRgb = hexToRgb(linksSettings.backgroundColor || '#ffd700');
+  // Very dark version for top of gradient (15% of the color)
+  const bgGradientTop = `rgb(${Math.round(bgRgb.r * 0.15)}, ${Math.round(bgRgb.g * 0.15)}, ${Math.round(bgRgb.b * 0.15)})`;
+  // Very dark version for bottom (5% of the color, almost black but with hue)
+  const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.05)}, ${Math.round(bgRgb.g * 0.05)}, ${Math.round(bgRgb.b * 0.05)})`;
+
+  // Higher threshold for button icons (switches to white earlier)
+  const getButtonIconColor = (hex: string): string => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) return '#ffffff';
+    const r = parseInt(result[1], 16) / 255;
+    const g = parseInt(result[2], 16) / 255;
+    const b = parseInt(result[3], 16) / 255;
+    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+    return luminance < 0.6 ? '#ffffff' : '#1a1a1a';
+  };
+  const buttonIconColor = getButtonIconColor(linksSettings.accentColor);
 
   // Debug: Log hasColorImage changes
   useEffect(() => {
@@ -10459,6 +10536,7 @@ return (
           <div>
             <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Color</label>
             {/* Background / Accent pill selector with color indicator */}
+            {/* Pill text color adapts to background brightness */}
             <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative mb-3">
               {/* Animated sliding pill indicator */}
               <div
@@ -10473,7 +10551,10 @@ return (
                 className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 flex items-center justify-center gap-1.5`}
                 style={{
                   fontFamily: 'var(--font-synonym, sans-serif)',
-                  color: colorEditMode === 'background' ? '#000000' : 'rgba(255,255,255,0.6)',
+                  // Dynamic text color: white on dark pills, black on light pills
+                  color: colorEditMode === 'background'
+                    ? (isColorDark(linksSettings.backgroundColor || '#ffd700') ? '#ffffff' : '#000000')
+                    : 'rgba(255,255,255,0.6)',
                 }}
               >
                 <span>Background</span>
@@ -10483,7 +10564,10 @@ return (
                 className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 flex items-center justify-center gap-1.5`}
                 style={{
                   fontFamily: 'var(--font-synonym, sans-serif)',
-                  color: colorEditMode === 'accent' ? '#000000' : 'rgba(255,255,255,0.6)',
+                  // Dynamic text color: white on dark pills, black on light pills
+                  color: colorEditMode === 'accent'
+                    ? (isAccentDark ? '#ffffff' : '#000000')
+                    : 'rgba(255,255,255,0.6)',
                 }}
               >
                 <span>Accent</span>
@@ -10804,12 +10888,11 @@ return (
                 }
               }}
             >
-              {/* Star Field Background with customizable hue */}
+              {/* Star Field Background - backgroundColor controls the gradient hue */}
               <div
                 className="absolute inset-0 overflow-hidden"
                 style={{
                   background: `
-                    radial-gradient(ellipse 120% 100% at 50% 20%, ${linksSettings.backgroundColor || '#ffd700'}15 0%, transparent 60%),
                     radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.4) 0%, transparent 100%),
                     radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.35) 0%, transparent 100%),
                     radial-gradient(1.5px 1.5px at 50px 160px, rgba(255,255,255,0.5) 0%, transparent 100%),
@@ -10829,7 +10912,8 @@ return (
                     radial-gradient(1px 1px at 220px 220px, rgba(255,255,255,0.35) 0%, transparent 100%),
                     radial-gradient(1.5px 1.5px at 250px 100px, rgba(255,255,255,0.45) 0%, transparent 100%),
                     radial-gradient(1px 1px at 240px 340px, rgba(255,255,255,0.3) 0%, transparent 100%),
-                    radial-gradient(1px 1px at 270px 480px, rgba(255,255,255,0.35) 0%, transparent 100%)
+                    radial-gradient(1px 1px at 270px 480px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                    radial-gradient(at center bottom, ${bgGradientTop} 0%, ${bgGradientBottom} 100%)
                   `,
                   pointerEvents: 'none',
                 }}
@@ -11122,13 +11206,13 @@ return (
                           className="w-full py-2.5 px-3 rounded-lg relative"
                           style={{
                             backgroundColor: isDefault
-                              ? `${linksSettings.accentColor}33` // 20% opacity for default button
+                              ? `${linksSettings.accentColor}D9` // 85% opacity for default button (15% transparent)
                               : linksSettings.accentColor,
                             border: isDefault
                               ? `2px solid ${linksSettings.accentColor}` // Solid border for default
                               : 'none',
                             // Text color uses dark/light selector for ALL buttons including default
-                            color: isAccentDark ? '#ffffff' : '#1a1a1a',
+                            color: buttonIconColor, // Higher threshold for button icons
                             fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                             fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                             fontSize: `${linksSettings.buttonTextSize ?? 14}px`,
@@ -12161,14 +12245,14 @@ return (
                   <button
                     onClick={() => setColorEditMode('background')}
                     className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
-                    style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'background' ? '#000000' : 'rgba(255,255,255,0.6)' }}
+                    style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'background' ? (isColorDark(linksSettings.backgroundColor || '#ffd700') ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                   >
                     Background
                   </button>
                   <button
                     onClick={() => setColorEditMode('accent')}
                     className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
-                    style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'accent' ? '#000000' : 'rgba(255,255,255,0.6)' }}
+                    style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'accent' ? (isAccentDark ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                   >
                     Accent
                   </button>
@@ -12531,14 +12615,14 @@ return (
                 <button
                   onClick={() => setColorEditMode('background')}
                   className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'background' ? '#000000' : 'rgba(255,255,255,0.6)' }}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'background' ? (isColorDark(linksSettings.backgroundColor || '#ffd700') ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                 >
                   Background
                 </button>
                 <button
                   onClick={() => setColorEditMode('accent')}
                   className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'accent' ? '#000000' : 'rgba(255,255,255,0.6)' }}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'accent' ? (isAccentDark ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                 >
                   Accent
                 </button>
