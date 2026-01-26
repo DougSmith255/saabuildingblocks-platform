@@ -2570,6 +2570,29 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       .md:col-span-8 { grid-column: span 8 / span 8; }
     }
 
+    /* SAA Pills - responsive text sizing for 2-column mobile layout */
+    .saa-pills .text-body {
+      font-size: var(--font-size-body);
+    }
+    @media (max-width: 595px) {
+      .saa-pills .text-body {
+        font-size: calc(var(--font-size-body) - 5px);
+      }
+      .saa-pills .icon-3d svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+    @media (max-width: 400px) {
+      .saa-pills .text-body {
+        font-size: calc(var(--font-size-body) - 7px);
+      }
+      .saa-pills .icon-3d svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
     /* Why SAA section grid - two cards side by side */
     .why-saa-grid {
       display: grid;
@@ -3486,7 +3509,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                 <p class="text-body mt-3 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
                 <p class="font-bold mt-5" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.5rem;">Smart Agent Alliance was built differently.</p>
                 <p class="text-body mt-3" style="line-height: 1.6;">We invest in real systems, long-term training, and agent collaboration because our incentives are aligned with agent success.</p>
-                <div class="grid grid-cols-2 mt-8" style="gap: 0.5rem 1rem;">
+                <div class="grid grid-cols-2 mt-8 saa-pills" style="gap: 0.5rem 1rem;">
                   <div class="flex items-center gap-3">
                     <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
                     <span class="text-body font-medium">Not a production team</span>
