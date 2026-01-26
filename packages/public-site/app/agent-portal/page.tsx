@@ -755,7 +755,18 @@ interface UserData {
   gender?: 'male' | 'female' | null;
   isLeader?: boolean | null;
   state?: string | null;
+  dashboardAccent?: string | null; // User's dashboard accent color (yellow, purple, green, blue)
 }
+
+// Dashboard accent color options
+const DASHBOARD_ACCENT_COLORS = [
+  { id: 'yellow', label: 'Gold', color: '#ffd700' },
+  { id: 'purple', label: 'Purple', color: '#a855f7' },
+  { id: 'green', label: 'Green', color: '#22c55e' },
+  { id: 'blue', label: 'Blue', color: '#3b82f6' },
+] as const;
+
+type DashboardAccentId = typeof DASHBOARD_ACCENT_COLORS[number]['id'];
 
 // Section types
 type SectionId = 'onboarding' | 'dashboard' | 'market-stats' | 'calls' | 'templates' | 'courses' | 'production' | 'new-agents' | 'agent-page' | 'linktree' | 'support' | 'profile' | 'download';
@@ -1056,6 +1067,7 @@ function AgentPortal() {
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
+    dashboardAccent: 'yellow' as DashboardAccentId,
   });
   const [editFormError, setEditFormError] = useState('');
   const [editFormSuccess, setEditFormSuccess] = useState('');
@@ -1283,6 +1295,8 @@ function AgentPortal() {
   const completedStepsCount = Object.values(onboardingProgress).filter(Boolean).length;
   const totalStepsCount = Object.keys(onboardingProgress).length;
 
+  // Dashboard accent color - user's personalized dashboard color (default: yellow/gold)
+  const dashboardAccentColor = user?.dashboardAccent || '#ffd700';
 
   // Redirect to dashboard if onboarding is complete and user is on onboarding tab
   useEffect(() => {
@@ -1391,6 +1405,10 @@ function AgentPortal() {
   };
 
   const handleOpenEditProfile = () => {
+    // Convert stored color to accent id, default to yellow
+    const storedAccent = user?.dashboardAccent;
+    const accentId = DASHBOARD_ACCENT_COLORS.find(c => c.color === storedAccent)?.id || 'yellow';
+
     setEditFormData({
       displayFirstName: user?.firstName || '',
       displayLastName: user?.lastName || '',
@@ -1398,6 +1416,7 @@ function AgentPortal() {
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
+      dashboardAccent: accentId,
     });
     setEditFormError('');
     setEditFormSuccess('');
@@ -1513,6 +1532,14 @@ function AgentPortal() {
         updates.newPassword = editFormData.newPassword;
       }
 
+      // Check if dashboard accent color changed
+      const newAccentColor = DASHBOARD_ACCENT_COLORS.find(c => c.id === editFormData.dashboardAccent)?.color || '#ffd700';
+      const currentAccentColor = user?.dashboardAccent || '#ffd700';
+      const accentChanged = newAccentColor !== currentAccentColor;
+      if (accentChanged) {
+        updates.dashboardAccent = newAccentColor;
+      }
+
       if (Object.keys(updates).length === 0) {
         setEditFormSuccess('No changes to save');
         setIsSubmitting(false);
@@ -1548,6 +1575,9 @@ function AgentPortal() {
         }
         if (emailChanged && editFormData.email) {
           updatedUser.email = editFormData.email;
+        }
+        if (accentChanged) {
+          updatedUser.dashboardAccent = newAccentColor;
         }
         setUser(updatedUser);
         localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
@@ -2484,17 +2514,17 @@ function AgentPortal() {
                       ? 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)'
                       : 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
                     boxShadow: isActive
-                      ? 'inset 0 1px 0 rgba(255,215,0,0.2), inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px rgba(255,215,0,0.15)'
+                      ? `inset 0 1px 0 ${dashboardAccentColor}33, inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px ${dashboardAccentColor}26`
                       : 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
-                    border: isActive ? '1px solid rgba(255,215,0,0.3)' : '1px solid rgba(255,255,255,0.08)',
+                    border: isActive ? `1px solid ${dashboardAccentColor}4D` : '1px solid rgba(255,255,255,0.08)',
                   } as React.CSSProperties}
                 >
                   {/* Icon with glow effect when active */}
                   <div
                     className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}
                     style={{
-                      filter: isActive ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
-                      color: isActive ? '#ffd700' : 'rgba(229,228,221,0.5)',
+                      filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
+                      color: isActive ? dashboardAccentColor : 'rgba(229,228,221,0.5)',
                     }}
                   >
                     <item.Icon className="w-5 h-5" />
@@ -2504,8 +2534,8 @@ function AgentPortal() {
                   <span
                     className="text-[10px] font-medium mt-1 transition-all duration-200"
                     style={{
-                      color: isActive ? '#ffd700' : 'rgba(229,228,221,0.5)',
-                      textShadow: isActive ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                      color: isActive ? dashboardAccentColor : 'rgba(229,228,221,0.5)',
+                      textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : 'none',
                     }}
                   >
                     {item.label}
@@ -2530,21 +2560,31 @@ function AgentPortal() {
           <aside className="hidden min-[950px]:block w-64 flex-shrink-0">
             <div className="sticky top-24 space-y-4">
               {/* User Profile Section */}
-              <div className="rounded-xl p-4 border border-white/[0.08]">
+              <div
+                className="rounded-xl p-4"
+                style={{
+                  border: `1px solid ${dashboardAccentColor}30`,
+                  boxShadow: `0 0 20px ${dashboardAccentColor}10, inset 0 1px 0 rgba(255,255,255,0.03)`,
+                }}
+              >
                 {/* Profile Picture */}
                 <div className="flex flex-col items-center mb-4">
                   <button
                     onClick={handleProfilePictureClick}
                     className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-[3px] transition-colors mb-3 bg-white/5"
                     style={{
-                      borderColor: getVisibleSocialIconColor(preloadedAgentPageData?.page?.links_settings?.accentColor || '#ffd700'),
+                      borderColor: dashboardAccentColor,
+                      boxShadow: `0 0 16px ${dashboardAccentColor}40`,
                     }}
                     title="Click to change profile picture"
                   >
                     {/* Upload spinner - shows while uploading */}
                     {isUploadingDashboardImage && (
                       <div className="absolute inset-0 bg-[#0a0a0a]/90 flex items-center justify-center z-20">
-                        <div className="w-10 h-10 border-[3px] border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                        <div
+                          className="w-10 h-10 border-[3px] rounded-full animate-spin"
+                          style={{ borderColor: `${dashboardAccentColor}30`, borderTopColor: dashboardAccentColor }}
+                        />
                       </div>
                     )}
                     {user?.profilePictureUrl && !profileImageError ? (
@@ -2552,7 +2592,10 @@ function AgentPortal() {
                         {/* Loading spinner - shows while image is loading */}
                         {profileImageLoading && (
                           <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center z-10">
-                            <div className="w-8 h-8 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                            <div
+                              className="w-8 h-8 border-2 rounded-full animate-spin"
+                              style={{ borderColor: `${dashboardAccentColor}30`, borderTopColor: dashboardAccentColor }}
+                            />
                           </div>
                         )}
                         <img
@@ -2570,8 +2613,11 @@ function AgentPortal() {
                         />
                       </>
                     ) : (
-                      <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
-                        <span className="text-3xl text-[#ffd700]">
+                      <div
+                        className="w-full h-full flex items-center justify-center"
+                        style={{ backgroundColor: `${dashboardAccentColor}15` }}
+                      >
+                        <span className="text-3xl" style={{ color: dashboardAccentColor }}>
                           {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
                         </span>
                       </div>
@@ -2586,7 +2632,7 @@ function AgentPortal() {
                   </button>
 
                   {/* User Name */}
-                  <h3 className="text-[#ffd700] font-semibold text-center">
+                  <h3 className="font-semibold text-center" style={{ color: dashboardAccentColor }}>
                     {user?.firstName} {user?.lastName}
                   </h3>
                   <p className="text-[#e5e4dd]/60 text-sm">{user?.email}</p>
@@ -2606,7 +2652,22 @@ function AgentPortal() {
                   {/* Edit Profile Button */}
                   <button
                     onClick={handleOpenEditProfile}
-                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-[#e5e4dd]/80 hover:text-[#ffd700] bg-white/5 hover:bg-[#ffd700]/10 border border-white/[0.08] hover:border-[#ffd700]/30 transition-all"
+                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-[#e5e4dd]/80 bg-white/5 border border-white/[0.08] transition-all"
+                    style={{
+                      ['--hover-text-color' as any]: dashboardAccentColor,
+                      ['--hover-bg-color' as any]: `${dashboardAccentColor}15`,
+                      ['--hover-border-color' as any]: `${dashboardAccentColor}50`,
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.target as HTMLElement).style.color = dashboardAccentColor;
+                      (e.target as HTMLElement).style.backgroundColor = `${dashboardAccentColor}15`;
+                      (e.target as HTMLElement).style.borderColor = `${dashboardAccentColor}50`;
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLElement).style.color = '';
+                      (e.target as HTMLElement).style.backgroundColor = '';
+                      (e.target as HTMLElement).style.borderColor = '';
+                    }}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -2652,36 +2713,36 @@ function AgentPortal() {
                           ? 'linear-gradient(180deg, #252525 0%, #1a1a1a 50%, #151515 100%)'
                           : 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
                         boxShadow: isActive
-                          ? 'inset 0 1px 0 rgba(255,215,0,0.2), inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px rgba(255,215,0,0.15)'
+                          ? `inset 0 1px 0 ${dashboardAccentColor}33, inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px ${dashboardAccentColor}26`
                           : isOnboardingInactive
                           ? 'inset 0 2px 0 rgba(255,215,0,0.15), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(255,215,0,0.1), 0 0 20px rgba(255,215,0,0.05)'
                           : isDownloadInactive
                           ? 'inset 0 2px 0 rgba(255,255,255,0.1), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)'
                           : 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
                         border: isActive
-                          ? '1px solid rgba(255,215,0,0.3)'
+                          ? `1px solid ${dashboardAccentColor}4D`
                           : isOnboardingInactive
                           ? '1px solid rgba(255,215,0,0.25)'
                           : '1px solid rgba(255,255,255,0.08)',
                         ...(shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : {}),
                       }}
                     >
-                      {/* Icon - gold for onboarding, yellow when active */}
+                      {/* Icon - gold for onboarding, accent when active */}
                       <div
                         className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}
                         style={{
-                          filter: isActive || isOnboardingInactive ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
-                          color: isActive || isOnboardingInactive ? '#ffd700' : 'rgba(229,228,221,0.6)',
+                          filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : isOnboardingInactive ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
+                          color: isActive ? dashboardAccentColor : isOnboardingInactive ? '#ffd700' : 'rgba(229,228,221,0.6)',
                         }}
                       >
                         <IconComponent className="w-5 h-5" />
                       </div>
-                      {/* Label - gold for onboarding, yellow when active */}
+                      {/* Label - gold for onboarding, accent when active */}
                       <span
                         className="font-medium font-taskor text-sm transition-all duration-200"
                         style={{
-                          color: isActive || isOnboardingInactive ? '#ffd700' : 'rgba(229,228,221,0.8)',
-                          textShadow: isActive || isOnboardingInactive ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                          color: isActive ? dashboardAccentColor : isOnboardingInactive ? '#ffd700' : 'rgba(229,228,221,0.8)',
+                          textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : isOnboardingInactive ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
                         }}
                       >
                         {item.label}
@@ -2787,13 +2848,17 @@ function AgentPortal() {
                     onClick={handleProfilePictureClick}
                     className="relative group w-32 h-32 rounded-full overflow-hidden border-[3px] transition-colors bg-white/5"
                     style={{
-                      borderColor: getVisibleSocialIconColor(preloadedAgentPageData?.page?.links_settings?.accentColor || '#ffd700'),
+                      borderColor: dashboardAccentColor,
+                      boxShadow: `0 0 16px ${dashboardAccentColor}40`,
                     }}
                   >
                     {/* Upload spinner - shows while uploading */}
                     {isUploadingDashboardImage && (
                       <div className="absolute inset-0 bg-[#0a0a0a]/90 flex items-center justify-center z-20">
-                        <div className="w-10 h-10 border-[3px] border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                        <div
+                          className="w-10 h-10 border-[3px] rounded-full animate-spin"
+                          style={{ borderColor: `${dashboardAccentColor}30`, borderTopColor: dashboardAccentColor }}
+                        />
                       </div>
                     )}
                     {user?.profilePictureUrl && !profileImageError ? (
@@ -2801,7 +2866,10 @@ function AgentPortal() {
                         {/* Loading spinner - shows while image is loading */}
                         {profileImageLoading && (
                           <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center z-10">
-                            <div className="w-8 h-8 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                            <div
+                              className="w-8 h-8 border-2 rounded-full animate-spin"
+                              style={{ borderColor: `${dashboardAccentColor}30`, borderTopColor: dashboardAccentColor }}
+                            />
                           </div>
                         )}
                         <img
@@ -2819,8 +2887,11 @@ function AgentPortal() {
                         />
                       </>
                     ) : (
-                      <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
-                        <span className="text-4xl text-[#ffd700]">
+                      <div
+                        className="w-full h-full flex items-center justify-center"
+                        style={{ backgroundColor: `${dashboardAccentColor}15` }}
+                      >
+                        <span className="text-4xl" style={{ color: dashboardAccentColor }}>
                           {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
                         </span>
                       </div>
@@ -2886,6 +2957,46 @@ function AgentPortal() {
                       className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
                       placeholder="your@email.com"
                     />
+                  </div>
+
+                  {/* Dashboard Accent Color */}
+                  <div>
+                    <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
+                      Dashboard Accent Color
+                    </label>
+                    <p className="text-xs text-[#e5e4dd]/50 mb-3">Personalize your dashboard with a theme color</p>
+                    <div className="flex gap-2">
+                      {DASHBOARD_ACCENT_COLORS.map((accent) => (
+                        <button
+                          key={accent.id}
+                          type="button"
+                          onClick={() => setEditFormData({ ...editFormData, dashboardAccent: accent.id })}
+                          className={`flex-1 flex flex-col items-center gap-1.5 py-2 px-1 rounded-lg border-2 transition-all ${
+                            editFormData.dashboardAccent === accent.id
+                              ? 'border-white/40 bg-white/10'
+                              : 'border-white/10 bg-black/20'
+                          }`}
+                        >
+                          <div
+                            className="w-6 h-6 rounded-full"
+                            style={{
+                              backgroundColor: accent.color,
+                              boxShadow: editFormData.dashboardAccent === accent.id
+                                ? `0 0 10px ${accent.color}80`
+                                : 'none',
+                            }}
+                          />
+                          <span
+                            className="text-[10px] font-medium"
+                            style={{
+                              color: editFormData.dashboardAccent === accent.id ? accent.color : 'rgba(229,228,221,0.6)',
+                            }}
+                          >
+                            {accent.label}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Password Change Section */}
@@ -3174,20 +3285,27 @@ function AgentPortal() {
 
             {/* Form */}
             <form onSubmit={handleEditProfileSubmit} className="p-6 space-y-5">
-              {/* Profile Picture Section */}
+              {/* Profile Picture Section - uses selected accent color for live preview */}
+              {(() => {
+                const selectedAccentColor = DASHBOARD_ACCENT_COLORS.find(c => c.id === editFormData.dashboardAccent)?.color || '#ffd700';
+                return (
               <div className="flex flex-col items-center mb-6">
                 <button
                   type="button"
                   onClick={handleProfilePictureClick}
                   className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-[3px] transition-colors bg-white/5"
                   style={{
-                    borderColor: getVisibleSocialIconColor(preloadedAgentPageData?.page?.links_settings?.accentColor || '#ffd700'),
+                    borderColor: selectedAccentColor,
+                    boxShadow: `0 0 20px ${selectedAccentColor}40`,
                   }}
                 >
                   {/* Upload spinner - shows while uploading */}
                   {isUploadingDashboardImage && (
                     <div className="absolute inset-0 bg-[#0a0a0a]/90 flex items-center justify-center z-20">
-                      <div className="w-12 h-12 border-[3px] border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                      <div
+                        className="w-12 h-12 border-[3px] rounded-full animate-spin"
+                        style={{ borderColor: `${selectedAccentColor}30`, borderTopColor: selectedAccentColor }}
+                      />
                     </div>
                   )}
                   {user?.profilePictureUrl && !profileImageError ? (
@@ -3195,7 +3313,10 @@ function AgentPortal() {
                       {/* Loading spinner - shows while image is loading */}
                       {profileImageLoading && (
                         <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center z-10">
-                          <div className="w-10 h-10 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                          <div
+                            className="w-10 h-10 border-2 rounded-full animate-spin"
+                            style={{ borderColor: `${selectedAccentColor}30`, borderTopColor: selectedAccentColor }}
+                          />
                         </div>
                       )}
                       <img
@@ -3213,8 +3334,11 @@ function AgentPortal() {
                       />
                     </>
                   ) : (
-                    <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
-                      <span className="text-4xl text-[#ffd700]">
+                    <div
+                      className="w-full h-full flex items-center justify-center"
+                      style={{ backgroundColor: `${selectedAccentColor}15` }}
+                    >
+                      <span className="text-4xl" style={{ color: selectedAccentColor }}>
                         {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
                       </span>
                     </div>
@@ -3240,6 +3364,8 @@ function AgentPortal() {
                   </div>
                 )}
               </div>
+                );
+              })()}
 
               {/* Display Name */}
               <div>
@@ -3278,6 +3404,46 @@ function AgentPortal() {
                   className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
                   placeholder="your@email.com"
                 />
+              </div>
+
+              {/* Dashboard Accent Color */}
+              <div>
+                <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
+                  Dashboard Accent Color
+                </label>
+                <p className="text-xs text-[#e5e4dd]/50 mb-3">Personalize your dashboard with a theme color</p>
+                <div className="flex gap-3">
+                  {DASHBOARD_ACCENT_COLORS.map((accent) => (
+                    <button
+                      key={accent.id}
+                      type="button"
+                      onClick={() => setEditFormData({ ...editFormData, dashboardAccent: accent.id })}
+                      className={`flex-1 flex flex-col items-center gap-2 py-3 px-2 rounded-lg border-2 transition-all ${
+                        editFormData.dashboardAccent === accent.id
+                          ? 'border-white/40 bg-white/10'
+                          : 'border-white/10 bg-black/20 hover:border-white/20'
+                      }`}
+                    >
+                      <div
+                        className="w-8 h-8 rounded-full"
+                        style={{
+                          backgroundColor: accent.color,
+                          boxShadow: editFormData.dashboardAccent === accent.id
+                            ? `0 0 12px ${accent.color}80, 0 0 24px ${accent.color}40`
+                            : 'none',
+                        }}
+                      />
+                      <span
+                        className="text-xs font-medium"
+                        style={{
+                          color: editFormData.dashboardAccent === accent.id ? accent.color : 'rgba(229,228,221,0.6)',
+                        }}
+                      >
+                        {accent.label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Password Change Section */}
