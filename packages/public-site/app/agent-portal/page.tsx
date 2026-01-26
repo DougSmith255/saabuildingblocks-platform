@@ -880,7 +880,14 @@ function AgentPortal() {
   // Delayed background fade for blur dissolve effect
   const [isBackgroundFadingOut, setIsBackgroundFadingOut] = useState(false);
   // Show loading screen for all users (PWA and browser) to load everything upfront
-  const [showLoadingScreen, setShowLoadingScreen] = useState(true);
+  // Skip loading screen on soft refresh if we've already loaded this session AND have cached user data
+  const [showLoadingScreen, setShowLoadingScreen] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const hasLoadedThisSession = sessionStorage.getItem('agent_portal_loaded') === 'true';
+    const hasCachedUser = !!localStorage.getItem('agent_portal_user');
+    // Skip loading screen only if both conditions are true
+    return !(hasLoadedThisSession && hasCachedUser);
+  });
   // Detect if running as installed PWA (hide download button if true)
   const [isRunningAsPWA, setIsRunningAsPWA] = useState(() => {
     if (typeof window === 'undefined') return false;
@@ -1057,7 +1064,13 @@ function AgentPortal() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Minimum loading screen display time (3 seconds for all users)
+  // Only run timer if loading screen is actually being shown
   useEffect(() => {
+    if (!showLoadingScreen) {
+      // If loading screen was skipped (session already loaded), mark as elapsed immediately
+      setMinLoadTimeElapsed(true);
+      return;
+    }
     console.log('[Loading Screen] Starting 3 second timer');
     const timer = setTimeout(() => {
       console.log('[Loading Screen] 3 seconds elapsed, setting minLoadTimeElapsed=true');
@@ -1082,7 +1095,7 @@ function AgentPortal() {
     }
   }, [searchParams]);
 
-  // Preload all app data during loading screen
+  // Preload all app data during loading screen (or background preload if loading screen was skipped)
   useEffect(() => {
     console.log('[Loading Screen] Preload effect running, showLoadingScreen=', showLoadingScreen);
     if (showLoadingScreen) {
@@ -1123,6 +1136,18 @@ function AgentPortal() {
         console.log('[Loading Screen] preloadAppData error, setting isLoading=false', err);
         setIsLoading(false);
       });
+    } else {
+      // Loading screen was skipped (session already loaded) - do background preload of agent page data
+      // User data is already loaded from localStorage, just need agent page data for smoother tab switching
+      console.log('[Background] Loading screen skipped, doing background preload');
+      preloadAppData().then((result) => {
+        if (result.agentPageData) {
+          setPreloadedAgentPageData(result.agentPageData);
+          console.log('[Background] Agent page data preloaded');
+        }
+      }).catch(() => {
+        // Silently ignore - sections will load their own data if needed
+      });
     }
   }, []); // Only run once on mount
 
@@ -1139,6 +1164,8 @@ function AgentPortal() {
       const hideTimer = setTimeout(() => {
         console.log('[Loading Screen] ✓ Removing loading screen');
         setShowLoadingScreen(false);
+        // Mark that we've loaded this session - skip loading screen on soft refresh
+        sessionStorage.setItem('agent_portal_loaded', 'true');
       }, 600);
 
       return () => clearTimeout(hideTimer);
