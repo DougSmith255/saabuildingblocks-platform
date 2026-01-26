@@ -8860,11 +8860,14 @@ function NewAgentsSection() {
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors">
+                    <h4
+                      className="font-medium text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors"
+                      style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
+                    >
                       {doc.title}
                     </h4>
                     {doc.description && (
-                      <p className="text-sm text-[#dcdbd5]/70 mt-0.5">{doc.description}</p>
+                      <p className="text-sm text-[#dcdbd5]/70 mt-0.5" style={{ fontFamily: 'var(--font-amulya, sans-serif)' }}>{doc.description}</p>
                     )}
                   </div>
                   <ChevronRight className="w-5 h-5 text-[#e5e4dd]/40 group-hover:text-[#ffd700] transition-colors flex-shrink-0" />
@@ -13829,7 +13832,7 @@ function DownloadSection() {
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(false)}
-                className="relative z-10 w-[130px] py-2.5 rounded-full text-sm font-bold transition-colors duration-300 text-center"
+                className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 text-center"
                 style={{
                   fontFamily: 'var(--font-synonym, sans-serif)',
                   color: !showIOSInstructions ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -13840,7 +13843,7 @@ function DownloadSection() {
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(true)}
-                className="relative z-10 w-[130px] py-2.5 rounded-full text-sm font-bold transition-colors duration-300 text-center"
+                className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 text-center"
                 style={{
                   fontFamily: 'var(--font-synonym, sans-serif)',
                   color: showIOSInstructions ? '#ffffff' : 'rgba(255,255,255,0.6)'

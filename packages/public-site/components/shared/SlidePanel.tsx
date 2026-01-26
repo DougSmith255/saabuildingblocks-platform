@@ -53,8 +53,10 @@ export function SlidePanel({
   const [isClosing, setIsClosing] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const touchStartRef = useRef<{ x: number; y: number; scrollTop: number } | null>(null);
+  const prevIsOpenRef = useRef(isOpen);
 
   const SWIPE_THRESHOLD = 80;
   const ANIMATION_DURATION = 250;
@@ -63,6 +65,28 @@ export function SlidePanel({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Detect when isOpen changes from true to false (parent triggered close)
+  // and play closing animation before fully hiding
+  useEffect(() => {
+    if (prevIsOpenRef.current && !isOpen && !isClosing) {
+      // isOpen went from true to false - trigger closing animation
+      setIsClosing(true);
+      setShouldRender(true);
+      const timer = setTimeout(() => {
+        setIsClosing(false);
+        setShouldRender(false);
+      }, ANIMATION_DURATION);
+      prevIsOpenRef.current = isOpen;
+      return () => clearTimeout(timer);
+    }
+
+    if (isOpen) {
+      setShouldRender(true);
+    }
+
+    prevIsOpenRef.current = isOpen;
+  }, [isOpen, isClosing]);
 
   // Size classes for desktop width
   const sizeClasses = {
@@ -166,12 +190,12 @@ export function SlidePanel({
   };
 
   // Don't render anything if never opened or not mounted (SSR safety)
-  if (!mounted || (!hasBeenOpened && !isOpen)) {
+  if (!mounted || (!hasBeenOpened && !isOpen && !shouldRender)) {
     return null;
   }
 
-  // Don't render if closed and not closing animation
-  if (!isOpen && !isClosing) {
+  // Don't render if closed and not closing animation and not in shouldRender state
+  if (!isOpen && !isClosing && !shouldRender) {
     return null;
   }
 
@@ -357,7 +381,7 @@ export function SlidePanel({
                     {title}
                   </h2>
                   {subtitle && (
-                    <p className="text-sm text-[#e5e4dd]/60">{subtitle}</p>
+                    <p className="text-sm text-[#e5e4dd]/60" style={{ fontFamily: 'var(--font-amulya, sans-serif)' }}>{subtitle}</p>
                   )}
                 </div>
               </div>
