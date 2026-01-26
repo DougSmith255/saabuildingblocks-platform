@@ -981,6 +981,8 @@ function AgentPortal() {
   const [showAgentAttractionHelpModal, setShowAgentAttractionHelpModal] = useState(false);
   const [isCompletingOnboarding, setIsCompletingOnboarding] = useState(false);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
+  const [isOnboardingTransitioning, setIsOnboardingTransitioning] = useState(false); // Prevents instant redirect during completion animation
+  const [forceShowOnboarding, setForceShowOnboarding] = useState(false); // Allows viewing completed onboarding from Edit Profile
   const [showEliteCoursesHelpModal, setShowEliteCoursesHelpModal] = useState(false);
   const [showEliteCoursesIntroModal, setShowEliteCoursesIntroModal] = useState(false);
   const [showSupportHelpModal, setShowSupportHelpModal] = useState(false);
@@ -1251,7 +1253,7 @@ function AgentPortal() {
     setOnboardingProgress(newProgress);
 
     try {
-      const response = await fetch('https://saabuildingblocks.com/api/users/onboarding', {
+      await fetch('https://saabuildingblocks.com/api/users/onboarding', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1259,10 +1261,8 @@ function AgentPortal() {
           onboarding_progress: newProgress,
         }),
       });
-      const data = await response.json();
-      if (data.success && data.data) {
-        setOnboardingCompletedAt(data.data.onboarding_completed_at || null);
-      }
+      // NOTE: Don't set onboardingCompletedAt here - only the explicit "Finish" button should complete onboarding
+      // This prevents auto-completion when the last checkbox is checked
     } catch (err) {
       console.error('[Onboarding] Failed to update progress:', err);
     }
@@ -1303,11 +1303,19 @@ function AgentPortal() {
   const dashboardAccentColor = user?.dashboardAccent || '#ffd700';
 
   // Redirect to dashboard if onboarding is complete and user is on onboarding tab
+  // But NOT during completion transition animation, or when forceShowOnboarding is true
   useEffect(() => {
-    if (isOnboardingComplete && activeSection === 'onboarding') {
+    if (isOnboardingComplete && activeSection === 'onboarding' && !isOnboardingTransitioning && !forceShowOnboarding) {
       setActiveSection('dashboard');
     }
-  }, [isOnboardingComplete, activeSection]);
+  }, [isOnboardingComplete, activeSection, isOnboardingTransitioning, forceShowOnboarding]);
+
+  // Reset forceShowOnboarding when navigating away from onboarding section
+  useEffect(() => {
+    if (activeSection !== 'onboarding' && forceShowOnboarding) {
+      setForceShowOnboarding(false);
+    }
+  }, [activeSection, forceShowOnboarding]);
   // Show one-time intro modals when navigating to Link Page or Elite Courses for the first time
 
   // Disable body scroll and hide scrollbar when modal is open
@@ -1442,6 +1450,7 @@ function AgentPortal() {
 
   const handleCompleteOnboarding = async () => {
     setIsCompletingOnboarding(true);
+    setIsOnboardingTransitioning(true); // Prevent instant redirect
 
     try {
       // Check if all steps are complete
@@ -1450,6 +1459,7 @@ function AgentPortal() {
       if (!allComplete) {
         alert('Please complete all onboarding steps first!');
         setIsCompletingOnboarding(false);
+        setIsOnboardingTransitioning(false);
         return;
       }
 
@@ -1463,6 +1473,7 @@ function AgentPortal() {
         body: JSON.stringify({
           userId: user?.id,
           onboarding_progress: onboardingProgress,
+          complete_onboarding: true, // Explicit flag to mark complete
         }),
       });
 
@@ -1471,17 +1482,19 @@ function AgentPortal() {
         setOnboardingCompletedAt(data.onboarding_completed_at);
         setShowCompletionModal(true);
 
-        // After 2 seconds, start fade-out transition
+        // After 2.5 seconds, start fade-out transition to dashboard
         setTimeout(() => {
           setShowCompletionModal(false);
-          // Fade-out will be handled by CSS transition
+          // Smooth fade-out before transitioning
           setTimeout(() => {
             setActiveSection('dashboard');
-          }, 800); // Allow fade-out to complete
-        }, 2000);
+            setIsOnboardingTransitioning(false);
+          }, 500); // Short delay for smooth transition
+        }, 2500);
       }
     } catch (error) {
       console.error('Error completing onboarding:', error);
+      setIsOnboardingTransitioning(false);
     } finally {
       setIsCompletingOnboarding(false);
     }
@@ -2846,7 +2859,7 @@ function AgentPortal() {
 
             {/* Profile Section (Mobile) - Inline Edit Form */}
             {activeSection === 'profile' && (
-              <div className="space-y-6 px-1 sm:px-2 pb-8">
+              <div className="space-y-6 px-1 sm:px-2 pb-2">
                 {/* Profile Picture Section */}
                 <div className="flex flex-col items-center">
                   <button
@@ -2963,46 +2976,6 @@ function AgentPortal() {
                       className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
                       placeholder="your@email.com"
                     />
-                  </div>
-
-                  {/* Dashboard Accent Color */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
-                      Dashboard Accent Color
-                    </label>
-                    <p className="text-xs text-[#e5e4dd]/50 mb-3">Personalize your dashboard with a theme color</p>
-                    <div className="flex gap-2">
-                      {DASHBOARD_ACCENT_COLORS.map((accent) => (
-                        <button
-                          key={accent.id}
-                          type="button"
-                          onClick={() => setEditFormData({ ...editFormData, dashboardAccent: accent.id })}
-                          className={`flex-1 flex flex-col items-center gap-1.5 py-2 px-1 rounded-lg border-2 transition-all ${
-                            editFormData.dashboardAccent === accent.id
-                              ? 'border-white/40 bg-white/10'
-                              : 'border-white/10 bg-black/20'
-                          }`}
-                        >
-                          <div
-                            className="w-6 h-6 rounded-full"
-                            style={{
-                              backgroundColor: accent.color,
-                              boxShadow: editFormData.dashboardAccent === accent.id
-                                ? `0 0 10px ${accent.color}80`
-                                : 'none',
-                            }}
-                          />
-                          <span
-                            className="text-[10px] font-medium"
-                            style={{
-                              color: editFormData.dashboardAccent === accent.id ? accent.color : 'rgba(229,228,221,0.6)',
-                            }}
-                          >
-                            {accent.label}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
                   </div>
 
                   {/* Password Change Section */}
@@ -3414,45 +3387,6 @@ function AgentPortal() {
                 </div>
               </div>
 
-              {/* Dashboard Accent Color - full width */}
-              <div>
-                <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-1.5">
-                  Dashboard Accent Color
-                </label>
-                <div className="flex gap-2">
-                  {DASHBOARD_ACCENT_COLORS.map((accent) => (
-                    <button
-                      key={accent.id}
-                      type="button"
-                      onClick={() => setEditFormData({ ...editFormData, dashboardAccent: accent.id })}
-                      className={`flex-1 flex flex-col items-center gap-1.5 py-2 px-1.5 rounded-lg border-2 transition-all ${
-                        editFormData.dashboardAccent === accent.id
-                          ? 'border-white/40 bg-white/10'
-                          : 'border-white/10 bg-black/20 hover:border-white/20'
-                      }`}
-                    >
-                      <div
-                        className="w-6 h-6 rounded-full"
-                        style={{
-                          backgroundColor: accent.color,
-                          boxShadow: editFormData.dashboardAccent === accent.id
-                            ? `0 0 10px ${accent.color}80, 0 0 20px ${accent.color}40`
-                            : 'none',
-                        }}
-                      />
-                      <span
-                        className="text-[10px] font-medium"
-                        style={{
-                          color: editFormData.dashboardAccent === accent.id ? accent.color : 'rgba(229,228,221,0.6)',
-                        }}
-                      >
-                        {accent.label}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Password Change Section - 2-column on desktop */}
               <div className="pt-3 border-t border-white/10">
                 <p className="text-sm font-medium text-[#e5e4dd]/80 mb-3">Change Password <span className="text-[#e5e4dd]/50 font-normal">(optional)</span></p>
@@ -3564,6 +3498,34 @@ function AgentPortal() {
               {editFormSuccess && (
                 <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
                   {editFormSuccess}
+                </div>
+              )}
+
+              {/* View Onboarding Process - Only shown after onboarding is complete */}
+              {isOnboardingComplete && (
+                <div className="pt-4 border-t border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForceShowOnboarding(true);
+                      setShowEditProfile(false);
+                      setActiveSection('onboarding');
+                    }}
+                    className="w-full flex items-center justify-between px-4 py-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                      </svg>
+                      <div className="text-left">
+                        <p className="font-medium text-sm">View Onboarding Process</p>
+                        <p className="text-xs text-[#ffd700]/60">Review your completed setup steps</p>
+                      </div>
+                    </div>
+                    <svg className="w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
                 </div>
               )}
 
@@ -10285,35 +10247,28 @@ function AgentPagesSection({
                   <span className="text-xs text-[#e5e4dd]/50">Agent Attraction Page</span>
                 </div>
               </div>
-              <div className="relative w-full overflow-hidden" style={{ height: '500px' }}>
-                {/* Star Field Background - matches Link Page preview style */}
+              <div className="relative w-full overflow-hidden" style={{ height: '500px', background: 'radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%)' }}>
+                {/* Static star dots - CSS-only star field matching main site */}
                 <div
-                  className="absolute inset-0 overflow-hidden"
+                  className="absolute inset-0 pointer-events-none"
                   style={{
                     background: `
-                      radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.4) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.35) 0%, transparent 100%),
-                      radial-gradient(1.5px 1.5px at 50px 160px, rgba(255,255,255,0.5) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.3) 0%, transparent 100%),
-                      radial-gradient(1.5px 1.5px at 130px 80px, rgba(255,255,255,0.45) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.35) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 20px 200px, rgba(255,255,255,0.3) 0%, transparent 100%),
-                      radial-gradient(1.5px 1.5px at 100px 250px, rgba(255,255,255,0.5) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 180px 300px, rgba(255,255,255,0.4) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 60px 350px, rgba(255,255,255,0.35) 0%, transparent 100%),
-                      radial-gradient(1.5px 1.5px at 140px 380px, rgba(255,255,255,0.45) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 30px 420px, rgba(255,255,255,0.3) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 200px 450px, rgba(255,255,255,0.35) 0%, transparent 100%),
-                      radial-gradient(1.5px 1.5px at 80px 500px, rgba(255,255,255,0.5) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 170px 530px, rgba(255,255,255,0.4) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 110px 180px, rgba(255,255,255,0.3) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 220px 220px, rgba(255,255,255,0.35) 0%, transparent 100%),
-                      radial-gradient(1.5px 1.5px at 250px 100px, rgba(255,255,255,0.45) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 240px 340px, rgba(255,255,255,0.3) 0%, transparent 100%),
-                      radial-gradient(1px 1px at 270px 480px, rgba(255,255,255,0.35) 0%, transparent 100%),
-                      linear-gradient(to bottom, rgb(18, 18, 18) 0%, rgb(35, 35, 35) 100%)
+                      radial-gradient(1.5px 1.5px at 30px 40px, white, transparent),
+                      radial-gradient(1px 1px at 60px 90px, rgba(255,255,255,0.8), transparent),
+                      radial-gradient(1.5px 1.5px at 140px 50px, rgba(255,255,255,0.6), transparent),
+                      radial-gradient(1px 1px at 200px 100px, white, transparent),
+                      radial-gradient(1px 1px at 250px 40px, rgba(255,255,255,0.7), transparent),
+                      radial-gradient(0.5px 0.5px at 100px 130px, rgba(255,255,255,0.5), transparent),
+                      radial-gradient(1px 1px at 180px 180px, rgba(255,255,255,0.4), transparent),
+                      radial-gradient(1.5px 1.5px at 70px 250px, rgba(255,255,255,0.6), transparent),
+                      radial-gradient(1px 1px at 230px 200px, rgba(255,255,255,0.5), transparent),
+                      radial-gradient(1px 1px at 40px 350px, rgba(255,255,255,0.7), transparent),
+                      radial-gradient(0.5px 0.5px at 200px 320px, rgba(255,255,255,0.4), transparent),
+                      radial-gradient(1.5px 1.5px at 120px 400px, rgba(255,255,255,0.6), transparent),
+                      radial-gradient(1px 1px at 260px 380px, rgba(255,255,255,0.5), transparent),
+                      radial-gradient(0.5px 0.5px at 80px 450px, rgba(255,255,255,0.4), transparent)
                     `,
-                    pointerEvents: 'none',
+                    opacity: 0.5,
                   }}
                 />
                 {pageData?.activated && (generatedSlug || pageData?.slug) ? (
@@ -11397,7 +11352,7 @@ return (
                           className="w-full py-2.5 px-3 rounded-lg relative"
                           style={{
                             backgroundColor: isDefault
-                              ? `${linksSettings.accentColor}55` // ~33% opacity for default button (slightly more visible)
+                              ? `${linksSettings.accentColor}70` // ~44% opacity for default button (more visible)
                               : linksSettings.accentColor,
                             border: isDefault
                               ? `2px solid ${linksSettings.accentColor}` // Solid border for default
@@ -13820,61 +13775,137 @@ function DownloadSection() {
           <p className="text-sm text-[#e5e4dd]/60">Smart Agent Alliance</p>
         </div>
 
-        {/* FIX-009: Installation Instructions (always visible) */}
-        <div className="space-y-5">
-          <p className="text-center text-sm text-[#e5e4dd]/70 mb-4">
+        {/* Installation Instructions with Browser Tabs */}
+        <div className="space-y-4">
+          <p className="text-center text-sm text-[#e5e4dd]/70">
             Install the SAA Portal as an app on your device for the best experience.
           </p>
 
-          {/* iOS/Safari Instructions */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 mb-2">
-              <svg className="w-5 h-5 text-[#22c55e]" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-              </svg>
-              <p className="text-sm text-[#22c55e] font-semibold" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
-                iPhone / iPad / Mac (Safari)
-              </p>
-            </div>
-            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-              <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">1</div>
-              <p className="text-sm text-[#e5e4dd]/80">Tap the <span className="text-[#007AFF] font-medium">Share</span> button <span className="text-[#007AFF]">⬆</span> at the bottom of Safari</p>
-            </div>
-            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-              <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">2</div>
-              <p className="text-sm text-[#e5e4dd]/80">Scroll down and select <span className="text-[#22c55e] font-medium">&quot;Add to Home Screen&quot;</span></p>
-            </div>
-            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-              <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">3</div>
-              <p className="text-sm text-[#e5e4dd]/80">Tap <span className="text-[#22c55e] font-medium">&quot;Add&quot;</span> in the top right corner</p>
+          {/* Browser Tab Selector - Pill Style */}
+          <div className="flex justify-center">
+            <div className="inline-flex p-1 rounded-full bg-black/30 border border-white/10">
+              <button
+                type="button"
+                onClick={() => setShowIOSInstructions(false)}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                  !showIOSInstructions
+                    ? 'bg-[#ffd700] text-[#1a1a1a]'
+                    : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
+                }`}
+              >
+                Chrome
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowIOSInstructions(true)}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                  showIOSInstructions
+                    ? 'bg-[#007AFF] text-white'
+                    : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
+                }`}
+              >
+                Safari
+              </button>
             </div>
           </div>
 
-          <div className="border-t border-white/10" />
+          {/* Chrome Instructions */}
+          {!showIOSInstructions && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Phone Column */}
+              <div className="p-3 rounded-xl bg-black/20 border border-[#ffd700]/20">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                    <line x1="12" y1="18" x2="12.01" y2="18"/>
+                  </svg>
+                  <span className="text-sm font-semibold text-[#ffd700]">Phone</span>
+                </div>
+                <div className="space-y-2 text-sm text-[#e5e4dd]/80">
+                  <div className="flex gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+                    <p>Tap <span className="text-[#ffd700] font-medium">⋮</span> (three dots) in top right</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+                    <p>Scroll down, tap <span className="text-[#ffd700] font-medium">&quot;Add to Home screen&quot;</span></p>
+                  </div>
+                </div>
+              </div>
+              {/* Desktop Column */}
+              <div className="p-3 rounded-xl bg-black/20 border border-[#ffd700]/20">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                  </svg>
+                  <span className="text-sm font-semibold text-[#ffd700]">Desktop</span>
+                </div>
+                <div className="space-y-2 text-sm text-[#e5e4dd]/80">
+                  <div className="flex gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+                    <p>Look for <span className="text-[#ffd700] font-medium">⊕</span> in address bar (right side)</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+                    <p>Or: <span className="text-[#ffd700] font-medium">⋮</span> menu → <span className="text-[#ffd700] font-medium">&quot;Install app&quot;</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
-          {/* Android/PC Chrome/Edge Instructions */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 mb-2">
-              <svg className="w-5 h-5 text-[#ffd700]" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-              </svg>
-              <p className="text-sm text-[#ffd700] font-semibold" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
-                Android / Windows / Linux (Chrome / Edge)
-              </p>
+          {/* Safari Instructions */}
+          {showIOSInstructions && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Phone Column */}
+              <div className="p-3 rounded-xl bg-black/20 border border-[#007AFF]/20">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg className="w-4 h-4 text-[#007AFF]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                    <line x1="12" y1="18" x2="12.01" y2="18"/>
+                  </svg>
+                  <span className="text-sm font-semibold text-[#007AFF]">iPhone / iPad</span>
+                </div>
+                <div className="space-y-2 text-sm text-[#e5e4dd]/80">
+                  <div className="flex gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+                    <p>Tap <span className="text-[#007AFF] font-medium">⬆</span> Share button (bottom)</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+                    <p>Scroll, tap <span className="text-[#007AFF] font-medium">&quot;Add to Home Screen&quot;</span></p>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">3</span>
+                    <p>Tap <span className="text-[#007AFF] font-medium">&quot;Add&quot;</span> (top right)</p>
+                  </div>
+                </div>
+              </div>
+              {/* Desktop Column */}
+              <div className="p-3 rounded-xl bg-black/20 border border-[#007AFF]/20">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg className="w-4 h-4 text-[#007AFF]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                  </svg>
+                  <span className="text-sm font-semibold text-[#007AFF]">Mac</span>
+                </div>
+                <div className="space-y-2 text-sm text-[#e5e4dd]/80">
+                  <div className="flex gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+                    <p>Click <span className="text-[#007AFF] font-medium">File</span> menu</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+                    <p>Select <span className="text-[#007AFF] font-medium">&quot;Add to Dock&quot;</span></p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-              <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">1</div>
-              <p className="text-sm text-[#e5e4dd]/80">Look for the <span className="text-[#ffd700] font-medium">install icon</span> <span className="text-[#ffd700]">⊕</span> in the address bar (right side)</p>
-            </div>
-            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-              <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">2</div>
-              <p className="text-sm text-[#e5e4dd]/80">Or tap the <span className="text-[#ffd700] font-medium">menu</span> <span className="text-[#ffd700]">⋮</span> → <span className="text-[#ffd700] font-medium">&quot;Install app&quot;</span></p>
-            </div>
-            <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-              <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">3</div>
-              <p className="text-sm text-[#e5e4dd]/80">Click <span className="text-[#ffd700] font-medium">&quot;Install&quot;</span> to confirm</p>
-            </div>
-          </div>
+          )}
         </div>
       </GenericCard>
 

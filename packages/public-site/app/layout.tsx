@@ -96,6 +96,14 @@ export const metadata: Metadata = {
     default: 'Smart Agent Alliance - For Agents Who Want More',
     template: '%s | Smart Agent Alliance',
   },
+  icons: {
+    icon: [
+      { url: '/icons/s-logo-1000.png', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   description:
     'Join the Smart Agent Alliance and eXp Realty to build your real estate career with industry-leading commission splits, revenue share, and mentorship from Doug Smart and Karrie Hill.',
   keywords: [

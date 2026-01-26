@@ -6111,11 +6111,10 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
   // Convert backgroundColor to RGB for gradient (star field background)
   const bgRgb = hexToRgb(backgroundColor);
-  // Create very dark version for top of gradient (15% of the color)
-  const bgGradientTop = `rgb(${Math.round(bgRgb.r * 0.15)}, ${Math.round(bgRgb.g * 0.15)}, ${Math.round(bgRgb.b * 0.15)})`;
-  // Create very dark version for bottom (5% of the color, almost black but with hue)
-  const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.05)}, ${Math.round(bgRgb.g * 0.05)}, ${Math.round(bgRgb.b * 0.05)})`;
-
+  // Top of gradient: almost black (matching preview)
+  const bgGradientTop = 'rgb(18, 18, 18)';
+  // Bottom of gradient: lighter color-tinted (15% of accent color for subtle glow)
+  const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.15)}, ${Math.round(bgRgb.g * 0.15)}, ${Math.round(bgRgb.b * 0.15)})`;
   // Higher threshold version for button link icons (more likely to be white)
   // Uses 0.6 luminance threshold instead of 0.5
   const getButtonIconColor = (hexColor) => {
@@ -6439,8 +6438,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       font-size: 16px;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      /* Star field background - backgroundColor completely replaces the grey gradient */
-      background: radial-gradient(at center bottom, ${bgGradientTop} 0%, ${bgGradientBottom} 100%);
+      /* Star field background - linear gradient dark top to color-tinted bottom (matching preview) */
+      background: linear-gradient(to bottom, ${bgGradientTop} 0%, ${bgGradientBottom} 100%);
       min-height: 100%;
     }
 
