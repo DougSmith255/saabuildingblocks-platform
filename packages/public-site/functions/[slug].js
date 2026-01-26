@@ -6111,10 +6111,10 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
   // Convert backgroundColor to RGB for gradient (star field background)
   const bgRgb = hexToRgb(backgroundColor);
-  // Top of gradient: almost black (matching preview)
-  const bgGradientTop = 'rgb(18, 18, 18)';
-  // Bottom of gradient: lighter color-tinted (15% of accent color for subtle glow)
-  const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.15)}, ${Math.round(bgRgb.g * 0.15)}, ${Math.round(bgRgb.b * 0.15)})`;
+  // Top of gradient: dark but with subtle color tint (10% of background color)
+  const bgGradientTop = `rgb(${Math.round(18 + bgRgb.r * 0.05)}, ${Math.round(18 + bgRgb.g * 0.05)}, ${Math.round(18 + bgRgb.b * 0.05)})`;
+  // Bottom of gradient: visible color glow (40% of background color for noticeable tint)
+  const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.4)}, ${Math.round(bgRgb.g * 0.4)}, ${Math.round(bgRgb.b * 0.4)})`;
   // Higher threshold version for button link icons (more likely to be white)
   // Uses 0.6 luminance threshold instead of 0.5
   const getButtonIconColor = (hexColor) => {

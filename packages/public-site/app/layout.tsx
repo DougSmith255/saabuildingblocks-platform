@@ -98,10 +98,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/icons/s-logo-1000.png', type: 'image/png' },
+      { url: '/icons/s-logo-dark.png', type: 'image/png', sizes: '512x512' },
     ],
+    shortcut: '/icons/s-logo-dark.png',
     apple: [
-      { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/icons/s-logo-dark.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   description:
@@ -216,10 +217,9 @@ export default async function RootLayout({
           since it's a rare error case. Manual preloads caused duplicate downloads.
         */}
 
-        {/* Favicon and app icons */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        {/* Favicon - using s-logo-dark.png (transparent background, dark S) */}
+        {/* Note: Icons are configured in metadata.icons above, these are fallbacks */}
+        <link rel="icon" href="/icons/s-logo-dark.png" type="image/png" />
 
         {/* Manifest for PWA support */}
         <link rel="manifest" href="/manifest.json" />

@@ -2570,20 +2570,23 @@ function AgentPortal() {
       </nav>
 
       {/* Main Dashboard Layout */}
-      {/* FIX-4: Reduced bottom padding to prevent scroll when content fits above fold */}
-      <div className="max-w-[2500px] mx-auto px-3 sm:px-6 md:px-8 min-[950px]:px-12 pb-0 min-[950px]:pb-4 pt-20 md:pt-28">
+      {/* FIX-4: Minimal bottom padding to prevent scroll when content fits above fold */}
+      <div className="max-w-[2500px] mx-auto px-3 sm:px-6 md:px-8 min-[950px]:px-12 pb-0 min-[950px]:pb-2 pt-20 md:pt-28">
         <div className="flex flex-col min-[950px]:flex-row gap-6">
 
           {/* Sidebar Navigation - Desktop only (1200px+) */}
-          {/* FIX-3a: On Onboarding tab, sidebar scrolls with content (no sticky) */}
+          {/* FIX: Sidebar scrolls with content on Link Page tabs (onboarding, linkpage, templates, agent-attraction) */}
           <aside className="hidden min-[950px]:block w-64 flex-shrink-0">
-            <div className={`${activeSection === 'onboarding' ? '' : 'sticky top-24'} space-y-4`}>
-              {/* User Profile Section */}
+            <div className={`${['onboarding', 'linkpage', 'templates', 'agent-attraction'].includes(activeSection) ? '' : 'sticky top-24'} space-y-4`}>
+              {/* User Profile Section - Premium Glass Card */}
               <div
                 className="rounded-xl p-4"
                 style={{
-                  border: `1px solid ${dashboardAccentColor}30`,
-                  boxShadow: `0 0 20px ${dashboardAccentColor}10, inset 0 1px 0 rgba(255,255,255,0.03)`,
+                  background: `linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%), linear-gradient(to bottom, rgba(18, 18, 18, 0.95), rgba(12, 12, 12, 0.98))`,
+                  backdropFilter: 'blur(12px) saturate(1.4)',
+                  WebkitBackdropFilter: 'blur(12px) saturate(1.4)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  boxShadow: `0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px ${dashboardAccentColor}08, inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 0 rgba(0,0,0,0.2)`,
                 }}
               >
                 {/* Profile Picture */}
@@ -2859,7 +2862,7 @@ function AgentPortal() {
 
             {/* Profile Section (Mobile) - Inline Edit Form */}
             {activeSection === 'profile' && (
-              <div className="space-y-6 px-1 sm:px-2 pb-2">
+              <div className="space-y-6 px-1 sm:px-2 pb-0">
                 {/* Profile Picture Section */}
                 <div className="flex flex-col items-center">
                   <button
@@ -3240,7 +3243,7 @@ function AgentPortal() {
         title="Edit Profile"
         subtitle="Update your profile information"
         icon={<User className="w-5 h-5 text-[#ffd700]" />}
-        size="xl"
+        size="md"
         footer={
           <div className="flex gap-3">
             <button
@@ -8877,7 +8880,7 @@ function NewAgentsSection() {
       <Modal
         isOpen={selectedDocument !== null}
         onClose={handleCloseModal}
-        size="xl"
+        size="md"
       >
         {selectedDocument && selectedCategory && (
           <div className="space-y-4">
@@ -11352,7 +11355,7 @@ return (
                           className="w-full py-2.5 px-3 rounded-lg relative"
                           style={{
                             backgroundColor: isDefault
-                              ? `${linksSettings.accentColor}70` // ~44% opacity for default button (more visible)
+                              ? `${linksSettings.accentColor}60` // ~37% opacity for default button
                               : linksSettings.accentColor,
                             border: isDefault
                               ? `2px solid ${linksSettings.accentColor}` // Solid border for default
@@ -13781,15 +13784,24 @@ function DownloadSection() {
             Install the SAA Portal as an app on your device for the best experience.
           </p>
 
-          {/* Browser Tab Selector - Pill Style */}
+          {/* Browser Tab Selector - Animated Pill Style */}
           <div className="flex justify-center">
-            <div className="inline-flex p-1 rounded-full bg-black/30 border border-white/10">
+            <div className="relative inline-flex p-1 rounded-full bg-black/30 border border-white/10">
+              {/* Animated sliding pill background */}
+              <div
+                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out"
+                style={{
+                  left: showIOSInstructions ? 'calc(50% + 2px)' : '4px',
+                  right: showIOSInstructions ? '4px' : 'calc(50% + 2px)',
+                  backgroundColor: showIOSInstructions ? '#007AFF' : '#ffd700',
+                }}
+              />
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(false)}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                className={`relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 ${
                   !showIOSInstructions
-                    ? 'bg-[#ffd700] text-[#1a1a1a]'
+                    ? 'text-[#1a1a1a]'
                     : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
                 }`}
               >
@@ -13798,9 +13810,9 @@ function DownloadSection() {
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(true)}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                className={`relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 ${
                   showIOSInstructions
-                    ? 'bg-[#007AFF] text-white'
+                    ? 'text-white'
                     : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
                 }`}
               >
@@ -13845,7 +13857,7 @@ function DownloadSection() {
                 <div className="space-y-2 text-sm text-[#e5e4dd]/80">
                   <div className="flex gap-2">
                     <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
-                    <p>Look for <span className="text-[#ffd700] font-medium">⊕</span> in address bar (right side)</p>
+                    <p>Look for <svg className="inline-block w-4 h-4 text-[#ffd700] align-text-bottom" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M12 10v4m0 0l-2-2m2 2l2-2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> install icon in address bar</p>
                   </div>
                   <div className="flex gap-2">
                     <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
