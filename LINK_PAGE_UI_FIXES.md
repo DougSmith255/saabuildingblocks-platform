@@ -445,3 +445,195 @@ Phase 6: In Progress (11 fixes - Layout & Functionality)
 - **Add minimum margin below name** - When no intermediate elements, ensure H1 has adequate space before link buttons
 - Create consistent vertical rhythm throughout the preview section
 
+---
+
+## Phase 7 Fixes (Current)
+
+| # | Fix | Status | Details |
+|---|-----|--------|---------|
+| 1 | Dashboard profile container border | PENDING | Has glow but NO hard visible border line - see TROUBLESHOOTING section below |
+| 2 | Edit Profile SlidePanel 2-column layout | PENDING | Desktop has scrollbar but shouldn't need to scroll - use 2 columns |
+| 3 | Tab scrollable space excess | PENDING | All tab UIs fit above fold but page still scrolls to empty space |
+| 4 | Star gradient direction | PENDING | Should go from selected color to LIGHTER variant (not darker) |
+| 5 | Down arrow switch disabled state | PENDING | Still not working on page load - see TROUBLESHOOTING section in code |
+| 6 | Default button inner color transparency | PENDING | Make slightly more transparent (currently 85% opacity) |
+| 7 | Social links and bio missing from preview | PENDING | Shows on actual link page but not in preview section |
+| 8 | Color switch threshold unification | PENDING | Button text, S icon, contact icons all switch at different luminance thresholds |
+
+---
+
+## TROUBLESHOOTING: Dashboard Profile Image Container Border (Issue #1)
+
+**ISSUE (Reported 6+ times):**
+The profile image CONTAINER in the main dashboard sidebar is missing a hard visible border line.
+Currently only shows a subtle glow but no actual border.
+
+**LOCATIONS:**
+
+1. **Desktop Sidebar Profile Container** - `page.tsx` line ~2564-2569:
+```tsx
+<div
+  className="rounded-xl p-4"
+  style={{
+    border: `1px solid ${dashboardAccentColor}30`,  // <-- 30% opacity = barely visible
+    boxShadow: `0 0 20px ${dashboardAccentColor}10, inset 0 1px 0 rgba(255,255,255,0.03)`,
+  }}
+>
+```
+
+2. **Desktop Sidebar Profile IMAGE** - `page.tsx` line ~2575-2579:
+```tsx
+<button
+  className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-[3px] transition-colors mb-3 bg-white/5"
+  style={{
+    borderColor: dashboardAccentColor,  // <-- THIS has hard border (3px)
+    boxShadow: `0 0 16px ${dashboardAccentColor}40`,
+  }}
+>
+```
+
+3. **Mobile Profile Section** - Need to locate similar pattern
+
+**CURRENT STATE:**
+- Profile IMAGE button (line 2575): Has `border-[3px]` with `borderColor: dashboardAccentColor` ✓ CORRECT
+- Profile CONTAINER div (line 2564): Has `border: 1px solid ${dashboardAccentColor}30` ✗ TOO SUBTLE
+
+**THE PROBLEM:**
+The CONTAINER has `30` appended to the hex color which means 30% opacity (actually hex 30 = 48/255 = 18.8% opacity).
+This makes the border nearly invisible on dark backgrounds.
+
+**PROPOSED FIX:**
+Change the container border from 30% to higher opacity (60-80%):
+```tsx
+// BEFORE (barely visible):
+border: `1px solid ${dashboardAccentColor}30`
+
+// AFTER (visible hard border):
+border: `1px solid ${dashboardAccentColor}80`  // or 60 for softer
+```
+
+**WHY THIS KEEPS GETTING MISSED:**
+1. The profile IMAGE has a proper border, so it looks "fixed" at first glance
+2. The CONTAINER border is so subtle it's easy to miss
+3. The glow effect creates an illusion of a border
+4. Code search for "border" returns many results, easy to fix wrong one
+
+**VERIFICATION:**
+After fix, the outer rounded container should have a clearly visible border line (not just glow).
+
+---
+
+## TROUBLESHOOTING: Star Background Gradient Direction (Issue #4)
+
+**CURRENT CODE** (`page.tsx` lines 9385-9390):
+```tsx
+const bgRgb = hexToRgb(linksSettings.backgroundColor || '#ffd700');
+// Very dark version for top of gradient (15% of the color)
+const bgGradientTop = `rgb(${Math.round(bgRgb.r * 0.15)}, ${Math.round(bgRgb.g * 0.15)}, ${Math.round(bgRgb.b * 0.15)})`;
+// Very dark version for bottom (5% of the color, almost black but with hue)
+const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.05)}, ${Math.round(bgRgb.g * 0.05)}, ${Math.round(bgRgb.b * 0.05)})`;
+```
+
+**APPLIED AT** (`page.tsx` line ~11063):
+```tsx
+radial-gradient(at center bottom, ${bgGradientTop} 0%, ${bgGradientBottom} 100%)
+```
+
+**CURRENT BEHAVIOR:**
+- Top: 15% of selected color (very dark)
+- Bottom: 5% of selected color (almost black)
+- Result: Dark to darker gradient
+
+**USER WANTS:**
+- One end: The selected background color itself
+- Other end: A LIGHTER version of the selected color
+- Result: Color to lighter-color gradient (NOT darker)
+
+**PROPOSED FIX:**
+```tsx
+// Lighten color by mixing with white
+const lightenColor = (r: number, g: number, b: number, amount: number) => ({
+  r: Math.round(r + (255 - r) * amount),
+  g: Math.round(g + (255 - g) * amount),
+  b: Math.round(b + (255 - b) * amount),
+});
+
+const bgRgb = hexToRgb(linksSettings.backgroundColor || '#ffd700');
+const lighterBg = lightenColor(bgRgb.r, bgRgb.g, bgRgb.b, 0.4); // 40% lighter
+
+// Selected color at bottom, lighter version at top
+const bgGradientTop = `rgb(${lighterBg.r}, ${lighterBg.g}, ${lighterBg.b})`;
+const bgGradientBottom = `rgb(${bgRgb.r}, ${bgRgb.g}, ${bgRgb.b})`;
+```
+
+---
+
+## TROUBLESHOOTING: Color Switch Threshold Unification (Issue #8)
+
+**CURRENT STATE - Multiple different thresholds:**
+
+1. **isColorDark function** (line ~9355-9369):
+   - Formula: `luminance = 0.299*r + 0.587*g + 0.114*b` (r,g,b are 0-255)
+   - Threshold: `luminance < 140`
+   - Used for: Button text color, general dark/light detection
+
+2. **getButtonIconColor function** (line ~9393-9401):
+   - Formula: Same but r,g,b normalized to 0-1 (divided by 255)
+   - Threshold: `luminance < 0.6`
+   - Used for: Button icons (S logo, link icons)
+
+**THRESHOLD COMPARISON:**
+- isColorDark: 140/255 = **0.549** (switches at ~55% luminance)
+- getButtonIconColor: **0.6** (switches at 60% luminance)
+
+**RESULT:**
+Button text switches at 55% luminance, but icons switch at 60% luminance.
+Colors between 55-60% luminance will have mismatched text/icon colors.
+
+**PROPOSED FIX:**
+Unify to single threshold. Use 0.55 (140/255) for all:
+```tsx
+const LUMINANCE_THRESHOLD = 0.55; // Single source of truth
+
+const isColorDark = (hexColor: string): boolean => {
+  const hex = hexColor.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16) / 255;
+  const g = parseInt(hex.substring(2, 4), 16) / 255;
+  const b = parseInt(hex.substring(4, 6), 16) / 255;
+  const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+  return luminance < LUMINANCE_THRESHOLD;
+};
+
+// Remove getButtonIconColor, use isColorDark instead
+const buttonIconColor = isColorDark(linksSettings.accentColor) ? '#ffffff' : '#1a1a1a';
+```
+
+---
+
+## TROUBLESHOOTING: Down Arrow Disabled State (Issue #5)
+
+**See existing troubleshooting section in code at line ~9235**
+
+**SUMMARY:**
+- Disabled condition exists at line ~11764: `disabled={allLinkIds[index + 1] === 'learn-about' || index === allLinkIds.length - 1}`
+- BUT moveLink function (line ~11700) only checks: `currentIndex < allLinkIds.length - 1`
+- Missing check: `allLinkIds[currentIndex + 1] !== 'learn-about'`
+
+**FIX NEEDED in moveLink function:**
+```tsx
+// BEFORE (line ~11700):
+} else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
+
+// AFTER:
+} else if (direction === 'down' && currentIndex < allLinkIds.length - 1 && allLinkIds[currentIndex + 1] !== 'learn-about') {
+```
+
+---
+
+## Phase 6 Completed Fixes (Mark as DONE)
+
+Based on user feedback, marking fixes that were not mentioned as issues:
+- Fix #1-7: All marked DONE in table above
+- Fix #8, #9: Still PENDING (profile upload notification, color image)
+- Fix #10, #11: Marked DONE
+
