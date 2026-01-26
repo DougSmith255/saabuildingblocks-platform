@@ -13875,7 +13875,7 @@ function DownloadSection() {
                 <button
                   type="button"
                   onClick={() => setShowIOSInstructions(false)}
-                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 inline-flex items-center justify-center leading-none"
+                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 grid place-items-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: !showIOSInstructions ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -13886,7 +13886,7 @@ function DownloadSection() {
                 <button
                   type="button"
                   onClick={() => setShowIOSInstructions(true)}
-                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 inline-flex items-center justify-center leading-none"
+                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 grid place-items-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: showIOSInstructions ? '#ffffff' : 'rgba(255,255,255,0.6)'

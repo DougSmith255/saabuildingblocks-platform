@@ -1,11 +1,11 @@
 # Pending UI Fixes
 
-## FIX-1: Pill text centering (Safari-specific)
-Safari text and other pill texts not centered properly.
+## FIX-1: Pill text centering ("Safari" text not centered)
+The text "Safari" inside the Download App pill is not centered, while "Chrome" is.
 - **ATTEMPT 1 (FAILED)**: Changed `text-center` to `flex items-center justify-center` - Made it WORSE
-- **ATTEMPT 2 (REVERTED)**: Reverted all pill buttons back to `text-center` - Still not centered in Safari
-- **ATTEMPT 3 (CURRENT)**: Using `inline-flex items-center justify-center leading-none` - Added explicit line-height control
-- **ROOT CAUSE THEORY**: Safari handles line-height differently than Chrome, causing vertical misalignment
+- **ATTEMPT 2 (REVERTED)**: Reverted all pill buttons back to `text-center` - Still not centered
+- **ATTEMPT 3 (FAILED)**: Using `inline-flex items-center justify-center leading-none` - Still not centered
+- **ATTEMPT 4 (CURRENT)**: Using `grid place-items-center` - Grid centering can be more reliable than flexbox
 
 ## FIX-2: Download App H1 title
 Title missing proper H1 effects.
