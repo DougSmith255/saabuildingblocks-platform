@@ -3195,6 +3195,9 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
 /* ========================================
    3D TRANSFORMS - DESKTOP ONLY (fixes mobile scroll jumping)
    ======================================== */
+/* NOTE: hero-3d-backdrop intentionally has NO 3D transform because
+   combining transform + filter: blur() causes the blur to clip at element bounds.
+   The backdrop is just a blurred gradient - no 3D depth needed. */
 .hero-3d-backdrop {
   transform-style: flat;
   transform: none;
@@ -3207,11 +3210,7 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
 }
 
 @media (min-width: 768px) {
-  .hero-3d-backdrop {
-    transform-style: preserve-3d;
-    transform: translateZ(-70px);
-  }
-
+  /* Only apply 3D transform to the image, NOT the backdrop */
   .hero-3d-image {
     transform-style: preserve-3d;
     transform: translateZ(-50px) rotateX(5deg);
