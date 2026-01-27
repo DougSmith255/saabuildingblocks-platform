@@ -1256,7 +1256,7 @@ function AgentPortal() {
     setOnboardingProgress(newProgress);
 
     try {
-      await fetch(`${API_URL}/api/users/onboarding', {
+      await fetch(`${API_URL}/api/users/onboarding`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1282,7 +1282,7 @@ function AgentPortal() {
     }
 
     try {
-      await fetch(`${API_URL}/api/users/onboarding', {
+      await fetch(`${API_URL}/api/users/onboarding`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1572,7 +1572,7 @@ function AgentPortal() {
         return;
       }
 
-      const response = await fetch(`${API_URL}/api/users/profile', {
+      const response = await fetch(`${API_URL}/api/users/profile`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -1892,7 +1892,7 @@ function AgentPortal() {
       dashboardFormData.append('file', processedBlob, 'profile.png');
       dashboardFormData.append('userId', user.id);
 
-      const dashboardResponse = await fetch(`${API_URL}/api/users/profile-picture', {
+      const dashboardResponse = await fetch(`${API_URL}/api/users/profile-picture`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: dashboardFormData,
@@ -1922,7 +1922,7 @@ function AgentPortal() {
       // If page doesn't exist, create it first
       if (!pageResponse.ok && pageResponse.status === 404) {
         setStatus('Creating your page...');
-        const createResponse = await fetch(`${API_URL}/api/agent-pages', {
+        const createResponse = await fetch(`${API_URL}/api/agent-pages`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1947,7 +1947,7 @@ function AgentPortal() {
           attractionFormData.append('file', processedBlob, 'profile.png');
           attractionFormData.append('pageId', currentPageData.page.id);
 
-          const uploadResponse = await fetch(`${API_URL}/api/agent-pages/upload-image', {
+          const uploadResponse = await fetch(`${API_URL}/api/agent-pages/upload-image`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` },
             body: attractionFormData,
@@ -1972,7 +1972,7 @@ function AgentPortal() {
           colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
           colorFormData.append('pageId', currentPageData.page.id);
 
-          const colorResponse = await fetch(`${API_URL}/api/agent-pages/upload-color-image', {
+          const colorResponse = await fetch(`${API_URL}/api/agent-pages/upload-color-image`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` },
             body: colorFormData,
@@ -2073,7 +2073,7 @@ function AgentPortal() {
       dashboardFormData.append('file', processedBlob, 'profile.png');
       dashboardFormData.append('userId', user!.id);
 
-      const dashboardResponse = await fetch(`${API_URL}/api/users/profile-picture', {
+      const dashboardResponse = await fetch(`${API_URL}/api/users/profile-picture`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: dashboardFormData,
@@ -2103,7 +2103,7 @@ function AgentPortal() {
           attractionFormData.append('file', processedBlob, 'profile.png');
           attractionFormData.append('pageId', pageData.page.id);
 
-          await fetch(`${API_URL}/api/agent-pages/upload-image', {
+          await fetch(`${API_URL}/api/agent-pages/upload-image`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` },
             body: attractionFormData,
@@ -2115,7 +2115,7 @@ function AgentPortal() {
           colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
           colorFormData.append('pageId', pageData.page.id);
 
-          const colorResponse = await fetch(`${API_URL}/api/agent-pages/upload-color-image', {
+          const colorResponse = await fetch(`${API_URL}/api/agent-pages/upload-color-image`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` },
             body: colorFormData,
@@ -9872,7 +9872,7 @@ function AgentPagesSection({
 
       // If page doesn't exist, create it first
       if (!currentPageData) {
-        const createResponse = await fetch(`${API_URL}/api/agent-pages', {
+        const createResponse = await fetch(`${API_URL}/api/agent-pages`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -10095,7 +10095,7 @@ function AgentPagesSection({
       dashboardFormData.append('file', processedBlob, 'profile.png');
       dashboardFormData.append('userId', user.id);
 
-      const dashboardResponse = await fetch(`${API_URL}/api/users/profile-picture', {
+      const dashboardResponse = await fetch(`${API_URL}/api/users/profile-picture`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: dashboardFormData,
@@ -10118,7 +10118,7 @@ function AgentPagesSection({
         attractionFormData.append('file', processedBlob, 'profile.png');
         attractionFormData.append('pageId', pageData.id);
 
-        const response = await fetch(`${API_URL}/api/agent-pages/upload-image', {
+        const response = await fetch(`${API_URL}/api/agent-pages/upload-image`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
           body: attractionFormData,
@@ -10140,7 +10140,7 @@ function AgentPagesSection({
         colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
         colorFormData.append('pageId', pageData.id);
 
-        const colorResponse = await fetch(`${API_URL}/api/agent-pages/upload-color-image', {
+        const colorResponse = await fetch(`${API_URL}/api/agent-pages/upload-color-image`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
           body: colorFormData,
@@ -10186,7 +10186,7 @@ function AgentPagesSection({
 
     try {
       const token = localStorage.getItem('agent_portal_token');
-      const response = await fetch(`${API_URL}/api/agent-pages', {
+      const response = await fetch(`${API_URL}/api/agent-pages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
