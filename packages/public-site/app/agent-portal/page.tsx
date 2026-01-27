@@ -2622,9 +2622,8 @@ function AgentPortal() {
             }} />
           </div>
 
-          {/* Inner L corner - CONCAVE cutout effect */}
-          {/* Using transparent background to let content area show through */}
-          {/* Positioned at exact corner intersection point */}
+          {/* Inner L corner - CONCAVE cutout using radial gradient */}
+          {/* Creates transparent quarter-circle that reveals page background */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2632,11 +2631,33 @@ function AgentPortal() {
               left: '280px',
               width: '24px',
               height: '24px',
-              background: 'red', // DEBUG: red to see positioning
-              borderRadius: '0 0 0 100%',
+              background: 'radial-gradient(circle at 0% 0%, transparent 100%, rgba(14, 14, 14, 0.98) 100%)',
               zIndex: 50,
             }}
           />
+          {/* L-frame inner corner mask - dark element with transparent circular cutout */}
+          <div
+            className="absolute pointer-events-none overflow-hidden"
+            style={{
+              top: '85px',
+              left: '280px',
+              width: '24px',
+              height: '24px',
+              zIndex: 45,
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                top: '-24px',
+                left: '-24px',
+                width: '48px',
+                height: '48px',
+                background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+                borderRadius: '0 0 24px 0',
+              }}
+            />
+          </div>
 
           {/* Top Bar - interactive content area */}
           <div
