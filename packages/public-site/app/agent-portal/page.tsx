@@ -2581,51 +2581,24 @@ function AgentPortal() {
           {/* === L-FRAME: Header bar + Sidebar with curved inner corner === */}
 
           {/* Header bar - full width */}
+          {/* DEBUG: Base = purple, Layer 1 = red, Layer 2 = green, Layer 3 = blue */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
             style={{
-              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-            }}
-          >
-            {/* Glass texture layers */}
-            <div className="absolute inset-0" style={{
-              background: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)',
-            }} />
-            <div className="absolute inset-0" style={{
-              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)',
-            }} />
-            <div className="absolute inset-0" style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-            }} />
-          </div>
-
-          {/* Sidebar - full height, only bottom-right convex corner */}
-          {/* DEBUG: Base = purple, Layer 1 = red, Layer 2 = green, Layer 3 = blue */}
-          <div
-            className="absolute top-0 left-0 bottom-0 w-[280px] pointer-events-none"
-            style={{
-              /* DEBUG: Purple base */
               background: 'purple',
-              borderRadius: '0 0 24px 0',
             }}
           >
-            {/* Glass texture layers - all with matching border-radius */}
-            {/* DEBUG: Layer 1 = Red */}
+            {/* Glass texture layers - DEBUG COLORS */}
             <div className="absolute inset-0" style={{
               background: 'red',
-              borderRadius: '0 0 24px 0',
               opacity: 0.7,
             }} />
-            {/* DEBUG: Layer 2 = Green */}
             <div className="absolute inset-0" style={{
               background: 'green',
-              borderRadius: '0 0 24px 0',
               opacity: 0.7,
             }} />
-            {/* DEBUG: Layer 3 = Blue */}
             <div className="absolute inset-0" style={{
               background: 'blue',
-              borderRadius: '0 0 24px 0',
               opacity: 0.7,
             }} />
           </div>
@@ -2679,18 +2652,18 @@ function AgentPortal() {
           </div>
 
           {/* Left Sidebar - interactive content area (background handled by unified L-shape above) */}
+          {/* DEBUG: Sidebar = orange, Shimmer = cyan */}
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-auto overflow-visible"
-            style={{ background: 'transparent' }}
+            style={{ background: 'orange' }}
           >
-            {/* Shimmer overlay */}
+            {/* Shimmer overlay - DEBUG: Cyan */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 30%, transparent 60%)',
+                background: 'cyan',
                 borderBottomRightRadius: '24px',
                 opacity: 0.7,
-                mixBlendMode: 'overlay',
               }}
             />
 
