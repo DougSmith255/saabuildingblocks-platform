@@ -2842,8 +2842,8 @@ function AgentPortal() {
 
         {/* ===== RIGHT COLUMN: Header bar (desktop) + Content (both) ===== */}
         <div className="flex flex-col flex-1 min-w-0">
-          {/* Header bar with glass effect */}
-          <div className="h-[85px] relative flex-shrink-0">
+          {/* Header bar with glass effect - desktop only (>=950px) */}
+          <div className="hidden min-[950px]:flex h-[85px] relative flex-shrink-0">
             {/* Glass background */}
             <div
               className="absolute inset-0"
