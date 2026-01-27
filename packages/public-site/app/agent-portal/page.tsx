@@ -2579,56 +2579,65 @@ function AgentPortal() {
       {/* Content scrolls within the open part of the L */}
       <div className="hidden min-[950px]:block">
         {/* === FIXED L-FRAME CONTAINER === */}
-        {/* Uses mask to cut a concave circular curve at the inner corner */}
-        <div
-          className="fixed inset-0 z-40 pointer-events-none"
-          style={{
-            maskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 100%, black 100%)',
-            WebkitMaskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 100%, black 100%)',
-          }}
-        >
+        <div className="fixed inset-0 z-40 pointer-events-none">
 
-          {/* === HEADER BAR (Full width top) === */}
-          <div className="absolute top-0 left-0 right-0 h-[85px] overflow-hidden pointer-events-none">
-            {/* Base gradient */}
+          {/* === TOP-LEFT CORNER PIECE === */}
+          {/* This piece fills where header and sidebar would overlap */}
+          {/* Has a 90-degree concave cutout at bottom-right for the inner L corner */}
+          <div
+            className="absolute top-0 left-0 w-[280px] h-[85px] overflow-hidden pointer-events-none"
+            style={{
+              maskImage: 'radial-gradient(circle 24px at 100% 100%, transparent 24px, black 24px)',
+              WebkitMaskImage: 'radial-gradient(circle 24px at 100% 100%, transparent 24px, black 24px)',
+            }}
+          >
             <div className="absolute inset-0" style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
             }} />
-            {/* Corrugated vertical stripes */}
             <div className="absolute inset-0" style={{
               background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
             }} />
-            {/* Scan lines */}
             <div className="absolute inset-0" style={{
               background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
             }} />
-            {/* Shimmer */}
             <div className="absolute inset-0" style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
             }} />
           </div>
 
-          {/* === SIDEBAR (Full height left) === */}
+          {/* === HEADER (Right portion, starts at sidebar edge) === */}
+          <div className="absolute top-0 left-[280px] right-0 h-[85px] overflow-hidden pointer-events-none">
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+            }} />
+            <div className="absolute inset-0" style={{
+              background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
+            }} />
+            <div className="absolute inset-0" style={{
+              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
+            }} />
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+            }} />
+          </div>
+
+          {/* === SIDEBAR (Below header, left side) === */}
           <div
-            className="absolute top-0 left-0 bottom-0 w-[280px] overflow-hidden pointer-events-none"
+            className="absolute top-[85px] left-0 bottom-0 w-[280px] overflow-hidden pointer-events-none"
             style={{ borderBottomRightRadius: '24px' }}
           >
-            {/* Base gradient */}
             <div className="absolute inset-0" style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
               borderBottomRightRadius: '24px',
             }} />
-            {/* Corrugated vertical stripes */}
             <div className="absolute inset-0" style={{
               background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
               borderBottomRightRadius: '24px',
             }} />
-            {/* Scan lines */}
             <div className="absolute inset-0" style={{
               background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
               borderBottomRightRadius: '24px',
             }} />
-            {/* Shimmer */}
             <div className="absolute inset-0" style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
               borderBottomRightRadius: '24px',
@@ -2920,21 +2929,44 @@ function AgentPortal() {
           className="relative min-h-full min-[950px]:rounded-tl-[24px] min-[950px]:overflow-clip"
           style={{ background: 'transparent' }}
         >
-          {/* 3D inner edge effect - highlight on top-left curve */}
+          {/* 3D inner edge effect - wraps around the top-left curved corner */}
+          {/* Uses SVG for precise curved corner rendering */}
+          <svg
+            className="hidden min-[950px]:block absolute top-0 left-0 pointer-events-none z-10"
+            width="27"
+            height="27"
+            viewBox="0 0 27 27"
+            fill="none"
+          >
+            {/* Curved corner path - 3px stroke that follows the 24px radius curve */}
+            <path
+              d="M 1.5 27 L 1.5 25.5 A 24 24 0 0 1 25.5 1.5 L 27 1.5"
+              stroke="url(#corner-gradient)"
+              strokeWidth="3"
+              fill="none"
+            />
+            <defs>
+              <linearGradient id="corner-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.12)" />
+                <stop offset="50%" stopColor="rgba(255,255,255,0.15)" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0.08)" />
+              </linearGradient>
+            </defs>
+          </svg>
+          {/* Top edge - extends from corner to right */}
           <div
-            className="hidden min-[950px]:block absolute top-0 left-0 right-0 pointer-events-none z-10"
+            className="hidden min-[950px]:block absolute top-0 left-[24px] right-0 pointer-events-none z-10"
             style={{
               height: '3px',
-              background: 'linear-gradient(90deg, transparent 0px, rgba(255,255,255,0.15) 24px, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%)',
-              borderTopLeftRadius: '24px',
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)',
             }}
           />
+          {/* Left edge - extends from corner to bottom */}
           <div
-            className="hidden min-[950px]:block absolute top-0 left-0 bottom-0 pointer-events-none z-10"
+            className="hidden min-[950px]:block absolute top-[24px] left-0 bottom-0 pointer-events-none z-10"
             style={{
               width: '3px',
-              background: 'linear-gradient(180deg, transparent 0px, rgba(255,255,255,0.12) 24px, rgba(255,255,255,0.04) 50%, transparent 100%)',
-              borderTopLeftRadius: '24px',
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 50%, transparent 100%)',
             }}
           />
         {/* Content Area */}
