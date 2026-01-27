@@ -2581,7 +2581,73 @@ function AgentPortal() {
         {/* === FIXED L-FRAME CONTAINER === */}
         <div className="fixed inset-0 z-40 pointer-events-none">
 
-          {/* === YELLOW VOID MARKER (rendered first, at bottom of stack) === */}
+          {/* === SINGLE L-SHAPED FRAME WITH SVG MASK === */}
+          {/* Using SVG to create the exact L-shape with curved inner corner */}
+          <svg
+            className="absolute top-0 left-0 w-full h-full pointer-events-none"
+            style={{ zIndex: 40 }}
+            preserveAspectRatio="none"
+          >
+            <defs>
+              <clipPath id="l-frame-clip">
+                {/* L-shape: header bar + sidebar with curved inner corner */}
+                <path d={`
+                  M 0 0
+                  L 100% 0
+                  L 100% 85
+                  L 280 85
+                  A 24 24 0 0 1 256 61
+                  L 256 61
+                  L 280 61
+                  L 280 85
+                  L 0 85
+                  L 0 100%
+                  L 280 100%
+                  L 280 85
+                  A 24 24 0 0 0 256 61
+                  L 0 61
+                  Z
+                `} />
+              </clipPath>
+            </defs>
+          </svg>
+
+          {/* Simple approach: Two overlapping rectangles */}
+          {/* Header bar - full width */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
+            style={{ background: 'rgba(255, 0, 0, 0.7)' }}
+          />
+
+          {/* Sidebar - full height */}
+          <div
+            className="absolute top-0 left-0 bottom-0 w-[280px] pointer-events-none"
+            style={{
+              background: 'rgba(0, 100, 255, 0.7)',
+              borderRadius: '0 0 24px 0',
+            }}
+          />
+
+          {/* Inner corner curve - cut out with SVG */}
+          <svg
+            className="absolute pointer-events-none"
+            style={{
+              top: '61px',
+              left: '256px',
+              width: '24px',
+              height: '24px',
+              zIndex: 50,
+            }}
+            viewBox="0 0 24 24"
+          >
+            {/* Quarter circle that masks out the corner */}
+            <path
+              d="M 24 0 A 24 24 0 0 1 0 24 L 24 24 Z"
+              fill="black"
+            />
+          </svg>
+
+          {/* Yellow marker to show where curve should be - ON TOP for debugging */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2590,34 +2656,8 @@ function AgentPortal() {
               width: '24px',
               height: '24px',
               background: 'yellow',
-            }}
-          />
-
-          {/* === TOP-LEFT CORNER PIECE === DEBUG: GREEN */}
-          {/* Using mask-image instead of clip-path for better browser support */}
-          <div
-            className="absolute top-0 left-0 w-[280px] h-[85px] pointer-events-none"
-            style={{
-              background: 'rgba(0, 255, 0, 0.7)',
-              maskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 0px, transparent 24px, black 24px)',
-              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 0px, transparent 24px, black 24px)',
-            }}
-          />
-
-          {/* === HEADER (Right portion) === DEBUG: RED */}
-          <div
-            className="absolute top-0 left-[280px] right-0 h-[85px] pointer-events-none"
-            style={{
-              background: 'rgba(255, 0, 0, 0.7)',
-            }}
-          />
-
-          {/* === SIDEBAR (Below corner piece) === DEBUG: BLUE */}
-          <div
-            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
-            style={{
-              background: 'rgba(0, 100, 255, 0.7)',
-              borderRadius: '0 0 24px 0',
+              zIndex: 100,
+              borderRadius: '0 0 0 24px',
             }}
           />
 
