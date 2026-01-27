@@ -2581,73 +2581,52 @@ function AgentPortal() {
         {/* === FIXED L-FRAME CONTAINER === */}
         <div className="fixed inset-0 z-40 pointer-events-none">
 
-          {/* === SINGLE L-SHAPED FRAME WITH SVG MASK === */}
-          {/* Using SVG to create the exact L-shape with curved inner corner */}
-          <svg
-            className="absolute top-0 left-0 w-full h-full pointer-events-none"
-            style={{ zIndex: 40 }}
-            preserveAspectRatio="none"
-          >
-            <defs>
-              <clipPath id="l-frame-clip">
-                {/* L-shape: header bar + sidebar with curved inner corner */}
-                <path d={`
-                  M 0 0
-                  L 100% 0
-                  L 100% 85
-                  L 280 85
-                  A 24 24 0 0 1 256 61
-                  L 256 61
-                  L 280 61
-                  L 280 85
-                  L 0 85
-                  L 0 100%
-                  L 280 100%
-                  L 280 85
-                  A 24 24 0 0 0 256 61
-                  L 0 61
-                  Z
-                `} />
-              </clipPath>
-            </defs>
-          </svg>
+          {/* === L-FRAME: Header bar + Sidebar with curved inner corner === */}
 
-          {/* Simple approach: Two overlapping rectangles */}
-          {/* Header bar - full width */}
+          {/* Header bar - full width, dark glass effect */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
-            style={{ background: 'rgba(255, 0, 0, 0.7)' }}
-          />
+            style={{
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+            }}
+          >
+            {/* Glass texture layers */}
+            <div className="absolute inset-0" style={{
+              background: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)',
+            }} />
+            <div className="absolute inset-0" style={{
+              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)',
+            }} />
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+            }} />
+          </div>
 
-          {/* Sidebar - full height */}
+          {/* Sidebar - full height, dark glass effect */}
           <div
             className="absolute top-0 left-0 bottom-0 w-[280px] pointer-events-none"
             style={{
-              background: 'rgba(0, 100, 255, 0.7)',
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
               borderRadius: '0 0 24px 0',
             }}
-          />
-
-          {/* Inner corner curve - cut out with SVG */}
-          <svg
-            className="absolute pointer-events-none"
-            style={{
-              top: '61px',
-              left: '256px',
-              width: '24px',
-              height: '24px',
-              zIndex: 50,
-            }}
-            viewBox="0 0 24 24"
           >
-            {/* Quarter circle that masks out the corner */}
-            <path
-              d="M 24 0 A 24 24 0 0 1 0 24 L 24 24 Z"
-              fill="black"
-            />
-          </svg>
+            {/* Glass texture layers */}
+            <div className="absolute inset-0" style={{
+              background: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)',
+              borderRadius: '0 0 24px 0',
+            }} />
+            <div className="absolute inset-0" style={{
+              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)',
+              borderRadius: '0 0 24px 0',
+            }} />
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              borderRadius: '0 0 24px 0',
+            }} />
+          </div>
 
-          {/* Yellow marker to show where curve should be - ON TOP for debugging */}
+          {/* Inner L corner - quarter circle cutout matching background */}
+          {/* This creates the concave curve effect by drawing background color over the overlap */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2655,11 +2634,15 @@ function AgentPortal() {
               left: '256px',
               width: '24px',
               height: '24px',
-              background: 'yellow',
-              zIndex: 100,
-              borderRadius: '0 0 0 24px',
+              background: 'radial-gradient(circle at 0% 0%, transparent 100%, #0a0a0a 100%)',
+              zIndex: 45,
             }}
-          />
+          >
+            {/* SVG quarter circle filled with dark background to create cutout effect */}
+            <svg width="24" height="24" viewBox="0 0 24 24" style={{ display: 'block' }}>
+              <path d="M 0 0 L 24 0 A 24 24 0 0 0 0 24 Z" fill="#0a0a0a" />
+            </svg>
+          </div>
 
           {/* Top Bar - interactive content area */}
           <div
