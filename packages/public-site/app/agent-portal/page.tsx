@@ -6,6 +6,7 @@ import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/compone
 import { API_URL, SITE_URL } from '@/lib/api-config';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
 import { SlidePanel } from '@/components/shared/SlidePanel';
+import SmoothScrollContainer from '@/components/SmoothScrollContainer';
 import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target, MessageSquare, LayoutTemplate, FileText } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
@@ -2906,7 +2907,8 @@ function AgentPortal() {
       {/* ===== CONTENT AREA ===== */}
       {/* On desktop (950px+): positioned to the right of sidebar and below header */}
       {/* On mobile: fills screen with padding for header/nav */}
-      <div
+      {/* SmoothScrollContainer applies Lenis smooth scroll to this container only */}
+      <SmoothScrollContainer
         className="min-[950px]:fixed min-[950px]:top-[85px] min-[950px]:left-[280px] min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto min-[950px]:overflow-x-hidden min-[950px]:z-30 min-[950px]:overscroll-contain"
         style={{ background: 'transparent' }}
       >
@@ -3340,7 +3342,7 @@ function AgentPortal() {
             )}
           </main>
         </div>
-        </div>
+      </SmoothScrollContainer>
 
       {/* ========== Floating Help Buttons - Desktop/Tablet only (hidden on mobile where header has help button) ========== */}
       <div className="hidden min-[950px]:block">
