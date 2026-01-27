@@ -2612,21 +2612,20 @@ function AgentPortal() {
             }}
           />
 
-          {/* === INNER L CORNER CURVE (separate piece) === DEBUG: YELLOW */}
-          {/* This fills the gap between corner piece curve and where header/sidebar meet */}
-          {/* Creates the visual concave corner effect */}
+          {/* === VOID AREA DEBUG: BRIGHT YELLOW === */}
+          {/* This shows where the concave corner void should be */}
+          {/* If the clip-path is working, this yellow should show through the corner piece's cutout */}
           <div
-            className="absolute overflow-hidden pointer-events-none"
+            className="absolute overflow-visible pointer-events-none"
             style={{
               top: '61px',
               left: '256px',
               width: '24px',
               height: '24px',
-              background: 'transparent',
+              background: 'rgba(255, 255, 0, 1)',
+              zIndex: -1,
             }}
-          >
-            {/* This is the void - should show background through */}
-          </div>
+          />
 
           {/* Top Bar - interactive content area */}
           <div
