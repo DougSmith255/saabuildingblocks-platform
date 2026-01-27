@@ -2684,31 +2684,6 @@ function AgentPortal() {
             }}
           />
 
-          {/* Header bottom-right corner - curved shadow */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '61px',
-              right: '0',
-              width: '24px',
-              height: '24px',
-              borderBottomRightRadius: '24px',
-              boxShadow: 'inset -4px -4px 8px rgba(0,0,0,0.5)',
-            }}
-          />
-
-          {/* Sidebar bottom-right corner - curved shadow */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              bottom: '0',
-              left: '256px',
-              width: '24px',
-              height: '24px',
-              borderBottomRightRadius: '24px',
-              boxShadow: 'inset -4px -4px 8px rgba(0,0,0,0.5)',
-            }}
-          />
 
           {/* Top Bar - interactive content area */}
           <div
