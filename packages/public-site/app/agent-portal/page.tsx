@@ -948,27 +948,25 @@ function AgentPortal() {
 
   // Onboarding state
   const [onboardingProgress, setOnboardingProgress] = useState<{
-    step1_welcome_video: boolean;
-    step2_okta_account: boolean;
+    step1_okta_account: boolean;
+    step2_training: boolean;
     step3_broker_tasks: boolean;
     step4_choose_crm: boolean;
-    step5_training: boolean;
-    step6_community: boolean;
-    step7_karrie_session: boolean;
-    step8_link_page: boolean;
-    step9_elite_courses: boolean;
-    step10_download_app: boolean;
+    step5_community: boolean;
+    step6_karrie_session: boolean;
+    step7_link_page: boolean;
+    step8_elite_courses: boolean;
+    step9_download_app: boolean;
   }>({
-    step1_welcome_video: false,
-    step2_okta_account: false,
+    step1_okta_account: false,
+    step2_training: false,
     step3_broker_tasks: false,
     step4_choose_crm: false,
-    step5_training: false,
-    step6_community: false,
-    step7_karrie_session: false,
-    step8_link_page: false,
-    step9_elite_courses: false,
-    step10_download_app: false,
+    step5_community: false,
+    step6_karrie_session: false,
+    step7_link_page: false,
+    step8_elite_courses: false,
+    step9_download_app: false,
   });
   const [onboardingCompletedAt, setOnboardingCompletedAt] = useState<string | null>(null);
   const [linkPageIntroDismissed, setLinkPageIntroDismissed] = useState(false);
@@ -1221,16 +1219,15 @@ function AgentPortal() {
           console.log('[Onboarding] API Response:', data);
           if (data.success && data.data) {
             const progress = data.data.onboarding_progress || {
-              step1_welcome_video: false,
-              step2_okta_account: false,
+              step1_okta_account: false,
+              step2_training: false,
               step3_broker_tasks: false,
               step4_choose_crm: false,
-              step5_training: false,
-              step6_community: false,
-              step7_karrie_session: false,
-              step8_link_page: false,
-              step9_elite_courses: false,
-              step10_download_app: false,
+              step5_community: false,
+              step6_karrie_session: false,
+              step7_link_page: false,
+              step8_elite_courses: false,
+              step9_download_app: false,
             };
             console.log('[Onboarding] Setting progress:', progress);
             console.log('[Onboarding] onboarding_completed_at:', data.data.onboarding_completed_at);
@@ -5721,16 +5718,15 @@ const STATE_BROKER_URLS: Record<string, { name: string; url: string; phone: stri
 
 // Onboarding Section Component
 interface OnboardingProgress {
-  step1_welcome_video: boolean;
-  step2_okta_account: boolean;
+  step1_okta_account: boolean;
+  step2_training: boolean;
   step3_broker_tasks: boolean;
   step4_choose_crm: boolean;
-  step5_training: boolean;
-  step6_community: boolean;
-  step7_karrie_session: boolean;
-  step8_link_page: boolean;
-  step9_elite_courses: boolean;
-  step10_download_app: boolean;
+  step5_community: boolean;
+  step6_karrie_session: boolean;
+  step7_link_page: boolean;
+  step8_elite_courses: boolean;
+  step9_download_app: boolean;
 }
 
 interface OnboardingSectionProps {
@@ -5750,23 +5746,23 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
   // Onboarding steps configuration
   const steps = [
     {
-      key: 'step1_welcome_video' as keyof OnboardingProgress,
+      key: 'step1_okta_account' as keyof OnboardingProgress,
       number: 1,
-      title: 'Watch the Welcome Video',
-      description: 'Get started with eXp Realty by watching the new agent welcome video.',
+      title: 'Activate Your Okta Account',
+      description: 'Set up your Okta account for secure access to eXp systems.',
       content: (
         <div className="space-y-4">
           <p className="text-[#e5e4dd]/80 text-sm">
-            Begin your journey by watching the welcome video that introduces you to eXp Realty and what to expect as a new agent.
+            Okta is your secure gateway to all eXp systems. Follow the tutorial to activate your account.
           </p>
           <a
-            href="https://exptoolkit.com/us-new-exp-agent"
+            href="https://share.synthesia.io/e356900d-e4e2-498b-af44-a45de76f85ce"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
           >
             <Video className="w-4 h-4" />
-            Watch Welcome Video
+            Okta Tutorial Video
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
@@ -5775,40 +5771,37 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       ),
     },
     {
-      key: 'step2_okta_account' as keyof OnboardingProgress,
+      key: 'step2_training' as keyof OnboardingProgress,
       number: 2,
-      title: 'Activate Your Okta Account',
-      description: 'Set up your Okta account for secure access to eXp systems. Scroll down to Step 1 in the "Quick Startup Guide" section of the eXp Toolkit Guide, or go directly to the Okta setup video.',
+      title: 'Sign up and Attend Live Agent Training (ASAP)',
+      description: 'Sign up for and attend the Live Agent Startup session.',
       content: (
         <div className="space-y-4">
           <p className="text-[#e5e4dd]/80 text-sm">
-            Okta is your secure gateway to all eXp systems. Follow the tutorial to activate your account.
+            Sign up for the Live Agent Startup training session - this is required for all new agents.
           </p>
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="https://exptoolkit.com/us-new-exp-agent"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
-            >
-              eXp Toolkit Guide
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-            <a
-              href="https://share.synthesia.io/e356900d-e4e2-498b-af44-a45de76f85ce"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/50 transition-all text-sm"
-            >
-              <Video className="w-4 h-4" />
-              Okta Tutorial Video
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-          </div>
+          <a
+            href="https://www.expuniversity.com/course/realty-live-agent-startup-session"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
+          >
+            Live Agent Startup
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+          <a
+            href="https://www.expuniversity.com/new-to-exp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-3 py-1.5 text-[#e5e4dd]/60 hover:text-[#ffd700] transition-all text-xs"
+          >
+            View full training roadmap
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
         </div>
       ),
     },
@@ -5892,58 +5885,8 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       ),
     },
     {
-      key: 'step5_training' as keyof OnboardingProgress,
+      key: 'step5_community' as keyof OnboardingProgress,
       number: 5,
-      title: 'Complete Required Training (ASAP)',
-      description: 'Complete the Live Agent Startup session and Agent Essentials course.',
-      content: (
-        <div className="space-y-4">
-          <p className="text-[#e5e4dd]/80 text-sm">
-            Complete these trainings in order - Live Agent Startup first, then Agent Essentials.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="https://www.expuniversity.com/course/realty-live-agent-startup-session"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
-            >
-              <span className="bg-[#ffd700]/20 text-[#ffd700] text-xs px-1.5 py-0.5 rounded font-bold">1</span>
-              Live Agent Startup
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-            <a
-              href="https://www.expuniversity.com/course/agentessentials"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
-            >
-              <span className="bg-[#ffd700]/20 text-[#ffd700] text-xs px-1.5 py-0.5 rounded font-bold">2</span>
-              Agent Essentials
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-          </div>
-          <a
-            href="https://www.expuniversity.com/new-to-exp"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-3 py-1.5 text-[#e5e4dd]/60 hover:text-[#ffd700] transition-all text-xs"
-          >
-            View full training roadmap
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
-        </div>
-      ),
-    },
-    {
-      key: 'step6_community' as keyof OnboardingProgress,
-      number: 6,
       title: 'Plug Into Training & Community',
       description: 'Review the events calendar and attend an eXp World Tour session.',
       content: (
@@ -5967,8 +5910,8 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       ),
     },
     {
-      key: 'step7_karrie_session' as keyof OnboardingProgress,
-      number: 7,
+      key: 'step6_karrie_session' as keyof OnboardingProgress,
+      number: 6,
       title: '1-on-1 Onboarding Session with Karrie',
       description: 'Schedule an optional personalized onboarding session.',
       isOptional: true,
@@ -5988,8 +5931,8 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       ),
     },
     {
-      key: 'step8_link_page' as keyof OnboardingProgress,
-      number: 8,
+      key: 'step7_link_page' as keyof OnboardingProgress,
+      number: 7,
       title: 'Set Up Your Link Page',
       description: 'Complete your Profile, Design, Connect, and Links sections.',
       content: (
@@ -6037,8 +5980,8 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       ),
     },
     {
-      key: 'step9_elite_courses' as keyof OnboardingProgress,
-      number: 9,
+      key: 'step8_elite_courses' as keyof OnboardingProgress,
+      number: 8,
       title: 'Explore Elite Courses',
       description: 'Access Social Agent Academy PRO and other exclusive training.',
       content: (
@@ -6060,8 +6003,8 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       ),
     },
     {
-      key: 'step10_download_app' as keyof OnboardingProgress,
-      number: 10,
+      key: 'step9_download_app' as keyof OnboardingProgress,
+      number: 9,
       title: 'Download the Mobile App',
       description: 'Install the SAA Agent Portal app on your device for quick access and offline features.',
       content: (
