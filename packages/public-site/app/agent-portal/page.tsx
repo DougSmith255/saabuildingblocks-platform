@@ -2625,18 +2625,18 @@ function AgentPortal() {
             }} />
           </div>
 
-          {/* Inner L corner - quarter circle cutout matching background */}
-          {/* Curve goes from header bottom (y=85) to sidebar right (x=280) */}
-          {/* Element positioned so its bottom-right is at (280, 85), rounded top-right corner */}
+          {/* Inner L corner - quarter circle creating concave curve */}
+          {/* Positioned at corner junction (280, 85), extends into content area */}
+          {/* Rounded top-left corner creates curve that sweeps into L-frame */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '61px',
-              left: '256px',
+              top: '85px',
+              left: '280px',
               width: '24px',
               height: '24px',
               background: '#0a0a0a',
-              borderRadius: '0 100% 0 0',
+              borderRadius: '100% 0 0 0',
               zIndex: 45,
             }}
           />
