@@ -2620,48 +2620,12 @@ function AgentPortal() {
             }}
           />
 
-          {/* Border on bottom edge of header (only in content area, not over sidebar) */}
-          <div
-            className="absolute top-[85px] left-[280px] right-0 h-[1px] pointer-events-none"
-            style={{ background: 'rgba(60, 60, 60, 0.6)' }}
-          />
-          {/* Border on right edge of sidebar (curved at bottom) */}
-          <div
-            className="absolute top-[85px] left-[280px] bottom-0 w-[1px] pointer-events-none"
-            style={{
-              background: 'rgba(60, 60, 60, 0.6)',
-              borderBottomRightRadius: '24px',
-            }}
-          />
-          {/* Curved inner corner - bottom-right of the L junction */}
-          <div
-            className="absolute top-[85px] left-[280px] w-[24px] h-[24px] pointer-events-none"
-            style={{
-              background: 'transparent',
-              borderBottomRightRadius: '24px',
-              boxShadow: '-24px -24px 0 0 rgba(14, 14, 14, 0.98)',
-            }}
-          />
           {/* Bottom-right corner radius on sidebar */}
           <div
             className="absolute bottom-0 left-0 w-[280px] h-[24px] pointer-events-none"
             style={{
               background: 'rgba(14, 14, 14, 0.98)',
               borderBottomRightRadius: '24px',
-            }}
-          />
-
-          {/* Shadow for depth on the L-frame edges */}
-          <div
-            className="absolute top-[85px] left-[280px] right-0 h-[12px] pointer-events-none"
-            style={{
-              background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 100%)',
-            }}
-          />
-          <div
-            className="absolute top-[85px] left-[280px] bottom-0 w-[12px] pointer-events-none"
-            style={{
-              background: 'linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, transparent 100%)',
             }}
           />
 
@@ -2940,11 +2904,19 @@ function AgentPortal() {
       {/* On desktop (950px+): positioned to the right of sidebar and below header */}
       {/* On mobile: fills screen with padding for header/nav */}
       <div
-        className="min-[950px]:fixed min-[950px]:top-[85px] min-[950px]:left-[280px] min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto"
+        className="min-[950px]:fixed min-[950px]:top-[85px] min-[950px]:left-[280px] min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto min-[950px]:z-30"
         style={{
-          // On desktop, add curved top-left corner to create visual L-frame inner corner effect
+          // Desktop: background + curved corner creates the visual inner corner of the L-frame
         }}
       >
+        {/* Inner wrapper with curved corner - creates the concave inner corner effect */}
+        <div
+          className="min-h-full min-[950px]:rounded-tl-[24px] min-[950px]:border-l min-[950px]:border-t"
+          style={{
+            background: '#0a0a0a',
+            borderColor: 'rgba(60, 60, 60, 0.6)',
+          }}
+        >
         {/* Content Area */}
         <main
           className="flex-1 p-4 sm:p-6 min-[950px]:p-8 min-h-screen min-[950px]:min-h-0"
@@ -3368,6 +3340,7 @@ function AgentPortal() {
             </div>
             )}
           </main>
+        </div>
         </div>
 
       {/* ========== Floating Help Buttons - Desktop/Tablet only (hidden on mobile where header has help button) ========== */}
