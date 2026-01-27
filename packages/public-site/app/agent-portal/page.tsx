@@ -2581,87 +2581,52 @@ function AgentPortal() {
         {/* === FIXED L-FRAME CONTAINER === */}
         <div className="fixed inset-0 z-40 pointer-events-none">
 
-          {/* === TOP-LEFT CORNER PIECE === */}
+          {/* === TOP-LEFT CORNER PIECE === DEBUG: GREEN */}
           {/* This piece fills where header and sidebar would overlap */}
           {/* Has a 90-degree concave cutout at bottom-right for the inner L corner */}
-          {/* Uses clip-path with SVG path for precise curved corner */}
           <div
-            className="absolute top-0 left-0 w-[280px] h-[85px] overflow-visible pointer-events-none"
+            className="absolute top-0 left-0 w-[280px] h-[85px] overflow-hidden pointer-events-none"
             style={{
               clipPath: 'path("M 0 0 L 280 0 L 280 61 A 24 24 0 0 1 256 85 L 0 85 Z")',
+              background: 'rgba(0, 255, 0, 0.7)',
             }}
-          >
-            {/* Layer 1: Base gradient */}
-            <div className="absolute inset-0" style={{
-              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-            }} />
-            {/* Layer 2: Corrugated stripes - DEBUG RED */}
-            <div className="absolute inset-0" style={{
-              background: 'rgba(255, 0, 0, 0.5)',
-            }} />
-            {/* Layer 3: Scan lines - DEBUG BLUE */}
-            <div className="absolute inset-0" style={{
-              background: 'rgba(0, 100, 255, 0.5)',
-            }} />
-            {/* Layer 4: Shimmer */}
-            <div className="absolute inset-0" style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-            }} />
-          </div>
+          />
 
-          {/* === HEADER (Right portion, starts at sidebar edge) === */}
-          {/* No special bottom-left curve needed - corner piece handles the inner L corner */}
+          {/* === HEADER (Right portion) === DEBUG: RED */}
+          {/* Starts where corner piece ends horizontally */}
           <div
-            className="absolute top-0 left-[280px] right-0 h-[85px] overflow-visible pointer-events-none"
-          >
-            {/* Layer 1: Base gradient */}
-            <div className="absolute inset-0" style={{
-              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-            }} />
-            {/* Layer 2: Corrugated stripes - DEBUG RED */}
-            <div className="absolute inset-0" style={{
-              background: 'rgba(255, 0, 0, 0.5)',
-            }} />
-            {/* Layer 3: Scan lines - DEBUG BLUE */}
-            <div className="absolute inset-0" style={{
-              background: 'rgba(0, 100, 255, 0.5)',
-            }} />
-            {/* Layer 4: Shimmer */}
-            <div className="absolute inset-0" style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-            }} />
-          </div>
-
-          {/* === SIDEBAR (Below header, left side) === */}
-          {/* Bottom-right corner rounded outward */}
-          <div
-            className="absolute top-[85px] left-0 bottom-0 w-[280px] overflow-visible pointer-events-none"
+            className="absolute top-0 left-[280px] right-0 h-[85px] overflow-hidden pointer-events-none"
             style={{
+              background: 'rgba(255, 0, 0, 0.7)',
+            }}
+          />
+
+          {/* === SIDEBAR (Below corner piece) === DEBUG: BLUE */}
+          {/* Starts where corner piece ends vertically */}
+          {/* Has concave curve at top-right to match corner piece, convex at bottom-right */}
+          <div
+            className="absolute top-[85px] left-0 bottom-0 w-[280px] overflow-hidden pointer-events-none"
+            style={{
+              background: 'rgba(0, 100, 255, 0.7)',
               borderRadius: '0 0 24px 0',
             }}
-          >
-            {/* Layer 1: Base gradient */}
-            <div className="absolute inset-0" style={{
-              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderRadius: '0 0 24px 0',
-            }} />
-            {/* Layer 2: Corrugated stripes - DEBUG RED */}
-            <div className="absolute inset-0" style={{
-              background: 'rgba(255, 0, 0, 0.5)',
-              borderRadius: '0 0 24px 0',
-            }} />
-            {/* Layer 3: Scan lines - DEBUG BLUE */}
-            <div className="absolute inset-0" style={{
-              background: 'rgba(0, 100, 255, 0.5)',
-              borderRadius: '0 0 24px 0',
-            }} />
-            {/* Layer 4: Shimmer */}
-            <div className="absolute inset-0" style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-              borderRadius: '0 0 24px 0',
-            }} />
-          </div>
+          />
 
+          {/* === INNER L CORNER CURVE (separate piece) === DEBUG: YELLOW */}
+          {/* This fills the gap between corner piece curve and where header/sidebar meet */}
+          {/* Creates the visual concave corner effect */}
+          <div
+            className="absolute overflow-hidden pointer-events-none"
+            style={{
+              top: '61px',
+              left: '256px',
+              width: '24px',
+              height: '24px',
+              background: 'transparent',
+            }}
+          >
+            {/* This is the void - should show background through */}
+          </div>
 
           {/* Top Bar - interactive content area */}
           <div
