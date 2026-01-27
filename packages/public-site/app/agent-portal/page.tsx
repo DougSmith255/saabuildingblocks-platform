@@ -2582,7 +2582,7 @@ function AgentPortal() {
         <div className="fixed inset-0 z-40 pointer-events-none">
 
           {/* === UNIFIED L-SHAPE BACKGROUND === */}
-          {/* Single L-shaped element using clip-path for seamless appearance */}
+          {/* Simple L-shape (rectangular) - corner curve handled separately */}
           {/* Base layer - solid dark background with L-shape clip */}
           <div
             className="absolute inset-0 pointer-events-none"
@@ -2593,8 +2593,7 @@ function AgentPortal() {
                 100% 0,
                 100% 85px,
                 280px 85px,
-                280px calc(100% - 24px),
-                256px 100%,
+                280px 100%,
                 0 100%
               )`,
             }}
@@ -2610,8 +2609,7 @@ function AgentPortal() {
                 100% 0,
                 100% 85px,
                 280px 85px,
-                280px calc(100% - 24px),
-                256px 100%,
+                280px 100%,
                 0 100%
               )`,
             }}
@@ -2627,8 +2625,7 @@ function AgentPortal() {
                 100% 0,
                 100% 85px,
                 280px 85px,
-                280px calc(100% - 24px),
-                256px 100%,
+                280px 100%,
                 0 100%
               )`,
             }}
@@ -2644,60 +2641,94 @@ function AgentPortal() {
                 100% 0,
                 100% 85px,
                 280px 85px,
-                280px calc(100% - 24px),
-                256px 100%,
+                280px 100%,
                 0 100%
               )`,
             }}
           />
 
-          {/* 3D Edge Effects - Strong depth illusion */}
-          {/* Top edge highlight */}
+          {/* Bottom-right corner curve overlay - covers corner with page background + rounded cutout */}
           <div
-            className="absolute top-0 left-0 right-0 h-[2px] pointer-events-none"
+            className="absolute pointer-events-none"
             style={{
-              background: 'linear-gradient(90deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.15) 100%)',
+              bottom: 0,
+              left: '256px',
+              width: '24px',
+              height: '24px',
+              background: '#0a0a0a',
+              borderTopLeftRadius: '24px',
             }}
           />
-          {/* Left edge highlight */}
+
+          {/* 3D Edge Effects - Strong depth illusion */}
+          {/* Top edge highlight - thicker for visibility */}
           <div
-            className="absolute top-0 left-0 w-[2px] bottom-0 pointer-events-none"
+            className="absolute top-0 left-0 right-0 h-[3px] pointer-events-none"
             style={{
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
-              clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 24px), 0 100%)',
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.2) 100%)',
+            }}
+          />
+          {/* Left edge highlight - thicker */}
+          <div
+            className="absolute top-0 left-0 w-[3px] pointer-events-none"
+            style={{
+              height: 'calc(100% - 24px)',
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.08) 100%)',
             }}
           />
           {/* Bottom edge of header (inner L edge) - shadow for depth */}
           <div
-            className="absolute top-[83px] left-[280px] right-0 h-[4px] pointer-events-none"
+            className="absolute top-[83px] left-[280px] right-0 h-[6px] pointer-events-none"
             style={{
-              background: 'linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+              background: 'linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)',
             }}
           />
           {/* Right edge of sidebar (inner L edge) - shadow for depth */}
           <div
-            className="absolute top-[85px] left-[278px] w-[4px] pointer-events-none"
+            className="absolute top-[85px] left-[276px] w-[6px] pointer-events-none"
             style={{
               height: 'calc(100% - 85px - 24px)',
-              background: 'linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+              background: 'linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)',
             }}
           />
-          {/* Right edge of header - subtle highlight */}
+          {/* Right edge of header - highlight */}
           <div
-            className="absolute top-0 right-0 w-[2px] h-[85px] pointer-events-none"
+            className="absolute top-0 right-0 w-[3px] h-[85px] pointer-events-none"
             style={{
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%)',
             }}
           />
-          {/* Bottom-right corner curve shadow */}
+          {/* Bottom edge of sidebar - highlight before curve */}
+          <div
+            className="absolute bottom-0 left-0 h-[3px] pointer-events-none"
+            style={{
+              width: '256px',
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.12) 100%)',
+            }}
+          />
+          {/* Sidebar right edge highlight - runs down to corner */}
+          <div
+            className="absolute right-0 w-[3px] pointer-events-none"
+            style={{
+              top: '85px',
+              height: 'calc(100% - 85px - 24px)',
+              left: '277px',
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.1) 100%)',
+            }}
+          />
+          {/* Corner curve highlight - follows the curve */}
           <div
             className="absolute pointer-events-none"
             style={{
               bottom: '0',
               left: '256px',
-              width: '28px',
-              height: '28px',
-              background: 'radial-gradient(circle at top left, transparent 22px, rgba(0,0,0,0.4) 22px, transparent 28px)',
+              width: '24px',
+              height: '24px',
+              border: '3px solid transparent',
+              borderTopLeftRadius: '24px',
+              borderTop: '3px solid rgba(255,255,255,0.12)',
+              borderLeft: '3px solid rgba(255,255,255,0.1)',
+              background: 'transparent',
             }}
           />
 
