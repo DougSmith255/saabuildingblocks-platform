@@ -2622,34 +2622,21 @@ function AgentPortal() {
             }} />
           </div>
 
-          {/* Inner L corner - dark element extending into content area with curved top-left */}
-          {/* Creates concave curve from header bottom (304,85) down to sidebar right (280,109) */}
+          {/* Inner L corner - CONCAVE cutout using content-area background */}
+          {/* Positioned INSIDE the L-frame to cut a quarter-circle out of the corner */}
+          {/* Creates concave curve: header bottom at (280,61) curving to sidebar right at (256,85) */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '85px',
-              left: '280px',
+              top: '61px',
+              left: '256px',
               width: '24px',
               height: '24px',
-              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderRadius: '100% 0 0 0',
-              zIndex: 45,
+              background: 'linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 100%)',
+              borderRadius: '0 0 100% 0',
+              zIndex: 50,
             }}
-          >
-            {/* Glass texture layers with matching curve */}
-            <div className="absolute inset-0" style={{
-              background: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)',
-              borderRadius: '100% 0 0 0',
-            }} />
-            <div className="absolute inset-0" style={{
-              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)',
-              borderRadius: '100% 0 0 0',
-            }} />
-            <div className="absolute inset-0" style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-              borderRadius: '100% 0 0 0',
-            }} />
-          </div>
+          />
 
           {/* Top Bar - interactive content area */}
           <div
