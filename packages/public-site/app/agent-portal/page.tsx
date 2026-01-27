@@ -2581,91 +2581,87 @@ function AgentPortal() {
         {/* === FIXED L-FRAME CONTAINER === */}
         <div className="fixed inset-0 z-40 pointer-events-none">
 
-          {/* === HEADER BAR (Top portion of L) === */}
-          {/* Bottom-right corner curves where header meets content area */}
+          {/* === TOP-LEFT CORNER (where header and sidebar overlap) === */}
           <div
-            className="absolute top-0 left-0 right-0 h-[85px] overflow-hidden pointer-events-none"
-            style={{
-              borderBottomRightRadius: '24px',
-            }}
+            className="absolute top-0 left-0 w-[280px] h-[85px] overflow-hidden pointer-events-none"
           >
             {/* Base gradient */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-                borderBottomRightRadius: '24px',
-              }}
-            />
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+            }} />
             {/* Corrugated vertical stripes */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
-                borderBottomRightRadius: '24px',
-              }}
-            />
+            <div className="absolute inset-0" style={{
+              background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
+            }} />
             {/* Scan lines */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
-                borderBottomRightRadius: '24px',
-              }}
-            />
+            <div className="absolute inset-0" style={{
+              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
+            }} />
             {/* Shimmer */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-                borderBottomRightRadius: '24px',
-              }}
-            />
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+            }} />
           </div>
 
-          {/* === SIDEBAR (Left portion of L) === */}
-          {/* Uses border-radius instead of clip-path for proper rounded corners */}
+          {/* === HEADER BAR (Right portion, next to content) === */}
+          {/* Starts at sidebar edge, bottom-left corner curves at inner L corner */}
           <div
-            className="absolute top-0 left-0 bottom-0 w-[280px] overflow-hidden pointer-events-none"
-            style={{
-              borderBottomRightRadius: '24px',
-            }}
+            className="absolute top-0 left-[280px] right-0 h-[85px] overflow-hidden pointer-events-none"
+            style={{ borderBottomLeftRadius: '24px' }}
           >
             {/* Base gradient */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-                borderBottomRightRadius: '24px',
-              }}
-            />
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              borderBottomLeftRadius: '24px',
+            }} />
             {/* Corrugated vertical stripes */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
-                borderBottomRightRadius: '24px',
-              }}
-            />
+            <div className="absolute inset-0" style={{
+              background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
+              borderBottomLeftRadius: '24px',
+            }} />
             {/* Scan lines */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
-                borderBottomRightRadius: '24px',
-              }}
-            />
+            <div className="absolute inset-0" style={{
+              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
+              borderBottomLeftRadius: '24px',
+            }} />
             {/* Shimmer */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-                borderBottomRightRadius: '24px',
-              }}
-            />
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              borderBottomLeftRadius: '24px',
+            }} />
           </div>
 
-          {/* 3D EDGE EFFECTS REMOVED - will rethink approach after verifying corners */}
+          {/* === SIDEBAR (Below header, left side) === */}
+          {/* Starts below header, top-right corner curves at inner L corner, bottom-right curves at bottom */}
+          <div
+            className="absolute top-[85px] left-0 bottom-0 w-[280px] overflow-hidden pointer-events-none"
+            style={{ borderTopRightRadius: '24px', borderBottomRightRadius: '24px' }}
+          >
+            {/* Base gradient */}
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              borderTopRightRadius: '24px',
+              borderBottomRightRadius: '24px',
+            }} />
+            {/* Corrugated vertical stripes */}
+            <div className="absolute inset-0" style={{
+              background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
+              borderTopRightRadius: '24px',
+              borderBottomRightRadius: '24px',
+            }} />
+            {/* Scan lines */}
+            <div className="absolute inset-0" style={{
+              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
+              borderTopRightRadius: '24px',
+              borderBottomRightRadius: '24px',
+            }} />
+            {/* Shimmer */}
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              borderTopRightRadius: '24px',
+              borderBottomRightRadius: '24px',
+            }} />
+          </div>
 
 
           {/* Top Bar - interactive content area */}
