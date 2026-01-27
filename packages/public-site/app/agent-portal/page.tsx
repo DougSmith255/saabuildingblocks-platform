@@ -2968,13 +2968,13 @@ function AgentPortal() {
       {/* On desktop (950px+): positioned to the right of sidebar and below header */}
       {/* On mobile: fills screen with padding for header/nav */}
       <div
-        className="min-[950px]:fixed min-[950px]:top-[85px] min-[950px]:left-[280px] min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto min-[950px]:z-30"
+        className="min-[950px]:fixed min-[950px]:top-[85px] min-[950px]:left-[280px] min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto min-[950px]:overflow-x-hidden min-[950px]:z-30 min-[950px]:overscroll-contain"
         style={{ background: 'transparent' }}
       >
         {/* Inner wrapper with curved corner - creates the concave inner corner effect */}
         {/* Background is transparent to allow global StarBackground to show through */}
         <div
-          className="relative min-h-full min-[950px]:rounded-tl-[24px] overflow-hidden"
+          className="relative min-h-full min-[950px]:rounded-tl-[24px] min-[950px]:overflow-clip"
           style={{ background: 'transparent' }}
         >
           {/* 3D inner edge effect - highlight on top-left curve */}
