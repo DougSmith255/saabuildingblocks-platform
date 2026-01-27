@@ -2581,49 +2581,43 @@ function AgentPortal() {
         {/* === FIXED L-FRAME CONTAINER === */}
         <div className="fixed inset-0 z-40 pointer-events-none">
 
-          {/* === TOP-LEFT CORNER PIECE === DEBUG: GREEN */}
-          {/* This piece fills where header and sidebar would overlap */}
-          {/* Has a 90-degree concave cutout at bottom-right for the inner L corner */}
+          {/* === YELLOW VOID MARKER (rendered first, at bottom of stack) === */}
           <div
-            className="absolute top-0 left-0 w-[280px] h-[85px] overflow-hidden pointer-events-none"
+            className="absolute pointer-events-none"
             style={{
-              clipPath: 'path("M 0 0 L 280 0 L 280 61 A 24 24 0 0 1 256 85 L 0 85 Z")',
+              top: '61px',
+              left: '256px',
+              width: '24px',
+              height: '24px',
+              background: 'yellow',
+            }}
+          />
+
+          {/* === TOP-LEFT CORNER PIECE === DEBUG: GREEN */}
+          {/* Using mask-image instead of clip-path for better browser support */}
+          <div
+            className="absolute top-0 left-0 w-[280px] h-[85px] pointer-events-none"
+            style={{
               background: 'rgba(0, 255, 0, 0.7)',
+              maskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 0px, transparent 24px, black 24px)',
+              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 0px, transparent 24px, black 24px)',
             }}
           />
 
           {/* === HEADER (Right portion) === DEBUG: RED */}
-          {/* Starts where corner piece ends horizontally */}
           <div
-            className="absolute top-0 left-[280px] right-0 h-[85px] overflow-hidden pointer-events-none"
+            className="absolute top-0 left-[280px] right-0 h-[85px] pointer-events-none"
             style={{
               background: 'rgba(255, 0, 0, 0.7)',
             }}
           />
 
           {/* === SIDEBAR (Below corner piece) === DEBUG: BLUE */}
-          {/* Starts where corner piece ends vertically */}
-          {/* Has concave curve at top-right to match corner piece, convex at bottom-right */}
           <div
-            className="absolute top-[85px] left-0 bottom-0 w-[280px] overflow-hidden pointer-events-none"
+            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
             style={{
               background: 'rgba(0, 100, 255, 0.7)',
               borderRadius: '0 0 24px 0',
-            }}
-          />
-
-          {/* === VOID AREA DEBUG: BRIGHT YELLOW === */}
-          {/* This shows where the concave corner void should be */}
-          {/* If the clip-path is working, this yellow should show through the corner piece's cutout */}
-          <div
-            className="absolute overflow-visible pointer-events-none"
-            style={{
-              top: '61px',
-              left: '256px',
-              width: '24px',
-              height: '24px',
-              background: 'rgba(255, 255, 0, 1)',
-              zIndex: -1,
             }}
           />
 
