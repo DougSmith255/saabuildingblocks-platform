@@ -97,7 +97,6 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   // Routes where Lenis smooth scroll should be disabled
   // These pages have fixed layouts with their own scroll containers
   const noSmoothScrollPrefixes = useMemo(() => [
-    '/agent-portal',            // Agent portal - fixed layout with own scroll
     '/master-controller',       // Admin interface
   ], []);
 
