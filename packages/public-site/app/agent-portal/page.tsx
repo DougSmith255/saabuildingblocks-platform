@@ -2580,33 +2580,9 @@ function AgentPortal() {
 
           {/* === L-FRAME: Header bar + Sidebar with curved inner corner === */}
 
-          {/* Header bar RIGHT portion (x > 280) - has rounded bottom-left corner */}
+          {/* Header bar - full width */}
           <div
-            className="absolute top-0 right-0 h-[85px] pointer-events-none overflow-hidden"
-            style={{
-              left: '280px',
-              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderRadius: '0 0 0 24px',
-            }}
-          >
-            {/* Glass texture layers - all with matching border-radius */}
-            <div className="absolute inset-0" style={{
-              background: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)',
-              borderRadius: '0 0 0 24px',
-            }} />
-            <div className="absolute inset-0" style={{
-              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)',
-              borderRadius: '0 0 0 24px',
-            }} />
-            <div className="absolute inset-0" style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-              borderRadius: '0 0 0 24px',
-            }} />
-          </div>
-
-          {/* Sidebar UPPER portion (y=0 to y=85) - overlaps with header, no inner curve */}
-          <div
-            className="absolute top-0 left-0 w-[280px] h-[85px] pointer-events-none"
+            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
             style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
             }}
@@ -2623,28 +2599,55 @@ function AgentPortal() {
             }} />
           </div>
 
-          {/* Sidebar LOWER portion (y=85 to bottom) - has rounded corners */}
-          {/* Top-right: inner L corner (concave), Bottom-right: convex corner */}
+          {/* Sidebar - full height, only bottom-right convex corner */}
           <div
-            className="absolute left-0 bottom-0 w-[280px] pointer-events-none overflow-hidden"
+            className="absolute top-0 left-0 bottom-0 w-[280px] pointer-events-none"
             style={{
-              top: '85px',
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderRadius: '0 24px 24px 0',
+              borderRadius: '0 0 24px 0',
             }}
           >
             {/* Glass texture layers - all with matching border-radius */}
             <div className="absolute inset-0" style={{
               background: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)',
-              borderRadius: '0 24px 24px 0',
+              borderRadius: '0 0 24px 0',
             }} />
             <div className="absolute inset-0" style={{
               background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)',
-              borderRadius: '0 24px 24px 0',
+              borderRadius: '0 0 24px 0',
             }} />
             <div className="absolute inset-0" style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-              borderRadius: '0 24px 24px 0',
+              borderRadius: '0 0 24px 0',
+            }} />
+          </div>
+
+          {/* Inner L corner - dark element extending into content area with curved top-left */}
+          {/* Creates concave curve from header bottom (304,85) down to sidebar right (280,109) */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: '280px',
+              width: '24px',
+              height: '24px',
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              borderRadius: '100% 0 0 0',
+              zIndex: 45,
+            }}
+          >
+            {/* Glass texture layers with matching curve */}
+            <div className="absolute inset-0" style={{
+              background: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)',
+              borderRadius: '100% 0 0 0',
+            }} />
+            <div className="absolute inset-0" style={{
+              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)',
+              borderRadius: '100% 0 0 0',
+            }} />
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              borderRadius: '100% 0 0 0',
             }} />
           </div>
 
