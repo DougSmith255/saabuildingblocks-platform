@@ -2622,8 +2622,10 @@ function AgentPortal() {
           </div>
 
           {/* Inner L corner - CONCAVE cutout creating smooth inner curve */}
-          {/* DEBUG: Layer 1 (z-50) = PURPLE, Layer 2 (z-51) = RED, Layer 3 (z-52) = GREEN */}
-          {/* Dark crescent fills the corner with a circular transparent cutout at the corner point */}
+          {/* DEBUG: Layer 1 (z-50) = PURPLE, Layer 2 (z-51) = RED, Layer 3 (z-52) = LIME */}
+          {/* The concave curve cuts INTO the corner, opening toward the content area */}
+
+          {/* Layer 1: Base dark fill with concave curve - PURPLE debug */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2631,12 +2633,13 @@ function AgentPortal() {
               left: '280px',
               width: '24px',
               height: '24px',
-              /* DEBUG: Purple for layer 1 */
+              /* Concave curve: transparent quarter-circle at top-left, color fills the crescent */
               background: 'radial-gradient(circle at 0 0, transparent 0, transparent 23px, purple 24px)',
               zIndex: 50,
             }}
           />
-          {/* Inner corner glass texture - corrugated pattern with concave curve */}
+
+          {/* Layer 2: Middle layer - RED debug - slightly smaller radius for layered effect */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2644,14 +2647,13 @@ function AgentPortal() {
               left: '280px',
               width: '24px',
               height: '24px',
-              /* DEBUG: Red for layer 2 */
-              background: `
-                radial-gradient(circle at 0 0, transparent 0, transparent 23px, red 24px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)
-              `,
+              /* Same concave curve pattern */
+              background: 'radial-gradient(circle at 0 0, transparent 0, transparent 22px, red 23px)',
               zIndex: 51,
             }}
           />
+
+          {/* Layer 3: Top layer - LIME debug - smallest radius crescent */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2659,11 +2661,8 @@ function AgentPortal() {
               left: '280px',
               width: '24px',
               height: '24px',
-              /* DEBUG: Green for layer 3 */
-              background: `
-                radial-gradient(circle at 0 0, transparent 0, transparent 23px, lime 24px),
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
-              `,
+              /* Tightest concave curve */
+              background: 'radial-gradient(circle at 0 0, transparent 0, transparent 21px, lime 22px)',
               zIndex: 52,
             }}
           />
