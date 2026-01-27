@@ -2622,18 +2622,18 @@ function AgentPortal() {
             }} />
           </div>
 
-          {/* Inner L corner - CONCAVE cutout using content-area background */}
-          {/* Positioned INSIDE the L-frame to cut a quarter-circle out of the corner */}
-          {/* Creates concave curve: header bottom at (280,61) curving to sidebar right at (256,85) */}
+          {/* Inner L corner - CONCAVE cutout effect */}
+          {/* Using transparent background to let content area show through */}
+          {/* Positioned at exact corner intersection point */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '61px',
-              left: '256px',
+              top: '85px',
+              left: '280px',
               width: '24px',
               height: '24px',
-              background: 'linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 100%)',
-              borderRadius: '0 0 100% 0',
+              background: 'red', // DEBUG: red to see positioning
+              borderRadius: '0 0 0 100%',
               zIndex: 50,
             }}
           />
