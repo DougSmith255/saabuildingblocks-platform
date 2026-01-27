@@ -2599,20 +2599,34 @@ function AgentPortal() {
             }}
           />
 
-          {/* Concave inner corner - creates the smooth inward curve at the junction */}
-          {/* This element overlays the corner with a quarter-circle in content bg color */}
-          {/* The solid quarter-circle covers the L-frame corner, creating concave effect */}
-          {/* DEBUG: Using red to visualize concave corner element */}
+          {/* Concave inner corner - TWO elements that create smooth inward curves */}
+          {/* Element 1: Covers header corner (above junction) */}
+          {/* Position: bottom-right of this element sits at junction (280, 85) */}
+          {/* DEBUG: Using red to visualize */}
           <div
             className="absolute"
             style={{
-              top: '85px',
-              left: '280px',
+              top: '61px',      // 85 - 24 = element's bottom edge at junction Y
+              left: '256px',    // 280 - 24 = element's right edge at junction X
               width: '24px',
               height: '24px',
-              // DEBUG: Red quarter-circle to visualize the concave corner
-              background: 'radial-gradient(circle at 0 0, rgba(255, 0, 0, 1) 0, rgba(255, 0, 0, 1) 23px, transparent 24px)',
-              // PRODUCTION: background: 'radial-gradient(circle at 0 0, #0a0a0a 0, #0a0a0a 23px, transparent 24px)',
+              background: 'rgba(255, 0, 0, 1)', // DEBUG: red - PRODUCTION: #0a0a0a
+              borderBottomRightRadius: '24px', // Curves inward toward junction
+              zIndex: 50,
+            }}
+          />
+          {/* Element 2: Covers sidebar corner (below junction) */}
+          {/* Position: top-right of this element sits at junction (280, 85) */}
+          {/* DEBUG: Using orange to visualize */}
+          <div
+            className="absolute"
+            style={{
+              top: '85px',      // Junction Y = element's top edge
+              left: '256px',    // 280 - 24 = element's right edge at junction X
+              width: '24px',
+              height: '24px',
+              background: 'rgba(255, 165, 0, 1)', // DEBUG: orange - PRODUCTION: #0a0a0a
+              borderTopRightRadius: '24px', // Curves inward toward junction
               zIndex: 50,
             }}
           />
