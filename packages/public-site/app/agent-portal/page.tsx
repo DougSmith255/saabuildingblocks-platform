@@ -354,7 +354,7 @@ const shakeKeyframes = `
 }
 
 /* Force repaint on modal content for Safari */
-.agent-portal-root [class*="z-[10020]"] > div {
+.agent-portal-root [class*="z-[99990]"] > div {
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   will-change: contents;
@@ -2622,6 +2622,7 @@ function AgentPortal() {
           </div>
 
           {/* Inner L corner - CONCAVE cutout creating smooth inner curve */}
+          {/* DEBUG: Layer 1 (z-50) = PURPLE, Layer 2 (z-51) = RED, Layer 3 (z-52) = GREEN */}
           {/* Dark crescent fills the corner with a circular transparent cutout at the corner point */}
           <div
             className="absolute pointer-events-none"
@@ -2630,7 +2631,8 @@ function AgentPortal() {
               left: '280px',
               width: '24px',
               height: '24px',
-              background: 'radial-gradient(circle at 0 0, transparent 0, transparent 23px, rgba(14, 14, 14, 0.98) 24px)',
+              /* DEBUG: Purple for layer 1 */
+              background: 'radial-gradient(circle at 0 0, transparent 0, transparent 23px, purple 24px)',
               zIndex: 50,
             }}
           />
@@ -2642,8 +2644,9 @@ function AgentPortal() {
               left: '280px',
               width: '24px',
               height: '24px',
+              /* DEBUG: Red for layer 2 */
               background: `
-                radial-gradient(circle at 0 0, transparent 0, transparent 23px, rgba(255, 215, 0, 0.025) 24px),
+                radial-gradient(circle at 0 0, transparent 0, transparent 23px, red 24px),
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)
               `,
               zIndex: 51,
@@ -2656,8 +2659,9 @@ function AgentPortal() {
               left: '280px',
               width: '24px',
               height: '24px',
+              /* DEBUG: Green for layer 3 */
               background: `
-                radial-gradient(circle at 0 0, transparent 0, transparent 23px, rgba(255, 255, 255, 0.015) 24px),
+                radial-gradient(circle at 0 0, transparent 0, transparent 23px, lime 24px),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
               zIndex: 52,
@@ -2713,7 +2717,7 @@ function AgentPortal() {
 
           {/* Left Sidebar - interactive content area (background handled by unified L-shape above) */}
           <div
-            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-auto"
+            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-auto overflow-visible"
             style={{ background: 'transparent' }}
           >
             {/* Shimmer overlay */}
@@ -2914,11 +2918,13 @@ function AgentPortal() {
                       {/* Progress indicator for onboarding */}
                       {isOnboardingInactive && (
                         <span
-                          className="ml-auto text-xs font-synonym px-2 py-0.5 rounded-full"
+                          className="ml-auto text-[10px] font-synonym px-1.5 py-0.5 rounded-full"
                           style={{
                             background: 'rgba(255,215,0,0.15)',
                             color: '#ffd700',
                             border: '1px solid rgba(255,215,0,0.2)',
+                            minWidth: '32px',
+                            textAlign: 'center',
                           }}
                         >
                           {completedStepsCount}/{totalStepsCount}
@@ -3700,7 +3706,7 @@ function AgentPortal() {
       {/* Link Page Intro Modal - One Time Notification */}
       {showLinkPageIntroModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          className="fixed inset-0 z-[99990] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
           onClick={() => {}}
           onWheel={(e) => e.stopPropagation()}
         >
@@ -3796,7 +3802,7 @@ function AgentPortal() {
       {/* Link Page Help Modal - Premium Glass with Yellow Highlights */}
       {showLinkPageHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => closeHelpPanel('linkpage', setShowLinkPageHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -3941,7 +3947,7 @@ function AgentPortal() {
       {/* New Agents Help Modal */}
       {showNewAgentsHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => closeHelpPanel('newagents', setShowNewAgentsHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -4103,7 +4109,7 @@ function AgentPortal() {
       {/* Templates Help Modal */}
       {showTemplatesHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => closeHelpPanel('templates', setShowTemplatesHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -4231,7 +4237,7 @@ function AgentPortal() {
       {/* Agent Attraction Help Modal */}
       {showAgentAttractionHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => closeHelpPanel('agentattraction', setShowAgentAttractionHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -4379,7 +4385,7 @@ function AgentPortal() {
       {/* Team Calls Help Modal */}
       {showTeamCallsHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => closeHelpPanel('teamcalls', setShowTeamCallsHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -4478,7 +4484,7 @@ function AgentPortal() {
       {/* Elite Courses Help Modal */}
       {showEliteCoursesHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => closeHelpPanel('elitecourses', setShowEliteCoursesHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -4718,7 +4724,7 @@ function AgentPortal() {
       {/* Elite Courses Intro Modal - One Time Notification */}
       {showEliteCoursesIntroModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          className="fixed inset-0 z-[99990] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
           onClick={() => {}}
           onWheel={(e) => e.stopPropagation()}
         >
@@ -4787,7 +4793,7 @@ function AgentPortal() {
 
       {/* Completion Success Modal */}
       {showCompletionModal && (
-        <div className="fixed inset-0 z-[10020] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[99990] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-gradient-to-br from-green-500/20 to-blue-500/20 border border-green-500/30 rounded-2xl p-8 max-w-md text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500 flex items-center justify-center">
               <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
