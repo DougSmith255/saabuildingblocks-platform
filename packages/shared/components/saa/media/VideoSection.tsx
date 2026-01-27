@@ -100,11 +100,12 @@ export function VideoSection({
 
   const handleJoinSuccess = useCallback((data: JoinFormData) => {
     setUserName(data.firstName);
-    setShowJoinModal(false);
-    // Small delay to allow join modal to close before showing instructions
+    // Open instructions panel FIRST (with its backdrop) while join modal is still visible
+    setShowInstructions(true);
+    // Then close join modal after a tiny delay - its backdrop is hidden so transition is seamless
     setTimeout(() => {
-      setShowInstructions(true);
-    }, 300);
+      setShowJoinModal(false);
+    }, 50);
   }, []);
 
   return (
@@ -173,19 +174,29 @@ export function VideoSection({
         </div>
       </div>
 
-      {/* Join Modal */}
+      {/* Join Modal - hideBackdrop when instructions is also open for seamless transition */}
       <JoinModal
         isOpen={showJoinModal}
         onClose={() => setShowJoinModal(false)}
         onSuccess={handleJoinSuccess}
         sponsorName={sponsorName}
+        hideBackdrop={showInstructions}
+        zIndexOffset={showInstructions ? 10 : 0}
       />
 
-      {/* Instructions Modal - shown after successful join */}
+      {/* Instructions Modal - shown after successful join, provides the backdrop during transition */}
       <InstructionsModal
         isOpen={showInstructions}
         onClose={() => setShowInstructions(false)}
         userName={userName}
+        onNotYou={() => {
+          // Clear the cached data and show join form
+          try {
+            localStorage.removeItem('saa_join_submitted');
+          } catch {}
+          setShowInstructions(false);
+          setTimeout(() => setShowJoinModal(true), 300);
+        }}
       />
     </section>
   );

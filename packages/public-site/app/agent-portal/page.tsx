@@ -8775,6 +8775,8 @@ function NewAgentsSection() {
   const [selectedDocument, setSelectedDocument] = useState<NewAgentDocument | null>(null);
   // Single activePanel state - 'category' | 'document' | null
   const [activePanel, setActivePanel] = useState<'category' | 'document' | null>(null);
+  // Track if we skipped category panel (single-doc categories)
+  const [skippedCategoryPanel, setSkippedCategoryPanel] = useState(false);
 
   const handleCategoryClick = (category: NewAgentCategory) => {
     setSelectedCategory(category);
@@ -8783,8 +8785,10 @@ function NewAgentsSection() {
     if (category.documents.length === 1) {
       setSelectedDocument(category.documents[0]);
       setActivePanel('document');
+      setSkippedCategoryPanel(true);
     } else {
       setActivePanel('category');
+      setSkippedCategoryPanel(false);
     }
   };
 
@@ -8808,6 +8812,7 @@ function NewAgentsSection() {
     setActivePanel(null);
     setSelectedCategory(null);
     setSelectedDocument(null);
+    setSkippedCategoryPanel(false);
   };
 
   return (
@@ -8855,13 +8860,9 @@ function NewAgentsSection() {
       </div>
 
       {/* Shared Backdrop for both panels */}
-      {selectedCategory !== null && (
+      {activePanel !== null && (
         <div
           className="fixed inset-0 z-[10019] bg-black/60 backdrop-blur-sm transition-opacity duration-300"
-          style={{
-            opacity: activePanel !== null ? 1 : 0,
-            pointerEvents: activePanel !== null ? 'auto' : 'none',
-          }}
           onClick={handleCloseModal}
           aria-hidden="true"
         />
@@ -8869,6 +8870,7 @@ function NewAgentsSection() {
 
       {/* Category SlidePanel - Shows list of documents (behind document panel) */}
       <SlidePanel
+        key={`category-${selectedCategory?.id || 'none'}`}
         isOpen={activePanel === 'category' || activePanel === 'document'}
         onClose={handleCloseModal}
         title={selectedCategory?.title || ''}
@@ -8918,6 +8920,7 @@ function NewAgentsSection() {
 
       {/* Document Content SlidePanel (on top of category panel) */}
       <SlidePanel
+        key={`document-${selectedDocument?.id || 'none'}`}
         isOpen={activePanel === 'document'}
         onClose={handleCloseModal}
         title={selectedDocument?.title || ''}
@@ -8935,26 +8938,28 @@ function NewAgentsSection() {
             <Download className="w-4 h-4" />
             Download Document
           </a>
-        ) : (
+        ) : !skippedCategoryPanel ? (
           <button
             onClick={handleBackToCategory}
             className="w-full px-4 py-3 rounded-lg text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
           >
             Back to {selectedCategory?.title}
           </button>
-        )}
+        ) : undefined}
       >
         {selectedDocument && (
           <div className="space-y-4">
-            {/* Back button at top */}
-            <button
-              onClick={handleBackToCategory}
-              className="inline-flex items-center gap-2 text-sm text-[#ffd700]/80 hover:text-[#ffd700] transition-colors"
-              style={{ WebkitTapHighlightColor: 'transparent' }}
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Back to {selectedCategory?.title}
-            </button>
+            {/* Back button at top - only show if we didn't skip the category panel */}
+            {!skippedCategoryPanel && (
+              <button
+                onClick={handleBackToCategory}
+                className="inline-flex items-center gap-2 text-sm text-[#ffd700]/80 hover:text-[#ffd700] transition-colors"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Back to {selectedCategory?.title}
+              </button>
+            )}
 
             {/* Document Content */}
             <div className="prose prose-invert prose-sm max-w-none">

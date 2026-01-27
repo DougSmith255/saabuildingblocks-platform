@@ -10,6 +10,12 @@ export interface InstructionsModalProps {
   onClose: () => void;
   /** User's name for personalization */
   userName?: string;
+  /** Callback when user clicks "Not You?" - should clear cache and show form */
+  onNotYou?: () => void;
+  /** Hide the backdrop (for stacked panels sharing a single backdrop) */
+  hideBackdrop?: boolean;
+  /** Z-index offset for stacking panels */
+  zIndexOffset?: number;
 }
 
 // Styles specific to InstructionsModal content
@@ -98,6 +104,20 @@ const styles: Record<string, React.CSSProperties> = {
   link: {
     color: '#ffd700',
   },
+  notYou: {
+    marginTop: '1rem',
+    fontSize: '0.8rem',
+    color: 'rgba(255, 255, 255, 0.4)',
+  },
+  notYouLink: {
+    color: 'rgba(255, 215, 0, 0.6)',
+    textDecoration: 'none',
+    cursor: 'pointer',
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    font: 'inherit',
+  },
 };
 
 /**
@@ -122,6 +142,9 @@ export function InstructionsModal({
   isOpen,
   onClose,
   userName = 'Agent',
+  onNotYou,
+  hideBackdrop = false,
+  zIndexOffset = 0,
 }: InstructionsModalProps) {
   return (
     <SlidePanel
@@ -131,6 +154,8 @@ export function InstructionsModal({
       subtitle="Follow these steps to join Smart Agent Alliance at eXp Realty."
       icon={<SuccessIcon />}
       size="md"
+      hideBackdrop={hideBackdrop}
+      zIndexOffset={zIndexOffset}
     >
       <div style={styles.instructionsList}>
         <div style={styles.instructionItem}>
@@ -186,6 +211,20 @@ export function InstructionsModal({
       <p style={styles.footer}>
         Questions? Email us at <a style={styles.footerLink} href="mailto:team@smartagentalliance.com">team@smartagentalliance.com</a>
       </p>
+
+      {onNotYou && (
+        <p style={styles.notYou}>
+          <button
+            type="button"
+            style={styles.notYouLink}
+            onClick={onNotYou}
+            onMouseOver={(e) => { (e.target as HTMLButtonElement).style.color = '#ffd700'; }}
+            onMouseOut={(e) => { (e.target as HTMLButtonElement).style.color = 'rgba(255, 215, 0, 0.6)'; }}
+          >
+            Not {userName}? Click here to update your info.
+          </button>
+        </p>
+      )}
     </SlidePanel>
   );
 }

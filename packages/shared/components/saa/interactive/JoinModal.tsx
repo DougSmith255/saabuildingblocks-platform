@@ -15,6 +15,10 @@ export interface JoinModalProps {
   sponsorName?: string | null;
   /** API endpoint for form submission */
   apiEndpoint?: string;
+  /** Hide the backdrop (for stacked panels sharing a single backdrop) */
+  hideBackdrop?: boolean;
+  /** Z-index offset for stacking panels */
+  zIndexOffset?: number;
 }
 
 export interface JoinFormData {
@@ -49,6 +53,8 @@ export function JoinModal({
   onSuccess,
   sponsorName = null,
   apiEndpoint = '/api/join-team',
+  hideBackdrop = false,
+  zIndexOffset = 0,
 }: JoinModalProps) {
   const [formData, setFormData] = useState<JoinFormData>({
     firstName: '',
@@ -61,19 +67,29 @@ export function JoinModal({
   const [hasCheckedStorage, setHasCheckedStorage] = useState(false);
 
   // Check if user has already submitted - if so, skip form and show instructions
+  // Cache expires after 1 day
+  const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
   useEffect(() => {
     if (isOpen && !hasCheckedStorage) {
       setHasCheckedStorage(true);
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
-          const savedData = JSON.parse(stored) as JoinFormData;
-          // User already submitted - skip form and go directly to instructions
-          onClose();
-          onSuccess?.(savedData);
+          const savedData = JSON.parse(stored) as JoinFormData & { timestamp?: number };
+          // Check if cache has expired (1 day)
+          if (savedData.timestamp && (Date.now() - savedData.timestamp) < ONE_DAY_MS) {
+            // User already submitted - skip form and go directly to instructions
+            onClose();
+            onSuccess?.(savedData);
+          } else {
+            // Cache expired, clear it
+            localStorage.removeItem(STORAGE_KEY);
+          }
         }
       } catch {
-        // Invalid JSON, ignore
+        // Invalid JSON, clear it
+        localStorage.removeItem(STORAGE_KEY);
       }
     }
     // Reset check when modal closes
@@ -108,9 +124,12 @@ export function JoinModal({
       const result = await response.json();
 
       if (result.success) {
-        // Save to localStorage so returning users skip the form
+        // Save to localStorage with timestamp (1-day expiration)
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            ...formData,
+            timestamp: Date.now()
+          }));
         } catch {
           // localStorage not available, continue anyway
         }
@@ -141,6 +160,8 @@ export function JoinModal({
       title="Join Smart Agent Alliance"
       subtitle="Take the first step towards building your dream career at eXp Realty."
       size="md"
+      hideBackdrop={hideBackdrop}
+      zIndexOffset={zIndexOffset}
     >
       <form onSubmit={handleSubmit}>
         <FormRow>
