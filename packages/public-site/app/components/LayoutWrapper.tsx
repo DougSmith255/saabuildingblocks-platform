@@ -98,6 +98,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   // These pages have fixed layouts with their own scroll containers
   const noSmoothScrollPrefixes = useMemo(() => [
     '/master-controller',       // Admin interface
+    '/agent-portal',            // Agent portal has nested scroll containers
   ], []);
 
   // Check for embed mode via URL search params
