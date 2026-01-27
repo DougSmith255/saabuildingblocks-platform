@@ -2621,34 +2621,6 @@ function AgentPortal() {
             }} />
           </div>
 
-          {/* Inner L corner - CONCAVE cutout creating smooth inner curve */}
-          {/* DEBUG: Layer 1 (z-50) = PURPLE, Layer 2 (z-51) = GREEN */}
-
-          {/* Layer 1: Base layer - PURPLE debug */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '85px',
-              left: '280px',
-              width: '24px',
-              height: '24px',
-              background: 'radial-gradient(circle at 0 0, transparent 0, transparent 23px, purple 24px)',
-              zIndex: 50,
-            }}
-          />
-
-          {/* Layer 2: Top layer - GREEN debug */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '85px',
-              left: '280px',
-              width: '24px',
-              height: '24px',
-              background: 'radial-gradient(circle at 0 0, transparent 0, transparent 22px, green 23px)',
-              zIndex: 51,
-            }}
-          />
 
           {/* Top Bar - interactive content area */}
           <div
