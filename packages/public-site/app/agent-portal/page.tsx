@@ -2441,9 +2441,7 @@ function AgentPortal() {
             <div className="flex items-center gap-3">
               {/* Mobile (<950px): Pixel Help Button - always visible, greyed out for sections without modals */}
               <div className="min-[950px]:hidden">
-                {activeSection === 'support' ? (
-                  <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="green" ariaLabel="Support Help" size="mobile" className="relative" />
-                ) : activeSection === 'calls' ? (
+                {activeSection === 'calls' ? (
                   <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" size="mobile" className="relative" />
                 ) : activeSection === 'templates' ? (
                   <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" size="mobile" className="relative" />
@@ -2456,7 +2454,7 @@ function AgentPortal() {
                 ) : activeSection === 'linktree' ? (
                   <PixelHelpButton onClick={() => setShowLinkPageHelpModal(true)} color="gold" ariaLabel="Link Page Help" size="mobile" className="relative" />
                 ) : (
-                  /* Grey/disabled for sections without help modals: dashboard, onboarding, profile, production, download */
+                  /* Grey/disabled for sections without help modals: dashboard, onboarding, profile, production, download, support */
                   <PixelHelpButton onClick={() => {}} color="grey" ariaLabel="Help unavailable" size="mobile" className="relative" disabled />
                 )}
               </div>
@@ -3371,10 +3369,6 @@ function AgentPortal() {
 
       {/* ========== Floating Help Buttons - Desktop/Tablet only (hidden on mobile where header has help button) ========== */}
       <div className="hidden min-[950px]:block">
-        {/* Support Help Button */}
-        {activeSection === 'support' && (
-          <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="green" ariaLabel="Support Help" />
-        )}
         {/* Team Calls Help Button */}
         {activeSection === 'calls' && (
           <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" />
@@ -4365,143 +4359,6 @@ function AgentPortal() {
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.boxShadow = '0 0 20px rgba(168, 85, 247, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                Got it!
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Support Help Modal */}
-      {showSupportHelpModal && (
-        <div
-          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
-          onClick={() => closeHelpPanel('support', setShowSupportHelpModal)}
-        >
-          {/* Backdrop with blur */}
-          <div
-            className={`help-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${closingHelpPanel === 'support' ? 'help-backdrop-closing' : ''}`}
-            style={{ isolation: 'isolate' }}
-          />
-
-          {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
-          <div
-            className={`help-panel help-panel-green relative overflow-y-auto overscroll-contain ${closingHelpPanel === 'support' ? 'help-panel-closing' : ''}`}
-            style={{
-              background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
-            }}
-            onClick={(e) => e.stopPropagation()}
-            {...createSwipeHandlers('support', setShowSupportHelpModal)}
-          >
-            {/* Header - Green accent */}
-            <div
-              className="help-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
-              style={{
-                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(20,20,20,0.98) 50%)',
-              }}
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className="p-2 rounded-lg"
-                  style={{
-                    background: 'rgba(34, 197, 94, 0.15)',
-                    border: '1px solid rgba(34, 197, 94, 0.3)',
-                    boxShadow: '0 0 12px rgba(34, 197, 94, 0.2)',
-                  }}
-                >
-                  <Headphones className="w-6 h-6 text-[#22c55e]" />
-                </div>
-                <h2 className="text-xl font-semibold text-[#22c55e]" style={{ textShadow: '0 0 20px rgba(34, 197, 94, 0.3)' }}>When to Contact Who</h2>
-              </div>
-              <button
-                onClick={() => closeHelpPanel('support', setShowSupportHelpModal)}
-                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#22c55e] hover:bg-[#22c55e]/10 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Content - Use cases for each support option */}
-            <div className="p-5 space-y-4">
-              {/* eXp Support - Blue */}
-              <div className="rounded-xl p-4" style={{ background: 'rgba(59, 130, 246, 0.08)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
-                <h4 className="font-semibold text-[#3b82f6] mb-2 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#3b82f6]" />
-                  eXp Support
-                </h4>
-                <p className="text-[#e5e4dd]/70 text-sm">Tech issues with eXp tools, questions about eXp services, or help finding specific eXp resources.</p>
-              </div>
-
-              {/* Broker - Purple */}
-              <div className="rounded-xl p-4" style={{ background: 'rgba(168, 85, 247, 0.08)', border: '1px solid rgba(168, 85, 247, 0.2)' }}>
-                <h4 className="font-semibold text-[#a855f7] mb-2 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#a855f7]" />
-                  State Broker
-                </h4>
-                <p className="text-[#e5e4dd]/70 text-sm">Agent production questions - contracts, commission splits, compliance, or transaction issues.</p>
-              </div>
-
-              {/* SAA Support - Gold */}
-              <div className="rounded-xl p-4" style={{ background: 'rgba(255, 215, 0, 0.08)', border: '1px solid rgba(255, 215, 0, 0.2)' }}>
-                <h4 className="font-semibold text-[#ffd700] mb-2 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#ffd700]" />
-                  SAA Support
-                </h4>
-                <p className="text-[#e5e4dd]/70 text-sm">Questions about SAA assets (Agent Portal, Link Page, Templates, Team Calls) or SAA-related tech issues.</p>
-              </div>
-
-              {/* Text Doug - Gold variant */}
-              <div className="rounded-xl p-4 ml-4" style={{ background: 'rgba(255, 215, 0, 0.04)', border: '1px solid rgba(255, 215, 0, 0.15)' }}>
-                <h4 className="font-medium text-[#ffd700]/90 mb-2 flex items-center gap-2 text-sm">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                  Text Doug
-                </h4>
-                <p className="text-[#e5e4dd]/60 text-xs">Critical bugs or tech issues in the Agent Portal specifically. Time-sensitive issues only.</p>
-              </div>
-
-              {/* Wolf Pack - Green */}
-              <div className="rounded-xl p-4" style={{ background: 'rgba(34, 197, 94, 0.08)', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
-                <h4 className="font-semibold text-[#22c55e] mb-2 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#22c55e]" />
-                  Wolf Pack Support
-                </h4>
-                <p className="text-[#e5e4dd]/70 text-sm mb-3">Questions about Wolf Pack courses and communities:</p>
-                <div className="space-y-2 text-xs">
-                  <div className="flex items-start gap-2 text-[#e5e4dd]/60">
-                    <span className="text-[#22c55e] mt-0.5">→</span>
-                    <span><strong className="text-[#e5e4dd]/80">Mike:</strong> Skool Community, Social Agent Academy, Master Agent Attraction, AI Agent Accelerator</span>
-                  </div>
-                  <div className="flex items-start gap-2 text-[#e5e4dd]/60">
-                    <span className="text-[#3b82f6] mt-0.5">→</span>
-                    <span><strong className="text-[#e5e4dd]/80">Connor:</strong> Investor Army course</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div className="p-5 border-t border-white/10">
-              <button
-                onClick={() => closeHelpPanel('support', setShowSupportHelpModal)}
-                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
-                style={{
-                  background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-                  color: '#1a1a1a',
-                  boxShadow: '0 0 20px rgba(34, 197, 94, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 30px rgba(34, 197, 94, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -6464,13 +6321,13 @@ function SupportSection({ userState }: SupportSectionProps) {
         >
           {/* Header */}
           <div className="p-5 border-b border-[#3b82f6]/20" style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, transparent 50%)' }}>
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3">
               <div className="p-3 rounded-xl" style={{ background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
                 <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public" alt="eXp" className="w-7 h-7 object-contain" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#3b82f6]">eXp Support</h3>
-                <p className="text-sm text-[#e5e4dd]/60">eXp Realty questions, issues & tech support</p>
+                <p className="text-xs text-[#e5e4dd]/50">Tech issues, eXp tools, finding eXp resources</p>
               </div>
             </div>
           </div>
@@ -6535,13 +6392,13 @@ function SupportSection({ userState }: SupportSectionProps) {
           >
             {/* Header */}
             <div className="p-5 border-b border-[#a855f7]/20" style={{ background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, transparent 50%)' }}>
-              <div className="flex items-center gap-3 mb-2">
+              <div className="flex items-center gap-3">
                 <div className="p-2 rounded-xl" style={{ background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.3)' }}>
                   <LocationIndicatorIcon className="w-10 h-10" style={{ color: '#a855f7' }} />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-[#a855f7]">{brokerInfo.name} eXp Broker</h3>
-                  <p className="text-sm text-[#e5e4dd]/60">Agent production questions & issues</p>
+                  <p className="text-xs text-[#e5e4dd]/50">Contracts, splits, compliance, transactions</p>
                 </div>
               </div>
             </div>
@@ -6593,50 +6450,53 @@ function SupportSection({ userState }: SupportSectionProps) {
         >
           {/* Header */}
           <div className="p-5 border-b border-[#ffd700]/20" style={{ background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, transparent 50%)' }}>
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3">
               <div className="p-3 rounded-xl" style={{ background: 'rgba(255, 215, 0, 0.15)', border: '1px solid rgba(255, 215, 0, 0.3)' }}>
                 <img src="/icons/s-logo-1000.png" alt="SAA" className="w-7 h-7 object-contain" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#ffd700]">SAA Support</h3>
-                <p className="text-sm text-[#e5e4dd]/60">SAA questions, issues & tech support</p>
+                <p className="text-xs text-[#e5e4dd]/50">Portal, Link Page, Templates, Team Calls</p>
               </div>
             </div>
           </div>
 
           {/* Contact Options */}
-          <div className="p-5 space-y-4">
-            {/* Email Button */}
-            <a
-              href="mailto:team@smartagentalliance.com"
-              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#ffd700] text-[#1a1a1a] font-semibold hover:bg-[#ffe55c] transition-colors text-sm"
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            >
-              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <span className="truncate">team@smartagentalliance.com</span>
-            </a>
+          <div className="p-5 space-y-3">
+            {/* Email - General questions */}
+            <div>
+              <p className="text-[10px] text-[#e5e4dd]/40 uppercase tracking-wider mb-1.5">General Questions</p>
+              <a
+                href="mailto:team@smartagentalliance.com"
+                className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#ffd700] text-[#1a1a1a] font-semibold hover:bg-[#ffe55c] transition-colors text-sm"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span className="truncate">team@smartagentalliance.com</span>
+              </a>
+            </div>
 
-            {/* Urgent Contact Info */}
-            <div className="p-4 rounded-xl bg-black/30 border border-white/10">
-              <p className="text-xs text-[#e5e4dd]/60 mb-3 text-center">For time-sensitive issues, text:</p>
-              <div className="space-y-2">
+            {/* Urgent - Text Doug or Karrie */}
+            <div>
+              <p className="text-[10px] text-[#e5e4dd]/40 uppercase tracking-wider mb-1.5">Urgent / Critical Bug</p>
+              <div className="grid grid-cols-2 gap-2">
                 <a
-                  href="sms:4153205606"
-                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors"
+                  href="sms:+13143205606"
+                  className="flex flex-col items-center py-2.5 px-3 rounded-xl bg-black/30 border border-[#ffd700]/20 text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
                   style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
                 >
-                  <span className="text-sm text-[#e5e4dd]">Doug</span>
-                  <span className="text-sm text-[#ffd700] font-medium">(415) 320-5606</span>
+                  <span className="text-xs font-semibold">Doug</span>
+                  <span className="text-[10px] text-[#e5e4dd]/50">314-320-5606</span>
                 </a>
                 <a
-                  href="sms:4152380922"
-                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors"
+                  href="sms:+14152380922"
+                  className="flex flex-col items-center py-2.5 px-3 rounded-xl bg-black/30 border border-[#ffd700]/20 text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
                   style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
                 >
-                  <span className="text-sm text-[#e5e4dd]">Karrie</span>
-                  <span className="text-sm text-[#ffd700] font-medium">(415) 238-0922</span>
+                  <span className="text-xs font-semibold">Karrie</span>
+                  <span className="text-[10px] text-[#e5e4dd]/50">415-238-0922</span>
                 </a>
               </div>
             </div>
@@ -6655,39 +6515,47 @@ function SupportSection({ userState }: SupportSectionProps) {
         >
           {/* Header */}
           <div className="p-5 border-b border-[#22c55e]/20" style={{ background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, transparent 50%)' }}>
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3">
               <div className="p-3 rounded-xl" style={{ background: 'rgba(34, 197, 94, 0.15)', border: '1px solid rgba(34, 197, 94, 0.3)' }}>
                 <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wolf-pack-logo-icon/public" alt="Wolf Pack" className="w-7 h-7 object-contain" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#22c55e]">Wolf Pack Support</h3>
-                <p className="text-sm text-[#e5e4dd]/60">Wolf Pack questions, issues & tech support</p>
+                <p className="text-xs text-[#e5e4dd]/50">Skool, courses, Wolf Pack communities</p>
               </div>
             </div>
           </div>
 
           {/* Contact Options */}
           <div className="p-5 space-y-3">
-            <a
-              href="mailto:support@mikesherrard.com"
-              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#22c55e] text-[#1a1a1a] font-semibold hover:bg-[#16a34a] transition-colors text-sm"
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            >
-              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <span className="truncate">support@mikesherrard.com</span>
-            </a>
-            <a
-              href="mailto:connor.steinbrook@exprealty.com"
-              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-black/30 border border-[#22c55e]/30 text-[#22c55e] font-semibold hover:bg-[#22c55e]/10 transition-colors text-sm"
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            >
-              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <span className="truncate">connor.steinbrook@exprealty.com</span>
-            </a>
+            {/* Mike - Skool, SAA PRO, Master Agent Attraction, AI Accelerator */}
+            <div>
+              <p className="text-[10px] text-[#e5e4dd]/40 uppercase tracking-wider mb-1.5">Skool • SAA PRO • Agent Attraction • AI Accelerator</p>
+              <a
+                href="mailto:support@mikesherrard.com"
+                className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#22c55e] text-[#1a1a1a] font-semibold hover:bg-[#16a34a] transition-colors text-sm"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span className="truncate">support@mikesherrard.com</span>
+              </a>
+            </div>
+            {/* Connor - Investor Army */}
+            <div>
+              <p className="text-[10px] text-[#e5e4dd]/40 uppercase tracking-wider mb-1.5">Investor Army Course</p>
+              <a
+                href="mailto:connor.steinbrook@exprealty.com"
+                className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-black/30 border border-[#22c55e]/30 text-[#22c55e] font-semibold hover:bg-[#22c55e]/10 transition-colors text-sm"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span className="truncate">connor.steinbrook@exprealty.com</span>
+              </a>
+            </div>
           </div>
         </div>
 
