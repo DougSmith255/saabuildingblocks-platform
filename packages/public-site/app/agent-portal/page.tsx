@@ -2582,50 +2582,122 @@ function AgentPortal() {
         <div className="fixed inset-0 z-40 pointer-events-none">
 
           {/* === UNIFIED L-SHAPE BACKGROUND === */}
-          {/* This creates the continuous L-shape without visible seams */}
-          {/* Top portion of L (header area) */}
+          {/* Single L-shaped element using clip-path for seamless appearance */}
+          {/* Base layer - solid dark background with L-shape clip */}
           <div
-            className="absolute top-0 left-0 right-0 h-[85px]"
+            className="absolute inset-0 pointer-events-none"
             style={{
-              background: `
-                linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
-              `,
-              boxShadow: 'inset 0 0 30px rgba(255, 255, 255, 0.03)',
-            }}
-          />
-          {/* Left portion of L (sidebar area) - overlaps header to ensure seamless connection */}
-          <div
-            className="absolute top-0 left-0 bottom-0 w-[280px]"
-            style={{
-              background: `
-                linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
-              `,
-              boxShadow: 'inset 0 0 30px rgba(255, 255, 255, 0.03)',
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              clipPath: `polygon(
+                0 0,
+                100% 0,
+                100% 85px,
+                280px 85px,
+                280px calc(100% - 24px),
+                256px 100%,
+                0 100%
+              )`,
             }}
           />
 
-          {/* Scan lines overlay for entire L-shape */}
+          {/* Corrugated vertical stripes - SINGLE unified L-shape */}
           <div
-            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
+            className="absolute inset-0 pointer-events-none"
             style={{
-              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px)`,
-            }}
-          />
-          <div
-            className="absolute top-0 left-0 bottom-0 w-[280px] pointer-events-none"
-            style={{
-              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px)`,
+              background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
+              clipPath: `polygon(
+                0 0,
+                100% 0,
+                100% 85px,
+                280px 85px,
+                280px calc(100% - 24px),
+                256px 100%,
+                0 100%
+              )`,
             }}
           />
 
-          {/* Bottom-right corner radius on sidebar */}
+          {/* Scan lines overlay - SINGLE unified L-shape */}
           <div
-            className="absolute bottom-0 left-0 w-[280px] h-[24px] pointer-events-none"
+            className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'rgba(14, 14, 14, 0.98)',
-              borderBottomRightRadius: '24px',
+              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
+              clipPath: `polygon(
+                0 0,
+                100% 0,
+                100% 85px,
+                280px 85px,
+                280px calc(100% - 24px),
+                256px 100%,
+                0 100%
+              )`,
+            }}
+          />
+
+          {/* Inner glow/shimmer - unified L-shape */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              clipPath: `polygon(
+                0 0,
+                100% 0,
+                100% 85px,
+                280px 85px,
+                280px calc(100% - 24px),
+                256px 100%,
+                0 100%
+              )`,
+            }}
+          />
+
+          {/* 3D Edge Effects - Strong depth illusion */}
+          {/* Top edge highlight */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[2px] pointer-events-none"
+            style={{
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.15) 100%)',
+            }}
+          />
+          {/* Left edge highlight */}
+          <div
+            className="absolute top-0 left-0 w-[2px] bottom-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
+              clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 24px), 0 100%)',
+            }}
+          />
+          {/* Bottom edge of header (inner L edge) - shadow for depth */}
+          <div
+            className="absolute top-[83px] left-[280px] right-0 h-[4px] pointer-events-none"
+            style={{
+              background: 'linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+            }}
+          />
+          {/* Right edge of sidebar (inner L edge) - shadow for depth */}
+          <div
+            className="absolute top-[85px] left-[278px] w-[4px] pointer-events-none"
+            style={{
+              height: 'calc(100% - 85px - 24px)',
+              background: 'linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+            }}
+          />
+          {/* Right edge of header - subtle highlight */}
+          <div
+            className="absolute top-0 right-0 w-[2px] h-[85px] pointer-events-none"
+            style={{
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+            }}
+          />
+          {/* Bottom-right corner curve shadow */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              bottom: '0',
+              left: '256px',
+              width: '28px',
+              height: '28px',
+              background: 'radial-gradient(circle at top left, transparent 22px, rgba(0,0,0,0.4) 22px, transparent 28px)',
             }}
           />
 
@@ -2905,18 +2977,31 @@ function AgentPortal() {
       {/* On mobile: fills screen with padding for header/nav */}
       <div
         className="min-[950px]:fixed min-[950px]:top-[85px] min-[950px]:left-[280px] min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto min-[950px]:z-30"
-        style={{
-          // Desktop: background + curved corner creates the visual inner corner of the L-frame
-        }}
       >
         {/* Inner wrapper with curved corner - creates the concave inner corner effect */}
         <div
-          className="min-h-full min-[950px]:rounded-tl-[24px] min-[950px]:border-l min-[950px]:border-t"
+          className="relative min-h-full min-[950px]:rounded-tl-[24px] overflow-hidden"
           style={{
             background: '#0a0a0a',
-            borderColor: 'rgba(60, 60, 60, 0.6)',
           }}
         >
+          {/* 3D inner edge effect - highlight on top-left curve */}
+          <div
+            className="hidden min-[950px]:block absolute top-0 left-0 right-0 pointer-events-none z-10"
+            style={{
+              height: '3px',
+              background: 'linear-gradient(90deg, transparent 0px, rgba(255,255,255,0.15) 24px, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%)',
+              borderTopLeftRadius: '24px',
+            }}
+          />
+          <div
+            className="hidden min-[950px]:block absolute top-0 left-0 bottom-0 pointer-events-none z-10"
+            style={{
+              width: '3px',
+              background: 'linear-gradient(180deg, transparent 0px, rgba(255,255,255,0.12) 24px, rgba(255,255,255,0.04) 50%, transparent 100%)',
+              borderTopLeftRadius: '24px',
+            }}
+          />
         {/* Content Area */}
         <main
           className="flex-1 p-4 sm:p-6 min-[950px]:p-8 min-h-screen min-[950px]:min-h-0"
