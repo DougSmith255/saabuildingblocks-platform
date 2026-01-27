@@ -38,7 +38,9 @@
       right: 0;
       height: 85px;
       background: rgba(128, 0, 128, 0.9); /* DEBUG: purple */
-      /* Mask creates the concave cutout at bottom-right corner of sidebar area */
+      /* Rounded corner on bottom-right (outer edge of header) */
+      border-bottom-right-radius: 24px;
+      /* Mask creates the concave cutout at inner corner (junction with sidebar) */
       -webkit-mask-image: radial-gradient(
         circle 24px at 280px 85px,
         transparent 23px,

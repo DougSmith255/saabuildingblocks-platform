@@ -2585,6 +2585,8 @@ function AgentPortal() {
             style={{
               background: 'rgba(128, 0, 128, 0.9)', // DEBUG: purple
               // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              // Rounded corner on bottom-right (outer edge of header)
+              borderBottomRightRadius: '24px',
               // Mask creates concave cutout at junction (280px, 85px)
               WebkitMaskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
               maskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
