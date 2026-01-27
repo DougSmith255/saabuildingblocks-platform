@@ -955,8 +955,8 @@ function AgentPortal() {
     step5_choose_crm: boolean;
     step6_karrie_session: boolean;
     step7_link_page: boolean;
-    step8_elite_courses: boolean;
-    step9_download_app: boolean;
+    step8_download_app: boolean;
+    step9_agent_portal: boolean;
   }>({
     step1_okta_account: false,
     step2_training: false,
@@ -965,8 +965,8 @@ function AgentPortal() {
     step5_choose_crm: false,
     step6_karrie_session: false,
     step7_link_page: false,
-    step8_elite_courses: false,
-    step9_download_app: false,
+    step8_download_app: false,
+    step9_agent_portal: false,
   });
   const [onboardingCompletedAt, setOnboardingCompletedAt] = useState<string | null>(null);
   const [linkPageIntroDismissed, setLinkPageIntroDismissed] = useState(false);
@@ -1226,8 +1226,8 @@ function AgentPortal() {
               step5_choose_crm: false,
               step6_karrie_session: false,
               step7_link_page: false,
-              step8_elite_courses: false,
-              step9_download_app: false,
+              step8_download_app: false,
+              step9_agent_portal: false,
             };
             console.log('[Onboarding] Setting progress:', progress);
             console.log('[Onboarding] onboarding_completed_at:', data.data.onboarding_completed_at);
@@ -5736,8 +5736,8 @@ interface OnboardingProgress {
   step5_choose_crm: boolean;
   step6_karrie_session: boolean;
   step7_link_page: boolean;
-  step8_elite_courses: boolean;
-  step9_download_app: boolean;
+  step8_download_app: boolean;
+  step9_agent_portal: boolean;
 }
 
 interface OnboardingSectionProps {
@@ -5991,31 +5991,8 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       ),
     },
     {
-      key: 'step8_elite_courses' as keyof OnboardingProgress,
+      key: 'step8_download_app' as keyof OnboardingProgress,
       number: 8,
-      title: 'Explore Elite Courses',
-      description: 'Access Social Agent Academy PRO and other exclusive training.',
-      content: (
-        <div className="space-y-4">
-          <p className="text-[#e5e4dd]/80 text-sm">
-            Access your elite training resources including Social Agent Academy PRO, Master Agent Attraction, and AI Agent Accelerator.
-          </p>
-          <button
-            onClick={() => onNavigate('courses')}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-500/20 hover:border-purple-500/50 transition-all text-sm"
-          >
-            <GraduationCap className="w-4 h-4" />
-            Go to Elite Courses
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      ),
-    },
-    {
-      key: 'step9_download_app' as keyof OnboardingProgress,
-      number: 9,
       title: 'Download the Mobile App',
       description: 'Install the SAA Agent Portal app on your device for quick access and offline features.',
       content: (
@@ -6059,6 +6036,48 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
           </a>
+        </div>
+      ),
+    },
+    {
+      key: 'step9_agent_portal' as keyof OnboardingProgress,
+      number: 9,
+      title: 'Explore Agent Portal',
+      description: 'Discover all the tools and resources available in your Agent Portal.',
+      content: (
+        <div className="space-y-4">
+          <p className="text-[#e5e4dd]/80 text-sm">
+            Your Agent Portal is your central hub for everything you need as a Smart Agent Alliance team member. Take time to explore all the features.
+          </p>
+          <div className="bg-purple-500/10 rounded-lg p-4 border border-purple-500/30">
+            <h4 className="text-purple-400 font-semibold mb-2 text-sm flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              Portal Features:
+            </h4>
+            <ul className="space-y-1 text-[#e5e4dd]/80 text-sm">
+              <li className="flex items-start gap-2">
+                <span className="text-purple-400 mt-0.5">📚</span>
+                <span>Elite Courses - Social Agent Academy PRO & more</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-purple-400 mt-0.5">🔗</span>
+                <span>Link Page - Your personal marketing page</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-purple-400 mt-0.5">📄</span>
+                <span>New Agents - Documents & resources</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-purple-400 mt-0.5">🎯</span>
+                <span>Agent Attraction - Grow your team</span>
+              </li>
+            </ul>
+          </div>
+          <p className="text-[#e5e4dd]/60 text-sm italic">
+            Use the sidebar to navigate between sections and discover all the tools available to you.
+          </p>
         </div>
       ),
     },
@@ -6340,35 +6359,66 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
           <LifeBuoy className="w-5 h-5" />
           Need Help?
         </h3>
-        <p className="text-[#e5e4dd]/70 text-sm mb-4">
-          For eXp-related onboarding questions, contact the eXp Expert Care Team:
-        </p>
-        <div className="grid sm:grid-cols-3 gap-3">
-          <a
-            href="tel:833-303-0610"
-            className="flex items-center gap-2 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-[#e5e4dd] hover:bg-white/10 hover:border-white/20 transition-all text-sm"
-          >
-            <Headphones className="w-4 h-4 text-[#ffd700]" />
-            <span>833-303-0610</span>
-          </a>
-          <a
-            href="mailto:ExpertCare@exprealty.net"
-            className="flex items-center gap-2 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-[#e5e4dd] hover:bg-white/10 hover:border-white/20 transition-all text-sm"
-          >
-            <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            <span className="truncate">ExpertCare@exprealty.net</span>
-          </a>
-          <a
-            href="https://exp.world/expertcare"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-[#e5e4dd] hover:bg-white/10 hover:border-white/20 transition-all text-sm"
-          >
-            <Building2 className="w-4 h-4 text-[#ffd700]" />
-            <span>exp.world/expertcare</span>
-          </a>
+
+        {/* Steps 1-5: eXp Expert Care */}
+        <div className="mb-4">
+          <p className="text-[#e5e4dd]/90 text-sm font-medium mb-2">
+            For Steps 1-5 (eXp onboarding), contact the eXp Expert Care Team:
+          </p>
+          <div className="grid sm:grid-cols-3 gap-2">
+            <a
+              href="tel:833-303-0610"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-[#e5e4dd] hover:bg-white/10 hover:border-white/20 transition-all text-sm"
+            >
+              <Headphones className="w-4 h-4 text-[#ffd700]" />
+              <span>833-303-0610</span>
+            </a>
+            <a
+              href="mailto:ExpertCare@exprealty.net"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-[#e5e4dd] hover:bg-white/10 hover:border-white/20 transition-all text-sm"
+            >
+              <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span className="truncate">ExpertCare@exprealty.net</span>
+            </a>
+            <a
+              href="https://exp.world/expertcare"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-[#e5e4dd] hover:bg-white/10 hover:border-white/20 transition-all text-sm"
+            >
+              <Building2 className="w-4 h-4 text-[#ffd700]" />
+              <span>exp.world/expertcare</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Steps 6-9: Contact Doug */}
+        <div className="pt-3 border-t border-white/10">
+          <p className="text-[#e5e4dd]/90 text-sm font-medium mb-2">
+            For Steps 6-9 (Smart Agent Alliance), contact Doug:
+          </p>
+          <div className="grid sm:grid-cols-2 gap-2">
+            <a
+              href="mailto:doug@smartagentalliance.com"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#ffd700]/5 border border-[#ffd700]/20 text-[#e5e4dd] hover:bg-[#ffd700]/10 hover:border-[#ffd700]/30 transition-all text-sm"
+            >
+              <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span className="truncate">doug@smartagentalliance.com</span>
+            </a>
+            <a
+              href="sms:+13143205606"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#ffd700]/5 border border-[#ffd700]/20 text-[#e5e4dd] hover:bg-[#ffd700]/10 hover:border-[#ffd700]/30 transition-all text-sm"
+            >
+              <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              <span>Text: 314-320-5606</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -10804,18 +10854,30 @@ return (
           {/* Bio */}
           <div>
             <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">
-              Bio <span className="text-white/30">({linksSettings.bio.length}/80)</span>
+              Bio <span className="text-white/30">({linksSettings.bio.length}/120 • {(linksSettings.bio.match(/\n/g) || []).length + 1}/3 lines)</span>
             </label>
             <textarea
               value={linksSettings.bio}
               onChange={(e) => {
-                if (e.target.value.length <= 80) {
-                  setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
+                const newValue = e.target.value;
+                const lineCount = (newValue.match(/\n/g) || []).length + 1;
+                // Allow up to 120 chars and max 3 lines
+                if (newValue.length <= 120 && lineCount <= 3) {
+                  setLinksSettings(prev => ({ ...prev, bio: newValue }));
                   setHasUnsavedChanges(true);
                 }
               }}
-              placeholder="Short bio about yourself..."
-              rows={2}
+              onKeyDown={(e) => {
+                // Prevent new line if already at 3 lines
+                if (e.key === 'Enter') {
+                  const lineCount = (linksSettings.bio.match(/\n/g) || []).length + 1;
+                  if (lineCount >= 3) {
+                    e.preventDefault();
+                  }
+                }
+              }}
+              placeholder="Short bio about yourself...&#10;Press Enter for new line (max 3 lines)"
+              rows={3}
               className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none resize-none"
             />
           </div>
@@ -11360,7 +11422,7 @@ return (
 
                 {/* Bio - moved under social icons with spacing below for contact buttons */}
                 {linksSettings.bio && (
-                  <p className="text-xs text-center text-white/50 px-2 leading-tight max-w-[220px] mt-1.5 mb-3 break-words overflow-hidden" style={{ wordBreak: 'break-word' }}>{linksSettings.bio}</p>
+                  <p className="text-xs text-center text-white/50 px-2 leading-tight max-w-[220px] mt-1.5 mb-3 break-words overflow-hidden" style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}>{linksSettings.bio}</p>
                 )}
               </div>
 
@@ -12458,12 +12520,25 @@ return (
               </div>
               {/* Bio */}
               <div>
-                <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Bio ({linksSettings.bio.length}/80)</label>
+                <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Bio ({linksSettings.bio.length}/120 • {(linksSettings.bio.match(/\n/g) || []).length + 1}/3 lines)</label>
                 <textarea
                   value={linksSettings.bio}
-                  onChange={(e) => { if (e.target.value.length <= 80) { setLinksSettings(prev => ({ ...prev, bio: e.target.value })); setHasUnsavedChanges(true); } }}
+                  onChange={(e) => {
+                    const newValue = e.target.value;
+                    const lineCount = (newValue.match(/\n/g) || []).length + 1;
+                    if (newValue.length <= 120 && lineCount <= 3) {
+                      setLinksSettings(prev => ({ ...prev, bio: newValue }));
+                      setHasUnsavedChanges(true);
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      const lineCount = (linksSettings.bio.match(/\n/g) || []).length + 1;
+                      if (lineCount >= 3) e.preventDefault();
+                    }
+                  }}
                   placeholder="Short bio..."
-                  rows={2}
+                  rows={3}
                   className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none resize-none"
                 />
               </div>
@@ -12898,17 +12973,25 @@ return (
 
             {/* Bio */}
             <div>
-              <label className="block text-xs text-white/50 mb-1">Bio ({linksSettings.bio.length}/80)</label>
+              <label className="block text-xs text-white/50 mb-1">Bio ({linksSettings.bio.length}/120 • {(linksSettings.bio.match(/\n/g) || []).length + 1}/3 lines)</label>
               <textarea
                 value={linksSettings.bio}
                 onChange={(e) => {
-                  if (e.target.value.length <= 80) {
-                    setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
+                  const newValue = e.target.value;
+                  const lineCount = (newValue.match(/\n/g) || []).length + 1;
+                  if (newValue.length <= 120 && lineCount <= 3) {
+                    setLinksSettings(prev => ({ ...prev, bio: newValue }));
                     setHasUnsavedChanges(true);
                   }
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const lineCount = (linksSettings.bio.match(/\n/g) || []).length + 1;
+                    if (lineCount >= 3) e.preventDefault();
+                  }
+                }}
                 placeholder="Short bio about yourself..."
-                rows={2}
+                rows={3}
                 className="w-full px-3 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white focus:border-[#ffd700]/50 focus:outline-none resize-none"
               />
             </div>
@@ -13113,7 +13196,7 @@ return (
                   )}
                   {/* Bio */}
                   {linksSettings.bio && (
-                    <p className="text-xs text-center text-white/60 px-2 leading-relaxed max-w-[280px]" style={{ wordBreak: 'break-word' }}>
+                    <p className="text-xs text-center text-white/60 px-2 leading-relaxed max-w-[280px]" style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}>
                       {linksSettings.bio}
                     </p>
                   )}

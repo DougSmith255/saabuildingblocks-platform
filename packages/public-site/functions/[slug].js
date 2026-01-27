@@ -6474,8 +6474,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     </div>
   `;
 
-  // Bio HTML
-  const bioHTML = bio ? `<p class="bio">${escapeHTML(bio)}</p>` : '';
+  // Bio HTML - preserve line breaks by converting \n to <br>
+  const bioHTML = bio ? `<p class="bio">${escapeHTML(bio).replace(/\n/g, '<br>')}</p>` : '';
 
   // Custom links from agent data (with fallback to empty array)
   const customLinks = agent.custom_links || [];
