@@ -2572,42 +2572,99 @@ function AgentPortal() {
       </nav>
 
       {/* ===== DESKTOP FIXED L-FRAME (950px+) ===== */}
-      {/* This is a unified L-shaped glass frame that stays fixed on screen */}
-      {/* Content scrolls within the open part of the L */}
+      {/* UNIFIED L-SHAPE with concave inner corner */}
       <div className="hidden min-[950px]:block">
         {/* === FIXED L-FRAME CONTAINER === */}
         <div className="fixed inset-0 z-40 pointer-events-none">
 
-          {/* === L-FRAME: Header bar + Sidebar with curved inner corner === */}
+          {/* === UNIFIED L-FRAME BACKGROUND === */}
+          {/* Header portion - full width */}
+          {/* DEBUG: Using purple to visualize header layer */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[85px]"
+            style={{
+              background: 'rgba(128, 0, 128, 0.9)', // DEBUG: purple
+              // background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+            }}
+          />
 
-          {/* Header bar - full width */}
-          {/* DEBUG: Base = purple, Layer 1 = red, Layer 2 = green, Layer 3 = blue */}
+          {/* Sidebar portion - left side below header */}
+          {/* DEBUG: Using blue to visualize sidebar layer */}
+          <div
+            className="absolute top-[85px] left-0 bottom-0 w-[280px]"
+            style={{
+              background: 'rgba(0, 0, 200, 0.9)', // DEBUG: blue
+              // background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              borderBottomRightRadius: '24px',
+            }}
+          />
+
+          {/* Concave inner corner - creates the smooth inward curve at the junction */}
+          {/* This element overlays the corner with a quarter-circle in content bg color */}
+          {/* The solid quarter-circle covers the L-frame corner, creating concave effect */}
+          {/* DEBUG: Using red to visualize concave corner element */}
+          <div
+            className="absolute"
+            style={{
+              top: '85px',
+              left: '280px',
+              width: '24px',
+              height: '24px',
+              // DEBUG: Red quarter-circle to visualize the concave corner
+              background: 'radial-gradient(circle at 0 0, rgba(255, 0, 0, 1) 0, rgba(255, 0, 0, 1) 23px, transparent 24px)',
+              // PRODUCTION: background: 'radial-gradient(circle at 0 0, #0a0a0a 0, #0a0a0a 23px, transparent 24px)',
+              zIndex: 50,
+            }}
+          />
+
+          {/* Glass texture overlay for header - DISABLED FOR DEBUG */}
+          {/*
           <div
             className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
             style={{
-              background: 'purple',
+              background: `
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
+              `,
             }}
-          >
-            {/* Glass texture layers - DEBUG COLORS */}
-            <div className="absolute inset-0" style={{
-              background: 'red',
-              opacity: 0.7,
-            }} />
-            <div className="absolute inset-0" style={{
-              background: 'green',
-              opacity: 0.7,
-            }} />
-            <div className="absolute inset-0" style={{
-              background: 'blue',
-              opacity: 0.7,
-            }} />
-          </div>
+          />
+          */}
 
+          {/* Glass texture overlay for sidebar - DISABLED FOR DEBUG */}
+          {/*
+          <div
+            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
+            style={{
+              background: `
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
+              `,
+              borderBottomRightRadius: '24px',
+            }}
+          />
+          */}
+
+          {/* Shimmer gradient overlay - DISABLED FOR DEBUG */}
+          {/*
+          <div
+            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+            }}
+          />
+          <div
+            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              borderBottomRightRadius: '24px',
+            }}
+          />
+          */}
 
           {/* Top Bar - interactive content area */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px] pointer-events-auto"
-            style={{ background: 'transparent' }}
+            style={{ background: 'transparent', zIndex: 10 }}
           >
             {/* Top bar content: Logo on left, Title in middle-ish, Logout on right */}
             <div className="relative z-10 h-full flex items-center px-6">
@@ -2651,21 +2708,11 @@ function AgentPortal() {
             </div>
           </div>
 
-          {/* Left Sidebar - interactive content area (background handled by unified L-shape above) */}
-          {/* DEBUG: Sidebar = orange, Shimmer = cyan */}
+          {/* Left Sidebar - interactive content area */}
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-auto overflow-visible"
-            style={{ background: 'orange' }}
+            style={{ background: 'transparent', zIndex: 10 }}
           >
-            {/* Shimmer overlay - DEBUG: Cyan */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: 'cyan',
-                borderBottomRightRadius: '24px',
-                opacity: 0.7,
-              }}
-            />
 
             {/* Sidebar content - fits within viewport without scrollbar */}
             <div className="relative z-10 h-full flex flex-col p-3 space-y-2">
