@@ -82,8 +82,8 @@ export function VideoSection({
   bookCallUrl = 'https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7',
 }: VideoSectionProps) {
   const [showBookCall, setShowBookCall] = useState(false);
-  const [showJoinModal, setShowJoinModal] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(false);
+  // Single activePanel state - mirrors New Agents pattern
+  const [activePanel, setActivePanel] = useState<'join' | 'instructions' | null>(null);
   const [userName, setUserName] = useState('');
 
   // Check localStorage for existing progress on mount
@@ -100,12 +100,12 @@ export function VideoSection({
 
   const handleJoinSuccess = useCallback((data: JoinFormData) => {
     setUserName(data.firstName);
-    // Open instructions panel FIRST (with its backdrop) while join modal is still visible
-    setShowInstructions(true);
-    // Then close join modal after a tiny delay - its backdrop is hidden so transition is seamless
-    setTimeout(() => {
-      setShowJoinModal(false);
-    }, 50);
+    // Switch to instructions panel - join panel stays open underneath (like New Agents pattern)
+    setActivePanel('instructions');
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setActivePanel(null);
   }, []);
 
   return (
@@ -143,7 +143,7 @@ export function VideoSection({
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setShowJoinModal(true);
+                setActivePanel('join');
               }}
             >
               {joinButtonText}
@@ -174,28 +174,38 @@ export function VideoSection({
         </div>
       </div>
 
-      {/* Join Modal - hideBackdrop when instructions is also open for seamless transition */}
+      {/* Shared Backdrop for both panels - matches New Agents pattern */}
+      {activePanel !== null && (
+        <div
+          className="fixed inset-0 z-[10019] bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+          onClick={handleCloseModal}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Join Modal - stays open when instructions opens (like category panel in New Agents) */}
       <JoinModal
-        isOpen={showJoinModal}
-        onClose={() => setShowJoinModal(false)}
+        isOpen={activePanel === 'join' || activePanel === 'instructions'}
+        onClose={handleCloseModal}
         onSuccess={handleJoinSuccess}
         sponsorName={sponsorName}
-        hideBackdrop={showInstructions}
-        zIndexOffset={showInstructions ? 10 : 0}
+        hideBackdrop={true}
+        zIndexOffset={0}
       />
 
-      {/* Instructions Modal - shown after successful join, provides the backdrop during transition */}
+      {/* Instructions Modal - slides on top of join modal (like document panel in New Agents) */}
       <InstructionsModal
-        isOpen={showInstructions}
-        onClose={() => setShowInstructions(false)}
+        isOpen={activePanel === 'instructions'}
+        onClose={handleCloseModal}
         userName={userName}
+        hideBackdrop={true}
+        zIndexOffset={1}
         onNotYou={() => {
           // Clear the cached data and show join form
           try {
             localStorage.removeItem('saa_join_submitted');
           } catch {}
-          setShowInstructions(false);
-          setTimeout(() => setShowJoinModal(true), 300);
+          setActivePanel('join');
         }}
       />
     </section>

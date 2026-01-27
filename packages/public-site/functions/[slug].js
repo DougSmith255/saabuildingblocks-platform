@@ -2149,6 +2149,33 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       animation: slidePanelBackdropOut 0.25s ease-in forwards;
     }
 
+    /* Shared Backdrop for Join/Instructions panels (New Agents pattern) */
+    .shared-panel-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-out;
+    }
+
+    .shared-panel-backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Join/Instructions panels - no individual backdrop, use shared one */
+    .join-instructions-panel {
+      z-index: 100000;
+    }
+
+    .join-instructions-panel.instructions-on-top {
+      z-index: 100001;
+    }
+
     /* Slide Panel - Mobile (bottom sheet) */
     .slide-panel {
       position: relative;
@@ -2557,6 +2584,18 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
 
     .instructions-footer a { color: #ffd700; text-decoration: none; }
+
+    .instructions-not-you {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.4);
+    }
+    .instructions-not-you a {
+      color: rgba(255, 215, 0, 0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .instructions-not-you a:hover { color: #ffd700; }
 
     /* Grid utilities */
     .grid { display: grid; }
@@ -4271,9 +4310,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
   </main>
 
+  <!-- Shared Backdrop for Join/Instructions panels (New Agents pattern) -->
+  <div class="shared-panel-backdrop" id="shared-backdrop" aria-hidden="true"></div>
+
   <!-- Join Slide Panel -->
-  <div class="slide-panel-container" id="join-modal" role="dialog" aria-modal="true" aria-labelledby="join-panel-title">
-    <div class="slide-panel-backdrop" id="join-modal-backdrop"></div>
+  <div class="slide-panel-container join-instructions-panel" id="join-modal" role="dialog" aria-modal="true" aria-labelledby="join-panel-title">
     <div class="slide-panel" id="join-panel">
       <div class="slide-panel-header">
         <div class="slide-panel-header-left">
@@ -4324,8 +4365,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   </div>
 
   <!-- Instructions Slide Panel -->
-  <div class="slide-panel-container" id="instructions-modal" role="dialog" aria-modal="true" aria-labelledby="instructions-panel-title">
-    <div class="slide-panel-backdrop" id="instructions-modal-backdrop"></div>
+  <div class="slide-panel-container join-instructions-panel instructions-on-top" id="instructions-modal" role="dialog" aria-modal="true" aria-labelledby="instructions-panel-title">
     <div class="slide-panel" id="instructions-panel">
       <div class="slide-panel-header">
         <div class="slide-panel-header-left">
@@ -4381,6 +4421,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         </div>
         <a href="https://joinapp.exprealty.com/" target="_blank" rel="noopener noreferrer" class="instructions-cta">Join eXp with SAA</a>
         <p class="instructions-footer">Questions? Email us at <a href="mailto:team@smartagentalliance.com">team@smartagentalliance.com</a></p>
+        <p class="instructions-not-you"><a href="#" id="not-you-link">Not <span id="user-name-in-link"></span>? Click here to update your info.</a></p>
       </div>
     </div>
   </div>
@@ -4480,6 +4521,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       const instructionsModal = document.getElementById('instructions-modal');
       const calculatorModal = document.getElementById('calculator-modal');
       const revshareModal = document.getElementById('revshare-modal');
+      const sharedBackdrop = document.getElementById('shared-backdrop');
       const calculatorIframe = document.getElementById('calculator-iframe');
       const revshareIframe = document.getElementById('revshare-iframe');
       const calculatorSpinner = document.getElementById('calculator-spinner');
@@ -4488,6 +4530,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       const joinSubmit = document.getElementById('join-submit');
       const joinMessage = document.getElementById('join-message');
       const userNameDisplay = document.getElementById('user-name-display');
+
+      // Active panel state for join/instructions (New Agents pattern)
+      // 'join' | 'instructions' | null
+      let activeJoinPanel = null;
 
       // Initialize
       function init() {
@@ -4625,12 +4671,43 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           isDragging = false;
         });
 
-        // Modals
-        document.getElementById('btn-join-alliance').addEventListener('click', () => openModal('join'));
-        document.getElementById('join-modal-close').addEventListener('click', () => closeModal('join'));
-        document.getElementById('join-modal-backdrop').addEventListener('click', () => closeModal('join'));
-        document.getElementById('instructions-modal-close').addEventListener('click', () => closeModal('instructions'));
-        document.getElementById('instructions-modal-backdrop').addEventListener('click', () => closeModal('instructions'));
+        // Modals - Check for cached user data first (with 1-day expiration)
+        const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+        document.getElementById('btn-join-alliance').addEventListener('click', () => {
+          try {
+            const stored = localStorage.getItem('saa_join_submitted');
+            if (stored) {
+              const data = JSON.parse(stored);
+              // Check if cache has expired (1 day)
+              if (data.timestamp && (Date.now() - data.timestamp) < ONE_DAY_MS) {
+                userNameDisplay.textContent = data.firstName;
+                document.getElementById('user-name-in-link').textContent = data.firstName;
+                // Go directly to instructions (New Agents pattern)
+                openJoinInstructionsPanel('instructions');
+                return;
+              } else {
+                // Cache expired, clear it
+                localStorage.removeItem('saa_join_submitted');
+              }
+            }
+          } catch (e) {
+            localStorage.removeItem('saa_join_submitted');
+          }
+          openJoinInstructionsPanel('join');
+        });
+        document.getElementById('join-modal-close').addEventListener('click', () => closeJoinInstructionsPanels());
+        document.getElementById('instructions-modal-close').addEventListener('click', () => closeJoinInstructionsPanels());
+
+        // Shared backdrop click - closes all join/instructions panels
+        sharedBackdrop.addEventListener('click', () => closeJoinInstructionsPanels());
+
+        // "Not You?" link - clears cache and goes back to form (New Agents pattern)
+        document.getElementById('not-you-link').addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('saa_join_submitted');
+          // Switch back to join panel (instructions closes, join shows)
+          openJoinInstructionsPanel('join');
+        });
 
         // Calculator modals
         document.getElementById('btn-commission-calculator').addEventListener('click', () => openModal('calculator'));
@@ -4680,8 +4757,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // Escape key
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape') {
-            if (joinModal.classList.contains('open')) closeModal('join');
-            if (instructionsModal.classList.contains('open')) closeModal('instructions');
+            // Join/Instructions use new pattern - close together
+            if (activeJoinPanel !== null) closeJoinInstructionsPanels();
+            // Calculator/RevShare use old pattern
             if (calculatorModal.classList.contains('open')) closeModal('calculator');
             if (revshareModal.classList.contains('open')) closeModal('revshare');
           }
@@ -4756,8 +4834,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
       function getPanel(type) {
         switch(type) {
-          case 'join': return { container: joinModal, panel: document.getElementById('join-panel'), backdrop: document.getElementById('join-modal-backdrop') };
-          case 'instructions': return { container: instructionsModal, panel: document.getElementById('instructions-panel'), backdrop: document.getElementById('instructions-modal-backdrop') };
+          // Join/Instructions use shared backdrop (New Agents pattern) - no individual backdrop
+          case 'join': return { container: joinModal, panel: document.getElementById('join-panel'), backdrop: null };
+          case 'instructions': return { container: instructionsModal, panel: document.getElementById('instructions-panel'), backdrop: null };
+          // Calculator/RevShare still use individual backdrops
           case 'calculator': return { container: calculatorModal, panel: document.getElementById('calculator-panel'), backdrop: document.getElementById('calculator-modal-backdrop') };
           case 'revshare': return { container: revshareModal, panel: document.getElementById('revshare-panel'), backdrop: document.getElementById('revshare-modal-backdrop') };
           default: return null;
@@ -4801,13 +4881,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
         // Add closing animation classes
         elements.panel.classList.add('closing');
-        elements.backdrop.classList.add('closing');
+        if (elements.backdrop) elements.backdrop.classList.add('closing');
 
         // Wait for animation to complete
         setTimeout(() => {
           elements.container.classList.remove('open');
           elements.panel.classList.remove('closing');
-          elements.backdrop.classList.remove('closing');
+          if (elements.backdrop) elements.backdrop.classList.remove('closing');
           document.body.classList.remove('slide-panel-open');
           document.documentElement.classList.remove('slide-panel-open');
           panelClosing[type] = false;
@@ -4821,6 +4901,94 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             revshareIframe.classList.remove('loaded');
           }
         }, ANIMATION_DURATION);
+      }
+
+      // New Agents pattern - Join/Instructions panel management
+      // Join panel stays open when instructions opens, instructions slides on top
+      function openJoinInstructionsPanel(type) {
+        const joinPanel = document.getElementById('join-panel');
+        const instructionsPanel = document.getElementById('instructions-panel');
+
+        // Show shared backdrop
+        sharedBackdrop.classList.add('visible');
+        document.body.classList.add('slide-panel-open');
+        document.documentElement.classList.add('slide-panel-open');
+
+        if (type === 'join') {
+          // Open join panel only
+          activeJoinPanel = 'join';
+          joinModal.classList.add('open');
+          joinPanel.classList.remove('closing');
+          // Close instructions if it was open
+          instructionsModal.classList.remove('open');
+          instructionsPanel.classList.remove('closing');
+        } else if (type === 'instructions') {
+          // Keep join panel open (underneath), open instructions on top
+          activeJoinPanel = 'instructions';
+          joinModal.classList.add('open');
+          joinPanel.classList.remove('closing');
+          instructionsModal.classList.add('open');
+          instructionsPanel.classList.remove('closing');
+        }
+
+        // Add swipe handlers
+        const activePanel = type === 'instructions' ? instructionsPanel : joinPanel;
+        activePanel.addEventListener('touchstart', handlePanelTouchStart, { passive: true });
+        activePanel.addEventListener('touchend', (e) => handleJoinInstructionsTouchEnd(e), { passive: true });
+      }
+
+      function closeJoinInstructionsPanels() {
+        if (activeJoinPanel === null) return;
+
+        const joinPanel = document.getElementById('join-panel');
+        const instructionsPanel = document.getElementById('instructions-panel');
+
+        // Add closing animation to visible panels
+        if (activeJoinPanel === 'instructions') {
+          instructionsPanel.classList.add('closing');
+        }
+        joinPanel.classList.add('closing');
+
+        // Wait for animation to complete
+        setTimeout(() => {
+          joinModal.classList.remove('open');
+          instructionsModal.classList.remove('open');
+          joinPanel.classList.remove('closing');
+          instructionsPanel.classList.remove('closing');
+          sharedBackdrop.classList.remove('visible');
+          document.body.classList.remove('slide-panel-open');
+          document.documentElement.classList.remove('slide-panel-open');
+          activeJoinPanel = null;
+        }, ANIMATION_DURATION);
+      }
+
+      function handleJoinInstructionsTouchEnd(e) {
+        if (!panelTouchStart || activeJoinPanel === null) return;
+
+        const touchEnd = {
+          x: e.changedTouches[0].clientX,
+          y: e.changedTouches[0].clientY
+        };
+
+        const deltaX = touchEnd.x - panelTouchStart.x;
+        const deltaY = touchEnd.y - panelTouchStart.y;
+        const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+        const isMobile = window.innerWidth < 950;
+
+        if (isMobile) {
+          // Swipe down to close - only if at top of scroll
+          const wasAtTop = panelTouchStart.scrollTop <= 0;
+          if (deltaY > SWIPE_THRESHOLD && !isHorizontalSwipe && wasAtTop) {
+            closeJoinInstructionsPanels();
+          }
+        } else {
+          // Swipe right to close
+          if (deltaX > SWIPE_THRESHOLD && isHorizontalSwipe) {
+            closeJoinInstructionsPanels();
+          }
+        }
+
+        panelTouchStart = null;
       }
 
       function handlePanelTouchStart(e) {
@@ -4887,13 +5055,18 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           const result = await response.json();
 
           if (result.success) {
-            // Save to localStorage
-            localStorage.setItem('saa_join_submitted', JSON.stringify(formData));
+            // Save to localStorage with timestamp for expiration
+            localStorage.setItem('saa_join_submitted', JSON.stringify({
+              ...formData,
+              timestamp: Date.now()
+            }));
 
-            // Close join modal and open instructions immediately
-            closeModal('join');
+            // Update user name display
             userNameDisplay.textContent = formData.firstName;
-            setTimeout(() => openModal('instructions'), 300);
+            document.getElementById('user-name-in-link').textContent = formData.firstName;
+
+            // Switch to instructions panel - join stays open underneath (New Agents pattern)
+            openJoinInstructionsPanel('instructions');
 
             // Reset form
             joinForm.reset();
@@ -5653,20 +5826,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         setupWhyOnlyClickAnimation();
       }
 
-      // Check for previously submitted user
+      // Check for previously submitted user - DEPRECATED
+      // Logic now handled in main click handler (line ~4629)
       function checkPreviousSubmission() {
-        try {
-          const stored = localStorage.getItem('saa_join_submitted');
-          if (stored) {
-            const data = JSON.parse(stored);
-            // User already submitted - clicking join will show instructions directly
-            document.getElementById('btn-join-alliance').addEventListener('click', function(e) {
-              e.stopPropagation();
-              userNameDisplay.textContent = data.firstName;
-              openModal('instructions');
-            }, { once: true });
-          }
-        } catch (e) {}
+        // No-op - logic moved to main btn-join-alliance click handler
       }
 
       // FAQ Toggle Function
