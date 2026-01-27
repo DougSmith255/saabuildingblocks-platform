@@ -9063,11 +9063,11 @@ const DEFAULT_LINKS_SETTINGS: LinksSettings = {
   iconStyle: 'dark',
   font: 'synonym',
   nameWeight: 'bold', // Bold by default
-  nameGlow: true, // Glow on by default
+  nameGlow: false, // Glow off by default (cleaner look)
   buttonTextSize: 14, // 14px default (equivalent to text-sm)
-  bio: '',
+  bio: 'Welcome to my Smart Agent Alliance link page! Connect with me to learn about the best opportunities at eXp Realty.',
   showColorPhoto: false, // B&W by default
-  linkOrder: ['learn-about'], // Default order: default button at bottom
+  linkOrder: ['example-1', 'learn-about'], // Default order: example custom link, then default button
 };
 
 // Helper function to ensure social icon color is visible on dark backgrounds
@@ -9136,6 +9136,11 @@ interface CustomLink {
   icon?: string;
   order: number;
 }
+
+// Default example custom link for new users (shown when no saved data exists)
+const DEFAULT_CUSTOM_LINKS: CustomLink[] = [
+  { id: 'example-1', label: 'Example', url: 'https://example.com', icon: 'Award', order: 0 },
+];
 
 // Custom social link (for icon-based social links beyond the built-in 6)
 interface CustomSocialLink {
@@ -9256,26 +9261,27 @@ function AgentPagesSection({
   const attractionFileInputRef = useRef<HTMLInputElement>(null);
 
   // Form state - initialize from preloaded data if available
+  // Default example values shown for new users to understand the format
   const [formData, setFormData] = useState(() => {
     const page = preloadedPageData?.page;
     return {
       display_first_name: page?.display_first_name || '',
       display_last_name: page?.display_last_name || '',
       email: page?.email || '',
-      phone: page?.phone || '',
+      phone: page?.phone || '123-456-7890',
       show_call_button: page?.show_call_button ?? true,
       show_text_button: page?.show_text_button ?? true,
       facebook_url: page?.facebook_url || '',
-      instagram_url: page?.instagram_url || '',
-      twitter_url: page?.twitter_url || '',
-      youtube_url: page?.youtube_url || '',
+      instagram_url: page?.instagram_url || 'Example',
+      twitter_url: page?.twitter_url || 'Example',
+      youtube_url: page?.youtube_url || 'Example',
       tiktok_url: page?.tiktok_url || '',
       linkedin_url: page?.linkedin_url || '',
     };
   });
 
-  // Custom links state - initialize from preloaded data if available
-  const [customLinks, setCustomLinks] = useState<CustomLink[]>(preloadedPageData?.page?.custom_links || []);
+  // Custom links state - initialize from preloaded data if available (uses DEFAULT_CUSTOM_LINKS for new users)
+  const [customLinks, setCustomLinks] = useState<CustomLink[]>(preloadedPageData?.page?.custom_links || DEFAULT_CUSTOM_LINKS);
   const [newLinkLabel, setNewLinkLabel] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
   const [newLinkIcon, setNewLinkIcon] = useState<string>('Globe');
