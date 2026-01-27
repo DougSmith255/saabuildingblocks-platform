@@ -39,6 +39,10 @@ name: Deploy to Cloudflare Pages
         required: false
         default: 'manual'
 
+concurrency:
+  group: cloudflare-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   NODE_VERSION: '20'
   CLOUDFLARE_PROJECT_NAME: 'saabuildingblocks'  # Static export project
