@@ -4690,7 +4690,7 @@ function AgentPortal() {
               >
                 <p className="text-green-400 text-sm font-medium mb-1">Pro Tip: Easy Referrals</p>
                 <p className="text-[#e5e4dd]/70 text-sm">
-                  Add your location to your Zoom display name (e.g., "Jane Smith - Austin, TX"). When other agents on the call have a lead in your area, they'll see your name and location instantly — making it easy for them to send you a referral.
+                  Add your location to your Zoom name, for example, "Jane Smith, Austin, Texas." Your location is visible at a glance, keeping you top of mind for future referrals.
                 </p>
               </div>
             </div>
@@ -7012,7 +7012,7 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
           <div>
             <h4 className="text-sm font-semibold text-[#ffd700] mb-1">Pro Tip: Easy Referrals</h4>
             <p className="text-xs sm:text-sm text-[#e5e4dd]/80">
-              Add your location to your Zoom display name (e.g., "Jane Smith - Austin, TX"). When other agents on the call have a lead in your area, they'll see your name and location instantly — making it easy for them to send you a referral. It's a simple change that can lead to extra deals.
+              Add your location to your Zoom name, for example, "Jane Smith, Austin, Texas." Your location is visible at a glance, keeping you top of mind for future referrals.
             </p>
           </div>
         </div>
