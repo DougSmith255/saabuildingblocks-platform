@@ -5815,9 +5815,22 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       key: 'step7_link_page' as keyof OnboardingProgress,
       number: 7,
       title: 'Set Up Your Link Page',
-      description: 'Complete your Profile, Design, Connect, and Links sections.',
+      description: 'Automatically sets up your Agent Attraction Funnel Page',
+      badge: 'Highly Recommended',
       content: (
         <div className="space-y-4">
+          {/* Value Proposition */}
+          <div className="bg-[#ffd700]/10 rounded-lg p-4 border border-[#ffd700]/30">
+            <h4 className="text-[#ffd700] font-semibold mb-2 text-sm flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Passive Income System
+            </h4>
+            <p className="text-[#e5e4dd]/80 text-sm">
+              Your Link Page works with our Agent Attraction Funnel to help you attract new agents to your team — <span className="text-[#ffd700]">without you having to do anything extra</span>. Just set it up once and let the system work for you.
+            </p>
+          </div>
           <div className="bg-white/5 rounded-lg p-4 border border-white/10">
             <h4 className="text-[#ffd700] font-semibold mb-2 text-sm">Complete these sections:</h4>
             <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
@@ -5839,12 +5852,12 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
               </li>
             </ul>
           </div>
-          <div className="bg-blue-500/10 rounded-lg p-3 border border-blue-500/30">
-            <p className="text-blue-400 text-xs">
-              Your page URL will be: <span className="font-mono">smartagentalliance.com/firstname-lastname-links</span>
+          <div className="bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/30">
+            <p className="text-emerald-400 text-xs font-medium mb-1">
+              ✨ Two pages, one setup:
             </p>
-            <p className="text-blue-400/70 text-xs mt-1">
-              Activating your Link Page also activates your Agent Attraction Page (they share the same display name).
+            <p className="text-emerald-400/70 text-xs">
+              Activating your Link Page automatically activates your Agent Attraction Page. Both use your display name and work together to grow your team.
             </p>
           </div>
           <button
@@ -6118,6 +6131,11 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                     {(step as { isOptional?: boolean }).isOptional && (
                       <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-[#e5e4dd]/50">
                         Optional
+                      </span>
+                    )}
+                    {(step as { badge?: string }).badge && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/30 font-medium whitespace-nowrap">
+                        {(step as { badge?: string }).badge}
                       </span>
                     )}
                   </div>
