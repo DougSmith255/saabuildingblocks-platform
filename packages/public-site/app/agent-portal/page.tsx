@@ -2591,61 +2591,74 @@ function AgentPortal() {
               clipPath: 'path("M 0 0 L 280 0 L 280 61 A 24 24 0 0 1 256 85 L 0 85 Z")',
             }}
           >
+            {/* Layer 1: Base gradient */}
             <div className="absolute inset-0" style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
             }} />
+            {/* Layer 2: Corrugated stripes - DEBUG RED */}
             <div className="absolute inset-0" style={{
-              background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
+              background: 'rgba(255, 0, 0, 0.5)',
             }} />
+            {/* Layer 3: Scan lines - DEBUG BLUE */}
             <div className="absolute inset-0" style={{
-              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
+              background: 'rgba(0, 100, 255, 0.5)',
             }} />
+            {/* Layer 4: Shimmer */}
             <div className="absolute inset-0" style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
             }} />
           </div>
 
           {/* === HEADER (Right portion, starts at sidebar edge) === */}
-          {/* Bottom-left corner curves to match the inner L corner */}
+          {/* No special bottom-left curve needed - corner piece handles the inner L corner */}
           <div
             className="absolute top-0 left-[280px] right-0 h-[85px] overflow-visible pointer-events-none"
-            style={{
-              clipPath: 'inset(0 0 0 0 round 0 0 0 24px)',
-            }}
           >
+            {/* Layer 1: Base gradient */}
             <div className="absolute inset-0" style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
             }} />
+            {/* Layer 2: Corrugated stripes - DEBUG RED */}
             <div className="absolute inset-0" style={{
-              background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
+              background: 'rgba(255, 0, 0, 0.5)',
             }} />
+            {/* Layer 3: Scan lines - DEBUG BLUE */}
             <div className="absolute inset-0" style={{
-              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
+              background: 'rgba(0, 100, 255, 0.5)',
             }} />
+            {/* Layer 4: Shimmer */}
             <div className="absolute inset-0" style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
             }} />
           </div>
 
           {/* === SIDEBAR (Below header, left side) === */}
-          {/* Top-right corner curves to match the inner L corner, bottom-right also curved */}
+          {/* Bottom-right corner rounded outward */}
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px] overflow-visible pointer-events-none"
             style={{
-              clipPath: 'inset(0 0 0 0 round 0 24px 24px 0)',
+              borderRadius: '0 0 24px 0',
             }}
           >
+            {/* Layer 1: Base gradient */}
             <div className="absolute inset-0" style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              borderRadius: '0 0 24px 0',
             }} />
+            {/* Layer 2: Corrugated stripes - DEBUG RED */}
             <div className="absolute inset-0" style={{
-              background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
+              background: 'rgba(255, 0, 0, 0.5)',
+              borderRadius: '0 0 24px 0',
             }} />
+            {/* Layer 3: Scan lines - DEBUG BLUE */}
             <div className="absolute inset-0" style={{
-              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
+              background: 'rgba(0, 100, 255, 0.5)',
+              borderRadius: '0 0 24px 0',
             }} />
+            {/* Layer 4: Shimmer */}
             <div className="absolute inset-0" style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              borderRadius: '0 0 24px 0',
             }} />
           </div>
 
