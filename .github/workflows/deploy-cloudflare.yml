@@ -52,7 +52,7 @@ jobs:
   build:
     name: Build Static Export
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 6
 
     outputs:
       build-hash: ${{ steps.compute-hash.outputs.build-hash }}
@@ -82,9 +82,9 @@ jobs:
           # Extract a unique identifier from local file
           LOCAL_MARKER=$(grep -o "Scroll-Triggered 3D Card Stack\|Why Only at eXp Section -->" "$LOCAL_FILE" | head -1)
 
-          # Fetch live page and check for the same marker
+          # Fetch live page and check for the same marker (with timeout to prevent hanging)
           echo "📡 Fetching live deployment to verify..."
-          LIVE_CONTENT=$(curl -s "$LIVE_URL" | head -5000)
+          LIVE_CONTENT=$(curl -s --connect-timeout 5 --max-time 15 "$LIVE_URL" | head -5000) || echo "Warning: Could not fetch live site"
 
           if echo "$LIVE_CONTENT" | grep -q "$LOCAL_MARKER"; then
             echo "✅ Verified: Local [slug].js matches live deployment"
@@ -252,7 +252,7 @@ jobs:
     name: Deploy to Cloudflare Pages
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
 
     steps:
       - name: Checkout repository
