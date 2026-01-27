@@ -2574,56 +2574,105 @@ function AgentPortal() {
         </div>
       </nav>
 
-      {/* ===== MAIN LAYOUT ===== */}
-      {/* Mobile: padding for fixed header/nav */}
-      {/* Desktop: L-shaped glass frame layout */}
-      <div className="
-        pt-20 pb-20
-        min-[950px]:pt-0 min-[950px]:pb-0
-        min-[950px]:flex min-[950px]:min-h-screen
-      ">
-        {/* ===== DESKTOP L-SHAPED SIDEBAR (950px+) ===== */}
-        {/* Sidebar is sticky so it stays visible while content scrolls */}
-        <aside
-          className="hidden min-[950px]:flex min-[950px]:flex-col w-[280px] flex-shrink-0 sticky top-0 h-screen"
-          style={{
-            background: `
-              linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
-              repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
-            `,
-            borderRight: '1px solid rgba(60, 60, 60, 0.6)',
-            borderBottomRightRadius: '24px',
-            boxShadow: '2px 0 12px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.03)',
-          }}
-        >
-          {/* Scan lines overlay */}
+      {/* ===== DESKTOP FIXED L-FRAME (950px+) ===== */}
+      {/* This is a unified L-shaped glass frame that stays fixed on screen */}
+      {/* Content scrolls within the open part of the L */}
+      <div className="hidden min-[950px]:block">
+        {/* === FIXED L-FRAME CONTAINER === */}
+        <div className="fixed inset-0 z-40 pointer-events-none">
+
+          {/* === UNIFIED L-SHAPE BACKGROUND === */}
+          {/* This creates the continuous L-shape without visible seams */}
+          {/* Top portion of L (header area) */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute top-0 left-0 right-0 h-[85px]"
             style={{
-              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px)`,
-              borderBottomRightRadius: '24px',
+              background: `
+                linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
+              `,
+              boxShadow: 'inset 0 0 30px rgba(255, 255, 255, 0.03)',
             }}
           />
-          {/* Shimmer gradient */}
+          {/* Left portion of L (sidebar area) - overlaps header to ensure seamless connection */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute top-0 left-0 bottom-0 w-[280px]"
             style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 30%, transparent 60%)',
-              borderBottomRightRadius: '24px',
-              opacity: 0.7,
-              mixBlendMode: 'overlay',
+              background: `
+                linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
+              `,
+              boxShadow: 'inset 0 0 30px rgba(255, 255, 255, 0.03)',
             }}
           />
 
-          {/* Sidebar Content */}
-          <div className="relative z-10 flex flex-col h-full">
-            {/* Logo area - top of L, matching header height */}
-            <div
-              className="h-[85px] flex items-center px-6"
-              style={{
-                borderBottom: '1px solid rgba(60, 60, 60, 0.6)',
-              }}
-            >
+          {/* Scan lines overlay for entire L-shape */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
+            style={{
+              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px)`,
+            }}
+          />
+          <div
+            className="absolute top-0 left-0 bottom-0 w-[280px] pointer-events-none"
+            style={{
+              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px)`,
+            }}
+          />
+
+          {/* Border on bottom edge of header (only in content area, not over sidebar) */}
+          <div
+            className="absolute top-[85px] left-[280px] right-0 h-[1px] pointer-events-none"
+            style={{ background: 'rgba(60, 60, 60, 0.6)' }}
+          />
+          {/* Border on right edge of sidebar (curved at bottom) */}
+          <div
+            className="absolute top-[85px] left-[280px] bottom-0 w-[1px] pointer-events-none"
+            style={{
+              background: 'rgba(60, 60, 60, 0.6)',
+              borderBottomRightRadius: '24px',
+            }}
+          />
+          {/* Curved inner corner - bottom-right of the L junction */}
+          <div
+            className="absolute top-[85px] left-[280px] w-[24px] h-[24px] pointer-events-none"
+            style={{
+              background: 'transparent',
+              borderBottomRightRadius: '24px',
+              boxShadow: '-24px -24px 0 0 rgba(14, 14, 14, 0.98)',
+            }}
+          />
+          {/* Bottom-right corner radius on sidebar */}
+          <div
+            className="absolute bottom-0 left-0 w-[280px] h-[24px] pointer-events-none"
+            style={{
+              background: 'rgba(14, 14, 14, 0.98)',
+              borderBottomRightRadius: '24px',
+            }}
+          />
+
+          {/* Shadow for depth on the L-frame edges */}
+          <div
+            className="absolute top-[85px] left-[280px] right-0 h-[12px] pointer-events-none"
+            style={{
+              background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 100%)',
+            }}
+          />
+          <div
+            className="absolute top-[85px] left-[280px] bottom-0 w-[12px] pointer-events-none"
+            style={{
+              background: 'linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, transparent 100%)',
+            }}
+          />
+
+          {/* Top Bar - interactive content area */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-auto"
+            style={{ background: 'transparent' }}
+          >
+            {/* Top bar content: Logo on left, Title in middle-ish, Logout on right */}
+            <div className="relative z-10 h-full flex items-center px-6">
+              {/* Logo */}
               <button
                 onClick={() => setActiveSection('dashboard')}
                 className="flex-shrink-0 cursor-pointer"
@@ -2635,10 +2684,52 @@ function AgentPortal() {
                   style={{ width: '120px', height: 'auto' }}
                 />
               </button>
+              {/* Spacer to push title after sidebar width */}
+              <div className="w-[160px] flex-shrink-0" />
+              {/* Title */}
+              <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(24px, calc(18px + 1.2vw), 42px)' }}>
+                AGENT PORTAL
+              </H1>
+              {/* Spacer */}
+              <div className="flex-1" />
+              {/* Logout */}
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all uppercase font-semibold"
+                style={{
+                  fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
+                  fontSize: 'clamp(14px, calc(12px + 0.4vw), 18px)',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                <span>Logout</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+              </button>
             </div>
+          </div>
 
-            {/* Profile + Nav - scrollable if needed */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {/* Left Sidebar - interactive content area (background handled by unified L-shape above) */}
+          <div
+            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-auto"
+            style={{ background: 'transparent' }}
+          >
+            {/* Shimmer overlay */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 30%, transparent 60%)',
+                borderBottomRightRadius: '24px',
+                opacity: 0.7,
+                mixBlendMode: 'overlay',
+              }}
+            />
+
+            {/* Sidebar content - scrollable */}
+            <div className="relative z-10 h-full overflow-y-auto p-4 space-y-4">
               {/* User Profile Section */}
               <div
                 className="rounded-xl p-4"
@@ -2842,55 +2933,28 @@ function AgentPortal() {
 
             </div>
           </div>
-        </aside>
+        </div>
+      </div>
 
-        {/* ===== RIGHT COLUMN (Desktop) / FULL WIDTH (Mobile) ===== */}
-        <div className="flex-1 flex flex-col min-w-0">
-          {/* Desktop Header Bar - shows AGENT PORTAL title and Logout */}
-          <div
-            className="hidden min-[950px]:flex h-[85px] items-center justify-between px-8 flex-shrink-0"
-            style={{
-              background: `
-                linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
-              `,
-              borderBottom: '1px solid rgba(60, 60, 60, 0.6)',
-              borderBottomLeftRadius: '24px',
-              borderBottomRightRadius: '24px',
-              boxShadow: '0 2px 12px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.03)',
-            }}
-          >
-            <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(24px, calc(18px + 1.2vw), 42px)' }}>
-              AGENT PORTAL
-            </H1>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all uppercase font-semibold"
-              style={{
-                fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
-                fontSize: 'clamp(14px, calc(12px + 0.4vw), 18px)',
-                letterSpacing: '0.05em',
-              }}
-            >
-              <span>Logout</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" y1="12" x2="9" y2="12" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Content Area */}
-          <main
-            className="flex-1 p-4 sm:p-6 overflow-y-auto"
-            style={{
-              WebkitTapHighlightColor: 'transparent',
-              WebkitTouchCallout: 'none',
-              WebkitUserSelect: 'none',
-              userSelect: 'none',
-            } as React.CSSProperties}
-          >
+      {/* ===== CONTENT AREA ===== */}
+      {/* On desktop (950px+): positioned to the right of sidebar and below header */}
+      {/* On mobile: fills screen with padding for header/nav */}
+      <div
+        className="min-[950px]:fixed min-[950px]:top-[85px] min-[950px]:left-[280px] min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto"
+        style={{
+          // On desktop, add curved top-left corner to create visual L-frame inner corner effect
+        }}
+      >
+        {/* Content Area */}
+        <main
+          className="flex-1 p-4 sm:p-6 min-[950px]:p-8 min-h-screen min-[950px]:min-h-0"
+          style={{
+            WebkitTapHighlightColor: 'transparent',
+            WebkitTouchCallout: 'none',
+            WebkitUserSelect: 'none',
+            userSelect: 'none',
+          } as React.CSSProperties}
+        >
             {/* Onboarding Section - with blur/fade transition on completion */}
             {activeSection === 'onboarding' && (
               <div
@@ -3305,7 +3369,6 @@ function AgentPortal() {
             )}
           </main>
         </div>
-      </div>
 
       {/* ========== Floating Help Buttons - Desktop/Tablet only (hidden on mobile where header has help button) ========== */}
       <div className="hidden min-[950px]:block">
