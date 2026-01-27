@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>L-Frame Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a1a1a;
+      min-height: 100vh;
+      font-family: system-ui, sans-serif;
+    }
+
+    /* Content area simulation */
+    .content {
+      position: absolute;
+      top: 85px;
+      left: 280px;
+      right: 0;
+      bottom: 0;
+      background: #0a0a0a;
+      padding: 20px;
+      color: #fff;
+    }
+
+    /* L-Frame Container */
+    .l-frame {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      pointer-events: none;
+    }
+
+    /* Header portion - full width with concave cutout via mask */
+    .l-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 85px;
+      background: rgba(128, 0, 128, 0.9); /* DEBUG: purple */
+      /* Mask creates the concave cutout at bottom-right corner of sidebar area */
+      -webkit-mask-image: radial-gradient(
+        circle 24px at 280px 85px,
+        transparent 23px,
+        black 24px
+      );
+      mask-image: radial-gradient(
+        circle 24px at 280px 85px,
+        transparent 23px,
+        black 24px
+      );
+    }
+
+    /* Sidebar portion - left side below header with concave cutout */
+    .l-sidebar {
+      position: absolute;
+      top: 85px;
+      left: 0;
+      bottom: 0;
+      width: 280px;
+      background: rgba(0, 0, 200, 0.9); /* DEBUG: blue */
+      border-bottom-right-radius: 24px;
+      /* Mask creates the concave cutout at top-right corner */
+      -webkit-mask-image: radial-gradient(
+        circle 24px at 280px 0px,
+        transparent 23px,
+        black 24px
+      );
+      mask-image: radial-gradient(
+        circle 24px at 280px 0px,
+        transparent 23px,
+        black 24px
+      );
+    }
+
+    /* No separate corner element needed - the masks handle it */
+    .concave-corner { display: none; }
+
+    /* Labels for debugging */
+    .label {
+      position: absolute;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      text-shadow: 0 0 4px black;
+    }
+  </style>
+</head>
+<body>
+  <!-- L-Frame -->
+  <div class="l-frame">
+    <div class="l-header">
+      <span class="label" style="top: 30px; left: 20px;">HEADER (purple)</span>
+    </div>
+    <div class="l-sidebar">
+      <span class="label" style="top: 20px; left: 20px;">SIDEBAR (blue)</span>
+    </div>
+    <div class="concave-corner"></div>
+  </div>
+
+  <!-- Content area -->
+  <div class="content">
+    <h1>Content Area</h1>
+    <p>The L-frame should have a concave (inward-curving) corner at the junction.</p>
+    <br>
+    <p><strong>Debug colors:</strong></p>
+    <ul>
+      <li>Purple = Header bar</li>
+      <li>Blue = Sidebar</li>
+      <li>Dark circle at junction = Concave cutout (radial gradient)</li>
+    </ul>
+  </div>
+</body>
+</html>

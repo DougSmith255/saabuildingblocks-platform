@@ -2578,61 +2578,37 @@ function AgentPortal() {
         <div className="fixed inset-0 z-40 pointer-events-none">
 
           {/* === UNIFIED L-FRAME BACKGROUND === */}
-          {/* Header portion - full width */}
+          {/* Header portion - full width with concave cutout via CSS mask */}
           {/* DEBUG: Using purple to visualize header layer */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px]"
             style={{
               background: 'rgba(128, 0, 128, 0.9)', // DEBUG: purple
-              // background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              // Mask creates concave cutout at junction (280px, 85px)
+              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
+              maskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
             }}
           />
 
-          {/* Sidebar portion - left side below header */}
+          {/* Sidebar portion - left side below header with concave cutout */}
           {/* DEBUG: Using blue to visualize sidebar layer */}
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px]"
             style={{
               background: 'rgba(0, 0, 200, 0.9)', // DEBUG: blue
-              // background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
               borderBottomRightRadius: '24px',
+              // Mask creates concave cutout at top-right (280px relative to sidebar = right edge, 0px = top)
+              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
+              maskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
             }}
           />
 
-          {/* Concave inner corner - TWO elements that create smooth inward curves */}
-          {/* Element 1: Covers header corner (above junction) */}
-          {/* Position: bottom-right of this element sits at junction (280, 85) */}
-          {/* DEBUG: Using red to visualize */}
-          <div
-            className="absolute"
-            style={{
-              top: '61px',      // 85 - 24 = element's bottom edge at junction Y
-              left: '256px',    // 280 - 24 = element's right edge at junction X
-              width: '24px',
-              height: '24px',
-              background: 'rgba(255, 0, 0, 1)', // DEBUG: red - PRODUCTION: #0a0a0a
-              borderBottomRightRadius: '24px', // Curves inward toward junction
-              zIndex: 50,
-            }}
-          />
-          {/* Element 2: Covers sidebar corner (below junction) */}
-          {/* Position: top-right of this element sits at junction (280, 85) */}
-          {/* DEBUG: Using orange to visualize */}
-          <div
-            className="absolute"
-            style={{
-              top: '85px',      // Junction Y = element's top edge
-              left: '256px',    // 280 - 24 = element's right edge at junction X
-              width: '24px',
-              height: '24px',
-              background: 'rgba(255, 165, 0, 1)', // DEBUG: orange - PRODUCTION: #0a0a0a
-              borderTopRightRadius: '24px', // Curves inward toward junction
-              zIndex: 50,
-            }}
-          />
+          {/* No separate corner elements needed - CSS masks handle the concave corner */}
 
-          {/* Glass texture overlay for header - DISABLED FOR DEBUG */}
-          {/*
+          {/* Glass texture overlay for header - with matching concave mask */}
+          {/* TEMPORARILY DISABLED FOR DEBUG - uncomment for production
           <div
             className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
             style={{
@@ -2640,12 +2616,14 @@ function AgentPortal() {
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
+              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
+              maskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
             }}
           />
           */}
 
-          {/* Glass texture overlay for sidebar - DISABLED FOR DEBUG */}
-          {/*
+          {/* Glass texture overlay for sidebar - with matching concave mask */}
+          {/* TEMPORARILY DISABLED FOR DEBUG - uncomment for production
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
             style={{
@@ -2654,16 +2632,20 @@ function AgentPortal() {
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
               borderBottomRightRadius: '24px',
+              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
+              maskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
             }}
           />
           */}
 
-          {/* Shimmer gradient overlay - DISABLED FOR DEBUG */}
-          {/*
+          {/* Shimmer gradient overlay - with matching concave masks */}
+          {/* TEMPORARILY DISABLED FOR DEBUG - uncomment for production
           <div
             className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
             style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
+              maskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
             }}
           />
           <div
@@ -2671,6 +2653,8 @@ function AgentPortal() {
             style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
               borderBottomRightRadius: '24px',
+              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
+              maskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
             }}
           />
           */}
