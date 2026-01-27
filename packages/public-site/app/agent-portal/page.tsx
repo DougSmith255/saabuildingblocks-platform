@@ -2607,11 +2607,31 @@ function AgentPortal() {
             }} />
           </div>
 
-          {/* Sidebar - full height, dark glass effect */}
-          {/* Has rounded bottom-right (convex) AND rounded top-right at inner corner (concave) */}
+          {/* Sidebar UPPER portion (y=0 to y=85) - overlaps with header, no inner curve */}
           <div
-            className="absolute top-0 left-0 bottom-0 w-[280px] pointer-events-none overflow-hidden"
+            className="absolute top-0 left-0 w-[280px] h-[85px] pointer-events-none"
             style={{
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+            }}
+          >
+            {/* Glass texture layers */}
+            <div className="absolute inset-0" style={{
+              background: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)',
+            }} />
+            <div className="absolute inset-0" style={{
+              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)',
+            }} />
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+            }} />
+          </div>
+
+          {/* Sidebar LOWER portion (y=85 to bottom) - has rounded corners */}
+          {/* Top-right: inner L corner (concave), Bottom-right: convex corner */}
+          <div
+            className="absolute left-0 bottom-0 w-[280px] pointer-events-none overflow-hidden"
+            style={{
+              top: '85px',
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
               borderRadius: '0 24px 24px 0',
             }}
