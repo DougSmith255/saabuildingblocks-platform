@@ -2355,10 +2355,10 @@ function AgentPortal() {
         className="hidden"
       />
 
-      {/* Fixed Header Bar - Uses same glass styling as main site header */}
-      {/* Slides up off screen when any popup is open, slides down on entry from login */}
+      {/* Mobile Header Bar - <950px only */}
+      {/* Fixed at top, slides up when popup is open */}
       <header
-        className="fixed left-0 right-0 z-[10010] transition-transform duration-500 ease-out"
+        className="min-[950px]:hidden fixed left-0 right-0 z-[10010] transition-transform duration-500 ease-out"
         style={{
           background: 'transparent',
           overflow: 'visible',
@@ -2485,66 +2485,6 @@ function AgentPortal() {
         </div>
       </header>
 
-      {/* Desktop Sidebar Glass Frame - L-shape extension of header (950px+) */}
-      {/* More transparent than header to create visual hierarchy */}
-      <div
-        className="hidden min-[950px]:block fixed left-0 z-[10009] pointer-events-none"
-        style={{
-          top: '85px', // Below header
-          bottom: 0,
-          width: '280px', // Sidebar width + padding
-          // More transparent glass effect
-          background: `
-            linear-gradient(180deg, rgba(14, 14, 14, 0.85) 0%, rgba(10, 10, 10, 0.75) 100%),
-            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.015) 2px, rgba(255, 215, 0, 0.015) 4px)
-          `,
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          borderRight: '1px solid rgba(60, 60, 60, 0.5)',
-          borderBottom: '1px solid rgba(60, 60, 60, 0.5)',
-          borderRadius: '0 0 24px 0',
-          boxShadow: `
-            2px 0 8px rgba(0, 0, 0, 0.3),
-            inset 0 0 30px rgba(255, 255, 255, 0.02),
-            inset -1px 0 0 rgba(255, 255, 255, 0.03)
-          `,
-        }}
-      >
-        {/* Subtle horizontal scan lines - matching header but fainter */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            borderRadius: '0 0 24px 0',
-            background: `repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 2px,
-              rgba(255, 255, 255, 0.015) 2px,
-              rgba(255, 255, 255, 0.015) 4px
-            )`,
-            pointerEvents: 'none',
-          }}
-        />
-        {/* Subtle shimmer - less intense than header */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            borderRadius: '0 0 24px 0',
-            opacity: 0.3,
-            mixBlendMode: 'overlay',
-            background: `linear-gradient(
-              180deg,
-              rgba(255, 255, 255, 0.08) 0%,
-              rgba(255, 255, 255, 0.03) 30%,
-              rgba(255, 255, 255, 0.01) 100%
-            )`,
-            pointerEvents: 'none',
-          }}
-        />
-      </div>
-
       {/* Mobile Bottom Navigation - 3D button styling with separators */}
       <nav
         className="mobile-bottom-nav min-[950px]:hidden fixed bottom-0 left-0 right-0 z-50"
@@ -2634,23 +2574,74 @@ function AgentPortal() {
         </div>
       </nav>
 
-      {/* Main Dashboard Layout */}
-      {/* FIX-4: Minimal bottom padding to prevent scroll when content fits above fold */}
-      <div className="max-w-[2500px] mx-auto px-3 sm:px-6 md:px-8 min-[950px]:px-12 pb-0 min-[950px]:pb-2 pt-20 md:pt-28">
-        <div className="flex flex-col min-[950px]:flex-row gap-6">
+      {/* ===== MAIN LAYOUT ===== */}
+      {/* Mobile: padding for fixed header/nav */}
+      {/* Desktop: flex layout with L-shaped glass shell */}
+      <div className="
+        pt-20 pb-20
+        min-[950px]:pt-0 min-[950px]:pb-0
+        min-[950px]:flex min-[950px]:min-h-screen
+      ">
+        {/* ===== DESKTOP L-SHAPED SIDEBAR (950px+) ===== */}
+        <aside className="hidden min-[950px]:flex min-[950px]:flex-col w-[300px] flex-shrink-0 relative">
+          {/* Glass background for entire sidebar column */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `
+                linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
+              `,
+              borderRight: '1px solid rgba(60, 60, 60, 0.6)',
+              borderRadius: '0 0 24px 0',
+              boxShadow: '2px 0 12px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.03)',
+            }}
+          />
+          {/* Scan lines overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px)`,
+              borderRadius: '0 0 24px 0',
+            }}
+          />
+          {/* Shimmer gradient */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 30%, transparent 60%)',
+              borderRadius: '0 0 24px 0',
+              opacity: 0.7,
+              mixBlendMode: 'overlay',
+            }}
+          />
 
-          {/* Sidebar Navigation - Desktop only (950px+) */}
-          {/* Sits on top of the glass sidebar frame */}
-          {/* self-start prevents flex stretching which can cause scroll hang-up */}
-          <aside className="hidden min-[950px]:block w-64 flex-shrink-0 self-start relative z-[10010]">
-            <div className={`${['onboarding', 'linkpage', 'templates', 'agent-attraction', 'production', 'download', 'support'].includes(activeSection) ? '' : 'sticky top-24'} space-y-4`}>
-              {/* User Profile Section - Subtle card on glass frame */}
+          {/* Sidebar Content - relative to appear above glass */}
+          <div className="relative z-10 flex flex-col h-full">
+            {/* Logo area - top of L */}
+            <div className="h-[85px] flex items-center px-6 border-b border-white/[0.06]">
+              <button
+                onClick={() => setActiveSection('dashboard')}
+                className="flex-shrink-0 cursor-pointer"
+                title="Go to Dashboard"
+              >
+                <img
+                  src="/images/saa-logo-gold.png"
+                  alt="Smart Agent Alliance"
+                  style={{ width: '120px', height: 'auto' }}
+                />
+              </button>
+            </div>
+
+            {/* Profile + Nav - scrollable if needed */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {/* User Profile Section */}
               <div
                 className="rounded-xl p-4"
                 style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
-                  boxShadow: `0 4px 16px rgba(0, 0, 0, 0.2), 0 0 12px ${dashboardAccentColor}06, inset 0 1px 0 rgba(255,255,255,0.04)`,
+                  boxShadow: `0 4px 16px rgba(0, 0, 0, 0.3), 0 0 12px ${dashboardAccentColor}06`,
                 }}
               >
                 {/* Profile Picture */}
@@ -2783,28 +2774,26 @@ function AgentPortal() {
                       }}
                       className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 hover:animate-[shakeHover_0.3s_ease-in-out]"
                       style={{
-                        // More transparent backgrounds to let glass frame show through
+                        // 3D button effect with gradients
                         background: isActive
-                          ? 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)'
+                          ? 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)'
                           : isOnboardingInactive
-                          ? 'linear-gradient(180deg, rgba(255,215,0,0.12) 0%, rgba(255,215,0,0.04) 100%)'
+                          ? 'linear-gradient(180deg, #2a2518 0%, #1f1a10 50%, #191408 100%)'
                           : isDownloadInactive
-                          ? 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)'
-                          : 'transparent',
+                          ? 'linear-gradient(180deg, #252525 0%, #1a1a1a 50%, #151515 100%)'
+                          : 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
                         boxShadow: isActive
-                          ? `inset 0 1px 0 ${dashboardAccentColor}33, 0 0 12px ${dashboardAccentColor}20`
+                          ? `inset 0 1px 0 ${dashboardAccentColor}33, inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px ${dashboardAccentColor}26`
                           : isOnboardingInactive
-                          ? 'inset 0 1px 0 rgba(255,215,0,0.2), 0 0 16px rgba(255,215,0,0.08)'
+                          ? 'inset 0 2px 0 rgba(255,215,0,0.15), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(255,215,0,0.1), 0 0 20px rgba(255,215,0,0.05)'
                           : isDownloadInactive
-                          ? 'inset 0 1px 0 rgba(255,255,255,0.08)'
-                          : 'none',
+                          ? 'inset 0 2px 0 rgba(255,255,255,0.1), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)'
+                          : 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
                         border: isActive
                           ? `1px solid ${dashboardAccentColor}4D`
                           : isOnboardingInactive
                           ? '1px solid rgba(255,215,0,0.25)'
-                          : isDownloadInactive
-                          ? '1px solid rgba(255,255,255,0.1)'
-                          : '1px solid transparent',
+                          : '1px solid rgba(255,255,255,0.08)',
                         ...(shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : {}),
                       }}
                     >
@@ -2848,11 +2837,72 @@ function AgentPortal() {
               </nav>
 
             </div>
-          </aside>
+          </div>
+        </aside>
 
-          {/* Main Content Area */}
-          <div
-            className="flex-1 min-w-0"
+        {/* ===== RIGHT COLUMN: Header bar (desktop) + Content (both) ===== */}
+        <div className="flex flex-col flex-1 min-w-0">
+          {/* Header bar with glass effect */}
+          <div className="h-[85px] relative flex-shrink-0">
+            {/* Glass background */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `
+                  linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
+                  repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
+                `,
+                borderBottom: '1px solid rgba(60, 60, 60, 0.6)',
+                boxShadow: '0 2px 12px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.03)',
+              }}
+            />
+            {/* Scan lines */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px)`,
+              }}
+            />
+            {/* Shimmer */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 30%, transparent 60%)',
+                opacity: 0.7,
+                mixBlendMode: 'overlay',
+              }}
+            />
+
+            {/* Header content */}
+            <div className="relative z-10 flex items-center justify-center h-full px-8">
+              <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(28px, calc(20px + 1.5vw), 48px)' }}>
+                AGENT PORTAL
+              </H1>
+              {/* Logout button - absolute right */}
+              <button
+                onClick={handleLogout}
+                className="absolute right-8 flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all uppercase font-semibold"
+                style={{
+                  fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
+                  fontSize: 'clamp(14px, calc(12px + 0.4vw), 20px)',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                <span>Logout</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Content Area - Shared by desktop and mobile */}
+          {/* On desktop: appears after header bar in right column */}
+          {/* On mobile: this whole right column is the only visible part */}
+          <main
+            className="flex-1 p-4 sm:p-6 overflow-y-auto"
             style={{
               WebkitTapHighlightColor: 'transparent',
               WebkitTouchCallout: 'none',
@@ -3272,7 +3322,7 @@ function AgentPortal() {
               />
             </div>
             )}
-          </div>
+          </main>
         </div>
       </div>
 
