@@ -10425,7 +10425,7 @@ function AgentPagesSection({
               border: '1px solid rgba(255, 215, 0, 0.15)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
-              <h3 className="text-lg font-medium text-[#ffd700] mb-4">Which Link Should You Use?</h3>
+              <h3 className="text-lg font-medium text-[#ffd700] mb-4">Should You Share Your Link Page or Agent Attraction URL/QR Codes?</h3>
               <div className="space-y-4 text-sm text-[#e5e4dd]/80">
                 {/* Option 1: Link Page */}
                 <div className="flex gap-3">
@@ -10433,8 +10433,8 @@ function AgentPagesSection({
                     <span className="text-[#22c55e] font-bold text-xs">1</span>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-[#e5e4dd] mb-1">Focusing on Production? <span className="text-[#22c55e]">(Most Agents)</span></p>
-                    <p className="text-[#e5e4dd]/60 text-xs mb-2">Use your <strong className="text-[#22c55e]">Link Page</strong> as your one link for everything. It connects clients to your content and passively attracts agents in the background.</p>
+                    <p className="font-medium text-[#e5e4dd] mb-1">Focusing on Production:</p>
+                    <p className="text-[#e5e4dd]/60 text-xs mb-2">Share your <strong className="text-[#22c55e]">Link Page URL/QR code</strong></p>
                     {/* Subtle Copy Link Page Button */}
                     <button
                       onClick={() => {
@@ -10470,8 +10470,8 @@ function AgentPagesSection({
                     <span className="text-[#ffd700] font-bold text-xs">2</span>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-[#e5e4dd] mb-1">Focusing on Agent Attraction?</p>
-                    <p className="text-[#e5e4dd]/60 text-xs mb-2">Use your <strong className="text-[#ffd700]">Attraction Page</strong> directly when actively recruiting agents or targeting real estate communities.</p>
+                    <p className="font-medium text-[#e5e4dd] mb-1">Focusing on Agent Attraction:</p>
+                    <p className="text-[#e5e4dd]/60 text-xs mb-2">Share your <strong className="text-[#ffd700]">Agent Attraction Funnel URL/QR code</strong></p>
                     {/* Subtle Copy Attraction Page Button */}
                     <button
                       onClick={() => {
@@ -10501,16 +10501,16 @@ function AgentPagesSection({
                     </button>
                   </div>
                 </div>
-                {/* Either Way You Win */}
+                {/* Either Way You're Covered */}
                 <div className="flex gap-3">
                   <div className="w-8 h-8 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center flex-shrink-0">
                     <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <div>
-                    <p className="font-medium text-[#e5e4dd] mb-1">Either Way, You Win</p>
-                    <p className="text-[#e5e4dd]/60 text-xs">Your Link Page has your Attraction Page built in. Competitors clicking around will find it and land on your recruitment funnel.</p>
+                    <p className="font-medium text-[#e5e4dd] mb-1">Either way, your agent attraction is covered.</p>
+                    <p className="text-[#e5e4dd]/60 text-xs">Your Link Page already includes your Agent Attraction Page. Anyone exploring your links, including curious agents, will eventually land on your recruiting funnel.</p>
                   </div>
                 </div>
               </div>
@@ -10531,7 +10531,7 @@ function AgentPagesSection({
                     </svg>
                     <div>
                       <p className="font-medium text-[#e5e4dd] mb-1">When someone books a call</p>
-                      <p className="text-[#e5e4dd]/60 text-xs"><strong className="text-[#ffd700]">SAA handles the closing</strong>. Joining is optional.</p>
+                      <p className="text-[#e5e4dd]/60 text-xs"><strong className="text-[#ffd700]">SAA runs the call</strong>. Afterward, join instructions are sent with you listed as the sponsor.</p>
                     </div>
                   </div>
                 </div>
@@ -10542,7 +10542,7 @@ function AgentPagesSection({
                     </svg>
                     <div>
                       <p className="font-medium text-[#e5e4dd] mb-1">When someone clicks Join</p>
-                      <p className="text-[#e5e4dd]/60 text-xs">Join instructions show <strong className="text-green-400">your name and email</strong> as sponsor. You get credit.</p>
+                      <p className="text-[#e5e4dd]/60 text-xs">The instructions list <strong className="text-green-400">you as the sponsor</strong>, with your name and email included.</p>
                     </div>
                   </div>
                 </div>
@@ -10555,7 +10555,7 @@ function AgentPagesSection({
               border: '1px solid rgba(255, 215, 0, 0.15)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
-              <h3 className="text-lg font-medium text-[#ffd700] mb-3">Where to Share Your Link</h3>
+              <h3 className="text-lg font-medium text-[#ffd700] mb-3">Where to Share Your Agent Attraction URL/QR Code</h3>
               {/* Top 2 highlighted placements */}
               <div className="grid grid-cols-2 gap-2 mb-3">
                 <div className="flex items-center gap-2 text-[#e5e4dd] p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
@@ -10584,6 +10584,7 @@ function AgentPagesSection({
                   { icon: 'M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z', label: 'Facebook groups' },
                   { icon: 'M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z', label: 'Direct messages' },
                   { icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', label: 'Presentations' },
+                  { icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-7-2h2v-4h4v-2h-4V7h-2v4H8v2h4z', label: 'Advertisements' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2 text-[#e5e4dd]/70 p-2 rounded-lg bg-black/20">
                     <svg className="w-4 h-4 text-[#22c55e] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
