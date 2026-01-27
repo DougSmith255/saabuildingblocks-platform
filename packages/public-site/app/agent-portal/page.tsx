@@ -2576,33 +2576,32 @@ function AgentPortal() {
 
       {/* ===== MAIN LAYOUT ===== */}
       {/* Mobile: padding for fixed header/nav */}
-      {/* Desktop: flex layout with L-shaped glass shell */}
+      {/* Desktop: L-shaped glass frame layout */}
       <div className="
         pt-20 pb-20
         min-[950px]:pt-0 min-[950px]:pb-0
         min-[950px]:flex min-[950px]:min-h-screen
       ">
         {/* ===== DESKTOP L-SHAPED SIDEBAR (950px+) ===== */}
-        <aside className="hidden min-[950px]:flex min-[950px]:flex-col w-[300px] flex-shrink-0 relative">
-          {/* Glass background for entire sidebar column */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `
-                linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
-              `,
-              borderRight: '1px solid rgba(60, 60, 60, 0.6)',
-              borderRadius: '0 0 24px 0',
-              boxShadow: '2px 0 12px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.03)',
-            }}
-          />
+        {/* Sidebar is sticky so it stays visible while content scrolls */}
+        <aside
+          className="hidden min-[950px]:flex min-[950px]:flex-col w-[280px] flex-shrink-0 sticky top-0 h-screen"
+          style={{
+            background: `
+              linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
+              repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
+            `,
+            borderRight: '1px solid rgba(60, 60, 60, 0.6)',
+            borderBottomRightRadius: '24px',
+            boxShadow: '2px 0 12px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.03)',
+          }}
+        >
           {/* Scan lines overlay */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
               background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px)`,
-              borderRadius: '0 0 24px 0',
+              borderBottomRightRadius: '24px',
             }}
           />
           {/* Shimmer gradient */}
@@ -2610,16 +2609,21 @@ function AgentPortal() {
             className="absolute inset-0 pointer-events-none"
             style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 30%, transparent 60%)',
-              borderRadius: '0 0 24px 0',
+              borderBottomRightRadius: '24px',
               opacity: 0.7,
               mixBlendMode: 'overlay',
             }}
           />
 
-          {/* Sidebar Content - relative to appear above glass */}
+          {/* Sidebar Content */}
           <div className="relative z-10 flex flex-col h-full">
-            {/* Logo area - top of L */}
-            <div className="h-[85px] flex items-center px-6 border-b border-white/[0.06]">
+            {/* Logo area - top of L, matching header height */}
+            <div
+              className="h-[85px] flex items-center px-6"
+              style={{
+                borderBottom: '1px solid rgba(60, 60, 60, 0.6)',
+              }}
+            >
               <button
                 onClick={() => setActiveSection('dashboard')}
                 className="flex-shrink-0 cursor-pointer"
@@ -2840,67 +2844,44 @@ function AgentPortal() {
           </div>
         </aside>
 
-        {/* ===== RIGHT COLUMN: Header bar (desktop) + Content (both) ===== */}
-        <div className="flex flex-col flex-1 min-w-0">
-          {/* Header bar with glass effect - desktop only (>=950px) */}
-          <div className="hidden min-[950px]:flex h-[85px] relative flex-shrink-0">
-            {/* Glass background */}
-            <div
-              className="absolute inset-0"
+        {/* ===== RIGHT COLUMN (Desktop) / FULL WIDTH (Mobile) ===== */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Desktop Header Bar - shows AGENT PORTAL title and Logout */}
+          <div
+            className="hidden min-[950px]:flex h-[85px] items-center justify-between px-8 flex-shrink-0"
+            style={{
+              background: `
+                linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
+              `,
+              borderBottom: '1px solid rgba(60, 60, 60, 0.6)',
+              borderBottomLeftRadius: '24px',
+              borderBottomRightRadius: '24px',
+              boxShadow: '0 2px 12px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.03)',
+            }}
+          >
+            <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(24px, calc(18px + 1.2vw), 42px)' }}>
+              AGENT PORTAL
+            </H1>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all uppercase font-semibold"
               style={{
-                background: `
-                  linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%),
-                  repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
-                `,
-                borderBottom: '1px solid rgba(60, 60, 60, 0.6)',
-                boxShadow: '0 2px 12px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.03)',
+                fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
+                fontSize: 'clamp(14px, calc(12px + 0.4vw), 18px)',
+                letterSpacing: '0.05em',
               }}
-            />
-            {/* Scan lines */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px)`,
-              }}
-            />
-            {/* Shimmer */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 30%, transparent 60%)',
-                opacity: 0.7,
-                mixBlendMode: 'overlay',
-              }}
-            />
-
-            {/* Header content */}
-            <div className="relative z-10 flex items-center justify-center h-full px-8">
-              <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(28px, calc(20px + 1.5vw), 48px)' }}>
-                AGENT PORTAL
-              </H1>
-              {/* Logout button - absolute right */}
-              <button
-                onClick={handleLogout}
-                className="absolute right-8 flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all uppercase font-semibold"
-                style={{
-                  fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
-                  fontSize: 'clamp(14px, calc(12px + 0.4vw), 20px)',
-                  letterSpacing: '0.05em',
-                }}
-              >
-                <span>Logout</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-              </button>
-            </div>
+            >
+              <span>Logout</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </button>
           </div>
 
-          {/* Content Area - Shared by desktop and mobile */}
-          {/* On desktop: appears after header bar in right column */}
-          {/* On mobile: this whole right column is the only visible part */}
+          {/* Content Area */}
           <main
             className="flex-1 p-4 sm:p-6 overflow-y-auto"
             style={{
