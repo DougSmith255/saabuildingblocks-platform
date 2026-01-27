@@ -2626,7 +2626,7 @@ function AgentPortal() {
           </div>
 
           {/* Inner L corner - quarter circle cutout matching background */}
-          {/* This creates the concave curve effect by drawing background color over the overlap */}
+          {/* Simple CSS approach: dark quarter-circle shape using border-radius */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2634,15 +2634,11 @@ function AgentPortal() {
               left: '256px',
               width: '24px',
               height: '24px',
-              background: 'radial-gradient(circle at 0% 0%, transparent 100%, #0a0a0a 100%)',
+              background: '#0a0a0a',
+              borderRadius: '0 0 0 100%',
               zIndex: 45,
             }}
-          >
-            {/* SVG quarter circle filled with dark background to create cutout effect */}
-            <svg width="24" height="24" viewBox="0 0 24 24" style={{ display: 'block' }}>
-              <path d="M 0 0 L 24 0 A 24 24 0 0 0 0 24 Z" fill="#0a0a0a" />
-            </svg>
-          </div>
+          />
 
           {/* Top Bar - interactive content area */}
           <div
