@@ -168,7 +168,7 @@ export default function Home() {
                   SMART AGENT ALLIANCE
                 </H1>
                 <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
-                  For All Agents Who Want More
+                  For Agents Who Want More
                 </Tagline>
               </div>
             </div>
