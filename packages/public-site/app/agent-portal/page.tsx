@@ -2594,6 +2594,7 @@ function AgentPortal() {
               className="absolute inset-0"
               style={{
                 background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+                borderBottomRightRadius: '24px',
               }}
             />
             {/* Corrugated vertical stripes */}
@@ -2601,6 +2602,7 @@ function AgentPortal() {
               className="absolute inset-0"
               style={{
                 background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
+                borderBottomRightRadius: '24px',
               }}
             />
             {/* Scan lines */}
@@ -2608,6 +2610,7 @@ function AgentPortal() {
               className="absolute inset-0"
               style={{
                 background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
+                borderBottomRightRadius: '24px',
               }}
             />
             {/* Shimmer */}
@@ -2615,6 +2618,7 @@ function AgentPortal() {
               className="absolute inset-0"
               style={{
                 background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+                borderBottomRightRadius: '24px',
               }}
             />
           </div>
@@ -2632,6 +2636,7 @@ function AgentPortal() {
               className="absolute inset-0"
               style={{
                 background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+                borderBottomRightRadius: '24px',
               }}
             />
             {/* Corrugated vertical stripes */}
@@ -2639,6 +2644,7 @@ function AgentPortal() {
               className="absolute inset-0"
               style={{
                 background: `repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)`,
+                borderBottomRightRadius: '24px',
               }}
             />
             {/* Scan lines */}
@@ -2646,6 +2652,7 @@ function AgentPortal() {
               className="absolute inset-0"
               style={{
                 background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)`,
+                borderBottomRightRadius: '24px',
               }}
             />
             {/* Shimmer */}
@@ -2653,6 +2660,7 @@ function AgentPortal() {
               className="absolute inset-0"
               style={{
                 background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+                borderBottomRightRadius: '24px',
               }}
             />
           </div>
