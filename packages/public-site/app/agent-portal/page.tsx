@@ -2622,10 +2622,9 @@ function AgentPortal() {
           </div>
 
           {/* Inner L corner - CONCAVE cutout creating smooth inner curve */}
-          {/* DEBUG: Layer 1 (z-50) = PURPLE, Layer 2 (z-51) = RED, Layer 3 (z-52) = LIME */}
-          {/* The concave curve cuts INTO the corner, opening toward the content area */}
+          {/* DEBUG: Layer 1 (z-50) = PURPLE, Layer 2 (z-51) = GREEN */}
 
-          {/* Layer 1: Base dark fill with concave curve - PURPLE debug */}
+          {/* Layer 1: Base layer - PURPLE debug */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2633,13 +2632,12 @@ function AgentPortal() {
               left: '280px',
               width: '24px',
               height: '24px',
-              /* Concave curve: transparent quarter-circle at top-left, color fills the crescent */
               background: 'radial-gradient(circle at 0 0, transparent 0, transparent 23px, purple 24px)',
               zIndex: 50,
             }}
           />
 
-          {/* Layer 2: Middle layer - RED debug - slightly smaller radius for layered effect */}
+          {/* Layer 2: Top layer - GREEN debug */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2647,23 +2645,8 @@ function AgentPortal() {
               left: '280px',
               width: '24px',
               height: '24px',
-              /* Same concave curve pattern */
-              background: 'radial-gradient(circle at 0 0, transparent 0, transparent 22px, red 23px)',
+              background: 'radial-gradient(circle at 0 0, transparent 0, transparent 22px, green 23px)',
               zIndex: 51,
-            }}
-          />
-
-          {/* Layer 3: Top layer - LIME debug - smallest radius crescent */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '85px',
-              left: '280px',
-              width: '24px',
-              height: '24px',
-              /* Tightest concave curve */
-              background: 'radial-gradient(circle at 0 0, transparent 0, transparent 21px, lime 22px)',
-              zIndex: 52,
             }}
           />
 
