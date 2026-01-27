@@ -2647,7 +2647,24 @@ function AgentPortal() {
             }}
           />
 
-          {/* Bottom-right corner curve overlay - covers corner with page background + rounded cutout */}
+          {/* === CORNER CURVE OVERLAYS === */}
+          {/* These create rounded corners by overlaying page background with border-radius */}
+
+          {/* Inner L corner (concave) - where header meets sidebar */}
+          {/* This creates the smooth curve at the L junction */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: '256px',
+              width: '24px',
+              height: '24px',
+              background: '#0a0a0a',
+              borderTopLeftRadius: '24px',
+            }}
+          />
+
+          {/* Bottom-right corner of sidebar (convex curve) */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2660,63 +2677,49 @@ function AgentPortal() {
             }}
           />
 
-          {/* 3D Edge Effects - Strong depth illusion */}
-          {/* Top edge highlight - thicker for visibility */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[3px] pointer-events-none"
-            style={{
-              background: 'linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.2) 100%)',
-            }}
-          />
-          {/* Left edge highlight - thicker */}
-          <div
-            className="absolute top-0 left-0 w-[3px] pointer-events-none"
-            style={{
-              height: 'calc(100% - 24px)',
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.08) 100%)',
-            }}
-          />
+          {/* === 3D EDGE EFFECTS === */}
+          {/* Only on inner edges and corners - NOT on screen-touching edges */}
+
           {/* Bottom edge of header (inner L edge) - shadow for depth */}
+          {/* Starts after the inner corner curve */}
           <div
-            className="absolute top-[83px] left-[280px] right-0 h-[6px] pointer-events-none"
+            className="absolute pointer-events-none"
             style={{
+              top: '83px',
+              left: '304px',
+              right: '0',
+              height: '6px',
               background: 'linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)',
             }}
           />
+
           {/* Right edge of sidebar (inner L edge) - shadow for depth */}
+          {/* Starts after the inner corner curve, ends before bottom corner */}
           <div
-            className="absolute top-[85px] left-[276px] w-[6px] pointer-events-none"
+            className="absolute pointer-events-none"
             style={{
-              height: 'calc(100% - 85px - 24px)',
+              top: '109px',
+              left: '276px',
+              width: '6px',
+              height: 'calc(100% - 109px - 24px)',
               background: 'linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)',
             }}
           />
-          {/* Right edge of header - highlight */}
+
+          {/* Inner L corner curve - 3D highlight that follows the curve */}
           <div
-            className="absolute top-0 right-0 w-[3px] h-[85px] pointer-events-none"
-            style={{
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%)',
-            }}
-          />
-          {/* Bottom edge of sidebar - highlight before curve */}
-          <div
-            className="absolute bottom-0 left-0 h-[3px] pointer-events-none"
-            style={{
-              width: '256px',
-              background: 'linear-gradient(90deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.12) 100%)',
-            }}
-          />
-          {/* Sidebar right edge highlight - runs down to corner */}
-          <div
-            className="absolute right-0 w-[3px] pointer-events-none"
+            className="absolute pointer-events-none"
             style={{
               top: '85px',
-              height: 'calc(100% - 85px - 24px)',
-              left: '277px',
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.1) 100%)',
+              left: '256px',
+              width: '24px',
+              height: '24px',
+              borderTopLeftRadius: '24px',
+              boxShadow: 'inset 3px 3px 6px rgba(0,0,0,0.6)',
             }}
           />
-          {/* Corner curve highlight - follows the curve */}
+
+          {/* Bottom-right corner curve - 3D highlight */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2724,9 +2727,8 @@ function AgentPortal() {
               left: '256px',
               width: '24px',
               height: '24px',
-              border: '3px solid transparent',
               borderTopLeftRadius: '24px',
-              borderTop: '3px solid rgba(255,255,255,0.12)',
+              boxShadow: 'inset 3px -3px 6px rgba(0,0,0,0.4)',
               borderLeft: '3px solid rgba(255,255,255,0.1)',
               background: 'transparent',
             }}
