@@ -2666,31 +2666,29 @@ function AgentPortal() {
           </div>
 
           {/* === 3D EDGE EFFECTS === */}
-          {/* Only on inner edges facing content area - curves match parent containers */}
+          {/* Shadows on inner edges - stop before corners to not interfere with rounded edges */}
 
-          {/* Bottom edge of header - shadow for depth (curves at right end to match header) */}
+          {/* Bottom edge of header - shadow for depth (stops before right edge) */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '83px',
               left: '280px',
-              right: '0',
+              right: '30px', /* Stop before the corner */
               height: '6px',
               background: 'linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)',
-              borderBottomRightRadius: '24px',
             }}
           />
 
-          {/* Right edge of sidebar - shadow for depth (curves at bottom to match sidebar) */}
+          {/* Right edge of sidebar - shadow for depth (stops before bottom edge) */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '85px',
               left: '276px',
               width: '6px',
-              bottom: '0',
+              bottom: '30px', /* Stop before the corner */
               background: 'linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)',
-              borderBottomRightRadius: '24px',
             }}
           />
 
