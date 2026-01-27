@@ -950,9 +950,9 @@ function AgentPortal() {
   const [onboardingProgress, setOnboardingProgress] = useState<{
     step1_okta_account: boolean;
     step2_training: boolean;
-    step3_broker_tasks: boolean;
-    step4_choose_crm: boolean;
-    step5_community: boolean;
+    step3_world_tour: boolean;
+    step4_broker_tasks: boolean;
+    step5_choose_crm: boolean;
     step6_karrie_session: boolean;
     step7_link_page: boolean;
     step8_elite_courses: boolean;
@@ -960,9 +960,9 @@ function AgentPortal() {
   }>({
     step1_okta_account: false,
     step2_training: false,
-    step3_broker_tasks: false,
-    step4_choose_crm: false,
-    step5_community: false,
+    step3_world_tour: false,
+    step4_broker_tasks: false,
+    step5_choose_crm: false,
     step6_karrie_session: false,
     step7_link_page: false,
     step8_elite_courses: false,
@@ -1221,9 +1221,9 @@ function AgentPortal() {
             const progress = data.data.onboarding_progress || {
               step1_okta_account: false,
               step2_training: false,
-              step3_broker_tasks: false,
-              step4_choose_crm: false,
-              step5_community: false,
+              step3_world_tour: false,
+              step4_broker_tasks: false,
+              step5_choose_crm: false,
               step6_karrie_session: false,
               step7_link_page: false,
               step8_elite_courses: false,
@@ -5720,9 +5720,9 @@ const STATE_BROKER_URLS: Record<string, { name: string; url: string; phone: stri
 interface OnboardingProgress {
   step1_okta_account: boolean;
   step2_training: boolean;
-  step3_broker_tasks: boolean;
-  step4_choose_crm: boolean;
-  step5_community: boolean;
+  step3_world_tour: boolean;
+  step4_broker_tasks: boolean;
+  step5_choose_crm: boolean;
   step6_karrie_session: boolean;
   step7_link_page: boolean;
   step8_elite_courses: boolean;
@@ -5806,8 +5806,33 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       ),
     },
     {
-      key: 'step3_broker_tasks' as keyof OnboardingProgress,
+      key: 'step3_world_tour' as keyof OnboardingProgress,
       number: 3,
+      title: 'Attend an eXp World Tour Session',
+      description: 'Go to the events calendar and attend an eXp World Tour session.',
+      content: (
+        <div className="space-y-4">
+          <p className="text-[#e5e4dd]/80 text-sm">
+            Go to the eXp events calendar and sign up for an eXp World Tour session.
+          </p>
+          <a
+            href="https://eventscalendar.exprealty.com/#tabs-44410029853595-48251349958648"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
+          >
+            <Users className="w-4 h-4" />
+            Events Calendar
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      ),
+    },
+    {
+      key: 'step4_broker_tasks' as keyof OnboardingProgress,
+      number: 4,
       title: 'Complete Important Broker Tasks',
       description: 'Join your Association of Realtors, local MLS, and complete mandatory training.',
       content: (
@@ -5847,8 +5872,8 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       ),
     },
     {
-      key: 'step4_choose_crm' as keyof OnboardingProgress,
-      number: 4,
+      key: 'step5_choose_crm' as keyof OnboardingProgress,
+      number: 5,
       title: 'Choose Your CRM',
       description: 'Select your CRM system. BoldTrail is recommended for SAA landing pages and email drips.',
       content: (
@@ -5877,31 +5902,6 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
           >
             Choose Your CRM
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
-        </div>
-      ),
-    },
-    {
-      key: 'step5_community' as keyof OnboardingProgress,
-      number: 5,
-      title: 'Plug Into Training & Community',
-      description: 'Review the events calendar and attend an eXp World Tour session.',
-      content: (
-        <div className="space-y-4">
-          <p className="text-[#e5e4dd]/80 text-sm">
-            Review the eXp events calendar and plan to attend an eXp World Tour session (found in the calendar).
-          </p>
-          <a
-            href="https://eventscalendar.exprealty.com/#tabs-44410029853595-48251349958648"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
-          >
-            <Users className="w-4 h-4" />
-            Events Calendar
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
