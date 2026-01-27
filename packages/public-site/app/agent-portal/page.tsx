@@ -2582,9 +2582,12 @@ function AgentPortal() {
         <div className="fixed inset-0 z-40 pointer-events-none">
 
           {/* === HEADER BAR (Top portion of L) === */}
-          {/* Header extends to screen edges - no border-radius needed (screen-touching edges are sharp) */}
+          {/* Bottom-right corner curves where header meets content area */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px] overflow-hidden pointer-events-none"
+            style={{
+              borderBottomRightRadius: '24px',
+            }}
           >
             {/* Base gradient */}
             <div
@@ -2655,9 +2658,9 @@ function AgentPortal() {
           </div>
 
           {/* === 3D EDGE EFFECTS === */}
-          {/* Only on inner edges facing content area */}
+          {/* Only on inner edges facing content area - curves match parent containers */}
 
-          {/* Bottom edge of header - shadow for depth (starts after sidebar, no radius - goes to content edge) */}
+          {/* Bottom edge of header - shadow for depth (curves at right end to match header) */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2666,18 +2669,20 @@ function AgentPortal() {
               right: '0',
               height: '6px',
               background: 'linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)',
+              borderBottomRightRadius: '24px',
             }}
           />
 
-          {/* Right edge of sidebar - shadow for depth (starts after header, stops before bottom corner) */}
+          {/* Right edge of sidebar - shadow for depth (curves at bottom to match sidebar) */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '85px',
               left: '276px',
               width: '6px',
-              height: 'calc(100% - 85px - 30px)',
+              bottom: '0',
               background: 'linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)',
+              borderBottomRightRadius: '24px',
             }}
           />
 
