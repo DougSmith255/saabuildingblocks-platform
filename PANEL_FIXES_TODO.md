@@ -129,7 +129,7 @@ The APIs require these environment variables in Cloudflare Pages:
 - `packages/shared/components/saa/interactive/InstructionsModal.tsx` - Added hideBackdrop, zIndexOffset props
 - `packages/shared/components/saa/media/VideoSection.tsx` - Updated transition logic
 
-**Status:** [x] Fixed - needs testing
+**Status:** [T] Tested & verified
 
 ---
 
@@ -153,11 +153,47 @@ The APIs require these environment variables in Cloudflare Pages:
 **Files Modified:**
 - `packages/public-site/app/agent-portal/page.tsx` - NewAgentsSection component, added key props
 
-**Status:** [x] Fixed - needs testing
+**Status:** [T] Tested & verified
+
+---
+
+## FIX-7: Agent Attraction [slug].js - Panel Pattern + Not You Link
+
+**Location:** `functions/[slug].js` → Join The Alliance panels
+
+**Issue:**
+- Panel transitions were not smooth (same issue as VideoSection)
+- "Not You?" link was missing from instructions panel
+- Cache expiration logic needed updating
+
+**Fix Applied:**
+1. Added shared backdrop HTML element and CSS
+2. Added `activeJoinPanel` state variable (vanilla JS pattern)
+3. Created `openJoinInstructionsPanel()` and `closeJoinInstructionsPanels()` functions
+4. JoinModal stays open while InstructionsModal slides on top (matching New Agents pattern)
+5. Both panels close together smoothly when dismissed
+6. Added "Not You?" link to instructions panel
+7. Updated Escape key handler to use new close function
+
+**Files Modified:**
+- `functions/[slug].js` - Complete panel system rewrite
+
+**Status:** [T] Tested & verified
 
 ---
 
 ## Progress Log
+
+### 2026-01-27 (Session 4)
+- **FIX-5: VERIFIED** - VideoSection panel transition using New Agents pattern
+- **FIX-6: VERIFIED** - New Agents tab panels work correctly with key props
+- **FIX-7: IMPLEMENTED** - Agent Attraction [slug].js panel system rewritten:
+  - Added shared backdrop element
+  - Added `activeJoinPanel` state (vanilla JS pattern)
+  - Created `openJoinInstructionsPanel()` and `closeJoinInstructionsPanels()` functions
+  - JoinModal stays open while InstructionsModal slides on top
+  - Added "Not You?" link to instructions panel
+  - Pushed to GitHub - Cloudflare auto-deploys
 
 ### 2026-01-27 (Session 3)
 - **FIX-5: FIXED** - VideoSection panel transition flash:

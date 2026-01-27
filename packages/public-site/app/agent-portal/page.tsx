@@ -2485,6 +2485,65 @@ function AgentPortal() {
         </div>
       </header>
 
+      {/* Desktop Sidebar Glass Frame - L-shape extension of header (950px+) */}
+      {/* More transparent than header to create visual hierarchy */}
+      <div
+        className="hidden min-[950px]:block fixed left-0 z-[10009] pointer-events-none"
+        style={{
+          top: '85px', // Below header
+          bottom: 0,
+          width: '280px', // Sidebar width + padding
+          // More transparent glass effect
+          background: `
+            linear-gradient(180deg, rgba(14, 14, 14, 0.85) 0%, rgba(10, 10, 10, 0.75) 100%),
+            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.015) 2px, rgba(255, 215, 0, 0.015) 4px)
+          `,
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderRight: '1px solid rgba(60, 60, 60, 0.5)',
+          borderBottom: '1px solid rgba(60, 60, 60, 0.5)',
+          borderRadius: '0 0 24px 0',
+          boxShadow: `
+            2px 0 8px rgba(0, 0, 0, 0.3),
+            inset 0 0 30px rgba(255, 255, 255, 0.02),
+            inset -1px 0 0 rgba(255, 255, 255, 0.03)
+          `,
+        }}
+      >
+        {/* Subtle horizontal scan lines - matching header but fainter */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: '0 0 24px 0',
+            background: `repeating-linear-gradient(
+              0deg,
+              transparent,
+              transparent 2px,
+              rgba(255, 255, 255, 0.015) 2px,
+              rgba(255, 255, 255, 0.015) 4px
+            )`,
+            pointerEvents: 'none',
+          }}
+        />
+        {/* Subtle shimmer - less intense than header */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: '0 0 24px 0',
+            opacity: 0.3,
+            mixBlendMode: 'overlay',
+            background: `linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.08) 0%,
+              rgba(255, 255, 255, 0.03) 30%,
+              rgba(255, 255, 255, 0.01) 100%
+            )`,
+            pointerEvents: 'none',
+          }}
+        />
+      </div>
 
       {/* Mobile Bottom Navigation - 3D button styling with separators */}
       <nav
@@ -2581,19 +2640,17 @@ function AgentPortal() {
         <div className="flex flex-col min-[950px]:flex-row gap-6">
 
           {/* Sidebar Navigation - Desktop only (950px+) */}
-          {/* FIX: Sidebar scrolls with content on tabs that have tall content */}
+          {/* Sits on top of the glass sidebar frame */}
           {/* self-start prevents flex stretching which can cause scroll hang-up */}
-          <aside className="hidden min-[950px]:block w-64 flex-shrink-0 self-start">
+          <aside className="hidden min-[950px]:block w-64 flex-shrink-0 self-start relative z-[10010]">
             <div className={`${['onboarding', 'linkpage', 'templates', 'agent-attraction', 'production', 'download', 'support'].includes(activeSection) ? '' : 'sticky top-24'} space-y-4`}>
-              {/* User Profile Section - Premium Glass Card */}
+              {/* User Profile Section - Subtle card on glass frame */}
               <div
                 className="rounded-xl p-4"
                 style={{
-                  background: `linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%), linear-gradient(to bottom, rgba(18, 18, 18, 0.95), rgba(12, 12, 12, 0.98))`,
-                  backdropFilter: 'blur(12px) saturate(1.4)',
-                  WebkitBackdropFilter: 'blur(12px) saturate(1.4)',
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
-                  boxShadow: `0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px ${dashboardAccentColor}08, inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 0 rgba(0,0,0,0.2)`,
+                  boxShadow: `0 4px 16px rgba(0, 0, 0, 0.2), 0 0 12px ${dashboardAccentColor}06, inset 0 1px 0 rgba(255,255,255,0.04)`,
                 }}
               >
                 {/* Profile Picture */}
@@ -2726,25 +2783,28 @@ function AgentPortal() {
                       }}
                       className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 hover:animate-[shakeHover_0.3s_ease-in-out]"
                       style={{
+                        // More transparent backgrounds to let glass frame show through
                         background: isActive
-                          ? 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)'
+                          ? 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)'
                           : isOnboardingInactive
-                          ? 'linear-gradient(180deg, #2a2518 0%, #1f1a10 50%, #191408 100%)'
+                          ? 'linear-gradient(180deg, rgba(255,215,0,0.12) 0%, rgba(255,215,0,0.04) 100%)'
                           : isDownloadInactive
-                          ? 'linear-gradient(180deg, #252525 0%, #1a1a1a 50%, #151515 100%)'
-                          : 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
+                          ? 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)'
+                          : 'transparent',
                         boxShadow: isActive
-                          ? `inset 0 1px 0 ${dashboardAccentColor}33, inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px ${dashboardAccentColor}26`
+                          ? `inset 0 1px 0 ${dashboardAccentColor}33, 0 0 12px ${dashboardAccentColor}20`
                           : isOnboardingInactive
-                          ? 'inset 0 2px 0 rgba(255,215,0,0.15), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(255,215,0,0.1), 0 0 20px rgba(255,215,0,0.05)'
+                          ? 'inset 0 1px 0 rgba(255,215,0,0.2), 0 0 16px rgba(255,215,0,0.08)'
                           : isDownloadInactive
-                          ? 'inset 0 2px 0 rgba(255,255,255,0.1), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)'
-                          : 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
+                          ? 'inset 0 1px 0 rgba(255,255,255,0.08)'
+                          : 'none',
                         border: isActive
                           ? `1px solid ${dashboardAccentColor}4D`
                           : isOnboardingInactive
                           ? '1px solid rgba(255,215,0,0.25)'
-                          : '1px solid rgba(255,255,255,0.08)',
+                          : isDownloadInactive
+                          ? '1px solid rgba(255,255,255,0.1)'
+                          : '1px solid transparent',
                         ...(shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : {}),
                       }}
                     >

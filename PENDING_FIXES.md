@@ -17,25 +17,21 @@ Title has effects but text is way too big.
 - **ATTEMPT 3 (PARTIAL)**: Added perspective wrapper + H1 component - Effects work but text is massive
 - **ATTEMPT 4 (CURRENT)**: Added inline `style={{ fontSize: 'clamp(1.5rem, 4vw, 1.875rem)' }}` to override H1's `text-h1` class
 
-## FIX-3: SlidePanel independent transitions - CLICK ISSUES PERSIST
-Panels not transitioning independently - one should slide out while other slides in underneath.
+## FIX-3: SlidePanel independent transitions - ✅ RESOLVED
 
-### What Has Been Tried:
-1. **Attempt 1**: Added `prevIsOpenRef` to detect parent-triggered close - FAILED
-2. **Attempt 2**: Added `hideBackdrop` and `zIndexOffset` props - FAILED
-3. **Attempt 3**: Added `isTransitioning` state with 150ms delay - FAILED
-4. **Attempt 4**: Separate `showCategoryPanel`/`showDocumentPanel` states - FAILED
-5. **Attempt 5**: Single `activePanel` state + swapped z-index - FAILED
-6. **Attempt 6**: Fixed race condition with `isClosingTransition` check - PARTIALLY WORKING
-7. **Attempt 7 (FAILED)**: Added `pointerEvents: 'none'` during closing + 500px width - Still can't click
+### Solution:
+Added `pointerEvents: (isClosing || isClosingTransition) ? 'none' : 'auto'` to the CONTAINER div (not just the panel).
 
-### Current Issues:
-- ✅ Animations work
-- ❌ Cannot click exit button on document panel (second panel)
-- ❌ Cannot click "Back to [category]" button
-- ❌ Back button should close document panel and reveal category panel sliding in from behind
+### Root Cause:
+The category panel's full-screen container div (`fixed inset-0`) was intercepting ALL pointer events, preventing clicks from reaching the document panel's buttons (Back, X).
 
-### Playwright Testing (Attempt 8):
-- Confirmed: Category panel's CONTAINER div (`fixed inset-0`) intercepts ALL pointer events
-- The `pointerEvents: 'none'` was only on the panel content, not the full-screen container
-- **FIX**: Added `pointerEvents: (isClosing || isClosingTransition) ? 'none' : 'auto'` to the container div
+### What Worked:
+- **Attempt 8**: Added `pointerEvents` style to the container div in SlidePanel.tsx
+- The fix disables pointer events on the entire container during closing transitions
+- This allows clicks to pass through to panels underneath
+
+### Verified via Playwright Testing (2026-01-26):
+- ✅ Back button clicks successfully
+- ✅ X button clicks successfully
+- ✅ Panels close properly
+- ✅ No more "intercepts pointer events" timeout errors
