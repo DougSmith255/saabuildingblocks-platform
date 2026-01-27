@@ -94,6 +94,13 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     '/master-controller',       // Admin interface
   ], []);
 
+  // Routes where Lenis smooth scroll should be disabled
+  // These pages have fixed layouts with their own scroll containers
+  const noSmoothScrollPrefixes = useMemo(() => [
+    '/agent-portal',            // Agent portal - fixed layout with own scroll
+    '/master-controller',       // Admin interface
+  ], []);
+
   // Check for embed mode via URL search params
   const [isEmbedMode, setIsEmbedMode] = useState(false);
 
@@ -155,6 +162,15 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     );
   }, [pathname, noScrollProgressPrefixes]);
 
+  // Check if Lenis smooth scroll should be disabled (fixed layout pages)
+  const shouldDisableSmoothScroll = useMemo(() => {
+    if (!pathname) return false;
+    const normalizedPath = pathname.replace(/\/$/, '');
+    return noSmoothScrollPrefixes.some(prefix =>
+      normalizedPath === prefix || normalizedPath.startsWith(prefix + '/')
+    );
+  }, [pathname, noSmoothScrollPrefixes]);
+
   // Embed mode: minimal wrapper, just the content
   if (isEmbedMode) {
     return <>{children}</>;
@@ -162,7 +178,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   return (
     <ViewportProvider>
-      <SmoothScroll />
+      {!shouldDisableSmoothScroll && <SmoothScroll />}
       {!shouldHideScrollProgress && <ScrollProgress />}
       {!shouldHideHeaderFooter && !shouldHideScrollIndicator && <ScrollIndicator />}
       <ExternalLinkHandler />

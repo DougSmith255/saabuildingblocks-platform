@@ -3,13 +3,14 @@
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, FormCard, FormGroup, FormInput, FormButton, FormMessage, ModalTitle } from '@saa/shared/components/saa';
+import { API_URL } from '@/lib/api-config';
 
 // Initial progress values for the data stream effect
 const INITIAL_PROGRESS_START = 0.05;
 const INITIAL_PROGRESS_END = 0.5;
 
-// Auth API URL - admin dashboard handles authentication
-const AUTH_API_URL = 'https://saabuildingblocks.com';
+// Auth API URL - uses centralized config
+const AUTH_API_URL = API_URL;
 
 
 /**

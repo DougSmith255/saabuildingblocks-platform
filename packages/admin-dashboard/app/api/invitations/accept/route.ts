@@ -20,12 +20,28 @@ import bcrypt from 'bcryptjs';
 
 export const dynamic = 'force-dynamic';
 
-// CORS configuration for cross-origin requests from public site
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.pages.dev',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
+// Allowed origins for CORS (public sites that can call this API)
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.pages.dev',
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+];
+
+// Get CORS headers based on request origin
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  // Check if origin is in allowed list
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin)
+    ? origin
+    : ALLOWED_ORIGINS[0]; // Default to Cloudflare Pages
+
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+}
 
 /**
  * Generate unique slug from name
@@ -103,6 +119,10 @@ function checkRateLimit(ipAddress: string): { allowed: boolean; remainingAttempt
  * and activate user account with password
  */
 export async function POST(request: NextRequest) {
+  // Get origin for CORS
+  const origin = request.headers.get('origin');
+  const corsHeaders = getCorsHeaders(origin);
+
   try {
     // Get IP address for rate limiting
     const ipAddress = request.headers.get('x-forwarded-for')?.split(',')[0].trim()
@@ -120,7 +140,7 @@ export async function POST(request: NextRequest) {
         {
           status: 429,
           headers: {
-            ...CORS_HEADERS,
+            ...corsHeaders,
             'Retry-After': '60',
             'X-RateLimit-Limit': RATE_LIMIT_MAX.toString(),
             'X-RateLimit-Remaining': '0',
@@ -133,7 +153,7 @@ export async function POST(request: NextRequest) {
     if (!supabase) {
       return NextResponse.json(
         { error: 'Database connection unavailable' },
-        { status: 503, headers: CORS_HEADERS }
+        { status: 503, headers: corsHeaders }
       );
     }
 
@@ -147,7 +167,7 @@ export async function POST(request: NextRequest) {
       if (error instanceof ZodError) {
         return NextResponse.json(
           { error: 'Validation error', details: error.issues },
-          { status: 400, headers: CORS_HEADERS }
+          { status: 400, headers: corsHeaders }
         );
       }
       throw error;
@@ -162,7 +182,7 @@ export async function POST(request: NextRequest) {
     if (invitationError || !invitation) {
       return NextResponse.json(
         { error: 'Invalid invitation token' },
-        { status: 404, headers: CORS_HEADERS }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -171,7 +191,7 @@ export async function POST(request: NextRequest) {
     if (!validationResult.valid) {
       return NextResponse.json(
         { error: validationResult.reason || 'Invitation is not valid' },
-        { status: 400, headers: CORS_HEADERS }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -184,7 +204,7 @@ export async function POST(request: NextRequest) {
     if (userError || !user) {
       return NextResponse.json(
         { error: 'Associated user not found' },
-        { status: 404, headers: CORS_HEADERS }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -192,7 +212,7 @@ export async function POST(request: NextRequest) {
     if (user.status !== 'invited') {
       return NextResponse.json(
         { error: `User account is already ${user.status}` },
-        { status: 400, headers: CORS_HEADERS }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -217,7 +237,7 @@ export async function POST(request: NextRequest) {
       if (existingEmailUser) {
         return NextResponse.json(
           { error: 'Email address is already in use by another account' },
-          { status: 409, headers: CORS_HEADERS }
+          { status: 409, headers: corsHeaders }
         );
       }
     }
@@ -233,7 +253,7 @@ export async function POST(request: NextRequest) {
       if (existingUser) {
         return NextResponse.json(
           { error: 'Username is already taken' },
-          { status: 409, headers: CORS_HEADERS }
+          { status: 409, headers: corsHeaders }
         );
       }
     }
@@ -261,7 +281,7 @@ export async function POST(request: NextRequest) {
     if (updateUserError) {
       return NextResponse.json(
         { error: 'Failed to activate user account', details: updateUserError.message },
-        { status: 500, headers: CORS_HEADERS }
+        { status: 500, headers: corsHeaders }
       );
     }
 
@@ -413,7 +433,7 @@ export async function POST(request: NextRequest) {
     }, {
       status: 200,
       headers: {
-        ...CORS_HEADERS,
+        ...corsHeaders,
         'X-RateLimit-Limit': RATE_LIMIT_MAX.toString(),
         'X-RateLimit-Remaining': rateLimit.remainingAttempts.toString(),
       }
@@ -421,7 +441,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500, headers: CORS_HEADERS }
+      { status: 500, headers: corsHeaders }
     );
   }
 }
@@ -429,11 +449,14 @@ export async function POST(request: NextRequest) {
 /**
  * OPTIONS handler for CORS preflight requests
  */
-export async function OPTIONS() {
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  const corsHeaders = getCorsHeaders(origin);
+
   return NextResponse.json({}, {
     status: 200,
     headers: {
-      ...CORS_HEADERS,
+      ...corsHeaders,
       'Access-Control-Max-Age': '86400',
     },
   });

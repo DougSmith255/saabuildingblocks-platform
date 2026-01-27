@@ -4,13 +4,14 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { H1, Modal, FormCard, FormButton, FormInput, FormGroup, ModalTitle, FormMessage } from '@saa/shared/components/saa';
+import { API_URL } from '@/lib/api-config';
 
 // Initial progress values for the data stream effect
 const INITIAL_PROGRESS_START = 0.05;
 const INITIAL_PROGRESS_END = 0.5;
 
-// Auth API URL - admin dashboard handles authentication (runs on saabuildingblocks.com)
-const AUTH_API_URL = 'https://saabuildingblocks.com';
+// Auth API URL - uses centralized config
+const AUTH_API_URL = API_URL;
 
 // Password Reset Modal States
 type ResetStep = 'email' | 'success';

@@ -3,6 +3,7 @@
 import { useState, useEffect, useLayoutEffect, useRef, useMemo, Suspense, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
+import { API_URL, SITE_URL } from '@/lib/api-config';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
 import { SlidePanel } from '@/components/shared/SlidePanel';
 import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target, MessageSquare, LayoutTemplate, FileText } from 'lucide-react';
@@ -1213,7 +1214,7 @@ function AgentPortal() {
   useEffect(() => {
     if (user?.id && !isOnboardingLoaded) {
       console.log('[Onboarding] Fetching progress for user:', user.id);
-      fetch(`https://saabuildingblocks.com/api/users/onboarding?userId=${user.id}`)
+      fetch(`${API_URL}/api/users/onboarding?userId=${user.id}`)
         .then(res => res.json())
         .then(data => {
           console.log('[Onboarding] API Response:', data);
@@ -1255,7 +1256,7 @@ function AgentPortal() {
     setOnboardingProgress(newProgress);
 
     try {
-      await fetch('https://saabuildingblocks.com/api/users/onboarding', {
+      await fetch(`${API_URL}/api/users/onboarding', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1281,7 +1282,7 @@ function AgentPortal() {
     }
 
     try {
-      await fetch('https://saabuildingblocks.com/api/users/onboarding', {
+      await fetch(`${API_URL}/api/users/onboarding', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1571,7 +1572,7 @@ function AgentPortal() {
         return;
       }
 
-      const response = await fetch('https://saabuildingblocks.com/api/users/profile', {
+      const response = await fetch(`${API_URL}/api/users/profile', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -1891,7 +1892,7 @@ function AgentPortal() {
       dashboardFormData.append('file', processedBlob, 'profile.png');
       dashboardFormData.append('userId', user.id);
 
-      const dashboardResponse = await fetch('https://saabuildingblocks.com/api/users/profile-picture', {
+      const dashboardResponse = await fetch(`${API_URL}/api/users/profile-picture', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: dashboardFormData,
@@ -1914,14 +1915,14 @@ function AgentPortal() {
 
       // Step 5: Upload same to attraction page (B&W version)
       setStatus('Syncing to attraction page...');
-      let pageResponse = await fetch(`https://saabuildingblocks.com/api/agent-pages/${user.id}`, {
+      let pageResponse = await fetch(`${API_URL}/api/agent-pages/${user.id}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
 
       // If page doesn't exist, create it first
       if (!pageResponse.ok && pageResponse.status === 404) {
         setStatus('Creating your page...');
-        const createResponse = await fetch('https://saabuildingblocks.com/api/agent-pages', {
+        const createResponse = await fetch(`${API_URL}/api/agent-pages', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1946,7 +1947,7 @@ function AgentPortal() {
           attractionFormData.append('file', processedBlob, 'profile.png');
           attractionFormData.append('pageId', currentPageData.page.id);
 
-          const uploadResponse = await fetch('https://saabuildingblocks.com/api/agent-pages/upload-image', {
+          const uploadResponse = await fetch(`${API_URL}/api/agent-pages/upload-image', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` },
             body: attractionFormData,
@@ -1971,7 +1972,7 @@ function AgentPortal() {
           colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
           colorFormData.append('pageId', currentPageData.page.id);
 
-          const colorResponse = await fetch('https://saabuildingblocks.com/api/agent-pages/upload-color-image', {
+          const colorResponse = await fetch(`${API_URL}/api/agent-pages/upload-color-image', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` },
             body: colorFormData,
@@ -2072,7 +2073,7 @@ function AgentPortal() {
       dashboardFormData.append('file', processedBlob, 'profile.png');
       dashboardFormData.append('userId', user!.id);
 
-      const dashboardResponse = await fetch('https://saabuildingblocks.com/api/users/profile-picture', {
+      const dashboardResponse = await fetch(`${API_URL}/api/users/profile-picture', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: dashboardFormData,
@@ -2090,7 +2091,7 @@ function AgentPortal() {
 
       // Step 4: Upload same to attraction page
       setDashboardUploadStatus('Syncing to attraction page...');
-      const pageResponse = await fetch(`https://saabuildingblocks.com/api/agent-pages/${user!.id}`, {
+      const pageResponse = await fetch(`${API_URL}/api/agent-pages/${user!.id}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
 
@@ -2102,7 +2103,7 @@ function AgentPortal() {
           attractionFormData.append('file', processedBlob, 'profile.png');
           attractionFormData.append('pageId', pageData.page.id);
 
-          await fetch('https://saabuildingblocks.com/api/agent-pages/upload-image', {
+          await fetch(`${API_URL}/api/agent-pages/upload-image', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` },
             body: attractionFormData,
@@ -2114,7 +2115,7 @@ function AgentPortal() {
           colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
           colorFormData.append('pageId', pageData.page.id);
 
-          const colorResponse = await fetch('https://saabuildingblocks.com/api/agent-pages/upload-color-image', {
+          const colorResponse = await fetch(`${API_URL}/api/agent-pages/upload-color-image', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` },
             body: colorFormData,
@@ -2620,8 +2621,8 @@ function AgentPortal() {
             }} />
           </div>
 
-          {/* Inner L corner - CONCAVE cutout using radial gradient */}
-          {/* Creates transparent quarter-circle that reveals page background */}
+          {/* Inner L corner - CONCAVE cutout creating smooth inner curve */}
+          {/* Dark crescent fills the corner with a circular transparent cutout at the corner point */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2629,33 +2630,39 @@ function AgentPortal() {
               left: '280px',
               width: '24px',
               height: '24px',
-              background: 'radial-gradient(circle at 0% 0%, transparent 100%, rgba(14, 14, 14, 0.98) 100%)',
+              background: 'radial-gradient(circle at 0 0, transparent 0, transparent 23px, rgba(14, 14, 14, 0.98) 24px)',
               zIndex: 50,
             }}
           />
-          {/* L-frame inner corner mask - dark element with transparent circular cutout */}
+          {/* Inner corner glass texture - corrugated pattern with concave curve */}
           <div
-            className="absolute pointer-events-none overflow-hidden"
+            className="absolute pointer-events-none"
             style={{
               top: '85px',
               left: '280px',
               width: '24px',
               height: '24px',
-              zIndex: 45,
+              background: `
+                radial-gradient(circle at 0 0, transparent 0, transparent 23px, rgba(255, 215, 0, 0.025) 24px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px)
+              `,
+              zIndex: 51,
             }}
-          >
-            <div
-              style={{
-                position: 'absolute',
-                top: '-24px',
-                left: '-24px',
-                width: '48px',
-                height: '48px',
-                background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-                borderRadius: '0 0 24px 0',
-              }}
-            />
-          </div>
+          />
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: '280px',
+              width: '24px',
+              height: '24px',
+              background: `
+                radial-gradient(circle at 0 0, transparent 0, transparent 23px, rgba(255, 255, 255, 0.015) 24px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
+              `,
+              zIndex: 52,
+            }}
+          />
 
           {/* Top Bar - interactive content area */}
           <div
@@ -2720,11 +2727,11 @@ function AgentPortal() {
               }}
             />
 
-            {/* Sidebar content - scrollable */}
-            <div className="relative z-10 h-full overflow-y-auto p-4 space-y-4">
-              {/* User Profile Section */}
+            {/* Sidebar content - fits within viewport without scrollbar */}
+            <div className="relative z-10 h-full flex flex-col p-3 space-y-2">
+              {/* User Profile Section - compact for fitting */}
               <div
-                className="rounded-xl p-4"
+                className="rounded-xl p-3 flex-shrink-0"
                 style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -2732,10 +2739,10 @@ function AgentPortal() {
                 }}
               >
                 {/* Profile Picture */}
-                <div className="flex flex-col items-center mb-4">
+                <div className="flex flex-col items-center mb-2">
                   <button
                     onClick={handleProfilePictureClick}
-                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden transition-colors mb-3 bg-white/5"
+                    className="relative group w-[90px] h-[90px] rounded-full overflow-hidden transition-colors mb-2 bg-white/5"
                     style={{
                       border: `3px solid ${dashboardAccentColor}`,
                       boxShadow: `0 0 16px ${dashboardAccentColor}40`,
@@ -2823,9 +2830,9 @@ function AgentPortal() {
                   `}</style>
                   <button
                     onClick={handleOpenEditProfile}
-                    className="edit-profile-btn mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-[#e5e4dd]/80 bg-white/5 border border-white/[0.08] transition-all"
+                    className="edit-profile-btn mt-2 flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-[#e5e4dd]/80 bg-white/5 border border-white/[0.08] transition-all"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                     <span>Edit Profile</span>
@@ -2833,8 +2840,8 @@ function AgentPortal() {
                 </div>
               </div>
 
-              {/* Navigation Menu - 3D Button Style, no container on desktop */}
-              <nav className="md:space-y-1">
+              {/* Navigation Menu - Compact 3D Button Style */}
+              <nav className="flex-1 space-y-0.5 overflow-y-auto min-h-0">
               {navItems
                 .filter(item => {
                   // Hide onboarding tab when onboarding is complete
@@ -2859,7 +2866,7 @@ function AgentPortal() {
                         setShakingItem(item.id);
                         setTimeout(() => setShakingItem(null), 300);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 hover:animate-[shakeHover_0.3s_ease-in-out]"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-all duration-200 hover:animate-[shakeHover_0.3s_ease-in-out]"
                       style={{
                         // 3D button effect with gradients
                         background: isActive
@@ -6267,13 +6274,13 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
               <span className="truncate">doug@smartagentalliance.com</span>
             </a>
             <a
-              href="sms:+13143205606"
+              href="sms:+14153205606"
               className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#ffd700]/5 border border-[#ffd700]/20 text-[#e5e4dd] hover:bg-[#ffd700]/10 hover:border-[#ffd700]/30 transition-all text-sm"
             >
               <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
-              <span>Text: 314-320-5606</span>
+              <span>Text: 415-320-5606</span>
             </a>
           </div>
         </div>
@@ -6483,12 +6490,12 @@ function SupportSection({ userState }: SupportSectionProps) {
               <p className="text-[10px] text-[#e5e4dd]/40 uppercase tracking-wider mb-1.5">Urgent / Critical Bug</p>
               <div className="grid grid-cols-2 gap-2">
                 <a
-                  href="sms:+13143205606"
+                  href="sms:+14153205606"
                   className="flex flex-col items-center py-2.5 px-3 rounded-xl bg-black/30 border border-[#ffd700]/20 text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
                   style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
                 >
                   <span className="text-xs font-semibold">Doug</span>
-                  <span className="text-[10px] text-[#e5e4dd]/50">314-320-5606</span>
+                  <span className="text-[10px] text-[#e5e4dd]/50">415-320-5606</span>
                 </a>
                 <a
                   href="sms:+14152380922"
@@ -9610,7 +9617,7 @@ function AgentPagesSection({
     const fetchPageData = async () => {
       try {
         const token = localStorage.getItem('agent_portal_token');
-        const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${user.id}`, {
+        const response = await fetch(`${API_URL}/api/agent-pages/${user.id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -9747,7 +9754,7 @@ function AgentPagesSection({
       .replace(/[^a-z0-9-]/g, '')
       .replace(/--+/g, '-')
       .replace(/^-|-$/g, '') || pageData.slug;
-    const linktreeUrl = `https://saabuildingblocks.pages.dev/${slug}-links`;
+    const linktreeUrl = `${SITE_URL}/${slug}-links`;
 
     let cancelled = false;
 
@@ -9816,7 +9823,7 @@ function AgentPagesSection({
 
     try {
       const token = localStorage.getItem('agent_portal_token');
-      const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${pageData.id}`, {
+      const response = await fetch(`${API_URL}/api/agent-pages/${pageData.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -9865,7 +9872,7 @@ function AgentPagesSection({
 
       // If page doesn't exist, create it first
       if (!currentPageData) {
-        const createResponse = await fetch('https://saabuildingblocks.com/api/agent-pages', {
+        const createResponse = await fetch(`${API_URL}/api/agent-pages', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -9930,7 +9937,7 @@ function AgentPagesSection({
 
       // If using user's profile picture, sync it to agent page first
       if (!currentPageData.profile_image_url && user.profilePictureUrl) {
-        await fetch(`https://saabuildingblocks.com/api/agent-pages/${currentPageData.id}`, {
+        await fetch(`${API_URL}/api/agent-pages/${currentPageData.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -9942,7 +9949,7 @@ function AgentPagesSection({
         });
       }
 
-      const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${currentPageData.id}/activate`, {
+      const response = await fetch(`${API_URL}/api/agent-pages/${currentPageData.id}/activate`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -10088,7 +10095,7 @@ function AgentPagesSection({
       dashboardFormData.append('file', processedBlob, 'profile.png');
       dashboardFormData.append('userId', user.id);
 
-      const dashboardResponse = await fetch('https://saabuildingblocks.com/api/users/profile-picture', {
+      const dashboardResponse = await fetch(`${API_URL}/api/users/profile-picture', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: dashboardFormData,
@@ -10111,7 +10118,7 @@ function AgentPagesSection({
         attractionFormData.append('file', processedBlob, 'profile.png');
         attractionFormData.append('pageId', pageData.id);
 
-        const response = await fetch('https://saabuildingblocks.com/api/agent-pages/upload-image', {
+        const response = await fetch(`${API_URL}/api/agent-pages/upload-image', {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
           body: attractionFormData,
@@ -10133,7 +10140,7 @@ function AgentPagesSection({
         colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
         colorFormData.append('pageId', pageData.id);
 
-        const colorResponse = await fetch('https://saabuildingblocks.com/api/agent-pages/upload-color-image', {
+        const colorResponse = await fetch(`${API_URL}/api/agent-pages/upload-color-image', {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
           body: colorFormData,
@@ -10179,7 +10186,7 @@ function AgentPagesSection({
 
     try {
       const token = localStorage.getItem('agent_portal_token');
-      const response = await fetch('https://saabuildingblocks.com/api/agent-pages', {
+      const response = await fetch(`${API_URL}/api/agent-pages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -10266,9 +10273,9 @@ function AgentPagesSection({
 
   // TODO: Change to smartagentalliance.com when domain migration is complete
   const slugForUrl = generatedSlug || pageData?.slug || '';
-  const pageUrl = slugForUrl ? `https://saabuildingblocks.pages.dev/${slugForUrl}` : '';
-  const pageUrlPreview = slugForUrl ? `https://saabuildingblocks.pages.dev/${slugForUrl}?preview=true` : '';
-  const linktreeUrl = slugForUrl ? `https://saabuildingblocks.pages.dev/${slugForUrl}-links` : '';
+  const pageUrl = slugForUrl ? `${SITE_URL}/${slugForUrl}` : '';
+  const pageUrlPreview = slugForUrl ? `${SITE_URL}/${slugForUrl}?preview=true` : '';
+  const linktreeUrl = slugForUrl ? `${SITE_URL}/${slugForUrl}-links` : '';
   const hasPage = !!pageData;
 
   // Download QR Code function
