@@ -147,10 +147,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user data from users table (using service client to bypass RLS)
+    // Query by email since users table ID may differ from Supabase Auth ID
     const { data: user, error: userError } = await serviceClient
       .from('users')
       .select('*')
-      .eq('id', authData.user.id)
+      .eq('email', authData.user.email)
       .single();
 
     if (userError || !user) {
