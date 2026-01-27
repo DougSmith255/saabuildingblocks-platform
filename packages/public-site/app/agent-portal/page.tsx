@@ -2971,53 +2971,14 @@ function AgentPortal() {
       {/* On mobile: fills screen with padding for header/nav */}
       <div
         className="min-[950px]:fixed min-[950px]:top-[85px] min-[950px]:left-[280px] min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto min-[950px]:z-30"
+        style={{ background: 'transparent' }}
       >
         {/* Inner wrapper with curved corner - creates the concave inner corner effect */}
+        {/* Background is transparent to allow global StarBackground to show through */}
         <div
           className="relative min-h-full min-[950px]:rounded-tl-[24px] overflow-hidden"
-          style={{
-            background: 'radial-gradient(ellipse at center top, rgb(35, 35, 35) 0%, rgb(12, 12, 12) 60%, rgb(8, 8, 8) 100%)',
-          }}
+          style={{ background: 'transparent' }}
         >
-          {/* Star background layer */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage: `
-                radial-gradient(1.5px 1.5px at 30px 40px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 60px 90px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1.5px 1.5px at 140px 50px, rgba(255,255,255,0.55), transparent),
-                radial-gradient(1px 1px at 200px 100px, rgba(255,255,255,0.7), transparent),
-                radial-gradient(1px 1px at 250px 40px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(0.5px 0.5px at 100px 130px, rgba(255,255,255,0.5), transparent),
-                radial-gradient(1px 1px at 180px 180px, rgba(255,255,255,0.45), transparent),
-                radial-gradient(1.5px 1.5px at 70px 250px, rgba(255,255,255,0.55), transparent),
-                radial-gradient(1px 1px at 230px 200px, rgba(255,255,255,0.5), transparent),
-                radial-gradient(1px 1px at 40px 350px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(0.5px 0.5px at 200px 320px, rgba(255,255,255,0.45), transparent),
-                radial-gradient(1.5px 1.5px at 120px 400px, rgba(255,255,255,0.55), transparent),
-                radial-gradient(1px 1px at 260px 380px, rgba(255,255,255,0.5), transparent),
-                radial-gradient(0.5px 0.5px at 80px 450px, rgba(255,255,255,0.45), transparent),
-                radial-gradient(1px 1px at 320px 60px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1.5px 1.5px at 380px 120px, rgba(255,255,255,0.55), transparent),
-                radial-gradient(1px 1px at 420px 200px, rgba(255,255,255,0.5), transparent),
-                radial-gradient(0.5px 0.5px at 350px 280px, rgba(255,255,255,0.45), transparent),
-                radial-gradient(1px 1px at 480px 80px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1.5px 1.5px at 520px 160px, rgba(255,255,255,0.55), transparent),
-                radial-gradient(1px 1px at 560px 240px, rgba(255,255,255,0.5), transparent),
-                radial-gradient(0.5px 0.5px at 600px 100px, rgba(255,255,255,0.45), transparent),
-                radial-gradient(1px 1px at 640px 180px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1.5px 1.5px at 700px 60px, rgba(255,255,255,0.55), transparent),
-                radial-gradient(1px 1px at 750px 140px, rgba(255,255,255,0.5), transparent),
-                radial-gradient(0.5px 0.5px at 450px 350px, rgba(255,255,255,0.45), transparent),
-                radial-gradient(1px 1px at 550px 420px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1.5px 1.5px at 680px 380px, rgba(255,255,255,0.55), transparent),
-                radial-gradient(1px 1px at 780px 300px, rgba(255,255,255,0.5), transparent)
-              `,
-              backgroundRepeat: 'repeat',
-              backgroundSize: '800px 500px',
-            }}
-          />
           {/* 3D inner edge effect - highlight on top-left curve */}
           <div
             className="hidden min-[950px]:block absolute top-0 left-0 right-0 pointer-events-none z-10"
