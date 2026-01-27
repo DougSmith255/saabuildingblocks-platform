@@ -8808,11 +8808,15 @@ function NewAgentsSection() {
   };
 
   const handleCloseModal = () => {
-    // Clear all state immediately so clicking a new card works right away
+    // Start closing animation first
     setActivePanel(null);
-    setSelectedCategory(null);
-    setSelectedDocument(null);
-    setSkippedCategoryPanel(false);
+    // Clear category/document data AFTER animation completes
+    // so the panel keys don't change mid-animation (which causes flash)
+    setTimeout(() => {
+      setSelectedCategory(null);
+      setSelectedDocument(null);
+      setSkippedCategoryPanel(false);
+    }, 300); // Match SlidePanel animation duration + buffer
   };
 
   return (
@@ -8869,9 +8873,10 @@ function NewAgentsSection() {
       )}
 
       {/* Category SlidePanel - Shows list of documents (behind document panel) */}
+      {/* Skip rendering entirely for single-document categories */}
       <SlidePanel
         key={`category-${selectedCategory?.id || 'none'}`}
-        isOpen={activePanel === 'category' || activePanel === 'document'}
+        isOpen={(activePanel === 'category' || activePanel === 'document') && !skippedCategoryPanel}
         onClose={handleCloseModal}
         title={selectedCategory?.title || ''}
         subtitle={selectedCategory?.description}
