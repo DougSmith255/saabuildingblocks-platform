@@ -3060,11 +3060,11 @@ function AgentPortal() {
                   boxShadow: `0 4px 16px rgba(0, 0, 0, 0.3), 0 0 12px ${dashboardAccentColor}06`,
                 }}
               >
-                {/* Profile Picture */}
+                {/* Profile Picture - responsive sizing */}
                 <div className="flex flex-col items-center mb-2">
                   <button
                     onClick={handleProfilePictureClick}
-                    className="relative group w-[90px] h-[90px] rounded-full overflow-hidden transition-colors mb-2 bg-white/5"
+                    className="relative group rounded-full overflow-hidden transition-colors mb-2 bg-white/5 w-[90px] h-[90px] min-[1700px]:w-[117px] min-[1700px]:h-[117px]"
                     style={{
                       border: `3px solid ${dashboardAccentColor}`,
                       boxShadow: `0 0 16px ${dashboardAccentColor}40`,
@@ -3128,7 +3128,8 @@ function AgentPortal() {
                   <h3 className="font-semibold text-center" style={{ color: dashboardAccentColor }}>
                     {user?.firstName} {user?.lastName}
                   </h3>
-                  <p className="text-[#e5e4dd]/60 text-sm">{user?.email}</p>
+                  {/* Email - hidden below 1500px */}
+                  <p className="text-[#e5e4dd]/60 text-sm hidden min-[1500px]:block">{user?.email}</p>
 
                   {/* Dashboard Upload Status - only show completion message, spinner is in image */}
                   {dashboardUploadStatus && !isUploadingDashboardImage && (
@@ -3163,7 +3164,8 @@ function AgentPortal() {
               </div>
 
               {/* Navigation Menu - Compact 3D Button Style */}
-              <nav className="flex-1 space-y-0.5 overflow-y-auto min-h-0">
+              {/* Responsive spacing: +2px (space-y-1) on screens over 1700px */}
+              <nav className="flex-1 space-y-0.5 min-[1700px]:space-y-1 overflow-y-auto min-h-0">
               {navItems
                 .filter(item => {
                   // Hide onboarding tab when onboarding is complete
@@ -3224,8 +3226,9 @@ function AgentPortal() {
                         <IconComponent className="w-5 h-5" />
                       </div>
                       {/* Label - gold for onboarding, accent when active */}
+                      {/* Responsive text: 10px (950-1300), 12px (1300-1500), 14px (1500+) */}
                       <span
-                        className="font-medium font-taskor text-sm transition-all duration-200"
+                        className="font-medium font-taskor text-[10px] min-[1300px]:text-xs min-[1500px]:text-sm transition-all duration-200"
                         style={{
                           color: isActive ? dashboardAccentColor : isOnboardingInactive ? '#ffd700' : 'rgba(229,228,221,0.8)',
                           textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : isOnboardingInactive ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
