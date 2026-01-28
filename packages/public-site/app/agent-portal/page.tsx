@@ -10595,16 +10595,43 @@ function AgentPagesSection({
                 />
                 {pageData?.activated && (generatedSlug || pageData?.slug) ? (
                   <div className="flex justify-center py-4 relative z-[1]">
-                    {/* Phone Mockup Shell */}
-                    <div className="phone-mockup" style={{ width: '260px' }}>
-                      <div className="phone-screen" style={{ height: '450px' }}>
+                    {/* Phone Mockup Shell - thinner border to match link page */}
+                    <div
+                      className="relative"
+                      style={{
+                        width: '250px',
+                        background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)',
+                        borderRadius: '36px',
+                        padding: '8px',
+                        boxShadow: '0 0 0 1px rgba(255,255,255,0.1), 0 25px 50px -12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)',
+                      }}
+                    >
+                      {/* Dynamic Island notch */}
+                      <div
+                        className="absolute left-1/2 -translate-x-1/2 z-10"
+                        style={{ top: '12px', width: '70px', height: '20px', background: '#000', borderRadius: '16px' }}
+                      />
+                      {/* Home indicator */}
+                      <div
+                        className="absolute left-1/2 -translate-x-1/2"
+                        style={{ bottom: '6px', width: '90px', height: '4px', background: 'rgba(255,255,255,0.2)', borderRadius: '2px' }}
+                      />
+                      <div
+                        style={{
+                          height: '460px',
+                          background: '#0a0a0a',
+                          borderRadius: '28px',
+                          overflow: 'hidden',
+                          position: 'relative',
+                        }}
+                      >
                         <iframe
                           src={pageUrlPreview}
                           className="absolute top-0 left-0"
                           style={{
-                            width: '390px',
-                            height: '680px',
-                            transform: 'scale(0.60)',
+                            width: '375px',
+                            height: '740px',
+                            transform: 'scale(0.625)',
                             transformOrigin: 'top left',
                             pointerEvents: 'none',
                             border: 'none',
@@ -10619,8 +10646,8 @@ function AgentPagesSection({
                 ) : (
                   <div className="flex justify-center py-4 relative z-[1]">
                     {/* Phone Mockup Shell - Empty State */}
-                    <div className="phone-mockup" style={{ width: '260px' }}>
-                      <div className="phone-screen flex flex-col items-center justify-center text-center px-6" style={{ height: '450px' }}>
+                    <div className="phone-mockup" style={{ width: '250px', padding: '8px' }}>
+                      <div className="phone-screen flex flex-col items-center justify-center text-center px-6" style={{ height: '460px' }}>
                         <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
                           <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
