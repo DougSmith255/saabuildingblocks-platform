@@ -185,16 +185,6 @@ export function CalculatorDataStreamEffect() {
           );
         })}
       </div>
-
-      {/* Bottom fade overlay - simple fade to transparent at bottom, no tunnel effect */}
-      <div
-        className="absolute left-0 right-0 top-0 pointer-events-none hero-effect-layer"
-        style={{
-          height: 'calc(100% + 100px)',
-          background: 'linear-gradient(to bottom, transparent 0%, transparent 70%, rgba(12,12,12,0.8) 100%)',
-          zIndex: 1,
-        }}
-      />
     </>
   );
 }

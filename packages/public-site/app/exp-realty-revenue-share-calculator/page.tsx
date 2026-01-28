@@ -240,10 +240,14 @@ function DisclaimerSection() {
             href="https://exprealty.com/income"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#ffd700] transition-all duration-300"
-            style={{ textShadow: '0 0 8px rgba(255,215,0,0.4)' }}
-            onMouseEnter={(e) => e.currentTarget.style.textShadow = '0 0 12px rgba(255,215,0,0.8), 0 0 20px rgba(255,215,0,0.5)'}
-            onMouseLeave={(e) => e.currentTarget.style.textShadow = '0 0 8px rgba(255,215,0,0.4)'}
+            className="transition-all duration-300"
+            style={{ color: '#ffd700', textShadow: '0 0 8px rgba(255,215,0,0.4)' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.textShadow = '0 0 12px rgba(255,215,0,0.8), 0 0 20px rgba(255,215,0,0.5)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.textShadow = '0 0 8px rgba(255,215,0,0.4)';
+            }}
           >
             See eXp's Average Income Chart
           </a>

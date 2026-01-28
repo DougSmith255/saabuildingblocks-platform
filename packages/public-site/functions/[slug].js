@@ -2168,8 +2168,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
 
     /* Join/Instructions panels - no individual backdrop, use shared one */
+    /* pointer-events: none allows clicks to pass through to shared backdrop */
     .join-instructions-panel {
       z-index: 100000;
+      pointer-events: none;
     }
 
     .join-instructions-panel.instructions-on-top {
@@ -2177,7 +2179,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
 
     /* Slide Panel - Mobile (bottom sheet) */
+    /* pointer-events: auto so the panel itself is clickable */
     .slide-panel {
+      pointer-events: auto;
       position: relative;
       width: 100%;
       max-height: 85vh;
@@ -2454,6 +2458,96 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
 
     .form-select option { background: #1a1a1c; color: #fff; }
+
+    /* Custom Country Dropdown (for smooth animation) */
+    .custom-dropdown {
+      position: relative;
+      width: 100%;
+    }
+
+    .custom-dropdown-trigger {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #1a1a1c;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: #fff;
+      font-family: var(--font-synonym), system-ui, sans-serif;
+      font-size: 1rem;
+      box-sizing: border-box;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.2s ease;
+    }
+
+    .custom-dropdown-trigger:focus {
+      outline: none;
+      border-color: rgba(255, 215, 0, 0.5);
+    }
+
+    .custom-dropdown-trigger.placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .custom-dropdown-arrow {
+      width: 12px;
+      height: 12px;
+      transition: transform 0.25s ease;
+    }
+
+    .custom-dropdown.open .custom-dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    .custom-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #1a1a1c;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 200000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scaleY(0.95);
+      transform-origin: top center;
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .custom-dropdown.open .custom-dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scaleY(1);
+    }
+
+    .custom-dropdown-option {
+      padding: 0.75rem 1rem;
+      color: #fff;
+      font-family: var(--font-synonym), system-ui, sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .custom-dropdown-option:hover {
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    .custom-dropdown-option.selected {
+      background: rgba(255, 215, 0, 0.2);
+      color: #ffd700;
+    }
+
+    /* Hidden input for form submission */
+    .custom-dropdown input[type="hidden"] {
+      display: none;
+    }
 
     .form-submit {
       width: 100%;
@@ -3530,7 +3624,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <section class="section py-24 md:py-32 px-6 overflow-hidden relative" id="why-saa-section">
       <div style="max-width: 1500px; margin: 0 auto;">
         <!-- Header - always visible, no animation -->
-        <div class="text-center mb-12">
+        <div class="text-center mb-12" style="max-width: 1600px; margin-left: auto; margin-right: auto;">
           <h2 class="text-h2 h2-container">
             <span class="h2-word">Why</span>
             <span class="h2-word">Smart</span>
@@ -4348,14 +4442,20 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </div>
           <div class="form-group">
             <label class="form-label" for="country">Country *</label>
-            <select id="country" name="country" class="form-select" required="">
-              <option value="">Select country</option>
-              <option value="US">United States</option>
-              <option value="CA">Canada</option>
-              <option value="UK">United Kingdom</option>
-              <option value="AU">Australia</option>
-              <option value="other">Other</option>
-            </select>
+            <div class="custom-dropdown" id="country-dropdown">
+              <input type="hidden" id="country" name="country" value="" required="">
+              <button type="button" class="custom-dropdown-trigger placeholder" id="country-trigger" aria-haspopup="listbox" aria-expanded="false">
+                <span id="country-selected-text">Select country</span>
+                <svg class="custom-dropdown-arrow" viewBox="0 0 12 12" fill="#ffffff"><path d="M6 8L1 3h10z"/></svg>
+              </button>
+              <div class="custom-dropdown-menu" role="listbox" id="country-menu">
+                <div class="custom-dropdown-option" data-value="US" role="option">United States</div>
+                <div class="custom-dropdown-option" data-value="CA" role="option">Canada</div>
+                <div class="custom-dropdown-option" data-value="UK" role="option">United Kingdom</div>
+                <div class="custom-dropdown-option" data-value="AU" role="option">Australia</div>
+                <div class="custom-dropdown-option" data-value="other" role="option">Other</div>
+              </div>
+            </div>
           </div>
           <button type="submit" class="form-submit" id="join-submit">Get Started</button>
           <div class="form-message" id="join-message" style="display: none;"></div>
@@ -4762,6 +4862,82 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             // Calculator/RevShare use old pattern
             if (calculatorModal.classList.contains('open')) closeModal('calculator');
             if (revshareModal.classList.contains('open')) closeModal('revshare');
+            // Close country dropdown if open
+            const dropdown = document.getElementById('country-dropdown');
+            if (dropdown && dropdown.classList.contains('open')) {
+              dropdown.classList.remove('open');
+              document.getElementById('country-trigger').setAttribute('aria-expanded', 'false');
+            }
+          }
+        });
+
+        // Custom Country Dropdown Setup
+        setupCountryDropdown();
+      }
+
+      function setupCountryDropdown() {
+        const dropdown = document.getElementById('country-dropdown');
+        const trigger = document.getElementById('country-trigger');
+        const menu = document.getElementById('country-menu');
+        const hiddenInput = document.getElementById('country');
+        const selectedText = document.getElementById('country-selected-text');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+
+        // Toggle dropdown on trigger click
+        trigger.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const isOpen = dropdown.classList.contains('open');
+          if (isOpen) {
+            dropdown.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+          } else {
+            dropdown.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
+          }
+        });
+
+        // Option selection
+        options.forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value;
+            const text = option.textContent;
+
+            // Update hidden input
+            hiddenInput.value = value;
+
+            // Update display text
+            selectedText.textContent = text;
+            trigger.classList.remove('placeholder');
+
+            // Update selected state
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+
+            // Close dropdown
+            dropdown.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+          });
+        });
+
+        // Close on click outside
+        document.addEventListener('click', (e) => {
+          if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        // Keyboard navigation
+        trigger.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            if (!dropdown.classList.contains('open')) {
+              dropdown.classList.add('open');
+              trigger.setAttribute('aria-expanded', 'true');
+              options[0].focus();
+            }
           }
         });
       }

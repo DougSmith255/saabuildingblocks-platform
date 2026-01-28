@@ -72,7 +72,7 @@ export function WhySAA() {
       `}</style>
       <div className="mx-auto" style={{ maxWidth: '1500px' }}>
         {/* H2 - always visible */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 mx-auto" style={{ maxWidth: '1600px' }}>
           <H2>{HEADLINE}</H2>
         </div>
 
