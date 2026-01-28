@@ -2586,10 +2586,10 @@ function AgentPortal() {
               background: 'rgba(128, 0, 128, 0.9)', // DEBUG: purple
               // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
               // Rounded corner on bottom-right (outer edge of header)
-              borderBottomRightRadius: '24px',
-              // Mask creates concave cutout at junction (280px, 85px)
-              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
-              maskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
+              borderBottomRightRadius: '12px',
+              // Mask creates subtle concave cutout at junction (280px, 85px) - 12px radius
+              WebkitMaskImage: 'radial-gradient(circle 12px at 280px 85px, transparent 11px, black 12px)',
+              maskImage: 'radial-gradient(circle 12px at 280px 85px, transparent 11px, black 12px)',
             }}
           />
 
@@ -2600,10 +2600,10 @@ function AgentPortal() {
             style={{
               background: 'rgba(0, 0, 200, 0.9)', // DEBUG: blue
               // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderBottomRightRadius: '24px',
-              // Mask creates concave cutout at top-right (280px relative to sidebar = right edge, 0px = top)
-              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
-              maskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
+              borderBottomRightRadius: '12px',
+              // Mask creates subtle concave cutout at top-right - 12px radius
+              WebkitMaskImage: 'radial-gradient(circle 12px at 280px 0px, transparent 11px, black 12px)',
+              maskImage: 'radial-gradient(circle 12px at 280px 0px, transparent 11px, black 12px)',
             }}
           />
 

@@ -38,18 +38,18 @@
       right: 0;
       height: 85px;
       background: rgba(128, 0, 128, 0.9); /* DEBUG: purple */
-      /* Rounded corner on bottom-right (outer edge of header) */
-      border-bottom-right-radius: 24px;
-      /* Mask creates the concave cutout at inner corner (junction with sidebar) */
+      /* Rounded corner on bottom-right (outer edge of header) - subtle 12px */
+      border-bottom-right-radius: 12px;
+      /* Mask creates subtle concave cutout at inner corner - 12px radius */
       -webkit-mask-image: radial-gradient(
-        circle 24px at 280px 85px,
-        transparent 23px,
-        black 24px
+        circle 12px at 280px 85px,
+        transparent 11px,
+        black 12px
       );
       mask-image: radial-gradient(
-        circle 24px at 280px 85px,
-        transparent 23px,
-        black 24px
+        circle 12px at 280px 85px,
+        transparent 11px,
+        black 12px
       );
     }
 
@@ -61,17 +61,17 @@
       bottom: 0;
       width: 280px;
       background: rgba(0, 0, 200, 0.9); /* DEBUG: blue */
-      border-bottom-right-radius: 24px;
-      /* Mask creates the concave cutout at top-right corner */
+      border-bottom-right-radius: 12px;
+      /* Mask creates subtle concave cutout at top-right - 12px radius */
       -webkit-mask-image: radial-gradient(
-        circle 24px at 280px 0px,
-        transparent 23px,
-        black 24px
+        circle 12px at 280px 0px,
+        transparent 11px,
+        black 12px
       );
       mask-image: radial-gradient(
-        circle 24px at 280px 0px,
-        transparent 23px,
-        black 24px
+        circle 12px at 280px 0px,
+        transparent 11px,
+        black 12px
       );
     }
 
