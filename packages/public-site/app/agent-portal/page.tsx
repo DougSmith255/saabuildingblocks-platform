@@ -669,8 +669,8 @@ const shakeKeyframes = `
   backdrop-filter: none !important;
 }
 
-/* Desktop (950px+): right panel with premium glass 3D effect */
-@media (min-width: 950px) {
+/* Desktop (1024px+): right panel with premium glass 3D effect */
+@media (min-width: 1024px) {
   .help-panel {
     animation: slideInRight 0.3s ease-out forwards;
     /* Only left border - clean edge design */
@@ -1031,11 +1031,11 @@ function AgentPortal() {
   }, []);
 
   // L-frame dimensions - responsive based on breakpoints
-  // 950-1700px: reduced sidebar (240px) and header (70px)
+  // 1024-1700px: reduced sidebar (240px) and header (70px)
   // 1700px+: default (280px sidebar, 85px header)
   const lFrame = {
-    sidebarWidth: (windowWidth >= 950 && windowWidth < 1700) ? 240 : 280, /* 240 = 280 - 40px for 950-1700 */
-    headerHeight: (windowWidth >= 950 && windowWidth < 1700) ? 70 : 85,
+    sidebarWidth: (windowWidth >= 1024 && windowWidth < 1700) ? 240 : 280, /* 240 = 280 - 40px for 1024-1700 */
+    headerHeight: (windowWidth >= 1024 && windowWidth < 1700) ? 70 : 85,
     cornerRadius: 24,
   };
   // Derived values
@@ -1084,9 +1084,9 @@ function AgentPortal() {
       // Check if it's primarily a vertical or horizontal swipe
       const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
 
-      // Mobile (< 950px): Swipe down to close (bottom sheet)
-      // Desktop (>= 950px): Swipe right to close (side panel)
-      const isMobile = window.innerWidth < 950;
+      // Mobile (< 1024px): Swipe down to close (bottom sheet)
+      // Desktop (>= 1024px): Swipe right to close (side panel)
+      const isMobile = window.innerWidth < 1024;
 
       if (isMobile) {
         // Swipe down to close - ONLY if already at top of scroll
@@ -2593,10 +2593,10 @@ function AgentPortal() {
         className="hidden"
       />
 
-      {/* Mobile Header Bar - <950px only */}
+      {/* Mobile Header Bar - <1024px only */}
       {/* Fixed at top, slides up when popup is open */}
       <header
-        className="min-[950px]:hidden fixed left-0 right-0 z-[10010] transition-transform duration-500 ease-out"
+        className="min-[1024px]:hidden fixed left-0 right-0 z-[10010] transition-transform duration-500 ease-out"
         style={{
           background: 'transparent',
           overflow: 'visible',
@@ -2637,10 +2637,10 @@ function AgentPortal() {
             }}
           />
 
-          <div className="flex items-center justify-between px-4 sm:px-8 relative z-10 h-16 min-[950px]:h-[85px]">
+          <div className="flex items-center justify-between px-4 sm:px-8 relative z-10 h-16 min-[1024px]:h-[85px]">
             {/* SAA Logo - links to dashboard */}
-            {/* Mobile (<950px): S icon logo */}
-            {/* Desktop (>=950px): Full SAA logo */}
+            {/* Mobile (<1024px): S icon logo */}
+            {/* Desktop (>=1024px): Full SAA logo */}
             <button
               onClick={() => setActiveSection('dashboard')}
               className="flex-shrink-0 cursor-pointer"
@@ -2650,7 +2650,7 @@ function AgentPortal() {
               <img
                 src="/icons/s-logo-1000.png"
                 alt="Smart Agent Alliance"
-                className="min-[950px]:hidden object-contain"
+                className="min-[1024px]:hidden object-contain"
                 style={{
                   width: '36px',
                   height: '36px',
@@ -2660,7 +2660,7 @@ function AgentPortal() {
               <img
                 src="/images/saa-logo-gold.png"
                 alt="Smart Agent Alliance"
-                className="hidden min-[950px]:block"
+                className="hidden min-[1024px]:block"
                 style={{
                   width: 'clamp(100px, calc(80px + 3vw), 140px)',
                   height: 'auto',
@@ -2668,15 +2668,15 @@ function AgentPortal() {
               />
             </button>
 
-            {/* Desktop (>=950px): AGENT PORTAL title - centered in header */}
-            <div className="hidden min-[950px]:block absolute left-1/2 -translate-x-1/2">
+            {/* Desktop (>=1024px): AGENT PORTAL title - centered in header */}
+            <div className="hidden min-[1024px]:block absolute left-1/2 -translate-x-1/2">
               <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(28px, calc(20px + 1.5vw), 48px)' }}>
                 AGENT PORTAL
               </H1>
             </div>
 
-            {/* Mobile (<950px): Section Title - centered */}
-            <div className="min-[950px]:hidden absolute left-1/2 -translate-x-1/2">
+            {/* Mobile (<1024px): Section Title - centered */}
+            <div className="min-[1024px]:hidden absolute left-1/2 -translate-x-1/2">
               <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap">
                 {activeSection === 'onboarding' && 'Onboarding'}
                 {activeSection === 'dashboard' && 'Home'}
@@ -2695,8 +2695,8 @@ function AgentPortal() {
 
             {/* Right side: Mobile Help Button + Desktop Logout */}
             <div className="flex items-center gap-3">
-              {/* Mobile (<950px): Pixel Help Button - always visible, greyed out for sections without modals */}
-              <div className="min-[950px]:hidden">
+              {/* Mobile (<1024px): Pixel Help Button - always visible, greyed out for sections without modals */}
+              <div className="min-[1024px]:hidden">
                 {activeSection === 'calls' ? (
                   <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" size="mobile" className="relative" />
                 ) : activeSection === 'templates' ? (
@@ -2714,10 +2714,10 @@ function AgentPortal() {
                   <PixelHelpButton onClick={() => {}} color="grey" ariaLabel="Help unavailable" size="mobile" className="relative" disabled />
                 )}
               </div>
-              {/* Desktop (>=950px): Logout Button */}
+              {/* Desktop (>=1024px): Logout Button */}
               <button
                 onClick={handleLogout}
-                className="hidden min-[950px]:flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all uppercase font-semibold"
+                className="hidden min-[1024px]:flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all uppercase font-semibold"
                 style={{
                   fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
                   fontSize: 'clamp(17px, calc(15.36px + 0.55vw), 32px)',
@@ -2738,7 +2738,7 @@ function AgentPortal() {
 
       {/* Mobile Bottom Navigation - 3D button styling with separators */}
       <nav
-        className="mobile-bottom-nav min-[950px]:hidden fixed bottom-0 left-0 right-0 z-50"
+        className="mobile-bottom-nav min-[1024px]:hidden fixed bottom-0 left-0 right-0 z-50"
         style={{
           WebkitTapHighlightColor: 'transparent',
           WebkitTouchCallout: 'none',
@@ -2845,9 +2845,9 @@ function AgentPortal() {
         </div>
       </nav>
 
-      {/* ===== DESKTOP FIXED L-FRAME (950px+) ===== */}
+      {/* ===== DESKTOP FIXED L-FRAME (1024px+) ===== */}
       {/* UNIFIED L-SHAPE with concave inner corner */}
-      <div className="hidden min-[950px]:block">
+      <div className="hidden min-[1024px]:block">
         {/* === FIXED L-FRAME CONTAINER === */}
         <div className="fixed inset-0 z-40 pointer-events-none">
 
@@ -3247,7 +3247,7 @@ function AgentPortal() {
                       }}
                     >
                       {/* Icon - gold for onboarding, accent when active */}
-                      {/* Responsive icon: 16px (950-1300), 18px (1300-1500), 20px (1500+) */}
+                      {/* Responsive icon: 16px (1024-1300), 18px (1300-1500), 20px (1500+) */}
                       <div
                         className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}
                         style={{
@@ -3258,7 +3258,7 @@ function AgentPortal() {
                         <IconComponent className="w-4 h-4 min-[1300px]:w-[18px] min-[1300px]:h-[18px] min-[1500px]:w-5 min-[1500px]:h-5" />
                       </div>
                       {/* Label - gold for onboarding, accent when active */}
-                      {/* Responsive text: 10px (950-1300), 12px (1300-1500), 14px (1500+) */}
+                      {/* Responsive text: 10px (1024-1300), 12px (1300-1500), 14px (1500+) */}
                       <span
                         className="font-medium font-taskor text-[10px] min-[1300px]:text-xs min-[1500px]:text-sm transition-all duration-200"
                         style={{
@@ -3295,29 +3295,29 @@ function AgentPortal() {
       </div>
 
       {/* ===== CONTENT AREA ===== */}
-      {/* On desktop (950px+): positioned to the right of sidebar and below header */}
+      {/* On desktop (1024px+): positioned to the right of sidebar and below header */}
       {/* On mobile: fills screen with padding for header/nav */}
       {/* SmoothScrollContainer applies Lenis smooth scroll to this container only */}
       <SmoothScrollContainer
         id="agent-portal-scroll-container"
-        className="min-[950px]:fixed min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto min-[950px]:overflow-x-hidden min-[950px]:z-30 min-[950px]:overscroll-contain"
+        className="min-[1024px]:fixed min-[1024px]:right-0 min-[1024px]:bottom-0 min-[1024px]:overflow-y-auto min-[1024px]:overflow-x-hidden min-[1024px]:z-30 min-[1024px]:overscroll-contain"
         style={{
           background: 'transparent',
-          ...(windowWidth >= 950 ? { top: `${lFrame.headerHeight}px`, left: `${lFrame.sidebarWidth}px` } : {}),
+          ...(windowWidth >= 1024 ? { top: `${lFrame.headerHeight}px`, left: `${lFrame.sidebarWidth}px` } : {}),
         }}
       >
         {/* Inner wrapper with curved corner - creates the concave inner corner effect */}
         {/* Background is transparent to allow global StarBackground to show through */}
         <div
-          className="relative min-h-full min-[950px]:overflow-clip"
+          className="relative min-h-full min-[1024px]:overflow-clip"
           style={{
             background: 'transparent',
-            ...(windowWidth >= 950 ? { borderTopLeftRadius: `${lFrame.cornerRadius}px` } : {}),
+            ...(windowWidth >= 1024 ? { borderTopLeftRadius: `${lFrame.cornerRadius}px` } : {}),
           }}
         >
         {/* Content Area */}
         <main
-          className="flex-1 p-4 sm:p-6 min-[950px]:p-8 min-h-screen min-[950px]:min-h-0"
+          className="flex-1 p-4 sm:p-6 min-[1024px]:p-8 min-h-screen min-[1024px]:min-h-0"
           style={{
             WebkitTapHighlightColor: 'transparent',
             WebkitTouchCallout: 'none',
@@ -3756,7 +3756,7 @@ function AgentPortal() {
       </SmoothScrollContainer>
 
       {/* ========== Floating Help Buttons - Desktop/Tablet only (hidden on mobile where header has help button) ========== */}
-      <div className="hidden min-[950px]:block">
+      <div className="hidden min-[1024px]:block">
         {/* Team Calls Help Button */}
         {activeSection === 'calls' && (
           <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" />
@@ -3821,7 +3821,7 @@ function AgentPortal() {
                 <button
                   type="button"
                   onClick={handleProfilePictureClick}
-                  className="relative group w-[120px] h-[120px] min-[950px]:w-[100px] min-[950px]:h-[100px] rounded-full overflow-hidden transition-colors bg-white/5"
+                  className="relative group w-[120px] h-[120px] min-[1024px]:w-[100px] min-[1024px]:h-[100px] rounded-full overflow-hidden transition-colors bg-white/5"
                   style={{
                     border: `3px solid ${selectedAccentColor}`,
                     boxShadow: `0 0 16px ${selectedAccentColor}40`,
@@ -3866,7 +3866,7 @@ function AgentPortal() {
                       className="w-full h-full flex items-center justify-center"
                       style={{ backgroundColor: `${selectedAccentColor}15` }}
                     >
-                      <span className="text-2xl min-[950px]:text-xl" style={{ color: selectedAccentColor }}>
+                      <span className="text-2xl min-[1024px]:text-xl" style={{ color: selectedAccentColor }}>
                         {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
                       </span>
                     </div>
@@ -3896,7 +3896,7 @@ function AgentPortal() {
               })()}
 
               {/* 2-column grid on desktop for form fields */}
-              <div className="grid grid-cols-1 min-[950px]:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 min-[1024px]:grid-cols-2 gap-4">
                 {/* Display Name */}
                 <div>
                   <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-1.5">
@@ -3941,7 +3941,7 @@ function AgentPortal() {
               <div className="pt-3 border-t border-white/10">
                 <p className="text-sm font-medium text-[#e5e4dd]/80 mb-3">Change Password <span className="text-[#e5e4dd]/50 font-normal">(optional)</span></p>
 
-                <div className="grid grid-cols-1 min-[950px]:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 min-[1024px]:grid-cols-2 gap-3">
                   {/* New Password */}
                   <div>
                     <label className="block text-xs text-[#e5e4dd]/60 mb-1.5">
@@ -4181,7 +4181,7 @@ function AgentPortal() {
       {/* Link Page Help Modal - Premium Glass with Yellow Highlights */}
       {showLinkPageHelpModal && (
         <div
-          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[1024px]:items-stretch min-[1024px]:justify-end"
           onClick={() => closeHelpPanel('linkpage', setShowLinkPageHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -4326,7 +4326,7 @@ function AgentPortal() {
       {/* New Agents Help Modal */}
       {showNewAgentsHelpModal && (
         <div
-          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[1024px]:items-stretch min-[1024px]:justify-end"
           onClick={() => closeHelpPanel('newagents', setShowNewAgentsHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -4488,7 +4488,7 @@ function AgentPortal() {
       {/* Templates Help Modal */}
       {showTemplatesHelpModal && (
         <div
-          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[1024px]:items-stretch min-[1024px]:justify-end"
           onClick={() => closeHelpPanel('templates', setShowTemplatesHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -4616,7 +4616,7 @@ function AgentPortal() {
       {/* Agent Attraction Help Modal */}
       {showAgentAttractionHelpModal && (
         <div
-          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[1024px]:items-stretch min-[1024px]:justify-end"
           onClick={() => closeHelpPanel('agentattraction', setShowAgentAttractionHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -4764,7 +4764,7 @@ function AgentPortal() {
       {/* Team Calls Help Modal */}
       {showTeamCallsHelpModal && (
         <div
-          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[1024px]:items-stretch min-[1024px]:justify-end"
           onClick={() => closeHelpPanel('teamcalls', setShowTeamCallsHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -4863,7 +4863,7 @@ function AgentPortal() {
       {/* Elite Courses Help Modal */}
       {showEliteCoursesHelpModal && (
         <div
-          className="fixed inset-0 z-[99990] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 z-[99990] flex items-end min-[1024px]:items-stretch min-[1024px]:justify-end"
           onClick={() => closeHelpPanel('elitecourses', setShowEliteCoursesHelpModal)}
         >
           {/* Backdrop with blur */}
@@ -5616,8 +5616,8 @@ function DashboardView({
         })}
       </div>
 
-      {/* Download App CTA - Mobile Only (under 950px) */}
-      <div className="min-[950px]:hidden mt-6 mb-8">
+      {/* Download App CTA - Mobile Only (under 1024px) */}
+      <div className="min-[1024px]:hidden mt-6 mb-8">
         <a
           href="/download"
           className="block w-full py-4 px-6 rounded-xl bg-gradient-to-r from-[#ffd700] to-[#ffed4e] text-black font-semibold text-center shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
@@ -9478,7 +9478,7 @@ function AgentPagesSection({
   // Tab navigation state for new UI - uses initialTab from props
   const [activeTab, setActiveTab] = useState<AgentPagesTabId>(initialTab);
 
-  // Tablet layout (950-1549px) uses 2 tabs: 'content' (Profile, Contact, Social) or 'style' (Style, Page Actions)
+  // Tablet layout (1024-1549px) uses 2 tabs: 'content' (Profile, Contact, Social) or 'style' (Style, Page Actions)
   const [tabletTab, setTabletTab] = useState<'content' | 'style'>('content');
 
   // Copy link feedback state
@@ -10806,7 +10806,7 @@ function AgentPagesSection({
         </div>
 
         {/* Bottom spacer for mobile nav (h-16 = 64px matches nav height) */}
-        <div className="h-16 min-[950px]:h-0" />
+        <div className="h-16 min-[1024px]:h-0" />
       </div>
     );
   }
@@ -10824,9 +10824,9 @@ return (
         Row 2: Social Links (spans 2 cols) | Page Actions | (Preview continues)
         ==================================================================== */}
 
-    {/* DESKTOP LAYOUT (≥950px) - overflow visible for button controls */}
+    {/* DESKTOP LAYOUT (≥1024px) - overflow visible for button controls */}
     <div
-      className="hidden min-[950px]:grid gap-4 overflow-visible"
+      className="hidden min-[1024px]:grid gap-4 overflow-visible"
       style={{
         gridTemplateColumns: '1fr 1fr 1fr minmax(300px, 340px)',
         gridTemplateRows: 'auto auto',
@@ -12520,7 +12520,7 @@ return (
     </div>
 
     {/* ====================================================================
-        TABLET LAYOUT - HIDDEN (now using desktop layout for screens >= 950px)
+        TABLET LAYOUT - HIDDEN (now using desktop layout for screens >= 1024px)
         ==================================================================== */}
     <div className="hidden">
       {/* Save Bar */}
@@ -12965,9 +12965,9 @@ return (
     </div>
 
     {/* ====================================================================
-        MOBILE LAYOUT (<950px) - Tabbed Interface
+        MOBILE LAYOUT (<1024px) - Tabbed Interface
         ==================================================================== */}
-    <div className="min-[950px]:hidden space-y-4">
+    <div className="min-[1024px]:hidden space-y-4">
       {/* Save Bar - Fixed at top */}
       {hasUnsavedChanges && (
         <div className="sticky top-0 z-20 p-3 rounded-xl bg-[#ffd700]/20 border border-[#ffd700]/40 flex items-center justify-between">
