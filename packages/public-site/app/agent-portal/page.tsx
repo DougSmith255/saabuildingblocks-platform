@@ -2825,12 +2825,12 @@ function AgentPortal() {
           />
 
           {/* 2. Shadow for HEADER BOTTOM-RIGHT CORNER - convex curve at right edge */}
-          {/* DEBUG: GREEN - moved RIGHT again */}
+          {/* DEBUG: GREEN - moved back left 4px */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '61px', /* Header corner center y = 85 - 24 = 61 */
-              right: '-12px', /* Was -6px - moved right another 6px */
+              right: '-8px', /* Was -12px - moved left 4px */
               width: '30px',
               height: '30px',
               zIndex: 0,
@@ -2841,17 +2841,17 @@ function AgentPortal() {
 
           {/* 3. Shadow for INNER CORNER - concave curve into content area */}
           {/* Actual curve: center at (304, 109), 24px radius, curves into content */}
-          {/* DEBUG: BLUE - points moved INWARD again: top left 6px, bottom up 6px */}
+          {/* DEBUG: BLUE - top down 4px, bottom right 4px, INVERTED shadow direction */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '75px', /* Was 81px - moved up 6px (bottom point up) */
-              left: '270px', /* Was 276px - moved left 6px (top point left) */
+              top: '79px', /* Was 75px - moved down 4px */
+              left: '274px', /* Was 270px - moved right 4px */
               width: '30px',
               height: '30px',
               zIndex: 0,
-              /* Circle center at 100% 100% of 30x30 box = (276+30, 81+30) = (306, 111) */
-              background: 'radial-gradient(circle at 100% 100%, transparent 23px, rgba(0,0,255,0.5) 24px, rgba(0,0,255,0.3) 28px, transparent 32px)', /* DEBUG BLUE */
+              /* Circle at 0% 0% (top-left) so shadow extends toward content (bottom-right) */
+              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(0,0,255,0.5) 24px, rgba(0,0,255,0.3) 28px, transparent 32px)', /* DEBUG BLUE - INVERTED */
             }}
           />
 
