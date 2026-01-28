@@ -1034,7 +1034,7 @@ function AgentPortal() {
   // 1500-1700px: reduced sidebar (210px) and header (70px)
   // Other sizes: default (280px sidebar, 85px header)
   const lFrame = {
-    sidebarWidth: (windowWidth >= 1500 && windowWidth < 1700) ? 210 : 280,
+    sidebarWidth: (windowWidth >= 1500 && windowWidth < 1700) ? 230 : 280, /* 230 = 280 - 50px for 1500-1700 */
     headerHeight: (windowWidth >= 1500 && windowWidth < 1700) ? 70 : 85,
     cornerRadius: 24,
   };
@@ -2888,7 +2888,7 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: `${lFrame.headerHeight - lFrame.cornerRadius - 1}px`,
+              top: `${lFrame.headerHeight - lFrame.cornerRadius - 2}px`, /* moved up 1px */
               right: '-16px',
               width: '40px',
               height: '40px',
@@ -2901,7 +2901,7 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: `${lFrame.headerHeight - 6}px`,
+              top: `${lFrame.headerHeight - 7}px`, /* moved up 1px */
               left: `${lFrame.sidebarWidth - 7}px`,
               width: '30px',
               height: '30px',
