@@ -2928,7 +2928,7 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              bottom: '-8px',
+              bottom: '-11px',
               left: `${lFrame.sidebarWidth - lFrame.cornerRadius - 4}px`,
               width: '36px',
               height: '36px',
