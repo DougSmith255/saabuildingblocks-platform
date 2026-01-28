@@ -2578,46 +2578,37 @@ function AgentPortal() {
         <div className="fixed inset-0 z-40 pointer-events-none">
 
           {/* === UNIFIED L-FRAME BACKGROUND === */}
-          {/* Header: Full width, no inner corner radius */}
-          {/* DEBUG: Using purple to visualize */}
+          {/* Header: Full width with outer corner radius */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px]"
             style={{
-              background: 'rgba(128, 0, 128, 0.9)', // DEBUG: purple
-              // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderBottomRightRadius: '24px', // Outer corner only
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              borderBottomRightRadius: '24px',
             }}
           />
 
-          {/* Sidebar: Below header, no inner corner radius */}
-          {/* DEBUG: Using blue to visualize */}
+          {/* Sidebar: Below header with outer corner radius */}
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px]"
             style={{
-              background: 'rgba(0, 0, 200, 0.9)', // DEBUG: blue
-              // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderBottomRightRadius: '24px', // Outer corner only
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              borderBottomRightRadius: '24px',
             }}
           />
 
-          {/* Inner Corner: Single element that creates the smooth rounded inner corner */}
-          {/* This element extends INTO the content area with a curved edge */}
-          {/* DEBUG: Using green to visualize */}
+          {/* Inner Corner: Fills junction gap with 24px curved cutout into content */}
           <div
             className="absolute"
             style={{
-              top: '85px',      // Starts at junction Y
-              left: '280px',    // Starts at junction X
+              top: '85px',
+              left: '280px',
               width: '24px',
               height: '24px',
-              background: 'rgba(0, 255, 0, 0.9)', // DEBUG: green
-              // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderBottomRightRadius: '24px', // Creates the smooth curve into content area
+              background: 'radial-gradient(circle at 100% 100%, transparent 24px, rgba(14, 14, 14, 0.98) 24px)',
             }}
           />
 
-          {/* Glass texture overlay for header - with matching concave mask */}
-          {/* TEMPORARILY DISABLED FOR DEBUG - uncomment for production
+          {/* Glass texture overlay for header */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
             style={{
@@ -2625,14 +2616,11 @@ function AgentPortal() {
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
-              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
-              maskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
+              borderBottomRightRadius: '24px',
             }}
           />
-          */}
 
-          {/* Glass texture overlay for sidebar - with matching concave mask */}
-          {/* TEMPORARILY DISABLED FOR DEBUG - uncomment for production
+          {/* Glass texture overlay for sidebar */}
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
             style={{
@@ -2641,32 +2629,26 @@ function AgentPortal() {
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
               borderBottomRightRadius: '24px',
-              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
-              maskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
             }}
           />
-          */}
 
-          {/* Shimmer gradient overlay - with matching concave masks */}
-          {/* TEMPORARILY DISABLED FOR DEBUG - uncomment for production
+          {/* Shimmer gradient overlay for header */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
             style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
-              maskImage: 'radial-gradient(circle 24px at 280px 85px, transparent 23px, black 24px)',
+              borderBottomRightRadius: '24px',
             }}
           />
+
+          {/* Shimmer gradient overlay for sidebar */}
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
             style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
               borderBottomRightRadius: '24px',
-              WebkitMaskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
-              maskImage: 'radial-gradient(circle 24px at 280px 0px, transparent 23px, black 24px)',
             }}
           />
-          */}
 
           {/* Top Bar - interactive content area */}
           <div
