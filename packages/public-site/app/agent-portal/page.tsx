@@ -3033,10 +3033,10 @@ function AgentPortal() {
           >
             {/* Top bar content: Logo on left, Title in middle-ish, Logout on right */}
             <div className="relative z-10 h-full flex items-center px-6">
-              {/* Logo */}
+              {/* Logo - hidden on 1024-1300px screens */}
               <button
                 onClick={() => setActiveSection('dashboard')}
-                className="flex-shrink-0 cursor-pointer"
+                className="flex-shrink-0 cursor-pointer hidden min-[1300px]:block"
                 title="Go to Dashboard"
               >
                 <img
@@ -3080,17 +3080,29 @@ function AgentPortal() {
           >
 
             {/* Sidebar content - fits within viewport without scrollbar */}
-            {/* Responsive: move content up 10px on screens under 1500px */}
-            <div className="relative z-10 h-full flex flex-col px-3 pb-3 pt-[2px] min-[1500px]:pt-3 space-y-2">
+            {/* Responsive: 1024-1300px moves up 60px, under 1500px moves up 10px */}
+            <div className="relative z-10 h-full flex flex-col px-3 pb-3 pt-[2px] min-[1500px]:pt-3 space-y-2 -mt-[60px] min-[1300px]:mt-0">
               {/* User Profile Section - compact for fitting */}
               <div
-                className="rounded-xl p-3 flex-shrink-0"
+                className="rounded-xl p-3 flex-shrink-0 relative"
                 style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
                   boxShadow: `0 4px 16px rgba(0, 0, 0, 0.3), 0 0 12px ${dashboardAccentColor}06`,
                 }}
               >
+                {/* Small SAA badge - only visible on 1024-1300px screens */}
+                <button
+                  onClick={() => setActiveSection('dashboard')}
+                  className="absolute top-2 left-2 min-[1300px]:hidden z-10 w-7 h-7 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffd700 0%, #b8860b 100%)',
+                    boxShadow: '0 2px 8px rgba(255, 215, 0, 0.3)',
+                  }}
+                  title="Go to Dashboard"
+                >
+                  <span className="text-[#0a0a0a] font-bold text-xs font-taskor">S</span>
+                </button>
                 {/* Profile Picture - responsive sizing */}
                 <div className="flex flex-col items-center mb-2">
                   <button
