@@ -2785,44 +2785,64 @@ function AgentPortal() {
         <div className="fixed inset-0 z-40 pointer-events-none">
 
           {/* === LAYER 0: SHADOWS (behind everything) === */}
+          {/* Shadow follows the L-frame's content-facing edges:
+              - Header bottom: y=85, from x=0 to x=280 (covered by sidebar) + x=304 to right edge
+              - Inner corner: 24px radius curve with center at (304, 109)
+              - Sidebar right: x=280, from y=109 to bottom-24px
+              - Sidebar bottom corner: 24px radius at bottom-right of sidebar
+          */}
 
-          {/* Shadow for sidebar right edge - light grey, soft */}
+          {/* Shadow for header bottom edge - from after inner corner to right edge */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '85px',
-              left: '280px',
-              width: '8px',
-              bottom: 0,
-              zIndex: 0,
-              background: 'linear-gradient(to right, rgba(120,120,120,0.15) 0%, rgba(0,0,0,0.3) 30%, transparent 100%)',
-              borderBottomRightRadius: '24px',
-            }}
-          />
-
-          {/* Shadow for header bottom edge - only content-facing portion */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '85px',
-              left: '280px',
+              left: '304px', /* Start after inner corner (280 + 24) */
               right: 0,
               height: '8px',
               zIndex: 0,
-              background: 'linear-gradient(to bottom, rgba(120,120,120,0.15) 0%, rgba(0,0,0,0.3) 30%, transparent 100%)',
+              background: 'linear-gradient(to bottom, rgba(120,120,120,0.15) 0%, rgba(0,0,0,0.25) 40%, transparent 100%)',
             }}
           />
 
-          {/* Shadow for inner corner curve - light grey following the curve */}
+          {/* Shadow for inner corner curve - center at (304, 109) to match actual curve */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '85px',
-              left: '280px',
+              top: '77px', /* 109 - 32 = 77, so center ends up at 77 + 32 = 109 */
+              left: '272px', /* 304 - 32 = 272, so center ends up at 272 + 32 = 304 */
               width: '32px',
               height: '32px',
               zIndex: 0,
+              /* Center at 100% 100% of 32x32 box = (304, 109), matching actual curve center */
               background: 'radial-gradient(circle at 100% 100%, transparent 24px, rgba(120,120,120,0.15) 24px, rgba(0,0,0,0.25) 28px, transparent 32px)',
+            }}
+          />
+
+          {/* Shadow for sidebar right edge - from after inner corner to before bottom corner */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '109px', /* Start after inner corner ends (85 + 24) */
+              left: '280px',
+              width: '8px',
+              bottom: '24px', /* Stop before sidebar's bottom-right corner */
+              zIndex: 0,
+              background: 'linear-gradient(to right, rgba(120,120,120,0.15) 0%, rgba(0,0,0,0.25) 40%, transparent 100%)',
+            }}
+          />
+
+          {/* Shadow for sidebar bottom-right corner - follows the 24px radius curve */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              bottom: '-8px', /* Extend below to create shadow */
+              left: '248px', /* 280 - 32 = 248, so center at 248 + 32 = 280 */
+              width: '40px',
+              height: '32px',
+              zIndex: 0,
+              /* Curve center at bottom-left of where sidebar corner is (280, bottom) */
+              background: 'radial-gradient(circle at 80% 0%, transparent 24px, rgba(120,120,120,0.15) 24px, rgba(0,0,0,0.25) 28px, transparent 32px)',
             }}
           />
 
