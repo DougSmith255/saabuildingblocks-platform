@@ -2841,41 +2841,6 @@ function AgentPortal() {
             }}
           />
 
-          {/* Shimmer gradient overlay for header */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-              backgroundAttachment: 'fixed',
-              borderBottomRightRadius: '24px',
-            }}
-          />
-
-          {/* Shimmer gradient overlay for sidebar */}
-          <div
-            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-              backgroundAttachment: 'fixed',
-              borderBottomRightRadius: '24px',
-            }}
-          />
-
-          {/* Shimmer overlay for inner corner */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '85px',
-              left: '280px',
-              width: '24px',
-              height: '24px',
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-              backgroundAttachment: 'fixed',
-              WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
-              maskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
-            }}
-          />
-
           {/* Top Bar - interactive content area */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px] pointer-events-auto"

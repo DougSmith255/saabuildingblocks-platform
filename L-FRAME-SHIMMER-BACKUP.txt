@@ -1,0 +1,44 @@
+# L-Frame Shimmer Layer Backup
+# Created for easy restoration if needed
+# Location: agent-portal/page.tsx, lines ~2844-2877
+
+## Shimmer gradient overlay for header (line 2844-2852)
+          {/* Shimmer gradient overlay for header */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              backgroundAttachment: 'fixed',
+              borderBottomRightRadius: '24px',
+            }}
+          />
+
+## Shimmer gradient overlay for sidebar (line 2854-2862)
+          {/* Shimmer gradient overlay for sidebar */}
+          <div
+            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              backgroundAttachment: 'fixed',
+              borderBottomRightRadius: '24px',
+            }}
+          />
+
+## Shimmer overlay for inner corner (line 2864-2877)
+          {/* Shimmer overlay for inner corner */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: '280px',
+              width: '24px',
+              height: '24px',
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              backgroundAttachment: 'fixed',
+              WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
+              maskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
+            }}
+          />
+
+# To restore: Copy the JSX blocks above back into agent-portal/page.tsx
+# Insert after the glass texture overlay (around line 2843) and before the Top Bar section
