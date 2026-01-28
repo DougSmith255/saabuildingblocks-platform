@@ -2928,12 +2928,12 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              bottom: '-6px',
-              left: `${lFrame.sidebarWidth - lFrame.cornerRadius - 2}px`,
-              width: '30px',
-              height: '30px',
+              bottom: '-8px',
+              left: `${lFrame.sidebarWidth - lFrame.cornerRadius - 4}px`,
+              width: '36px',
+              height: '36px',
               zIndex: 0,
-              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(180,180,180,0.25) 24px, rgba(180,180,180,0.12) 28px, transparent 32px)',
+              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(180,180,180,0.25) 24px, rgba(180,180,180,0.12) 28px, transparent 34px)',
             }}
           />
 
