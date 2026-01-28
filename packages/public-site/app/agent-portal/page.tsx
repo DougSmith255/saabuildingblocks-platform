@@ -2765,25 +2765,29 @@ function AgentPortal() {
         <div className="fixed inset-0 z-40 pointer-events-none">
 
           {/* === UNIFIED L-FRAME BACKGROUND === */}
-          {/* Header: Full width with outer corner radius */}
+          {/* Header: Full width with outer corner radius + 3D edge on bottom */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px]"
             style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
               borderBottomRightRadius: '24px',
+              /* 3D edge: dark line at bottom + shadow cast down */
+              boxShadow: 'inset 0 -2px 0 rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.5)',
             }}
           />
 
-          {/* Sidebar: Below header with outer corner radius */}
+          {/* Sidebar: Below header with outer corner radius + 3D edge on right */}
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px]"
             style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
               borderBottomRightRadius: '24px',
+              /* 3D edge: dark line on right + shadow cast right */
+              boxShadow: 'inset -2px 0 0 rgba(0,0,0,0.4), 4px 0 12px rgba(0,0,0,0.5)',
             }}
           />
 
-          {/* Inner Corner: Fills junction gap with 24px curved cutout into content */}
+          {/* Inner Corner: Fills junction gap with 24px curved cutout + 3D edge following curve */}
           <div
             className="absolute"
             style={{
@@ -2792,6 +2796,8 @@ function AgentPortal() {
               width: '24px',
               height: '24px',
               background: 'radial-gradient(circle at 100% 100%, transparent 24px, rgba(14, 14, 14, 0.98) 24px)',
+              /* drop-shadow follows the actual shape including the curved cutout */
+              filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.5))',
             }}
           />
 
@@ -2838,86 +2844,6 @@ function AgentPortal() {
               backgroundAttachment: 'fixed',
               WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
               maskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
-            }}
-          />
-
-          {/* === CONTINUOUS 3D EDGE (Content-facing edges only) === */}
-          {/* Uses overlapping elements for seamless connections */}
-
-          {/* Header bottom edge - extends 2px past corner to overlap */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '85px',
-              left: 0,
-              width: '284px', /* 280 + 4px overlap into corner area */
-              height: '3px',
-              background: 'linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.35) 100%)',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
-            }}
-          />
-
-          {/* Inner corner - positioned to seamlessly connect header and sidebar */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '85px',
-              left: '280px',
-              width: '24px',
-              height: '24px',
-              /* Radial gradient creates curve that faces into content (concave from L-frame perspective) */
-              background: 'radial-gradient(circle 22px at 0 0, transparent 20px, rgba(0,0,0,0.35) 20px, rgba(0,0,0,0.35) 23px, transparent 23px)',
-              /* Outer glow shadow for depth */
-              filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))',
-            }}
-          />
-          {/* Inner corner highlight (white edge) */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '85px',
-              left: '280px',
-              width: '24px',
-              height: '24px',
-              background: 'radial-gradient(circle 22px at 0 0, transparent 19px, rgba(255,255,255,0.12) 19px, rgba(255,255,255,0.12) 20px, transparent 20px)',
-            }}
-          />
-
-          {/* Sidebar right edge - starts 2px above corner end to overlap, ends above bottom corner */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '107px', /* 85 + 22px (slight overlap with corner) */
-              left: '280px',
-              width: '3px',
-              bottom: '26px', /* Leave room for bottom corner + 2px overlap */
-              background: 'linear-gradient(to right, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.35) 100%)',
-              boxShadow: '2px 0 6px rgba(0,0,0,0.4)',
-            }}
-          />
-
-          {/* Bottom corner - follows sidebar's bottom-right radius curving outward */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              bottom: '0px',
-              left: '256px', /* 280 - 24 */
-              width: '27px', /* 24 + 3px to include edge */
-              height: '27px',
-              /* Radial gradient for corner curving away (bottom-right of sidebar) */
-              background: 'radial-gradient(circle 24px at 27px 0, transparent 22px, rgba(0,0,0,0.35) 22px, rgba(0,0,0,0.35) 25px, transparent 25px)',
-              filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))',
-            }}
-          />
-          {/* Bottom corner highlight */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              bottom: '0px',
-              left: '256px',
-              width: '27px',
-              height: '27px',
-              background: 'radial-gradient(circle 24px at 27px 0, transparent 21px, rgba(255,255,255,0.12) 21px, rgba(255,255,255,0.12) 22px, transparent 22px)',
             }}
           />
 
