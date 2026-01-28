@@ -6523,13 +6523,14 @@ function SupportSection({ userState }: SupportSectionProps) {
 
             {/* Urgent - Text Doug or Karrie */}
             <div>
-              <p className="text-[10px] text-[#e5e4dd]/40 uppercase tracking-wider mb-1.5">Urgent / Critical Bug</p>
+              <p className="text-[10px] text-[#e5e4dd]/40 uppercase tracking-wider mb-1.5">Urgent / Critical Issue</p>
               <div className="grid grid-cols-2 gap-2">
                 <a
                   href="sms:+14153205606"
                   className="flex flex-col items-center py-2.5 px-3 rounded-xl bg-black/30 border border-[#ffd700]/20 text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
                   style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
                 >
+                  <span className="text-[9px] text-[#e5e4dd]/50 uppercase tracking-wide">SAA Tech Issue</span>
                   <span className="text-xs font-semibold">Doug</span>
                   <span className="text-[10px] text-[#e5e4dd]/50">415-320-5606</span>
                 </a>
@@ -6538,6 +6539,7 @@ function SupportSection({ userState }: SupportSectionProps) {
                   className="flex flex-col items-center py-2.5 px-3 rounded-xl bg-black/30 border border-[#ffd700]/20 text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
                   style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
                 >
+                  <span className="text-[9px] text-[#e5e4dd]/50 uppercase tracking-wide">Urgent Agent Issue</span>
                   <span className="text-xs font-semibold">Karrie</span>
                   <span className="text-[10px] text-[#e5e4dd]/50">415-238-0922</span>
                 </a>
