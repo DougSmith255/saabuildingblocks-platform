@@ -30,30 +30,29 @@
       pointer-events: none;
     }
 
-    /* Header portion - full width with concave cutout via mask */
-    .l-header {
+    /* Header Part 1: Above sidebar - rounded inner corner */
+    .l-header-left {
       position: absolute;
       top: 0;
       left: 0;
+      width: 280px;
+      height: 85px;
+      background: rgba(128, 0, 128, 0.9); /* DEBUG: purple */
+      border-bottom-right-radius: 24px; /* Inner corner curves into content */
+    }
+
+    /* Header Part 2: Extends right - rounded outer corner */
+    .l-header-right {
+      position: absolute;
+      top: 0;
+      left: 280px;
       right: 0;
       height: 85px;
       background: rgba(128, 0, 128, 0.9); /* DEBUG: purple */
-      /* Rounded corner on bottom-right (outer edge of header) - subtle 12px */
-      border-bottom-right-radius: 12px;
-      /* Mask creates subtle concave cutout at inner corner - 12px radius */
-      -webkit-mask-image: radial-gradient(
-        circle 12px at 280px 85px,
-        transparent 11px,
-        black 12px
-      );
-      mask-image: radial-gradient(
-        circle 12px at 280px 85px,
-        transparent 11px,
-        black 12px
-      );
+      border-bottom-right-radius: 24px; /* Outer corner */
     }
 
-    /* Sidebar portion - left side below header with concave cutout */
+    /* Sidebar: Rounded corners at top-right (inner) and bottom-right (outer) */
     .l-sidebar {
       position: absolute;
       top: 85px;
@@ -61,21 +60,12 @@
       bottom: 0;
       width: 280px;
       background: rgba(0, 0, 200, 0.9); /* DEBUG: blue */
-      border-bottom-right-radius: 12px;
-      /* Mask creates subtle concave cutout at top-right - 12px radius */
-      -webkit-mask-image: radial-gradient(
-        circle 12px at 280px 0px,
-        transparent 11px,
-        black 12px
-      );
-      mask-image: radial-gradient(
-        circle 12px at 280px 0px,
-        transparent 11px,
-        black 12px
-      );
+      border-top-right-radius: 24px;    /* Inner corner curves into content */
+      border-bottom-right-radius: 24px; /* Outer corner */
     }
 
-    /* No separate corner element needed - the masks handle it */
+    /* Old class - not used anymore */
+    .l-header { display: none; }
     .concave-corner { display: none; }
 
     /* Labels for debugging */
@@ -91,13 +81,13 @@
 <body>
   <!-- L-Frame -->
   <div class="l-frame">
-    <div class="l-header">
+    <div class="l-header-left">
       <span class="label" style="top: 30px; left: 20px;">HEADER (purple)</span>
     </div>
+    <div class="l-header-right"></div>
     <div class="l-sidebar">
       <span class="label" style="top: 20px; left: 20px;">SIDEBAR (blue)</span>
     </div>
-    <div class="concave-corner"></div>
   </div>
 
   <!-- Content area -->
