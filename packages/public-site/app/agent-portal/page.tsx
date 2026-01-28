@@ -2608,6 +2608,34 @@ function AgentPortal() {
             }}
           />
 
+          {/* === UNIFIED GLASS TEXTURE (backgroundAttachment: fixed for seamless alignment) === */}
+
+          {/* Glass texture overlay for header */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
+            style={{
+              background: `
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
+              `,
+              backgroundAttachment: 'fixed',
+              borderBottomRightRadius: '24px',
+            }}
+          />
+
+          {/* Glass texture overlay for sidebar */}
+          <div
+            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
+            style={{
+              background: `
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
+              `,
+              backgroundAttachment: 'fixed',
+              borderBottomRightRadius: '24px',
+            }}
+          />
+
           {/* Glass texture overlay for inner corner */}
           <div
             className="absolute pointer-events-none"
@@ -2620,8 +2648,27 @@ function AgentPortal() {
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
+              backgroundAttachment: 'fixed',
               WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
               maskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
+            }}
+          />
+
+          {/* Shimmer gradient overlay for header */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              borderBottomRightRadius: '24px',
+            }}
+          />
+
+          {/* Shimmer gradient overlay for sidebar */}
+          <div
+            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              borderBottomRightRadius: '24px',
             }}
           />
 
@@ -2636,131 +2683,6 @@ function AgentPortal() {
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
               WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
               maskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
-            }}
-          />
-
-          {/* Glass texture overlay for header */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
-            style={{
-              background: `
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
-              `,
-              borderBottomRightRadius: '24px',
-            }}
-          />
-
-          {/* Glass texture overlay for sidebar */}
-          <div
-            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
-            style={{
-              background: `
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
-              `,
-              borderBottomRightRadius: '24px',
-            }}
-          />
-
-          {/* Shimmer gradient overlay for header */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-              borderBottomRightRadius: '24px',
-            }}
-          />
-
-          {/* === 3D BEVELED EDGE - Content-facing edges only === */}
-
-          {/* Header bottom edge - highlight on top, shadow on bottom */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '83px',
-              left: '0',
-              right: '0',
-              height: '2px',
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.3) 100%)',
-              borderBottomRightRadius: '24px',
-            }}
-          />
-
-          {/* Header right edge - from top to corner */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '0',
-              right: '0',
-              width: '2px',
-              height: '61px',
-              background: 'linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.25) 100%)',
-            }}
-          />
-
-          {/* Header corner arc - follows the 24px rounded corner */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '61px',
-              right: '0',
-              width: '26px',
-              height: '26px',
-              border: '2px solid transparent',
-              borderBottomColor: 'rgba(0,0,0,0.25)',
-              borderRightColor: 'rgba(0,0,0,0.25)',
-              borderBottomRightRadius: '26px',
-              boxShadow: 'inset -1px -1px 0 rgba(255,255,255,0.06)',
-            }}
-          />
-
-          {/* Sidebar right edge - from inner corner to outer corner */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '109px',
-              left: '278px',
-              width: '2px',
-              bottom: '24px',
-              background: 'linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.25) 100%)',
-            }}
-          />
-
-          {/* Sidebar bottom-right corner arc */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              bottom: '0',
-              left: '254px',
-              width: '26px',
-              height: '26px',
-              border: '2px solid transparent',
-              borderBottomColor: 'rgba(0,0,0,0.25)',
-              borderRightColor: 'rgba(0,0,0,0.25)',
-              borderBottomRightRadius: '26px',
-              boxShadow: 'inset -1px -1px 0 rgba(255,255,255,0.06)',
-            }}
-          />
-
-          {/* Inner corner 3D edge - follows the concave curve */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '85px',
-              left: '280px',
-              width: '24px',
-              height: '24px',
-              background: 'radial-gradient(circle at 100% 100%, transparent 22px, rgba(255,255,255,0.08) 22px, rgba(255,255,255,0.08) 23px, rgba(0,0,0,0.3) 23px, rgba(0,0,0,0.3) 24px, transparent 24px)',
-            }}
-          />
-
-          {/* Shimmer gradient overlay for sidebar */}
-          <div
-            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
-              borderBottomRightRadius: '24px',
             }}
           />
 
