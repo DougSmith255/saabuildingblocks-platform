@@ -2816,10 +2816,10 @@ function AgentPortal() {
             style={{
               top: '85px',
               left: '304px',
-              right: '24px', /* Stop before header's bottom-right corner */
+              right: '24px',
               height: '6px',
               zIndex: 0,
-              background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
+              background: 'linear-gradient(to bottom, rgba(180,180,180,0.25) 0%, rgba(180,180,180,0.12) 50%, transparent 100%)',
             }}
           />
 
@@ -2827,12 +2827,12 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '57px',
+              top: '61px', /* Moved down - aligns with corner curve center (85 - 24 = 61) */
               right: '-6px',
               width: '40px',
               height: '40px',
               zIndex: 0,
-              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(0,0,0,0.2) 24px, rgba(0,0,0,0.1) 28px, transparent 32px)',
+              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(180,180,180,0.25) 24px, rgba(180,180,180,0.12) 28px, transparent 32px)',
             }}
           />
 
@@ -2845,7 +2845,7 @@ function AgentPortal() {
               width: '30px',
               height: '30px',
               zIndex: 0,
-              background: 'radial-gradient(circle at 100% 100%, transparent 18px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.2) 23px, transparent 24px)',
+              background: 'radial-gradient(circle at 100% 100%, transparent 18px, rgba(180,180,180,0.12) 20px, rgba(180,180,180,0.25) 23px, transparent 24px)',
             }}
           />
 
@@ -2853,12 +2853,12 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '109px', /* Start after inner corner (85 + 24) */
+              top: '109px',
               left: '280px',
               width: '6px',
-              bottom: '24px', /* Stop before sidebar corner */
+              bottom: '24px',
               zIndex: 0,
-              background: 'linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
+              background: 'linear-gradient(to right, rgba(180,180,180,0.25) 0%, rgba(180,180,180,0.12) 50%, transparent 100%)',
             }}
           />
 
@@ -2871,7 +2871,7 @@ function AgentPortal() {
               width: '30px',
               height: '30px',
               zIndex: 0,
-              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(0,0,0,0.2) 24px, rgba(0,0,0,0.1) 28px, transparent 32px)',
+              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(180,180,180,0.25) 24px, rgba(180,180,180,0.12) 28px, transparent 32px)',
             }}
           />
 
