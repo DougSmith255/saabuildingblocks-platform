@@ -3046,8 +3046,8 @@ function AgentPortal() {
                   style={{ width: '120px', height: 'auto' }}
                 />
               </button>
-              {/* Spacer to push title after sidebar width */}
-              <div className="w-[160px] flex-shrink-0" />
+              {/* Spacer to push title after sidebar width - larger on 1024-1300px since logo is hidden */}
+              <div className="w-[205px] min-[1300px]:w-[160px] flex-shrink-0" />
               {/* Title */}
               <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(24px, calc(18px + 1.2vw), 42px)' }}>
                 AGENT PORTAL
@@ -3093,16 +3093,22 @@ function AgentPortal() {
                 }}
               >
                 {/* Small SAA badge - only visible on 1024-1300px screens */}
+                {/* Styled like menu item 3D dark button with S logo */}
                 <button
                   onClick={() => setActiveSection('dashboard')}
-                  className="absolute top-2 left-2 min-[1300px]:hidden z-10 w-7 h-7 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                  className="absolute top-2 left-2 min-[1300px]:hidden z-10 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
                   style={{
-                    background: 'linear-gradient(135deg, #ffd700 0%, #b8860b 100%)',
-                    boxShadow: '0 2px 8px rgba(255, 215, 0, 0.3)',
+                    background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)',
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 2px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.4)',
+                    border: '1px solid rgba(255,255,255,0.1)',
                   }}
                   title="Go to Dashboard"
                 >
-                  <span className="text-[#0a0a0a] font-bold text-xs font-taskor">S</span>
+                  <img
+                    src="/icons/s-logo-1000.png"
+                    alt="SAA"
+                    className="w-5 h-5 object-contain"
+                  />
                 </button>
                 {/* Profile Picture - responsive sizing */}
                 <div className="flex flex-col items-center mb-2">
