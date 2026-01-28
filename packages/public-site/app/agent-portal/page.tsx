@@ -2899,11 +2899,12 @@ function AgentPortal() {
           />
 
           {/* 3. Shadow for INNER CORNER - concave curve into content area */}
+          {/* Responsive: >1700px moves left 1px & down 1px; <1300px moves left 1px */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: `${lFrame.headerHeight - 7}px`, /* moved up 1px */
-              left: `${lFrame.sidebarWidth - 6}px`, /* moved right 1px */
+              top: `${lFrame.headerHeight - 7 + (windowWidth >= 1700 ? 1 : 0)}px`,
+              left: `${lFrame.sidebarWidth - 6 - (windowWidth >= 1700 || windowWidth < 1300 ? 1 : 0)}px`,
               width: '30px',
               height: '30px',
               zIndex: 0,
@@ -2912,10 +2913,11 @@ function AgentPortal() {
           />
 
           {/* 4. Shadow for SIDEBAR RIGHT EDGE - straight line */}
+          {/* Responsive: >1700px shortens top by 1px */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: `${lFrame.headerHeight + lFrame.cornerRadius - 1}px`, /* extended upward 1px */
+              top: `${lFrame.headerHeight + lFrame.cornerRadius - 1 + (windowWidth >= 1700 ? 1 : 0)}px`,
               left: `${lFrame.sidebarWidth}px`,
               width: '6px',
               bottom: '24px',
