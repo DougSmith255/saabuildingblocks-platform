@@ -2710,8 +2710,23 @@ function AgentPortal() {
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         } as React.CSSProperties}
       >
-        {/* Solid background - edge to edge, no rounded corners */}
-        <div className="absolute inset-0 bg-[#0a0a0a] border-t border-white/[0.08]" />
+        {/* Glass background - matching desktop L-frame */}
+        <div
+          className="absolute inset-0 border-t border-white/[0.08]"
+          style={{
+            background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+          }}
+        />
+        {/* Glass texture overlay - matching desktop L-frame */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `
+              repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
+              repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
+            `,
+          }}
+        />
 
         <div
           className="relative flex items-center h-16 px-1"
