@@ -1031,10 +1031,11 @@ function AgentPortal() {
   }, []);
 
   // L-frame dimensions - responsive based on breakpoints
-  // 1024-1700px: reduced sidebar (240px) and header (70px)
+  // 1024-1300px: narrow sidebar (212px) and header (70px)
+  // 1300-1700px: reduced sidebar (240px) and header (70px)
   // 1700px+: default (280px sidebar, 85px header)
   const lFrame = {
-    sidebarWidth: (windowWidth >= 1024 && windowWidth < 1700) ? 240 : 280, /* 240 = 280 - 40px for 1024-1700 */
+    sidebarWidth: windowWidth >= 1700 ? 280 : windowWidth >= 1300 ? 240 : 212, /* 212 = 240 - 28px for 1024-1300 */
     headerHeight: (windowWidth >= 1024 && windowWidth < 1700) ? 70 : 85,
     cornerRadius: 24,
   };
