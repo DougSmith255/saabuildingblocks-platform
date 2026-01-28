@@ -884,7 +884,30 @@ function AgentPortal() {
   console.log('[Loading Screen] === AgentPortal component rendering ===');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeSection, setActiveSection] = useState<SectionId>('onboarding');
+  const [activeSection, setActiveSectionRaw] = useState<SectionId>('onboarding');
+  const [isTabTransitioning, setIsTabTransitioning] = useState(false);
+  const [pendingSection, setPendingSection] = useState<SectionId | null>(null);
+
+  // Wrapped setActiveSection with blur transition
+  const setActiveSection = useCallback((newSection: SectionId) => {
+    if (newSection === activeSection) return;
+
+    // Start fade out
+    setIsTabTransitioning(true);
+    setPendingSection(newSection);
+
+    // After fade out, switch section and scroll to top
+    setTimeout(() => {
+      setActiveSectionRaw(newSection);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // After a tiny delay, fade in
+      setTimeout(() => {
+        setIsTabTransitioning(false);
+        setPendingSection(null);
+      }, 50);
+    }, 150); // 150ms fade out duration
+  }, [activeSection]);
   const [shakingItem, setShakingItem] = useState<SectionId | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   // Initialize user directly from localStorage to avoid flash
@@ -1113,10 +1136,7 @@ function AgentPortal() {
     }
   }, [searchParams]);
 
-  // Scroll to top when activeSection changes
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [activeSection]);
+  // Note: Scroll to top is now handled in setActiveSection with blur transition
 
   // Preload all app data during loading screen (or background preload if loading screen was skipped)
   useEffect(() => {
@@ -3150,6 +3170,15 @@ function AgentPortal() {
             userSelect: 'none',
           } as React.CSSProperties}
         >
+          {/* Tab transition wrapper - blur fade effect */}
+          <div
+            className="transition-all duration-150 ease-out"
+            style={{
+              opacity: isTabTransitioning ? 0 : 1,
+              filter: isTabTransitioning ? 'blur(8px)' : 'blur(0px)',
+              transform: isTabTransitioning ? 'scale(0.98)' : 'scale(1)',
+            }}
+          >
             {/* Onboarding Section - with blur/fade transition on completion */}
             {activeSection === 'onboarding' && (
               <div
@@ -3566,6 +3595,7 @@ function AgentPortal() {
               />
             </div>
             )}
+          </div>{/* End tab transition wrapper */}
           </main>
         </div>
       </SmoothScrollContainer>
@@ -5791,10 +5821,8 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
               </li>
             </ul>
           </div>
-          <a
-            href="/download"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => onNavigate('download')}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -5802,9 +5830,9 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
             </svg>
             Go to Download Page
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-          </a>
+          </button>
         </div>
       ),
     },
