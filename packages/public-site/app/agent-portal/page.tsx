@@ -2825,32 +2825,32 @@ function AgentPortal() {
           />
 
           {/* 2. Shadow for HEADER BOTTOM-RIGHT CORNER - convex curve at right edge */}
-          {/* DEBUG: GREEN */}
+          {/* DEBUG: GREEN - moved UP significantly (was top: 85px) */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '85px',
+              top: '61px', /* Header corner center y = 85 - 24 = 61 */
               right: '0px',
               width: '30px',
               height: '30px',
               zIndex: 0,
-              /* Center at top-left of this box (right-24, 85), curve goes down-right */
+              /* Center at top-left of this box, curve goes down-right */
               background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(0,255,0,0.5) 24px, rgba(0,255,0,0.3) 28px, transparent 32px)', /* DEBUG GREEN */
             }}
           />
 
           {/* 3. Shadow for INNER CORNER - concave curve into content area */}
           {/* Actual curve: center at (304, 109), 24px radius, curves into content */}
-          {/* DEBUG: BLUE */}
+          {/* DEBUG: BLUE - moved DOWN and RIGHT (top point more, bottom point less) */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '79px', /* 109 - 30 = 79 */
-              left: '274px', /* 304 - 30 = 274 */
+              top: '85px', /* Was 79px - moved down 6px */
+              left: '280px', /* Was 274px - moved right 6px */
               width: '30px',
               height: '30px',
               zIndex: 0,
-              /* Circle center at 100% 100% of 30x30 box = (274+30, 79+30) = (304, 109) ✓ */
+              /* Circle center at 100% 100% of 30x30 box = (280+30, 85+30) = (310, 115) */
               background: 'radial-gradient(circle at 100% 100%, transparent 23px, rgba(0,0,255,0.5) 24px, rgba(0,0,255,0.3) 28px, transparent 32px)', /* DEBUG BLUE */
             }}
           />
@@ -2871,17 +2871,16 @@ function AgentPortal() {
 
           {/* 5. Shadow for SIDEBAR BOTTOM-RIGHT CORNER - convex curve */}
           {/* Sidebar corner: 24px radius, center at (280-24, bottom-24) = (256, bottom-24) */}
-          {/* DEBUG: MAGENTA */}
+          {/* DEBUG: MAGENTA - moved DOWN slightly (was bottom: 0px) */}
           <div
             className="absolute pointer-events-none"
             style={{
-              bottom: '0px',
+              bottom: '-6px', /* Was 0px - moved down 6px */
               left: '256px', /* Corner center x = 280 - 24 = 256 */
               width: '30px',
               height: '30px',
               zIndex: 0,
-              /* Circle center at 0% 0% = top-left of box = (256, bottom-30) */
-              /* But corner center is at (256, bottom-24). Close enough for shadow effect */
+              /* Circle center at 0% 0% = top-left of box */
               background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(255,0,255,0.5) 24px, rgba(255,0,255,0.3) 28px, transparent 32px)', /* DEBUG MAGENTA */
             }}
           />
