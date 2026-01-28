@@ -10874,10 +10874,11 @@ return (
         ==================================================================== */}
 
     {/* DESKTOP LAYOUT (≥1024px) - overflow visible for button controls */}
+    {/* Profile: 310px | Style: flex | Contact/Page Actions: 260px | Preview: 300-340px */}
     <div
       className="hidden min-[1024px]:grid gap-4 overflow-visible"
       style={{
-        gridTemplateColumns: '1fr 1fr 1fr minmax(300px, 340px)',
+        gridTemplateColumns: '310px 1fr 260px minmax(300px, 340px)',
         gridTemplateRows: 'auto auto',
       }}
     >
