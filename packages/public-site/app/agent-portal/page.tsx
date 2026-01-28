@@ -2608,6 +2608,37 @@ function AgentPortal() {
             }}
           />
 
+          {/* Glass texture overlay for inner corner */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: '280px',
+              width: '24px',
+              height: '24px',
+              background: `
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
+              `,
+              WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
+              maskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
+            }}
+          />
+
+          {/* Shimmer overlay for inner corner */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: '280px',
+              width: '24px',
+              height: '24px',
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
+              maskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
+            }}
+          />
+
           {/* Glass texture overlay for header */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
