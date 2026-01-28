@@ -2825,12 +2825,12 @@ function AgentPortal() {
           />
 
           {/* 2. Shadow for HEADER BOTTOM-RIGHT CORNER - convex curve at right edge */}
-          {/* DEBUG: GREEN - moved RIGHT (was right: 0px) */}
+          {/* DEBUG: GREEN - moved RIGHT again */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '61px', /* Header corner center y = 85 - 24 = 61 */
-              right: '-6px', /* Was 0px - moved right 6px */
+              right: '-12px', /* Was -6px - moved right another 6px */
               width: '30px',
               height: '30px',
               zIndex: 0,
@@ -2841,12 +2841,12 @@ function AgentPortal() {
 
           {/* 3. Shadow for INNER CORNER - concave curve into content area */}
           {/* Actual curve: center at (304, 109), 24px radius, curves into content */}
-          {/* DEBUG: BLUE - points moved INWARD: bottom up, top left */}
+          {/* DEBUG: BLUE - points moved INWARD again: top left 6px, bottom up 6px */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '81px', /* Was 85px - moved up 4px (bottom point up) */
-              left: '276px', /* Was 280px - moved left 4px (top point left) */
+              top: '75px', /* Was 81px - moved up 6px (bottom point up) */
+              left: '270px', /* Was 276px - moved left 6px (top point left) */
               width: '30px',
               height: '30px',
               zIndex: 0,
