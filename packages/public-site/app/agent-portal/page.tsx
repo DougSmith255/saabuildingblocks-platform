@@ -2825,12 +2825,12 @@ function AgentPortal() {
           />
 
           {/* 2. Shadow for HEADER BOTTOM-RIGHT CORNER - convex curve at right edge */}
-          {/* DEBUG: GREEN - left 1px, up 2px */}
+          {/* DEBUG: GREEN - another 1px left, 2px up */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '59px', /* Was 61px - moved up 2px */
-              right: '-7px', /* Was -8px - moved left 1px */
+              top: '57px', /* Was 59px - moved up 2px */
+              right: '-6px', /* Was -7px - moved left 1px */
               width: '30px',
               height: '30px',
               zIndex: 0,
@@ -2841,17 +2841,18 @@ function AgentPortal() {
 
           {/* 3. Shadow for INNER CORNER - concave curve into content area */}
           {/* Actual curve: center at (304, 109), 24px radius, curves into content */}
-          {/* DEBUG: BLUE - curve restored to 100% 100% */}
+          {/* DEBUG: BLUE - left 1px, shadow flipped to extend INWARD toward content */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '79px',
-              left: '274px',
+              left: '273px', /* Was 274px - moved left 1px */
               width: '30px',
               height: '30px',
               zIndex: 0,
-              /* Circle at 100% 100% (bottom-right of box) = curve center at corner point */
-              background: 'radial-gradient(circle at 100% 100%, transparent 23px, rgba(0,0,255,0.5) 24px, rgba(0,0,255,0.3) 28px, transparent 32px)', /* DEBUG BLUE */
+              /* Circle at 100% 100%, shadow extends INWARD (0-24px) not outward */
+              /* Darkest near the 24px edge, fading toward center (into content) */
+              background: 'radial-gradient(circle at 100% 100%, transparent 0px, rgba(0,0,255,0.2) 14px, rgba(0,0,255,0.5) 22px, transparent 24px)', /* DEBUG BLUE - FLIPPED */
             }}
           />
 
