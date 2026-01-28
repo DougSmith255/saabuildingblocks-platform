@@ -1246,18 +1246,20 @@ function AgentPortal() {
         .then(data => {
           console.log('[Onboarding] API Response:', data);
           if (data.success && data.data) {
-            const progress = data.data.onboarding_progress || {
-              step1_okta_account: false,
-              step2_training: false,
-              step3_world_tour: false,
-              step4_broker_tasks: false,
-              step5_choose_crm: false,
-              step6_karrie_session: false,
-              step7_link_page: false,
-              step8_download_app: false,
-              step9_agent_portal: false,
+            // Only use the 9 valid step keys (filter out any legacy keys from database)
+            const dbProgress = data.data.onboarding_progress || {};
+            const progress = {
+              step1_okta_account: dbProgress.step1_okta_account || false,
+              step2_training: dbProgress.step2_training || false,
+              step3_world_tour: dbProgress.step3_world_tour || false,
+              step4_broker_tasks: dbProgress.step4_broker_tasks || false,
+              step5_choose_crm: dbProgress.step5_choose_crm || false,
+              step6_karrie_session: dbProgress.step6_karrie_session || false,
+              step7_link_page: dbProgress.step7_link_page || false,
+              step8_download_app: dbProgress.step8_download_app || false,
+              step9_agent_portal: dbProgress.step9_agent_portal || false,
             };
-            console.log('[Onboarding] Setting progress:', progress);
+            console.log('[Onboarding] Setting progress (filtered to 9 steps):', progress);
             console.log('[Onboarding] onboarding_completed_at:', data.data.onboarding_completed_at);
             setOnboardingProgress(progress);
             setOnboardingCompletedAt(data.data.onboarding_completed_at || null);
