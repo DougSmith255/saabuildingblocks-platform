@@ -3080,7 +3080,8 @@ function AgentPortal() {
           >
 
             {/* Sidebar content - fits within viewport without scrollbar */}
-            <div className="relative z-10 h-full flex flex-col p-3 space-y-2">
+            {/* Responsive: move content up 10px on screens under 1500px */}
+            <div className="relative z-10 h-full flex flex-col px-3 pb-3 pt-[2px] min-[1500px]:pt-3 space-y-2">
               {/* User Profile Section - compact for fitting */}
               <div
                 className="rounded-xl p-3 flex-shrink-0"
