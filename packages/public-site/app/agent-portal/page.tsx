@@ -1031,11 +1031,11 @@ function AgentPortal() {
   }, []);
 
   // L-frame dimensions - responsive based on breakpoints
-  // 1500-1700px: reduced sidebar (210px) and header (70px)
-  // Other sizes: default (280px sidebar, 85px header)
+  // 950-1700px: reduced sidebar (240px) and header (70px)
+  // 1700px+: default (280px sidebar, 85px header)
   const lFrame = {
-    sidebarWidth: (windowWidth >= 1500 && windowWidth < 1700) ? 230 : 280, /* 230 = 280 - 50px for 1500-1700 */
-    headerHeight: (windowWidth >= 1500 && windowWidth < 1700) ? 70 : 85,
+    sidebarWidth: (windowWidth >= 950 && windowWidth < 1700) ? 240 : 280, /* 240 = 280 - 40px for 950-1700 */
+    headerHeight: (windowWidth >= 950 && windowWidth < 1700) ? 70 : 85,
     cornerRadius: 24,
   };
   // Derived values
@@ -2876,7 +2876,7 @@ function AgentPortal() {
             className="absolute pointer-events-none"
             style={{
               top: `${lFrame.headerHeight}px`,
-              left: `${lFrame.sidebarWidth + lFrame.cornerRadius - 1}px`,
+              left: `${lFrame.sidebarWidth + lFrame.cornerRadius}px`, /* shortened from left by 1px */
               right: '24px',
               height: '6px',
               zIndex: 0,
@@ -2902,7 +2902,7 @@ function AgentPortal() {
             className="absolute pointer-events-none"
             style={{
               top: `${lFrame.headerHeight - 7}px`, /* moved up 1px */
-              left: `${lFrame.sidebarWidth - 7}px`,
+              left: `${lFrame.sidebarWidth - 6}px`, /* moved right 1px */
               width: '30px',
               height: '30px',
               zIndex: 0,
@@ -2914,7 +2914,7 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: `${lFrame.headerHeight + lFrame.cornerRadius}px`,
+              top: `${lFrame.headerHeight + lFrame.cornerRadius - 1}px`, /* extended upward 1px */
               left: `${lFrame.sidebarWidth}px`,
               width: '6px',
               bottom: '24px',
