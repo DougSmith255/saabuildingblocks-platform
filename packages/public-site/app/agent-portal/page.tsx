@@ -2765,25 +2765,25 @@ function AgentPortal() {
         <div className="fixed inset-0 z-40 pointer-events-none">
 
           {/* === UNIFIED L-FRAME BACKGROUND === */}
-          {/* Header: Full width with outer corner radius + 3D edge on bottom */}
+          {/* Header: Full width with outer corner radius (no shadow - sidebar covers left side) */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px]"
             style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
               borderBottomRightRadius: '24px',
-              /* 3D edge: dark line at bottom + shadow cast down */
-              boxShadow: 'inset 0 -2px 0 rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.5)',
+              zIndex: 1,
             }}
           />
 
-          {/* Sidebar: Below header with outer corner radius + 3D edge on right */}
+          {/* Sidebar: Below header with outer corner radius + 3D edge on right (z-index 2 to sit above header) */}
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px]"
             style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
               borderBottomRightRadius: '24px',
-              /* 3D edge: dark line on right + shadow cast right */
-              boxShadow: 'inset -2px 0 0 rgba(0,0,0,0.4), 4px 0 12px rgba(0,0,0,0.5)',
+              zIndex: 2,
+              /* 3D edge: tight shadow + grey highlight */
+              boxShadow: 'inset -1px 0 0 rgba(80,80,80,0.3), inset -2px 0 0 rgba(0,0,0,0.5), 2px 0 4px rgba(0,0,0,0.6)',
             }}
           />
 
@@ -2796,8 +2796,24 @@ function AgentPortal() {
               width: '24px',
               height: '24px',
               background: 'radial-gradient(circle at 100% 100%, transparent 24px, rgba(14, 14, 14, 0.98) 24px)',
-              /* drop-shadow follows the actual shape including the curved cutout */
-              filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.5))',
+              zIndex: 3,
+              /* tight drop-shadow */
+              filter: 'drop-shadow(2px 2px 3px rgba(0,0,0,0.6))',
+            }}
+          />
+
+          {/* Header bottom edge shadow - only on content-facing portion (after sidebar width) */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: '280px',
+              right: 0,
+              height: '2px',
+              zIndex: 1,
+              /* Tight gradient: grey highlight 1px + dark shadow 2px */
+              background: 'linear-gradient(to bottom, rgba(80,80,80,0.3) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.6)',
             }}
           />
 
