@@ -2873,11 +2873,12 @@ function AgentPortal() {
           */}
 
           {/* 1. Shadow for HEADER BOTTOM EDGE - straight line from inner corner to header corner */}
+          {/* Responsive: >1700px and 1024-1300px extends left 1px */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: `${lFrame.headerHeight}px`,
-              left: `${lFrame.sidebarWidth + lFrame.cornerRadius}px`, /* shortened from left by 1px */
+              left: `${lFrame.sidebarWidth + lFrame.cornerRadius - (windowWidth >= 1700 || (windowWidth >= 1024 && windowWidth < 1300) ? 1 : 0)}px`,
               right: '24px',
               height: '6px',
               zIndex: 0,
@@ -2913,14 +2914,14 @@ function AgentPortal() {
           />
 
           {/* 4. Shadow for SIDEBAR RIGHT EDGE - straight line */}
-          {/* Responsive: >1700px shortens top by 1px */}
+          {/* Responsive: >1700px shortens top by 1px, extends bottom 2px; 1024-1300px extends bottom 2px */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: `${lFrame.headerHeight + lFrame.cornerRadius - 1 + (windowWidth >= 1700 ? 1 : 0)}px`,
               left: `${lFrame.sidebarWidth}px`,
               width: '6px',
-              bottom: '24px',
+              bottom: `${24 - (windowWidth >= 1700 || (windowWidth >= 1024 && windowWidth < 1300) ? 2 : 0)}px`,
               zIndex: 0,
               background: 'linear-gradient(to right, rgba(180,180,180,0.25) 0%, rgba(180,180,180,0.12) 50%, transparent 100%)',
             }}
@@ -9026,10 +9027,10 @@ function NewAgentsSection() {
         ))}
       </div>
 
-      {/* Shared Backdrop for both panels */}
+      {/* Shared Backdrop for both panels - z-index must match SlidePanel (100000) to overlay L-frame */}
       {activePanel !== null && (
         <div
-          className="fixed inset-0 z-[10019] bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+          className="fixed inset-0 z-[99999] bg-black/60 backdrop-blur-sm transition-opacity duration-300"
           onClick={handleCloseModal}
           aria-hidden="true"
         />
@@ -10874,11 +10875,11 @@ return (
         ==================================================================== */}
 
     {/* DESKTOP LAYOUT (≥1024px) - overflow visible for button controls */}
-    {/* Profile: 310px | Style: min 294px flex | Contact/Page Actions: 260px | Preview: 300-340px */}
+    {/* Profile: 310px | Style: 388px | Contact/Page Actions: 260px | Preview: 300-340px */}
     <div
       className="hidden min-[1024px]:grid gap-4 overflow-visible"
       style={{
-        gridTemplateColumns: '310px minmax(294px, 1fr) 260px minmax(300px, 340px)',
+        gridTemplateColumns: '310px 388px 260px minmax(300px, 340px)',
         gridTemplateRows: 'auto auto',
       }}
     >
