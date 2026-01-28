@@ -2842,96 +2842,84 @@ function AgentPortal() {
           />
 
           {/* === CONTINUOUS 3D EDGE (Content-facing edges only) === */}
-          {/* 3D bevel effect on inner edges - shadow cast into content area */}
+          {/* Uses overlapping elements for seamless connections */}
 
-          {/* Header bottom edge - 3D bevel (from left edge to inner corner) */}
+          {/* Header bottom edge - extends 2px past corner to overlap */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '85px',
               left: 0,
-              width: '280px',
-              height: '4px',
-              background: 'linear-gradient(to bottom, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+              width: '284px', /* 280 + 4px overlap into corner area */
+              height: '3px',
+              background: 'linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.35) 100%)',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
             }}
           />
 
-          {/* Inner corner - curved 3D bevel (SVG for smooth curve going RIGHT then DOWN) */}
-          <svg
+          {/* Inner corner - positioned to seamlessly connect header and sidebar */}
+          <div
             className="absolute pointer-events-none"
             style={{
               top: '85px',
               left: '280px',
-              width: '28px',
-              height: '28px',
-              overflow: 'visible',
+              width: '24px',
+              height: '24px',
+              /* Radial gradient creates curve that faces into content (concave from L-frame perspective) */
+              background: 'radial-gradient(circle 22px at 0 0, transparent 20px, rgba(0,0,0,0.35) 20px, rgba(0,0,0,0.35) 23px, transparent 23px)',
+              /* Outer glow shadow for depth */
+              filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))',
             }}
-          >
-            {/* Shadow blur layer - curve goes right then down into content */}
-            <path
-              d="M 0 4 Q 20 4, 20 24"
-              fill="none"
-              stroke="rgba(0,0,0,0.4)"
-              strokeWidth="6"
-              style={{ filter: 'blur(3px)' }}
-            />
-            {/* Highlight edge */}
-            <path
-              d="M 0 2 Q 22 2, 22 24"
-              fill="none"
-              stroke="rgba(255,255,255,0.08)"
-              strokeWidth="2"
-            />
-            {/* Gold accent line */}
-            <path
-              d="M 0 3 Q 21 3, 21 24"
-              fill="none"
-              stroke="rgba(255,215,0,0.1)"
-              strokeWidth="1"
-            />
-          </svg>
-
-          {/* Sidebar right edge - 3D bevel (from inner corner to near bottom, leaving room for bottom corner) */}
+          />
+          {/* Inner corner highlight (white edge) */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '109px', /* 85px header + 24px corner radius */
+              top: '85px',
               left: '280px',
-              width: '4px',
-              bottom: '24px', /* Leave room for bottom corner radius */
-              background: 'linear-gradient(to right, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%)',
-              boxShadow: '2px 0 8px rgba(0,0,0,0.4)',
+              width: '24px',
+              height: '24px',
+              background: 'radial-gradient(circle 22px at 0 0, transparent 19px, rgba(255,255,255,0.12) 19px, rgba(255,255,255,0.12) 20px, transparent 20px)',
             }}
           />
 
-          {/* Bottom corner - curved 3D bevel following sidebar's bottom-right radius */}
-          <svg
+          {/* Sidebar right edge - starts 2px above corner end to overlap, ends above bottom corner */}
+          <div
             className="absolute pointer-events-none"
             style={{
-              bottom: 0,
-              left: '256px', /* 280px - 24px radius */
-              width: '28px',
-              height: '28px',
-              overflow: 'visible',
+              top: '107px', /* 85 + 22px (slight overlap with corner) */
+              left: '280px',
+              width: '3px',
+              bottom: '26px', /* Leave room for bottom corner + 2px overlap */
+              background: 'linear-gradient(to right, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.35) 100%)',
+              boxShadow: '2px 0 6px rgba(0,0,0,0.4)',
             }}
-          >
-            {/* Shadow blur layer - curve goes down then left (following the outer corner) */}
-            <path
-              d="M 28 0 Q 28 24, 4 24"
-              fill="none"
-              stroke="rgba(0,0,0,0.4)"
-              strokeWidth="6"
-              style={{ filter: 'blur(3px)' }}
-            />
-            {/* Highlight edge */}
-            <path
-              d="M 26 0 Q 26 22, 4 22"
-              fill="none"
-              stroke="rgba(255,255,255,0.08)"
-              strokeWidth="2"
-            />
-          </svg>
+          />
+
+          {/* Bottom corner - follows sidebar's bottom-right radius curving outward */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              bottom: '0px',
+              left: '256px', /* 280 - 24 */
+              width: '27px', /* 24 + 3px to include edge */
+              height: '27px',
+              /* Radial gradient for corner curving away (bottom-right of sidebar) */
+              background: 'radial-gradient(circle 24px at 27px 0, transparent 22px, rgba(0,0,0,0.35) 22px, rgba(0,0,0,0.35) 25px, transparent 25px)',
+              filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))',
+            }}
+          />
+          {/* Bottom corner highlight */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              bottom: '0px',
+              left: '256px',
+              width: '27px',
+              height: '27px',
+              background: 'radial-gradient(circle 24px at 27px 0, transparent 21px, rgba(255,255,255,0.12) 21px, rgba(255,255,255,0.12) 22px, transparent 22px)',
+            }}
+          />
 
           {/* Top Bar - interactive content area */}
           <div
@@ -10465,34 +10453,42 @@ function AgentPagesSection({
                   }}
                 />
                 {pageData?.activated && (generatedSlug || pageData?.slug) ? (
-                  <div className="flex justify-center pt-2 pb-4 relative z-[1]">
-                    <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px', background: 'transparent' }}>
-                      <iframe
-                        src={pageUrlPreview}
-                        className="absolute top-0 left-0"
-                        style={{
-                          width: '390px',
-                          height: '680px',
-                          transform: 'scale(0.71)',
-                          transformOrigin: 'top left',
-                          pointerEvents: 'none',
-                          border: 'none',
-                          outline: 'none',
-                          background: 'transparent',
-                        }}
-                        title="Attraction Page Preview"
-                      />
+                  <div className="flex justify-center py-4 relative z-[1]">
+                    {/* Phone Mockup Shell */}
+                    <div className="phone-mockup" style={{ width: '260px' }}>
+                      <div className="phone-screen" style={{ height: '450px' }}>
+                        <iframe
+                          src={pageUrlPreview}
+                          className="absolute top-0 left-0"
+                          style={{
+                            width: '390px',
+                            height: '680px',
+                            transform: 'scale(0.60)',
+                            transformOrigin: 'top left',
+                            pointerEvents: 'none',
+                            border: 'none',
+                            outline: 'none',
+                            background: '#0a0a0a',
+                          }}
+                          title="Attraction Page Preview"
+                        />
+                      </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-full text-center px-6 relative z-[1]">
-                    <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
-                      <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                      </svg>
+                  <div className="flex justify-center py-4 relative z-[1]">
+                    {/* Phone Mockup Shell - Empty State */}
+                    <div className="phone-mockup" style={{ width: '260px' }}>
+                      <div className="phone-screen flex flex-col items-center justify-center text-center px-6" style={{ height: '450px' }}>
+                        <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
+                          <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                          </svg>
+                        </div>
+                        <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
+                        <p className="text-[#e5e4dd]/40 text-xs">Upload a profile image and activate your page to see the preview</p>
+                      </div>
                     </div>
-                    <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
-                    <p className="text-[#e5e4dd]/40 text-xs">Upload a profile image and activate your page to see the preview</p>
                   </div>
                 )}
               </div>
@@ -12791,36 +12787,44 @@ return (
                 <span className="text-sm font-medium text-[#ffd700]">Link Page Preview</span>
               </div>
             </div>
-            <div className="relative w-full overflow-hidden" style={{ height: '500px', background: '#0a0a0a' }}>
+            <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ height: '520px', background: '#0a0a0a' }}>
               {pageData?.activated && (generatedSlug || pageData?.slug) ? (
-                <div className="flex justify-center pt-2 pb-4">
-                  <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px', background: '#0a0a0a' }}>
-                    <iframe
-                      src={`${linktreeUrl}?preview=true`}
-                      className="absolute top-0 left-0"
-                      style={{
-                        width: '390px',
-                        height: '680px',
-                        transform: 'scale(0.71)',
-                        transformOrigin: 'top left',
-                        pointerEvents: 'none',
-                        border: 'none',
-                        outline: 'none',
-                        background: '#0a0a0a',
-                      }}
-                      title="Link Page Preview"
-                    />
+                <div className="flex justify-center py-4">
+                  {/* Phone Mockup Shell */}
+                  <div className="phone-mockup" style={{ width: '260px' }}>
+                    <div className="phone-screen" style={{ height: '450px' }}>
+                      <iframe
+                        src={`${linktreeUrl}?preview=true`}
+                        className="absolute top-0 left-0"
+                        style={{
+                          width: '390px',
+                          height: '680px',
+                          transform: 'scale(0.60)',
+                          transformOrigin: 'top left',
+                          pointerEvents: 'none',
+                          border: 'none',
+                          outline: 'none',
+                          background: '#0a0a0a',
+                        }}
+                        title="Link Page Preview"
+                      />
+                    </div>
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full text-center px-6">
-                  <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
-                    <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                    </svg>
+                <div className="flex justify-center py-4">
+                  {/* Phone Mockup Shell - Empty State */}
+                  <div className="phone-mockup" style={{ width: '260px' }}>
+                    <div className="phone-screen flex flex-col items-center justify-center text-center px-6" style={{ height: '450px' }}>
+                      <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
+                        <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                        </svg>
+                      </div>
+                      <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
+                      <p className="text-[#e5e4dd]/40 text-xs">Activate your page to see the preview</p>
+                    </div>
                   </div>
-                  <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
-                  <p className="text-[#e5e4dd]/40 text-xs">Activate your page to see the preview</p>
                 </div>
               )}
             </div>
