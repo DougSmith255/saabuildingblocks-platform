@@ -2587,16 +2587,31 @@ function AgentPortal() {
           style={{
             width: '100%',
             borderRadius: '0 0 20px 20px',
-            borderBottom: '2px solid rgba(60, 60, 60, 0.8)',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
             position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          {/* Glass Background - 3 layers from GlassShimmer.module.css */}
-          <div className={glassStyles['glassContainer']}>
-            <div className={glassStyles['glassBase']} />
-            <div className={glassStyles['shimmerGradient']} />
-          </div>
+          {/* Glass background - matching desktop L-frame and mobile bottom bar */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              borderRadius: '0 0 20px 20px',
+              borderBottom: '1px solid rgba(180, 180, 180, 0.3)', /* Light grey line at bottom */
+            }}
+          />
+          {/* Glass texture overlay - matching desktop L-frame */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
+              `,
+              borderRadius: '0 0 20px 20px',
+            }}
+          />
 
           <div className="flex items-center justify-between px-4 sm:px-8 relative z-10 h-16 min-[950px]:h-[85px]">
             {/* SAA Logo - links to dashboard */}
@@ -2710,11 +2725,14 @@ function AgentPortal() {
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         } as React.CSSProperties}
       >
-        {/* Glass background - matching desktop L-frame */}
+        {/* Glass background - matching desktop L-frame with rounded top corners */}
         <div
-          className="absolute inset-0 border-t border-white/[0.08]"
+          className="absolute inset-0"
           style={{
             background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+            borderTopLeftRadius: '20px',
+            borderTopRightRadius: '20px',
+            borderTop: '1px solid rgba(180, 180, 180, 0.3)', /* Light grey line at top */
           }}
         />
         {/* Glass texture overlay - matching desktop L-frame */}
@@ -2725,6 +2743,8 @@ function AgentPortal() {
               repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
               repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
             `,
+            borderTopLeftRadius: '20px',
+            borderTopRightRadius: '20px',
           }}
         />
 
