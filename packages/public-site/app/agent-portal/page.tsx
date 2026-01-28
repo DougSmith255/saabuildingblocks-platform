@@ -2578,37 +2578,41 @@ function AgentPortal() {
         <div className="fixed inset-0 z-40 pointer-events-none">
 
           {/* === UNIFIED L-FRAME BACKGROUND === */}
-          {/* Header Part 1: Above sidebar area - has rounded corner at inner junction */}
+          {/* Header: Full width, no inner corner radius */}
           {/* DEBUG: Using purple to visualize */}
           <div
-            className="absolute top-0 left-0 w-[280px] h-[85px]"
+            className="absolute top-0 left-0 right-0 h-[85px]"
             style={{
               background: 'rgba(128, 0, 128, 0.9)', // DEBUG: purple
               // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderBottomRightRadius: '24px', // Rounded inner corner
+              borderBottomRightRadius: '24px', // Outer corner only
             }}
           />
 
-          {/* Header Part 2: Extends from sidebar edge to right - has rounded outer corner */}
-          {/* DEBUG: Using slightly different purple to show separation */}
-          <div
-            className="absolute top-0 left-[280px] right-0 h-[85px]"
-            style={{
-              background: 'rgba(128, 0, 128, 0.9)', // DEBUG: purple (same color in production)
-              // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderBottomRightRadius: '24px', // Rounded outer corner
-            }}
-          />
-
-          {/* Sidebar: Below header, has rounded corners at top-right (inner) and bottom-right (outer) */}
+          {/* Sidebar: Below header, no inner corner radius */}
           {/* DEBUG: Using blue to visualize */}
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px]"
             style={{
               background: 'rgba(0, 0, 200, 0.9)', // DEBUG: blue
               // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderTopRightRadius: '24px',    // Rounded inner corner (matches header)
-              borderBottomRightRadius: '24px', // Rounded outer corner
+              borderBottomRightRadius: '24px', // Outer corner only
+            }}
+          />
+
+          {/* Inner Corner: Single element that creates the smooth rounded inner corner */}
+          {/* This element extends INTO the content area with a curved edge */}
+          {/* DEBUG: Using green to visualize */}
+          <div
+            className="absolute"
+            style={{
+              top: '85px',      // Starts at junction Y
+              left: '280px',    // Starts at junction X
+              width: '24px',
+              height: '24px',
+              background: 'rgba(0, 255, 0, 0.9)', // DEBUG: green
+              // PRODUCTION: background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              borderBottomRightRadius: '24px', // Creates the smooth curve into content area
             }}
           />
 

@@ -30,29 +30,18 @@
       pointer-events: none;
     }
 
-    /* Header Part 1: Above sidebar - rounded inner corner */
-    .l-header-left {
+    /* Header: Full width, outer corner only */
+    .l-header {
       position: absolute;
       top: 0;
       left: 0;
-      width: 280px;
-      height: 85px;
-      background: rgba(128, 0, 128, 0.9); /* DEBUG: purple */
-      border-bottom-right-radius: 24px; /* Inner corner curves into content */
-    }
-
-    /* Header Part 2: Extends right - rounded outer corner */
-    .l-header-right {
-      position: absolute;
-      top: 0;
-      left: 280px;
       right: 0;
       height: 85px;
       background: rgba(128, 0, 128, 0.9); /* DEBUG: purple */
-      border-bottom-right-radius: 24px; /* Outer corner */
+      border-bottom-right-radius: 24px; /* Outer corner only */
     }
 
-    /* Sidebar: Rounded corners at top-right (inner) and bottom-right (outer) */
+    /* Sidebar: Outer corner only */
     .l-sidebar {
       position: absolute;
       top: 85px;
@@ -60,12 +49,25 @@
       bottom: 0;
       width: 280px;
       background: rgba(0, 0, 200, 0.9); /* DEBUG: blue */
-      border-top-right-radius: 24px;    /* Inner corner curves into content */
-      border-bottom-right-radius: 24px; /* Outer corner */
+      border-bottom-right-radius: 24px; /* Outer corner only */
     }
 
-    /* Old class - not used anymore */
-    .l-header { display: none; }
+    /* Inner Corner: Creates smooth rounded corner extending into content */
+    .inner-corner {
+      position: absolute;
+      top: 85px;      /* Junction Y */
+      left: 280px;    /* Junction X */
+      width: 24px;
+      height: 24px;
+      background: rgba(0, 255, 0, 0.9); /* DEBUG: green */
+      border-bottom-right-radius: 24px; /* Curved edge into content */
+    }
+
+    /* Old classes - not used */
+    .l-header-left { display: none; }
+    .l-header-right { display: none; }
+    .corner-filler-top { display: none; }
+    .corner-filler-bottom { display: none; }
     .concave-corner { display: none; }
 
     /* Labels for debugging */
@@ -81,13 +83,14 @@
 <body>
   <!-- L-Frame -->
   <div class="l-frame">
-    <div class="l-header-left">
+    <div class="l-header">
       <span class="label" style="top: 30px; left: 20px;">HEADER (purple)</span>
     </div>
-    <div class="l-header-right"></div>
     <div class="l-sidebar">
       <span class="label" style="top: 20px; left: 20px;">SIDEBAR (blue)</span>
     </div>
+    <!-- Inner corner element - extends into content with curved edge -->
+    <div class="inner-corner"></div>
   </div>
 
   <!-- Content area -->
