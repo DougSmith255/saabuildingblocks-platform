@@ -52,15 +52,14 @@
       border-bottom-right-radius: 24px; /* Outer corner only */
     }
 
-    /* Inner Corner: Creates smooth rounded corner extending into content */
+    /* Inner Corner: Fills gap with curved cutout into content area */
     .inner-corner {
       position: absolute;
       top: 85px;      /* Junction Y */
       left: 280px;    /* Junction X */
       width: 24px;
       height: 24px;
-      background: rgba(0, 255, 0, 0.9); /* DEBUG: green */
-      border-bottom-right-radius: 24px; /* Curved edge into content */
+      background: radial-gradient(circle at 100% 100%, transparent 24px, rgba(0, 255, 0, 0.9) 24px); /* DEBUG: green, cutout at bottom-right */
     }
 
     /* Old classes - not used */

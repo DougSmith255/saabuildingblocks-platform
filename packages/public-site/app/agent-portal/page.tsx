@@ -1866,9 +1866,9 @@ function AgentPortal() {
       setDashboardUploadStatus('Applying B&W filter...');
       const processedBlob = await applyAutoContrastBW(bgRemovedBlob);
 
-      // Step 3b: Color version (no contrast change, just the cutout)
+      // Step 3b: Color version - keep original image intact (no bg removal, no contrast)
       setDashboardUploadStatus('Creating color version...');
-      const colorProcessedBlob = bgRemovedBlob; // Use bg-removed directly for color
+      const colorProcessedBlob = croppedBlob; // Keep full original image with background
 
       // Step 4: Upload B&W to dashboard profile
       setDashboardUploadStatus('Uploading...');
@@ -2838,6 +2838,70 @@ function AgentPortal() {
               backgroundAttachment: 'fixed',
               WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
               maskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
+            }}
+          />
+
+          {/* === CONTINUOUS 3D EDGE (Content-facing edges only) === */}
+          {/* 3D bevel effect on inner edges - shadow cast into content area */}
+
+          {/* Header bottom edge - 3D bevel (from left edge to inner corner) */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: 0,
+              width: '280px',
+              height: '4px',
+              background: 'linear-gradient(to bottom, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+            }}
+          />
+
+          {/* Inner corner - curved 3D bevel (SVG for smooth curve) */}
+          <svg
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: '280px',
+              width: '28px',
+              height: '28px',
+              overflow: 'visible',
+            }}
+          >
+            {/* Shadow blur layer */}
+            <path
+              d="M 0 0 Q 24 0, 24 24"
+              fill="none"
+              stroke="rgba(0,0,0,0.4)"
+              strokeWidth="6"
+              style={{ filter: 'blur(3px)' }}
+            />
+            {/* Highlight edge */}
+            <path
+              d="M 0 0 Q 24 0, 24 24"
+              fill="none"
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth="1"
+            />
+            {/* Gold accent line */}
+            <path
+              d="M 0 2 Q 22 2, 22 24"
+              fill="none"
+              stroke="rgba(255,215,0,0.12)"
+              strokeWidth="1"
+            />
+          </svg>
+
+          {/* Sidebar right edge - 3D bevel (from inner corner to bottom) */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '109px', /* 85px header + 24px corner radius */
+              left: '280px',
+              width: '4px',
+              bottom: 0,
+              background: 'linear-gradient(to right, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%)',
+              boxShadow: '2px 0 8px rgba(0,0,0,0.4)',
             }}
           />
 
@@ -5676,29 +5740,8 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       ),
     },
     {
-      key: 'step6_karrie_session' as keyof OnboardingProgress,
-      number: 6,
-      title: '1-on-1 Onboarding Session with Karrie',
-      description: 'Schedule an optional personalized onboarding session.',
-      isOptional: true,
-      content: (
-        <div className="space-y-4">
-          <p className="text-[#e5e4dd]/80 text-sm">
-            Book a personalized 1-on-1 onboarding session with Karrie to get your questions answered and receive tailored guidance.
-          </p>
-          <div className="rounded-lg overflow-hidden border border-white/10">
-            <iframe
-              src="https://team.smartagentalliance.com/widget/booking/gEwZSA9OwOAQWH63u5Yc"
-              style={{ width: '100%', height: '600px', border: 'none' }}
-              title="Book a session with Karrie"
-            />
-          </div>
-        </div>
-      ),
-    },
-    {
       key: 'step7_link_page' as keyof OnboardingProgress,
-      number: 7,
+      number: 6,
       title: 'Set Up Your Link Page',
       description: 'Automatically sets up your Agent Attraction Funnel Page',
       badge: 'Highly Recommended',
@@ -5760,7 +5803,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
     },
     {
       key: 'step8_download_app' as keyof OnboardingProgress,
-      number: 8,
+      number: 7,
       title: 'Download the Mobile App',
       description: 'Install the SAA Agent Portal app on your device for quick access and offline features.',
       content: (
@@ -5809,7 +5852,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
     },
     {
       key: 'step9_agent_portal' as keyof OnboardingProgress,
-      number: 9,
+      number: 8,
       title: 'Explore Agent Portal',
       description: 'Discover all the tools and resources available in your Agent Portal.',
       content: (
@@ -5846,6 +5889,27 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
           <p className="text-[#e5e4dd]/60 text-sm italic">
             Use the sidebar to navigate between sections and discover all the tools available to you.
           </p>
+        </div>
+      ),
+    },
+    {
+      key: 'step6_karrie_session' as keyof OnboardingProgress,
+      number: 9,
+      title: '1-on-1 Strategy Session with Karrie',
+      description: 'Cut through the noise. Identify the specific tools and resources that matter most for your next step at eXp.',
+      isOptional: true,
+      content: (
+        <div className="space-y-4">
+          <p className="text-[#e5e4dd]/80 text-sm">
+            Cut through the noise. Identify the specific tools and resources that matter most for your next step at eXp.
+          </p>
+          <div className="rounded-lg overflow-hidden border border-white/10">
+            <iframe
+              src="https://team.smartagentalliance.com/widget/booking/gEwZSA9OwOAQWH63u5Yc"
+              style={{ width: '100%', height: '600px', border: 'none' }}
+              title="Book a session with Karrie"
+            />
+          </div>
         </div>
       ),
     },
@@ -9968,8 +10032,8 @@ function AgentPagesSection({
       setAttractionUploadStatus('Applying B&W filter...');
       const processedBlob = await applyAutoContrastBW(bgRemovedBlob);
 
-      // Step 3b: Color version (just the cutout, no extra contrast)
-      const colorProcessedBlob = bgRemovedBlob;
+      // Step 3b: Color version - keep original image intact (no bg removal, no contrast)
+      const colorProcessedBlob = croppedBlob;
 
       // Step 4: Upload B&W to dashboard profile
       setAttractionUploadStatus('Uploading...');
