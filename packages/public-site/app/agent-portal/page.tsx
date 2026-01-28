@@ -11621,7 +11621,7 @@ return (
                           <div className="mt-2 space-y-2">
                             {/* Icon Picker Dropdown - absolute to overlay content - FIX-018 */}
                             {showIconPicker === linkId && (
-                              <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 max-h-[150px] overflow-y-auto z-[100] shadow-xl w-48">
+                              <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 max-h-[150px] overflow-y-auto z-[100] shadow-xl w-48">
                                 <div className="grid grid-cols-6 gap-1">
                                   {LINK_ICONS.map((icon) => (
                                     <button
@@ -11732,7 +11732,7 @@ return (
                     </div>
                     {/* Icon Picker Dropdown for new link - absolute to overlay content below - FIX-018 */}
                     {showIconPicker === 'new-link' && (
-                      <div className="absolute left-0 right-0 p-2 rounded-lg bg-black/95 border border-white/20 max-h-[150px] overflow-y-auto z-[50] shadow-xl" style={{ top: '44px' }}>
+                      <div className="absolute left-0 right-0 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 max-h-[150px] overflow-y-auto z-[50] shadow-xl" style={{ top: '44px' }}>
                         <div className="grid grid-cols-6 gap-1">
                           {LINK_ICONS.map((icon) => (
                             <button
@@ -12167,7 +12167,7 @@ return (
               </div>
               {/* Icon Picker for Custom 1 - fixed position to break out of containers */}
               {showSocialIconPicker === 0 && (
-                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 z-[100] max-h-[180px] overflow-y-auto w-48 shadow-xl">
+                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 z-[100] max-h-[180px] overflow-y-auto w-48 shadow-xl">
                   <div className="grid grid-cols-6 gap-1">
                     {LINK_ICONS.map((icon) => (
                       <button
@@ -12235,7 +12235,7 @@ return (
               </div>
               {/* Icon Picker for Custom 2 - fixed position to break out of containers */}
               {showSocialIconPicker === 1 && (
-                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 z-[100] max-h-[180px] overflow-y-auto w-48 shadow-xl">
+                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 z-[100] max-h-[180px] overflow-y-auto w-48 shadow-xl">
                   <div className="grid grid-cols-6 gap-1">
                     {LINK_ICONS.map((icon) => (
                       <button
