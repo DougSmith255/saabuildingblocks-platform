@@ -9942,6 +9942,8 @@ function AgentPagesSection({
       if (response.ok) {
         const data = await response.json();
         setPageData(data.page);
+        // Fire confetti to celebrate activation!
+        triggerConfetti();
         // Success is indicated by the page now being activated (shown in status banner)
       } else {
         const errorData = await response.json();
