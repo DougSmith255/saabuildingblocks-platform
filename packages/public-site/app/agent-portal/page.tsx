@@ -2857,7 +2857,7 @@ function AgentPortal() {
             }}
           />
 
-          {/* Inner corner - curved 3D bevel (SVG for smooth curve) */}
+          {/* Inner corner - curved 3D bevel (SVG for smooth curve going RIGHT then DOWN) */}
           <svg
             className="absolute pointer-events-none"
             style={{
@@ -2868,9 +2868,9 @@ function AgentPortal() {
               overflow: 'visible',
             }}
           >
-            {/* Shadow blur layer */}
+            {/* Shadow blur layer - curve goes right then down into content */}
             <path
-              d="M 0 0 Q 24 0, 24 24"
+              d="M 0 4 Q 20 4, 20 24"
               fill="none"
               stroke="rgba(0,0,0,0.4)"
               strokeWidth="6"
@@ -2878,32 +2878,60 @@ function AgentPortal() {
             />
             {/* Highlight edge */}
             <path
-              d="M 0 0 Q 24 0, 24 24"
+              d="M 0 2 Q 22 2, 22 24"
               fill="none"
               stroke="rgba(255,255,255,0.08)"
-              strokeWidth="1"
+              strokeWidth="2"
             />
             {/* Gold accent line */}
             <path
-              d="M 0 2 Q 22 2, 22 24"
+              d="M 0 3 Q 21 3, 21 24"
               fill="none"
-              stroke="rgba(255,215,0,0.12)"
+              stroke="rgba(255,215,0,0.1)"
               strokeWidth="1"
             />
           </svg>
 
-          {/* Sidebar right edge - 3D bevel (from inner corner to bottom) */}
+          {/* Sidebar right edge - 3D bevel (from inner corner to near bottom, leaving room for bottom corner) */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '109px', /* 85px header + 24px corner radius */
               left: '280px',
               width: '4px',
-              bottom: 0,
+              bottom: '24px', /* Leave room for bottom corner radius */
               background: 'linear-gradient(to right, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%)',
               boxShadow: '2px 0 8px rgba(0,0,0,0.4)',
             }}
           />
+
+          {/* Bottom corner - curved 3D bevel following sidebar's bottom-right radius */}
+          <svg
+            className="absolute pointer-events-none"
+            style={{
+              bottom: 0,
+              left: '256px', /* 280px - 24px radius */
+              width: '28px',
+              height: '28px',
+              overflow: 'visible',
+            }}
+          >
+            {/* Shadow blur layer - curve goes down then left (following the outer corner) */}
+            <path
+              d="M 28 0 Q 28 24, 4 24"
+              fill="none"
+              stroke="rgba(0,0,0,0.4)"
+              strokeWidth="6"
+              style={{ filter: 'blur(3px)' }}
+            />
+            {/* Highlight edge */}
+            <path
+              d="M 26 0 Q 26 22, 4 22"
+              fill="none"
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth="2"
+            />
+          </svg>
 
           {/* Top Bar - interactive content area */}
           <div
