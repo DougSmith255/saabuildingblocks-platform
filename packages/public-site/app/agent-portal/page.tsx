@@ -2811,7 +2811,6 @@ function AgentPortal() {
           */}
 
           {/* 1. Shadow for HEADER BOTTOM EDGE - straight line from inner corner to header corner */}
-          {/* DEBUG: RED */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2820,28 +2819,24 @@ function AgentPortal() {
               right: '24px', /* Stop before header's bottom-right corner */
               height: '6px',
               zIndex: 0,
-              background: 'linear-gradient(to bottom, rgba(255,0,0,0.5) 0%, rgba(255,0,0,0.3) 50%, transparent 100%)', /* DEBUG RED */
+              background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
             }}
           />
 
           {/* 2. Shadow for HEADER BOTTOM-RIGHT CORNER - convex curve at right edge */}
-          {/* DEBUG: GREEN - increased box size to show full gradient */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '57px',
               right: '-6px',
-              width: '40px', /* Was 30px - increased to show full gradient */
-              height: '40px', /* Was 30px - increased to show full gradient */
+              width: '40px',
+              height: '40px',
               zIndex: 0,
-              /* Center at top-left of this box, curve goes down-right */
-              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(0,255,0,0.5) 24px, rgba(0,255,0,0.3) 28px, transparent 32px)', /* DEBUG GREEN */
+              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(0,0,0,0.2) 24px, rgba(0,0,0,0.1) 28px, transparent 32px)',
             }}
           />
 
           {/* 3. Shadow for INNER CORNER - concave curve into content area */}
-          {/* Actual curve: center at (304, 109), 24px radius, curves into content */}
-          {/* DEBUG: BLUE - shadow tightened to 18-24px band (was 14-24px) */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2850,13 +2845,11 @@ function AgentPortal() {
               width: '30px',
               height: '30px',
               zIndex: 0,
-              /* Shadow only in tight 6px band near the curve edge */
-              background: 'radial-gradient(circle at 100% 100%, transparent 18px, rgba(0,0,255,0.3) 20px, rgba(0,0,255,0.5) 23px, transparent 24px)', /* DEBUG BLUE - TIGHTENED */
+              background: 'radial-gradient(circle at 100% 100%, transparent 18px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.2) 23px, transparent 24px)',
             }}
           />
 
           {/* 4. Shadow for SIDEBAR RIGHT EDGE - straight line */}
-          {/* DEBUG: YELLOW */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -2865,23 +2858,20 @@ function AgentPortal() {
               width: '6px',
               bottom: '24px', /* Stop before sidebar corner */
               zIndex: 0,
-              background: 'linear-gradient(to right, rgba(255,255,0,0.5) 0%, rgba(255,255,0,0.3) 50%, transparent 100%)', /* DEBUG YELLOW */
+              background: 'linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
             }}
           />
 
           {/* 5. Shadow for SIDEBAR BOTTOM-RIGHT CORNER - convex curve */}
-          {/* Sidebar corner: 24px radius, center at (280-24, bottom-24) = (256, bottom-24) */}
-          {/* DEBUG: MAGENTA - moved DOWN slightly (was bottom: 0px) */}
           <div
             className="absolute pointer-events-none"
             style={{
-              bottom: '-6px', /* Was 0px - moved down 6px */
-              left: '256px', /* Corner center x = 280 - 24 = 256 */
+              bottom: '-6px',
+              left: '256px',
               width: '30px',
               height: '30px',
               zIndex: 0,
-              /* Circle center at 0% 0% = top-left of box */
-              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(255,0,255,0.5) 24px, rgba(255,0,255,0.3) 28px, transparent 32px)', /* DEBUG MAGENTA */
+              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(0,0,0,0.2) 24px, rgba(0,0,0,0.1) 28px, transparent 32px)',
             }}
           />
 
