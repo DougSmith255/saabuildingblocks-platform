@@ -1662,6 +1662,91 @@ function AgentPortal() {
     });
   };
 
+  // Apply AUTO contrast B&W filter using percentile-based levels + S-curve
+  // This gives semi-high contrast results automatically regardless of input image
+  const applyAutoContrastBW = async (imageSource: File | Blob): Promise<Blob> => {
+    const img = new Image();
+    const imageUrl = URL.createObjectURL(imageSource);
+
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
+      img.onerror = reject;
+      img.src = imageUrl;
+    });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+      URL.revokeObjectURL(imageUrl);
+      throw new Error('Could not get canvas context');
+    }
+
+    // Draw image
+    ctx.drawImage(img, 0, 0);
+    URL.revokeObjectURL(imageUrl);
+
+    // Get image data
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    // Convert to grayscale and collect values (only for non-transparent pixels)
+    const grayValues: number[] = [];
+    for (let i = 0; i < data.length; i += 4) {
+      const alpha = data[i + 3];
+      if (alpha > 0) { // Only consider non-transparent pixels
+        // Luminance formula
+        const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        grayValues.push(gray);
+      }
+    }
+
+    // Find 2nd and 98th percentile for auto-levels
+    const sorted = [...grayValues].sort((a, b) => a - b);
+    const lowIdx = Math.floor(sorted.length * 0.02);
+    const highIdx = Math.floor(sorted.length * 0.98);
+    const low = sorted[lowIdx] || 0;
+    const high = sorted[highIdx] || 255;
+    const range = high - low || 1; // Prevent division by zero
+
+    // Apply levels stretch + S-curve to all pixels
+    for (let i = 0; i < data.length; i += 4) {
+      const alpha = data[i + 3];
+      if (alpha > 0) {
+        // Convert to grayscale
+        let gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+
+        // Stretch to full range (auto-levels)
+        gray = ((gray - low) / range) * 255;
+        gray = Math.max(0, Math.min(255, gray));
+
+        // Apply S-curve for semi-high contrast (strength ~1.3)
+        let normalized = gray / 255;
+        if (normalized < 0.5) {
+          normalized = 0.5 * Math.pow(2 * normalized, 1.3);
+        } else {
+          normalized = 1 - 0.5 * Math.pow(2 * (1 - normalized), 1.3);
+        }
+        gray = normalized * 255;
+
+        // Set RGB to grayscale value
+        data[i] = data[i + 1] = data[i + 2] = Math.round(gray);
+      }
+      // Alpha channel (data[i + 3]) stays unchanged
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+
+    return new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error('Failed to create blob'));
+      }, 'image/png');
+    });
+  };
+
   // Apply color contrast filter (no grayscale, just contrast adjustment)
   const applyColorContrastFilter = async (imageSource: File | Blob, contrast: number): Promise<Blob> => {
     const img = new Image();
@@ -1695,101 +1780,203 @@ function AgentPortal() {
     });
   };
 
-  // Open image editor modal when user selects a file
+  // Process and upload profile picture directly (no modal)
+  // Automatically: crops center, removes background, applies auto-contrast B&W
   const handleProfilePictureChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) {
+      console.log('[ImageUpload] No file selected or no user');
+      return;
+    }
+
+    console.log('[ImageUpload] File selected:', file.name, file.type, file.size);
+
+    // Validate file type
+    const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+
+    if (!file.type.startsWith('image/') && !validExtensions.includes(fileExtension)) {
+      setDashboardUploadError('Please select an image file (JPEG, PNG, GIF, or WebP)');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setDashboardUploadError('Image must be less than 5MB');
+      return;
+    }
+
+    // Validate image dimensions (minimum 900x900)
+    const MIN_DIMENSION = 900;
+    let imageDimensions: { width: number; height: number };
+
     try {
-      const file = e.target.files?.[0];
-      if (!file || !user) {
-        console.log('[ImageEditor] No file selected or no user');
-        return;
+      imageDimensions = await new Promise<{ width: number; height: number }>((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          console.log('[ImageUpload] Image loaded:', img.width, 'x', img.height);
+          resolve({ width: img.width, height: img.height });
+          URL.revokeObjectURL(img.src);
+        };
+        img.onerror = (err) => {
+          console.error('[ImageUpload] Image load error:', err);
+          reject(new Error('Failed to load image'));
+          URL.revokeObjectURL(img.src);
+        };
+        img.src = URL.createObjectURL(file);
+      });
+    } catch (dimError) {
+      console.error('[ImageUpload] Dimension check failed:', dimError);
+      setDashboardUploadError('Failed to load image. Please try another file.');
+      return;
+    }
+
+    if (imageDimensions.width < MIN_DIMENSION || imageDimensions.height < MIN_DIMENSION) {
+      setDashboardUploadError(`Image must be at least ${MIN_DIMENSION}x${MIN_DIMENSION} pixels. Your image is ${imageDimensions.width}x${imageDimensions.height}.`);
+      return;
+    }
+
+    // Start processing directly (no modal)
+    console.log('[ImageUpload] Starting automatic processing');
+    setUploadSource('dashboard');
+    setIsUploadingDashboardImage(true);
+    setDashboardUploadError(null);
+    setDashboardUploadStatus('Processing image...');
+
+    try {
+      const token = localStorage.getItem('agent_portal_token');
+
+      // Step 1: Center crop (use full image, crop to square from center)
+      setDashboardUploadStatus('Cropping image...');
+      const croppedBlob = await cropImage(file, 0, 0, 100); // Full image, cropImage handles center square
+
+      // Step 2: Remove background
+      setDashboardUploadStatus('Removing background...');
+      const { removeBackground } = await import('@imgly/background-removal');
+      const bgRemovedBlob = await removeBackground(croppedBlob, {
+        progress: (key: string, current: number, total: number) => {
+          const percent = total > 0 ? Math.round((current / total) * 100) : 0;
+          if (percent > 0) {
+            setDashboardUploadStatus(`Removing background... ${percent}%`);
+          }
+        },
+      });
+
+      // Step 3: Apply AUTO B&W contrast (percentile + S-curve)
+      setDashboardUploadStatus('Applying B&W filter...');
+      const processedBlob = await applyAutoContrastBW(bgRemovedBlob);
+
+      // Step 3b: Color version (no contrast change, just the cutout)
+      setDashboardUploadStatus('Creating color version...');
+      const colorProcessedBlob = bgRemovedBlob; // Use bg-removed directly for color
+
+      // Step 4: Upload B&W to dashboard profile
+      setDashboardUploadStatus('Uploading...');
+      const dashboardFormData = new FormData();
+      dashboardFormData.append('file', processedBlob, 'profile.png');
+      dashboardFormData.append('userId', user.id);
+
+      const dashboardResponse = await fetch(`${API_URL}/api/users/profile-picture`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: dashboardFormData,
+      });
+
+      if (!dashboardResponse.ok) {
+        const errorData = await dashboardResponse.json();
+        throw new Error(errorData.message || 'Failed to upload');
       }
 
-      console.log('[ImageEditor] File selected:', file.name, file.type, file.size);
+      const dashboardData = await dashboardResponse.json();
+      const cacheBustUrl = `${toCdnUrl(dashboardData.url)}?v=${Date.now()}`;
+      const updatedUser = { ...user, profilePictureUrl: cacheBustUrl };
+      setUser(updatedUser);
+      setProfileImageError(false);
+      setProfileImageLoading(true);
+      localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
 
-      // Validate file type
-      const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+      // Step 5: Upload B&W to attraction page
+      setDashboardUploadStatus('Syncing to attraction page...');
+      let pageResponse = await fetch(`${API_URL}/api/agent-pages/${user.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
 
-      if (!file.type.startsWith('image/') && !validExtensions.includes(fileExtension)) {
-        setDashboardUploadError('Please select an image file (JPEG, PNG, GIF, or WebP)');
-        return;
-      }
-
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setDashboardUploadError('Image must be less than 5MB');
-        return;
-      }
-
-      // Validate image dimensions (minimum 900x900)
-      const MIN_DIMENSION = 900;
-      let imageDimensions: { width: number; height: number };
-
-      try {
-        imageDimensions = await new Promise<{ width: number; height: number }>((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => {
-            console.log('[ImageEditor] Image loaded:', img.width, 'x', img.height);
-            resolve({ width: img.width, height: img.height });
-            URL.revokeObjectURL(img.src);
-          };
-          img.onerror = (err) => {
-            console.error('[ImageEditor] Image load error:', err);
-            reject(new Error('Failed to load image'));
-            URL.revokeObjectURL(img.src);
-          };
-          img.src = URL.createObjectURL(file);
-        });
-      } catch (dimError) {
-        console.error('[ImageEditor] Dimension check failed:', dimError);
-        setDashboardUploadError('Failed to load image. Please try another file.');
-        return;
-      }
-
-      if (imageDimensions.width < MIN_DIMENSION || imageDimensions.height < MIN_DIMENSION) {
-        setDashboardUploadError(`Image must be at least ${MIN_DIMENSION}x${MIN_DIMENSION} pixels. Your image is ${imageDimensions.width}x${imageDimensions.height}.`);
-        return;
-      }
-
-      // Open editor modal with the image
-      console.log('[ImageEditor] Opening editor modal from dashboard');
-      setUploadSource('dashboard'); // Track that this came from dashboard
-      setPendingImageFile(file);
-      const originalUrl = URL.createObjectURL(file);
-      setPendingImageUrl(originalUrl);
-      setPendingBgRemovedUrl(null); // Reset bg removed preview
-      setPendingImageDimensions(imageDimensions);
-      setPreviewContrastLevel(130);
-      setCropArea({ x: 0, y: 0, size: 100 });
-      setShowImageEditor(true);
-      setDashboardUploadError(null);
-
-      // Start background removal for preview
-      setIsRemovingBackground(true);
-      setBgRemovalProgress(0);
-      try {
-        const { removeBackground } = await import('@imgly/background-removal');
-        const bgRemovedBlob = await removeBackground(file, {
-          progress: (key: string, current: number, total: number) => {
-            // Track progress across all phases
-            const progress = total > 0 ? Math.round((current / total) * 100) : 0;
-            // Update progress for any phase that reports it
-            if (progress > 0) {
-              setBgRemovalProgress(progress);
-            }
+      // If page doesn't exist, create it first
+      if (!pageResponse.ok && pageResponse.status === 404) {
+        setDashboardUploadStatus('Creating your page...');
+        const createResponse = await fetch(`${API_URL}/api/agent-pages`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
         });
-        const bgRemovedUrl = URL.createObjectURL(bgRemovedBlob);
-        setPendingBgRemovedUrl(bgRemovedUrl);
-      } catch (bgErr) {
-        console.error('[ImageEditor] Background removal failed:', bgErr);
-        // Continue without bg removal preview - will still work on confirm
-      } finally {
-        setIsRemovingBackground(false);
+        if (createResponse.ok) {
+          pageResponse = createResponse;
+        }
       }
-    } catch (error) {
-      console.error('[ImageEditor] Unexpected error:', error);
-      setDashboardUploadError('An unexpected error occurred. Please try again.');
+
+      if (pageResponse.ok) {
+        const currentPageData = await pageResponse.json();
+        if (currentPageData.page?.id) {
+          window.dispatchEvent(new CustomEvent('agent-page-created', {
+            detail: { page: currentPageData.page }
+          }));
+
+          // Upload B&W version
+          const attractionFormData = new FormData();
+          attractionFormData.append('file', processedBlob, 'profile.png');
+          attractionFormData.append('pageId', currentPageData.page.id);
+
+          const uploadResponse = await fetch(`${API_URL}/api/agent-pages/upload-image`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: attractionFormData,
+          });
+
+          if (uploadResponse.ok) {
+            const uploadResult = await uploadResponse.json();
+            if (uploadResult.data?.url) {
+              const cacheBustUrl = `${uploadResult.data.url}?v=${Date.now()}`;
+              window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
+                detail: { url: cacheBustUrl }
+              }));
+            }
+          }
+
+          // Step 6: Upload COLOR version
+          setDashboardUploadStatus('Uploading color version...');
+          const colorFormData = new FormData();
+          colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
+          colorFormData.append('pageId', currentPageData.page.id);
+
+          const colorResponse = await fetch(`${API_URL}/api/agent-pages/upload-color-image`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: colorFormData,
+          });
+
+          if (colorResponse.ok) {
+            const colorResult = await colorResponse.json();
+            if (colorResult.data?.url) {
+              const colorCacheBustUrl = `${colorResult.data.url}?v=${Date.now()}`;
+              window.dispatchEvent(new CustomEvent('agent-page-color-image-updated', {
+                detail: { url: colorCacheBustUrl }
+              }));
+            }
+          }
+        }
+      }
+
+      setDashboardUploadStatus('Profile picture updated!');
+      setTimeout(() => setDashboardUploadStatus(null), 3000);
+    } catch (err) {
+      console.error('[ImageUpload] Error:', err);
+      setDashboardUploadError(err instanceof Error ? err.message : 'Failed to upload');
+      setDashboardUploadStatus(null);
+    } finally {
+      setIsUploadingDashboardImage(false);
+      setUploadSource(null);
     }
   };
 
@@ -3322,6 +3509,8 @@ function AgentPortal() {
                 colorContrastLevel={colorContrastLevel}
                 applyBWContrastFilter={applyBWContrastFilter}
                 applyColorContrastFilter={applyColorContrastFilter}
+                cropImage={cropImage}
+                applyAutoContrastBW={applyAutoContrastBW}
                 originalImageFile={originalImageFile}
                 setOriginalImageFile={setOriginalImageFile}
                 setPendingImageFile={setPendingImageFile}
@@ -3361,6 +3550,8 @@ function AgentPortal() {
                 colorContrastLevel={colorContrastLevel}
                 applyBWContrastFilter={applyBWContrastFilter}
                 applyColorContrastFilter={applyColorContrastFilter}
+                cropImage={cropImage}
+                applyAutoContrastBW={applyAutoContrastBW}
                 originalImageFile={originalImageFile}
                 setOriginalImageFile={setOriginalImageFile}
                 setPendingImageFile={setPendingImageFile}
@@ -4924,289 +5115,6 @@ function AgentPortal() {
               >
                 Got it, let&apos;s explore the courses!
               </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Image Editor Modal */}
-      {showImageEditor && pendingImageUrl && (
-        <div
-          className="fixed inset-0 z-[110] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
-          onClick={handleCancelImageEdit}
-          onWheel={(e) => e.stopPropagation()}
-        >
-          {/* Backdrop */}
-          <div className="fixed inset-0 bg-black md:bg-black/90 md:backdrop-blur-md" />
-
-          {/* Modal */}
-          <div
-            className="relative w-full max-w-lg my-auto bg-[#151517] rounded-2xl border border-white/10 shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
-            onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-[#151517] rounded-t-2xl">
-              <div>
-                <h2 className="text-lg font-semibold text-[#ffd700]">
-                  Step {imageEditorStep}: {imageEditorStep === 1 ? 'Color Version' : 'B&W Version'}
-                </h2>
-                <p className="text-xs text-[#e5e4dd]/50 mt-0.5">
-                  {imageEditorStep === 1
-                    ? '(Used for Link Page when Color Photo is enabled)'
-                    : '(Used for Agent Page and Link Page default)'}
-                </p>
-              </div>
-              <button
-                onClick={handleCancelImageEdit}
-                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Step indicators */}
-            <div className="flex justify-center gap-2 pt-3 px-4">
-              <div className={`w-2 h-2 rounded-full transition-colors ${imageEditorStep === 1 ? 'bg-[#ffd700]' : 'bg-white/20'}`} />
-              <div className={`w-2 h-2 rounded-full transition-colors ${imageEditorStep === 2 ? 'bg-[#ffd700]' : 'bg-white/20'}`} />
-            </div>
-
-            {/* Image Preview with Crop */}
-            <div className="p-4">
-              {/* Background removal progress indicator */}
-              {isRemovingBackground && (
-                <div className="mb-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
-                  <span>Removing background...</span>
-                </div>
-              )}
-
-              <div
-                ref={imageEditorRef}
-                className="relative mx-auto rounded-lg overflow-hidden select-none"
-                style={{
-                  maxWidth: '400px',
-                  aspectRatio: '1',
-                  // Checkerboard pattern to show transparency
-                  background: pendingBgRemovedUrl
-                    ? 'repeating-conic-gradient(#2a2a2a 0% 25%, #1a1a1a 0% 50%) 50% / 20px 20px'
-                    : '#000',
-                  touchAction: 'none', // Prevent scroll while dragging on mobile
-                }}
-              >
-                {/* Image with filter based on step: Color (step 1) or B&W (step 2) */}
-                <img
-                  src={pendingBgRemovedUrl || pendingImageUrl}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                  style={{
-                    filter: imageEditorStep === 1
-                      ? `contrast(${colorContrastLevel}%)`
-                      : `grayscale(100%) contrast(${bwContrastLevel}%)`,
-                  }}
-                  draggable={false}
-                />
-
-                {/* Crop overlay - darkens area outside the crop */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background: `
-                      linear-gradient(to right, rgba(0,0,0,0.7) ${cropArea.x}%, transparent ${cropArea.x}%),
-                      linear-gradient(to left, rgba(0,0,0,0.7) ${100 - cropArea.x - cropArea.size}%, transparent ${100 - cropArea.x - cropArea.size}%),
-                      linear-gradient(to bottom, rgba(0,0,0,0.7) ${cropArea.y}%, transparent ${cropArea.y}%),
-                      linear-gradient(to top, rgba(0,0,0,0.7) ${100 - cropArea.y - cropArea.size}%, transparent ${100 - cropArea.y - cropArea.size}%)
-                    `,
-                  }}
-                />
-
-                {/* Draggable crop border - only interactive in Step 1 */}
-                <div
-                  className={`absolute border-2 ${imageEditorStep === 1 ? 'border-[#ffd700] cursor-move' : 'border-[#e5e4dd]/30 cursor-not-allowed'}`}
-                  style={{
-                    left: `${cropArea.x}%`,
-                    top: `${cropArea.y}%`,
-                    width: `${cropArea.size}%`,
-                    height: `${cropArea.size}%`,
-                  }}
-                  onMouseDown={(e) => {
-                    if (imageEditorStep !== 1) return; // Locked in step 2
-                    e.preventDefault();
-                    const containerRect = imageEditorRef.current?.getBoundingClientRect();
-                    if (!containerRect) return;
-
-                    const startX = e.clientX;
-                    const startY = e.clientY;
-                    const startCropX = cropArea.x;
-                    const startCropY = cropArea.y;
-
-                    const handleMouseMove = (moveEvent: MouseEvent) => {
-                      const deltaX = ((moveEvent.clientX - startX) / containerRect.width) * 100;
-                      const deltaY = ((moveEvent.clientY - startY) / containerRect.height) * 100;
-                      const maxPos = 100 - cropArea.size;
-
-                      setCropArea(prev => ({
-                        ...prev,
-                        x: Math.max(0, Math.min(maxPos, startCropX + deltaX)),
-                        y: Math.max(0, Math.min(maxPos, startCropY + deltaY)),
-                      }));
-                    };
-
-                    const handleMouseUp = () => {
-                      document.removeEventListener('mousemove', handleMouseMove);
-                      document.removeEventListener('mouseup', handleMouseUp);
-                    };
-
-                    document.addEventListener('mousemove', handleMouseMove);
-                    document.addEventListener('mouseup', handleMouseUp);
-                  }}
-                  onTouchStart={(e) => {
-                    if (imageEditorStep !== 1) return; // Locked in step 2
-                    const touch = e.touches[0];
-                    const containerRect = imageEditorRef.current?.getBoundingClientRect();
-                    if (!containerRect || !touch) return;
-
-                    const startX = touch.clientX;
-                    const startY = touch.clientY;
-                    const startCropX = cropArea.x;
-                    const startCropY = cropArea.y;
-
-                    const handleTouchMove = (moveEvent: TouchEvent) => {
-                      const moveTouch = moveEvent.touches[0];
-                      if (!moveTouch) return;
-
-                      const deltaX = ((moveTouch.clientX - startX) / containerRect.width) * 100;
-                      const deltaY = ((moveTouch.clientY - startY) / containerRect.height) * 100;
-                      const maxPos = 100 - cropArea.size;
-
-                      setCropArea(prev => ({
-                        ...prev,
-                        x: Math.max(0, Math.min(maxPos, startCropX + deltaX)),
-                        y: Math.max(0, Math.min(maxPos, startCropY + deltaY)),
-                      }));
-                    };
-
-                    const handleTouchEnd = () => {
-                      document.removeEventListener('touchmove', handleTouchMove);
-                      document.removeEventListener('touchend', handleTouchEnd);
-                    };
-
-                    document.addEventListener('touchmove', handleTouchMove, { passive: false });
-                    document.addEventListener('touchend', handleTouchEnd);
-                  }}
-                >
-                  {/* Drag handle indicator in center - only show in step 1 */}
-                  {imageEditorStep === 1 ? (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="w-8 h-8 rounded-full bg-[#ffd700]/20 border border-[#ffd700]/50 flex items-center justify-center">
-                        <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                        </svg>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="w-8 h-8 rounded-full bg-white/5 border border-white/20 flex items-center justify-center">
-                        <svg className="w-4 h-4 text-[#e5e4dd]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <p className="text-xs text-[#e5e4dd]/50 mt-3 text-center">
-                {imageEditorStep === 1
-                  ? 'Drag the crop area to reposition • Background removed automatically'
-                  : 'Crop position locked from Step 1 • Adjust B&W contrast below'}
-              </p>
-
-              {/* Crop Size Slider - only in Step 1 */}
-              {imageEditorStep === 1 && (
-                <div className="mt-4">
-                  <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
-                    Zoom: {cropArea.size}%
-                    {minCropSizePercent < 100 && (
-                      <span className="text-xs text-[#e5e4dd]/50 ml-2">(min {minCropSizePercent}% for 900px)</span>
-                    )}
-                  </label>
-                  <input
-                    type="range"
-                    min={minCropSizePercent}
-                    max="100"
-                    value={cropArea.size}
-                    onChange={(e) => {
-                      const newSize = Number(e.target.value);
-                      // Adjust position to keep crop within bounds
-                      const maxPos = 100 - newSize;
-                      setCropArea({
-                        x: Math.min(cropArea.x, maxPos),
-                        y: Math.min(cropArea.y, maxPos),
-                        size: newSize,
-                      });
-                    }}
-                    className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
-                  />
-                </div>
-              )}
-
-              {/* Contrast Slider - different for each step */}
-              <div className={`mt-4 ${imageEditorStep === 1 ? 'pt-4 border-t border-white/10' : ''}`}>
-                <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
-                  {imageEditorStep === 1 ? 'Color Contrast' : 'B&W Contrast'}: {imageEditorStep === 1 ? colorContrastLevel : bwContrastLevel}%
-                </label>
-                <input
-                  type="range"
-                  min="80"
-                  max="200"
-                  value={imageEditorStep === 1 ? colorContrastLevel : bwContrastLevel}
-                  onChange={(e) => {
-                    if (imageEditorStep === 1) {
-                      setColorContrastLevel(Number(e.target.value));
-                    } else {
-                      setBwContrastLevel(Number(e.target.value));
-                    }
-                  }}
-                  className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
-                />
-              </div>
-            </div>
-
-            {/* Actions - Three buttons: Cancel | Next/Back | Upload */}
-            <div className="flex gap-3 p-4 border-t border-white/10">
-              <button
-                type="button"
-                onClick={handleCancelImageEdit}
-                className="px-4 py-3 rounded-lg text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (imageEditorStep === 1) {
-                    setImageEditorStep(2);
-                    setHasVisitedStep2(true);
-                  } else {
-                    setImageEditorStep(1);
-                  }
-                }}
-                className="flex-1 px-4 py-3 rounded-lg text-[#e5e4dd] bg-white/10 hover:bg-white/20 border border-white/10 transition-colors"
-              >
-                {imageEditorStep === 1 ? 'Next →' : '← Back'}
-              </button>
-              {(imageEditorStep === 2 || hasVisitedStep2) && (
-                <button
-                  type="button"
-                  onClick={handleConfirmImageEdit}
-                  className="px-6 py-3 rounded-lg text-black font-semibold bg-[#ffd700] hover:bg-[#ffe55c] transition-all animate-in fade-in duration-300"
-                >
-                  Upload
-                </button>
-              )}
             </div>
           </div>
         </div>
@@ -9219,6 +9127,8 @@ interface AgentPagesSectionProps {
   colorContrastLevel: number; // For color version of profile image
   applyBWContrastFilter: (imageSource: File | Blob, contrast: number) => Promise<Blob>;
   applyColorContrastFilter: (imageSource: File | Blob, contrast: number) => Promise<Blob>; // For color version
+  cropImage: (file: File, cropX: number, cropY: number, cropSize: number) => Promise<Blob>;
+  applyAutoContrastBW: (imageSource: File | Blob) => Promise<Blob>;
   originalImageFile: File | null;
   setOriginalImageFile: React.Dispatch<React.SetStateAction<File | null>>;
   // Image editor modal props
@@ -9257,6 +9167,8 @@ function AgentPagesSection({
   colorContrastLevel,
   applyBWContrastFilter,
   applyColorContrastFilter,
+  cropImage,
+  applyAutoContrastBW,
   originalImageFile,
   setOriginalImageFile,
   setPendingImageFile,
@@ -10016,11 +9928,10 @@ function AgentPagesSection({
     }
   };
 
-  // Open image editor modal when user selects a file from attraction page section
+  // Process and upload profile picture directly (no modal) - from attraction page section
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    // Note: pageData check removed - page will be created during upload if needed
 
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
@@ -10062,39 +9973,139 @@ function AgentPagesSection({
       return;
     }
 
-    // Open the image editor modal instead of uploading directly
-    console.log('[ImageEditor] Opening editor modal from attraction page section');
-    setUploadSource('agent-pages'); // Track that this came from agent pages section
-    setPendingImageFile(file);
-    const originalUrl = URL.createObjectURL(file);
-    setPendingImageUrl(originalUrl);
-    setPendingBgRemovedUrl(null); // Reset bg removed preview
-    setPendingImageDimensions(dimensions);
-    setPreviewContrastLevel(contrastLevel || 130);
-    setCropArea({ x: 0, y: 0, size: 100 });
-    setShowImageEditor(true);
+    // Start processing directly (no modal)
+    console.log('[ImageUpload] Starting automatic processing from attraction page');
+    setUploadSource('agent-pages');
+    setIsUploadingImage(true);
     setAttractionUploadError(null);
+    setAttractionUploadStatus('Processing image...');
 
-    // Start background removal for preview
-    setIsRemovingBackground(true);
-    setBgRemovalProgress(0);
     try {
+      const token = localStorage.getItem('agent_portal_token');
+
+      // Step 1: Center crop
+      setAttractionUploadStatus('Cropping image...');
+      const croppedBlob = await cropImage(file, 0, 0, 100);
+
+      // Step 2: Remove background
+      setAttractionUploadStatus('Removing background...');
       const { removeBackground } = await import('@imgly/background-removal');
-      const bgRemovedBlob = await removeBackground(file, {
+      const bgRemovedBlob = await removeBackground(croppedBlob, {
         progress: (key: string, current: number, total: number) => {
-          const progress = total > 0 ? Math.round((current / total) * 100) : 0;
-          if (progress > 0) {
-            setBgRemovalProgress(progress);
+          const percent = total > 0 ? Math.round((current / total) * 100) : 0;
+          if (percent > 0) {
+            setAttractionUploadStatus(`Removing background... ${percent}%`);
           }
         },
       });
-      const bgRemovedUrl = URL.createObjectURL(bgRemovedBlob);
-      setPendingBgRemovedUrl(bgRemovedUrl);
-    } catch (bgErr) {
-      console.error('[ImageEditor] Background removal failed:', bgErr);
-      // Continue without bg removal preview - will still work on confirm
+
+      // Step 3: Apply AUTO B&W contrast
+      setAttractionUploadStatus('Applying B&W filter...');
+      const processedBlob = await applyAutoContrastBW(bgRemovedBlob);
+
+      // Step 3b: Color version (just the cutout, no extra contrast)
+      const colorProcessedBlob = bgRemovedBlob;
+
+      // Step 4: Upload B&W to dashboard profile
+      setAttractionUploadStatus('Uploading...');
+      const dashboardFormData = new FormData();
+      dashboardFormData.append('file', processedBlob, 'profile.png');
+      dashboardFormData.append('userId', user.id);
+
+      const dashboardResponse = await fetch(`${API_URL}/api/users/profile-picture`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: dashboardFormData,
+      });
+
+      if (dashboardResponse.ok) {
+        const dashboardData = await dashboardResponse.json();
+        const cacheBustUrl = `${toCdnUrl(dashboardData.url)}?v=${Date.now()}`;
+        // Update parent component's user state
+        window.dispatchEvent(new CustomEvent('profile-picture-updated', {
+          detail: { url: cacheBustUrl }
+        }));
+      }
+
+      // Step 5: Upload to agent page
+      setAttractionUploadStatus('Syncing to attraction page...');
+      let pageResponse = await fetch(`${API_URL}/api/agent-pages/${user.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      if (!pageResponse.ok && pageResponse.status === 404) {
+        setAttractionUploadStatus('Creating your page...');
+        const createResponse = await fetch(`${API_URL}/api/agent-pages`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        if (createResponse.ok) {
+          pageResponse = createResponse;
+        }
+      }
+
+      if (pageResponse.ok) {
+        const currentPageData = await pageResponse.json();
+        if (currentPageData.page?.id) {
+          // Update local state
+          setPageData(currentPageData.page);
+
+          // Upload B&W version
+          const attractionFormData = new FormData();
+          attractionFormData.append('file', processedBlob, 'profile.png');
+          attractionFormData.append('pageId', currentPageData.page.id);
+
+          const uploadResponse = await fetch(`${API_URL}/api/agent-pages/upload-image`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: attractionFormData,
+          });
+
+          if (uploadResponse.ok) {
+            const uploadResult = await uploadResponse.json();
+            if (uploadResult.data?.url) {
+              const cacheBustUrl = `${uploadResult.data.url}?v=${Date.now()}`;
+              setPageData((prev: AgentPageData | null) => prev ? { ...prev, image_url: cacheBustUrl } : prev);
+            }
+          }
+
+          // Step 6: Upload COLOR version
+          setAttractionUploadStatus('Uploading color version...');
+          const colorFormData = new FormData();
+          colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
+          colorFormData.append('pageId', currentPageData.page.id);
+
+          const colorResponse = await fetch(`${API_URL}/api/agent-pages/upload-color-image`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: colorFormData,
+          });
+
+          if (colorResponse.ok) {
+            const colorResult = await colorResponse.json();
+            if (colorResult.data?.url) {
+              const colorCacheBustUrl = `${colorResult.data.url}?v=${Date.now()}`;
+              setPageData((prev: AgentPageData | null) => prev ? { ...prev, color_image_url: colorCacheBustUrl } : prev);
+            }
+          }
+        }
+      }
+
+      setAttractionUploadStatus('Profile picture updated!');
+      setTimeout(() => setAttractionUploadStatus(null), 3000);
+    } catch (err) {
+      console.error('[ImageUpload] Error:', err);
+      setAttractionUploadError(err instanceof Error ? err.message : 'Failed to upload');
+      setAttractionUploadStatus(null);
     } finally {
-      setIsRemovingBackground(false);
+      setIsUploadingImage(false);
+      setUploadSource(null);
+      if (attractionFileInputRef.current) {
+        attractionFileInputRef.current.value = '';
+      }
     }
   };
 
