@@ -2784,8 +2784,51 @@ function AgentPortal() {
         {/* === FIXED L-FRAME CONTAINER === */}
         <div className="fixed inset-0 z-40 pointer-events-none">
 
-          {/* === UNIFIED L-FRAME BACKGROUND === */}
-          {/* Header: Full width with outer corner radius (no shadow - sidebar covers left side) */}
+          {/* === LAYER 0: SHADOWS (behind everything) === */}
+
+          {/* Shadow for sidebar right edge - light grey, soft */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: '280px',
+              width: '8px',
+              bottom: 0,
+              zIndex: 0,
+              background: 'linear-gradient(to right, rgba(120,120,120,0.15) 0%, rgba(0,0,0,0.3) 30%, transparent 100%)',
+              borderBottomRightRadius: '24px',
+            }}
+          />
+
+          {/* Shadow for header bottom edge - only content-facing portion */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: '280px',
+              right: 0,
+              height: '8px',
+              zIndex: 0,
+              background: 'linear-gradient(to bottom, rgba(120,120,120,0.15) 0%, rgba(0,0,0,0.3) 30%, transparent 100%)',
+            }}
+          />
+
+          {/* Shadow for inner corner curve - light grey following the curve */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '85px',
+              left: '280px',
+              width: '32px',
+              height: '32px',
+              zIndex: 0,
+              background: 'radial-gradient(circle at 100% 100%, transparent 24px, rgba(120,120,120,0.15) 24px, rgba(0,0,0,0.25) 28px, transparent 32px)',
+            }}
+          />
+
+          {/* === LAYER 1: BASE BACKGROUNDS === */}
+
+          {/* Header: Full width with outer corner radius */}
           <div
             className="absolute top-0 left-0 right-0 h-[85px]"
             style={{
@@ -2795,19 +2838,17 @@ function AgentPortal() {
             }}
           />
 
-          {/* Sidebar: Below header with outer corner radius + 3D edge on right (z-index 2 to sit above header) */}
+          {/* Sidebar: Below header with outer corner radius */}
           <div
             className="absolute top-[85px] left-0 bottom-0 w-[280px]"
             style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
               borderBottomRightRadius: '24px',
-              zIndex: 2,
-              /* 3D edge: tight shadow + grey highlight */
-              boxShadow: 'inset -1px 0 0 rgba(80,80,80,0.3), inset -2px 0 0 rgba(0,0,0,0.5), 2px 0 4px rgba(0,0,0,0.6)',
+              zIndex: 1,
             }}
           />
 
-          {/* Inner Corner: Fills junction gap with 24px curved cutout + 3D edge following curve */}
+          {/* Inner Corner: Fills junction gap with 24px curved cutout */}
           <div
             className="absolute"
             style={{
@@ -2816,28 +2857,11 @@ function AgentPortal() {
               width: '24px',
               height: '24px',
               background: 'radial-gradient(circle at 100% 100%, transparent 24px, rgba(14, 14, 14, 0.98) 24px)',
-              zIndex: 3,
-              /* tight drop-shadow */
-              filter: 'drop-shadow(2px 2px 3px rgba(0,0,0,0.6))',
-            }}
-          />
-
-          {/* Header bottom edge shadow - only on content-facing portion (after sidebar width) */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '85px',
-              left: '280px',
-              right: 0,
-              height: '2px',
               zIndex: 1,
-              /* Tight gradient: grey highlight 1px + dark shadow 2px */
-              background: 'linear-gradient(to bottom, rgba(80,80,80,0.3) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.6)',
             }}
           />
 
-          {/* === UNIFIED GLASS TEXTURE (backgroundAttachment: fixed for seamless alignment) === */}
+          {/* === LAYER 2: GLASS TEXTURE (on top of backgrounds) === */}
 
           {/* Glass texture overlay for header */}
           <div
@@ -2849,6 +2873,7 @@ function AgentPortal() {
               `,
               backgroundAttachment: 'fixed',
               borderBottomRightRadius: '24px',
+              zIndex: 2,
             }}
           />
 
@@ -2862,6 +2887,7 @@ function AgentPortal() {
               `,
               backgroundAttachment: 'fixed',
               borderBottomRightRadius: '24px',
+              zIndex: 2,
             }}
           />
 
@@ -2880,6 +2906,7 @@ function AgentPortal() {
               backgroundAttachment: 'fixed',
               WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
               maskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
+              zIndex: 2,
             }}
           />
 
