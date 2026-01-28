@@ -899,7 +899,13 @@ function AgentPortal() {
     // After fade out, switch section and scroll to top
     setTimeout(() => {
       setActiveSectionRaw(newSection);
+
+      // Scroll to top - both window (mobile) and scroll container (desktop)
       window.scrollTo({ top: 0, behavior: 'instant' });
+      const scrollContainer = document.getElementById('agent-portal-scroll-container');
+      if (scrollContainer) {
+        scrollContainer.scrollTop = 0;
+      }
 
       // After a tiny delay, fade in
       setTimeout(() => {
@@ -2785,64 +2791,98 @@ function AgentPortal() {
         <div className="fixed inset-0 z-40 pointer-events-none">
 
           {/* === LAYER 0: SHADOWS (behind everything) === */}
-          {/* Shadow follows the L-frame's content-facing edges:
-              - Header bottom: y=85, from x=0 to x=280 (covered by sidebar) + x=304 to right edge
-              - Inner corner: 24px radius curve with center at (304, 109)
-              - Sidebar right: x=280, from y=109 to bottom-24px
-              - Sidebar bottom corner: 24px radius at bottom-right of sidebar
+          {/*
+            L-Frame Shadow Map:
+            ┌─────────────────────────────────────────────────────╮ ← Header corner (convex)
+            │                    HEADER                           │
+            ├─────────┬───────────────────────────────────────────┘
+            │         │╲ ← Inner corner (concave curve into content)
+            │ SIDEBAR │ ╲
+            │         │
+            │       ╭─┘ ← Sidebar corner (convex)
+            └───────┘
+
+            Shadows appear on content-facing edges:
+            1. Header bottom edge (y=85, x=304 to x=right-24)
+            2. Header bottom-right corner (convex, at right edge)
+            3. Inner corner (concave, center at 304,109)
+            4. Sidebar right edge (x=280, y=109 to y=bottom-24)
+            5. Sidebar bottom-right corner (convex, center at 256, bottom-24)
           */}
 
-          {/* Shadow for header bottom edge - from after inner corner to right edge */}
+          {/* 1. Shadow for HEADER BOTTOM EDGE - straight line from inner corner to header corner */}
+          {/* DEBUG: RED */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '85px',
-              left: '304px', /* Start after inner corner (280 + 24) */
-              right: 0,
-              height: '8px',
+              left: '304px',
+              right: '24px', /* Stop before header's bottom-right corner */
+              height: '6px',
               zIndex: 0,
-              background: 'linear-gradient(to bottom, rgba(120,120,120,0.15) 0%, rgba(0,0,0,0.25) 40%, transparent 100%)',
+              background: 'linear-gradient(to bottom, rgba(255,0,0,0.5) 0%, rgba(255,0,0,0.3) 50%, transparent 100%)', /* DEBUG RED */
             }}
           />
 
-          {/* Shadow for inner corner curve - center at (304, 109) to match actual curve */}
+          {/* 2. Shadow for HEADER BOTTOM-RIGHT CORNER - convex curve at right edge */}
+          {/* DEBUG: GREEN */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '77px', /* 109 - 32 = 77, so center ends up at 77 + 32 = 109 */
-              left: '272px', /* 304 - 32 = 272, so center ends up at 272 + 32 = 304 */
-              width: '32px',
-              height: '32px',
+              top: '85px',
+              right: '0px',
+              width: '30px',
+              height: '30px',
               zIndex: 0,
-              /* Center at 100% 100% of 32x32 box = (304, 109), matching actual curve center */
-              background: 'radial-gradient(circle at 100% 100%, transparent 24px, rgba(120,120,120,0.15) 24px, rgba(0,0,0,0.25) 28px, transparent 32px)',
+              /* Center at top-left of this box (right-24, 85), curve goes down-right */
+              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(0,255,0,0.5) 24px, rgba(0,255,0,0.3) 28px, transparent 32px)', /* DEBUG GREEN */
             }}
           />
 
-          {/* Shadow for sidebar right edge - from after inner corner to before bottom corner */}
+          {/* 3. Shadow for INNER CORNER - concave curve into content area */}
+          {/* Actual curve: center at (304, 109), 24px radius, curves into content */}
+          {/* DEBUG: BLUE */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '109px', /* Start after inner corner ends (85 + 24) */
+              top: '79px', /* 109 - 30 = 79 */
+              left: '274px', /* 304 - 30 = 274 */
+              width: '30px',
+              height: '30px',
+              zIndex: 0,
+              /* Circle center at 100% 100% of 30x30 box = (274+30, 79+30) = (304, 109) ✓ */
+              background: 'radial-gradient(circle at 100% 100%, transparent 23px, rgba(0,0,255,0.5) 24px, rgba(0,0,255,0.3) 28px, transparent 32px)', /* DEBUG BLUE */
+            }}
+          />
+
+          {/* 4. Shadow for SIDEBAR RIGHT EDGE - straight line */}
+          {/* DEBUG: YELLOW */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '109px', /* Start after inner corner (85 + 24) */
               left: '280px',
-              width: '8px',
-              bottom: '24px', /* Stop before sidebar's bottom-right corner */
+              width: '6px',
+              bottom: '24px', /* Stop before sidebar corner */
               zIndex: 0,
-              background: 'linear-gradient(to right, rgba(120,120,120,0.15) 0%, rgba(0,0,0,0.25) 40%, transparent 100%)',
+              background: 'linear-gradient(to right, rgba(255,255,0,0.5) 0%, rgba(255,255,0,0.3) 50%, transparent 100%)', /* DEBUG YELLOW */
             }}
           />
 
-          {/* Shadow for sidebar bottom-right corner - follows the 24px radius curve */}
+          {/* 5. Shadow for SIDEBAR BOTTOM-RIGHT CORNER - convex curve */}
+          {/* Sidebar corner: 24px radius, center at (280-24, bottom-24) = (256, bottom-24) */}
+          {/* DEBUG: MAGENTA */}
           <div
             className="absolute pointer-events-none"
             style={{
-              bottom: '-8px', /* Extend below to create shadow */
-              left: '248px', /* 280 - 32 = 248, so center at 248 + 32 = 280 */
-              width: '40px',
-              height: '32px',
+              bottom: '0px',
+              left: '256px', /* Corner center x = 280 - 24 = 256 */
+              width: '30px',
+              height: '30px',
               zIndex: 0,
-              /* Curve center at bottom-left of where sidebar corner is (280, bottom) */
-              background: 'radial-gradient(circle at 80% 0%, transparent 24px, rgba(120,120,120,0.15) 24px, rgba(0,0,0,0.25) 28px, transparent 32px)',
+              /* Circle center at 0% 0% = top-left of box = (256, bottom-30) */
+              /* But corner center is at (256, bottom-24). Close enough for shadow effect */
+              background: 'radial-gradient(circle at 0% 0%, transparent 23px, rgba(255,0,255,0.5) 24px, rgba(255,0,255,0.3) 28px, transparent 32px)', /* DEBUG MAGENTA */
             }}
           />
 
@@ -3198,6 +3238,7 @@ function AgentPortal() {
       {/* On mobile: fills screen with padding for header/nav */}
       {/* SmoothScrollContainer applies Lenis smooth scroll to this container only */}
       <SmoothScrollContainer
+        id="agent-portal-scroll-container"
         className="min-[950px]:fixed min-[950px]:top-[85px] min-[950px]:left-[280px] min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto min-[950px]:overflow-x-hidden min-[950px]:z-30 min-[950px]:overscroll-contain"
         style={{ background: 'transparent' }}
       >
@@ -5936,15 +5977,14 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       description: 'Cut through the noise. Identify the specific tools and resources that matter most for your next step at eXp.',
       isOptional: true,
       content: (
-        <div className="space-y-4">
-          <p className="text-[#e5e4dd]/80 text-sm">
-            Cut through the noise. Identify the specific tools and resources that matter most for your next step at eXp.
-          </p>
-          <div className="rounded-lg overflow-hidden border border-white/10">
+        <div>
+          {/* Full-height calendar embed - no extra padding, allows page scroll */}
+          <div className="rounded-lg overflow-hidden border border-white/10 -mx-4 sm:-mx-6">
             <iframe
               src="https://team.smartagentalliance.com/widget/booking/gEwZSA9OwOAQWH63u5Yc"
-              style={{ width: '100%', height: '600px', border: 'none' }}
+              style={{ width: '100%', height: '900px', border: 'none', display: 'block' }}
               title="Book a session with Karrie"
+              scrolling="no"
             />
           </div>
         </div>
