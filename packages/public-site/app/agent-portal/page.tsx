@@ -2659,6 +2659,7 @@ function AgentPortal() {
             className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
             style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              backgroundAttachment: 'fixed',
               borderBottomRightRadius: '24px',
             }}
           />
@@ -2668,6 +2669,7 @@ function AgentPortal() {
             className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
             style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              backgroundAttachment: 'fixed',
               borderBottomRightRadius: '24px',
             }}
           />
@@ -2681,6 +2683,7 @@ function AgentPortal() {
               width: '24px',
               height: '24px',
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)',
+              backgroundAttachment: 'fixed',
               WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
               maskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
             }}
