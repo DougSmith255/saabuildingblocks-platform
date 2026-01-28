@@ -3246,6 +3246,7 @@ function AgentPortal() {
                       }}
                     >
                       {/* Icon - gold for onboarding, accent when active */}
+                      {/* Responsive icon: 16px (950-1300), 18px (1300-1500), 20px (1500+) */}
                       <div
                         className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}
                         style={{
@@ -3253,7 +3254,7 @@ function AgentPortal() {
                           color: isActive ? dashboardAccentColor : isOnboardingInactive ? '#ffd700' : 'rgba(229,228,221,0.6)',
                         }}
                       >
-                        <IconComponent className="w-5 h-5" />
+                        <IconComponent className="w-4 h-4 min-[1300px]:w-[18px] min-[1300px]:h-[18px] min-[1500px]:w-5 min-[1500px]:h-5" />
                       </div>
                       {/* Label - gold for onboarding, accent when active */}
                       {/* Responsive text: 10px (950-1300), 12px (1300-1500), 14px (1500+) */}
