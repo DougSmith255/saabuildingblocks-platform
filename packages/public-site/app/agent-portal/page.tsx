@@ -9192,7 +9192,7 @@ interface LinksSettings {
 
 const DEFAULT_LINKS_SETTINGS: LinksSettings = {
   accentColor: '#ffd700',
-  backgroundColor: '#ffd700', // Default gold hue for star background
+  backgroundColor: '#9a9a9a', // Default semi-light grey for star background
   iconStyle: 'dark',
   font: 'synonym',
   nameWeight: 'bold', // Bold by default
