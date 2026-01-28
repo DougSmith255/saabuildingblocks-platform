@@ -1020,6 +1020,30 @@ function AgentPortal() {
   // Help panel closing animation state
   const [closingHelpPanel, setClosingHelpPanel] = useState<string | null>(null);
 
+  // L-frame responsive dimensions based on screen width
+  const [windowWidth, setWindowWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 1920);
+
+  // Update window width on resize
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // L-frame dimensions - responsive based on breakpoints
+  // 1500-1700px: reduced sidebar (210px) and header (70px)
+  // Other sizes: default (280px sidebar, 85px header)
+  const lFrame = {
+    sidebarWidth: (windowWidth >= 1500 && windowWidth < 1700) ? 210 : 280,
+    headerHeight: (windowWidth >= 1500 && windowWidth < 1700) ? 70 : 85,
+    cornerRadius: 24,
+  };
+  // Derived values
+  const lFrameContentTop = lFrame.headerHeight;
+  const lFrameContentLeft = lFrame.sidebarWidth;
+  const lFrameInnerCornerTop = lFrame.headerHeight;
+  const lFrameInnerCornerLeft = lFrame.sidebarWidth;
+
   // Helper to close help panels with animation
   const closeHelpPanel = (panelName: string, setShowFn: (show: boolean) => void) => {
     setClosingHelpPanel(panelName);
@@ -2851,8 +2875,8 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '85px',
-              left: '303px', /* Was 304px - moved left 1px */
+              top: `${lFrame.headerHeight}px`,
+              left: `${lFrame.sidebarWidth + lFrame.cornerRadius - 1}px`,
               right: '24px',
               height: '6px',
               zIndex: 0,
@@ -2864,8 +2888,8 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '60px', /* Was 61px - moved up 1px */
-              right: '-16px', /* Was -15px - moved right 1px */
+              top: `${lFrame.headerHeight - lFrame.cornerRadius - 1}px`,
+              right: '-16px',
               width: '40px',
               height: '40px',
               zIndex: 0,
@@ -2877,8 +2901,8 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '79px',
-              left: '273px',
+              top: `${lFrame.headerHeight - 6}px`,
+              left: `${lFrame.sidebarWidth - 7}px`,
               width: '30px',
               height: '30px',
               zIndex: 0,
@@ -2890,8 +2914,8 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '109px',
-              left: '280px',
+              top: `${lFrame.headerHeight + lFrame.cornerRadius}px`,
+              left: `${lFrame.sidebarWidth}px`,
               width: '6px',
               bottom: '24px',
               zIndex: 0,
@@ -2903,8 +2927,8 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              bottom: '-6px', /* Was -7px - moved up 1px */
-              left: '254px', /* Was 255px - moved left 1px */
+              bottom: '-6px',
+              left: `${lFrame.sidebarWidth - lFrame.cornerRadius - 2}px`,
               width: '30px',
               height: '30px',
               zIndex: 0,
@@ -2916,33 +2940,36 @@ function AgentPortal() {
 
           {/* Header: Full width with outer corner radius */}
           <div
-            className="absolute top-0 left-0 right-0 h-[85px]"
+            className="absolute top-0 left-0 right-0"
             style={{
+              height: `${lFrame.headerHeight}px`,
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderBottomRightRadius: '24px',
+              borderBottomRightRadius: `${lFrame.cornerRadius}px`,
               zIndex: 1,
             }}
           />
 
           {/* Sidebar: Below header with outer corner radius */}
           <div
-            className="absolute top-[85px] left-0 bottom-0 w-[280px]"
+            className="absolute left-0 bottom-0"
             style={{
+              top: `${lFrame.headerHeight}px`,
+              width: `${lFrame.sidebarWidth}px`,
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderBottomRightRadius: '24px',
+              borderBottomRightRadius: `${lFrame.cornerRadius}px`,
               zIndex: 1,
             }}
           />
 
-          {/* Inner Corner: Fills junction gap with 24px curved cutout */}
+          {/* Inner Corner: Fills junction gap with curved cutout */}
           <div
             className="absolute"
             style={{
-              top: '85px',
-              left: '280px',
-              width: '24px',
-              height: '24px',
-              background: 'radial-gradient(circle at 100% 100%, transparent 24px, rgba(14, 14, 14, 0.98) 24px)',
+              top: `${lFrame.headerHeight}px`,
+              left: `${lFrame.sidebarWidth}px`,
+              width: `${lFrame.cornerRadius}px`,
+              height: `${lFrame.cornerRadius}px`,
+              background: `radial-gradient(circle at 100% 100%, transparent ${lFrame.cornerRadius}px, rgba(14, 14, 14, 0.98) ${lFrame.cornerRadius}px)`,
               zIndex: 1,
             }}
           />
@@ -2951,28 +2978,31 @@ function AgentPortal() {
 
           {/* Glass texture overlay for header */}
           <div
-            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-none"
+            className="absolute top-0 left-0 right-0 pointer-events-none"
             style={{
+              height: `${lFrame.headerHeight}px`,
               background: `
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
               backgroundAttachment: 'fixed',
-              borderBottomRightRadius: '24px',
+              borderBottomRightRadius: `${lFrame.cornerRadius}px`,
               zIndex: 2,
             }}
           />
 
           {/* Glass texture overlay for sidebar */}
           <div
-            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-none"
+            className="absolute left-0 bottom-0 pointer-events-none"
             style={{
+              top: `${lFrame.headerHeight}px`,
+              width: `${lFrame.sidebarWidth}px`,
               background: `
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
               backgroundAttachment: 'fixed',
-              borderBottomRightRadius: '24px',
+              borderBottomRightRadius: `${lFrame.cornerRadius}px`,
               zIndex: 2,
             }}
           />
@@ -2981,25 +3011,25 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '85px',
-              left: '280px',
-              width: '24px',
-              height: '24px',
+              top: `${lFrame.headerHeight}px`,
+              left: `${lFrame.sidebarWidth}px`,
+              width: `${lFrame.cornerRadius}px`,
+              height: `${lFrame.cornerRadius}px`,
               background: `
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
               backgroundAttachment: 'fixed',
-              WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
-              maskImage: 'radial-gradient(circle at 100% 100%, transparent 24px, black 24px)',
+              WebkitMaskImage: `radial-gradient(circle at 100% 100%, transparent ${lFrame.cornerRadius}px, black ${lFrame.cornerRadius}px)`,
+              maskImage: `radial-gradient(circle at 100% 100%, transparent ${lFrame.cornerRadius}px, black ${lFrame.cornerRadius}px)`,
               zIndex: 2,
             }}
           />
 
           {/* Top Bar - interactive content area */}
           <div
-            className="absolute top-0 left-0 right-0 h-[85px] pointer-events-auto"
-            style={{ background: 'transparent', zIndex: 10 }}
+            className="absolute top-0 left-0 right-0 pointer-events-auto"
+            style={{ height: `${lFrame.headerHeight}px`, background: 'transparent', zIndex: 10 }}
           >
             {/* Top bar content: Logo on left, Title in middle-ish, Logout on right */}
             <div className="relative z-10 h-full flex items-center px-6">
@@ -3045,8 +3075,8 @@ function AgentPortal() {
 
           {/* Left Sidebar - interactive content area */}
           <div
-            className="absolute top-[85px] left-0 bottom-0 w-[280px] pointer-events-auto overflow-visible"
-            style={{ background: 'transparent', zIndex: 10 }}
+            className="absolute left-0 bottom-0 pointer-events-auto overflow-visible"
+            style={{ top: `${lFrame.headerHeight}px`, width: `${lFrame.sidebarWidth}px`, background: 'transparent', zIndex: 10 }}
           >
 
             {/* Sidebar content - fits within viewport without scrollbar */}
@@ -3268,14 +3298,20 @@ function AgentPortal() {
       {/* SmoothScrollContainer applies Lenis smooth scroll to this container only */}
       <SmoothScrollContainer
         id="agent-portal-scroll-container"
-        className="min-[950px]:fixed min-[950px]:top-[85px] min-[950px]:left-[280px] min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto min-[950px]:overflow-x-hidden min-[950px]:z-30 min-[950px]:overscroll-contain"
-        style={{ background: 'transparent' }}
+        className="min-[950px]:fixed min-[950px]:right-0 min-[950px]:bottom-0 min-[950px]:overflow-y-auto min-[950px]:overflow-x-hidden min-[950px]:z-30 min-[950px]:overscroll-contain"
+        style={{
+          background: 'transparent',
+          ...(windowWidth >= 950 ? { top: `${lFrame.headerHeight}px`, left: `${lFrame.sidebarWidth}px` } : {}),
+        }}
       >
         {/* Inner wrapper with curved corner - creates the concave inner corner effect */}
         {/* Background is transparent to allow global StarBackground to show through */}
         <div
-          className="relative min-h-full min-[950px]:rounded-tl-[24px] min-[950px]:overflow-clip"
-          style={{ background: 'transparent' }}
+          className="relative min-h-full min-[950px]:overflow-clip"
+          style={{
+            background: 'transparent',
+            ...(windowWidth >= 950 ? { borderTopLeftRadius: `${lFrame.cornerRadius}px` } : {}),
+          }}
         >
         {/* Content Area */}
         <main
