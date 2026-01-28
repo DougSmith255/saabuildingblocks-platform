@@ -2825,12 +2825,12 @@ function AgentPortal() {
           />
 
           {/* 2. Shadow for HEADER BOTTOM-RIGHT CORNER - convex curve at right edge */}
-          {/* DEBUG: GREEN - moved UP significantly (was top: 85px) */}
+          {/* DEBUG: GREEN - moved RIGHT (was right: 0px) */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: '61px', /* Header corner center y = 85 - 24 = 61 */
-              right: '0px',
+              right: '-6px', /* Was 0px - moved right 6px */
               width: '30px',
               height: '30px',
               zIndex: 0,
@@ -2841,16 +2841,16 @@ function AgentPortal() {
 
           {/* 3. Shadow for INNER CORNER - concave curve into content area */}
           {/* Actual curve: center at (304, 109), 24px radius, curves into content */}
-          {/* DEBUG: BLUE - moved DOWN and RIGHT (top point more, bottom point less) */}
+          {/* DEBUG: BLUE - points moved INWARD: bottom up, top left */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '85px', /* Was 79px - moved down 6px */
-              left: '280px', /* Was 274px - moved right 6px */
+              top: '81px', /* Was 85px - moved up 4px (bottom point up) */
+              left: '276px', /* Was 280px - moved left 4px (top point left) */
               width: '30px',
               height: '30px',
               zIndex: 0,
-              /* Circle center at 100% 100% of 30x30 box = (280+30, 85+30) = (310, 115) */
+              /* Circle center at 100% 100% of 30x30 box = (276+30, 81+30) = (306, 111) */
               background: 'radial-gradient(circle at 100% 100%, transparent 23px, rgba(0,0,255,0.5) 24px, rgba(0,0,255,0.3) 28px, transparent 32px)', /* DEBUG BLUE */
             }}
           />
