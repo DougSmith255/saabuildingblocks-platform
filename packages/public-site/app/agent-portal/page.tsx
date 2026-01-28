@@ -2832,7 +2832,7 @@ function AgentPortal() {
             className="absolute pointer-events-none"
             style={{
               top: '85px',
-              left: '304px',
+              left: '303px', /* Was 304px - moved left 1px */
               right: '24px',
               height: '6px',
               zIndex: 0,
@@ -2844,8 +2844,8 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '61px', /* Moved down - aligns with corner curve center (85 - 24 = 61) */
-              right: '-6px',
+              top: '61px',
+              right: '-15px', /* Was -6px - moved right 9px */
               width: '40px',
               height: '40px',
               zIndex: 0,
@@ -2883,8 +2883,8 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              bottom: '-6px',
-              left: '256px',
+              bottom: '-7px', /* Was -6px - moved down 1px */
+              left: '255px', /* Was 256px - moved left 1px */
               width: '30px',
               height: '30px',
               zIndex: 0,
