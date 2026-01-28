@@ -2864,8 +2864,8 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              top: '61px',
-              right: '-15px', /* Was -6px - moved right 9px */
+              top: '60px', /* Was 61px - moved up 1px */
+              right: '-16px', /* Was -15px - moved right 1px */
               width: '40px',
               height: '40px',
               zIndex: 0,
@@ -2903,8 +2903,8 @@ function AgentPortal() {
           <div
             className="absolute pointer-events-none"
             style={{
-              bottom: '-7px', /* Was -6px - moved down 1px */
-              left: '255px', /* Was 256px - moved left 1px */
+              bottom: '-6px', /* Was -7px - moved up 1px */
+              left: '254px', /* Was 255px - moved left 1px */
               width: '30px',
               height: '30px',
               zIndex: 0,
