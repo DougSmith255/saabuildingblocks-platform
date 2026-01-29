@@ -2765,36 +2765,34 @@ function AgentPortal() {
             }}
           />
 
-          {/* 3D edge effect - solid line wrapping smoothly around top corners */}
+          {/* 3D edge effect - uses CSS borders that naturally follow the 20px border-radius */}
+          {/* Outer highlight line - bright edge */}
           <div
             className="absolute inset-0 pointer-events-none"
-            style={{ borderRadius: '20px 20px 0 0' }}
-          >
-            {/* SVG for smooth continuous line around corners */}
-            <svg
-              className="absolute top-0 left-0 w-full h-[40px]"
-              preserveAspectRatio="none"
-              viewBox="0 0 100 40"
-              style={{ overflow: 'visible' }}
-            >
-              {/* Outer highlight line */}
-              <path
-                d="M 0 40 L 0 20 Q 0 0 20 0 L 80 0 Q 100 0 100 20 L 100 40"
-                fill="none"
-                stroke="rgba(255, 255, 255, 0.28)"
-                strokeWidth="1.5"
-                vectorEffect="non-scaling-stroke"
-              />
-              {/* Inner shadow line for 3D depth */}
-              <path
-                d="M 1 40 L 1 20 Q 1 1 20 1 L 80 1 Q 99 1 99 20 L 99 40"
-                fill="none"
-                stroke="rgba(0, 0, 0, 0.2)"
-                strokeWidth="1"
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
-          </div>
+            style={{
+              borderRadius: '20px 20px 0 0',
+              borderTop: '2px solid rgba(255, 255, 255, 0.5)',
+              borderLeft: '2px solid rgba(255, 255, 255, 0.35)',
+              borderRight: '2px solid rgba(255, 255, 255, 0.35)',
+              borderBottom: 'none',
+              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+            }}
+          />
+          {/* Inner shadow for 3D depth - darker inset below the highlight */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: '2px',
+              left: '2px',
+              right: '2px',
+              bottom: 0,
+              borderRadius: '18px 18px 0 0',
+              borderTop: '1px solid rgba(0, 0, 0, 0.4)',
+              borderLeft: '1px solid rgba(0, 0, 0, 0.25)',
+              borderRight: '1px solid rgba(0, 0, 0, 0.25)',
+              borderBottom: 'none',
+            }}
+          />
 
           {/* Header portion - S logo | Title | Burger */}
           <div className="relative z-10 flex items-center justify-between px-4 h-16">
