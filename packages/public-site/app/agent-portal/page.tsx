@@ -12679,8 +12679,8 @@ return (
       className="hidden min-[1024px]:grid min-[1650px]:hidden gap-4 items-stretch"
       style={{ gridTemplateColumns: '1fr 340px' }}
     >
-      {/* LEFT COLUMN: Tabbed Content - flex column to fill height */}
-      <div className="flex flex-col gap-4">
+      {/* LEFT COLUMN: Tabbed Content - flex column to fill height, min 390px wide */}
+      <div className="flex flex-col gap-4" style={{ minWidth: '390px' }}>
         {/* Pill Tab Selector - 3 single-word tabs with gold active state */}
         <div
           className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative flex-shrink-0"
@@ -12742,7 +12742,7 @@ return (
 
         {/* Tab 2: Style - single card fills height */}
         {linkPageTab === 'style' && (
-          <div className="flex-1">{renderStyleCard()}</div>
+          <div className="flex-1 flex flex-col [&>div]:flex-1">{renderStyleCard()}</div>
         )}
 
         {/* Tab 3: Social - stacked cards */}
