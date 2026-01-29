@@ -13171,12 +13171,12 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         }
         /* SVG question mark icon - scales with button via percentage width */
         .pixel-help-qmark {
-          width: 65%;
-          height: 65%;
+          width: 75%;
+          height: 75%;
         }
         .pixel-help-mobile .pixel-help-qmark {
-          width: 60%;
-          height: 60%;
+          width: 70%;
+          height: 70%;
         }
         .pixel-help-gold > span:nth-child(5),
         .pixel-help-purple > span:nth-child(5),
