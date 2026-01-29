@@ -12768,7 +12768,7 @@ return (
         that break position:fixed. Save/Activate on left, 0.75x help on right.
         ==================================================================== */}
     {typeof window !== 'undefined' && isActive && createPortal(
-      <div className="hidden min-[1024px]:flex min-[1650px]:hidden fixed bottom-4 right-4 z-[100] items-center gap-2">
+      <div className="hidden min-[1024px]:flex min-[1650px]:hidden fixed bottom-6 right-6 z-[100] items-end gap-2">
         {/* Save/Activate Button - matches pixel help button height (3rem) */}
         {!pageData?.activated ? (
           <button
