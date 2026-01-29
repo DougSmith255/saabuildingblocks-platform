@@ -13061,6 +13061,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
             inset 0 -1.5px 0 0 var(--btn-dark) !important;
         }
         /* ===== AUTO-RESIZE: All pixel help buttons → 0.75x on medium screens (1024-1649px) ===== */
+        /* Uses transform: scale for pixel-perfect uniform scaling of the entire button */
+        /* (avoids styled-jsx/portal cascading issues from overriding internal elements) */
         @media (min-width: 1024px) and (max-width: 1649px) {
           .pixel-help-gold:not(.pixel-help-mobile),
           .pixel-help-purple:not(.pixel-help-mobile),
@@ -13068,64 +13070,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
           .pixel-help-green:not(.pixel-help-mobile),
           .pixel-help-gradient:not(.pixel-help-mobile),
           .pixel-help-grey:not(.pixel-help-mobile) {
-            width: 3rem !important;
-            height: 3rem !important;
-          }
-          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(2),
-          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(2),
-          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(2),
-          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(2),
-          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(2),
-          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(2) {
-            inset: 2px !important;
-          }
-          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(3)::before,
-          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(3)::before,
-          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(3)::before,
-          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(3)::before,
-          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(3)::before,
-          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(3)::before {
-            width: 0.3rem !important;
-            height: 0.3rem !important;
-            top: 0.2rem !important;
-            left: 0.2rem !important;
-            box-shadow:
-              2.3em 0 var(--btn-text),
-              0 2.3em var(--btn-text),
-              2.3em 2.3em var(--btn-text) !important;
-          }
-          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(4),
-          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(4),
-          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(4),
-          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(4),
-          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(4),
-          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(4) {
-            font-size: 12px !important;
-          }
-          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(4)::after,
-          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(4)::after,
-          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(4)::after,
-          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(4)::after,
-          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(4)::after,
-          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(4)::after {
-            width: 0.2rem !important;
-            height: 0.2rem !important;
-            top: 10px !important;
-            left: 12px !important;
-            transform: none !important;
-          }
-          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(5),
-          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(5),
-          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(5),
-          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(5),
-          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(5),
-          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(5) {
-            inset: 0.375rem 1.125rem !important;
-            border-radius: 0.5625rem !important;
-            box-shadow:
-              5px 0 0 0 var(--btn-text),
-              inset 0 1.5px 0 0 var(--btn-light),
-              inset 0 -1.5px 0 0 var(--btn-dark) !important;
+            transform: scale(0.75);
+            transform-origin: bottom right;
           }
         }
         .pixel-help-gold > button,
