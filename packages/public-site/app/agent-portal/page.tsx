@@ -12774,13 +12774,13 @@ return (
         ==================================================================== */}
     {typeof window !== 'undefined' && isActive && createPortal(
       <div className="hidden min-[1024px]:flex min-[1650px]:hidden fixed bottom-6 right-6 z-[100] items-end gap-2">
-        {/* Save/Activate Button - matches pixel help button height (3rem) */}
+        {/* Activate / Save Button - 45px height (matches pixel help), 215px fixed width */}
         {!pageData?.activated ? (
           <button
             onClick={handleActivate}
             disabled={isSaving}
-            className="h-12 px-4 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg"
-            style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
+            className="rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg"
+            style={{ fontFamily: 'var(--font-taskor, sans-serif)', height: '45px', width: '215px' }}
           >
             {isSaving ? (
               <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -12789,18 +12789,20 @@ return (
                 <path d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             )}
-            {isSaving ? 'Activating...' : 'Activate'}
+            {isSaving ? 'Activating...' : 'Activate My Page'}
           </button>
         ) : (
           <button
-            onClick={handleSave}
+            onClick={hasUnsavedChanges ? handleSave : undefined}
             disabled={isSaving || !hasUnsavedChanges}
-            className="h-12 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg"
+            className="rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg"
             style={{
               fontFamily: 'var(--font-taskor, sans-serif)',
+              height: '45px',
+              width: '215px',
               backgroundColor: hasUnsavedChanges ? '#ffd700' : '#3a3a3a',
               color: hasUnsavedChanges ? '#000000' : '#888888',
-              cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'not-allowed',
+              cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'default',
               opacity: isSaving ? 0.5 : 1,
             }}
           >
@@ -12813,7 +12815,7 @@ return (
                 <polyline points="7,3 7,8 15,8" />
               </svg>
             )}
-            {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save' : 'Saved'}
+            {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
           </button>
         )}
         {/* Pixel Help Button - auto-sized to 0.75x via CSS media query on 1024-1649px */}
