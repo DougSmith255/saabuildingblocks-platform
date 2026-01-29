@@ -3083,10 +3083,13 @@ function AgentPortal() {
             style={{ top: `${lFrame.headerHeight}px`, width: `${lFrame.sidebarWidth}px`, background: 'transparent', zIndex: 10 }}
           >
 
-            {/* Sidebar content - fits within viewport without scrollbar */}
-            {/* Responsive: 1024-1300px moves up 60px, under 1500px moves up 10px */}
+            {/* Sidebar content - extends to bottom of screen */}
+            {/* Uses calc to add height for negative margin offset on smaller screens */}
             {/* pb-[12px] gives 12px space at bottom above screen edge */}
-            <div className="relative z-10 h-full flex flex-col px-3 pb-[12px] pt-[2px] min-[1500px]:pt-3 space-y-2 -mt-[60px] min-[1300px]:mt-0">
+            <div
+              className="relative z-10 flex flex-col px-3 pb-[12px] pt-[2px] min-[1500px]:pt-3 space-y-2 -mt-[60px] min-[1300px]:mt-0"
+              style={{ height: windowWidth >= 1300 ? '100%' : 'calc(100% + 60px)' }}
+            >
               {/* User Profile Section - compact for fitting */}
               <div
                 className="rounded-xl p-3 flex-shrink-0 relative"
