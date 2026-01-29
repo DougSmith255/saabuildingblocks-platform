@@ -12875,7 +12875,7 @@ function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
 // ============================================================================
 
 type PixelHelpButtonColor = 'gold' | 'purple' | 'teal' | 'green' | 'gradient' | 'grey';
-type PixelHelpButtonSize = 'normal' | 'mobile' | 'medium';
+type PixelHelpButtonSize = 'normal' | 'mobile';
 
 interface PixelHelpButtonProps {
   onClick: () => void;
@@ -12899,7 +12899,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
     grey: 'pixel-help-grey',
   };
 
-  const sizeClass = size === 'mobile' ? 'pixel-help-mobile' : size === 'medium' ? 'pixel-help-medium' : '';
+  const sizeClass = size === 'mobile' ? 'pixel-help-mobile' : '';
 
   return (
     <>
@@ -12999,22 +12999,6 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
             0 1.9em var(--btn-text),
             1.9em 1.9em var(--btn-text) !important;
         }
-        /* Mobile question mark centering - use font-size to scale em-based box-shadows */
-        .pixel-help-mobile > span:nth-child(4) {
-          /* Scale down the em-based shadows by reducing font-size context */
-          font-size: 10px !important;
-        }
-        .pixel-help-mobile > span:nth-child(4)::after {
-          /* Keep original size ratio */
-          width: 0.25rem !important;
-          height: 0.2rem !important; /* Reduced by 1px to prevent tall dot appearance */
-          /* Attempt 6: Was too high and too far left, adjusting down and right */
-          /* Previous: top: 6px, left: 8px */
-          top: 8px !important;
-          left: 10px !important;
-          /* No transform needed - font-size handles the scaling */
-          transform: none !important;
-        }
         .pixel-help-mobile > span:nth-child(5) {
           inset: 0.3rem 0.9rem !important;
           border-radius: 0.5rem !important;
@@ -13023,45 +13007,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
             inset 0 1px 0 0 var(--btn-light),
             inset 0 -1px 0 0 var(--btn-dark) !important;
         }
-        /* ===== MEDIUM SIZE (0.75x for medium screens - 3rem instead of 4rem) ===== */
-        .pixel-help-medium {
-          width: 3rem !important;
-          height: 3rem !important;
-        }
-        .pixel-help-medium > span:nth-child(2) {
-          inset: 2px !important;
-        }
-        .pixel-help-medium > span:nth-child(3)::before {
-          width: 0.3rem !important;
-          height: 0.3rem !important;
-          top: 0.2rem !important;
-          left: 0.2rem !important;
-          box-shadow:
-            2.3em 0 var(--btn-text),
-            0 2.3em var(--btn-text),
-            2.3em 2.3em var(--btn-text) !important;
-        }
-        /* Medium question mark centering - scale down font-size context for em-based shadows */
-        .pixel-help-medium > span:nth-child(4) {
-          font-size: 12px !important;
-        }
-        .pixel-help-medium > span:nth-child(4)::after {
-          width: 0.2rem !important;
-          height: 0.2rem !important;
-          top: 10px !important;
-          left: 12px !important;
-          transform: none !important;
-        }
-        .pixel-help-medium > span:nth-child(5) {
-          inset: 0.375rem 1.125rem !important;
-          border-radius: 0.5625rem !important;
-          box-shadow:
-            5px 0 0 0 var(--btn-text),
-            inset 0 1.5px 0 0 var(--btn-light),
-            inset 0 -1.5px 0 0 var(--btn-dark) !important;
-        }
         /* ===== AUTO-RESIZE: All pixel help buttons → 0.75x on medium screens (1024-1649px) ===== */
-        /* Native size rendering (not transform:scale) to avoid subpixel gaps in pixel art */
         @media (min-width: 1024px) and (max-width: 1649px) {
           .pixel-help-gold:not(.pixel-help-mobile),
           .pixel-help-purple:not(.pixel-help-mobile),
@@ -13094,26 +13040,6 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
               2.3em 0 var(--btn-text),
               0 2.3em var(--btn-text),
               2.3em 2.3em var(--btn-text) !important;
-          }
-          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(4),
-          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(4),
-          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(4),
-          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(4),
-          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(4),
-          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(4) {
-            font-size: 12px !important;
-          }
-          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(4)::after,
-          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(4)::after,
-          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(4)::after,
-          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(4)::after,
-          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(4)::after,
-          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(4)::after {
-            width: 3px !important;
-            height: 3px !important;
-            top: 10px !important;
-            left: 12px !important;
-            transform: none !important;
           }
           .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(5),
           .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(5),
@@ -13237,51 +13163,20 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
           position: absolute;
           pointer-events: none;
           inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           filter: drop-shadow(0.25em 0.25em 0 rgba(0, 0, 0, 0.2));
           transition: all 75ms;
         }
-        .pixel-help-gold > span:nth-child(4)::after,
-        .pixel-help-purple > span:nth-child(4)::after,
-        .pixel-help-teal > span:nth-child(4)::after,
-        .pixel-help-green > span:nth-child(4)::after,
-        .pixel-help-gradient > span:nth-child(4)::after,
-        .pixel-help-grey > span:nth-child(4)::after {
-          content: "";
-          width: 0.25rem;
-          height: 0.25rem;
-          position: absolute;
-          top: 0.875rem;
-          left: 1rem;
-          border-radius: 0.0625px;
-          background-color: var(--btn-text);
-          box-shadow:
-            0.75em 2.125em var(--btn-text),
-            1em 2.125em var(--btn-text),
-            0.75em 1.75em var(--btn-text),
-            1em 1.75em var(--btn-text),
-            0.75em 1.25em var(--btn-text),
-            1em 1.25em var(--btn-text),
-            0.75em 1em var(--btn-text),
-            1em 1em var(--btn-text),
-            1em 0.75em var(--btn-text),
-            1.5em 0.75em var(--btn-text),
-            1.25em 0.75em var(--btn-text),
-            1.25em -0.25em var(--btn-text),
-            1.5em 0em var(--btn-text),
-            1.25em 0.5em var(--btn-text),
-            1.5em 0.5em var(--btn-text),
-            1.25em 0.25em var(--btn-text),
-            1.5em 0.25em var(--btn-text),
-            1.25em 0 var(--btn-text),
-            1em -0.25em var(--btn-text),
-            0.75em -0.25em var(--btn-text),
-            0.5em -0.25em var(--btn-text),
-            0.25em -0.25em var(--btn-text),
-            0.25em 0 var(--btn-text),
-            0 0.25em var(--btn-text),
-            0 0.5em var(--btn-text),
-            0.25em 0.25em var(--btn-text),
-            0.25em 0.5em var(--btn-text);
+        /* SVG question mark icon - scales with button via percentage width */
+        .pixel-help-qmark {
+          width: 65%;
+          height: 65%;
+        }
+        .pixel-help-mobile .pixel-help-qmark {
+          width: 60%;
+          height: 60%;
         }
         .pixel-help-gold > span:nth-child(5),
         .pixel-help-purple > span:nth-child(5),
@@ -13335,7 +13230,9 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         <button type="button" onClick={disabled ? undefined : onClick} aria-label={ariaLabel} disabled={disabled}></button>
         <span></span>
         <span></span>
-        <span></span>
+        <span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="pixel-help-qmark"><path fill="var(--btn-text)" d="M18 5v6h-1v1h-2v1h-1v2H9v-3h1v-1h1v-1h2V9h1V7h-1V6h-2v1h-1v1H9v1H8V8H7V7H6V6H5V5h1V4h1V3h2V2h6v1h1v1h1v1zm-5 13h1v3h-1v1h-3v-1H9v-3h1v-1h3z" /></svg>
+        </span>
         <span></span>
       </div>
     </>
