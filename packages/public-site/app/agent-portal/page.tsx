@@ -11356,29 +11356,31 @@ function AgentPagesSection({
 
       {/* Content */}
       <div className="p-4 space-y-4">
-        {/* Email */}
-        <div>
-          <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Email</label>
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => handleInputChange('email', e.target.value)}
-            placeholder="you@email.com"
-            className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
-          />
-          <p className="text-[10px] text-white/30 mt-1">Displayed on your page</p>
-        </div>
+        {/* Phone & Email - side by side on medium screens (1024px-1649px) */}
+        <div className="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1650px]:grid-cols-1 gap-4">
+          {/* Phone (left on medium screens) */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Phone</label>
+            <input
+              type="tel"
+              value={formData.phone}
+              onChange={(e) => handleInputChange('phone', e.target.value)}
+              placeholder="(555) 123-4567"
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
+            />
+          </div>
 
-        {/* Phone */}
-        <div>
-          <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Phone</label>
-          <input
-            type="tel"
-            value={formData.phone}
-            onChange={(e) => handleInputChange('phone', e.target.value)}
-            placeholder="(555) 123-4567"
-            className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
-          />
+          {/* Email (right on medium screens) */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Email</label>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              placeholder="you@email.com"
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
+            />
+          </div>
         </div>
 
         {/* Call/Text Toggles - Premium glass styled checkboxes matching onboarding */}
