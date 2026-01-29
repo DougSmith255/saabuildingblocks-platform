@@ -3869,9 +3869,11 @@ function AgentPortal() {
         {activeSection === 'agent-page' && (
           <PixelHelpButton onClick={() => setShowAgentAttractionHelpModal(true)} color="purple" ariaLabel="Agent Attraction Help" />
         )}
-        {/* Link Page Help Button */}
+        {/* Link Page Help Button - Hidden on medium screens (1024-1649px) where custom floating button shows */}
         {activeSection === 'linktree' && (
-          <PixelHelpButton onClick={() => setShowLinkPageHelpModal(true)} color="gold" ariaLabel="Link Page Help" />
+          <div className="hidden min-[1650px]:block">
+            <PixelHelpButton onClick={() => setShowLinkPageHelpModal(true)} color="gold" ariaLabel="Link Page Help" />
+          </div>
         )}
       </div>
 
@@ -9478,12 +9480,12 @@ function AgentPagesSection({
       phone: page?.phone || '123-456-7890',
       show_call_button: page?.show_call_button ?? true,
       show_text_button: page?.show_text_button ?? true,
-      facebook_url: page?.facebook_url || '',
+      facebook_url: page?.facebook_url || 'Example',
       instagram_url: page?.instagram_url || 'Example',
       twitter_url: page?.twitter_url || 'Example',
       youtube_url: page?.youtube_url || 'Example',
-      tiktok_url: page?.tiktok_url || '',
-      linkedin_url: page?.linkedin_url || '',
+      tiktok_url: page?.tiktok_url || 'Example',
+      linkedin_url: page?.linkedin_url || 'Example',
     };
   });
 
@@ -12732,9 +12734,9 @@ return (
 
         {/* TAB CONTENT - Stacked sections that fill remaining height */}
 
-        {/* Tab 1: Profile - stacked cards */}
+        {/* Tab 1: Profile - stacked cards (height equalized via [&>div]:flex-1) */}
         {linkPageTab === 'profile-contact' && (
-          <div className="flex flex-col gap-4 flex-1">
+          <div className="flex flex-col gap-4 flex-1 [&>div]:flex-1">
             {renderProfileCard()}
             {renderContactCard()}
           </div>
@@ -12756,6 +12758,64 @@ return (
 
       {/* RIGHT COLUMN: Preview (340px fixed) - uses shared render function */}
       {renderPreviewButtonLinksCard(false)}
+    </div>
+
+    {/* ====================================================================
+        FLOATING SAVE + HELP BUTTONS - Medium screens only (1024-1649px)
+        Save/Activate button on left, smaller (0.75x) help button on right
+        Positioned closer to corner (bottom-4 right-4 = 10px less than normal)
+        ==================================================================== */}
+    <div className="hidden min-[1024px]:flex min-[1650px]:hidden fixed bottom-4 right-4 z-[100] items-center gap-2">
+      {/* Save/Activate Button - matches pixel help button height (3rem) */}
+      {!pageData?.activated ? (
+        <button
+          onClick={handleActivate}
+          disabled={isSaving}
+          className="h-12 px-4 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg"
+          style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
+        >
+          {isSaving ? (
+            <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+          ) : (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          )}
+          {isSaving ? 'Activating...' : 'Activate'}
+        </button>
+      ) : (
+        <button
+          onClick={handleSave}
+          disabled={isSaving || !hasUnsavedChanges}
+          className="h-12 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg"
+          style={{
+            fontFamily: 'var(--font-taskor, sans-serif)',
+            backgroundColor: hasUnsavedChanges ? '#ffd700' : '#3a3a3a',
+            color: hasUnsavedChanges ? '#000000' : '#888888',
+            cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'not-allowed',
+            opacity: isSaving ? 0.5 : 1,
+          }}
+        >
+          {isSaving ? (
+            <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+          ) : (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+              <polyline points="17,21 17,13 7,13 7,21" />
+              <polyline points="7,3 7,8 15,8" />
+            </svg>
+          )}
+          {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save' : 'Saved'}
+        </button>
+      )}
+      {/* Pixel Help Button - medium size (0.75x) */}
+      <PixelHelpButton
+        onClick={() => setShowLinkPageHelpModal(true)}
+        color="gold"
+        ariaLabel="Link Page Help"
+        size="medium"
+        className="relative"
+      />
     </div>
 
   </div>
@@ -12811,7 +12871,7 @@ function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
 // ============================================================================
 
 type PixelHelpButtonColor = 'gold' | 'purple' | 'teal' | 'green' | 'gradient' | 'grey';
-type PixelHelpButtonSize = 'normal' | 'mobile';
+type PixelHelpButtonSize = 'normal' | 'mobile' | 'medium';
 
 interface PixelHelpButtonProps {
   onClick: () => void;
@@ -12835,7 +12895,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
     grey: 'pixel-help-grey',
   };
 
-  const sizeClass = size === 'mobile' ? 'pixel-help-mobile' : '';
+  const sizeClass = size === 'mobile' ? 'pixel-help-mobile' : size === 'medium' ? 'pixel-help-medium' : '';
 
   return (
     <>
@@ -12958,6 +13018,43 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
             4px 0 0 0 var(--btn-text),
             inset 0 1px 0 0 var(--btn-light),
             inset 0 -1px 0 0 var(--btn-dark) !important;
+        }
+        /* ===== MEDIUM SIZE (0.75x for medium screens - 3rem instead of 4rem) ===== */
+        .pixel-help-medium {
+          width: 3rem !important;
+          height: 3rem !important;
+        }
+        .pixel-help-medium > span:nth-child(2) {
+          inset: 2px !important;
+        }
+        .pixel-help-medium > span:nth-child(3)::before {
+          width: 0.3rem !important;
+          height: 0.3rem !important;
+          top: 0.2rem !important;
+          left: 0.2rem !important;
+          box-shadow:
+            2.3em 0 var(--btn-text),
+            0 2.3em var(--btn-text),
+            2.3em 2.3em var(--btn-text) !important;
+        }
+        /* Medium question mark centering - scale down font-size context for em-based shadows */
+        .pixel-help-medium > span:nth-child(4) {
+          font-size: 12px !important;
+        }
+        .pixel-help-medium > span:nth-child(4)::after {
+          width: 0.2rem !important;
+          height: 0.2rem !important;
+          top: 10px !important;
+          left: 12px !important;
+          transform: none !important;
+        }
+        .pixel-help-medium > span:nth-child(5) {
+          inset: 0.375rem 1.125rem !important;
+          border-radius: 0.5625rem !important;
+          box-shadow:
+            5px 0 0 0 var(--btn-text),
+            inset 0 1.5px 0 0 var(--btn-light),
+            inset 0 -1.5px 0 0 var(--btn-dark) !important;
         }
         .pixel-help-gold > button,
         .pixel-help-purple > button,
@@ -13085,8 +13182,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
           border-radius: 0.0625px;
           background-color: var(--btn-text);
           box-shadow:
-            0.75em 2.1375em var(--btn-text),
-            1em 2.1375em var(--btn-text),
+            0.75em 2.125em var(--btn-text),
+            1em 2.125em var(--btn-text),
             0.75em 1.75em var(--btn-text),
             1em 1.75em var(--btn-text),
             0.75em 1.25em var(--btn-text),
