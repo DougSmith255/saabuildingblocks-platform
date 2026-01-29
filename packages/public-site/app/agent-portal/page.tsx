@@ -3323,15 +3323,12 @@ function AgentPortal() {
                       >
                         {item.label}
                       </span>
-                      {/* Progress indicator for onboarding */}
+                      {/* Progress indicator for onboarding - no container, just text */}
                       {isOnboardingInactive && (
                         <span
-                          className="ml-auto text-[10px] font-synonym px-1.5 py-0.5 rounded-full"
+                          className="ml-auto text-[10px] font-synonym leading-none"
                           style={{
-                            background: 'rgba(255,215,0,0.15)',
                             color: '#ffd700',
-                            border: '1px solid rgba(255,215,0,0.2)',
-                            minWidth: '32px',
                             textAlign: 'center',
                           }}
                         >
