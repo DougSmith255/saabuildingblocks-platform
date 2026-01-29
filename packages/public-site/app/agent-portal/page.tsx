@@ -12670,18 +12670,18 @@ return (
 
     {/* ====================================================================
         MEDIUM SCREEN LAYOUT (1024px - 1649px) - 2-Column Tabbed Interface
-        Left: Pill tab selector + conditional sections
+        Left: Pill tab selector + stacked sections (height matches preview)
         Right: Preview/Button Links (340px fixed)
         ==================================================================== */}
     <div
-      className="hidden min-[1024px]:grid min-[1650px]:hidden gap-4"
+      className="hidden min-[1024px]:grid min-[1650px]:hidden gap-4 items-stretch"
       style={{ gridTemplateColumns: '1fr 340px' }}
     >
-      {/* LEFT COLUMN: Tabbed Content */}
-      <div className="space-y-4">
-        {/* Pill Tab Selector - 3 tabs with gold active state */}
+      {/* LEFT COLUMN: Tabbed Content - flex column to fill height */}
+      <div className="flex flex-col gap-4">
+        {/* Pill Tab Selector - 3 single-word tabs with gold active state */}
         <div
-          className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative"
+          className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative flex-shrink-0"
           style={{ width: '100%' }}
         >
           {/* Animated sliding pill indicator */}
@@ -12704,7 +12704,7 @@ return (
               color: linkPageTab === 'profile-contact' ? '#000000' : 'rgba(255,255,255,0.6)',
             }}
           >
-            Profile & Contact
+            Profile
           </button>
           <button
             onClick={() => setLinkPageTab('style')}
@@ -12724,26 +12724,28 @@ return (
               color: linkPageTab === 'socials-actions' ? '#000000' : 'rgba(255,255,255,0.6)',
             }}
           >
-            Socials & Actions
+            Social
           </button>
         </div>
 
-        {/* TAB CONTENT - Conditionally rendered sections */}
+        {/* TAB CONTENT - Stacked sections that fill remaining height */}
 
-        {/* Tab 1: Profile & Contact - uses shared render functions */}
+        {/* Tab 1: Profile - stacked cards */}
         {linkPageTab === 'profile-contact' && (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-4 flex-1">
             {renderProfileCard()}
             {renderContactCard()}
           </div>
         )}
 
-        {/* Tab 2: Style - uses shared render function */}
-        {linkPageTab === 'style' && renderStyleCard()}
+        {/* Tab 2: Style - single card fills height */}
+        {linkPageTab === 'style' && (
+          <div className="flex-1">{renderStyleCard()}</div>
+        )}
 
-        {/* Tab 3: Socials & Actions - uses shared render functions */}
+        {/* Tab 3: Social - stacked cards */}
         {linkPageTab === 'socials-actions' && (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-4 flex-1">
             {renderSocialLinksCard(2)}
             {renderPageActionsCard()}
           </div>
