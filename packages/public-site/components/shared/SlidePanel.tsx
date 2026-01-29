@@ -72,27 +72,42 @@ export function SlidePanel({
     setMounted(true);
   }, []);
 
-  // Detect when isOpen changes from true to false (parent triggered close)
-  // and play closing animation before fully hiding
+  // Track close timer so we can cancel it if panel reopens
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Detect when isOpen changes and handle animations
   useEffect(() => {
-    if (prevIsOpenRef.current && !isOpen && !isClosing) {
-      // isOpen went from true to false - trigger closing animation
+    // When opening: cancel any pending close, reset states, ensure render
+    if (isOpen) {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = null;
+      }
+      setIsClosing(false);  // Reset any lingering closing state
+      setShouldRender(true);
+      prevIsOpenRef.current = true;
+      return;
+    }
+
+    // When closing (isOpen went from true to false): trigger closing animation
+    if (prevIsOpenRef.current && !isOpen) {
       setIsClosing(true);
       setShouldRender(true);
-      const timer = setTimeout(() => {
+      closeTimerRef.current = setTimeout(() => {
         setIsClosing(false);
         setShouldRender(false);
+        closeTimerRef.current = null;
       }, ANIMATION_DURATION);
-      prevIsOpenRef.current = isOpen;
-      return () => clearTimeout(timer);
+      prevIsOpenRef.current = false;
     }
 
-    if (isOpen) {
-      setShouldRender(true);
-    }
-
-    prevIsOpenRef.current = isOpen;
-  }, [isOpen, isClosing]);
+    return () => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = null;
+      }
+    };
+  }, [isOpen]);
 
   // Size classes for desktop width - all use 500px like shared SlidePanel
   const sizeClasses = {

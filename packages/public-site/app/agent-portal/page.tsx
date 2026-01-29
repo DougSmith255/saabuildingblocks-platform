@@ -2914,11 +2914,11 @@ function AgentPortal() {
           />
 
           {/* 4. Shadow for SIDEBAR RIGHT EDGE - straight line */}
-          {/* Responsive: >1700px shortens top by 1px, extends bottom 2px; 1024-1300px extends bottom 2px */}
+          {/* Base: moved down 2px on all sizes; Responsive: >1700px shortens top by 1px, extends bottom 2px; 1024-1300px extends bottom 2px */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: `${lFrame.headerHeight + lFrame.cornerRadius - 1 + (windowWidth >= 1700 ? 1 : 0)}px`,
+              top: `${lFrame.headerHeight + lFrame.cornerRadius + 1 + (windowWidth >= 1700 ? 1 : 0)}px`,
               left: `${lFrame.sidebarWidth}px`,
               width: '6px',
               bottom: `${24 - (windowWidth >= 1700 || (windowWidth >= 1024 && windowWidth < 1300) ? 2 : 0)}px`,
@@ -2953,19 +2953,19 @@ function AgentPortal() {
             }}
           />
 
-          {/* Sidebar: Below header with outer corner radius */}
+          {/* Sidebar: Below header with outer corner radius - slightly darker */}
           <div
             className="absolute left-0 bottom-0"
             style={{
               top: `${lFrame.headerHeight}px`,
               width: `${lFrame.sidebarWidth}px`,
-              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              background: 'linear-gradient(180deg, rgba(12, 12, 12, 0.98) 0%, rgba(8, 8, 8, 0.95) 100%)',
               borderBottomRightRadius: `${lFrame.cornerRadius}px`,
               zIndex: 1,
             }}
           />
 
-          {/* Inner Corner: Fills junction gap with curved cutout */}
+          {/* Inner Corner: Fills junction gap with curved cutout - slightly darker */}
           <div
             className="absolute"
             style={{
@@ -2973,7 +2973,7 @@ function AgentPortal() {
               left: `${lFrame.sidebarWidth}px`,
               width: `${lFrame.cornerRadius}px`,
               height: `${lFrame.cornerRadius}px`,
-              background: `radial-gradient(circle at 100% 100%, transparent ${lFrame.cornerRadius}px, rgba(14, 14, 14, 0.98) ${lFrame.cornerRadius}px)`,
+              background: `radial-gradient(circle at 100% 100%, transparent ${lFrame.cornerRadius}px, rgba(12, 12, 12, 0.98) ${lFrame.cornerRadius}px)`,
               zIndex: 1,
             }}
           />
