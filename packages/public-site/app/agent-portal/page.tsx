@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useLayoutEffect, useRef, useMemo, Suspense, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { API_URL, SITE_URL } from '@/lib/api-config';
@@ -12734,11 +12735,11 @@ return (
 
         {/* TAB CONTENT - Stacked sections that fill remaining height */}
 
-        {/* Tab 1: Profile - stacked cards (height equalized via [&>div]:flex-1) */}
+        {/* Tab 1: Profile - Profile card expands, Contact card fixed at 415px */}
         {linkPageTab === 'profile-contact' && (
-          <div className="flex flex-col gap-4 flex-1 [&>div]:flex-1">
-            {renderProfileCard()}
-            {renderContactCard()}
+          <div className="flex flex-col gap-4 flex-1">
+            <div className="flex-1">{renderProfileCard()}</div>
+            <div style={{ height: '415px', flexShrink: 0 }}>{renderContactCard()}</div>
           </div>
         )}
 
@@ -12762,61 +12763,64 @@ return (
 
     {/* ====================================================================
         FLOATING SAVE + HELP BUTTONS - Medium screens only (1024-1649px)
-        Save/Activate button on left, smaller (0.75x) help button on right
-        Positioned closer to corner (bottom-4 right-4 = 10px less than normal)
+        Rendered via portal to document.body to escape parent transforms
+        that break position:fixed. Save/Activate on left, 0.75x help on right.
         ==================================================================== */}
-    <div className="hidden min-[1024px]:flex min-[1650px]:hidden fixed bottom-4 right-4 z-[100] items-center gap-2">
-      {/* Save/Activate Button - matches pixel help button height (3rem) */}
-      {!pageData?.activated ? (
-        <button
-          onClick={handleActivate}
-          disabled={isSaving}
-          className="h-12 px-4 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg"
-          style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
-        >
-          {isSaving ? (
-            <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-          ) : (
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          )}
-          {isSaving ? 'Activating...' : 'Activate'}
-        </button>
-      ) : (
-        <button
-          onClick={handleSave}
-          disabled={isSaving || !hasUnsavedChanges}
-          className="h-12 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg"
-          style={{
-            fontFamily: 'var(--font-taskor, sans-serif)',
-            backgroundColor: hasUnsavedChanges ? '#ffd700' : '#3a3a3a',
-            color: hasUnsavedChanges ? '#000000' : '#888888',
-            cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'not-allowed',
-            opacity: isSaving ? 0.5 : 1,
-          }}
-        >
-          {isSaving ? (
-            <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-          ) : (
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-              <polyline points="17,21 17,13 7,13 7,21" />
-              <polyline points="7,3 7,8 15,8" />
-            </svg>
-          )}
-          {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save' : 'Saved'}
-        </button>
-      )}
-      {/* Pixel Help Button - medium size (0.75x) */}
-      <PixelHelpButton
-        onClick={() => setShowLinkPageHelpModal(true)}
-        color="gold"
-        ariaLabel="Link Page Help"
-        size="medium"
-        className="relative"
-      />
-    </div>
+    {typeof window !== 'undefined' && createPortal(
+      <div className="hidden min-[1024px]:flex min-[1650px]:hidden fixed bottom-4 right-4 z-[100] items-center gap-2">
+        {/* Save/Activate Button - matches pixel help button height (3rem) */}
+        {!pageData?.activated ? (
+          <button
+            onClick={handleActivate}
+            disabled={isSaving}
+            className="h-12 px-4 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg"
+            style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
+          >
+            {isSaving ? (
+              <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            )}
+            {isSaving ? 'Activating...' : 'Activate'}
+          </button>
+        ) : (
+          <button
+            onClick={handleSave}
+            disabled={isSaving || !hasUnsavedChanges}
+            className="h-12 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg"
+            style={{
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              backgroundColor: hasUnsavedChanges ? '#ffd700' : '#3a3a3a',
+              color: hasUnsavedChanges ? '#000000' : '#888888',
+              cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'not-allowed',
+              opacity: isSaving ? 0.5 : 1,
+            }}
+          >
+            {isSaving ? (
+              <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17,21 17,13 7,13 7,21" />
+                <polyline points="7,3 7,8 15,8" />
+              </svg>
+            )}
+            {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save' : 'Saved'}
+          </button>
+        )}
+        {/* Pixel Help Button - medium size (0.75x) */}
+        <PixelHelpButton
+          onClick={() => setShowLinkPageHelpModal(true)}
+          color="gold"
+          ariaLabel="Link Page Help"
+          size="medium"
+          className="relative"
+        />
+      </div>,
+      document.body
+    )}
 
   </div>
 );
