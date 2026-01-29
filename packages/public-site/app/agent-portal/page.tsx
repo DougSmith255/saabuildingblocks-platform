@@ -3300,7 +3300,7 @@ function AgentPortal() {
 
               {/* Navigation Menu - Compact 3D Button Style */}
               {/* Responsive spacing: +2px (space-y-1) on screens over 1700px */}
-              <nav className="flex-1 space-y-0.5 min-[1700px]:space-y-1 overflow-y-auto min-h-0">
+              <nav className="flex-1 space-y-0.5 min-[1700px]:space-y-1 overflow-y-auto min-h-0 px-1 -mx-1">
               {navItems
                 .filter(item => {
                   // Hide onboarding tab when onboarding is complete
