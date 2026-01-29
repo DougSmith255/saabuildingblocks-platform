@@ -2640,13 +2640,14 @@ function AgentPortal() {
       `}</style>
 
       {/* Floating Pixel Help Button - Top Right (Mobile only) */}
+      {/* Stays visible behind overlay when slide panels open, hidden only for mobile menu */}
       <div
-        className="min-[1024px]:hidden fixed z-[10015] transition-opacity duration-300"
+        className="min-[1024px]:hidden fixed z-[10005] transition-opacity duration-300"
         style={{
           top: '16px',
           right: '16px',
-          opacity: isAnyPopupOpen || isMobileMenuOpen ? 0 : 1,
-          pointerEvents: isAnyPopupOpen || isMobileMenuOpen ? 'none' : 'auto',
+          opacity: isMobileMenuOpen ? 0 : 1,
+          pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
           filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
         }}
       >
@@ -2730,11 +2731,28 @@ function AgentPortal() {
             }}
           />
 
-          {/* Top border glow */}
+          {/* 3D edge at top - layered highlight and shadow for depth */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[4px] pointer-events-none"
+            style={{
+              borderRadius: '20px 20px 0 0',
+              background: `
+                linear-gradient(180deg,
+                  rgba(255, 255, 255, 0.12) 0%,
+                  rgba(255, 215, 0, 0.08) 25%,
+                  rgba(180, 180, 180, 0.15) 50%,
+                  transparent 100%
+                )
+              `,
+              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 2px 4px rgba(255, 215, 0, 0.05)',
+            }}
+          />
+          {/* Top edge highlight line */}
           <div
             className="absolute top-0 left-0 right-0 h-[1px]"
             style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.4) 20%, rgba(180, 180, 180, 0.4) 80%, transparent 100%)',
+              borderRadius: '20px 20px 0 0',
+              background: 'linear-gradient(90deg, transparent 5%, rgba(255, 255, 255, 0.25) 20%, rgba(255, 215, 0, 0.3) 50%, rgba(255, 255, 255, 0.25) 80%, transparent 95%)',
             }}
           />
 
@@ -2778,14 +2796,14 @@ function AgentPortal() {
               </span>
             </div>
 
-            {/* Burger Menu Button */}
+            {/* Burger Menu Button - 1.5x enlarged */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`mobile-menu-burger flex items-center justify-center w-10 h-10 ${isMobileMenuOpen ? 'menu-open' : ''}`}
+              className={`mobile-menu-burger flex items-center justify-center w-12 h-12 ${isMobileMenuOpen ? 'menu-open' : ''}`}
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMobileMenuOpen}
             >
-              <svg viewBox="0 0 32 32" className="hamburger-svg w-6 h-6">
+              <svg viewBox="0 0 32 32" className="hamburger-svg w-9 h-9">
                 <path className="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22" />
                 <path className="line" d="M7 16 27 16" />
               </svg>
@@ -2852,23 +2870,6 @@ function AgentPortal() {
                   );
                 })}
 
-                {/* Logout button at bottom */}
-                <div className="mt-4 pt-4 mx-4 border-t border-white/10">
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      handleLogout();
-                    }}
-                    className="w-full flex items-center justify-center gap-2 py-3 text-[#e5e4dd] hover:text-[#ff4444] transition-colors"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                      <polyline points="16 17 21 12 16 7" />
-                      <line x1="21" y1="12" x2="9" y2="12" />
-                    </svg>
-                    <span className="text-sm font-medium">Logout</span>
-                  </button>
-                </div>
               </div>
             </>
           )}
@@ -14098,8 +14099,8 @@ function DownloadSection() {
               </div>
             </div>
 
-            {/* Instructions container with smooth height transition */}
-            <div className="relative overflow-hidden transition-all duration-300 ease-out" style={{ minHeight: '180px' }}>
+            {/* Instructions container with smooth height transition - increased height for toggle animation */}
+            <div className="relative overflow-visible transition-all duration-300 ease-out pr-1" style={{ minHeight: '220px' }}>
               {/* Chrome Instructions */}
               <div
                 className={`transition-all duration-300 ease-out ${
