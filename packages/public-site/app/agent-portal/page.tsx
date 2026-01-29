@@ -2914,14 +2914,14 @@ function AgentPortal() {
           />
 
           {/* 4. Shadow for SIDEBAR RIGHT EDGE - straight line */}
-          {/* Base: moved down 2px on all sizes; Responsive: >1700px shortens top by 1px, extends bottom 2px; 1024-1300px extends bottom 2px */}
+          {/* Responsive: <1300: up 2px, down 1px | 1300-1700: up 2px, down 2px | >1700: up 1px, down 1px */}
           <div
             className="absolute pointer-events-none"
             style={{
-              top: `${lFrame.headerHeight + lFrame.cornerRadius + 1 + (windowWidth >= 1700 ? 1 : 0)}px`,
+              top: `${lFrame.headerHeight + lFrame.cornerRadius + 1 - (windowWidth >= 1700 ? 1 : 2)}px`,
               left: `${lFrame.sidebarWidth}px`,
               width: '6px',
-              bottom: `${24 - (windowWidth >= 1700 || (windowWidth >= 1024 && windowWidth < 1300) ? 2 : 0)}px`,
+              bottom: `${24 - (windowWidth >= 1700 ? 1 : windowWidth >= 1300 ? 2 : 1)}px`,
               zIndex: 0,
               background: 'linear-gradient(to right, rgba(180,180,180,0.25) 0%, rgba(180,180,180,0.12) 50%, transparent 100%)',
             }}
