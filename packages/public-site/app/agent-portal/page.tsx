@@ -977,6 +977,10 @@ function AgentPortal() {
   // Track which source triggered the image upload (for showing notifications in correct location)
   const [uploadSource, setUploadSource] = useState<'dashboard' | 'agent-pages' | null>(null);
 
+  // Mobile menu state (expandable bottom bar)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mobileMenuTouchStartRef = useRef<{ y: number; time: number } | null>(null);
+
   // Onboarding state
   const [onboardingProgress, setOnboardingProgress] = useState<{
     step1_okta_account: boolean;
@@ -2594,39 +2598,128 @@ function AgentPortal() {
         className="hidden"
       />
 
-      {/* Mobile Header Bar - <1024px only */}
-      {/* Fixed at top, slides up when popup is open */}
-      <header
-        className="min-[1024px]:hidden fixed left-0 right-0 z-[10010] transition-transform duration-500 ease-out"
+      {/* ===== MOBILE EXPANDABLE BOTTOM BAR (<1024px) ===== */}
+      {/* Burger menu animation styles */}
+      <style>{`
+        .mobile-menu-burger .hamburger-svg {
+          height: 100%;
+          transition: transform 0.4s;
+        }
+        .mobile-menu-burger .hamburger-svg .line {
+          fill: none;
+          stroke: #ffd700;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          stroke-width: 2.5;
+          transition: stroke-dasharray 0.4s, stroke-dashoffset 0.4s;
+        }
+        .mobile-menu-burger .hamburger-svg .line-top-bottom {
+          stroke-dasharray: 12 63;
+        }
+        .mobile-menu-burger.menu-open .hamburger-svg {
+          transform: rotate(-45deg);
+        }
+        .mobile-menu-burger.menu-open .hamburger-svg .line-top-bottom {
+          stroke-dasharray: 20 300;
+          stroke-dashoffset: -32.42;
+        }
+        @keyframes mobileMenuSlideUp {
+          from { transform: translateY(100%); }
+          to { transform: translateY(0); }
+        }
+        @keyframes mobileMenuSlideDown {
+          from { transform: translateY(0); }
+          to { transform: translateY(100%); }
+        }
+        .mobile-menu-panel {
+          animation: mobileMenuSlideUp 0.3s ease-out forwards;
+        }
+        .mobile-menu-panel-closing {
+          animation: mobileMenuSlideDown 0.25s ease-in forwards;
+        }
+      `}</style>
+
+      {/* Floating Pixel Help Button - Top Right (Mobile only) */}
+      <div
+        className="min-[1024px]:hidden fixed z-[10015] transition-opacity duration-300"
         style={{
-          background: 'transparent',
-          overflow: 'visible',
-          transform: isAnyPopupOpen
-            ? 'translateY(-100%)'
-            : 'translateY(0)',
-          top: 0,
+          top: '16px',
+          right: '16px',
+          opacity: isAnyPopupOpen || isMobileMenuOpen ? 0 : 1,
+          pointerEvents: isAnyPopupOpen || isMobileMenuOpen ? 'none' : 'auto',
+          filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
         }}
       >
+        {activeSection === 'calls' ? (
+          <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" size="mobile" className="relative" />
+        ) : activeSection === 'templates' ? (
+          <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" size="mobile" className="relative" />
+        ) : activeSection === 'courses' ? (
+          <PixelHelpButton onClick={() => setShowEliteCoursesHelpModal(true)} color="purple" ariaLabel="Elite Courses Help" size="mobile" className="relative" />
+        ) : activeSection === 'new-agents' ? (
+          <PixelHelpButton onClick={() => setShowNewAgentsHelpModal(true)} color="gold" ariaLabel="New Agents Help" size="mobile" className="relative" />
+        ) : activeSection === 'agent-page' ? (
+          <PixelHelpButton onClick={() => setShowAgentAttractionHelpModal(true)} color="purple" ariaLabel="Agent Attraction Help" size="mobile" className="relative" />
+        ) : activeSection === 'linktree' ? (
+          <PixelHelpButton onClick={() => setShowLinkPageHelpModal(true)} color="gold" ariaLabel="Link Page Help" size="mobile" className="relative" />
+        ) : (
+          <PixelHelpButton onClick={() => {}} color="grey" ariaLabel="Help unavailable" size="mobile" className="relative" disabled />
+        )}
+      </div>
+
+      {/* Mobile Menu Backdrop - tap to close */}
+      {isMobileMenuOpen && (
         <div
-          className="header-bg-container"
+          className="min-[1024px]:hidden fixed inset-0 z-[10009] bg-black/60 backdrop-blur-sm"
+          onClick={() => setIsMobileMenuOpen(false)}
           style={{
-            width: '100%',
-            borderRadius: '0 0 20px 20px',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-            position: 'relative',
-            overflow: 'hidden',
+            animation: 'slidePanelBackdropIn 0.3s ease-out forwards',
+          }}
+        />
+      )}
+
+      {/* Mobile Bottom Bar - Expandable */}
+      <div
+        className={`min-[1024px]:hidden fixed left-0 right-0 z-[10010] ${isMobileMenuOpen ? 'mobile-menu-panel' : ''}`}
+        style={{
+          bottom: 0,
+          maxHeight: isMobileMenuOpen ? '85vh' : 'auto',
+          WebkitTapHighlightColor: 'transparent',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        }}
+        onTouchStart={(e) => {
+          mobileMenuTouchStartRef.current = {
+            y: e.touches[0].clientY,
+            time: Date.now(),
+          };
+        }}
+        onTouchEnd={(e) => {
+          if (!mobileMenuTouchStartRef.current || !isMobileMenuOpen) return;
+          const deltaY = e.changedTouches[0].clientY - mobileMenuTouchStartRef.current.y;
+          const deltaTime = Date.now() - mobileMenuTouchStartRef.current.time;
+          // Swipe down to close (fast swipe or long swipe)
+          if (deltaY > 80 || (deltaY > 40 && deltaTime < 300)) {
+            setIsMobileMenuOpen(false);
+          }
+          mobileMenuTouchStartRef.current = null;
+        }}
+      >
+        {/* Glass background container */}
+        <div
+          className="relative overflow-hidden"
+          style={{
+            borderRadius: '20px 20px 0 0',
+            boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.4)',
           }}
         >
-          {/* Glass background - matching desktop L-frame and mobile bottom bar */}
+          {/* Glass background - matching desktop L-frame */}
           <div
             className="absolute inset-0"
             style={{
               background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-              borderRadius: '0 0 20px 20px',
-              borderBottom: '1px solid rgba(180, 180, 180, 0.3)', /* Light grey line at bottom */
             }}
           />
-          {/* Glass texture overlay - matching desktop L-frame */}
+          {/* Corrugated glass texture overlay - matching desktop L-frame */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -2634,50 +2727,41 @@ function AgentPortal() {
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
-              borderRadius: '0 0 20px 20px',
             }}
           />
 
-          <div className="flex items-center justify-between px-4 sm:px-8 relative z-10 h-16 min-[1024px]:h-[85px]">
-            {/* SAA Logo - links to dashboard */}
-            {/* Mobile (<1024px): S icon logo */}
-            {/* Desktop (>=1024px): Full SAA logo */}
+          {/* Top border glow */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[1px]"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.4) 20%, rgba(180, 180, 180, 0.4) 80%, transparent 100%)',
+            }}
+          />
+
+          {/* Header portion - S logo | Title | Burger */}
+          <div className="relative z-10 flex items-center justify-between px-4 h-16">
+            {/* S Logo - links to dashboard */}
             <button
-              onClick={() => setActiveSection('dashboard')}
+              onClick={() => {
+                setActiveSection('dashboard');
+                setIsMobileMenuOpen(false);
+              }}
               className="flex-shrink-0 cursor-pointer"
               title="Go to Dashboard"
             >
-              {/* S logo for mobile - using local transparent PNG (same as SAA Support panel) */}
               <img
                 src="/icons/s-logo-1000.png"
                 alt="Smart Agent Alliance"
-                className="min-[1024px]:hidden object-contain"
+                className="object-contain"
                 style={{
                   width: '36px',
                   height: '36px',
                 }}
               />
-              {/* Full SAA logo for desktop */}
-              <img
-                src="/images/saa-logo-gold.png"
-                alt="Smart Agent Alliance"
-                className="hidden min-[1024px]:block"
-                style={{
-                  width: 'clamp(100px, calc(80px + 3vw), 140px)',
-                  height: 'auto',
-                }}
-              />
             </button>
 
-            {/* Desktop (>=1024px): AGENT PORTAL title - centered in header */}
-            <div className="hidden min-[1024px]:block absolute left-1/2 -translate-x-1/2">
-              <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(28px, calc(20px + 1.5vw), 48px)' }}>
-                AGENT PORTAL
-              </H1>
-            </div>
-
-            {/* Mobile (<1024px): Section Title - centered */}
-            <div className="min-[1024px]:hidden absolute left-1/2 -translate-x-1/2">
+            {/* Section Title - centered */}
+            <div className="absolute left-1/2 -translate-x-1/2">
               <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap">
                 {activeSection === 'onboarding' && 'Onboarding'}
                 {activeSection === 'dashboard' && 'Home'}
@@ -2694,157 +2778,102 @@ function AgentPortal() {
               </span>
             </div>
 
-            {/* Right side: Mobile Help Button + Desktop Logout */}
-            <div className="flex items-center gap-3">
-              {/* Mobile (<1024px): Pixel Help Button - always visible, greyed out for sections without modals */}
-              <div className="min-[1024px]:hidden">
-                {activeSection === 'calls' ? (
-                  <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" size="mobile" className="relative" />
-                ) : activeSection === 'templates' ? (
-                  <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" size="mobile" className="relative" />
-                ) : activeSection === 'courses' ? (
-                  <PixelHelpButton onClick={() => setShowEliteCoursesHelpModal(true)} color="purple" ariaLabel="Elite Courses Help" size="mobile" className="relative" />
-                ) : activeSection === 'new-agents' ? (
-                  <PixelHelpButton onClick={() => setShowNewAgentsHelpModal(true)} color="gold" ariaLabel="New Agents Help" size="mobile" className="relative" />
-                ) : activeSection === 'agent-page' ? (
-                  <PixelHelpButton onClick={() => setShowAgentAttractionHelpModal(true)} color="purple" ariaLabel="Agent Attraction Help" size="mobile" className="relative" />
-                ) : activeSection === 'linktree' ? (
-                  <PixelHelpButton onClick={() => setShowLinkPageHelpModal(true)} color="gold" ariaLabel="Link Page Help" size="mobile" className="relative" />
-                ) : (
-                  /* Grey/disabled for sections without help modals: dashboard, onboarding, profile, production, download, support */
-                  <PixelHelpButton onClick={() => {}} color="grey" ariaLabel="Help unavailable" size="mobile" className="relative" disabled />
-                )}
-              </div>
-              {/* Desktop (>=1024px): Logout Button */}
-              <button
-                onClick={handleLogout}
-                className="hidden min-[1024px]:flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all uppercase font-semibold"
-                style={{
-                  fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
-                  fontSize: 'clamp(17px, calc(15.36px + 0.55vw), 32px)',
-                  letterSpacing: '0.05em',
-                }}
-              >
-                <span>Logout</span>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-              </button>
-            </div>
+            {/* Burger Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`mobile-menu-burger flex items-center justify-center w-10 h-10 ${isMobileMenuOpen ? 'menu-open' : ''}`}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMobileMenuOpen}
+            >
+              <svg viewBox="0 0 32 32" className="hamburger-svg w-6 h-6">
+                <path className="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22" />
+                <path className="line" d="M7 16 27 16" />
+              </svg>
+            </button>
           </div>
-        </div>
-      </header>
 
-      {/* Mobile Bottom Navigation - 3D button styling with separators */}
-      <nav
-        className="mobile-bottom-nav min-[1024px]:hidden fixed bottom-0 left-0 right-0 z-50"
-        style={{
-          WebkitTapHighlightColor: 'transparent',
-          WebkitTouchCallout: 'none',
-          transform: 'translateZ(0)',
-          backfaceVisibility: 'hidden',
-          WebkitBackfaceVisibility: 'hidden',
-          contain: 'layout style paint',
-          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-        } as React.CSSProperties}
-      >
-        {/* Glass background - matching desktop L-frame with rounded top corners */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
-            borderTopLeftRadius: '20px',
-            borderTopRightRadius: '20px',
-            borderTop: '1px solid rgba(180, 180, 180, 0.3)', /* Light grey line at top */
-          }}
-        />
-        {/* Glass texture overlay - matching desktop L-frame */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `
-              repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
-              repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
-            `,
-            borderTopLeftRadius: '20px',
-            borderTopRightRadius: '20px',
-          }}
-        />
+          {/* Menu Items - visible when expanded */}
+          {isMobileMenuOpen && (
+            <>
+              {/* Separator line */}
+              <div
+                className="mx-4 h-[1px]"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.3) 20%, rgba(180, 180, 180, 0.3) 80%, transparent 100%)',
+                }}
+              />
 
-        <div
-          className="relative flex items-center h-16 px-1"
-          style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-        >
-          {/* Mobile nav items change based on onboarding completion:
-              - Before completion: Start, Support, Link Page, Home (4 items - NO Profile, NO Calls)
-              - After completion: Home, Support, Calls, Link Page, Profile (5 items - NO Start/Onboarding) */}
-          {(isOnboardingComplete
-            ? [
-                { id: 'dashboard' as SectionId, label: 'Home', Icon: Home },
-                { id: 'support' as SectionId, label: 'Support', Icon: LifeBuoy },
-                { id: 'calls' as SectionId, label: 'Calls', Icon: Video },
-                { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
-                { id: 'profile' as SectionId, label: 'Profile', Icon: User },
-              ]
-            : [
-                { id: 'onboarding' as SectionId, label: 'Start', Icon: Rocket },
-                { id: 'support' as SectionId, label: 'Support', Icon: LifeBuoy },
-                { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
-                { id: 'dashboard' as SectionId, label: 'Home', Icon: Home },
-              ]
-          ).map((item, index, arr) => {
-            const isActive = activeSection === item.id;
-            return (
-              <div key={item.id} className="flex items-center flex-1 h-full">
-                <button
-                  data-section={item.id}
-                  onClick={() => setActiveSection(item.id)}
-                  className="relative flex flex-col items-center justify-center w-full h-[52px] mx-0.5 rounded-lg transition-all duration-200"
-                  style={{
-                    WebkitTapHighlightColor: 'transparent',
-                    background: isActive
-                      ? 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)'
-                      : 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
-                    boxShadow: isActive
-                      ? `inset 0 1px 0 ${dashboardAccentColor}33, inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px ${dashboardAccentColor}26`
-                      : 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
-                    border: isActive ? `1px solid ${dashboardAccentColor}4D` : '1px solid rgba(255,255,255,0.08)',
-                  } as React.CSSProperties}
-                >
-                  {/* Icon with glow effect when active */}
-                  <div
-                    className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}
-                    style={{
-                      filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
-                      color: isActive ? dashboardAccentColor : 'rgba(229,228,221,0.5)',
+              {/* Menu items - desktop order, vertical, centered */}
+              <div className="relative z-10 py-4 overflow-y-auto" style={{ maxHeight: 'calc(85vh - 80px)' }}>
+                {/* Navigation items in desktop order */}
+                {[
+                  ...(isOnboardingComplete ? [] : [{ id: 'onboarding' as SectionId, label: 'Onboarding', Icon: Rocket }]),
+                  { id: 'dashboard' as SectionId, label: 'Dashboard', Icon: Home },
+                  { id: 'support' as SectionId, label: 'Get Support', Icon: LifeBuoy },
+                  { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
+                  { id: 'agent-page' as SectionId, label: 'Agent Attraction', Icon: UserCircle },
+                  { id: 'calls' as SectionId, label: 'Team Calls', Icon: Video },
+                  { id: 'templates' as SectionId, label: 'Templates', Icon: Megaphone },
+                  { id: 'courses' as SectionId, label: 'Elite Courses', Icon: GraduationCap },
+                  { id: 'production' as SectionId, label: 'Landing Pages', Icon: Users },
+                  { id: 'new-agents' as SectionId, label: 'New Agents', Icon: PersonStanding },
+                  { id: 'download' as SectionId, label: 'Download App', Icon: Download },
+                  { id: 'profile' as SectionId, label: 'My Profile', Icon: User },
+                ].map((item) => {
+                  const isActive = activeSection === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setActiveSection(item.id);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200"
+                      style={{
+                        color: isActive ? dashboardAccentColor : 'rgba(229, 228, 221, 0.7)',
+                        background: isActive ? 'rgba(255, 215, 0, 0.08)' : 'transparent',
+                      }}
+                    >
+                      <item.Icon
+                        className="w-5 h-5"
+                        style={{
+                          filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
+                        }}
+                      />
+                      <span
+                        className="text-sm font-medium"
+                        style={{
+                          textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : 'none',
+                        }}
+                      >
+                        {item.label}
+                      </span>
+                    </button>
+                  );
+                })}
+
+                {/* Logout button at bottom */}
+                <div className="mt-4 pt-4 mx-4 border-t border-white/10">
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleLogout();
                     }}
+                    className="w-full flex items-center justify-center gap-2 py-3 text-[#e5e4dd] hover:text-[#ff4444] transition-colors"
                   >
-                    <item.Icon className="w-5 h-5" />
-                  </div>
-
-                  {/* Label with glow effect when active */}
-                  <span
-                    className="text-[10px] font-medium mt-1 transition-all duration-200"
-                    style={{
-                      color: isActive ? dashboardAccentColor : 'rgba(229,228,221,0.5)',
-                      textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : 'none',
-                    }}
-                  >
-                    {item.label}
-                  </span>
-                </button>
-
-                {/* Separator line between buttons (not after last) */}
-                {index < arr.length - 1 && (
-                  <div className="w-[1px] h-8 bg-white/10 flex-shrink-0" />
-                )}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                      <polyline points="16 17 21 12 16 7" />
+                      <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span className="text-sm font-medium">Logout</span>
+                  </button>
+                </div>
               </div>
-            );
-          })}
+            </>
+          )}
         </div>
-      </nav>
+      </div>
 
       {/* ===== DESKTOP FIXED L-FRAME (1024px+) ===== */}
       {/* UNIFIED L-SHAPE with concave inner corner */}
@@ -2914,14 +2943,14 @@ function AgentPortal() {
           />
 
           {/* 4. Shadow for SIDEBAR RIGHT EDGE - straight line */}
-          {/* Responsive: <1300: up 2px, down 1px | 1300-1700: up 2px, down 2px | >1700: up 1px, down 1px */}
+          {/* Responsive: <1300: up 2px, down 2px | 1300-1700: up 2px, down 3px | >1700: up 1px, down 2px */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: `${lFrame.headerHeight + lFrame.cornerRadius + 1 - (windowWidth >= 1700 ? 1 : 2)}px`,
               left: `${lFrame.sidebarWidth}px`,
               width: '6px',
-              bottom: `${24 - (windowWidth >= 1700 ? 1 : windowWidth >= 1300 ? 2 : 1)}px`,
+              bottom: `${24 - (windowWidth >= 1700 ? 2 : windowWidth >= 1300 ? 3 : 2)}px`,
               zIndex: 0,
               background: 'linear-gradient(to right, rgba(180,180,180,0.25) 0%, rgba(180,180,180,0.12) 50%, transparent 100%)',
             }}
@@ -3342,8 +3371,9 @@ function AgentPortal() {
           }}
         >
         {/* Content Area */}
+        {/* pb-24 on mobile for bottom bar clearance (96px), reduced on desktop */}
         <main
-          className="flex-1 p-4 sm:p-6 min-[1024px]:p-8 min-h-screen min-[1024px]:min-h-0"
+          className="flex-1 p-4 pb-24 sm:p-6 sm:pb-24 min-[1024px]:p-8 min-[1024px]:pb-8 min-h-screen min-[1024px]:min-h-0"
           style={{
             WebkitTapHighlightColor: 'transparent',
             WebkitTouchCallout: 'none',
