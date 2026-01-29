@@ -12680,10 +12680,10 @@ return (
         Right: Preview/Button Links (340px fixed)
         ==================================================================== */}
     <div
-      className="hidden min-[1024px]:grid min-[1650px]:hidden gap-4 items-stretch"
+      className="hidden min-[1024px]:grid min-[1650px]:hidden gap-4 items-start"
       style={{ gridTemplateColumns: '1fr 340px' }}
     >
-      {/* LEFT COLUMN: Tabbed Content - flex column to fill height, min 390px wide */}
+      {/* LEFT COLUMN: Tabbed Content - flex column, min 390px wide */}
       <div className="flex flex-col gap-4" style={{ minWidth: '390px' }}>
         {/* Pill Tab Selector - 3 single-word tabs with gold active state */}
         <div
@@ -12758,8 +12758,13 @@ return (
         )}
       </div>
 
-      {/* RIGHT COLUMN: Preview (340px fixed) - uses shared render function */}
-      {renderPreviewButtonLinksCard(false)}
+      {/* RIGHT COLUMN: Preview (340px fixed) - sticky so it stays in view */}
+      <div className="sticky top-4" style={{ maxHeight: 'calc(100vh - 2rem)', overflowY: 'auto', overflowX: 'hidden', scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}>
+        <style>{`.medium-preview-col::-webkit-scrollbar { display: none; }`}</style>
+        <div className="medium-preview-col">
+          {renderPreviewButtonLinksCard(false)}
+        </div>
+      </div>
     </div>
 
     {/* ====================================================================
