@@ -11774,86 +11774,9 @@ function AgentPagesSection({
     </div>
   );
 
-  // Medium screen preview column (just the phone mockup, no button link editing)
-  const renderMediumScreenPreview = () => (
-    <div className="rounded-xl overflow-visible sticky top-4" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-      <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-        <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-          <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-          <line x1="12" y1="18" x2="12" y2="18" />
-        </svg>
-        <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Preview</span>
-      </div>
-      <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ minHeight: '480px', background: '#0a0a0a' }}>
-        {pageData?.activated && (generatedSlug || pageData?.slug) ? (
-          <div className="flex justify-center py-4">
-            <div className="phone-mockup" style={{ width: '250px' }}>
-              <div className="phone-screen" style={{ height: '430px' }}>
-                <iframe
-                  src={`${linktreeUrl}?preview=true`}
-                  className="absolute top-0 left-0"
-                  style={{ width: '390px', height: '680px', transform: 'scale(0.57)', transformOrigin: 'top left', pointerEvents: 'none', border: 'none', outline: 'none', background: '#0a0a0a' }}
-                  title="Link Page Preview"
-                />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="flex justify-center py-4">
-            <div className="phone-mockup" style={{ width: '250px' }}>
-              <div className="phone-screen flex flex-col items-center justify-center text-center px-6" style={{ height: '430px' }}>
-                <div className="w-14 h-14 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
-                  <svg className="w-7 h-7 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                  </svg>
-                </div>
-                <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
-                <p className="text-[#e5e4dd]/40 text-xs">Activate your page to see the preview</p>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-      {/* Note: Full Button Links editing is available at 1650px+ screen width */}
-      <div className="px-4 py-3 border-t border-white/10 text-center">
-        <p className="text-[10px] text-white/30">Edit button links on larger screens (1650px+)</p>
-      </div>
-    </div>
-  );
-
-return (
-  <div className="link-page-fluid-root px-2 sm:px-4" style={{ maxWidth: '1600px', margin: '0 auto' }}>
-
-    {/* ====================================================================
-        NEW 4-COLUMN CARD LAYOUT - Desktop (≥1100px)
-        Layout:
-        Row 1: Profile | Style | Contact | Preview/Button Links (spans 2 rows)
-        Row 2: Social Links (spans 2 cols) | Page Actions | (Preview continues)
-        ==================================================================== */}
-
-    {/* DESKTOP LAYOUT (≥1650px) - Full 4-column layout, overflow visible for button controls */}
-    {/* Profile: 310px | Style: 388px | Contact/Page Actions: 260px | Preview: 340px */}
-    <div
-      className="hidden min-[1650px]:grid gap-4 overflow-visible"
-      style={{
-        gridTemplateColumns: '310px 388px 260px 340px',
-        gridTemplateRows: 'auto auto',
-      }}
-    >
-      {/* Profile Card - uses shared render function */}
-      {renderProfileCard()}
-
-      {/* Style Card - uses shared render function */}
-      {renderStyleCard()}
-
-      {/* Contact Card - uses shared render function */}
-      {renderContactCard()}
-
-      {/* ================================================================
-          PREVIEW / BUTTON LINKS CARD (Gold header, spans 2 rows)
-          Note: overflow-visible required for button controls to appear outside phone border
-          ================================================================ */}
-      <div className="rounded-xl overflow-visible row-span-2" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+  // Preview / Button Links Card (Gold header) - Shared between desktop and medium screen layouts
+  const renderPreviewButtonLinksCard = (withRowSpan: boolean) => (
+      <div className={`rounded-xl overflow-visible ${withRowSpan ? 'row-span-2' : ''}`} style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
         {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
           <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
@@ -12697,6 +12620,42 @@ return (
           </div>
         </div>
       </div>
+  );
+
+return (
+  <div className="link-page-fluid-root px-2 sm:px-4" style={{ maxWidth: '1600px', margin: '0 auto' }}>
+
+    {/* ====================================================================
+        NEW 4-COLUMN CARD LAYOUT - Desktop (≥1100px)
+        Layout:
+        Row 1: Profile | Style | Contact | Preview/Button Links (spans 2 rows)
+        Row 2: Social Links (spans 2 cols) | Page Actions | (Preview continues)
+        ==================================================================== */}
+
+    {/* DESKTOP LAYOUT (≥1650px) - Full 4-column layout, overflow visible for button controls */}
+    {/* Profile: 310px | Style: 388px | Contact/Page Actions: 260px | Preview: 340px */}
+    <div
+      className="hidden min-[1650px]:grid gap-4 overflow-visible"
+      style={{
+        gridTemplateColumns: '310px 388px 260px 340px',
+        gridTemplateRows: 'auto auto',
+      }}
+    >
+      {/* Profile Card - uses shared render function */}
+      {renderProfileCard()}
+
+      {/* Style Card - uses shared render function */}
+      {renderStyleCard()}
+
+      {/* Contact Card - uses shared render function */}
+      {renderContactCard()}
+
+      {/* ================================================================
+          PREVIEW / BUTTON LINKS CARD (Gold header, spans 2 rows)
+          Note: overflow-visible required for button controls to appear outside phone border
+          ================================================================ */}
+      {/* Preview / Button Links Card - uses shared render function */}
+      {renderPreviewButtonLinksCard(true)}
 
       {/* Social Links Card - uses shared render function with col-span-2 wrapper for desktop grid */}
       <div className="col-span-2">
@@ -12791,7 +12750,7 @@ return (
       </div>
 
       {/* RIGHT COLUMN: Preview (340px fixed) - uses shared render function */}
-      {renderMediumScreenPreview()}
+      {renderPreviewButtonLinksCard(false)}
     </div>
 
   </div>
@@ -12979,7 +12938,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-mobile > span:nth-child(4)::after {
           /* Keep original size ratio */
           width: 0.25rem !important;
-          height: 0.25rem !important;
+          height: 0.2rem !important; /* Reduced by 1px to prevent tall dot appearance */
           /* Attempt 6: Was too high and too far left, adjusting down and right */
           /* Previous: top: 6px, left: 8px */
           top: 8px !important;
@@ -13121,8 +13080,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
           border-radius: 0.0625px;
           background-color: var(--btn-text);
           box-shadow:
-            0.75em 2.2em var(--btn-text),
-            1em 2.2em var(--btn-text),
+            0.75em 2.1375em var(--btn-text),
+            1em 2.1375em var(--btn-text),
             0.75em 1.75em var(--btn-text),
             1em 1.75em var(--btn-text),
             0.75em 1.25em var(--btn-text),
