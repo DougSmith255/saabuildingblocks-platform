@@ -13428,8 +13428,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
           border-radius: 0.0625px;
           background-color: var(--btn-text);
           box-shadow:
-            0.75em 2em var(--btn-text),
-            1em 2em var(--btn-text),
+            0.75em 2.2em var(--btn-text),
+            1em 2.2em var(--btn-text),
             0.75em 1.75em var(--btn-text),
             1em 1.75em var(--btn-text),
             0.75em 1.25em var(--btn-text),
