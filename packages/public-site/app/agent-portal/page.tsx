@@ -2765,15 +2765,16 @@ function AgentPortal() {
             }}
           />
 
-          {/* 3D edge effect - TOP ONLY (same style as main website header) */}
-          {/* Single subtle top edge with soft glow - no side borders */}
+          {/* 3D edge effect - WRAPS around top rounded corners */}
           <div
-            className="absolute inset-x-0 top-0 pointer-events-none"
+            className="absolute top-0 left-0 right-0 pointer-events-none"
             style={{
-              height: '2px',
+              height: '24px', /* Tall enough to show curve (20px radius) + some straight edge */
               borderRadius: '20px 20px 0 0',
-              background: 'linear-gradient(90deg, rgba(60, 60, 60, 0.4) 0%, rgba(80, 80, 80, 0.8) 50%, rgba(60, 60, 60, 0.4) 100%)',
-              boxShadow: '0 1px 4px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.08)',
+              borderTop: '2px solid rgba(80, 80, 80, 0.8)',
+              borderLeft: '2px solid rgba(60, 60, 60, 0.5)',
+              borderRight: '2px solid rgba(60, 60, 60, 0.5)',
+              boxShadow: '0 1px 4px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.06)',
             }}
           />
 
