@@ -3840,6 +3840,7 @@ function AgentPortal() {
                 setShowLinkPageIntroModal={setShowLinkPageIntroModal}
                 setShowLinkPageHelpModal={setShowLinkPageHelpModal}
                 showLinkPageHelpModal={showLinkPageHelpModal}
+                isActive={activeSection === 'linktree'}
               />
             </div>
             )}
@@ -12766,7 +12767,7 @@ return (
         Rendered via portal to document.body to escape parent transforms
         that break position:fixed. Save/Activate on left, 0.75x help on right.
         ==================================================================== */}
-    {typeof window !== 'undefined' && createPortal(
+    {typeof window !== 'undefined' && isActive && createPortal(
       <div className="hidden min-[1024px]:flex min-[1650px]:hidden fixed bottom-4 right-4 z-[100] items-center gap-2">
         {/* Save/Activate Button - matches pixel help button height (3rem) */}
         {!pageData?.activated ? (
@@ -12810,12 +12811,11 @@ return (
             {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save' : 'Saved'}
           </button>
         )}
-        {/* Pixel Help Button - medium size (0.75x) */}
+        {/* Pixel Help Button - auto-sized to 0.75x via CSS media query on 1024-1649px */}
         <PixelHelpButton
           onClick={() => setShowLinkPageHelpModal(true)}
           color="gold"
           ariaLabel="Link Page Help"
-          size="medium"
           className="relative"
         />
       </div>,
@@ -13059,6 +13059,74 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
             5px 0 0 0 var(--btn-text),
             inset 0 1.5px 0 0 var(--btn-light),
             inset 0 -1.5px 0 0 var(--btn-dark) !important;
+        }
+        /* ===== AUTO-RESIZE: All pixel help buttons → 0.75x on medium screens (1024-1649px) ===== */
+        @media (min-width: 1024px) and (max-width: 1649px) {
+          .pixel-help-gold:not(.pixel-help-mobile),
+          .pixel-help-purple:not(.pixel-help-mobile),
+          .pixel-help-teal:not(.pixel-help-mobile),
+          .pixel-help-green:not(.pixel-help-mobile),
+          .pixel-help-gradient:not(.pixel-help-mobile),
+          .pixel-help-grey:not(.pixel-help-mobile) {
+            width: 3rem !important;
+            height: 3rem !important;
+          }
+          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(2),
+          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(2),
+          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(2),
+          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(2),
+          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(2),
+          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(2) {
+            inset: 2px !important;
+          }
+          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(3)::before,
+          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(3)::before,
+          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(3)::before,
+          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(3)::before,
+          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(3)::before,
+          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(3)::before {
+            width: 0.3rem !important;
+            height: 0.3rem !important;
+            top: 0.2rem !important;
+            left: 0.2rem !important;
+            box-shadow:
+              2.3em 0 var(--btn-text),
+              0 2.3em var(--btn-text),
+              2.3em 2.3em var(--btn-text) !important;
+          }
+          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(4),
+          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(4),
+          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(4),
+          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(4),
+          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(4),
+          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(4) {
+            font-size: 12px !important;
+          }
+          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(4)::after,
+          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(4)::after,
+          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(4)::after,
+          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(4)::after,
+          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(4)::after,
+          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(4)::after {
+            width: 0.2rem !important;
+            height: 0.2rem !important;
+            top: 10px !important;
+            left: 12px !important;
+            transform: none !important;
+          }
+          .pixel-help-gold:not(.pixel-help-mobile) > span:nth-child(5),
+          .pixel-help-purple:not(.pixel-help-mobile) > span:nth-child(5),
+          .pixel-help-teal:not(.pixel-help-mobile) > span:nth-child(5),
+          .pixel-help-green:not(.pixel-help-mobile) > span:nth-child(5),
+          .pixel-help-gradient:not(.pixel-help-mobile) > span:nth-child(5),
+          .pixel-help-grey:not(.pixel-help-mobile) > span:nth-child(5) {
+            inset: 0.375rem 1.125rem !important;
+            border-radius: 0.5625rem !important;
+            box-shadow:
+              5px 0 0 0 var(--btn-text),
+              inset 0 1.5px 0 0 var(--btn-light),
+              inset 0 -1.5px 0 0 var(--btn-dark) !important;
+          }
         }
         .pixel-help-gold > button,
         .pixel-help-purple > button,
