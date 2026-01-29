@@ -2873,12 +2873,12 @@ function AgentPortal() {
           */}
 
           {/* 1. Shadow for HEADER BOTTOM EDGE - straight line from inner corner to header corner */}
-          {/* Responsive: >1700px and 1024-1300px extends left 1px */}
+          {/* Responsive: >1700px and <1300px extends left 1px */}
           <div
             className="absolute pointer-events-none"
             style={{
               top: `${lFrame.headerHeight}px`,
-              left: `${lFrame.sidebarWidth + lFrame.cornerRadius - (windowWidth >= 1700 || (windowWidth >= 1024 && windowWidth < 1300) ? 1 : 0)}px`,
+              left: `${lFrame.sidebarWidth + lFrame.cornerRadius - (windowWidth >= 1700 || windowWidth < 1300 ? 1 : 0)}px`,
               right: '24px',
               height: '6px',
               zIndex: 0,
