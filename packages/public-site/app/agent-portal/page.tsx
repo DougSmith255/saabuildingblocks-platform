@@ -2614,21 +2614,25 @@ function AgentPortal() {
       <style>{`
         .mobile-menu-burger .hamburger-svg {
           height: 100%;
-          transition: transform 0.4s;
+          transition: transform 0.4s ease 0.3s;
         }
         .mobile-menu-burger .hamburger-svg .line {
           fill: none;
           stroke: #ffd700;
           stroke-linecap: round;
           stroke-linejoin: round;
-          stroke-width: 2.5;
-          transition: stroke-dasharray 0.4s, stroke-dashoffset 0.4s;
+          stroke-width: 3.5;
+          transition: stroke-dasharray 0.4s ease 0.3s, stroke-dashoffset 0.4s ease 0.3s;
         }
         .mobile-menu-burger .hamburger-svg .line-top-bottom {
           stroke-dasharray: 12 63;
         }
         .mobile-menu-burger.menu-open .hamburger-svg {
           transform: rotate(-45deg);
+          transition: transform 0.4s ease 0s;
+        }
+        .mobile-menu-burger.menu-open .hamburger-svg .line {
+          transition: stroke-dasharray 0.4s ease 0s, stroke-dashoffset 0.4s ease 0s;
         }
         .mobile-menu-burger.menu-open .hamburger-svg .line-top-bottom {
           stroke-dasharray: 20 300;
@@ -2761,57 +2765,35 @@ function AgentPortal() {
             }}
           />
 
-          {/* 3D edge effect - wraps around top corners with beveled look */}
+          {/* 3D edge effect - solid line wrapping smoothly around top corners */}
           <div
-            className="absolute inset-0 pointer-events-none overflow-hidden"
+            className="absolute inset-0 pointer-events-none"
             style={{ borderRadius: '20px 20px 0 0' }}
           >
-            {/* Main bevel highlight - top edge */}
-            <div
-              className="absolute top-0 left-0 right-0 h-[3px]"
-              style={{
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(200, 200, 200, 0.08) 100%)',
-              }}
-            />
-            {/* Inner shadow below highlight */}
-            <div
-              className="absolute top-[3px] left-0 right-0 h-[2px]"
-              style={{
-                background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, transparent 100%)',
-              }}
-            />
-            {/* Left corner vertical edge */}
-            <div
-              className="absolute top-0 left-0 w-[3px] h-[20px]"
-              style={{
-                background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.18) 0%, transparent 100%)',
-                borderTopLeftRadius: '20px',
-              }}
-            />
-            {/* Right corner vertical edge */}
-            <div
-              className="absolute top-0 right-0 w-[3px] h-[20px]"
-              style={{
-                background: 'linear-gradient(270deg, rgba(255, 255, 255, 0.18) 0%, transparent 100%)',
-                borderTopRightRadius: '20px',
-              }}
-            />
-            {/* Corner arc highlights - top left */}
-            <div
-              className="absolute top-0 left-0 w-[20px] h-[20px]"
-              style={{
-                background: 'radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.25) 0%, transparent 70%)',
-                borderTopLeftRadius: '20px',
-              }}
-            />
-            {/* Corner arc highlights - top right */}
-            <div
-              className="absolute top-0 right-0 w-[20px] h-[20px]"
-              style={{
-                background: 'radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.25) 0%, transparent 70%)',
-                borderTopRightRadius: '20px',
-              }}
-            />
+            {/* SVG for smooth continuous line around corners */}
+            <svg
+              className="absolute top-0 left-0 w-full h-[40px]"
+              preserveAspectRatio="none"
+              viewBox="0 0 100 40"
+              style={{ overflow: 'visible' }}
+            >
+              {/* Outer highlight line */}
+              <path
+                d="M 0 40 L 0 20 Q 0 0 20 0 L 80 0 Q 100 0 100 20 L 100 40"
+                fill="none"
+                stroke="rgba(255, 255, 255, 0.28)"
+                strokeWidth="1.5"
+                vectorEffect="non-scaling-stroke"
+              />
+              {/* Inner shadow line for 3D depth */}
+              <path
+                d="M 1 40 L 1 20 Q 1 1 20 1 L 80 1 Q 99 1 99 20 L 99 40"
+                fill="none"
+                stroke="rgba(0, 0, 0, 0.2)"
+                strokeWidth="1"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
           </div>
 
           {/* Header portion - S logo | Title | Burger */}
