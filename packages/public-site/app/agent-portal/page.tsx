@@ -2614,7 +2614,7 @@ function AgentPortal() {
       <style>{`
         .mobile-menu-burger .hamburger-svg {
           height: 100%;
-          transition: transform 0.4s ease 0.3s;
+          transition: transform 0.4s ease 0.2s;
         }
         .mobile-menu-burger .hamburger-svg .line {
           fill: none;
@@ -2622,17 +2622,17 @@ function AgentPortal() {
           stroke-linecap: round;
           stroke-linejoin: round;
           stroke-width: 3.5;
-          transition: stroke-dasharray 0.4s ease 0.3s, stroke-dashoffset 0.4s ease 0.3s;
+          transition: stroke-dasharray 0.4s ease 0.2s, stroke-dashoffset 0.4s ease 0.2s;
         }
         .mobile-menu-burger .hamburger-svg .line-top-bottom {
           stroke-dasharray: 12 63;
         }
         .mobile-menu-burger.menu-open .hamburger-svg {
           transform: rotate(-45deg);
-          transition: transform 0.4s ease 0s;
+          transition: transform 0.4s ease 0.2s;
         }
         .mobile-menu-burger.menu-open .hamburger-svg .line {
-          transition: stroke-dasharray 0.4s ease 0s, stroke-dashoffset 0.4s ease 0s;
+          transition: stroke-dasharray 0.4s ease 0.2s, stroke-dashoffset 0.4s ease 0.2s;
         }
         .mobile-menu-burger.menu-open .hamburger-svg .line-top-bottom {
           stroke-dasharray: 20 300;
@@ -2765,32 +2765,15 @@ function AgentPortal() {
             }}
           />
 
-          {/* 3D edge effect - uses CSS borders that naturally follow the 20px border-radius */}
-          {/* Outer highlight line - bright edge */}
+          {/* 3D edge effect - TOP ONLY (same style as main website header) */}
+          {/* Single subtle top edge with soft glow - no side borders */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-x-0 top-0 pointer-events-none"
             style={{
+              height: '2px',
               borderRadius: '20px 20px 0 0',
-              borderTop: '2px solid rgba(255, 255, 255, 0.5)',
-              borderLeft: '2px solid rgba(255, 255, 255, 0.35)',
-              borderRight: '2px solid rgba(255, 255, 255, 0.35)',
-              borderBottom: 'none',
-              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-            }}
-          />
-          {/* Inner shadow for 3D depth - darker inset below the highlight */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: '2px',
-              left: '2px',
-              right: '2px',
-              bottom: 0,
-              borderRadius: '18px 18px 0 0',
-              borderTop: '1px solid rgba(0, 0, 0, 0.4)',
-              borderLeft: '1px solid rgba(0, 0, 0, 0.25)',
-              borderRight: '1px solid rgba(0, 0, 0, 0.25)',
-              borderBottom: 'none',
+              background: 'linear-gradient(90deg, rgba(60, 60, 60, 0.4) 0%, rgba(80, 80, 80, 0.8) 50%, rgba(60, 60, 60, 0.4) 100%)',
+              boxShadow: '0 1px 4px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.08)',
             }}
           />
 
@@ -9586,8 +9569,8 @@ function AgentPagesSection({
   // Tab navigation state for new UI - uses initialTab from props
   const [activeTab, setActiveTab] = useState<AgentPagesTabId>(initialTab);
 
-  // Tablet layout (1024-1549px) uses 2 tabs: 'content' (Profile, Contact, Social) or 'style' (Style, Page Actions)
-  const [tabletTab, setTabletTab] = useState<'content' | 'style'>('content');
+  // Medium screen layout (1024-1649px) uses 3 tabs
+  const [linkPageTab, setLinkPageTab] = useState<'profile-contact' | 'style' | 'socials-actions'>('profile-contact');
 
   // Copy link feedback state
   const [copiedLink, setCopiedLink] = useState<'linktree' | 'linkpage' | 'attraction' | null>(null);
@@ -10949,6 +10932,895 @@ function AgentPagesSection({
   // ========================================================================
   // LINKTREE MODE - Full customization interface
   // ========================================================================
+
+  // ========================================================================
+  // RENDER FUNCTIONS - Shared between desktop and medium screen layouts
+  // ========================================================================
+
+  // Profile Card (Green header)
+  const renderProfileCard = () => (
+    <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+      {/* Header with Premium Glow */}
+      <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+        <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        <span className="text-sm font-medium text-green-400" style={{ textShadow: '0 0 8px rgba(74, 222, 128, 0.5)' }}>Profile</span>
+      </div>
+
+      {/* Content */}
+      <div className="p-4 space-y-4">
+        {/* Photo + B&W/Color Toggle */}
+        <div className="flex items-start gap-4">
+          <div
+            className="w-[100px] h-[100px] rounded-full bg-black/40 border-[3px] flex items-center justify-center overflow-hidden flex-shrink-0 relative"
+            style={{
+              borderColor: getVisibleSocialIconColor(linksSettings.accentColor),
+            }}
+          >
+            {/* Image with B&W filter - border stays colored */}
+            {getProfileImageUrl() && (
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  backgroundImage: `url(${getProfileImageUrl()})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
+                }}
+              />
+            )}
+            {!getProfileImageUrl() && (
+              <svg className="w-12 h-12 text-white/30" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            )}
+            {/* Loading spinner overlay during upload - FIX-003 */}
+            {attractionUploadStatus && (
+              <div className="absolute inset-0 rounded-full bg-black/60 flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-[#ffd700] border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col gap-2">
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleImageUpload}
+              className="hidden"
+              id="profile-photo-upload"
+            />
+            <label
+              htmlFor="profile-photo-upload"
+              className="px-3 py-1.5 rounded text-xs bg-white/10 border border-white/20 text-white/80 hover:bg-white/20 cursor-pointer transition-colors text-center"
+            >
+              Upload Photo
+            </label>
+            {/* B&W / Color Toggle - Pill Design with Animation */}
+            <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '156px' }}>
+              {/* Animated sliding pill indicator - fixed width */}
+              <div
+                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
+                style={{
+                  width: '72px',
+                  left: linksSettings.showColorPhoto ? 'calc(100% - 76px)' : '4px',
+                }}
+              />
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
+                className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: !linksSettings.showColorPhoto ? '#000000' : 'rgba(255,255,255,0.6)'
+                }}
+              >
+                B&W
+              </button>
+              <button
+                onClick={() => {
+                  if (hasColorImage) {
+                    setLinksSettings(prev => ({ ...prev, showColorPhoto: true }));
+                    setHasUnsavedChanges(true);
+                  }
+                }}
+                disabled={!hasColorImage}
+                title={!hasColorImage ? 'Upload a new photo to enable color mode' : 'Show color photo'}
+                className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: linksSettings.showColorPhoto && hasColorImage ? '#000000' : 'rgba(255,255,255,0.6)',
+                  opacity: !hasColorImage ? 0.5 : 1,
+                  cursor: !hasColorImage ? 'not-allowed' : 'pointer'
+                }}
+              >
+                Color
+              </button>
+            </div>
+            {!hasColorImage && (
+              <p className="text-[9px] text-white/40 mt-1">Upload new photo for color option</p>
+            )}
+          </div>
+        </div>
+
+        {/* First Name / Last Name */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">First Name</label>
+            <input
+              type="text"
+              value={formData.display_first_name}
+              onChange={(e) => handleInputChange('display_first_name', e.target.value)}
+              placeholder="First"
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Last Name</label>
+            <input
+              type="text"
+              value={formData.display_last_name}
+              onChange={(e) => handleInputChange('display_last_name', e.target.value)}
+              placeholder="Last"
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Bio */}
+        <div>
+          <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">
+            Bio <span className="text-white/30">({linksSettings.bio.length}/120 • {(linksSettings.bio.match(/\n/g) || []).length + 1}/3 lines)</span>
+          </label>
+          <textarea
+            value={linksSettings.bio}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              const lineCount = (newValue.match(/\n/g) || []).length + 1;
+              // Allow up to 120 chars and max 3 lines
+              if (newValue.length <= 120 && lineCount <= 3) {
+                setLinksSettings(prev => ({ ...prev, bio: newValue }));
+                setHasUnsavedChanges(true);
+              }
+            }}
+            onKeyDown={(e) => {
+              // Prevent new line if already at 3 lines
+              if (e.key === 'Enter') {
+                const lineCount = (linksSettings.bio.match(/\n/g) || []).length + 1;
+                if (lineCount >= 3) {
+                  e.preventDefault();
+                }
+              }
+            }}
+            placeholder="Short bio about yourself...&#10;Press Enter for new line (max 3 lines)"
+            rows={3}
+            className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none resize-none"
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  // Style Card (Purple header)
+  const renderStyleCard = () => (
+    <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+      {/* Header with Premium Glow */}
+      <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+        <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+        <span className="text-sm font-medium text-purple-400" style={{ textShadow: '0 0 8px rgba(192, 132, 252, 0.5)' }}>Style</span>
+      </div>
+
+      {/* Content */}
+      <div className="p-4 space-y-4">
+        {/* Color Mode Selector (Background / Accent) */}
+        <div>
+          <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Color</label>
+          {/* Background / Accent pill selector with color indicator */}
+          {/* Pill text color adapts to background brightness */}
+          <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative mb-3" style={{ width: '200px' }}>
+            {/* Animated sliding pill indicator - fixed width */}
+            <div
+              className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none"
+              style={{
+                width: '95px',
+                left: colorEditMode === 'accent' ? 'calc(100% - 99px)' : '4px',
+                backgroundColor: colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700'),
+              }}
+            />
+            <button
+              onClick={() => setColorEditMode('background')}
+              className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+              style={{
+                fontFamily: 'var(--font-synonym, sans-serif)',
+                // Dynamic text color: white on dark pills, black on light pills
+                color: colorEditMode === 'background'
+                  ? (isColorDark(linksSettings.backgroundColor || '#ffd700') ? '#ffffff' : '#000000')
+                  : 'rgba(255,255,255,0.6)',
+              }}
+            >
+              Background
+            </button>
+            <button
+              onClick={() => setColorEditMode('accent')}
+              className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+              style={{
+                fontFamily: 'var(--font-synonym, sans-serif)',
+                // Dynamic text color: white on dark pills, black on light pills
+                color: colorEditMode === 'accent'
+                  ? (isAccentDark ? '#ffffff' : '#000000')
+                  : 'rgba(255,255,255,0.6)',
+              }}
+            >
+              Accent
+            </button>
+          </div>
+          {/* Context-aware color picker */}
+          <HexColorPicker
+            color={colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700')}
+            onChange={(color) => {
+              if (colorEditMode === 'accent') {
+                setLinksSettings(prev => ({ ...prev, accentColor: color }));
+              } else {
+                setLinksSettings(prev => ({ ...prev, backgroundColor: color }));
+              }
+              setHasUnsavedChanges(true);
+            }}
+            style={{ width: '100%', height: '100px' }}
+          />
+        </div>
+
+        {/* Button Weight + Text Size - Side by side */}
+        <div className="flex gap-3">
+          {/* Button Weight */}
+          <div className="flex-1">
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Button Weight</label>
+            <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '185px' }}>
+              {/* Animated sliding pill indicator - fixed width */}
+              <div
+                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
+                style={{
+                  width: '88px',
+                  left: linksSettings.nameWeight === 'normal' ? 'calc(100% - 92px)' : '4px',
+                }}
+              />
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
+                className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: (linksSettings?.nameWeight || 'bold') === 'bold' ? '#000000' : 'rgba(255,255,255,0.6)'
+                }}
+              >
+                Bold
+              </button>
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
+                className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: linksSettings.nameWeight === 'normal' ? '#000000' : 'rgba(255,255,255,0.6)'
+                }}
+              >
+                Regular
+              </button>
+            </div>
+          </div>
+
+          {/* Text Size - with styled up/down buttons */}
+          <div className="flex-1">
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Text Size</label>
+            <div className="flex items-center rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
+              {/* Down button */}
+              <button
+                onClick={() => {
+                  const currentValue = linksSettings.buttonTextSize ?? 14;
+                  if (currentValue > 8) {
+                    setLinksSettings(prev => ({ ...prev, buttonTextSize: currentValue - 0.5 }));
+                    setHasUnsavedChanges(true);
+                  }
+                }}
+                disabled={(linksSettings.buttonTextSize ?? 14) <= 8}
+                className="flex items-center justify-center rounded-full transition-colors disabled:opacity-30"
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                }}
+              >
+                <svg className="w-3 h-3" fill="none" stroke="#ffd700" strokeWidth="3" viewBox="0 0 24 24">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+              {/* Value display */}
+              <div className="flex-1 flex items-center justify-center">
+                <span className="text-xs text-white" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
+                  {linksSettings.buttonTextSize ?? 14}
+                </span>
+                <span className="text-xs text-white/50 ml-0.5">px</span>
+              </div>
+              {/* Up button */}
+              <button
+                onClick={() => {
+                  const currentValue = linksSettings.buttonTextSize ?? 14;
+                  if (currentValue < 24) {
+                    setLinksSettings(prev => ({ ...prev, buttonTextSize: currentValue + 0.5 }));
+                    setHasUnsavedChanges(true);
+                  }
+                }}
+                disabled={(linksSettings.buttonTextSize ?? 14) >= 24}
+                className="flex items-center justify-center rounded-full transition-colors disabled:opacity-30"
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                }}
+              >
+                <svg className="w-3 h-3" fill="none" stroke="#ffd700" strokeWidth="3" viewBox="0 0 24 24">
+                  <path d="M18 15l-6-6-6 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Font + Name Glow - Side by side */}
+        <div className="flex gap-3">
+          {/* Font */}
+          <div className="flex-1">
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Font</label>
+            <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '185px' }}>
+              {/* Animated sliding pill indicator - fixed width */}
+              <div
+                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
+                style={{
+                  width: '88px',
+                  left: linksSettings.font === 'taskor' ? 'calc(100% - 92px)' : '4px',
+                }}
+              />
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
+                className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: linksSettings.font === 'synonym' ? '#000000' : 'rgba(255,255,255,0.6)'
+                }}
+              >
+                Synonym
+              </button>
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
+                className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: linksSettings.font === 'taskor' ? '#000000' : 'rgba(255,255,255,0.6)'
+                }}
+              >
+                Taskor
+              </button>
+            </div>
+          </div>
+
+          {/* Name Glow */}
+          <div className="flex-1">
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Name Glow</label>
+            <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '156px' }}>
+              {/* Animated sliding pill indicator - fixed width */}
+              <div
+                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
+                style={{
+                  width: '72px',
+                  left: linksSettings.nameGlow === false ? 'calc(100% - 76px)' : '4px',
+                }}
+              />
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: true })); setHasUnsavedChanges(true); }}
+                className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: linksSettings.nameGlow !== false ? '#000000' : 'rgba(255,255,255,0.6)'
+                }}
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: false })); setHasUnsavedChanges(true); }}
+                className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: linksSettings.nameGlow === false ? '#000000' : 'rgba(255,255,255,0.6)'
+                }}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Contact Card (Cyan header)
+  const renderContactCard = () => (
+    <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+      {/* Header with Premium Glow */}
+      <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+        <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="M22 7l-10 5L2 7" />
+        </svg>
+        <span className="text-sm font-medium text-cyan-400" style={{ textShadow: '0 0 8px rgba(34, 211, 238, 0.5)' }}>Contact</span>
+      </div>
+
+      {/* Content */}
+      <div className="p-4 space-y-4">
+        {/* Email */}
+        <div>
+          <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Email</label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => handleInputChange('email', e.target.value)}
+            placeholder="you@email.com"
+            className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
+          />
+          <p className="text-[10px] text-white/30 mt-1">Displayed on your page</p>
+        </div>
+
+        {/* Phone */}
+        <div>
+          <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Phone</label>
+          <input
+            type="tel"
+            value={formData.phone}
+            onChange={(e) => handleInputChange('phone', e.target.value)}
+            placeholder="(555) 123-4567"
+            className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
+          />
+        </div>
+
+        {/* Call/Text Toggles - Premium glass styled checkboxes matching onboarding */}
+        <div className="flex flex-col gap-3">
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={formData.show_call_button}
+              onChange={(e) => handleInputChange('show_call_button', e.target.checked)}
+              className="sr-only peer"
+            />
+            <div
+              className="w-6 h-6 rounded-md flex items-center justify-center transition-all duration-200 peer-focus:ring-2 peer-focus:ring-offset-1 peer-focus:ring-offset-black"
+              style={{
+                background: formData.show_call_button
+                  ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
+                  : '#bfbdb0',
+                border: formData.show_call_button
+                  ? '1px solid rgba(34, 197, 94, 0.5)'
+                  : '1px solid rgba(255,255,255,0.15)',
+                boxShadow: formData.show_call_button
+                  ? '0 0 10px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                  : 'inset 0 1px 2px rgba(0,0,0,0.2)',
+              }}
+            >
+              {formData.show_call_button && (
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+            </div>
+            <span className="text-sm text-white/70">Show Call Button</span>
+          </label>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={formData.show_text_button}
+              onChange={(e) => handleInputChange('show_text_button', e.target.checked)}
+              className="sr-only peer"
+            />
+            <div
+              className="w-6 h-6 rounded-md flex items-center justify-center transition-all duration-200 peer-focus:ring-2 peer-focus:ring-offset-1 peer-focus:ring-offset-black"
+              style={{
+                background: formData.show_text_button
+                  ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
+                  : '#bfbdb0',
+                border: formData.show_text_button
+                  ? '1px solid rgba(34, 197, 94, 0.5)'
+                  : '1px solid rgba(255,255,255,0.15)',
+                boxShadow: formData.show_text_button
+                  ? '0 0 10px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                  : 'inset 0 1px 2px rgba(0,0,0,0.2)',
+              }}
+            >
+              {formData.show_text_button && (
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+            </div>
+            <span className="text-sm text-white/70">Show Text Button</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Social Links Card
+  const renderSocialLinksCard = (gridCols: number = 4) => (
+    <div className="rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)', overflow: 'visible' }}>
+      {/* Header with Premium Glow */}
+      <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Social Links</span>
+        </div>
+        <span className="text-xs text-white/40">{filledSocialLinks}/6 max</span>
+      </div>
+
+      {/* Content */}
+      <div className="p-4">
+        <div className={`grid gap-3`} style={{ gridTemplateColumns: `repeat(${gridCols}, 1fr)` }}>
+          {/* Facebook */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Facebook</label>
+            <input
+              type="url"
+              value={formData.facebook_url}
+              onChange={(e) => handleInputChange('facebook_url', e.target.value)}
+              placeholder="facebook.com/..."
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+            />
+          </div>
+
+          {/* Instagram */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Instagram</label>
+            <input
+              type="url"
+              value={formData.instagram_url}
+              onChange={(e) => handleInputChange('instagram_url', e.target.value)}
+              placeholder="instagram.com/..."
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+            />
+          </div>
+
+          {/* X/Twitter */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">X/Twitter</label>
+            <input
+              type="url"
+              value={formData.twitter_url}
+              onChange={(e) => handleInputChange('twitter_url', e.target.value)}
+              placeholder="x.com/..."
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+            />
+          </div>
+
+          {/* YouTube */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">YouTube</label>
+            <input
+              type="url"
+              value={formData.youtube_url}
+              onChange={(e) => handleInputChange('youtube_url', e.target.value)}
+              placeholder="youtube.com/..."
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+            />
+          </div>
+
+          {/* TikTok */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">TikTok</label>
+            <input
+              type="url"
+              value={formData.tiktok_url}
+              onChange={(e) => handleInputChange('tiktok_url', e.target.value)}
+              placeholder="tiktok.com/..."
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+            />
+          </div>
+
+          {/* LinkedIn */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">LinkedIn</label>
+            <input
+              type="url"
+              value={formData.linkedin_url}
+              onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
+              placeholder="linkedin.com/..."
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+            />
+          </div>
+
+          {/* Custom 1 */}
+          <div className="min-w-0 relative">
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Custom 1</label>
+            <div className="flex gap-1">
+              <button
+                onClick={() => setShowSocialIconPicker(showSocialIconPicker === 0 ? null : 0)}
+                className={`p-2 rounded-lg border flex-shrink-0 transition-colors ${customSocialLinks[0]?.icon && customSocialLinks[0].icon !== 'Globe' ? 'bg-[#ffd700]/20 border-[#ffd700]/30 text-[#ffd700]' : 'bg-black/40 border-white/10 text-white/60 hover:bg-white/10'}`}
+                title="Choose icon"
+              >
+                {customSocialLinks[0]?.icon && customSocialLinks[0].icon !== 'Globe' ? (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === customSocialLinks[0].icon)?.path || ''} />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8M8 12h8" />
+                  </svg>
+                )}
+              </button>
+              <input
+                type="url"
+                value={customSocialLinks[0]?.url || ''}
+                onChange={(e) => {
+                  // Ensure we have a proper array with no sparse elements
+                  const newLinks = [
+                    customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
+                    customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                  ];
+                  newLinks[0] = { ...newLinks[0], url: e.target.value };
+                  setCustomSocialLinks(newLinks);
+                  setHasUnsavedChanges(true);
+                }}
+                placeholder="URL"
+                className="flex-1 min-w-0 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+              />
+            </div>
+            {/* Icon Picker for Custom 1 - fixed position to break out of containers */}
+            {showSocialIconPicker === 0 && (
+              <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 z-[100] max-h-[180px] overflow-y-auto w-48 shadow-xl">
+                <div className="grid grid-cols-6 gap-1">
+                  {LINK_ICONS.map((icon) => (
+                    <button
+                      key={icon.name}
+                      onClick={() => {
+                        // Ensure we have a proper array with no sparse elements
+                        const newLinks = [
+                          customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
+                          customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                        ];
+                        newLinks[0] = { ...newLinks[0], icon: icon.name };
+                        setCustomSocialLinks(newLinks);
+                        setShowSocialIconPicker(null);
+                        setHasUnsavedChanges(true);
+                      }}
+                      className={`p-1.5 rounded transition-colors ${customSocialLinks[0]?.icon === icon.name ? 'bg-[#ffd700]/30 text-[#ffd700]' : 'text-white/60 hover:bg-white/10 hover:text-white'}`}
+                      title={icon.label}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d={icon.path} />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Custom 2 */}
+          <div className="min-w-0 relative">
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Custom 2</label>
+            <div className="flex gap-1">
+              <button
+                onClick={() => setShowSocialIconPicker(showSocialIconPicker === 1 ? null : 1)}
+                className={`p-2 rounded-lg border flex-shrink-0 transition-colors ${customSocialLinks[1]?.icon && customSocialLinks[1].icon !== 'Globe' ? 'bg-[#ffd700]/20 border-[#ffd700]/30 text-[#ffd700]' : 'bg-black/40 border-white/10 text-white/60 hover:bg-white/10'}`}
+                title="Choose icon"
+              >
+                {customSocialLinks[1]?.icon && customSocialLinks[1].icon !== 'Globe' ? (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === customSocialLinks[1].icon)?.path || ''} />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8M8 12h8" />
+                  </svg>
+                )}
+              </button>
+              <input
+                type="url"
+                value={customSocialLinks[1]?.url || ''}
+                onChange={(e) => {
+                  // Ensure we have a proper array with no sparse elements
+                  const newLinks = [
+                    customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
+                    customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                  ];
+                  newLinks[1] = { ...newLinks[1], url: e.target.value };
+                  setCustomSocialLinks(newLinks);
+                  setHasUnsavedChanges(true);
+                }}
+                placeholder="URL"
+                className="flex-1 min-w-0 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+              />
+            </div>
+            {/* Icon Picker for Custom 2 - fixed position to break out of containers */}
+            {showSocialIconPicker === 1 && (
+              <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 z-[100] max-h-[180px] overflow-y-auto w-48 shadow-xl">
+                <div className="grid grid-cols-6 gap-1">
+                  {LINK_ICONS.map((icon) => (
+                    <button
+                      key={icon.name}
+                      onClick={() => {
+                        // Ensure we have a proper array with no sparse elements
+                        const newLinks = [
+                          customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
+                          customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                        ];
+                        newLinks[1] = { ...newLinks[1], icon: icon.name };
+                        setCustomSocialLinks(newLinks);
+                        setShowSocialIconPicker(null);
+                        setHasUnsavedChanges(true);
+                      }}
+                      className={`p-1.5 rounded transition-colors ${customSocialLinks[1]?.icon === icon.name ? 'bg-[#ffd700]/30 text-[#ffd700]' : 'text-white/60 hover:bg-white/10 hover:text-white'}`}
+                      title={icon.label}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d={icon.path} />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Page Actions Card (Emerald header)
+  const renderPageActionsCard = () => (
+    <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+      {/* Header with Premium Glow */}
+      <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+        <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+          <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <span className="text-sm font-medium text-emerald-400" style={{ textShadow: '0 0 8px rgba(52, 211, 153, 0.5)' }}>Page Actions</span>
+      </div>
+
+      {/* Content */}
+      <div className="p-4 space-y-2">
+        {/* Activate Button - Shows only when page is not activated */}
+        {!pageData?.activated && (
+          <button
+            onClick={handleActivate}
+            disabled={isSaving}
+            className="w-full py-3 px-4 rounded-lg font-semibold bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] hover:bg-[#ffd700]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+          >
+            {isSaving ? (
+              <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            )}
+            {isSaving ? 'Activating...' : 'Activate my Page'}
+          </button>
+        )}
+
+        {/* Save Changes Button - Always visible when page is activated, greyed out until changes made */}
+        {pageData?.activated && (
+          <button
+            onClick={handleSave}
+            disabled={isSaving || !hasUnsavedChanges}
+            className="w-full py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+            style={{
+              backgroundColor: hasUnsavedChanges ? '#ffd700' : '#3a3a3a',
+              color: hasUnsavedChanges ? '#000000' : '#888888',
+              cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'not-allowed',
+              opacity: isSaving ? 0.5 : 1,
+            }}
+          >
+            {isSaving ? (
+              <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17,21 17,13 7,13 7,21" />
+                <polyline points="7,3 7,8 15,8" />
+              </svg>
+            )}
+            {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
+          </button>
+        )}
+
+        {/* View Page - Opens the linktree-style link page */}
+        <button
+          onClick={() => linktreeUrl && window.open(linktreeUrl, '_blank')}
+          disabled={!linktreeUrl}
+          className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          VIEW PAGE
+        </button>
+
+        {/* Copy URL - Copies the linktree-style link page URL */}
+        <button
+          onClick={() => linktreeUrl && navigator.clipboard.writeText(linktreeUrl)}
+          disabled={!pageData?.slug}
+          className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+          COPY URL
+        </button>
+
+        {/* QR Code */}
+        <button
+          onClick={downloadQRCode}
+          disabled={!pageData?.activated}
+          className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.activated ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
+          title={!pageData?.activated ? 'Activate your page first to download QR code' : ''}
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="3" height="3" /><rect x="18" y="14" width="3" height="3" /><rect x="14" y="18" width="3" height="3" /><rect x="18" y="18" width="3" height="3" /></svg>
+          QR CODE
+        </button>
+      </div>
+    </div>
+  );
+
+  // Medium screen preview column (just the phone mockup, no button link editing)
+  const renderMediumScreenPreview = () => (
+    <div className="rounded-xl overflow-visible sticky top-4" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+      <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+        <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+          <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+          <line x1="12" y1="18" x2="12" y2="18" />
+        </svg>
+        <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Preview</span>
+      </div>
+      <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ minHeight: '480px', background: '#0a0a0a' }}>
+        {pageData?.activated && (generatedSlug || pageData?.slug) ? (
+          <div className="flex justify-center py-4">
+            <div className="phone-mockup" style={{ width: '250px' }}>
+              <div className="phone-screen" style={{ height: '430px' }}>
+                <iframe
+                  src={`${linktreeUrl}?preview=true`}
+                  className="absolute top-0 left-0"
+                  style={{ width: '390px', height: '680px', transform: 'scale(0.57)', transformOrigin: 'top left', pointerEvents: 'none', border: 'none', outline: 'none', background: '#0a0a0a' }}
+                  title="Link Page Preview"
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-center py-4">
+            <div className="phone-mockup" style={{ width: '250px' }}>
+              <div className="phone-screen flex flex-col items-center justify-center text-center px-6" style={{ height: '430px' }}>
+                <div className="w-14 h-14 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
+                  <svg className="w-7 h-7 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                  </svg>
+                </div>
+                <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
+                <p className="text-[#e5e4dd]/40 text-xs">Activate your page to see the preview</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* Note: Full Button Links editing is available at 1650px+ screen width */}
+      <div className="px-4 py-3 border-t border-white/10 text-center">
+        <p className="text-[10px] text-white/30">Edit button links on larger screens (1650px+)</p>
+      </div>
+    </div>
+  );
+
 return (
   <div className="link-page-fluid-root px-2 sm:px-4" style={{ maxWidth: '1600px', margin: '0 auto' }}>
 
@@ -10959,522 +11831,23 @@ return (
         Row 2: Social Links (spans 2 cols) | Page Actions | (Preview continues)
         ==================================================================== */}
 
-    {/* DESKTOP LAYOUT (≥1024px) - Full 4-column layout, overflow visible for button controls */}
+    {/* DESKTOP LAYOUT (≥1650px) - Full 4-column layout, overflow visible for button controls */}
     {/* Profile: 310px | Style: 388px | Contact/Page Actions: 260px | Preview: 340px */}
     <div
-      className="hidden min-[1024px]:grid gap-4 overflow-visible"
+      className="hidden min-[1650px]:grid gap-4 overflow-visible"
       style={{
         gridTemplateColumns: '310px 388px 260px 340px',
         gridTemplateRows: 'auto auto',
       }}
     >
-      {/* ================================================================
-          PROFILE CARD (Green header)
-          ================================================================ */}
-      <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-        {/* Header with Premium Glow */}
-        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-          <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-          <span className="text-sm font-medium text-green-400" style={{ textShadow: '0 0 8px rgba(74, 222, 128, 0.5)' }}>Profile</span>
-        </div>
+      {/* Profile Card - uses shared render function */}
+      {renderProfileCard()}
 
-        {/* Content */}
-        <div className="p-4 space-y-4">
-          {/* Photo + B&W/Color Toggle */}
-          <div className="flex items-start gap-4">
-            <div
-              className="w-[100px] h-[100px] rounded-full bg-black/40 border-[3px] flex items-center justify-center overflow-hidden flex-shrink-0 relative"
-              style={{
-                borderColor: getVisibleSocialIconColor(linksSettings.accentColor),
-              }}
-            >
-              {/* Image with B&W filter - border stays colored */}
-              {getProfileImageUrl() && (
-                <div
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    backgroundImage: `url(${getProfileImageUrl()})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
-                  }}
-                />
-              )}
-              {!getProfileImageUrl() && (
-                <svg className="w-12 h-12 text-white/30" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-              )}
-              {/* Loading spinner overlay during upload - FIX-003 */}
-              {attractionUploadStatus && (
-                <div className="absolute inset-0 rounded-full bg-black/60 flex items-center justify-center">
-                  <div className="w-8 h-8 border-2 border-[#ffd700] border-t-transparent rounded-full animate-spin" />
-                </div>
-              )}
-            </div>
-            <div className="flex flex-col gap-2">
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="profile-photo-upload"
-              />
-              <label
-                htmlFor="profile-photo-upload"
-                className="px-3 py-1.5 rounded text-xs bg-white/10 border border-white/20 text-white/80 hover:bg-white/20 cursor-pointer transition-colors text-center"
-              >
-                Upload Photo
-              </label>
-              {/* B&W / Color Toggle - Pill Design with Animation */}
-              <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '156px' }}>
-                {/* Animated sliding pill indicator - fixed width */}
-                <div
-                  className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
-                  style={{
-                    width: '72px',
-                    left: linksSettings.showColorPhoto ? 'calc(100% - 76px)' : '4px',
-                  }}
-                />
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                  style={{
-                    fontFamily: 'var(--font-synonym, sans-serif)',
-                    color: !linksSettings.showColorPhoto ? '#000000' : 'rgba(255,255,255,0.6)'
-                  }}
-                >
-                  B&W
-                </button>
-                <button
-                  onClick={() => {
-                    if (hasColorImage) {
-                      setLinksSettings(prev => ({ ...prev, showColorPhoto: true }));
-                      setHasUnsavedChanges(true);
-                    }
-                  }}
-                  disabled={!hasColorImage}
-                  title={!hasColorImage ? 'Upload a new photo to enable color mode' : 'Show color photo'}
-                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                  style={{
-                    fontFamily: 'var(--font-synonym, sans-serif)',
-                    color: linksSettings.showColorPhoto && hasColorImage ? '#000000' : 'rgba(255,255,255,0.6)',
-                    opacity: !hasColorImage ? 0.5 : 1,
-                    cursor: !hasColorImage ? 'not-allowed' : 'pointer'
-                  }}
-                >
-                  Color
-                </button>
-              </div>
-              {!hasColorImage && (
-                <p className="text-[9px] text-white/40 mt-1">Upload new photo for color option</p>
-              )}
-            </div>
-          </div>
+      {/* Style Card - uses shared render function */}
+      {renderStyleCard()}
 
-          {/* First Name / Last Name */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">First Name</label>
-              <input
-                type="text"
-                value={formData.display_first_name}
-                onChange={(e) => handleInputChange('display_first_name', e.target.value)}
-                placeholder="First"
-                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Last Name</label>
-              <input
-                type="text"
-                value={formData.display_last_name}
-                onChange={(e) => handleInputChange('display_last_name', e.target.value)}
-                placeholder="Last"
-                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
-              />
-            </div>
-          </div>
-
-          {/* Bio */}
-          <div>
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">
-              Bio <span className="text-white/30">({linksSettings.bio.length}/120 • {(linksSettings.bio.match(/\n/g) || []).length + 1}/3 lines)</span>
-            </label>
-            <textarea
-              value={linksSettings.bio}
-              onChange={(e) => {
-                const newValue = e.target.value;
-                const lineCount = (newValue.match(/\n/g) || []).length + 1;
-                // Allow up to 120 chars and max 3 lines
-                if (newValue.length <= 120 && lineCount <= 3) {
-                  setLinksSettings(prev => ({ ...prev, bio: newValue }));
-                  setHasUnsavedChanges(true);
-                }
-              }}
-              onKeyDown={(e) => {
-                // Prevent new line if already at 3 lines
-                if (e.key === 'Enter') {
-                  const lineCount = (linksSettings.bio.match(/\n/g) || []).length + 1;
-                  if (lineCount >= 3) {
-                    e.preventDefault();
-                  }
-                }
-              }}
-              placeholder="Short bio about yourself...&#10;Press Enter for new line (max 3 lines)"
-              rows={3}
-              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none resize-none"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* ================================================================
-          STYLE CARD (Purple header)
-          ================================================================ */}
-      <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-        {/* Header with Premium Glow */}
-        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-          <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
-          <span className="text-sm font-medium text-purple-400" style={{ textShadow: '0 0 8px rgba(192, 132, 252, 0.5)' }}>Style</span>
-        </div>
-
-        {/* Content */}
-        <div className="p-4 space-y-4">
-          {/* Color Mode Selector (Background / Accent) */}
-          <div>
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Color</label>
-            {/* Background / Accent pill selector with color indicator */}
-            {/* Pill text color adapts to background brightness */}
-            <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative mb-3" style={{ width: '200px' }}>
-              {/* Animated sliding pill indicator - fixed width */}
-              <div
-                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none"
-                style={{
-                  width: '95px',
-                  left: colorEditMode === 'accent' ? 'calc(100% - 99px)' : '4px',
-                  backgroundColor: colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700'),
-                }}
-              />
-              <button
-                onClick={() => setColorEditMode('background')}
-                className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                style={{
-                  fontFamily: 'var(--font-synonym, sans-serif)',
-                  // Dynamic text color: white on dark pills, black on light pills
-                  color: colorEditMode === 'background'
-                    ? (isColorDark(linksSettings.backgroundColor || '#ffd700') ? '#ffffff' : '#000000')
-                    : 'rgba(255,255,255,0.6)',
-                }}
-              >
-                Background
-              </button>
-              <button
-                onClick={() => setColorEditMode('accent')}
-                className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                style={{
-                  fontFamily: 'var(--font-synonym, sans-serif)',
-                  // Dynamic text color: white on dark pills, black on light pills
-                  color: colorEditMode === 'accent'
-                    ? (isAccentDark ? '#ffffff' : '#000000')
-                    : 'rgba(255,255,255,0.6)',
-                }}
-              >
-                Accent
-              </button>
-            </div>
-            {/* Context-aware color picker */}
-            <HexColorPicker
-              color={colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700')}
-              onChange={(color) => {
-                if (colorEditMode === 'accent') {
-                  setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                } else {
-                  setLinksSettings(prev => ({ ...prev, backgroundColor: color }));
-                }
-                setHasUnsavedChanges(true);
-              }}
-              style={{ width: '100%', height: '100px' }}
-            />
-          </div>
-
-          {/* Button Weight + Text Size - Side by side */}
-          <div className="flex gap-3">
-            {/* Button Weight */}
-            <div className="flex-1">
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Button Weight</label>
-              <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '185px' }}>
-                {/* Animated sliding pill indicator - fixed width */}
-                <div
-                  className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
-                  style={{
-                    width: '88px',
-                    left: linksSettings.nameWeight === 'normal' ? 'calc(100% - 92px)' : '4px',
-                  }}
-                />
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                  style={{
-                    fontFamily: 'var(--font-synonym, sans-serif)',
-                    color: (linksSettings?.nameWeight || 'bold') === 'bold' ? '#000000' : 'rgba(255,255,255,0.6)'
-                  }}
-                >
-                  Bold
-                </button>
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                  style={{
-                    fontFamily: 'var(--font-synonym, sans-serif)',
-                    color: linksSettings.nameWeight === 'normal' ? '#000000' : 'rgba(255,255,255,0.6)'
-                  }}
-                >
-                  Regular
-                </button>
-              </div>
-            </div>
-
-            {/* Text Size - with styled up/down buttons */}
-            <div className="flex-1">
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Text Size</label>
-              <div className="flex items-center rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
-                {/* Down button */}
-                <button
-                  onClick={() => {
-                    const currentValue = linksSettings.buttonTextSize ?? 14;
-                    if (currentValue > 8) {
-                      setLinksSettings(prev => ({ ...prev, buttonTextSize: currentValue - 0.5 }));
-                      setHasUnsavedChanges(true);
-                    }
-                  }}
-                  disabled={(linksSettings.buttonTextSize ?? 14) <= 8}
-                  className="flex items-center justify-center rounded-full transition-colors disabled:opacity-30"
-                  style={{
-                    width: '24px',
-                    height: '24px',
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                  }}
-                >
-                  <svg className="w-3 h-3" fill="none" stroke="#ffd700" strokeWidth="3" viewBox="0 0 24 24">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </button>
-                {/* Value display */}
-                <div className="flex-1 flex items-center justify-center">
-                  <span className="text-xs text-white" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
-                    {linksSettings.buttonTextSize ?? 14}
-                  </span>
-                  <span className="text-xs text-white/50 ml-0.5">px</span>
-                </div>
-                {/* Up button */}
-                <button
-                  onClick={() => {
-                    const currentValue = linksSettings.buttonTextSize ?? 14;
-                    if (currentValue < 24) {
-                      setLinksSettings(prev => ({ ...prev, buttonTextSize: currentValue + 0.5 }));
-                      setHasUnsavedChanges(true);
-                    }
-                  }}
-                  disabled={(linksSettings.buttonTextSize ?? 14) >= 24}
-                  className="flex items-center justify-center rounded-full transition-colors disabled:opacity-30"
-                  style={{
-                    width: '24px',
-                    height: '24px',
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                  }}
-                >
-                  <svg className="w-3 h-3" fill="none" stroke="#ffd700" strokeWidth="3" viewBox="0 0 24 24">
-                    <path d="M18 15l-6-6-6 6" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Font + Name Glow - Side by side */}
-          <div className="flex gap-3">
-            {/* Font */}
-            <div className="flex-1">
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Font</label>
-              <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '185px' }}>
-                {/* Animated sliding pill indicator - fixed width */}
-                <div
-                  className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
-                  style={{
-                    width: '88px',
-                    left: linksSettings.font === 'taskor' ? 'calc(100% - 92px)' : '4px',
-                  }}
-                />
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                  style={{
-                    fontFamily: 'var(--font-synonym, sans-serif)',
-                    color: linksSettings.font === 'synonym' ? '#000000' : 'rgba(255,255,255,0.6)'
-                  }}
-                >
-                  Synonym
-                </button>
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                  style={{
-                    fontFamily: 'var(--font-synonym, sans-serif)',
-                    color: linksSettings.font === 'taskor' ? '#000000' : 'rgba(255,255,255,0.6)'
-                  }}
-                >
-                  Taskor
-                </button>
-              </div>
-            </div>
-
-            {/* Name Glow */}
-            <div className="flex-1">
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Name Glow</label>
-              <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '156px' }}>
-                {/* Animated sliding pill indicator - fixed width */}
-                <div
-                  className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
-                  style={{
-                    width: '72px',
-                    left: linksSettings.nameGlow === false ? 'calc(100% - 76px)' : '4px',
-                  }}
-                />
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: true })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                  style={{
-                    fontFamily: 'var(--font-synonym, sans-serif)',
-                    color: linksSettings.nameGlow !== false ? '#000000' : 'rgba(255,255,255,0.6)'
-                  }}
-                >
-                  Yes
-                </button>
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: false })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                  style={{
-                    fontFamily: 'var(--font-synonym, sans-serif)',
-                    color: linksSettings.nameGlow === false ? '#000000' : 'rgba(255,255,255,0.6)'
-                  }}
-                >
-                  No
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ================================================================
-          CONTACT CARD (Cyan header)
-          ================================================================ */}
-      <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-        {/* Header with Premium Glow */}
-        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-          <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-            <rect x="2" y="4" width="20" height="16" rx="2" />
-            <path d="M22 7l-10 5L2 7" />
-          </svg>
-          <span className="text-sm font-medium text-cyan-400" style={{ textShadow: '0 0 8px rgba(34, 211, 238, 0.5)' }}>Contact</span>
-        </div>
-
-        {/* Content */}
-        <div className="p-4 space-y-4">
-          {/* Email */}
-          <div>
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Email</label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              placeholder="you@email.com"
-              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
-            />
-            <p className="text-[10px] text-white/30 mt-1">Displayed on your page</p>
-          </div>
-
-          {/* Phone */}
-          <div>
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Phone</label>
-            <input
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => handleInputChange('phone', e.target.value)}
-              placeholder="(555) 123-4567"
-              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
-            />
-          </div>
-
-          {/* Call/Text Toggles - Premium glass styled checkboxes matching onboarding */}
-          <div className="flex flex-col gap-3">
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={formData.show_call_button}
-                onChange={(e) => handleInputChange('show_call_button', e.target.checked)}
-                className="sr-only peer"
-              />
-              <div
-                className="w-6 h-6 rounded-md flex items-center justify-center transition-all duration-200 peer-focus:ring-2 peer-focus:ring-offset-1 peer-focus:ring-offset-black"
-                style={{
-                  background: formData.show_call_button
-                    ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
-                    : '#bfbdb0',
-                  border: formData.show_call_button
-                    ? '1px solid rgba(34, 197, 94, 0.5)'
-                    : '1px solid rgba(255,255,255,0.15)',
-                  boxShadow: formData.show_call_button
-                    ? '0 0 10px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                    : 'inset 0 1px 2px rgba(0,0,0,0.2)',
-                }}
-              >
-                {formData.show_call_button && (
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                )}
-              </div>
-              <span className="text-sm text-white/70">Show Call Button</span>
-            </label>
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={formData.show_text_button}
-                onChange={(e) => handleInputChange('show_text_button', e.target.checked)}
-                className="sr-only peer"
-              />
-              <div
-                className="w-6 h-6 rounded-md flex items-center justify-center transition-all duration-200 peer-focus:ring-2 peer-focus:ring-offset-1 peer-focus:ring-offset-black"
-                style={{
-                  background: formData.show_text_button
-                    ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
-                    : '#bfbdb0',
-                  border: formData.show_text_button
-                    ? '1px solid rgba(34, 197, 94, 0.5)'
-                    : '1px solid rgba(255,255,255,0.15)',
-                  boxShadow: formData.show_text_button
-                    ? '0 0 10px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                    : 'inset 0 1px 2px rgba(0,0,0,0.2)',
-                }}
-              >
-                {formData.show_text_button && (
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                )}
-              </div>
-              <span className="text-sm text-white/70">Show Text Button</span>
-            </label>
-          </div>
-        </div>
-      </div>
+      {/* Contact Card - uses shared render function */}
+      {renderContactCard()}
 
       {/* ================================================================
           PREVIEW / BUTTON LINKS CARD (Gold header, spans 2 rows)
@@ -12325,781 +12698,101 @@ return (
         </div>
       </div>
 
-      {/* ================================================================
-          SOCIAL LINKS CARD (spans 2 columns)
-          ================================================================ */}
-      <div className="rounded-xl col-span-2" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)', overflow: 'visible' }}>
-        {/* Header with Premium Glow */}
-        <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-            <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Social Links</span>
-          </div>
-          <span className="text-xs text-white/40">{filledSocialLinks}/6 max</span>
-        </div>
-
-        {/* Content */}
-        <div className="p-4">
-          <div className="grid grid-cols-4 gap-3">
-            {/* Facebook */}
-            <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Facebook</label>
-              <input
-                type="url"
-                value={formData.facebook_url}
-                onChange={(e) => handleInputChange('facebook_url', e.target.value)}
-                placeholder="facebook.com/..."
-                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
-              />
-            </div>
-
-            {/* Instagram */}
-            <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Instagram</label>
-              <input
-                type="url"
-                value={formData.instagram_url}
-                onChange={(e) => handleInputChange('instagram_url', e.target.value)}
-                placeholder="instagram.com/..."
-                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
-              />
-            </div>
-
-            {/* X/Twitter */}
-            <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">X/Twitter</label>
-              <input
-                type="url"
-                value={formData.twitter_url}
-                onChange={(e) => handleInputChange('twitter_url', e.target.value)}
-                placeholder="x.com/..."
-                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
-              />
-            </div>
-
-            {/* YouTube */}
-            <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">YouTube</label>
-              <input
-                type="url"
-                value={formData.youtube_url}
-                onChange={(e) => handleInputChange('youtube_url', e.target.value)}
-                placeholder="youtube.com/..."
-                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
-              />
-            </div>
-
-            {/* TikTok */}
-            <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">TikTok</label>
-              <input
-                type="url"
-                value={formData.tiktok_url}
-                onChange={(e) => handleInputChange('tiktok_url', e.target.value)}
-                placeholder="tiktok.com/..."
-                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
-              />
-            </div>
-
-            {/* LinkedIn */}
-            <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">LinkedIn</label>
-              <input
-                type="url"
-                value={formData.linkedin_url}
-                onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
-                placeholder="linkedin.com/..."
-                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
-              />
-            </div>
-
-            {/* Custom 1 */}
-            <div className="min-w-0 relative">
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Custom 1</label>
-              <div className="flex gap-1">
-                <button
-                  onClick={() => setShowSocialIconPicker(showSocialIconPicker === 0 ? null : 0)}
-                  className={`p-2 rounded-lg border flex-shrink-0 transition-colors ${customSocialLinks[0]?.icon && customSocialLinks[0].icon !== 'Globe' ? 'bg-[#ffd700]/20 border-[#ffd700]/30 text-[#ffd700]' : 'bg-black/40 border-white/10 text-white/60 hover:bg-white/10'}`}
-                  title="Choose icon"
-                >
-                  {customSocialLinks[0]?.icon && customSocialLinks[0].icon !== 'Globe' ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === customSocialLinks[0].icon)?.path || ''} />
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M12 8v8M8 12h8" />
-                    </svg>
-                  )}
-                </button>
-                <input
-                  type="url"
-                  value={customSocialLinks[0]?.url || ''}
-                  onChange={(e) => {
-                    // Ensure we have a proper array with no sparse elements
-                    const newLinks = [
-                      customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
-                      customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
-                    ];
-                    newLinks[0] = { ...newLinks[0], url: e.target.value };
-                    setCustomSocialLinks(newLinks);
-                    setHasUnsavedChanges(true);
-                  }}
-                  placeholder="URL"
-                  className="flex-1 min-w-0 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
-                />
-              </div>
-              {/* Icon Picker for Custom 1 - fixed position to break out of containers */}
-              {showSocialIconPicker === 0 && (
-                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 z-[100] max-h-[180px] overflow-y-auto w-48 shadow-xl">
-                  <div className="grid grid-cols-6 gap-1">
-                    {LINK_ICONS.map((icon) => (
-                      <button
-                        key={icon.name}
-                        onClick={() => {
-                          // Ensure we have a proper array with no sparse elements
-                          const newLinks = [
-                            customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
-                            customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
-                          ];
-                          newLinks[0] = { ...newLinks[0], icon: icon.name };
-                          setCustomSocialLinks(newLinks);
-                          setShowSocialIconPicker(null);
-                          setHasUnsavedChanges(true);
-                        }}
-                        className={`p-1.5 rounded transition-colors ${customSocialLinks[0]?.icon === icon.name ? 'bg-[#ffd700]/30 text-[#ffd700]' : 'text-white/60 hover:bg-white/10 hover:text-white'}`}
-                        title={icon.label}
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d={icon.path} />
-                        </svg>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Custom 2 */}
-            <div className="min-w-0 relative">
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Custom 2</label>
-              <div className="flex gap-1">
-                <button
-                  onClick={() => setShowSocialIconPicker(showSocialIconPicker === 1 ? null : 1)}
-                  className={`p-2 rounded-lg border flex-shrink-0 transition-colors ${customSocialLinks[1]?.icon && customSocialLinks[1].icon !== 'Globe' ? 'bg-[#ffd700]/20 border-[#ffd700]/30 text-[#ffd700]' : 'bg-black/40 border-white/10 text-white/60 hover:bg-white/10'}`}
-                  title="Choose icon"
-                >
-                  {customSocialLinks[1]?.icon && customSocialLinks[1].icon !== 'Globe' ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === customSocialLinks[1].icon)?.path || ''} />
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M12 8v8M8 12h8" />
-                    </svg>
-                  )}
-                </button>
-                <input
-                  type="url"
-                  value={customSocialLinks[1]?.url || ''}
-                  onChange={(e) => {
-                    // Ensure we have a proper array with no sparse elements
-                    const newLinks = [
-                      customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
-                      customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
-                    ];
-                    newLinks[1] = { ...newLinks[1], url: e.target.value };
-                    setCustomSocialLinks(newLinks);
-                    setHasUnsavedChanges(true);
-                  }}
-                  placeholder="URL"
-                  className="flex-1 min-w-0 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
-                />
-              </div>
-              {/* Icon Picker for Custom 2 - fixed position to break out of containers */}
-              {showSocialIconPicker === 1 && (
-                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 z-[100] max-h-[180px] overflow-y-auto w-48 shadow-xl">
-                  <div className="grid grid-cols-6 gap-1">
-                    {LINK_ICONS.map((icon) => (
-                      <button
-                        key={icon.name}
-                        onClick={() => {
-                          // Ensure we have a proper array with no sparse elements
-                          const newLinks = [
-                            customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
-                            customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
-                          ];
-                          newLinks[1] = { ...newLinks[1], icon: icon.name };
-                          setCustomSocialLinks(newLinks);
-                          setShowSocialIconPicker(null);
-                          setHasUnsavedChanges(true);
-                        }}
-                        className={`p-1.5 rounded transition-colors ${customSocialLinks[1]?.icon === icon.name ? 'bg-[#ffd700]/30 text-[#ffd700]' : 'text-white/60 hover:bg-white/10 hover:text-white'}`}
-                        title={icon.label}
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d={icon.path} />
-                        </svg>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+      {/* Social Links Card - uses shared render function with col-span-2 wrapper for desktop grid */}
+      <div className="col-span-2">
+        {renderSocialLinksCard(4)}
       </div>
 
-      {/* ================================================================
-          PAGE ACTIONS CARD
-          ================================================================ */}
-      <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-        {/* Header with Premium Glow */}
-        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-          <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          <span className="text-sm font-medium text-emerald-400" style={{ textShadow: '0 0 8px rgba(52, 211, 153, 0.5)' }}>Page Actions</span>
-        </div>
-
-        {/* Content */}
-        <div className="p-4 space-y-2">
-          {/* Activate Button - Shows only when page is not activated */}
-          {!pageData?.activated && (
-            <button
-              onClick={handleActivate}
-              disabled={isSaving}
-              className="w-full py-3 px-4 rounded-lg font-semibold bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] hover:bg-[#ffd700]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-            >
-              {isSaving ? (
-                <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
-              ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              )}
-              {isSaving ? 'Activating...' : 'Activate my Page'}
-            </button>
-          )}
-
-          {/* Save Changes Button - Always visible when page is activated, greyed out until changes made */}
-          {pageData?.activated && (
-            <button
-              onClick={handleSave}
-              disabled={isSaving || !hasUnsavedChanges}
-              className="w-full py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
-              style={{
-                backgroundColor: hasUnsavedChanges ? '#ffd700' : '#3a3a3a',
-                color: hasUnsavedChanges ? '#000000' : '#888888',
-                cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'not-allowed',
-                opacity: isSaving ? 0.5 : 1,
-              }}
-            >
-              {isSaving ? (
-                <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-              ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                  <polyline points="17,21 17,13 7,13 7,21" />
-                  <polyline points="7,3 7,8 15,8" />
-                </svg>
-              )}
-              {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
-            </button>
-          )}
-
-          {/* View Page - Opens the linktree-style link page */}
-          <button
-            onClick={() => linktreeUrl && window.open(linktreeUrl, '_blank')}
-            disabled={!linktreeUrl}
-            className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-            VIEW PAGE
-          </button>
-
-          {/* Copy URL - Copies the linktree-style link page URL */}
-          <button
-            onClick={() => linktreeUrl && navigator.clipboard.writeText(linktreeUrl)}
-            disabled={!pageData?.slug}
-            className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-            </svg>
-            COPY URL
-          </button>
-
-          {/* QR Code */}
-          <button
-            onClick={downloadQRCode}
-            disabled={!pageData?.activated}
-            className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.activated ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
-            title={!pageData?.activated ? 'Activate your page first to download QR code' : ''}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="3" height="3" /><rect x="18" y="14" width="3" height="3" /><rect x="14" y="18" width="3" height="3" /><rect x="18" y="18" width="3" height="3" /></svg>
-            QR CODE
-          </button>
-        </div>
-      </div>
+      {/* Page Actions Card - uses shared render function */}
+      {renderPageActionsCard()}
     </div>
 
+
     {/* ====================================================================
-        TABLET LAYOUT - HIDDEN (now using desktop layout for screens >= 1024px)
+        MEDIUM SCREEN LAYOUT (1024px - 1649px) - 2-Column Tabbed Interface
+        Left: Pill tab selector + conditional sections
+        Right: Preview/Button Links (340px fixed)
         ==================================================================== */}
-    <div className="hidden">
-      {/* Save Bar */}
-      {hasUnsavedChanges && (
-        <div className="sticky top-0 z-20 p-3 rounded-xl bg-[#ffd700]/20 border border-[#ffd700]/40 flex items-center justify-between mb-4">
-          <span className="text-sm text-[#ffd700]">You have unsaved changes</span>
+    <div
+      className="hidden min-[1024px]:grid min-[1650px]:hidden gap-4"
+      style={{ gridTemplateColumns: '1fr 340px' }}
+    >
+      {/* LEFT COLUMN: Tabbed Content */}
+      <div className="space-y-4">
+        {/* Pill Tab Selector - 3 tabs with gold active state */}
+        <div
+          className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative"
+          style={{ width: '100%' }}
+        >
+          {/* Animated sliding pill indicator */}
+          <div
+            className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
+            style={{
+              width: 'calc(33.333% - 6px)',
+              left: linkPageTab === 'profile-contact'
+                ? '4px'
+                : linkPageTab === 'style'
+                  ? 'calc(33.333% + 2px)'
+                  : 'calc(66.666% + 0px)',
+            }}
+          />
           <button
-            onClick={handleSave}
-            disabled={isSaving}
-            className="px-4 py-2 rounded-lg bg-[#ffd700] text-black text-sm font-bold disabled:opacity-50"
+            onClick={() => setLinkPageTab('profile-contact')}
+            className="relative z-10 flex-1 py-2.5 rounded-full text-sm font-bold transition-colors duration-300 text-center"
+            style={{
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              color: linkPageTab === 'profile-contact' ? '#000000' : 'rgba(255,255,255,0.6)',
+            }}
           >
-            {isSaving ? 'Saving...' : 'Save'}
+            Profile & Contact
+          </button>
+          <button
+            onClick={() => setLinkPageTab('style')}
+            className="relative z-10 flex-1 py-2.5 rounded-full text-sm font-bold transition-colors duration-300 text-center"
+            style={{
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              color: linkPageTab === 'style' ? '#000000' : 'rgba(255,255,255,0.6)',
+            }}
+          >
+            Style
+          </button>
+          <button
+            onClick={() => setLinkPageTab('socials-actions')}
+            className="relative z-10 flex-1 py-2.5 rounded-full text-sm font-bold transition-colors duration-300 text-center"
+            style={{
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              color: linkPageTab === 'socials-actions' ? '#000000' : 'rgba(255,255,255,0.6)',
+            }}
+          >
+            Socials & Actions
           </button>
         </div>
-      )}
 
-      {/* 2-Column Layout: Tabs + Preview */}
-      <div className="flex gap-4">
-        {/* Left Column: Tabbed Interface (fills remaining space) */}
-        <div className="flex-1 space-y-4">
-          {/* Tablet Pill Tabs */}
-          <div className="flex justify-center">
-            <div className="flex rounded-xl bg-black/40 border border-white/10 p-1">
-              <button
-                onClick={() => setTabletTab('content')}
-                className={`py-2 px-6 rounded-lg text-sm font-medium transition-colors ${tabletTab === 'content' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
-              >
-                Profile & Social
-              </button>
-              <button
-                onClick={() => setTabletTab('style')}
-                className={`py-2 px-6 rounded-lg text-sm font-medium transition-colors ${tabletTab === 'style' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
-              >
-                Style & Actions
-              </button>
-            </div>
-          </div>
+        {/* TAB CONTENT - Conditionally rendered sections */}
 
-          {/* Tablet Tab Content - Stacked Cards */}
-          {tabletTab === 'content' && (
-            <div className="space-y-4">
-          {/* Column 1: Profile */}
-          <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-            <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-              <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-              <span className="text-sm font-medium text-green-400" style={{ textShadow: '0 0 8px rgba(74, 222, 128, 0.5)' }}>Profile</span>
-            </div>
-            <div className="p-4 space-y-4">
-              {/* Photo + B&W/Color Toggle */}
-              <div className="flex items-start gap-4">
-                <div
-                  className="w-20 h-20 rounded-full bg-black/40 border-2 flex items-center justify-center overflow-hidden flex-shrink-0 relative"
-                  style={{ borderColor: getVisibleSocialIconColor(linksSettings.accentColor) }}
-                >
-                  {getProfileImageUrl() && (
-                    <div
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        backgroundImage: `url(${getProfileImageUrl()})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
-                      }}
-                    />
-                  )}
-                  {!getProfileImageUrl() && (
-                    <svg className="w-10 h-10 text-white/30" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                    </svg>
-                  )}
-                </div>
-                <div className="flex flex-col gap-2">
-                  <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleImageUpload} className="hidden" id="tablet-photo-upload" />
-                  <label htmlFor="tablet-photo-upload" className="px-3 py-1.5 rounded text-xs bg-white/10 border border-white/20 text-white/80 hover:bg-white/20 cursor-pointer text-center">
-                    Upload Photo
-                  </label>
-                  <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
-                    <div
-                      className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
-                      style={{ transform: linksSettings.showColorPhoto ? 'translateX(100%)' : 'translateX(0)' }}
-                    />
-                    <button
-                      onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
-                      className="flex-1 px-3 py-1 text-[10px] font-bold rounded-full relative z-10 transition-colors duration-200"
-                      style={{ color: !linksSettings.showColorPhoto ? '#000000' : 'rgba(255,255,255,0.6)' }}
-                    >B&W</button>
-                    <button
-                      onClick={() => { if (hasColorImage) { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); } }}
-                      disabled={!hasColorImage}
-                      className="flex-1 px-3 py-1 text-[10px] font-bold rounded-full relative z-10 transition-colors duration-200"
-                      style={{ color: linksSettings.showColorPhoto && hasColorImage ? '#000000' : 'rgba(255,255,255,0.6)', opacity: !hasColorImage ? 0.5 : 1 }}
-                    >Color</button>
-                  </div>
-                </div>
-              </div>
-              {/* Name Fields */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">First Name</label>
-                  <input type="text" value={formData.display_first_name} onChange={(e) => handleInputChange('display_first_name', e.target.value)} placeholder="First" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
-                </div>
-                <div>
-                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Last Name</label>
-                  <input type="text" value={formData.display_last_name} onChange={(e) => handleInputChange('display_last_name', e.target.value)} placeholder="Last" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
-                </div>
-              </div>
-              {/* Bio */}
-              <div>
-                <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Bio ({linksSettings.bio.length}/120 • {(linksSettings.bio.match(/\n/g) || []).length + 1}/3 lines)</label>
-                <textarea
-                  value={linksSettings.bio}
-                  onChange={(e) => {
-                    const newValue = e.target.value;
-                    const lineCount = (newValue.match(/\n/g) || []).length + 1;
-                    if (newValue.length <= 120 && lineCount <= 3) {
-                      setLinksSettings(prev => ({ ...prev, bio: newValue }));
-                      setHasUnsavedChanges(true);
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      const lineCount = (linksSettings.bio.match(/\n/g) || []).length + 1;
-                      if (lineCount >= 3) e.preventDefault();
-                    }
-                  }}
-                  placeholder="Short bio..."
-                  rows={3}
-                  className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none resize-none"
-                />
-              </div>
-            </div>
-          </div>
-
-              {/* Contact Card */}
-              <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-              <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-                <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-                  <rect x="2" y="4" width="20" height="16" rx="2" />
-                  <path d="M22 7l-10 5L2 7" />
-                </svg>
-                <span className="text-sm font-medium text-cyan-400" style={{ textShadow: '0 0 8px rgba(34, 211, 238, 0.5)' }}>Contact</span>
-              </div>
-              <div className="p-4 space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Email</label>
-                    <input type="email" value={formData.email} onChange={(e) => handleInputChange('email', e.target.value)} placeholder="you@email.com" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Phone</label>
-                    <input type="tel" value={formData.phone} onChange={(e) => handleInputChange('phone', e.target.value)} placeholder="(555) 123-4567" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={formData.show_call_button} onChange={(e) => handleInputChange('show_call_button', e.target.checked)} className="w-4 h-4 rounded" />
-                    <span className="text-xs text-white/70">Show Call</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={formData.show_text_button} onChange={(e) => handleInputChange('show_text_button', e.target.checked)} className="w-4 h-4 rounded" />
-                    <span className="text-xs text-white/70">Show Text</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            {/* Social Links Card */}
-            <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-              <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-                <svg className="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                </svg>
-                <span className="text-sm font-medium text-pink-400" style={{ textShadow: '0 0 8px rgba(244, 114, 182, 0.5)' }}>Social Links</span>
-              </div>
-              <div className="p-4 grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Facebook</label>
-                  <input type="url" value={formData.facebook_url} onChange={(e) => handleInputChange('facebook_url', e.target.value)} placeholder="facebook.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
-                </div>
-                <div>
-                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Instagram</label>
-                  <input type="url" value={formData.instagram_url} onChange={(e) => handleInputChange('instagram_url', e.target.value)} placeholder="instagram.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
-                </div>
-                <div>
-                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">X/Twitter</label>
-                  <input type="url" value={formData.twitter_url} onChange={(e) => handleInputChange('twitter_url', e.target.value)} placeholder="x.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
-                </div>
-                <div>
-                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">YouTube</label>
-                  <input type="url" value={formData.youtube_url} onChange={(e) => handleInputChange('youtube_url', e.target.value)} placeholder="youtube.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
-                </div>
-                <div>
-                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">TikTok</label>
-                  <input type="url" value={formData.tiktok_url} onChange={(e) => handleInputChange('tiktok_url', e.target.value)} placeholder="tiktok.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
-                </div>
-                <div>
-                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">LinkedIn</label>
-                  <input type="url" value={formData.linkedin_url} onChange={(e) => handleInputChange('linkedin_url', e.target.value)} placeholder="linkedin.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
-                </div>
-              </div>
-            </div>
+        {/* Tab 1: Profile & Contact - uses shared render functions */}
+        {linkPageTab === 'profile-contact' && (
+          <div className="grid grid-cols-2 gap-4">
+            {renderProfileCard()}
+            {renderContactCard()}
           </div>
         )}
 
-          {tabletTab === 'style' && (
-            <div className="space-y-4">
-              {/* Style Card */}
-              <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-            <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-              <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              </svg>
-              <span className="text-sm font-medium text-purple-400" style={{ textShadow: '0 0 8px rgba(192, 132, 252, 0.5)' }}>Style</span>
-            </div>
-            <div className="p-4 space-y-4">
-              {/* Color Mode Selector (Background / Accent) */}
-              <div>
-                <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Color</label>
-                {/* Background / Accent pill selector */}
-                <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative mb-3" style={{ width: '200px' }}>
-                  <div
-                    className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none"
-                    style={{
-                      width: '95px',
-                      left: colorEditMode === 'accent' ? 'calc(100% - 99px)' : '4px',
-                      backgroundColor: colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700'),
-                    }}
-                  />
-                  <button
-                    onClick={() => setColorEditMode('background')}
-                    className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                    style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'background' ? (isColorDark(linksSettings.backgroundColor || '#ffd700') ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
-                  >
-                    Background
-                  </button>
-                  <button
-                    onClick={() => setColorEditMode('accent')}
-                    className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                    style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'accent' ? (isAccentDark ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
-                  >
-                    Accent
-                  </button>
-                </div>
-                <HexColorPicker
-                  color={colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700')}
-                  onChange={(color) => {
-                    if (colorEditMode === 'accent') {
-                      setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                    } else {
-                      setLinksSettings(prev => ({ ...prev, backgroundColor: color }));
-                    }
-                    setHasUnsavedChanges(true);
-                  }}
-                  style={{ width: '100%', height: '100px' }}
-                />
-              </div>
-              {/* Weight/Font/Name Glow Toggles */}
-              <div className="grid grid-cols-3 gap-2">
-                <div>
-                  <label className="block text-[10px] text-white/50 mb-1">Weight</label>
-                  <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
-                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Bold</button>
-                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Norm</button>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-[10px] text-white/50 mb-1">Font</label>
-                  <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
-                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Syn</button>
-                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Task</button>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-[10px] text-white/50 mb-1">Glow</label>
-                  <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
-                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: true })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameGlow !== false ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Yes</button>
-                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: false })); setHasUnsavedChanges(true); }} className={`px-2 py-1.5 text-[10px] rounded ${linksSettings.nameGlow === false ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>No</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* Tab 2: Style - uses shared render function */}
+        {linkPageTab === 'style' && renderStyleCard()}
+
+        {/* Tab 3: Socials & Actions - uses shared render functions */}
+        {linkPageTab === 'socials-actions' && (
+          <div className="grid grid-cols-2 gap-4">
+            {renderSocialLinksCard(2)}
+            {renderPageActionsCard()}
           </div>
-
-              {/* Page Actions Card */}
-          <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-            <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-              <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
-                <polyline points="13 2 13 9 20 9" />
-              </svg>
-              <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Page Actions</span>
-            </div>
-            <div className="p-4 space-y-3">
-              {/* Activate Button - Shows only when page is not activated */}
-              {!pageData?.activated && (
-                <button
-                  onClick={handleActivate}
-                  disabled={isSaving}
-                  className="w-full py-2.5 px-4 rounded-lg font-semibold bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] hover:bg-[#ffd700]/30 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
-                >
-                  {isSaving ? (
-                    <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                  )}
-                  {isSaving ? 'Activating...' : 'Activate my Page'}
-                </button>
-              )}
-
-              {/* Save Changes Button - Shows when page is activated */}
-              {pageData?.activated && (
-                <button
-                  onClick={handleSave}
-                  disabled={isSaving || !hasUnsavedChanges}
-                  className="w-full py-2.5 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
-                  style={{
-                    backgroundColor: hasUnsavedChanges ? '#ffd700' : '#3a3a3a',
-                    color: hasUnsavedChanges ? '#000000' : '#888888',
-                    cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'not-allowed',
-                    opacity: isSaving ? 0.5 : 1,
-                  }}
-                >
-                  {isSaving ? (
-                    <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17,21 17,13 7,13 7,21" /><polyline points="7,3 7,8 15,8" /></svg>
-                  )}
-                  {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
-                </button>
-              )}
-
-              {/* Preview Page */}
-              <button
-                onClick={() => window.open(`/${pageData?.slug || user?.username || ''}`, '_blank')}
-                disabled={!pageData?.activated}
-                className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.activated ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
-                Preview Page
-              </button>
-
-              {/* Copy Link */}
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(`${window.location.origin}/${pageData?.slug || user?.username || ''}`);
-                  setCopiedLink('linktree');
-                  setTimeout(() => setCopiedLink(null), 2000);
-                }}
-                disabled={!pageData?.activated}
-                className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.activated ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
-              >
-                {copiedLink === 'linktree' ? (
-                  <>
-                    <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
-                    Copy Link
-                  </>
-                )}
-              </button>
-
-              {/* QR Code */}
-              <button
-                onClick={downloadQRCode}
-                disabled={!pageData?.activated}
-                className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.activated ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="3" height="3" /><rect x="18" y="14" width="3" height="3" /><rect x="14" y="18" width="3" height="3" /><rect x="18" y="18" width="3" height="3" /></svg>
-                QR Code
-              </button>
-            </div>
-          </div>
-            </div>
-          )}
-        </div>
-
-        {/* Right Column: Preview (fixed 340px width) - no sticky, scrolls with content */}
-        <div className="w-[340px] flex-shrink-0">
-          <div className="rounded-xl overflow-hidden" style={{
-            background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-            border: '1px solid rgba(255, 215, 0, 0.2)',
-            boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-          }}>
-            <div className="px-4 py-3 border-b border-white/10 bg-black/30">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-[#ffd700]">Link Page Preview</span>
-              </div>
-            </div>
-            <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ height: '520px', background: '#0a0a0a' }}>
-              {pageData?.activated && (generatedSlug || pageData?.slug) ? (
-                <div className="flex justify-center py-4">
-                  {/* Phone Mockup Shell */}
-                  <div className="phone-mockup" style={{ width: '260px' }}>
-                    <div className="phone-screen" style={{ height: '450px' }}>
-                      <iframe
-                        src={`${linktreeUrl}?preview=true`}
-                        className="absolute top-0 left-0"
-                        style={{
-                          width: '390px',
-                          height: '680px',
-                          transform: 'scale(0.60)',
-                          transformOrigin: 'top left',
-                          pointerEvents: 'none',
-                          border: 'none',
-                          outline: 'none',
-                          background: '#0a0a0a',
-                        }}
-                        title="Link Page Preview"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex justify-center py-4">
-                  {/* Phone Mockup Shell - Empty State */}
-                  <div className="phone-mockup" style={{ width: '260px' }}>
-                    <div className="phone-screen flex flex-col items-center justify-center text-center px-6" style={{ height: '450px' }}>
-                      <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
-                        <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                        </svg>
-                      </div>
-                      <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
-                      <p className="text-[#e5e4dd]/40 text-xs">Activate your page to see the preview</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        )}
       </div>
 
-      {/* Bottom spacer - minimal on tablet since no mobile nav */}
-      <div className="h-4" />
+      {/* RIGHT COLUMN: Preview (340px fixed) - uses shared render function */}
+      {renderMediumScreenPreview()}
     </div>
-
 
   </div>
 );
