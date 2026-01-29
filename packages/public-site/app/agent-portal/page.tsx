@@ -979,7 +979,18 @@ function AgentPortal() {
 
   // Mobile menu state (expandable bottom bar)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMenuClosing, setIsMobileMenuClosing] = useState(false);
   const mobileMenuTouchStartRef = useRef<{ y: number; time: number } | null>(null);
+
+  // Smooth close handler for mobile menu
+  const closeMobileMenu = useCallback(() => {
+    if (isMobileMenuClosing) return;
+    setIsMobileMenuClosing(true);
+    setTimeout(() => {
+      setIsMobileMenuOpen(false);
+      setIsMobileMenuClosing(false);
+    }, 250); // Match animation duration
+  }, [isMobileMenuClosing]);
 
   // Onboarding state
   const [onboardingProgress, setOnboardingProgress] = useState<{
@@ -2631,11 +2642,25 @@ function AgentPortal() {
           from { transform: translateY(0); }
           to { transform: translateY(100%); }
         }
+        @keyframes mobileMenuBackdropIn {
+          from { opacity: 0; backdrop-filter: blur(0px); }
+          to { opacity: 1; backdrop-filter: blur(8px); }
+        }
+        @keyframes mobileMenuBackdropOut {
+          from { opacity: 1; backdrop-filter: blur(8px); }
+          to { opacity: 0; backdrop-filter: blur(0px); }
+        }
         .mobile-menu-panel {
           animation: mobileMenuSlideUp 0.3s ease-out forwards;
         }
         .mobile-menu-panel-closing {
           animation: mobileMenuSlideDown 0.25s ease-in forwards;
+        }
+        .mobile-menu-backdrop {
+          animation: mobileMenuBackdropIn 0.3s ease-out forwards;
+        }
+        .mobile-menu-backdrop-closing {
+          animation: mobileMenuBackdropOut 0.25s ease-in forwards;
         }
       `}</style>
 
@@ -2668,23 +2693,28 @@ function AgentPortal() {
         )}
       </div>
 
-      {/* Mobile Menu Backdrop - tap to close */}
-      {isMobileMenuOpen && (
+      {/* Mobile Menu Backdrop - tap to close, with blur effect */}
+      {(isMobileMenuOpen || isMobileMenuClosing) && (
         <div
-          className="min-[1024px]:hidden fixed inset-0 z-[10009] bg-black/60 backdrop-blur-sm"
-          onClick={() => setIsMobileMenuOpen(false)}
+          className={`min-[1024px]:hidden fixed inset-0 z-[10009] bg-black/60 ${
+            isMobileMenuClosing ? 'mobile-menu-backdrop-closing' : 'mobile-menu-backdrop'
+          }`}
+          onClick={closeMobileMenu}
           style={{
-            animation: 'slidePanelBackdropIn 0.3s ease-out forwards',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
           }}
         />
       )}
 
       {/* Mobile Bottom Bar - Expandable */}
       <div
-        className={`min-[1024px]:hidden fixed left-0 right-0 z-[10010] ${isMobileMenuOpen ? 'mobile-menu-panel' : ''}`}
+        className={`min-[1024px]:hidden fixed left-0 right-0 z-[10010] ${
+          isMobileMenuClosing ? 'mobile-menu-panel-closing' : isMobileMenuOpen ? 'mobile-menu-panel' : ''
+        }`}
         style={{
           bottom: 0,
-          maxHeight: isMobileMenuOpen ? '85vh' : 'auto',
+          maxHeight: (isMobileMenuOpen || isMobileMenuClosing) ? '85vh' : 'auto',
           WebkitTapHighlightColor: 'transparent',
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
@@ -2695,12 +2725,12 @@ function AgentPortal() {
           };
         }}
         onTouchEnd={(e) => {
-          if (!mobileMenuTouchStartRef.current || !isMobileMenuOpen) return;
+          if (!mobileMenuTouchStartRef.current || !isMobileMenuOpen || isMobileMenuClosing) return;
           const deltaY = e.changedTouches[0].clientY - mobileMenuTouchStartRef.current.y;
           const deltaTime = Date.now() - mobileMenuTouchStartRef.current.time;
           // Swipe down to close (fast swipe or long swipe)
           if (deltaY > 80 || (deltaY > 40 && deltaTime < 300)) {
-            setIsMobileMenuOpen(false);
+            closeMobileMenu();
           }
           mobileMenuTouchStartRef.current = null;
         }}
@@ -2762,7 +2792,7 @@ function AgentPortal() {
             <button
               onClick={() => {
                 setActiveSection('dashboard');
-                setIsMobileMenuOpen(false);
+                closeMobileMenu();
               }}
               className="flex-shrink-0 cursor-pointer"
               title="Go to Dashboard"
@@ -2810,8 +2840,8 @@ function AgentPortal() {
             </button>
           </div>
 
-          {/* Menu Items - visible when expanded */}
-          {isMobileMenuOpen && (
+          {/* Menu Items - visible when expanded or closing */}
+          {(isMobileMenuOpen || isMobileMenuClosing) && (
             <>
               {/* Separator line */}
               <div
@@ -2844,7 +2874,7 @@ function AgentPortal() {
                       key={item.id}
                       onClick={() => {
                         setActiveSection(item.id);
-                        setIsMobileMenuOpen(false);
+                        closeMobileMenu();
                       }}
                       className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200"
                       style={{
