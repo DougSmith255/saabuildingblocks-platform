@@ -455,8 +455,8 @@ const shakeKeyframes = `
   --fluid-card-padding: clamp(12px, 1.5vw, 20px);
   --fluid-card-radius: clamp(8px, 1vw, 12px);
 
-  /* Preview column width (only visible >= 1100px) */
-  --preview-width: clamp(280px, 22vw, 380px);
+  /* Preview column width (only visible >= 1100px) - FIXED at 340px */
+  --preview-width: 340px;
 
   /* Content area constraints */
   --content-max-width: min(100%, 1800px);
@@ -480,17 +480,17 @@ const shakeKeyframes = `
   }
 }
 
-/* Extra-wide screens (>= 1600px): slightly wider preview */
+/* Extra-wide screens (>= 1600px): keep preview fixed at 340px */
 @media (min-width: 1600px) {
   .link-page-fluid-root {
-    --preview-width: clamp(340px, 24vw, 420px);
+    --preview-width: 340px;
   }
 }
 
-/* Ultra-wide screens (>= 2000px): maximize content usage */
+/* Ultra-wide screens (>= 2000px): maximize content usage, keep preview fixed at 340px */
 @media (min-width: 2000px) {
   .link-page-fluid-root {
-    --preview-width: 400px;
+    --preview-width: 340px;
     --fluid-gap-lg: clamp(24px, 2vw, 36px);
   }
 
@@ -3002,30 +3002,30 @@ function AgentPortal() {
 
           {/* === LAYER 1: BASE BACKGROUNDS === */}
 
-          {/* Header: Full width with outer corner radius */}
+          {/* Header: Full width with outer corner radius - FULLY OPAQUE to hide stars */}
           <div
             className="absolute top-0 left-0 right-0"
             style={{
               height: `${lFrame.headerHeight}px`,
-              background: 'linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.95) 100%)',
+              background: 'linear-gradient(180deg, rgb(14, 14, 14) 0%, rgb(10, 10, 10) 100%)',
               borderBottomRightRadius: `${lFrame.cornerRadius}px`,
               zIndex: 1,
             }}
           />
 
-          {/* Sidebar: Below header with outer corner radius - slightly darker */}
+          {/* Sidebar: Below header with outer corner radius - FULLY OPAQUE to hide stars */}
           <div
             className="absolute left-0 bottom-0"
             style={{
               top: `${lFrame.headerHeight}px`,
               width: `${lFrame.sidebarWidth}px`,
-              background: 'linear-gradient(180deg, rgba(12, 12, 12, 0.98) 0%, rgba(8, 8, 8, 0.95) 100%)',
+              background: 'linear-gradient(180deg, rgb(12, 12, 12) 0%, rgb(8, 8, 8) 100%)',
               borderBottomRightRadius: `${lFrame.cornerRadius}px`,
               zIndex: 1,
             }}
           />
 
-          {/* Inner Corner: Fills junction gap with curved cutout - slightly darker */}
+          {/* Inner Corner: Fills junction gap with curved cutout - FULLY OPAQUE to hide stars */}
           <div
             className="absolute"
             style={{
@@ -3033,7 +3033,7 @@ function AgentPortal() {
               left: `${lFrame.sidebarWidth}px`,
               width: `${lFrame.cornerRadius}px`,
               height: `${lFrame.cornerRadius}px`,
-              background: `radial-gradient(circle at 100% 100%, transparent ${lFrame.cornerRadius}px, rgba(12, 12, 12, 0.98) ${lFrame.cornerRadius}px)`,
+              background: `radial-gradient(circle at 100% 100%, transparent ${lFrame.cornerRadius}px, rgb(12, 12, 12) ${lFrame.cornerRadius}px)`,
               zIndex: 1,
             }}
           />
