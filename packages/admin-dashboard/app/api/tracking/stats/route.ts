@@ -104,16 +104,24 @@ export async function GET(request: NextRequest) {
     const weekStart = getWeekStart();
     const customLinks: Array<{ id: string; label: string }> = agentPage.custom_links || [];
 
-    // Build set of valid button IDs for links page (current buttons only)
+    // Build set of valid button IDs for links page (custom buttons only, NOT learn-about)
+    // learn-about directs users to the attraction page, so it belongs in attraction stats
     const validLinkButtonIds = new Set(customLinks.map(l => l.id));
-    validLinkButtonIds.add('learn-about'); // default button always valid
 
     // Build label lookup from CURRENT custom_links
     const labelLookup = new Map<string, string>();
     for (const link of customLinks) {
       labelLookup.set(link.id, link.label);
     }
-    labelLookup.set('learn-about', 'Learn About SAA');
+
+    // Known attraction buttons (including learn-about which lives on links page but drives to attraction)
+    const attractionLabels: Record<string, string> = {
+      'learn-about': 'Learn About SAA',
+      'cta-watch': 'Watch & Decide',
+      'form-submit': 'Join Form Submit',
+      'btn-join-alliance': 'Join The Alliance',
+    };
+    const knownAttractionIds = new Set(Object.keys(attractionLabels));
 
     // Fetch all events for this agent page
     const { data: events, error: eventsError } = await supabase
@@ -139,50 +147,66 @@ export async function GET(request: NextRequest) {
 
     for (const event of events || []) {
       const isThisWeek = event.created_at >= weekStart;
-      const isLinks = event.page_type === 'links';
-      const stats = isLinks ? linksStats : attractionStats;
-      const buttonMap = isLinks ? linksButtonClicks : attractionButtonClicks;
 
       if (event.event_type === 'view') {
+        // Views go to whichever page type they came from
+        const stats = event.page_type === 'links' ? linksStats : attractionStats;
         stats.views_all_time++;
         if (isThisWeek) stats.views_this_week++;
-      } else if (event.event_type === 'click') {
-        stats.clicks_all_time++;
-        if (isThisWeek) stats.clicks_this_week++;
+      } else if (event.event_type === 'click' && event.button_id) {
+        // Route clicks based on button identity, not page_type:
+        // - learn-about clicks (on links page) → attraction stats
+        // - known attraction buttons → attraction stats
+        // - custom link buttons → links stats (only if current)
+        const isAttractionButton = knownAttractionIds.has(event.button_id) || event.button_id.startsWith('social-');
+        const isValidLinkButton = validLinkButtonIds.has(event.button_id);
 
-        if (event.button_id) {
-          const existing = buttonMap.get(event.button_id) || { all: 0, week: 0 };
+        if (isAttractionButton) {
+          attractionStats.clicks_all_time++;
+          if (isThisWeek) attractionStats.clicks_this_week++;
+          const existing = attractionButtonClicks.get(event.button_id) || { all: 0, week: 0 };
           existing.all++;
           if (isThisWeek) existing.week++;
-          buttonMap.set(event.button_id, existing);
+          attractionButtonClicks.set(event.button_id, existing);
+        } else if (isValidLinkButton) {
+          linksStats.clicks_all_time++;
+          if (isThisWeek) linksStats.clicks_this_week++;
+          const existing = linksButtonClicks.get(event.button_id) || { all: 0, week: 0 };
+          existing.all++;
+          if (isThisWeek) existing.week++;
+          linksButtonClicks.set(event.button_id, existing);
         }
+        // Clicks for deleted/unknown buttons are silently excluded from totals
       }
     }
 
-    // Build links button breakdown — only CURRENT buttons
-    for (const [buttonId, counts] of linksButtonClicks) {
-      if (!validLinkButtonIds.has(buttonId)) continue;
+    // Build links button breakdown — ALL current buttons, even with 0 clicks
+    for (const link of customLinks) {
+      const counts = linksButtonClicks.get(link.id) || { all: 0, week: 0 };
       linksStats.button_breakdown.push({
-        button_id: buttonId,
-        label: labelLookup.get(buttonId) || buttonId,
+        button_id: link.id,
+        label: link.label,
         clicks_this_week: counts.week,
         clicks_all_time: counts.all,
       });
     }
 
-    // Build attraction button breakdown (fixed set of known buttons)
-    const attractionLabels: Record<string, string> = {
-      'cta-watch': 'Watch & Decide',
-      'form-submit': 'Join Form Submit',
-      'btn-join-alliance': 'Join The Alliance',
-    };
-    // Include social- prefixed buttons dynamically
+    // Build attraction button breakdown — ALL known buttons, even with 0 clicks
+    for (const [buttonId, label] of Object.entries(attractionLabels)) {
+      const counts = attractionButtonClicks.get(buttonId) || { all: 0, week: 0 };
+      attractionStats.button_breakdown.push({
+        button_id: buttonId,
+        label,
+        clicks_this_week: counts.week,
+        clicks_all_time: counts.all,
+      });
+    }
+    // Also include any social- buttons that have clicks (dynamic)
     for (const [buttonId, counts] of attractionButtonClicks) {
-      let label = attractionLabels[buttonId];
-      if (!label && buttonId.startsWith('social-')) {
-        label = buttonId.replace('social-', '').replace(/^\w/, c => c.toUpperCase());
-      }
-      if (!label) label = buttonId;
+      if (knownAttractionIds.has(buttonId)) continue; // already added above
+      const label = buttonId.startsWith('social-')
+        ? buttonId.replace('social-', '').replace(/^\w/, c => c.toUpperCase())
+        : buttonId;
       attractionStats.button_breakdown.push({
         button_id: buttonId,
         label,
