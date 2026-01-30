@@ -11774,7 +11774,7 @@ function AgentPagesSection({
 
   // Preview / Button Links Card (Gold header) - Shared between desktop and medium screen layouts
   const renderPreviewButtonLinksCard = (withRowSpan: boolean) => (
-      <div className={`overflow-visible ${withRowSpan ? 'rounded-xl row-span-2' : 'rounded-t-xl'}`} style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+      <div className={`overflow-visible ${withRowSpan ? 'rounded-xl row-span-2' : 'rounded-xl'}`} style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
         {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
           <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
@@ -12675,7 +12675,7 @@ return (
       style={{ gridTemplateColumns: '1fr 340px' }}
     >
       {/* LEFT COLUMN: Tabbed Content - flex column, min 390px wide, stretches to match preview */}
-      <div className="flex flex-col gap-4" style={{ minWidth: '390px' }}>
+      <div className="flex flex-col gap-4 h-full" style={{ minWidth: '390px' }}>
         {/* Pill Tab Selector - 3 single-word tabs with gold active state */}
         <div
           className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative flex-shrink-0"
@@ -12730,7 +12730,7 @@ return (
         {/* Tab 1: Profile - Profile card expands, Contact card fixed at 415px */}
         {linkPageTab === 'profile-contact' && (
           <div className="flex flex-col gap-4 flex-1">
-            <div className="flex-1">{renderProfileCard()}</div>
+            <div className="flex-1 flex flex-col [&>div]:flex-1">{renderProfileCard()}</div>
             <div style={{ height: '415px', flexShrink: 0 }}>{renderContactCard()}</div>
           </div>
         )}
@@ -12740,11 +12740,11 @@ return (
           <div className="flex-1 flex flex-col [&>div]:flex-1">{renderStyleCard()}</div>
         )}
 
-        {/* Tab 3: Social - stacked cards */}
+        {/* Tab 3: Social - Social card expands, Page Actions stays natural height */}
         {linkPageTab === 'socials-actions' && (
           <div className="flex flex-col gap-4 flex-1">
-            {renderSocialLinksCard(2)}
-            {renderPageActionsCard()}
+            <div className="flex-1 flex flex-col [&>div]:flex-1">{renderSocialLinksCard(2)}</div>
+            <div className="flex-shrink-0">{renderPageActionsCard()}</div>
           </div>
         )}
       </div>
