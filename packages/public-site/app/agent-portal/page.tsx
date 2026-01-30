@@ -2711,7 +2711,7 @@ function AgentPortal() {
       <style>{`
         .mobile-menu-burger .hamburger-svg {
           height: 100%;
-          transition: transform 0.4s ease 0.2s;
+          transition: transform 0.4s ease 0.1s;
         }
         .mobile-menu-burger .hamburger-svg .line {
           fill: none;
@@ -2719,17 +2719,17 @@ function AgentPortal() {
           stroke-linecap: round;
           stroke-linejoin: round;
           stroke-width: 3.5;
-          transition: stroke-dasharray 0.4s ease 0.2s, stroke-dashoffset 0.4s ease 0.2s;
+          transition: stroke-dasharray 0.4s ease 0.1s, stroke-dashoffset 0.4s ease 0.1s;
         }
         .mobile-menu-burger .hamburger-svg .line-top-bottom {
           stroke-dasharray: 12 63;
         }
         .mobile-menu-burger.menu-open .hamburger-svg {
           transform: rotate(-45deg);
-          transition: transform 0.4s ease 0.2s;
+          transition: transform 0.4s ease 0.1s;
         }
         .mobile-menu-burger.menu-open .hamburger-svg .line {
-          transition: stroke-dasharray 0.4s ease 0.2s, stroke-dashoffset 0.4s ease 0.2s;
+          transition: stroke-dasharray 0.4s ease 0.1s, stroke-dashoffset 0.4s ease 0.1s;
         }
         .mobile-menu-burger.menu-open .hamburger-svg .line-top-bottom {
           stroke-dasharray: 20 300;
