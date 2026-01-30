@@ -13171,6 +13171,7 @@ return (
               backgroundColor: '#ffd700',
               color: '#000',
               opacity: isSaving ? 0.5 : 1,
+              width: '178px',
             }}
           >
             {isSaving ? (
@@ -13193,6 +13194,7 @@ return (
               color: hasUnsavedChanges ? '#000' : '#888',
               cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'default',
               opacity: isSaving ? 0.5 : 1,
+              width: '178px',
             }}
           >
             {isSaving ? (
