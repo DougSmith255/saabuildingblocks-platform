@@ -987,6 +987,7 @@ function AgentPortal() {
   const [pendingImageUrl, setPendingImageUrl] = useState<string | null>(null);
   const [profileImageError, setProfileImageError] = useState(false); // Track if profile image failed to load
   const [profileImageLoading, setProfileImageLoading] = useState(false); // Images are preloaded during loading screen
+  const profileImageRetried = useRef(false); // Track if we already retried with non-CDN URL
   const [pendingBgRemovedUrl, setPendingBgRemovedUrl] = useState<string | null>(null);
   const [isRemovingBackground, setIsRemovingBackground] = useState(false);
   const [bgRemovalProgress, setBgRemovalProgress] = useState(0);
@@ -3414,8 +3415,15 @@ function AgentPortal() {
                           fetchPriority="high"
                           onLoad={() => setProfileImageLoading(false)}
                           onError={() => {
-                            setProfileImageError(true);
-                            setProfileImageLoading(false);
+                            // If CDN URL fails, retry with original assets URL before giving up
+                            if (!profileImageRetried.current && user?.profilePictureUrl?.includes('cdn.saabuildingblocks.com')) {
+                              profileImageRetried.current = true;
+                              const fallbackUrl = user.profilePictureUrl.replace('cdn.saabuildingblocks.com', 'assets.saabuildingblocks.com');
+                              setUser(prev => prev ? { ...prev, profilePictureUrl: fallbackUrl } : prev);
+                            } else {
+                              setProfileImageError(true);
+                              setProfileImageLoading(false);
+                            }
                           }}
                         />
                       </>
@@ -3731,8 +3739,15 @@ function AgentPortal() {
                           fetchPriority="high"
                           onLoad={() => setProfileImageLoading(false)}
                           onError={() => {
-                            setProfileImageError(true);
-                            setProfileImageLoading(false);
+                            // If CDN URL fails, retry with original assets URL before giving up
+                            if (!profileImageRetried.current && user?.profilePictureUrl?.includes('cdn.saabuildingblocks.com')) {
+                              profileImageRetried.current = true;
+                              const fallbackUrl = user.profilePictureUrl.replace('cdn.saabuildingblocks.com', 'assets.saabuildingblocks.com');
+                              setUser(prev => prev ? { ...prev, profilePictureUrl: fallbackUrl } : prev);
+                            } else {
+                              setProfileImageError(true);
+                              setProfileImageLoading(false);
+                            }
                           }}
                         />
                       </>
@@ -10184,13 +10199,9 @@ function AgentPagesSection({
   // Link Page intro modal is now only shown when user clicks the help button
   // No automatic popup on first visit - user must explicitly request help
 
-  // Fetch agent page data - skip if we have preloaded data
+  // Fetch agent page data - always fetch fresh data from API
+  // Even with preloaded (cached) data, fetch to ensure activated status and photos are current
   useEffect(() => {
-    // If we have preloaded data, don't fetch again
-    if (preloadedPageData) {
-      return;
-    }
-
     const fetchPageData = async () => {
       try {
         const token = localStorage.getItem('agent_portal_token');
@@ -10203,8 +10214,10 @@ function AgentPagesSection({
         if (response.ok) {
           const data = await response.json();
           if (data.page) {
-            console.log('[AgentPagesSection] Initial page data loaded, profile_image_color_url:', data.page.profile_image_color_url);
+            console.log('[AgentPagesSection] Fresh page data loaded, activated:', data.page.activated);
             setPageData(data.page);
+            // Cache for PreloadService so subsequent loads are instant
+            try { localStorage.setItem('agent_portal_page_data', JSON.stringify(data)); } catch {}
             setFormData({
               display_first_name: data.page.display_first_name || '',
               display_last_name: data.page.display_last_name || '',
@@ -11297,7 +11310,7 @@ function AgentPagesSection({
   const renderProfileCard = () => (
     <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
       {/* Header with Premium Glow */}
-      <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+      <div className="px-4 py-2.5 border-b border-white/10 hidden min-[1024px]:flex items-center gap-2">
         <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
           <circle cx="12" cy="7" r="4" />
@@ -11461,7 +11474,7 @@ function AgentPagesSection({
   const renderStyleCard = () => (
     <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
       {/* Header with Premium Glow */}
-      <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+      <div className="px-4 py-2.5 border-b border-white/10 hidden min-[1024px]:flex items-center gap-2">
         <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
           <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
         </svg>
@@ -11701,7 +11714,7 @@ function AgentPagesSection({
   const renderContactCard = () => (
     <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
       {/* Header with Premium Glow */}
-      <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+      <div className="px-4 py-2.5 border-b border-white/10 hidden min-[1024px]:flex items-center gap-2">
         <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
           <rect x="2" y="4" width="20" height="16" rx="2" />
           <path d="M22 7l-10 5L2 7" />
@@ -11711,21 +11724,9 @@ function AgentPagesSection({
 
       {/* Content */}
       <div className="p-4 space-y-4">
-        {/* Phone & Email - side by side on medium screens (1024px-1649px) */}
+        {/* Email & Phone - side by side on medium screens (1024px-1649px), Email stacks above Phone on mobile */}
         <div className="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1650px]:grid-cols-1 gap-4">
-          {/* Phone (left on medium screens) */}
-          <div>
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Phone</label>
-            <input
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => handleInputChange('phone', e.target.value)}
-              placeholder="(555) 123-4567"
-              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
-            />
-          </div>
-
-          {/* Email (right on medium screens) */}
+          {/* Email (top on mobile, left on medium) */}
           <div>
             <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Email</label>
             <input
@@ -11733,6 +11734,18 @@ function AgentPagesSection({
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
               placeholder="you@email.com"
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
+            />
+          </div>
+
+          {/* Phone (below email on mobile, right on medium) */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Phone</label>
+            <input
+              type="tel"
+              value={formData.phone}
+              onChange={(e) => handleInputChange('phone', e.target.value)}
+              placeholder="(555) 123-4567"
               className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
             />
           </div>
@@ -11807,7 +11820,7 @@ function AgentPagesSection({
   const renderSocialLinksCard = (gridCols: number = 4) => (
     <div className="rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)', overflow: 'visible' }}>
       {/* Header with Premium Glow */}
-      <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
+      <div className="px-4 py-2.5 border-b border-white/10 hidden min-[1024px]:flex items-center justify-between">
         <div className="flex items-center gap-2">
           <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -12039,7 +12052,7 @@ function AgentPagesSection({
   const renderPageActionsCard = () => (
     <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
       {/* Header with Premium Glow */}
-      <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+      <div className="px-4 py-2.5 border-b border-white/10 hidden min-[1024px]:flex items-center gap-2">
         <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
           <path d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
@@ -12979,7 +12992,7 @@ function AgentPagesSection({
     return (
       <div className={`overflow-hidden ${withRowSpan ? 'rounded-xl row-span-2' : 'rounded-xl'}`} style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
         {/* Header with Premium Glow */}
-        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+        <div className="px-4 py-2.5 border-b border-white/10 hidden min-[1024px]:flex items-center gap-2">
           <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
             <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
             <line x1="12" y1="18" x2="12" y2="18" />
@@ -13096,11 +13109,7 @@ return (
           margin: '8px 8px 8px 8px',
         }}
       >
-        <div className="flex items-center gap-2.5 px-3 py-2.5">
-          <span
-            className="text-white/50 text-xs flex-shrink-0"
-            style={{ fontFamily: 'var(--font-amulya, sans-serif)' }}
-          >Settings:</span>
+        <div className="flex items-center px-3 py-2.5">
           <div className="mobile-link-pill-container" ref={mobilePillContainerRef}>
             {([
               { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
