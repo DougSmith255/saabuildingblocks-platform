@@ -104,24 +104,16 @@ export async function GET(request: NextRequest) {
     const weekStart = getWeekStart();
     const customLinks: Array<{ id: string; label: string }> = agentPage.custom_links || [];
 
-    // Build set of valid button IDs for links page (custom buttons only, NOT learn-about)
-    // learn-about directs users to the attraction page, so it belongs in attraction stats
+    // Valid link page buttons: all custom links + learn-about default button
     const validLinkButtonIds = new Set(customLinks.map(l => l.id));
+    validLinkButtonIds.add('learn-about');
 
-    // Build label lookup from CURRENT custom_links
+    // Build label lookup from CURRENT custom_links + default
     const labelLookup = new Map<string, string>();
     for (const link of customLinks) {
       labelLookup.set(link.id, link.label);
     }
-
-    // Known attraction buttons (including learn-about which lives on links page but drives to attraction)
-    const attractionLabels: Record<string, string> = {
-      'learn-about': 'Learn About SAA',
-      'cta-watch': 'Watch & Decide',
-      'form-submit': 'Join Form Submit',
-      'btn-join-alliance': 'Join The Alliance',
-    };
-    const knownAttractionIds = new Set(Object.keys(attractionLabels));
+    labelLookup.set('learn-about', 'Learn About SAA');
 
     // Fetch all events for this agent page
     const { data: events, error: eventsError } = await supabase
@@ -141,34 +133,26 @@ export async function GET(request: NextRequest) {
     const linksStats: PageStats = { views_this_week: 0, views_all_time: 0, clicks_this_week: 0, clicks_all_time: 0, button_breakdown: [] };
     const attractionStats: PageStats = { views_this_week: 0, views_all_time: 0, clicks_this_week: 0, clicks_all_time: 0, button_breakdown: [] };
 
-    // Button click accumulators
+    // Button click accumulators (links page only — attraction has no breakdown)
     const linksButtonClicks = new Map<string, { all: number; week: number }>();
-    const attractionButtonClicks = new Map<string, { all: number; week: number }>();
 
     for (const event of events || []) {
       const isThisWeek = event.created_at >= weekStart;
 
       if (event.event_type === 'view') {
-        // Views go to whichever page type they came from
         const stats = event.page_type === 'links' ? linksStats : attractionStats;
         stats.views_all_time++;
         if (isThisWeek) stats.views_this_week++;
       } else if (event.event_type === 'click' && event.button_id) {
-        // Route clicks based on button identity, not page_type:
-        // - learn-about clicks (on links page) → attraction stats
-        // - known attraction buttons → attraction stats
-        // - custom link buttons → links stats (only if current)
-        const isAttractionButton = knownAttractionIds.has(event.button_id) || event.button_id.startsWith('social-');
-        const isValidLinkButton = validLinkButtonIds.has(event.button_id);
-
-        if (isAttractionButton) {
+        // Attraction clicks: only count "btn-join-alliance" (Join The Alliance)
+        // This is the one meaningful conversion action on the attraction page.
+        if (event.button_id === 'btn-join-alliance') {
           attractionStats.clicks_all_time++;
           if (isThisWeek) attractionStats.clicks_this_week++;
-          const existing = attractionButtonClicks.get(event.button_id) || { all: 0, week: 0 };
-          existing.all++;
-          if (isThisWeek) existing.week++;
-          attractionButtonClicks.set(event.button_id, existing);
-        } else if (isValidLinkButton) {
+        }
+
+        // Links clicks: count clicks for current link page buttons
+        if (validLinkButtonIds.has(event.button_id)) {
           linksStats.clicks_all_time++;
           if (isThisWeek) linksStats.clicks_this_week++;
           const existing = linksButtonClicks.get(event.button_id) || { all: 0, week: 0 };
@@ -176,7 +160,6 @@ export async function GET(request: NextRequest) {
           if (isThisWeek) existing.week++;
           linksButtonClicks.set(event.button_id, existing);
         }
-        // Clicks for deleted/unknown buttons are silently excluded from totals
       }
     }
 
@@ -190,36 +173,22 @@ export async function GET(request: NextRequest) {
         clicks_all_time: counts.all,
       });
     }
+    // Always include learn-about in links breakdown
+    const learnAboutCounts = linksButtonClicks.get('learn-about') || { all: 0, week: 0 };
+    linksStats.button_breakdown.push({
+      button_id: 'learn-about',
+      label: 'Learn About SAA',
+      clicks_this_week: learnAboutCounts.week,
+      clicks_all_time: learnAboutCounts.all,
+    });
 
-    // Build attraction button breakdown — ALL known buttons, even with 0 clicks
-    for (const [buttonId, label] of Object.entries(attractionLabels)) {
-      const counts = attractionButtonClicks.get(buttonId) || { all: 0, week: 0 };
-      attractionStats.button_breakdown.push({
-        button_id: buttonId,
-        label,
-        clicks_this_week: counts.week,
-        clicks_all_time: counts.all,
-      });
-    }
-    // Also include any social- buttons that have clicks (dynamic)
-    for (const [buttonId, counts] of attractionButtonClicks) {
-      if (knownAttractionIds.has(buttonId)) continue; // already added above
-      const label = buttonId.startsWith('social-')
-        ? buttonId.replace('social-', '').replace(/^\w/, c => c.toUpperCase())
-        : buttonId;
-      attractionStats.button_breakdown.push({
-        button_id: buttonId,
-        label,
-        clicks_this_week: counts.week,
-        clicks_all_time: counts.all,
-      });
-    }
+    // Attraction has NO button breakdown — the clicks total IS the Join Alliance count
+    // No button_breakdown entries needed.
 
-    // Sort breakdowns by clicks_this_week desc, then all_time desc
+    // Sort links breakdown by clicks_this_week desc, then all_time desc
     const sortBreakdown = (a: ButtonBreakdown, b: ButtonBreakdown) =>
       b.clicks_this_week - a.clicks_this_week || b.clicks_all_time - a.clicks_all_time;
     linksStats.button_breakdown.sort(sortBreakdown);
-    attractionStats.button_breakdown.sort(sortBreakdown);
 
     return NextResponse.json({
       success: true,

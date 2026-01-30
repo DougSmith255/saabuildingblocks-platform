@@ -786,7 +786,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: 'onboarding', label: 'Onboarding', icon: Rocket },
-  { id: 'dashboard', label: 'Performance', icon: TrendingUp },
+  { id: 'dashboard', label: 'Dashboard', icon: TrendingUp },
   { id: 'support', label: 'Get Support', icon: LifeBuoy },
   { id: 'linktree', label: 'Link Page', icon: LinkIcon },
   { id: 'agent-page', label: 'Agent Attraction', icon: UserCircle },
@@ -2805,7 +2805,7 @@ function AgentPortal() {
             <div className="absolute left-1/2 -translate-x-1/2">
               <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap">
                 {activeSection === 'onboarding' && 'Onboarding'}
-                {activeSection === 'dashboard' && 'Performance'}
+                {activeSection === 'dashboard' && 'Dashboard'}
                 {activeSection === 'support' && 'Get Support'}
                 {activeSection === 'agent-page' && 'Agent Attraction'}
                 {activeSection === 'linktree' && 'Link Page'}
@@ -2855,7 +2855,7 @@ function AgentPortal() {
                 {/* Navigation items in desktop order */}
                 {[
                   ...(isOnboardingComplete ? [] : [{ id: 'onboarding' as SectionId, label: 'Onboarding', Icon: Rocket }]),
-                  { id: 'dashboard' as SectionId, label: 'Performance', Icon: TrendingUp },
+                  { id: 'dashboard' as SectionId, label: 'Dashboard', Icon: TrendingUp },
                   { id: 'support' as SectionId, label: 'Get Support', Icon: LifeBuoy },
                   { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
                   { id: 'agent-page' as SectionId, label: 'Agent Attraction', Icon: UserCircle },
