@@ -952,6 +952,7 @@ function AgentPortal() {
   // Preloaded dashboard stats - fetched once during init, no reload on tab switch
   const [dashboardStats, setDashboardStats] = useState<{ stats: any; agentPageId: string } | null>(null);
   const [isRefreshingStats, setIsRefreshingStats] = useState(false);
+  const [statsStale, setStatsStale] = useState(false);
 
   // Manual refresh for dashboard stats - called from Analytics refresh button
   const refreshDashboardStats = useCallback(async () => {
@@ -967,6 +968,7 @@ function AgentPortal() {
         const statsJson = await statsRes.json();
         if (statsJson.success) {
           setDashboardStats({ stats: statsJson.data, agentPageId: pageId });
+          setStatsStale(false);
         }
       }
     } catch {
@@ -3552,6 +3554,7 @@ function AgentPortal() {
                 agentPageId={dashboardStats?.agentPageId || null}
                 onRefresh={refreshDashboardStats}
                 isRefreshing={isRefreshingStats}
+                statsStale={statsStale}
               />
             )}
 
@@ -3881,6 +3884,7 @@ function AgentPortal() {
                 mode="agent-page"
                 preloadedPageData={preloadedAgentPageData}
                 triggerConfetti={triggerConfetti}
+                onPageSaved={() => setStatsStale(true)}
                 setShowLinkPageIntroModal={setShowLinkPageIntroModal}
                 setShowLinkPageHelpModal={setShowLinkPageHelpModal}
                 showLinkPageHelpModal={showLinkPageHelpModal}
@@ -3922,6 +3926,7 @@ function AgentPortal() {
                 mode="linktree"
                 preloadedPageData={preloadedAgentPageData}
                 triggerConfetti={triggerConfetti}
+                onPageSaved={() => setStatsStale(true)}
                 setShowLinkPageIntroModal={setShowLinkPageIntroModal}
                 setShowLinkPageHelpModal={setShowLinkPageHelpModal}
                 showLinkPageHelpModal={showLinkPageHelpModal}
@@ -5662,6 +5667,7 @@ function DashboardView({
   agentPageId,
   onRefresh,
   isRefreshing = false,
+  statsStale = false,
 }: {
   onNavigate: (id: SectionId) => void;
   isOnboardingComplete: boolean;
@@ -5672,6 +5678,7 @@ function DashboardView({
   agentPageId: string | null;
   onRefresh: () => void;
   isRefreshing?: boolean;
+  statsStale?: boolean;
 }) {
   const stats = preloadedStats;
 
@@ -5793,18 +5800,43 @@ function DashboardView({
             <button
               onClick={onRefresh}
               disabled={isRefreshing}
-              className="flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium transition-all"
+              className="flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={{
                 width: '180px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                color: isRefreshing ? 'rgba(229, 228, 221, 0.3)' : 'rgba(229, 228, 221, 0.5)',
+                ...(statsStale && !isRefreshing ? {
+                  background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)',
+                  border: '1px solid rgba(34, 197, 94, 0.4)',
+                  color: '#4ade80',
+                  boxShadow: '0 0 12px rgba(34, 197, 94, 0.15)',
+                } : {
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: isRefreshing ? 'rgba(229, 228, 221, 0.3)' : 'rgba(229, 228, 221, 0.5)',
+                }),
               }}
-              onMouseEnter={(e) => { if (!isRefreshing) { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'; e.currentTarget.style.color = 'rgba(229, 228, 221, 0.8)'; } }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'; e.currentTarget.style.color = isRefreshing ? 'rgba(229, 228, 221, 0.3)' : 'rgba(229, 228, 221, 0.5)'; }}
+              onMouseEnter={(e) => {
+                if (isRefreshing) return;
+                if (statsStale) {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(59, 130, 246, 0.25) 100%)';
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.25)';
+                } else {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.color = 'rgba(229, 228, 221, 0.8)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (statsStale && !isRefreshing) {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)';
+                  e.currentTarget.style.boxShadow = '0 0 12px rgba(34, 197, 94, 0.15)';
+                } else {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                  e.currentTarget.style.color = isRefreshing ? 'rgba(229, 228, 221, 0.3)' : 'rgba(229, 228, 221, 0.5)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }
+              }}
             >
               <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
-              {isRefreshing ? 'Refreshing...' : 'Refresh'}
+              {isRefreshing ? 'Refreshing...' : statsStale ? 'Refresh Stats' : 'Refresh'}
             </button>
           </div>
 
@@ -9603,6 +9635,7 @@ interface AgentPagesSectionProps {
   mode?: AgentPagesSectionMode;
   preloadedPageData?: any; // Preloaded agent page data from loading screen
   triggerConfetti: () => void; // Confetti effect for save success
+  onPageSaved?: () => void; // Notify parent that page was saved (stats may be stale)
   // Link page intro/help modal props
   setShowLinkPageIntroModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowLinkPageHelpModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9642,6 +9675,7 @@ function AgentPagesSection({
   mode = 'linktree',
   preloadedPageData,
   triggerConfetti,
+  onPageSaved,
   setShowLinkPageIntroModal,
   setShowLinkPageHelpModal,
   showLinkPageHelpModal = false,
@@ -10257,6 +10291,7 @@ function AgentPagesSection({
         // Trigger success animation with confetti (button shows success state)
         setShowSaveSuccess(true);
         triggerConfetti();
+        onPageSaved?.();
         setTimeout(() => setShowSaveSuccess(false), 2000);
       } else {
         const errorData = await response.json();
@@ -10369,6 +10404,7 @@ function AgentPagesSection({
         setPageData(data.page);
         // Fire confetti to celebrate activation!
         triggerConfetti();
+        onPageSaved?.();
         // Success is indicated by the page now being activated (shown in status banner)
       } else {
         const errorData = await response.json();
