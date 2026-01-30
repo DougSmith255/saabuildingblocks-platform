@@ -786,7 +786,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: 'onboarding', label: 'Onboarding', icon: Rocket },
-  { id: 'dashboard', label: 'Dashboard', icon: TrendingUp },
+  { id: 'dashboard', label: 'Analytics', icon: TrendingUp },
   { id: 'support', label: 'Get Support', icon: LifeBuoy },
   { id: 'linktree', label: 'Link Page', icon: LinkIcon },
   { id: 'agent-page', label: 'Agent Attraction', icon: UserCircle },
@@ -2859,7 +2859,7 @@ function AgentPortal() {
             <div className="absolute left-1/2 -translate-x-1/2">
               <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap">
                 {activeSection === 'onboarding' && 'Onboarding'}
-                {activeSection === 'dashboard' && 'Dashboard'}
+                {activeSection === 'dashboard' && 'Analytics'}
                 {activeSection === 'support' && 'Get Support'}
                 {activeSection === 'agent-page' && 'Agent Attraction'}
                 {activeSection === 'linktree' && 'Link Page'}
@@ -2909,7 +2909,7 @@ function AgentPortal() {
                 {/* Navigation items in desktop order */}
                 {[
                   ...(isOnboardingComplete ? [] : [{ id: 'onboarding' as SectionId, label: 'Onboarding', Icon: Rocket }]),
-                  { id: 'dashboard' as SectionId, label: 'Dashboard', Icon: TrendingUp },
+                  { id: 'dashboard' as SectionId, label: 'Analytics', Icon: TrendingUp },
                   { id: 'support' as SectionId, label: 'Get Support', Icon: LifeBuoy },
                   { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
                   { id: 'agent-page' as SectionId, label: 'Agent Attraction', Icon: UserCircle },
@@ -5625,7 +5625,7 @@ function DashboardView({
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.links.views_this_week}</p>
-                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">views this month</p>
+                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">viewers this month</p>
                   <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.links.views_all_time.toLocaleString()} all time</p>
                 </div>
                 <div>
@@ -5653,7 +5653,7 @@ function DashboardView({
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.attraction.views_this_week}</p>
-                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">views this month</p>
+                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">viewers this month</p>
                   <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.attraction.views_all_time.toLocaleString()} all time</p>
                 </div>
                 <div>
@@ -5697,7 +5697,7 @@ function DashboardView({
                           className="h-full rounded-full transition-all duration-700 ease-out"
                           style={{
                             width: `${Math.max((btn.clicks_this_week / maxClicks) * 100, btn.clicks_this_week > 0 ? 4 : 0)}%`,
-                            background: btn.source === 'links'
+                            background: btn.source === 'links' && btn.button_id !== 'learn-about'
                               ? 'linear-gradient(90deg, #00ff88, #00cc6a)'
                               : 'linear-gradient(90deg, #a855f7, #7c3aed)',
                           }}
