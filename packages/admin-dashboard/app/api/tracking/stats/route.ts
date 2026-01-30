@@ -24,13 +24,11 @@ export async function OPTIONS() {
   });
 }
 
-/** Get Monday 00:00 UTC of the current week */
-function getWeekStart(): string {
+/** Get 1st of the current month 00:00 UTC */
+function getMonthStart(): string {
   const now = new Date();
-  const day = now.getUTCDay(); // 0=Sun, 1=Mon, ...
-  const diff = day === 0 ? 6 : day - 1; // days since Monday
-  const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - diff));
-  return monday.toISOString();
+  const first = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+  return first.toISOString();
 }
 
 interface ButtonBreakdown {
@@ -101,7 +99,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const weekStart = getWeekStart();
+    const weekStart = getMonthStart();
     const customLinks: Array<{ id: string; label: string }> = agentPage.custom_links || [];
 
     // Valid link page buttons: all custom links + learn-about default button

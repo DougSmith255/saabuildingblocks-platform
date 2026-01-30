@@ -949,6 +949,8 @@ function AgentPortal() {
   const [isUploadingDashboardImage, setIsUploadingDashboardImage] = useState(false);
   // Preloaded agent page data - fetched during loading screen to avoid loading on tab switch
   const [preloadedAgentPageData, setPreloadedAgentPageData] = useState<any>(null);
+  // Preloaded dashboard stats - fetched once during init, no reload on tab switch
+  const [dashboardStats, setDashboardStats] = useState<{ stats: any; agentPageId: string } | null>(null);
   const [contrastLevel, setContrastLevel] = useState(130); // Default 130%
   const [originalImageFile, setOriginalImageFile] = useState<File | null>(null); // Store original for reprocessing
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -1190,7 +1192,7 @@ function AgentPortal() {
     console.log('[Loading Screen] Preload effect running, showLoadingScreen=', showLoadingScreen);
     if (showLoadingScreen) {
       console.log('[Loading Screen] Starting preloadAppData');
-      preloadAppData().then((result) => {
+      preloadAppData().then(async (result) => {
         console.log('[Loading Screen] preloadAppData complete, result:', !!result.userData, !!result.agentPageData);
         if (result.userData) {
           // Update user state with fresh data from API
@@ -1219,6 +1221,33 @@ function AgentPortal() {
         if (result.agentPageData) {
           setPreloadedAgentPageData(result.agentPageData);
         }
+        // Preload dashboard stats (needs token + user ID)
+        const token = typeof localStorage !== 'undefined' ? localStorage.getItem('agent_portal_token') : null;
+        const uid = result.userData?.id;
+        if (token && uid) {
+          try {
+            const pageRes = await fetch(`${API_URL}/api/agent-pages/${uid}`, {
+              headers: { 'Authorization': `Bearer ${token}` },
+            });
+            if (pageRes.ok) {
+              const pageJson = await pageRes.json();
+              const pageId = pageJson?.page?.id;
+              if (pageId) {
+                const statsRes = await fetch(`${API_URL}/api/tracking/stats?agent_page_id=${pageId}`, {
+                  headers: { 'Authorization': `Bearer ${token}` },
+                });
+                if (statsRes.ok) {
+                  const statsJson = await statsRes.json();
+                  if (statsJson.success) {
+                    setDashboardStats({ stats: statsJson.data, agentPageId: pageId });
+                  }
+                }
+              }
+            }
+          } catch {
+            // Stats are non-critical — dashboard will show empty state
+          }
+        }
         console.log('[Loading Screen] Setting isLoading=false');
         setIsLoading(false);
       }).catch((err) => {
@@ -1227,16 +1256,41 @@ function AgentPortal() {
         setIsLoading(false);
       });
     } else {
-      // Loading screen was skipped (session already loaded) - do background preload of agent page data
-      // User data is already loaded from localStorage, just need agent page data for smoother tab switching
+      // Loading screen was skipped (session already loaded) - do background preload
       console.log('[Background] Loading screen skipped, doing background preload');
-      preloadAppData().then((result) => {
+      preloadAppData().then(async (result) => {
         if (result.agentPageData) {
           setPreloadedAgentPageData(result.agentPageData);
-          console.log('[Background] Agent page data preloaded');
+        }
+        // Also preload stats in background
+        const token = typeof localStorage !== 'undefined' ? localStorage.getItem('agent_portal_token') : null;
+        const uid = result.userData?.id;
+        if (token && uid) {
+          try {
+            const pageRes = await fetch(`${API_URL}/api/agent-pages/${uid}`, {
+              headers: { 'Authorization': `Bearer ${token}` },
+            });
+            if (pageRes.ok) {
+              const pageJson = await pageRes.json();
+              const pageId = pageJson?.page?.id;
+              if (pageId) {
+                const statsRes = await fetch(`${API_URL}/api/tracking/stats?agent_page_id=${pageId}`, {
+                  headers: { 'Authorization': `Bearer ${token}` },
+                });
+                if (statsRes.ok) {
+                  const statsJson = await statsRes.json();
+                  if (statsJson.success) {
+                    setDashboardStats({ stats: statsJson.data, agentPageId: pageId });
+                  }
+                }
+              }
+            }
+          } catch {
+            // Silently ignore
+          }
         }
       }).catch(() => {
-        // Silently ignore - sections will load their own data if needed
+        // Silently ignore
       });
     }
   }, []); // Only run once on mount
@@ -3467,7 +3521,8 @@ function AgentPortal() {
                 completedStepsCount={completedStepsCount}
                 totalStepsCount={totalStepsCount}
                 isSafari={isSafari}
-                userId={user?.id}
+                preloadedStats={dashboardStats?.stats || null}
+                agentPageId={dashboardStats?.agentPageId || null}
               />
             )}
 
@@ -5426,62 +5481,21 @@ function DashboardView({
   completedStepsCount,
   totalStepsCount,
   isSafari = false,
-  userId,
+  preloadedStats,
+  agentPageId,
 }: {
   onNavigate: (id: SectionId) => void;
   isOnboardingComplete: boolean;
   completedStepsCount: number;
   totalStepsCount: number;
   isSafari?: boolean;
-  userId?: string;
+  preloadedStats: TrackingStats | null;
+  agentPageId: string | null;
 }) {
-  const [stats, setStats] = useState<TrackingStats | null>(null);
-  const [statsLoading, setStatsLoading] = useState(true);
-  const [agentPageId, setAgentPageId] = useState<string | null>(null);
+  const stats = preloadedStats;
 
   // Calculate onboarding progress percentage
   const progressPercentage = totalStepsCount > 0 ? (completedStepsCount / totalStepsCount) * 100 : 0;
-
-  // Fetch agent page ID, then tracking stats
-  useEffect(() => {
-    if (!userId) {
-      setStatsLoading(false);
-      return;
-    }
-    let cancelled = false;
-    async function fetchData() {
-      try {
-        const token = localStorage.getItem('agent_portal_token');
-        if (!token) { setStatsLoading(false); return; }
-
-        // Step 1: Get agent page ID from the agent-pages API
-        const pageRes = await fetch(`${API_URL}/api/agent-pages/${userId}`, {
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
-        if (!pageRes.ok || cancelled) { setStatsLoading(false); return; }
-        const pageJson = await pageRes.json();
-        const pageId = pageJson?.page?.id;
-        if (!pageId || cancelled) { setStatsLoading(false); return; }
-        setAgentPageId(pageId);
-
-        // Step 2: Fetch tracking stats for this agent page
-        const statsRes = await fetch(`${API_URL}/api/tracking/stats?agent_page_id=${pageId}`, {
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
-        if (!statsRes.ok || cancelled) { setStatsLoading(false); return; }
-        const statsJson = await statsRes.json();
-        if (!cancelled && statsJson.success) {
-          setStats(statsJson.data);
-        }
-      } catch {
-        // Silently fail — stats are non-critical
-      } finally {
-        if (!cancelled) setStatsLoading(false);
-      }
-    }
-    fetchData();
-    return () => { cancelled = true; };
-  }, [userId]);
 
   // Merge both page type button breakdowns for the unified chart
   const allButtons = useMemo(() => {
@@ -5495,11 +5509,6 @@ function DashboardView({
   }, [stats]);
 
   const maxClicks = allButtons.length > 0 ? Math.max(...allButtons.map(b => b.clicks_this_week), 1) : 1;
-
-  // Skeleton loading block
-  const Skeleton = ({ className }: { className?: string }) => (
-    <div className={`animate-pulse rounded-lg bg-white/5 ${className || ''}`} />
-  );
 
   return (
     <div className="space-y-4 px-1 sm:px-2">
@@ -5575,7 +5584,7 @@ function DashboardView({
       )}
 
       {/* No Agent Page State */}
-      {!agentPageId && !statsLoading && (
+      {!agentPageId && (
         <div
           className="p-6 sm:p-8 rounded-2xl text-center"
           style={{
@@ -5595,23 +5604,8 @@ function DashboardView({
         </div>
       )}
 
-      {/* Stats Cards - Loading State */}
-      {agentPageId && statsLoading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-          {[0, 1].map(i => (
-            <div key={i} className="p-5 rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)' }}>
-              <Skeleton className="h-4 w-24 mb-4" />
-              <Skeleton className="h-8 w-16 mb-2" />
-              <Skeleton className="h-3 w-32 mb-4" />
-              <Skeleton className="h-8 w-16 mb-2" />
-              <Skeleton className="h-3 w-28" />
-            </div>
-          ))}
-        </div>
-      )}
-
       {/* Stats Cards */}
-      {agentPageId && stats && !statsLoading && (
+      {agentPageId && stats && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {/* Link Page Stats */}
@@ -5631,12 +5625,12 @@ function DashboardView({
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.links.views_this_week}</p>
-                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">views this week</p>
+                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">views this month</p>
                   <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.links.views_all_time.toLocaleString()} all time</p>
                 </div>
                 <div>
                   <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.links.clicks_this_week}</p>
-                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">clicks this week</p>
+                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">clicks this month</p>
                   <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.links.clicks_all_time.toLocaleString()} all time</p>
                 </div>
               </div>
@@ -5659,12 +5653,12 @@ function DashboardView({
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.attraction.views_this_week}</p>
-                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">views this week</p>
+                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">views this month</p>
                   <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.attraction.views_all_time.toLocaleString()} all time</p>
                 </div>
                 <div>
                   <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.attraction.clicks_this_week}</p>
-                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">clicks this week</p>
+                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">join clicks this month</p>
                   <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.attraction.clicks_all_time.toLocaleString()} all time</p>
                 </div>
               </div>
@@ -5682,7 +5676,7 @@ function DashboardView({
           >
             <div className="flex items-baseline gap-2 mb-4">
               <h3 className="text-sm font-semibold text-[#e5e4dd] uppercase tracking-wider" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>Button Clicks</h3>
-              <span className="text-xs text-[#e5e4dd]/40 font-amulya">(this week)</span>
+              <span className="text-xs text-[#e5e4dd]/40 font-amulya">(this month)</span>
             </div>
 
             {allButtons.length === 0 ? (
