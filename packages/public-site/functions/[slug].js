@@ -6379,6 +6379,39 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     })();
   </script>
 
+  <script>
+  (function(){
+    var API='https://saabuildingblocks.com/api/tracking/events';
+    var slug='${escapeJS(agent.slug)}';
+    var vid=sessionStorage.getItem('_saa_vid');
+    if(!vid){vid=Math.random().toString(36).substr(2)+Date.now().toString(36);sessionStorage.setItem('_saa_vid',vid);}
+    function track(type,btnId,btnLabel,btnUrl){
+      var p={slug:slug,page_type:'attraction',event_type:type,visitor_id:vid,referrer:document.referrer||null};
+      if(btnId){p.button_id=btnId;p.button_label=btnLabel;p.button_url=btnUrl;}
+      try{navigator.sendBeacon(API,new Blob([JSON.stringify(p)],{type:'application/json'}));}catch(e){}
+    }
+    track('view');
+    document.addEventListener('click',function(e){
+      var cta=e.target.closest('.cta-button');
+      if(cta){
+        var id=cta.id||'cta-watch';
+        track('click',id,(cta.textContent||'').trim(),cta.getAttribute('href')||'');
+        return;
+      }
+      var social=e.target.closest('.social-link');
+      if(social){
+        var title=social.getAttribute('title')||'unknown';
+        track('click','social-'+title.toLowerCase(),title,social.getAttribute('href')||'');
+        return;
+      }
+    });
+    var jf=document.getElementById('join-form');
+    if(jf){jf.addEventListener('submit',function(){track('click','form-submit','Join Form Submit','');});}
+    var joinBtn=document.getElementById('btn-join-alliance');
+    if(joinBtn){joinBtn.addEventListener('click',function(){track('click','btn-join-alliance','Join The Alliance','');});}
+  })();
+  </script>
+
 </body></html>`;
 }
 
@@ -6696,7 +6729,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
         id: link.id,
         order: link.order,
         html: `
-          <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer" class="link-button custom">
+          <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer" class="link-button custom" data-link-id="${link.id}">
             ${iconHTML}
             <span>${escapeHTML(link.label)}</span>
           </a>
@@ -7473,6 +7506,28 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       }
     }
   </script>
+
+  <script>
+  (function(){
+    var API='https://saabuildingblocks.com/api/tracking/events';
+    var slug='${escapeJS(agent.slug)}';
+    var vid=sessionStorage.getItem('_saa_vid');
+    if(!vid){vid=Math.random().toString(36).substr(2)+Date.now().toString(36);sessionStorage.setItem('_saa_vid',vid);}
+    function track(type,btnId,btnLabel,btnUrl){
+      var p={slug:slug,page_type:'links',event_type:type,visitor_id:vid,referrer:document.referrer||null};
+      if(btnId){p.button_id=btnId;p.button_label=btnLabel;p.button_url=btnUrl;}
+      try{navigator.sendBeacon(API,new Blob([JSON.stringify(p)],{type:'application/json'}));}catch(e){}
+    }
+    track('view');
+    document.addEventListener('click',function(e){
+      var a=e.target.closest('.link-button');
+      if(!a)return;
+      var id=a.getAttribute('data-link-id')||(a.classList.contains('default-muted')?'learn-about':null);
+      if(id)track('click',id,(a.querySelector('span')||a).textContent.trim(),a.getAttribute('href')||'');
+    });
+  })();
+  </script>
+
 </body>
 </html>`;
 }

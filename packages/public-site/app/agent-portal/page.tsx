@@ -786,7 +786,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: 'onboarding', label: 'Onboarding', icon: Rocket },
-  { id: 'dashboard', label: 'Dashboard', icon: Home },
+  { id: 'dashboard', label: 'Performance', icon: TrendingUp },
   { id: 'support', label: 'Get Support', icon: LifeBuoy },
   { id: 'linktree', label: 'Link Page', icon: LinkIcon },
   { id: 'agent-page', label: 'Agent Attraction', icon: UserCircle },
@@ -2805,7 +2805,7 @@ function AgentPortal() {
             <div className="absolute left-1/2 -translate-x-1/2">
               <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap">
                 {activeSection === 'onboarding' && 'Onboarding'}
-                {activeSection === 'dashboard' && 'Home'}
+                {activeSection === 'dashboard' && 'Performance'}
                 {activeSection === 'support' && 'Get Support'}
                 {activeSection === 'agent-page' && 'Agent Attraction'}
                 {activeSection === 'linktree' && 'Link Page'}
@@ -2855,7 +2855,7 @@ function AgentPortal() {
                 {/* Navigation items in desktop order */}
                 {[
                   ...(isOnboardingComplete ? [] : [{ id: 'onboarding' as SectionId, label: 'Onboarding', Icon: Rocket }]),
-                  { id: 'dashboard' as SectionId, label: 'Dashboard', Icon: Home },
+                  { id: 'dashboard' as SectionId, label: 'Performance', Icon: TrendingUp },
                   { id: 'support' as SectionId, label: 'Get Support', Icon: LifeBuoy },
                   { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
                   { id: 'agent-page' as SectionId, label: 'Agent Attraction', Icon: UserCircle },
@@ -3467,6 +3467,7 @@ function AgentPortal() {
                 completedStepsCount={completedStepsCount}
                 totalStepsCount={totalStepsCount}
                 isSafari={isSafari}
+                agentPageData={preloadedAgentPageData}
               />
             )}
 
@@ -5398,29 +5399,96 @@ function AgentPortal() {
 }
 
 // ============================================================================
-// Dashboard View - Quick Access Cards
+// Dashboard View - Performance Stats
 // ============================================================================
+
+interface PageStatsData {
+  views_this_week: number;
+  views_all_time: number;
+  clicks_this_week: number;
+  clicks_all_time: number;
+  button_breakdown: Array<{
+    button_id: string;
+    label: string;
+    clicks_this_week: number;
+    clicks_all_time: number;
+  }>;
+}
+
+interface TrackingStats {
+  links: PageStatsData;
+  attraction: PageStatsData;
+}
+
 function DashboardView({
   onNavigate,
   isOnboardingComplete,
   completedStepsCount,
   totalStepsCount,
   isSafari = false,
+  agentPageData,
 }: {
   onNavigate: (id: SectionId) => void;
   isOnboardingComplete: boolean;
   completedStepsCount: number;
   totalStepsCount: number;
   isSafari?: boolean;
+  agentPageData?: any;
 }) {
-  // Separate cards by size for bento layout
-  const heroCard = dashboardCards.find(c => c.size === 'hero');
-  const featuredCards = dashboardCards.filter(c => c.size === 'featured');
-  const standardCards = dashboardCards.filter(c => c.size === 'standard');
-  const compactCards = dashboardCards.filter(c => c.size === 'compact');
+  const [stats, setStats] = useState<TrackingStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  const agentPageId = agentPageData?.page?.id || agentPageData?.id || null;
 
   // Calculate onboarding progress percentage
   const progressPercentage = totalStepsCount > 0 ? (completedStepsCount / totalStepsCount) * 100 : 0;
+
+  // Fetch tracking stats
+  useEffect(() => {
+    if (!agentPageId) {
+      setStatsLoading(false);
+      return;
+    }
+    let cancelled = false;
+    async function fetchStats() {
+      try {
+        const token = localStorage.getItem('agent_portal_token');
+        if (!token) { setStatsLoading(false); return; }
+        const res = await fetch(`${API_URL}/api/tracking/stats?agent_page_id=${agentPageId}`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        if (!res.ok) { setStatsLoading(false); return; }
+        const json = await res.json();
+        if (!cancelled && json.success) {
+          setStats(json.data);
+        }
+      } catch {
+        // Silently fail — stats are non-critical
+      } finally {
+        if (!cancelled) setStatsLoading(false);
+      }
+    }
+    fetchStats();
+    return () => { cancelled = true; };
+  }, [agentPageId]);
+
+  // Merge both page type button breakdowns for the unified chart
+  const allButtons = useMemo(() => {
+    if (!stats) return [];
+    const combined = [
+      ...stats.links.button_breakdown.map(b => ({ ...b, source: 'links' as const })),
+      ...stats.attraction.button_breakdown.map(b => ({ ...b, source: 'attraction' as const })),
+    ];
+    combined.sort((a, b) => b.clicks_this_week - a.clicks_this_week || b.clicks_all_time - a.clicks_all_time);
+    return combined;
+  }, [stats]);
+
+  const maxClicks = allButtons.length > 0 ? Math.max(...allButtons.map(b => b.clicks_this_week), 1) : 1;
+
+  // Skeleton loading block
+  const Skeleton = ({ className }: { className?: string }) => (
+    <div className={`animate-pulse rounded-lg bg-white/5 ${className || ''}`} />
+  );
 
   return (
     <div className="space-y-4 px-1 sm:px-2">
@@ -5439,21 +5507,14 @@ function DashboardView({
               border: '1px solid rgba(255, 215, 0, 0.3)',
             }}
           >
-{/* Animated glow pulse removed - user requested no internal gradient hover */}
-
-            {/* Top highlight line */}
             <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#ffd700]/40 to-transparent" />
-
             <div className="relative flex items-center gap-4 sm:gap-6">
-              {/* Rocket Icon with glow - square background */}
               <div className="relative p-4 sm:p-5 rounded-md bg-[#ffd700]/15 border border-[#ffd700]/40 group-hover:border-[#ffd700]/60 group-hover:bg-[#ffd700]/20 transition-all duration-300 flex items-center justify-center aspect-square">
                 <Icon3D color="#ffd700">
                   <Rocket className="w-8 h-8 sm:w-10 sm:h-10 text-[#ffd700] transition-transform duration-300" />
                 </Icon3D>
               </div>
-
               <div className="flex-1 min-w-0">
-                {/* Title with Taskor font and neon glow (reduced on Safari) */}
                 <h3
                   className="text-xl sm:text-2xl font-bold uppercase tracking-wide"
                   style={{
@@ -5466,13 +5527,9 @@ function DashboardView({
                 >
                   Onboarding
                 </h3>
-
-                {/* Progress text */}
                 <p className="text-sm sm:text-base text-[#e5e4dd]/70 mt-1">
                   {completedStepsCount} of {totalStepsCount} steps complete
                 </p>
-
-                {/* Progress bar - 3D Plasma Tube style */}
                 <div
                   className="mt-3 h-2 rounded-full overflow-hidden relative"
                   style={{
@@ -5493,8 +5550,6 @@ function DashboardView({
                   />
                 </div>
               </div>
-
-              {/* Continue arrow */}
               <div className="hidden sm:flex flex-col items-center gap-1">
                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#ffd700]/15 group-hover:bg-[#ffd700]/25 border border-[#ffd700]/30 group-hover:border-[#ffd700]/50 transition-all duration-300">
                   <svg className="w-5 h-5 text-[#ffd700] group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -5508,225 +5563,149 @@ function DashboardView({
         </button>
       )}
 
-      {/* Hero Card - Get Support (most prominent) */}
-      {heroCard && (
-        <button
-          onClick={() => onNavigate(heroCard.id)}
-          className="w-full text-left group relative"
-          style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+      {/* No Agent Page State */}
+      {!agentPageId && !statsLoading && (
+        <div
+          className="p-6 sm:p-8 rounded-2xl text-center"
+          style={{
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+            border: '1px solid rgba(255,255,255,0.08)',
+          }}
         >
-          <div
-            className={`
-              relative p-5 sm:p-6 rounded-2xl
-              transition-all duration-300 ease-out
-              hover:scale-[1.01]
-              group-active:scale-[0.99]
-              overflow-hidden
-            `}
-            style={{
-              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.25)',
-              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.5)';
-              e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 25px rgba(255, 215, 0, 0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.25)';
-              e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)';
-            }}
+          <TrendingUp className="w-10 h-10 text-[#e5e4dd]/30 mx-auto mb-3" />
+          <p className="text-[#e5e4dd]/70 text-sm font-amulya">Set up your pages to start tracking performance</p>
+          <button
+            onClick={() => onNavigate('linktree')}
+            className="mt-4 px-5 py-2 rounded-lg text-sm font-semibold transition-colors"
+            style={{ background: '#00ff88', color: '#000' }}
           >
-            {/* Animated glow effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#ffd700]/0 via-[#ffd700]/10 to-[#ffd700]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            Set Up Link Page
+          </button>
+        </div>
+      )}
 
-            <div className="relative flex items-center gap-4 sm:gap-6">
-              {/* Icon container with gold glow - square background */}
-              <div className="relative p-4 sm:p-5 rounded-md bg-[#ffd700]/10 border border-[#ffd700]/30 group-hover:border-[#ffd700]/50 group-hover:bg-[#ffd700]/15 transition-all duration-300 flex items-center justify-center aspect-square">
-                <Icon3D color="#ffd700">
-                  <heroCard.icon className="w-8 h-8 sm:w-10 sm:h-10 text-[#ffd700] transition-transform duration-300" />
-                </Icon3D>
+      {/* Stats Cards - Loading State */}
+      {agentPageId && statsLoading && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          {[0, 1].map(i => (
+            <div key={i} className="p-5 rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <Skeleton className="h-4 w-24 mb-4" />
+              <Skeleton className="h-8 w-16 mb-2" />
+              <Skeleton className="h-3 w-32 mb-4" />
+              <Skeleton className="h-8 w-16 mb-2" />
+              <Skeleton className="h-3 w-28" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Stats Cards */}
+      {agentPageId && stats && !statsLoading && (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            {/* Link Page Stats */}
+            <div
+              className="p-5 rounded-2xl relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                border: '1px solid rgba(0, 255, 136, 0.2)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+              }}
+            >
+              <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#00ff88]/30 to-transparent" />
+              <div className="flex items-center gap-2 mb-4">
+                <LinkIcon className="w-4 h-4 text-[#00ff88]" />
+                <h3 className="text-sm font-semibold text-[#00ff88] uppercase tracking-wider" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>Link Page</h3>
               </div>
-
-              <div className="flex-1">
-                <h3 className="text-lg sm:text-xl font-bold text-[#ffd700] group-hover:text-[#ffe55c] transition-colors duration-300">
-                  {heroCard.title}
-                </h3>
-                <p className="text-sm sm:text-base text-[#e5e4dd]/70 mt-1 font-amulya">
-                  {heroCard.description}
-                </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.links.views_this_week}</p>
+                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">views this week</p>
+                  <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.links.views_all_time.toLocaleString()} all time</p>
+                </div>
+                <div>
+                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.links.clicks_this_week}</p>
+                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">clicks this week</p>
+                  <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.links.clicks_all_time.toLocaleString()} all time</p>
+                </div>
               </div>
+            </div>
 
-              {/* Arrow indicator */}
-              <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-[#ffd700]/10 group-hover:bg-[#ffd700]/20 transition-colors duration-300">
-                <svg className="w-5 h-5 text-[#ffd700] group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+            {/* Attraction Page Stats */}
+            <div
+              className="p-5 rounded-2xl relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                border: '1px solid rgba(168, 85, 247, 0.2)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+              }}
+            >
+              <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#a855f7]/30 to-transparent" />
+              <div className="flex items-center gap-2 mb-4">
+                <UserCircle className="w-4 h-4 text-[#a855f7]" />
+                <h3 className="text-sm font-semibold text-[#a855f7] uppercase tracking-wider" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>Agent Attraction</h3>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.attraction.views_this_week}</p>
+                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">views this week</p>
+                  <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.attraction.views_all_time.toLocaleString()} all time</p>
+                </div>
+                <div>
+                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.attraction.clicks_this_week}</p>
+                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">clicks this week</p>
+                  <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.attraction.clicks_all_time.toLocaleString()} all time</p>
+                </div>
               </div>
             </div>
           </div>
-        </button>
+
+          {/* Button Performance Breakdown */}
+          <div
+            className="p-5 rounded-2xl"
+            style={{
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            <div className="flex items-baseline gap-2 mb-4">
+              <h3 className="text-sm font-semibold text-[#e5e4dd] uppercase tracking-wider" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>Button Clicks</h3>
+              <span className="text-xs text-[#e5e4dd]/40 font-amulya">(this week)</span>
+            </div>
+
+            {allButtons.length === 0 ? (
+              <p className="text-sm text-[#e5e4dd]/40 font-amulya py-4 text-center">
+                Share your link page to start tracking clicks
+              </p>
+            ) : (
+              <div className="space-y-2.5">
+                {allButtons.map((btn) => (
+                  <div key={`${btn.source}-${btn.button_id}`} className="flex items-center gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm text-[#e5e4dd]/80 font-amulya truncate pr-2">{btn.label}</span>
+                        <span className="text-sm font-semibold text-[#e5e4dd] tabular-nums shrink-0">{btn.clicks_this_week}</span>
+                      </div>
+                      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                        <div
+                          className="h-full rounded-full transition-all duration-700 ease-out"
+                          style={{
+                            width: `${Math.max((btn.clicks_this_week / maxClicks) * 100, btn.clicks_this_week > 0 ? 4 : 0)}%`,
+                            background: btn.source === 'links'
+                              ? 'linear-gradient(90deg, #00ff88, #00cc6a)'
+                              : 'linear-gradient(90deg, #a855f7, #7c3aed)',
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
       )}
-
-      {/* Featured Cards Row - Large cards with gradients and custom accent colors */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-        {featuredCards.map((card) => {
-          const IconComponent = card.icon;
-          const accent = card.accentColor || '#ffd700';
-          const isComingSoon = card.comingSoon;
-          return (
-            <button
-              key={card.id}
-              onClick={() => !isComingSoon && onNavigate(card.id)}
-              className={`text-left group relative ${isComingSoon ? 'cursor-default' : ''}`}
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-              disabled={isComingSoon}
-            >
-              <div
-                className={`
-                  relative p-5 sm:p-6 rounded-2xl
-                  transition-all duration-300 ease-out
-                  ${isComingSoon ? '' : 'hover:scale-[1.02] group-active:scale-[0.98]'}
-                  overflow-hidden
-                `}
-                style={{
-                  background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-                  border: `1px solid ${isComingSoon ? 'rgba(102, 102, 102, 0.3)' : accent}25`,
-                  boxShadow: `0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)`,
-                  filter: isComingSoon ? 'grayscale(100%)' : 'none',
-                  opacity: isComingSoon ? 0.6 : 1,
-                }}
-                onMouseEnter={(e) => {
-                  if (!isComingSoon) {
-                    e.currentTarget.style.border = `1px solid ${accent}50`;
-                    e.currentTarget.style.boxShadow = `0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 20px ${accent}15`;
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isComingSoon) {
-                    e.currentTarget.style.border = `1px solid ${accent}25`;
-                    e.currentTarget.style.boxShadow = `0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)`;
-                  }
-                }}
-              >
-                {/* Subtle shine effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
-
-                <div className="relative flex flex-col items-center text-center space-y-3">
-                  {/* Icon container with accent color glow - square background */}
-                  <div
-                    className="relative p-4 rounded-md transition-all duration-300 flex items-center justify-center aspect-square"
-                    style={{
-                      backgroundColor: `${isComingSoon ? '#666' : accent}15`,
-                      border: `1px solid ${isComingSoon ? '#666' : accent}30`,
-                    }}
-                  >
-                    <Icon3D color={isComingSoon ? '#666' : accent}>
-                      <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 transition-transform duration-300" />
-                    </Icon3D>
-                  </div>
-
-                  <div className="space-y-1">
-                    <h3
-                      className="text-base sm:text-lg font-semibold transition-colors duration-300"
-                      style={{ color: isComingSoon ? '#888' : accent }}
-                    >
-                      {card.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-[#e5e4dd]/60 leading-snug font-amulya">
-                      {card.description}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Coming Soon Overlay */}
-                {isComingSoon && (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/40">
-                    <span className="px-4 py-2 bg-black/70 rounded-full text-sm font-semibold text-white/90 border border-white/20">
-                      Coming Soon
-                    </span>
-                  </div>
-                )}
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Standard Cards Grid - 2 cols on mobile (5th spans full), 5 cols on desktop */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
-        {standardCards.map((card, index) => {
-          const IconComponent = card.icon;
-          const accent = card.accentColor || '#ffd700';
-          // On 2-column layout, the 5th card (index 4) should span full width
-          const isLastOdd = index === standardCards.length - 1 && standardCards.length % 2 === 1;
-          return (
-            <button
-              key={card.id}
-              onClick={() => onNavigate(card.id)}
-              className={`text-left group ${isLastOdd ? 'col-span-2 lg:col-span-1' : ''}`}
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            >
-              <div
-                className="
-                  relative p-4 rounded-xl
-                  transition-all duration-300 ease-out
-                  hover:scale-[1.02]
-                  group-active:scale-[0.98]
-                  h-full
-                "
-                style={{
-                  background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.border = '1px solid rgba(255,255,255,0.12)';
-                  e.currentTarget.style.boxShadow = '0 0 0 1px rgba(255,255,255,0.04), 0 12px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)';
-                  e.currentTarget.style.boxShadow = '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)';
-                }}
-              >
-                <div className="flex flex-col items-center text-center space-y-2.5">
-                  {/* Centered icon with subtle background - square with hard border */}
-                  <div className="p-2.5 rounded-md bg-[#ffd700]/5 border border-[#ffd700]/30 group-hover:bg-[#ffd700]/10 group-hover:border-[#ffd700]/50 transition-all duration-300 flex items-center justify-center aspect-square">
-                    <Icon3D color={accent}>
-                      <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-300" />
-                    </Icon3D>
-                  </div>
-
-                  <div className="space-y-0.5">
-                    <h3 className="text-sm font-semibold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors duration-300 leading-tight">
-                      {card.title}
-                    </h3>
-                    <p className="text-[11px] text-[#e5e4dd]/50 leading-tight hidden sm:block font-amulya">
-                      {card.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Download App CTA - Mobile Only (under 1024px) */}
-      <div className="min-[1024px]:hidden mt-6 mb-8">
-        <a
-          href="/download"
-          className="block w-full py-4 px-6 rounded-xl bg-gradient-to-r from-[#ffd700] to-[#ffed4e] text-black font-semibold text-center shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-          </svg>
-          Download Mobile App
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </a>
-      </div>
     </div>
   );
 }
