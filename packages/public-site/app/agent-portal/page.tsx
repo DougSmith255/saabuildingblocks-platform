@@ -5343,58 +5343,10 @@ function AgentPortal() {
             {/* Content */}
             <div className="p-5 space-y-4">
               <p className="text-[#e5e4dd]/80">
-                Your analytics dashboard tracks how people interact with your <strong className="text-[#00ff88]">Link Page</strong> and <strong className="text-[#a855f7]">Agent Attraction Page</strong>. Here&apos;s what each number means.
+                Track how people interact with your <strong className="text-[#00ff88]">Link Page</strong> and <strong className="text-[#a855f7]">Agent Attraction Page</strong>.
               </p>
 
-              {/* Link Page Stats Explanation */}
-              <div
-                className="rounded-lg p-4"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 255, 136, 0.02) 100%)',
-                  border: '1px solid rgba(0, 255, 136, 0.2)',
-                }}
-              >
-                <p className="text-[#00ff88] text-sm mb-2 font-medium flex items-center gap-2">
-                  <LinkIcon className="w-4 h-4" />
-                  Link Page
-                </p>
-                <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#00ff88] mt-0.5">•</span>
-                    <span><strong className="text-[#e5e4dd]">Viewers</strong> — The number of unique people who visited your link page. Repeat visits within 30 minutes by the same person only count once.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#00ff88] mt-0.5">•</span>
-                    <span><strong className="text-[#e5e4dd]">Clicks</strong> — The total number of button clicks across all your link page buttons.</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Attraction Page Stats Explanation */}
-              <div
-                className="rounded-lg p-4"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.02) 100%)',
-                  border: '1px solid rgba(168, 85, 247, 0.2)',
-                }}
-              >
-                <p className="text-[#a855f7] text-sm mb-2 font-medium flex items-center gap-2">
-                  <UserCircle className="w-4 h-4" />
-                  Agent Attraction
-                </p>
-                <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#a855f7] mt-0.5">•</span>
-                    <span><strong className="text-[#e5e4dd]">Viewers</strong> — The number of unique people who visited your agent attraction page. Same 30-minute dedup applies.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#a855f7] mt-0.5">•</span>
-                    <span><strong className="text-[#e5e4dd]">Join Clicks</strong> — The number of times someone clicked the &quot;Join The Alliance&quot; button on your attraction page.</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Button Clicks Section */}
+              {/* Stats Explanation */}
               <div
                 className="rounded-lg p-4"
                 style={{
@@ -5402,41 +5354,41 @@ function AgentPortal() {
                   border: '1px solid rgba(255, 255, 255, 0.08)',
                 }}
               >
-                <p className="text-[#e5e4dd] text-sm mb-2 font-medium flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4 text-[#ffd700]" />
-                  Button Clicks Breakdown
-                </p>
+                <p className="text-[#e5e4dd] text-sm mb-2 font-medium">What Each Number Means</p>
                 <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
                   <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700] mt-0.5">•</span>
-                    <span>Shows every active button on your link page with its click count for the current month.</span>
+                    <span className="text-[#00ff88] mt-0.5">•</span>
+                    <span><strong className="text-[#e5e4dd]">Viewers</strong> — Unique visitors to your page. Repeat visits within 30 minutes count once.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700] mt-0.5">•</span>
-                    <span><strong className="text-[#00ff88]">Green bars</strong> are your custom link buttons. <strong className="text-[#a855f7]">Purple bars</strong> represent the &quot;About My eXp Team&quot; button, which links to your agent attraction page.</span>
+                    <span className="text-[#00ff88] mt-0.5">•</span>
+                    <span><strong className="text-[#e5e4dd]">Clicks</strong> — Total button clicks across all your link page buttons.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700] mt-0.5">•</span>
-                    <span>Buttons with zero clicks still appear so you can see which ones need more visibility.</span>
+                    <span className="text-[#a855f7] mt-0.5">•</span>
+                    <span><strong className="text-[#e5e4dd]">Join Clicks</strong> — Times someone clicked &quot;Join The Alliance&quot; on your attraction page.</span>
                   </li>
                 </ul>
               </div>
 
-              {/* Dynamic Buttons Explanation */}
+              {/* Button Breakdown */}
               <div
                 className="rounded-lg p-4"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.02) 100%)',
-                  border: '1px solid rgba(255, 215, 0, 0.15)',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
                 }}
               >
-                <p className="text-[#ffd700] text-sm font-medium mb-1">Automatic Button Tracking</p>
+                <p className="text-[#e5e4dd] text-sm mb-2 font-medium">Button Clicks Breakdown</p>
                 <p className="text-[#e5e4dd]/70 text-sm">
-                  When you <strong className="text-[#00ff88]">add a new button</strong> to your link page, it will automatically appear in the button clicks breakdown the next time someone clicks it. When you <strong className="text-red-400">remove a button</strong>, its stats are immediately removed from the breakdown. You never need to configure anything — tracking is fully automatic.
+                  Shows each active button with its monthly click count. <strong className="text-[#00ff88]">Green bars</strong> are your custom link buttons. The <strong className="text-[#a855f7]">purple bar</strong> represents the &quot;About My eXp Team&quot; button. Buttons with zero clicks still appear.
+                </p>
+                <p className="text-[#e5e4dd]/70 text-sm mt-2">
+                  When you add or remove a button on your link page, the breakdown updates automatically — no setup needed.
                 </p>
               </div>
 
-              {/* Refresh Tip */}
+              {/* Pro Tip */}
               <div
                 className="rounded-lg p-4"
                 style={{
@@ -5444,9 +5396,9 @@ function AgentPortal() {
                   border: '1px solid rgba(34, 197, 94, 0.15)',
                 }}
               >
-                <p className="text-green-400 text-sm font-medium mb-1">Refreshing Stats</p>
+                <p className="text-green-400 text-sm font-medium mb-1">Pro Tip</p>
                 <p className="text-[#e5e4dd]/70 text-sm">
-                  Your stats are loaded when you first open the app. To see the latest numbers after sharing your page, tap the <strong className="text-[#e5e4dd]">Refresh</strong> button at the top of the analytics section. Stats reset on the 1st of each month.
+                  Tap <strong className="text-[#e5e4dd]">Refresh</strong> to see the latest numbers. Stats reset on the 1st of each month.
                 </p>
               </div>
             </div>
@@ -5841,8 +5793,9 @@ function DashboardView({
             <button
               onClick={onRefresh}
               disabled={isRefreshing}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+              className="flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium transition-all"
               style={{
+                width: '180px',
                 background: 'rgba(255, 255, 255, 0.05)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 color: isRefreshing ? 'rgba(229, 228, 221, 0.3)' : 'rgba(229, 228, 221, 0.5)',
