@@ -2795,9 +2795,9 @@ function AgentPortal() {
         />
       )}
 
-      {/* Mobile Bottom Bar - Expandable (hidden when Link Page is active - panel replaces it) */}
+      {/* Mobile Bottom Bar - Expandable (always visible; link page preview portals into it) */}
       <div
-        className={`min-[1024px]:hidden ${activeSection === 'linktree' ? 'hidden' : ''} fixed left-0 right-0 z-[10010] ${
+        className={`min-[1024px]:hidden fixed left-0 right-0 z-[10010] ${
           isMobileMenuClosing ? 'mobile-menu-panel-closing' : isMobileMenuOpen ? 'mobile-menu-panel' : ''
         }`}
         style={{
@@ -2862,146 +2862,154 @@ function AgentPortal() {
             }}
           />
 
-          {/* Header portion - S logo | Title | Burger */}
-          <div className="relative z-10 flex items-center justify-between px-4 h-16">
-            {/* S Logo - links to dashboard */}
-            <button
-              onClick={() => {
-                setActiveSection('dashboard');
-                closeMobileMenu();
-              }}
-              className="flex-shrink-0 cursor-pointer"
-              title="Go to Dashboard"
-            >
-              <img
-                src="/icons/s-logo-1000.png"
-                alt="Smart Agent Alliance"
-                className="object-contain"
-                style={{
-                  width: '36px',
-                  height: '36px',
-                }}
-              />
-            </button>
-
-            {/* Section Title - centered */}
-            <div className="absolute left-1/2 -translate-x-1/2">
-              <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap">
-                {activeSection === 'onboarding' && 'Onboarding'}
-                {activeSection === 'dashboard' && 'Analytics'}
-                {activeSection === 'support' && 'Get Support'}
-                {activeSection === 'agent-page' && 'Agent Attraction'}
-                {activeSection === 'linktree' && 'Link Page'}
-                {activeSection === 'calls' && 'Team Calls'}
-                {activeSection === 'courses' && 'Courses'}
-                {activeSection === 'templates' && 'Templates'}
-                {activeSection === 'production' && 'Landing Pages'}
-                {activeSection === 'new-agents' && 'New Agents'}
-                {activeSection === 'download' && 'Download App'}
-                {activeSection === 'profile' && 'My Profile'}
-              </span>
-            </div>
-
-            {/* Burger Menu Button - 1.5x enlarged */}
-            <button
-              onClick={() => {
-                if (isMobileMenuOpen) {
-                  closeMobileMenu();
-                } else {
-                  setIsMobileMenuOpen(true);
-                }
-              }}
-              className={`mobile-menu-burger flex items-center justify-center w-12 h-12 ${isMobileMenuOpen ? 'menu-open' : ''}`}
-              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={isMobileMenuOpen}
-            >
-              <svg viewBox="0 0 32 32" className="hamburger-svg w-9 h-9">
-                <path className="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22" />
-                <path className="line" d="M7 16 27 16" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Menu Items - visible when expanded or closing */}
-          {(isMobileMenuOpen || isMobileMenuClosing) && (
+          {/* Conditional: Link Page preview slot OR normal header+menu */}
+          {activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing ? (
+            /* Link Page Preview mode: portal slot takes over entire bar */
+            <div id="mobile-link-preview-slot" className="relative z-10" />
+          ) : (
             <>
-              {/* Separator line */}
-              <div
-                className="mx-4 h-[1px]"
-                style={{
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.3) 20%, rgba(180, 180, 180, 0.3) 80%, transparent 100%)',
-                }}
-              />
-
-              {/* Menu items - desktop order, vertical, centered */}
-              <div className="relative z-10 py-4 overflow-y-auto" style={{ maxHeight: 'calc(85vh - 80px)' }}>
-                {/* Navigation items in desktop order */}
-                {[
-                  ...(isOnboardingComplete ? [] : [{ id: 'onboarding' as SectionId, label: 'Onboarding', Icon: Rocket }]),
-                  { id: 'dashboard' as SectionId, label: 'Analytics', Icon: TrendingUp },
-                  { id: 'support' as SectionId, label: 'Get Support', Icon: LifeBuoy },
-                  { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
-                  { id: 'agent-page' as SectionId, label: 'Agent Attraction', Icon: UserCircle },
-                  { id: 'calls' as SectionId, label: 'Team Calls', Icon: Video },
-                  { id: 'templates' as SectionId, label: 'Templates', Icon: Megaphone },
-                  { id: 'courses' as SectionId, label: 'Elite Courses', Icon: GraduationCap },
-                  { id: 'production' as SectionId, label: 'Landing Pages', Icon: Users },
-                  { id: 'new-agents' as SectionId, label: 'New Agents', Icon: PersonStanding },
-                  { id: 'download' as SectionId, label: 'Download App', Icon: Download },
-                  { id: 'profile' as SectionId, label: 'My Profile', Icon: User },
-                ].map((item) => {
-                  const isActive = activeSection === item.id;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        setActiveSection(item.id);
-                        closeMobileMenu();
-                      }}
-                      className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200"
-                      style={{
-                        color: isActive ? dashboardAccentColor : 'rgba(229, 228, 221, 0.7)',
-                        background: isActive ? 'rgba(255, 215, 0, 0.08)' : 'transparent',
-                      }}
-                    >
-                      <item.Icon
-                        className="w-5 h-5"
-                        style={{
-                          filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
-                        }}
-                      />
-                      <span
-                        className="text-sm font-medium"
-                        style={{
-                          textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : 'none',
-                        }}
-                      >
-                        {item.label}
-                      </span>
-                    </button>
-                  );
-                })}
-
-                {/* Separator line before logout */}
-                <div
-                  className="mx-6 my-4 h-[1px]"
-                  style={{
-                    background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.3) 20%, rgba(180, 180, 180, 0.3) 80%, transparent 100%)',
-                  }}
-                />
-
-                {/* Logout Button at bottom */}
+              {/* Header portion - S logo | Title | Burger */}
+              <div className="relative z-10 flex items-center justify-between px-4 h-16">
+                {/* S Logo - links to dashboard */}
                 <button
                   onClick={() => {
+                    setActiveSection('dashboard');
                     closeMobileMenu();
-                    handleLogout();
                   }}
-                  className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200 text-red-400/80 hover:text-red-400 hover:bg-red-400/5"
+                  className="flex-shrink-0 cursor-pointer"
+                  title="Go to Dashboard"
                 >
-                  <LogOut className="w-5 h-5" />
-                  <span className="text-sm font-medium">Logout</span>
+                  <img
+                    src="/icons/s-logo-1000.png"
+                    alt="Smart Agent Alliance"
+                    className="object-contain"
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                    }}
+                  />
+                </button>
+
+                {/* Section Title - centered */}
+                <div className="absolute left-1/2 -translate-x-1/2">
+                  <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap">
+                    {activeSection === 'onboarding' && 'Onboarding'}
+                    {activeSection === 'dashboard' && 'Analytics'}
+                    {activeSection === 'support' && 'Get Support'}
+                    {activeSection === 'agent-page' && 'Agent Attraction'}
+                    {activeSection === 'linktree' && 'Link Page'}
+                    {activeSection === 'calls' && 'Team Calls'}
+                    {activeSection === 'courses' && 'Courses'}
+                    {activeSection === 'templates' && 'Templates'}
+                    {activeSection === 'production' && 'Landing Pages'}
+                    {activeSection === 'new-agents' && 'New Agents'}
+                    {activeSection === 'download' && 'Download App'}
+                    {activeSection === 'profile' && 'My Profile'}
+                  </span>
+                </div>
+
+                {/* Burger Menu Button - 1.5x enlarged */}
+                <button
+                  onClick={() => {
+                    if (isMobileMenuOpen) {
+                      closeMobileMenu();
+                    } else {
+                      setIsMobileMenuOpen(true);
+                    }
+                  }}
+                  className={`mobile-menu-burger flex items-center justify-center w-12 h-12 ${isMobileMenuOpen ? 'menu-open' : ''}`}
+                  aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                  aria-expanded={isMobileMenuOpen}
+                >
+                  <svg viewBox="0 0 32 32" className="hamburger-svg w-9 h-9">
+                    <path className="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22" />
+                    <path className="line" d="M7 16 27 16" />
+                  </svg>
                 </button>
               </div>
+
+              {/* Menu Items - visible when expanded or closing */}
+              {(isMobileMenuOpen || isMobileMenuClosing) && (
+                <>
+                  {/* Separator line */}
+                  <div
+                    className="mx-4 h-[1px]"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.3) 20%, rgba(180, 180, 180, 0.3) 80%, transparent 100%)',
+                    }}
+                  />
+
+                  {/* Menu items - desktop order, vertical, centered */}
+                  <div className="relative z-10 py-4 overflow-y-auto" style={{ maxHeight: 'calc(85vh - 80px)' }}>
+                    {/* Navigation items in desktop order */}
+                    {[
+                      ...(isOnboardingComplete ? [] : [{ id: 'onboarding' as SectionId, label: 'Onboarding', Icon: Rocket }]),
+                      { id: 'dashboard' as SectionId, label: 'Analytics', Icon: TrendingUp },
+                      { id: 'support' as SectionId, label: 'Get Support', Icon: LifeBuoy },
+                      { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
+                      { id: 'agent-page' as SectionId, label: 'Agent Attraction', Icon: UserCircle },
+                      { id: 'calls' as SectionId, label: 'Team Calls', Icon: Video },
+                      { id: 'templates' as SectionId, label: 'Templates', Icon: Megaphone },
+                      { id: 'courses' as SectionId, label: 'Elite Courses', Icon: GraduationCap },
+                      { id: 'production' as SectionId, label: 'Landing Pages', Icon: Users },
+                      { id: 'new-agents' as SectionId, label: 'New Agents', Icon: PersonStanding },
+                      { id: 'download' as SectionId, label: 'Download App', Icon: Download },
+                      { id: 'profile' as SectionId, label: 'My Profile', Icon: User },
+                    ].map((item) => {
+                      const isActive = activeSection === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => {
+                            setActiveSection(item.id);
+                            closeMobileMenu();
+                          }}
+                          className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200"
+                          style={{
+                            color: isActive ? dashboardAccentColor : 'rgba(229, 228, 221, 0.7)',
+                            background: isActive ? 'rgba(255, 215, 0, 0.08)' : 'transparent',
+                          }}
+                        >
+                          <item.Icon
+                            className="w-5 h-5"
+                            style={{
+                              filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
+                            }}
+                          />
+                          <span
+                            className="text-sm font-medium"
+                            style={{
+                              textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : 'none',
+                            }}
+                          >
+                            {item.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+
+                    {/* Separator line before logout */}
+                    <div
+                      className="mx-6 my-4 h-[1px]"
+                      style={{
+                        background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.3) 20%, rgba(180, 180, 180, 0.3) 80%, transparent 100%)',
+                      }}
+                    />
+
+                    {/* Logout Button at bottom */}
+                    <button
+                      onClick={() => {
+                        closeMobileMenu();
+                        handleLogout();
+                      }}
+                      className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200 text-red-400/80 hover:text-red-400 hover:bg-red-400/5"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      <span className="text-sm font-medium">Logout</span>
+                    </button>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>
@@ -3933,6 +3941,8 @@ function AgentPortal() {
                 isActive={activeSection === 'linktree'}
                 onNavigateBack={() => setActiveSection('dashboard')}
                 onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+                onCloseMobileMenu={() => closeMobileMenu()}
+                isMobileMenuOpen={isMobileMenuOpen}
               />
             </div>
             )}
@@ -9647,6 +9657,8 @@ interface AgentPagesSectionProps {
   // Mobile panel callbacks
   onNavigateBack?: () => void;
   onOpenMobileMenu?: () => void;
+  onCloseMobileMenu?: () => void;
+  isMobileMenuOpen?: boolean;
 }
 
 function AgentPagesSection({
@@ -9687,6 +9699,8 @@ function AgentPagesSection({
   isActive = false,
   onNavigateBack,
   onOpenMobileMenu,
+  onCloseMobileMenu,
+  isMobileMenuOpen = false,
 }: AgentPagesSectionProps) {
   const [pageData, setPageData] = useState<AgentPageData | null>(preloadedPageData?.page || null);
   const [isLoading, setIsLoading] = useState(!preloadedPageData);
@@ -12866,117 +12880,7 @@ function AgentPagesSection({
     );
   };
 
-  // Simplified read-only phone preview for mobile non-button tabs
-  // Shows profile image, name, social icons, contact buttons — compact layout
-  const renderMobilePreviewContent = () => {
-    const socialIconColor = getVisibleSocialIconColor(linksSettings.accentColor);
-    const builtInSocialIcons = [
-      { url: formData.facebook_url, icon: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' },
-      { url: formData.instagram_url, icon: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' },
-      { url: formData.twitter_url, icon: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
-      { url: formData.youtube_url, icon: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' },
-      { url: formData.tiktok_url, icon: 'M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z' },
-      { url: formData.linkedin_url, icon: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
-    ].filter(s => s.url);
-    const customSocialIcons = customSocialLinks
-      .filter(link => link && link.url && link.icon && link.icon !== 'Globe')
-      .map(link => ({ url: link.url, icon: LINK_ICONS.find(i => i.name === link.icon)?.path || '' }))
-      .filter(s => s.icon);
-    const socialIcons = [...builtInSocialIcons, ...customSocialIcons];
-
-    const contacts: { type: string; icon: string }[] = [];
-    if (formData.phone && formData.show_call_button !== false) {
-      contacts.push({ type: 'call', icon: 'M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z' });
-    }
-    if (formData.phone && formData.show_text_button !== false) {
-      contacts.push({ type: 'text', icon: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z' });
-    }
-    if (formData.email) {
-      contacts.push({ type: 'email', icon: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6' });
-    }
-
-    return (
-      <div className="flex flex-col items-center py-4 px-3 gap-2" style={{ background: `linear-gradient(to bottom, ${bgGradientTop} 0%, ${bgGradientBottom} 100%)` }}>
-        {/* Profile Image */}
-        <div
-          className="w-16 h-16 rounded-full border-2 flex items-center justify-center overflow-hidden relative"
-          style={{ borderColor: socialIconColor, backgroundColor: 'rgba(40,40,40,0.8)' }}
-        >
-          {getProfileImageUrl() ? (
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{
-                backgroundImage: `url(${getProfileImageUrl()})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
-              }}
-            />
-          ) : (
-            <svg className="w-8 h-8 text-white/40" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-            </svg>
-          )}
-        </div>
-        {/* Name */}
-        <span
-          className="text-base text-center font-bold"
-          style={{
-            color: isAccentDark ? '#e5e4dd' : linksSettings.accentColor,
-            fontFamily: 'var(--font-taskor, sans-serif)',
-            textShadow: linksSettings.nameGlow !== false
-              ? (isAccentDark
-                  ? `0 0 0.1em ${linksSettings.accentColor}60`
-                  : `0 0 0.13em ${linksSettings.accentColor}8C`)
-              : 'none',
-          }}
-        >
-          {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
-        </span>
-        {/* Social Icons */}
-        {socialIcons.length > 0 && (
-          <div className="flex justify-center gap-1.5 flex-wrap">
-            {socialIcons.map((social, idx) => {
-              const isBuiltIn = idx < builtInSocialIcons.length;
-              return (
-                <div
-                  key={idx}
-                  className="w-7 h-7 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: `${socialIconColor}20`, border: `1px solid ${socialIconColor}40` }}
-                >
-                  {isBuiltIn ? (
-                    <svg className="w-3.5 h-3.5" fill={socialIconColor} viewBox="0 0 24 24"><path d={social.icon} /></svg>
-                  ) : (
-                    <svg className="w-3.5 h-3.5" fill="none" stroke={socialIconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d={social.icon} /></svg>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-        {/* Contact Buttons */}
-        {contacts.length > 0 && (
-          <div className="flex gap-1 w-full max-w-[260px] mt-1">
-            {contacts.map((contact, idx) => (
-              <div
-                key={idx}
-                className="flex-1 py-2 flex items-center justify-center"
-                style={{
-                  backgroundColor: linksSettings.accentColor,
-                  color: isAccentDark ? '#ffffff' : '#1a1a1a',
-                  borderRadius: contacts.length === 1 ? '0.5rem' : idx === 0 ? '0.5rem 0.25rem 0.25rem 0.5rem' : idx === contacts.length - 1 ? '0.25rem 0.5rem 0.5rem 0.25rem' : '0.25rem',
-                }}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d={contact.icon} />
-                </svg>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  };
+  // renderMobilePreviewContent removed — all tabs now use renderPreviewButtonLinksCard(bare=true)
 
 return (
   <div className="link-page-fluid-root px-2 sm:px-4" style={{ maxWidth: '1600px', margin: '0 auto' }}>
@@ -12987,41 +12891,78 @@ return (
     <style>{`
       .mobile-link-tabs::-webkit-scrollbar { display: none; }
       .mobile-link-tabs { -ms-overflow-style: none; scrollbar-width: none; }
-      @keyframes mobileLinkPanelUp {
-        from { transform: translateY(100%); }
-        to { transform: translateY(0); }
+      /* Animated expanding pills */
+      .mobile-link-pill {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
+        height: 36px;
+        min-width: 36px;
+        max-width: 36px;
+        padding: 0;
+        gap: 0;
+        overflow: hidden;
+        transition: max-width 0.3s ease, padding 0.3s ease, gap 0.3s ease, background-color 0.2s ease;
+        white-space: nowrap;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        flex-shrink: 0;
       }
-      .mobile-link-panel { animation: mobileLinkPanelUp 0.3s ease-out forwards; }
+      .mobile-link-pill.active {
+        max-width: 140px;
+        padding: 0 14px;
+        gap: 6px;
+      }
+      .mobile-link-pill .pill-label {
+        opacity: 0;
+        max-width: 0;
+        transition: opacity 0.2s ease 0s, max-width 0.3s ease;
+        overflow: hidden;
+      }
+      .mobile-link-pill.active .pill-label {
+        opacity: 1;
+        max-width: 80px;
+        transition: opacity 0.2s ease 0.1s, max-width 0.3s ease;
+      }
     `}</style>
     <div className="min-[1024px]:hidden flex flex-col">
-      {/* Scrollable Pill Tab Bar */}
-      <div className="flex overflow-x-auto gap-2 px-3 py-3 mobile-link-tabs sticky top-0 z-[20]" style={{ background: 'rgba(10,10,10,0.95)', backdropFilter: 'blur(8px)' }}>
+      {/* Animated Expanding Pill Tab Bar */}
+      <div
+        className="flex items-center gap-1.5 px-2 py-2.5 mobile-link-tabs sticky top-0 z-[20]"
+        style={{ background: 'rgba(10,10,10,0.95)', backdropFilter: 'blur(8px)' }}
+      >
         {([
-          { id: 'profile' as const, label: 'Profile', icon: <User className="w-3.5 h-3.5" /> },
-          { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-3.5 h-3.5" /> },
-          { id: 'contact' as const, label: 'Contact', icon: <Smartphone className="w-3.5 h-3.5" /> },
-          { id: 'social' as const, label: 'Social', icon: <LinkIcon className="w-3.5 h-3.5" /> },
-          { id: 'actions' as const, label: 'Actions', icon: <Target className="w-3.5 h-3.5" /> },
-          { id: 'buttons' as const, label: 'Buttons', icon: <LayoutTemplate className="w-3.5 h-3.5" /> },
+          { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
+          { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-4 h-4" /> },
+          { id: 'contact' as const, label: 'Contact', icon: <Smartphone className="w-4 h-4" /> },
+          { id: 'social' as const, label: 'Social', icon: <LinkIcon className="w-4 h-4" /> },
+          { id: 'actions' as const, label: 'Actions', icon: <Target className="w-4 h-4" /> },
+          { id: 'buttons' as const, label: 'Buttons', icon: <LayoutTemplate className="w-4 h-4" /> },
         ]).map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setMobileLinkTab(tab.id)}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-xs whitespace-nowrap transition-colors ${
-              mobileLinkTab === tab.id
-                ? 'bg-[#ffd700] text-black font-bold'
-                : 'bg-white/5 border border-white/10 text-white/60'
-            }`}
-            style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
+            onClick={() => {
+              setMobileLinkTab(tab.id);
+              if (isMobileMenuOpen) onCloseMobileMenu?.();
+            }}
+            className={`mobile-link-pill ${mobileLinkTab === tab.id ? 'active' : ''}`}
+            style={{
+              background: mobileLinkTab === tab.id ? '#ffd700' : 'rgba(255,255,255,0.05)',
+              border: mobileLinkTab === tab.id ? 'none' : '1px solid rgba(255,255,255,0.1)',
+              color: mobileLinkTab === tab.id ? '#000' : 'rgba(255,255,255,0.6)',
+              fontFamily: 'var(--font-taskor, sans-serif)',
+            }}
           >
             {tab.icon}
-            {tab.label}
+            <span className="pill-label text-xs font-bold">{tab.label}</span>
           </button>
         ))}
       </div>
 
       {/* Tab Content Area */}
-      <div className="flex-1 overflow-y-auto px-2" style={{ paddingBottom: mobileLinkTab === 'buttons' ? '0' : '310px' }}>
+      <div className="flex-1 overflow-y-auto px-2" style={{ paddingBottom: mobileLinkTab === 'buttons' ? '0' : '320px' }}>
         {mobileLinkTab === 'profile' && renderProfileCard()}
         {mobileLinkTab === 'style' && renderStyleCard()}
         {mobileLinkTab === 'contact' && renderContactCard()}
@@ -13031,81 +12972,83 @@ return (
       </div>
     </div>
 
-    {/* Mobile Preview Panel - fixed bottom, rendered via portal */}
-    {typeof window !== 'undefined' && isActive && createPortal(
-      <div
-        className="min-[1024px]:hidden fixed left-0 right-0 bottom-0 z-[10008] mobile-link-panel flex flex-col"
-        style={{
-          height: mobileLinkTab === 'buttons' ? 'calc(100vh - 52px)' : '310px',
-          transition: 'height 0.3s ease',
-        }}
-      >
-        {/* Panel Header */}
-        <div
-          className="flex items-center justify-between px-3 flex-shrink-0"
-          style={{ background: 'rgba(14,14,14,0.98)', borderBottom: '1px solid rgba(255,255,255,0.1)', height: '48px' }}
-        >
-          {/* Hamburger - opens main nav */}
-          <button
-            onClick={() => onOpenMobileMenu?.()}
-            className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white"
+    {/* Mobile Preview Panel - portaled into #mobile-link-preview-slot in parent bottom bar */}
+    {typeof window !== 'undefined' && isActive && !isMobileMenuOpen && (() => {
+      const slot = document.getElementById('mobile-link-preview-slot');
+      if (!slot) return null;
+      return createPortal(
+        <div className="min-[1024px]:hidden flex flex-col">
+          {/* Panel Header: burger | title | save | X */}
+          <div
+            className="flex items-center justify-between px-3 flex-shrink-0"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', height: '48px' }}
           >
-            <Menu className="w-5 h-5" />
-          </button>
-          {/* Title */}
-          <span className="text-[#ffd700] text-sm font-semibold" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>Link Page Preview</span>
-          {/* Save/Activate + Close */}
-          <div className="flex items-center gap-1">
-            {!pageData?.activated ? (
-              <button
-                onClick={handleActivate}
-                disabled={isSaving}
-                className="text-[#ffd700] text-xs font-semibold px-2 py-1 rounded hover:bg-[#ffd700]/10 disabled:opacity-50"
-                style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
-              >
-                {isSaving ? '...' : 'Activate'}
-              </button>
-            ) : (
-              <button
-                onClick={hasUnsavedChanges ? handleSave : undefined}
-                disabled={isSaving || !hasUnsavedChanges}
-                className="w-8 h-8 flex items-center justify-center rounded disabled:opacity-30"
-                style={{ color: hasUnsavedChanges ? '#ffd700' : '#555' }}
-                title={hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
-              >
-                {isSaving ? (
-                  <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
-                ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                    <polyline points="17,21 17,13 7,13 7,21" />
-                    <polyline points="7,3 7,8 15,8" />
-                  </svg>
-                )}
-              </button>
-            )}
-            {/* X close - back to dashboard */}
+            {/* Hamburger - opens main nav */}
             <button
-              onClick={() => onNavigateBack?.()}
-              className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white"
+              onClick={() => onOpenMobileMenu?.()}
+              className="w-10 h-10 flex items-center justify-center text-white/70 hover:text-white"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
+              <Menu className="w-5 h-5" />
             </button>
+            {/* Title */}
+            <span className="text-[#ffd700] text-sm font-semibold" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>Link Page Preview</span>
+            {/* Save/Activate + Close */}
+            <div className="flex items-center gap-1">
+              {!pageData?.activated ? (
+                <button
+                  onClick={handleActivate}
+                  disabled={isSaving}
+                  className="text-[#ffd700] text-xs font-semibold px-2 py-1 rounded hover:bg-[#ffd700]/10 disabled:opacity-50"
+                  style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
+                >
+                  {isSaving ? '...' : 'Activate'}
+                </button>
+              ) : (
+                <button
+                  onClick={hasUnsavedChanges ? handleSave : undefined}
+                  disabled={isSaving || !hasUnsavedChanges}
+                  className="w-8 h-8 flex items-center justify-center rounded disabled:opacity-30"
+                  style={{ color: hasUnsavedChanges ? '#ffd700' : '#555' }}
+                  title={hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
+                >
+                  {isSaving ? (
+                    <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                      <polyline points="17,21 17,13 7,13 7,21" />
+                      <polyline points="7,3 7,8 15,8" />
+                    </svg>
+                  )}
+                </button>
+              )}
+              {/* X close - back to dashboard */}
+              <button
+                onClick={() => onNavigateBack?.()}
+                className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Phone Preview Content */}
-        <div className="flex-1 overflow-y-auto" style={{ background: 'rgba(10,10,10,0.95)' }}>
-          {mobileLinkTab === 'buttons'
-            ? renderPreviewButtonLinksCard(false, true, true)
-            : renderMobilePreviewContent()
-          }
-        </div>
-      </div>,
-      document.body
-    )}
+          {/* Phone Preview Content — uses bare phone mockup for ALL tabs */}
+          <div
+            className="flex-1 overflow-y-auto"
+            style={{
+              background: 'rgba(10,10,10,0.95)',
+              height: mobileLinkTab === 'buttons' ? 'calc(100vh - 52px - 48px)' : '260px',
+              transition: 'height 0.3s ease',
+            }}
+          >
+            {renderPreviewButtonLinksCard(false, mobileLinkTab === 'buttons', true)}
+          </div>
+        </div>,
+        slot
+      );
+    })()}
 
     {/* ====================================================================
         NEW 4-COLUMN CARD LAYOUT - Desktop (≥1100px)
