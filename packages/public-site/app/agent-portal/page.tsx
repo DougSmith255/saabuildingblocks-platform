@@ -11768,7 +11768,7 @@ function AgentPagesSection({
 
   // Preview / Button Links Card (Gold header) - Shared between desktop and medium screen layouts
   const renderPreviewButtonLinksCard = (withRowSpan: boolean) => (
-      <div className={`overflow-visible ${withRowSpan ? 'rounded-xl row-span-2' : 'rounded-xl'}`} style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+      <div className={`overflow-hidden ${withRowSpan ? 'rounded-xl row-span-2' : 'rounded-xl'}`} style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
         {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
           <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
@@ -12725,7 +12725,7 @@ return (
         {linkPageTab === 'profile-contact' && (
           <div className="flex flex-col gap-4 flex-1">
             <div className="flex-1 flex flex-col [&>div]:flex-1">{renderProfileCard()}</div>
-            <div style={{ height: '415px', flexShrink: 0 }}>{renderContactCard()}</div>
+            <div style={{ height: '430px', flexShrink: 0 }}>{renderContactCard()}</div>
           </div>
         )}
 

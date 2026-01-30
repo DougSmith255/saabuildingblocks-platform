@@ -6405,10 +6405,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         return;
       }
     });
-    var jf=document.getElementById('join-form');
-    if(jf){jf.addEventListener('submit',function(){track('click','form-submit','Join Form Submit','');});}
-    var joinBtn=document.getElementById('btn-join-alliance');
-    if(joinBtn){joinBtn.addEventListener('click',function(){track('click','btn-join-alliance','Join The Alliance','');});}
   })();
   </script>
 
