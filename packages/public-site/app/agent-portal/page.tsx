@@ -8,7 +8,7 @@ import { API_URL, SITE_URL } from '@/lib/api-config';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
 import { SlidePanel } from '@/components/shared/SlidePanel';
 import SmoothScrollContainer from '@/components/SmoothScrollContainer';
-import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target, MessageSquare, LayoutTemplate, FileText } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target, MessageSquare, LayoutTemplate, FileText, RefreshCw } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
@@ -951,6 +951,30 @@ function AgentPortal() {
   const [preloadedAgentPageData, setPreloadedAgentPageData] = useState<any>(null);
   // Preloaded dashboard stats - fetched once during init, no reload on tab switch
   const [dashboardStats, setDashboardStats] = useState<{ stats: any; agentPageId: string } | null>(null);
+  const [isRefreshingStats, setIsRefreshingStats] = useState(false);
+
+  // Manual refresh for dashboard stats - called from Analytics refresh button
+  const refreshDashboardStats = useCallback(async () => {
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('agent_portal_token') : null;
+    const pageId = dashboardStats?.agentPageId;
+    if (!token || !pageId) return;
+    setIsRefreshingStats(true);
+    try {
+      const statsRes = await fetch(`${API_URL}/api/tracking/stats?agent_page_id=${pageId}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (statsRes.ok) {
+        const statsJson = await statsRes.json();
+        if (statsJson.success) {
+          setDashboardStats({ stats: statsJson.data, agentPageId: pageId });
+        }
+      }
+    } catch {
+      // Silently ignore
+    } finally {
+      setIsRefreshingStats(false);
+    }
+  }, [dashboardStats?.agentPageId]);
   const [contrastLevel, setContrastLevel] = useState(130); // Default 130%
   const [originalImageFile, setOriginalImageFile] = useState<File | null>(null); // Store original for reprocessing
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -1034,6 +1058,7 @@ function AgentPortal() {
   const [showEliteCoursesIntroModal, setShowEliteCoursesIntroModal] = useState(false);
   const [showSupportHelpModal, setShowSupportHelpModal] = useState(false);
   const [showTeamCallsHelpModal, setShowTeamCallsHelpModal] = useState(false);
+  const [showAnalyticsHelpModal, setShowAnalyticsHelpModal] = useState(false);
 
   // Help panel closing animation state
   const [closingHelpPanel, setClosingHelpPanel] = useState<string | null>(null);
@@ -2735,7 +2760,9 @@ function AgentPortal() {
           filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
         }}
       >
-        {activeSection === 'calls' ? (
+        {activeSection === 'dashboard' ? (
+          <PixelHelpButton onClick={() => setShowAnalyticsHelpModal(true)} color="gold" ariaLabel="Analytics Help" size="mobile" className="relative" />
+        ) : activeSection === 'calls' ? (
           <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" size="mobile" className="relative" />
         ) : activeSection === 'templates' ? (
           <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" size="mobile" className="relative" />
@@ -3523,6 +3550,8 @@ function AgentPortal() {
                 isSafari={isSafari}
                 preloadedStats={dashboardStats?.stats || null}
                 agentPageId={dashboardStats?.agentPageId || null}
+                onRefresh={refreshDashboardStats}
+                isRefreshing={isRefreshingStats}
               />
             )}
 
@@ -3907,6 +3936,10 @@ function AgentPortal() {
 
       {/* ========== Floating Help Buttons - Desktop/Tablet only (hidden on mobile where header has help button) ========== */}
       <div className="hidden min-[1024px]:block">
+        {/* Analytics Help Button */}
+        {activeSection === 'dashboard' && (
+          <PixelHelpButton onClick={() => setShowAnalyticsHelpModal(true)} color="gold" ariaLabel="Analytics Help" />
+        )}
         {/* Team Calls Help Button */}
         {activeSection === 'calls' && (
           <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" />
@@ -3932,6 +3965,10 @@ function AgentPortal() {
           <div className="hidden min-[1650px]:block">
             <PixelHelpButton onClick={() => setShowLinkPageHelpModal(true)} color="gold" ariaLabel="Link Page Help" />
           </div>
+        )}
+        {/* Grey disabled help button for sections without help panels */}
+        {(activeSection === 'onboarding' || activeSection === 'support' || activeSection === 'production' || activeSection === 'download') && (
+          <PixelHelpButton onClick={() => {}} color="grey" ariaLabel="Help unavailable" disabled />
         )}
       </div>
 
@@ -5252,6 +5289,194 @@ function AgentPortal() {
         </div>
       )}
 
+      {/* Analytics Help Panel */}
+      {showAnalyticsHelpModal && (
+        <div
+          className="fixed inset-0 z-[99990] flex items-end min-[1024px]:items-stretch min-[1024px]:justify-end"
+          onClick={() => closeHelpPanel('analytics', setShowAnalyticsHelpModal)}
+        >
+          {/* Backdrop with blur */}
+          <div
+            className={`help-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${closingHelpPanel === 'analytics' ? 'help-backdrop-closing' : ''}`}
+            style={{ isolation: 'isolate' }}
+          />
+
+          {/* Slide-in Panel */}
+          <div
+            className={`help-panel help-panel-gold relative overflow-y-auto overscroll-contain ${closingHelpPanel === 'analytics' ? 'help-panel-closing' : ''}`}
+            style={{
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+            {...createSwipeHandlers('analytics', setShowAnalyticsHelpModal)}
+          >
+            {/* Header */}
+            <div
+              className="help-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(20,20,20,0.98) 50%)',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    background: 'rgba(255, 215, 0, 0.2)',
+                    border: '1px solid rgba(255, 215, 0, 0.4)',
+                    boxShadow: '0 0 12px rgba(255, 215, 0, 0.3)',
+                  }}
+                >
+                  <TrendingUp className="w-6 h-6 text-[#ffd700]" />
+                </div>
+                <h2 className="text-xl font-semibold text-[#ffd700]" style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}>Analytics Help</h2>
+              </div>
+              <button
+                onClick={() => closeHelpPanel('analytics', setShowAnalyticsHelpModal)}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              <p className="text-[#e5e4dd]/80">
+                Your analytics dashboard tracks how people interact with your <strong className="text-[#00ff88]">Link Page</strong> and <strong className="text-[#a855f7]">Agent Attraction Page</strong>. Here&apos;s what each number means.
+              </p>
+
+              {/* Link Page Stats Explanation */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 255, 136, 0.02) 100%)',
+                  border: '1px solid rgba(0, 255, 136, 0.2)',
+                }}
+              >
+                <p className="text-[#00ff88] text-sm mb-2 font-medium flex items-center gap-2">
+                  <LinkIcon className="w-4 h-4" />
+                  Link Page
+                </p>
+                <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#00ff88] mt-0.5">•</span>
+                    <span><strong className="text-[#e5e4dd]">Viewers</strong> — The number of unique people who visited your link page. Repeat visits within 30 minutes by the same person only count once.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#00ff88] mt-0.5">•</span>
+                    <span><strong className="text-[#e5e4dd]">Clicks</strong> — The total number of button clicks across all your link page buttons.</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Attraction Page Stats Explanation */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.02) 100%)',
+                  border: '1px solid rgba(168, 85, 247, 0.2)',
+                }}
+              >
+                <p className="text-[#a855f7] text-sm mb-2 font-medium flex items-center gap-2">
+                  <UserCircle className="w-4 h-4" />
+                  Agent Attraction
+                </p>
+                <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#a855f7] mt-0.5">•</span>
+                    <span><strong className="text-[#e5e4dd]">Viewers</strong> — The number of unique people who visited your agent attraction page. Same 30-minute dedup applies.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#a855f7] mt-0.5">•</span>
+                    <span><strong className="text-[#e5e4dd]">Join Clicks</strong> — The number of times someone clicked the &quot;Join The Alliance&quot; button on your attraction page.</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Button Clicks Section */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <p className="text-[#e5e4dd] text-sm mb-2 font-medium flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-[#ffd700]" />
+                  Button Clicks Breakdown
+                </p>
+                <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700] mt-0.5">•</span>
+                    <span>Shows every active button on your link page with its click count for the current month.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700] mt-0.5">•</span>
+                    <span><strong className="text-[#00ff88]">Green bars</strong> are your custom link buttons. <strong className="text-[#a855f7]">Purple bars</strong> represent the &quot;About My eXp Team&quot; button, which links to your agent attraction page.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700] mt-0.5">•</span>
+                    <span>Buttons with zero clicks still appear so you can see which ones need more visibility.</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Dynamic Buttons Explanation */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.02) 100%)',
+                  border: '1px solid rgba(255, 215, 0, 0.15)',
+                }}
+              >
+                <p className="text-[#ffd700] text-sm font-medium mb-1">Automatic Button Tracking</p>
+                <p className="text-[#e5e4dd]/70 text-sm">
+                  When you <strong className="text-[#00ff88]">add a new button</strong> to your link page, it will automatically appear in the button clicks breakdown the next time someone clicks it. When you <strong className="text-red-400">remove a button</strong>, its stats are immediately removed from the breakdown. You never need to configure anything — tracking is fully automatic.
+                </p>
+              </div>
+
+              {/* Refresh Tip */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(34, 197, 94, 0.05)',
+                  border: '1px solid rgba(34, 197, 94, 0.15)',
+                }}
+              >
+                <p className="text-green-400 text-sm font-medium mb-1">Refreshing Stats</p>
+                <p className="text-[#e5e4dd]/70 text-sm">
+                  Your stats are loaded when you first open the app. To see the latest numbers after sharing your page, tap the <strong className="text-[#e5e4dd]">Refresh</strong> button at the top of the analytics section. Stats reset on the 1st of each month.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10">
+              <button
+                onClick={() => closeHelpPanel('analytics', setShowAnalyticsHelpModal)}
+                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #ffd700 0%, #cc9900 100%)',
+                  color: '#1a1500',
+                  boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Elite Courses Intro Modal - One Time Notification */}
       {showEliteCoursesIntroModal && (
         <div
@@ -5483,6 +5708,8 @@ function DashboardView({
   isSafari = false,
   preloadedStats,
   agentPageId,
+  onRefresh,
+  isRefreshing = false,
 }: {
   onNavigate: (id: SectionId) => void;
   isOnboardingComplete: boolean;
@@ -5491,6 +5718,8 @@ function DashboardView({
   isSafari?: boolean;
   preloadedStats: TrackingStats | null;
   agentPageId: string | null;
+  onRefresh: () => void;
+  isRefreshing?: boolean;
 }) {
   const stats = preloadedStats;
 
@@ -5607,6 +5836,25 @@ function DashboardView({
       {/* Stats Cards */}
       {agentPageId && stats && (
         <>
+          {/* Refresh Button */}
+          <div className="flex justify-end">
+            <button
+              onClick={onRefresh}
+              disabled={isRefreshing}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: isRefreshing ? 'rgba(229, 228, 221, 0.3)' : 'rgba(229, 228, 221, 0.5)',
+              }}
+              onMouseEnter={(e) => { if (!isRefreshing) { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'; e.currentTarget.style.color = 'rgba(229, 228, 221, 0.8)'; } }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'; e.currentTarget.style.color = isRefreshing ? 'rgba(229, 228, 221, 0.3)' : 'rgba(229, 228, 221, 0.5)'; }}
+            >
+              <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
+              {isRefreshing ? 'Refreshing...' : 'Refresh'}
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {/* Link Page Stats */}
             <div
