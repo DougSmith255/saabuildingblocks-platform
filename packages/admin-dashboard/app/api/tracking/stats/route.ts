@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
     for (const link of customLinks) {
       labelLookup.set(link.id, link.label);
     }
-    labelLookup.set('learn-about', 'Learn About SAA');
+    labelLookup.set('learn-about', 'About My eXp Team');
 
     // Fetch all events for this agent page
     const { data: events, error: eventsError } = await supabase
@@ -177,7 +177,7 @@ export async function GET(request: NextRequest) {
     const learnAboutCounts = linksButtonClicks.get('learn-about') || { all: 0, week: 0 };
     linksStats.button_breakdown.push({
       button_id: 'learn-about',
-      label: 'Learn About SAA',
+      label: 'About My eXp Team',
       clicks_this_week: learnAboutCounts.week,
       clicks_all_time: learnAboutCounts.all,
     });
