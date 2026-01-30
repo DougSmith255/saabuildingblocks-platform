@@ -2975,6 +2975,16 @@ function AgentPortal() {
             </div>
           </div>
 
+          {/* Separator line — visible when showing link page preview */}
+          {activeSection === 'linktree' && !((isMobileMenuOpen && !isLinktreeTransitioning) || isMobileMenuClosing) && (
+            <div
+              className="mx-4 h-[1px] relative z-10"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.3) 20%, rgba(180, 180, 180, 0.3) 80%, transparent 100%)',
+              }}
+            />
+          )}
+
           {/* Portal slot for link page preview - hidden when menu is open (unless transitioning to preview) */}
           {activeSection === 'linktree' && (
             <div
@@ -12984,7 +12994,7 @@ function AgentPagesSection({
   // renderMobilePreviewContent removed — all tabs now use renderPreviewButtonLinksCard(bare=true)
 
 return (
-  <div className="link-page-fluid-root px-2 sm:px-4" style={{ maxWidth: '1600px', margin: '0 auto' }}>
+  <div className="link-page-fluid-root px-2 sm:px-4" style={{ maxWidth: '1600px', margin: '0 auto', overflow: 'visible' }}>
 
     {/* ====================================================================
         MOBILE LAYOUT (<1024px) - Pill tabs + card content + preview panel
@@ -12992,7 +13002,7 @@ return (
     <style>{`
       .mobile-link-tabs::-webkit-scrollbar { display: none; }
       .mobile-link-tabs { -ms-overflow-style: none; scrollbar-width: none; }
-      /* Pill tab container */
+      /* Pill tab container — flex:1 prevents width changes between tab switches */
       .mobile-link-pill-container {
         display: flex;
         align-items: center;
@@ -13002,6 +13012,7 @@ return (
         border: 1px solid rgba(255,255,255,0.08);
         padding: 3px;
         gap: 2px;
+        flex: 1;
       }
       /* Individual pill button */
       .mobile-link-pill {
@@ -13074,14 +13085,15 @@ return (
         to { opacity: 1; transform: translateY(0) scale(1); }
       }
     `}</style>
-    <div className="min-[1024px]:hidden flex flex-col">
+    <div className="min-[1024px]:hidden flex flex-col" style={{ overflow: 'visible' }}>
       {/* Settings Card with Pill Tab Bar */}
       <div
-        className="sticky top-0 z-[20] mx-2 mt-2 rounded-xl"
+        className="sticky top-0 z-[20] rounded-xl"
         style={{
           background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
           border: '1px solid rgba(255,255,255,0.06)',
           boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+          margin: '8px 8px 8px 8px',
         }}
       >
         <div className="flex items-center gap-2.5 px-3 py-2.5">
@@ -13121,9 +13133,9 @@ return (
 
       {/* Tab Content Area — premium fade transition */}
       <div
-        className="flex-1 overflow-y-auto px-2"
+        className="flex-1 overflow-y-auto"
         style={{
-          paddingBottom: mobileLinkTab === 'buttons' ? '0' : '320px',
+          padding: `0 8px ${mobileLinkTab === 'buttons' ? '0' : '320px'} 8px`,
           opacity: isMobileTabTransitioning ? 0 : 1,
           transform: isMobileTabTransitioning ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
           transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
@@ -13150,7 +13162,7 @@ return (
             transition: 'height 0.3s ease',
           }}
         >
-          {renderPreviewButtonLinksCard(false, true, true)}
+          {renderPreviewButtonLinksCard(false, false, true)}
         </div>,
         slot
       );
