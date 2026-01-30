@@ -2763,6 +2763,10 @@ function AgentPortal() {
         .mobile-menu-backdrop-closing {
           animation: mobileMenuBackdropOut 0.25s ease-in forwards;
         }
+        @keyframes mobileLinkFadeIn {
+          from { opacity: 0; transform: translateY(8px) scale(0.98); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
       `}</style>
 
       {/* Floating Pixel Help Button - Top Right (Mobile only) */}
@@ -2973,16 +2977,18 @@ function AgentPortal() {
               className="relative z-10"
               style={{
                 display: ((isMobileMenuOpen && !isLinktreeTransitioning) || isMobileMenuClosing) ? 'none' : 'block',
-                opacity: isLinktreeTransitioning ? 1 : 1,
+                animation: 'mobileLinkFadeIn 0.2s ease-out',
               }}
             />
           )}
 
-          {/* Menu Items - visible when expanded or closing; fades out during linktree transition */}
+          {/* Menu Items - visible when expanded or closing; premium fade during linktree transition */}
           {(isMobileMenuOpen || isMobileMenuClosing) && (
             <div style={{
               opacity: isLinktreeTransitioning ? 0 : 1,
-              transition: 'opacity 0.2s ease',
+              transform: isLinktreeTransitioning ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
+              transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
+              ...(menuOpenedFromLinktreeRef.current && !isLinktreeTransitioning ? { animation: 'mobileLinkFadeIn 0.2s ease-out' } : {}),
             }}>
               {/* Separator line */}
               <div
@@ -9878,7 +9884,21 @@ function AgentPagesSection({
 
   // Mobile screen layout (<1024px) uses 6 tabs
   const [mobileLinkTab, setMobileLinkTab] = useState<'profile' | 'style' | 'contact' | 'social' | 'actions' | 'buttons'>('profile');
+  const [displayMobileLinkTab, setDisplayMobileLinkTab] = useState<typeof mobileLinkTab>('profile');
+  const [isMobileTabTransitioning, setIsMobileTabTransitioning] = useState(false);
   const mobilePillContainerRef = useRef<HTMLDivElement>(null);
+
+  // Premium tab transition: fade out → swap content → fade in
+  const handleMobileTabChange = useCallback((newTab: typeof mobileLinkTab) => {
+    if (newTab === mobileLinkTab || isMobileTabTransitioning) return;
+    setMobileLinkTab(newTab);
+    setIsMobileTabTransitioning(true);
+    setTimeout(() => {
+      setDisplayMobileLinkTab(newTab);
+      setIsMobileTabTransitioning(false);
+    }, 150);
+  }, [mobileLinkTab, isMobileTabTransitioning]);
+
   // Notify parent when mobile link tab changes (for bar height)
   useEffect(() => {
     onMobileLinkTabChange?.(mobileLinkTab);
@@ -13029,8 +13049,8 @@ return (
         transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease 0.1s, margin-left 0.3s ease;
       }
       @keyframes mobileLinkFadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from { opacity: 0; transform: translateY(8px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
       }
     `}</style>
     <div className="min-[1024px]:hidden flex flex-col">
@@ -13052,7 +13072,7 @@ return (
               key={tab.id}
               data-tab-id={tab.id}
               onClick={() => {
-                setMobileLinkTab(tab.id);
+                handleMobileTabChange(tab.id);
                 if (isMobileMenuOpen) onCloseMobileMenu?.();
               }}
               className={`mobile-link-pill ${mobileLinkTab === tab.id ? 'active' : ''}`}
@@ -13068,13 +13088,21 @@ return (
         </div>
       </div>
 
-      {/* Tab Content Area */}
-      <div className="flex-1 overflow-y-auto px-2" style={{ paddingBottom: mobileLinkTab === 'buttons' ? '0' : '320px' }}>
-        {mobileLinkTab === 'profile' && renderProfileCard()}
-        {mobileLinkTab === 'style' && renderStyleCard()}
-        {mobileLinkTab === 'contact' && renderContactCard()}
-        {mobileLinkTab === 'social' && renderSocialLinksCard(2)}
-        {mobileLinkTab === 'actions' && renderPageActionsCard()}
+      {/* Tab Content Area — premium fade transition */}
+      <div
+        className="flex-1 overflow-y-auto px-2"
+        style={{
+          paddingBottom: mobileLinkTab === 'buttons' ? '0' : '320px',
+          opacity: isMobileTabTransitioning ? 0 : 1,
+          transform: isMobileTabTransitioning ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
+          transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
+        }}
+      >
+        {displayMobileLinkTab === 'profile' && renderProfileCard()}
+        {displayMobileLinkTab === 'style' && renderStyleCard()}
+        {displayMobileLinkTab === 'contact' && renderContactCard()}
+        {displayMobileLinkTab === 'social' && renderSocialLinksCard(2)}
+        {displayMobileLinkTab === 'actions' && renderPageActionsCard()}
         {/* No card content for 'buttons' — panel is full height */}
       </div>
     </div>
