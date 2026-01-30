@@ -2824,10 +2824,10 @@ function AgentPortal() {
           maxHeight: (() => {
             if (isLinktreeTransitioning) {
               // Shrinking from menu to preview — animate to target height
-              return currentMobileLinkTab === 'buttons' ? 'calc(100vh - 52px)' : '350px';
+              return currentMobileLinkTab === 'buttons' ? '85vh' : '350px';
             }
             if (isMobileMenuOpen || isMobileMenuClosing) return '85vh';
-            if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? 'calc(100vh - 52px)' : '350px';
+            if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? '85vh' : '350px';
             return 'auto';
           })(),
           transition: 'max-height 0.3s ease',
@@ -9899,8 +9899,8 @@ function AgentPagesSection({
   const [linkPageTab, setLinkPageTab] = useState<'profile-contact' | 'style' | 'socials-actions'>('profile-contact');
 
   // Mobile screen layout (<1024px) uses 6 tabs
-  const [mobileLinkTab, setMobileLinkTab] = useState<'profile' | 'style' | 'contact' | 'social' | 'actions' | 'buttons'>('profile');
-  const [displayMobileLinkTab, setDisplayMobileLinkTab] = useState<typeof mobileLinkTab>('profile');
+  const [mobileLinkTab, setMobileLinkTab] = useState<'profile' | 'style' | 'contact' | 'social' | 'buttons' | 'actions'>('profile');
+  const [displayMobileLinkTab, setDisplayMobileLinkTab] = useState<'profile' | 'style' | 'contact' | 'social' | 'buttons' | 'actions'>('profile');
   const [isMobileTabTransitioning, setIsMobileTabTransitioning] = useState(false);
   const mobilePillContainerRef = useRef<HTMLDivElement>(null);
 
@@ -13095,20 +13095,31 @@ return (
       }
     `}</style>
     <div className="min-[1024px]:hidden flex flex-col">
-      {/* Pill Tab Bar with sliding indicator */}
+      {/* Settings Card with Pill Tab Bar */}
       <div
-        className="flex items-center justify-center px-2 py-2.5 mobile-link-tabs sticky top-0 z-[20]"
+        className="sticky top-0 z-[20] mx-2 mt-2 rounded-xl"
+        style={{
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+          backdropFilter: 'blur(8px)',
+        }}
       >
-        <div className="mobile-link-pill-container" ref={mobilePillContainerRef}>
-          <div className="mobile-link-pill-slider" />
-          {([
-            { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
-            { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-4 h-4" /> },
-            { id: 'contact' as const, label: 'Contact', icon: <Smartphone className="w-4 h-4" /> },
-            { id: 'social' as const, label: 'Social', icon: <LinkIcon className="w-4 h-4" /> },
-            { id: 'actions' as const, label: 'Actions', icon: <Target className="w-4 h-4" /> },
-            { id: 'buttons' as const, label: 'Buttons', icon: <LayoutTemplate className="w-4 h-4" /> },
-          ]).map((tab) => (
+        <div className="flex items-center gap-2.5 px-3 py-2.5">
+          <span
+            className="text-white/50 text-xs flex-shrink-0"
+            style={{ fontFamily: 'var(--font-amulya, sans-serif)' }}
+          >Settings:</span>
+          <div className="mobile-link-pill-container" ref={mobilePillContainerRef}>
+            <div className="mobile-link-pill-slider" />
+            {([
+              { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
+              { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-4 h-4" /> },
+              { id: 'contact' as const, label: 'Contact', icon: <Smartphone className="w-4 h-4" /> },
+              { id: 'social' as const, label: 'Social', icon: <LinkIcon className="w-4 h-4" /> },
+              { id: 'buttons' as const, label: 'Buttons', icon: <LayoutTemplate className="w-4 h-4" /> },
+              { id: 'actions' as const, label: 'Actions', icon: <Target className="w-4 h-4" /> },
+            ]).map((tab) => (
             <button
               key={tab.id}
               data-tab-id={tab.id}
@@ -13126,6 +13137,7 @@ return (
               <span className="pill-label text-xs font-bold">{tab.label}</span>
             </button>
           ))}
+          </div>
         </div>
       </div>
 
@@ -13144,7 +13156,7 @@ return (
         {displayMobileLinkTab === 'contact' && renderContactCard()}
         {displayMobileLinkTab === 'social' && renderSocialLinksCard(2)}
         {displayMobileLinkTab === 'actions' && renderPageActionsCard()}
-        {/* No card content for 'buttons' — panel is full height */}
+        {/* No card content for 'buttons' — preview panel is full height */}
       </div>
     </div>
 
@@ -13156,7 +13168,7 @@ return (
         <div
           className="min-[1024px]:hidden overflow-y-auto"
           style={{
-            height: mobileLinkTab === 'buttons' ? 'calc(100vh - 64px)' : '290px',
+            height: mobileLinkTab === 'buttons' ? 'calc(85vh - 64px)' : '290px',
             transition: 'height 0.3s ease',
           }}
         >
