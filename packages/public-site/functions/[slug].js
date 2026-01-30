@@ -6381,7 +6381,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
   <script>
   (function(){
-    var API='https://saabuildingblocks.com/api/tracking/events';
+    var API=location.origin+'/api/tracking/events';
     var slug='${escapeJS(agent.slug)}';
     var vid=sessionStorage.getItem('_saa_vid');
     if(!vid){vid=Math.random().toString(36).substr(2)+Date.now().toString(36);sessionStorage.setItem('_saa_vid',vid);}
@@ -7509,7 +7509,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
   <script>
   (function(){
-    var API='https://saabuildingblocks.com/api/tracking/events';
+    var API=location.origin+'/api/tracking/events';
     var slug='${escapeJS(agent.slug)}';
     var vid=sessionStorage.getItem('_saa_vid');
     if(!vid){vid=Math.random().toString(36).substr(2)+Date.now().toString(36);sessionStorage.setItem('_saa_vid',vid);}
