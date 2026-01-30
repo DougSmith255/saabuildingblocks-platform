@@ -1010,16 +1010,23 @@ function AgentPortal() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileMenuClosing, setIsMobileMenuClosing] = useState(false);
   const mobileMenuTouchStartRef = useRef<{ y: number; time: number } | null>(null);
+  // Track which link page tab is active (for mobile bar height)
+  const [currentMobileLinkTab, setCurrentMobileLinkTab] = useState<string>('profile');
 
   // Smooth close handler for mobile menu
   const closeMobileMenu = useCallback(() => {
     if (isMobileMenuClosing) return;
+    if (activeSection === 'linktree') {
+      // On link page: instant swap to preview mode (no slide-away animation)
+      setIsMobileMenuOpen(false);
+      return;
+    }
     setIsMobileMenuClosing(true);
     setTimeout(() => {
       setIsMobileMenuOpen(false);
       setIsMobileMenuClosing(false);
     }, 250); // Match animation duration
-  }, [isMobileMenuClosing]);
+  }, [isMobileMenuClosing, activeSection]);
 
   // Onboarding state
   const [onboardingProgress, setOnboardingProgress] = useState<{
@@ -2795,14 +2802,19 @@ function AgentPortal() {
         />
       )}
 
-      {/* Mobile Bottom Bar - Expandable (always visible; link page preview portals into it) */}
+      {/* Mobile Bottom Bar - Expandable (always visible; link page preview integrated) */}
       <div
         className={`min-[1024px]:hidden fixed left-0 right-0 z-[10010] ${
           isMobileMenuClosing ? 'mobile-menu-panel-closing' : isMobileMenuOpen ? 'mobile-menu-panel' : ''
         }`}
         style={{
           bottom: 0,
-          maxHeight: (isMobileMenuOpen || isMobileMenuClosing) ? '85vh' : 'auto',
+          maxHeight: (() => {
+            if (isMobileMenuOpen || isMobileMenuClosing) return '85vh';
+            if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? 'calc(100vh - 52px)' : '350px';
+            return 'auto';
+          })(),
+          transition: 'max-height 0.3s ease',
           WebkitTapHighlightColor: 'transparent',
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
@@ -2862,154 +2874,167 @@ function AgentPortal() {
             }}
           />
 
-          {/* Conditional: Link Page preview slot OR normal header+menu */}
-          {activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing ? (
-            /* Link Page Preview mode: portal slot takes over entire bar */
-            <div id="mobile-link-preview-slot" className="relative z-10" />
-          ) : (
+          {/* Normal header - hidden when link page preview is active */}
+          <div
+            className="relative z-10 flex items-center justify-between px-4 h-16"
+            style={{
+              display: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing) ? 'none' : 'flex',
+            }}
+          >
+            {/* S Logo - links to dashboard */}
+            <button
+              onClick={() => {
+                setActiveSection('dashboard');
+                closeMobileMenu();
+              }}
+              className="flex-shrink-0 cursor-pointer"
+              title="Go to Dashboard"
+            >
+              <img
+                src="/icons/s-logo-1000.png"
+                alt="Smart Agent Alliance"
+                className="object-contain"
+                style={{
+                  width: '36px',
+                  height: '36px',
+                }}
+              />
+            </button>
+
+            {/* Section Title - centered */}
+            <div className="absolute left-1/2 -translate-x-1/2">
+              <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap">
+                {activeSection === 'onboarding' && 'Onboarding'}
+                {activeSection === 'dashboard' && 'Analytics'}
+                {activeSection === 'support' && 'Get Support'}
+                {activeSection === 'agent-page' && 'Agent Attraction'}
+                {activeSection === 'linktree' && 'Link Page'}
+                {activeSection === 'calls' && 'Team Calls'}
+                {activeSection === 'courses' && 'Courses'}
+                {activeSection === 'templates' && 'Templates'}
+                {activeSection === 'production' && 'Landing Pages'}
+                {activeSection === 'new-agents' && 'New Agents'}
+                {activeSection === 'download' && 'Download App'}
+                {activeSection === 'profile' && 'My Profile'}
+              </span>
+            </div>
+
+            {/* Burger Menu Button - 1.5x enlarged */}
+            <button
+              onClick={() => {
+                if (isMobileMenuOpen) {
+                  closeMobileMenu();
+                } else {
+                  setIsMobileMenuOpen(true);
+                }
+              }}
+              className={`mobile-menu-burger flex items-center justify-center w-12 h-12 ${isMobileMenuOpen ? 'menu-open' : ''}`}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMobileMenuOpen}
+            >
+              <svg viewBox="0 0 32 32" className="hamburger-svg w-9 h-9">
+                <path className="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22" />
+                <path className="line" d="M7 16 27 16" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Portal slot for link page preview - always in DOM when on linktree, hidden when menu is open */}
+          {activeSection === 'linktree' && (
+            <div
+              id="mobile-link-preview-slot"
+              className="relative z-10"
+              style={{
+                display: (isMobileMenuOpen || isMobileMenuClosing) ? 'none' : 'block',
+              }}
+            />
+          )}
+
+          {/* Menu Items - visible when expanded or closing */}
+          {(isMobileMenuOpen || isMobileMenuClosing) && (
             <>
-              {/* Header portion - S logo | Title | Burger */}
-              <div className="relative z-10 flex items-center justify-between px-4 h-16">
-                {/* S Logo - links to dashboard */}
+              {/* Separator line */}
+              <div
+                className="mx-4 h-[1px]"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.3) 20%, rgba(180, 180, 180, 0.3) 80%, transparent 100%)',
+                }}
+              />
+
+              {/* Menu items - desktop order, vertical, centered */}
+              <div className="relative z-10 py-4 overflow-y-auto" style={{ maxHeight: 'calc(85vh - 80px)' }}>
+                {/* Navigation items in desktop order */}
+                {[
+                  ...(isOnboardingComplete ? [] : [{ id: 'onboarding' as SectionId, label: 'Onboarding', Icon: Rocket }]),
+                  { id: 'dashboard' as SectionId, label: 'Analytics', Icon: TrendingUp },
+                  { id: 'support' as SectionId, label: 'Get Support', Icon: LifeBuoy },
+                  { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
+                  { id: 'agent-page' as SectionId, label: 'Agent Attraction', Icon: UserCircle },
+                  { id: 'calls' as SectionId, label: 'Team Calls', Icon: Video },
+                  { id: 'templates' as SectionId, label: 'Templates', Icon: Megaphone },
+                  { id: 'courses' as SectionId, label: 'Elite Courses', Icon: GraduationCap },
+                  { id: 'production' as SectionId, label: 'Landing Pages', Icon: Users },
+                  { id: 'new-agents' as SectionId, label: 'New Agents', Icon: PersonStanding },
+                  { id: 'download' as SectionId, label: 'Download App', Icon: Download },
+                  { id: 'profile' as SectionId, label: 'My Profile', Icon: User },
+                ].map((item) => {
+                  const isActive = activeSection === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setActiveSection(item.id);
+                        if (item.id === 'linktree') {
+                          // Instant swap — bar transitions to preview mode, no slide-away
+                          setIsMobileMenuOpen(false);
+                        } else {
+                          closeMobileMenu();
+                        }
+                      }}
+                      className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200"
+                      style={{
+                        color: isActive ? dashboardAccentColor : 'rgba(229, 228, 221, 0.7)',
+                        background: isActive ? 'rgba(255, 215, 0, 0.08)' : 'transparent',
+                      }}
+                    >
+                      <item.Icon
+                        className="w-5 h-5"
+                        style={{
+                          filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
+                        }}
+                      />
+                      <span
+                        className="text-sm font-medium"
+                        style={{
+                          textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : 'none',
+                        }}
+                      >
+                        {item.label}
+                      </span>
+                    </button>
+                  );
+                })}
+
+                {/* Separator line before logout */}
+                <div
+                  className="mx-6 my-4 h-[1px]"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.3) 20%, rgba(180, 180, 180, 0.3) 80%, transparent 100%)',
+                  }}
+                />
+
+                {/* Logout Button at bottom */}
                 <button
                   onClick={() => {
-                    setActiveSection('dashboard');
                     closeMobileMenu();
+                    handleLogout();
                   }}
-                  className="flex-shrink-0 cursor-pointer"
-                  title="Go to Dashboard"
+                  className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200 text-red-400/80 hover:text-red-400 hover:bg-red-400/5"
                 >
-                  <img
-                    src="/icons/s-logo-1000.png"
-                    alt="Smart Agent Alliance"
-                    className="object-contain"
-                    style={{
-                      width: '36px',
-                      height: '36px',
-                    }}
-                  />
-                </button>
-
-                {/* Section Title - centered */}
-                <div className="absolute left-1/2 -translate-x-1/2">
-                  <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap">
-                    {activeSection === 'onboarding' && 'Onboarding'}
-                    {activeSection === 'dashboard' && 'Analytics'}
-                    {activeSection === 'support' && 'Get Support'}
-                    {activeSection === 'agent-page' && 'Agent Attraction'}
-                    {activeSection === 'linktree' && 'Link Page'}
-                    {activeSection === 'calls' && 'Team Calls'}
-                    {activeSection === 'courses' && 'Courses'}
-                    {activeSection === 'templates' && 'Templates'}
-                    {activeSection === 'production' && 'Landing Pages'}
-                    {activeSection === 'new-agents' && 'New Agents'}
-                    {activeSection === 'download' && 'Download App'}
-                    {activeSection === 'profile' && 'My Profile'}
-                  </span>
-                </div>
-
-                {/* Burger Menu Button - 1.5x enlarged */}
-                <button
-                  onClick={() => {
-                    if (isMobileMenuOpen) {
-                      closeMobileMenu();
-                    } else {
-                      setIsMobileMenuOpen(true);
-                    }
-                  }}
-                  className={`mobile-menu-burger flex items-center justify-center w-12 h-12 ${isMobileMenuOpen ? 'menu-open' : ''}`}
-                  aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-                  aria-expanded={isMobileMenuOpen}
-                >
-                  <svg viewBox="0 0 32 32" className="hamburger-svg w-9 h-9">
-                    <path className="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22" />
-                    <path className="line" d="M7 16 27 16" />
-                  </svg>
+                  <LogOut className="w-5 h-5" />
+                  <span className="text-sm font-medium">Logout</span>
                 </button>
               </div>
-
-              {/* Menu Items - visible when expanded or closing */}
-              {(isMobileMenuOpen || isMobileMenuClosing) && (
-                <>
-                  {/* Separator line */}
-                  <div
-                    className="mx-4 h-[1px]"
-                    style={{
-                      background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.3) 20%, rgba(180, 180, 180, 0.3) 80%, transparent 100%)',
-                    }}
-                  />
-
-                  {/* Menu items - desktop order, vertical, centered */}
-                  <div className="relative z-10 py-4 overflow-y-auto" style={{ maxHeight: 'calc(85vh - 80px)' }}>
-                    {/* Navigation items in desktop order */}
-                    {[
-                      ...(isOnboardingComplete ? [] : [{ id: 'onboarding' as SectionId, label: 'Onboarding', Icon: Rocket }]),
-                      { id: 'dashboard' as SectionId, label: 'Analytics', Icon: TrendingUp },
-                      { id: 'support' as SectionId, label: 'Get Support', Icon: LifeBuoy },
-                      { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
-                      { id: 'agent-page' as SectionId, label: 'Agent Attraction', Icon: UserCircle },
-                      { id: 'calls' as SectionId, label: 'Team Calls', Icon: Video },
-                      { id: 'templates' as SectionId, label: 'Templates', Icon: Megaphone },
-                      { id: 'courses' as SectionId, label: 'Elite Courses', Icon: GraduationCap },
-                      { id: 'production' as SectionId, label: 'Landing Pages', Icon: Users },
-                      { id: 'new-agents' as SectionId, label: 'New Agents', Icon: PersonStanding },
-                      { id: 'download' as SectionId, label: 'Download App', Icon: Download },
-                      { id: 'profile' as SectionId, label: 'My Profile', Icon: User },
-                    ].map((item) => {
-                      const isActive = activeSection === item.id;
-                      return (
-                        <button
-                          key={item.id}
-                          onClick={() => {
-                            setActiveSection(item.id);
-                            closeMobileMenu();
-                          }}
-                          className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200"
-                          style={{
-                            color: isActive ? dashboardAccentColor : 'rgba(229, 228, 221, 0.7)',
-                            background: isActive ? 'rgba(255, 215, 0, 0.08)' : 'transparent',
-                          }}
-                        >
-                          <item.Icon
-                            className="w-5 h-5"
-                            style={{
-                              filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
-                            }}
-                          />
-                          <span
-                            className="text-sm font-medium"
-                            style={{
-                              textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : 'none',
-                            }}
-                          >
-                            {item.label}
-                          </span>
-                        </button>
-                      );
-                    })}
-
-                    {/* Separator line before logout */}
-                    <div
-                      className="mx-6 my-4 h-[1px]"
-                      style={{
-                        background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.3) 20%, rgba(180, 180, 180, 0.3) 80%, transparent 100%)',
-                      }}
-                    />
-
-                    {/* Logout Button at bottom */}
-                    <button
-                      onClick={() => {
-                        closeMobileMenu();
-                        handleLogout();
-                      }}
-                      className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200 text-red-400/80 hover:text-red-400 hover:bg-red-400/5"
-                    >
-                      <LogOut className="w-5 h-5" />
-                      <span className="text-sm font-medium">Logout</span>
-                    </button>
-                  </div>
-                </>
-              )}
             </>
           )}
         </div>
@@ -3943,6 +3968,7 @@ function AgentPortal() {
                 onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
                 onCloseMobileMenu={() => closeMobileMenu()}
                 isMobileMenuOpen={isMobileMenuOpen}
+                onMobileLinkTabChange={(tab: string) => setCurrentMobileLinkTab(tab)}
               />
             </div>
             )}
@@ -9659,6 +9685,7 @@ interface AgentPagesSectionProps {
   onOpenMobileMenu?: () => void;
   onCloseMobileMenu?: () => void;
   isMobileMenuOpen?: boolean;
+  onMobileLinkTabChange?: (tab: string) => void;
 }
 
 function AgentPagesSection({
@@ -9701,6 +9728,7 @@ function AgentPagesSection({
   onOpenMobileMenu,
   onCloseMobileMenu,
   isMobileMenuOpen = false,
+  onMobileLinkTabChange,
 }: AgentPagesSectionProps) {
   const [pageData, setPageData] = useState<AgentPageData | null>(preloadedPageData?.page || null);
   const [isLoading, setIsLoading] = useState(!preloadedPageData);
@@ -9819,6 +9847,10 @@ function AgentPagesSection({
 
   // Mobile screen layout (<1024px) uses 6 tabs
   const [mobileLinkTab, setMobileLinkTab] = useState<'profile' | 'style' | 'contact' | 'social' | 'actions' | 'buttons'>('profile');
+  // Notify parent when mobile link tab changes (for bar height)
+  useEffect(() => {
+    onMobileLinkTabChange?.(mobileLinkTab);
+  }, [mobileLinkTab, onMobileLinkTabChange]);
 
   // Copy link feedback state
   const [copiedLink, setCopiedLink] = useState<'linktree' | 'linkpage' | 'attraction' | null>(null);
@@ -13034,16 +13066,16 @@ return (
             </div>
           </div>
 
-          {/* Phone Preview Content — uses bare phone mockup for ALL tabs */}
+          {/* Phone Preview Content — uses bare phone mockup for ALL tabs, always interactive */}
           <div
             className="flex-1 overflow-y-auto"
             style={{
               background: 'rgba(10,10,10,0.95)',
-              height: mobileLinkTab === 'buttons' ? 'calc(100vh - 52px - 48px)' : '260px',
+              height: mobileLinkTab === 'buttons' ? 'calc(100vh - 52px - 48px)' : '290px',
               transition: 'height 0.3s ease',
             }}
           >
-            {renderPreviewButtonLinksCard(false, mobileLinkTab === 'buttons', true)}
+            {renderPreviewButtonLinksCard(false, true, true)}
           </div>
         </div>,
         slot
