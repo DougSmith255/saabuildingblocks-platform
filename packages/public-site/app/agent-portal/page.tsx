@@ -9919,23 +9919,7 @@ function AgentPagesSection({
   useEffect(() => {
     onMobileLinkTabChange?.(mobileLinkTab);
   }, [mobileLinkTab, onMobileLinkTabChange]);
-  // Update pill slider position when active tab changes
-  useEffect(() => {
-    const updateSlider = () => {
-      const el = mobilePillContainerRef.current;
-      if (!el) return;
-      const slider = el.querySelector('.mobile-link-pill-slider') as HTMLElement;
-      if (!slider) return;
-      const activeBtn = el.querySelector(`.mobile-link-pill[data-tab-id="${mobileLinkTab}"]`) as HTMLElement;
-      if (!activeBtn) return;
-      slider.style.left = `${activeBtn.offsetLeft}px`;
-      slider.style.width = `${activeBtn.offsetWidth}px`;
-    };
-    // Run once immediately for initial position, then after CSS transition settles
-    updateSlider();
-    const timer = setTimeout(updateSlider, 350);
-    return () => clearTimeout(timer);
-  }, [mobileLinkTab]);
+  // mobilePillContainerRef kept for potential future use
 
   // Copy link feedback state
   const [copiedLink, setCopiedLink] = useState<'linktree' | 'linkpage' | 'attraction' | null>(null);
@@ -13019,16 +13003,6 @@ return (
         padding: 3px;
         gap: 2px;
       }
-      /* Sliding active indicator */
-      .mobile-link-pill-slider {
-        position: absolute;
-        top: 3px;
-        bottom: 3px;
-        border-radius: 9999px;
-        background: #ffd700;
-        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 0;
-      }
       /* Individual pill button */
       .mobile-link-pill {
         display: flex;
@@ -13048,9 +13022,15 @@ return (
         position: relative;
         z-index: 1;
         background: transparent;
-        transition: color 0.25s ease;
+        transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0.05s,
+                    color 0.2s ease,
+                    padding 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
       }
-      /* Icon circle — always visible, expands when active */
+      .mobile-link-pill.active {
+        background: #ffd700;
+        padding: 0 10px 0 4px;
+      }
+      /* Icon circle — fills with gold when active */
       .mobile-link-pill .pill-icon-circle {
         display: flex;
         align-items: center;
@@ -13061,33 +13041,33 @@ return (
         border: 1.5px solid rgba(255,255,255,0.15);
         background: rgba(255,255,255,0.04);
         flex-shrink: 0;
-        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
-                    height 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
-                    border-color 0.2s ease,
-                    background 0.2s ease;
+        transition: border-color 0.15s ease,
+                    background 0.15s ease,
+                    box-shadow 0.2s ease;
       }
       .mobile-link-pill.active .pill-icon-circle {
-        width: 28px;
-        height: 28px;
-        border-color: rgba(0,0,0,0.15);
-        background: rgba(0,0,0,0.08);
+        border-color: rgba(0,0,0,0.1);
+        background: rgba(0,0,0,0.1);
+        box-shadow: none;
       }
-      /* Label — delayed expand so slider arrives first */
+      /* Label — delayed expand so color fills first */
       .mobile-link-pill .pill-label {
         display: inline-block;
         max-width: 0;
         opacity: 0;
         overflow: hidden;
-        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease, margin-left 0.3s ease;
+        transition: max-width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.15s ease,
+                    margin-left 0.25s ease;
         margin-left: 0;
       }
       .mobile-link-pill.active .pill-label {
         max-width: 80px;
         opacity: 1;
         margin-left: 5px;
-        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
-                    opacity 0.2s ease 0.15s,
-                    margin-left 0.3s ease 0.1s;
+        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.12s,
+                    opacity 0.2s ease 0.18s,
+                    margin-left 0.3s ease 0.12s;
       }
       @keyframes mobileLinkFadeIn {
         from { opacity: 0; transform: translateY(8px) scale(0.98); }
@@ -13099,10 +13079,9 @@ return (
       <div
         className="sticky top-0 z-[20] mx-2 mt-2 rounded-xl"
         style={{
-          background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-          backdropFilter: 'blur(8px)',
+          background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+          border: '1px solid rgba(255,255,255,0.06)',
+          boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
         }}
       >
         <div className="flex items-center gap-2.5 px-3 py-2.5">
@@ -13111,7 +13090,6 @@ return (
             style={{ fontFamily: 'var(--font-amulya, sans-serif)' }}
           >Settings:</span>
           <div className="mobile-link-pill-container" ref={mobilePillContainerRef}>
-            <div className="mobile-link-pill-slider" />
             {([
               { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
               { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-4 h-4" /> },
