@@ -1009,24 +1009,32 @@ function AgentPortal() {
   // Mobile menu state (expandable bottom bar)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileMenuClosing, setIsMobileMenuClosing] = useState(false);
+  const [isLinktreeTransitioning, setIsLinktreeTransitioning] = useState(false);
+  const menuOpenedFromLinktreeRef = useRef(false);
   const mobileMenuTouchStartRef = useRef<{ y: number; time: number } | null>(null);
   // Track which link page tab is active (for mobile bar height)
   const [currentMobileLinkTab, setCurrentMobileLinkTab] = useState<string>('profile');
 
   // Smooth close handler for mobile menu
   const closeMobileMenu = useCallback(() => {
-    if (isMobileMenuClosing) return;
+    if (isMobileMenuClosing || isLinktreeTransitioning) return;
     if (activeSection === 'linktree') {
-      // On link page: instant swap to preview mode (no slide-away animation)
-      setIsMobileMenuOpen(false);
+      // On link page: smoothly shrink bar from menu height to preview height
+      setIsLinktreeTransitioning(true);
+      setTimeout(() => {
+        setIsMobileMenuOpen(false);
+        setIsLinktreeTransitioning(false);
+        menuOpenedFromLinktreeRef.current = false;
+      }, 300);
       return;
     }
     setIsMobileMenuClosing(true);
     setTimeout(() => {
       setIsMobileMenuOpen(false);
       setIsMobileMenuClosing(false);
+      menuOpenedFromLinktreeRef.current = false;
     }, 250); // Match animation duration
-  }, [isMobileMenuClosing, activeSection]);
+  }, [isMobileMenuClosing, isLinktreeTransitioning, activeSection]);
 
   // Onboarding state
   const [onboardingProgress, setOnboardingProgress] = useState<{
@@ -2805,11 +2813,15 @@ function AgentPortal() {
       {/* Mobile Bottom Bar - Expandable (always visible; link page preview integrated) */}
       <div
         className={`min-[1024px]:hidden fixed left-0 right-0 z-[10010] ${
-          isMobileMenuClosing ? 'mobile-menu-panel-closing' : isMobileMenuOpen ? 'mobile-menu-panel' : ''
+          isMobileMenuClosing ? 'mobile-menu-panel-closing' : (isMobileMenuOpen && !menuOpenedFromLinktreeRef.current) ? 'mobile-menu-panel' : ''
         }`}
         style={{
           bottom: 0,
           maxHeight: (() => {
+            if (isLinktreeTransitioning) {
+              // Shrinking from menu to preview — animate to target height
+              return currentMobileLinkTab === 'buttons' ? 'calc(100vh - 52px)' : '350px';
+            }
             if (isMobileMenuOpen || isMobileMenuClosing) return '85vh';
             if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? 'calc(100vh - 52px)' : '350px';
             return 'auto';
@@ -2861,16 +2873,18 @@ function AgentPortal() {
             }}
           />
 
-          {/* 3D edge effect - WRAPS around top rounded corners */}
+          {/* 3D edge effect - top border + rounded corners, no bottom line */}
           <div
             className="absolute top-0 left-0 right-0 pointer-events-none"
             style={{
-              height: '24px', /* Tall enough to show curve (20px radius) + some straight edge */
+              height: '24px',
               borderRadius: '20px 20px 0 0',
               borderTop: '2px solid rgba(80, 80, 80, 0.8)',
               borderLeft: '2px solid rgba(60, 60, 60, 0.5)',
               borderRight: '2px solid rgba(60, 60, 60, 0.5)',
-              boxShadow: '0 1px 4px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.06)',
+              boxShadow: '0 1px 4px rgba(0, 0, 0, 0.3)',
+              maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
             }}
           />
 
@@ -2918,7 +2932,7 @@ function AgentPortal() {
 
             {/* Right side: Save button (linktree only, when not in menu) + Burger */}
             <div className="flex items-center gap-1">
-              {activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && (
+              {activeSection === 'linktree' && (!isMobileMenuOpen || isLinktreeTransitioning) && !isMobileMenuClosing && (
                 <div id="mobile-link-save-slot" />
               )}
 
@@ -2928,6 +2942,10 @@ function AgentPortal() {
                   if (isMobileMenuOpen) {
                     closeMobileMenu();
                   } else {
+                    // Track if opening from linktree (bar already visible) to skip slide-from-bottom animation
+                    if (activeSection === 'linktree') {
+                      menuOpenedFromLinktreeRef.current = true;
+                    }
                     setIsMobileMenuOpen(true);
                   }
                 }}
@@ -2943,20 +2961,24 @@ function AgentPortal() {
             </div>
           </div>
 
-          {/* Portal slot for link page preview - always in DOM when on linktree, hidden when menu is open */}
+          {/* Portal slot for link page preview - hidden when menu is open (unless transitioning to preview) */}
           {activeSection === 'linktree' && (
             <div
               id="mobile-link-preview-slot"
               className="relative z-10"
               style={{
-                display: (isMobileMenuOpen || isMobileMenuClosing) ? 'none' : 'block',
+                display: ((isMobileMenuOpen && !isLinktreeTransitioning) || isMobileMenuClosing) ? 'none' : 'block',
+                opacity: isLinktreeTransitioning ? 1 : 1,
               }}
             />
           )}
 
-          {/* Menu Items - visible when expanded or closing */}
+          {/* Menu Items - visible when expanded or closing; fades out during linktree transition */}
           {(isMobileMenuOpen || isMobileMenuClosing) && (
-            <>
+            <div style={{
+              opacity: isLinktreeTransitioning ? 0 : 1,
+              transition: 'opacity 0.2s ease',
+            }}>
               {/* Separator line */}
               <div
                 className="mx-4 h-[1px]"
@@ -2989,8 +3011,8 @@ function AgentPortal() {
                       onClick={() => {
                         setActiveSection(item.id);
                         if (item.id === 'linktree') {
-                          // Instant swap — bar transitions to preview mode, no slide-away
-                          setIsMobileMenuOpen(false);
+                          // Smooth transition — bar shrinks from menu height to preview height
+                          closeMobileMenu();
                         } else {
                           closeMobileMenu();
                         }
@@ -3039,7 +3061,7 @@ function AgentPortal() {
                   <span className="text-sm font-medium">Logout</span>
                 </button>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -13016,7 +13038,6 @@ return (
         <div
           className="min-[1024px]:hidden overflow-y-auto"
           style={{
-            background: 'rgba(10,10,10,0.95)',
             height: mobileLinkTab === 'buttons' ? 'calc(100vh - 64px)' : '290px',
             transition: 'height 0.3s ease',
           }}
