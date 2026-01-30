@@ -13050,6 +13050,29 @@ return (
         background: transparent;
         transition: color 0.25s ease;
       }
+      /* Icon circle — always visible, expands when active */
+      .mobile-link-pill .pill-icon-circle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 9999px;
+        border: 1.5px solid rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.04);
+        flex-shrink: 0;
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+                    height 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+                    border-color 0.2s ease,
+                    background 0.2s ease;
+      }
+      .mobile-link-pill.active .pill-icon-circle {
+        width: 28px;
+        height: 28px;
+        border-color: rgba(0,0,0,0.15);
+        background: rgba(0,0,0,0.08);
+      }
+      /* Label — delayed expand so slider arrives first */
       .mobile-link-pill .pill-label {
         display: inline-block;
         max-width: 0;
@@ -13062,7 +13085,9 @@ return (
         max-width: 80px;
         opacity: 1;
         margin-left: 5px;
-        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease 0.1s, margin-left 0.3s ease;
+        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+                    opacity 0.2s ease 0.15s,
+                    margin-left 0.3s ease 0.1s;
       }
       @keyframes mobileLinkFadeIn {
         from { opacity: 0; transform: translateY(8px) scale(0.98); }
@@ -13097,7 +13122,7 @@ return (
                 fontFamily: 'var(--font-taskor, sans-serif)',
               }}
             >
-              {tab.icon}
+              <span className="pill-icon-circle">{tab.icon}</span>
               <span className="pill-label text-xs font-bold">{tab.label}</span>
             </button>
           ))}
