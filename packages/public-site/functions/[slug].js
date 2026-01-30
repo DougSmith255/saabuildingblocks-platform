@@ -420,6 +420,14 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
       0%, 100% { opacity: 0.7; }
       50% { opacity: 1; }
     }
+
+    /* Text copy protection — disable on everything, re-enable on headings/links/inputs */
+    body, body * {
+      -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+    }
+    h1, h2, h3, h4, h5, h6, a, code, pre, kbd, samp, input, textarea, select, button, [contenteditable="true"] {
+      -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text;
+    }
   </style>
 </head>
 <body>
@@ -3513,6 +3521,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
 
     /* Body scroll lock handled by .slide-panel-open class above */
+
+    /* Text copy protection — disable on everything, re-enable on headings/links/inputs */
+    body, body * {
+      -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+    }
+    h1, h2, h3, h4, h5, h6, a, code, pre, kbd, samp, input, textarea, select, button, [contenteditable="true"] {
+      -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text;
+    }
   </style>
 
   <!-- GSAP and Lenis for scroll animations -->
@@ -7283,6 +7299,14 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
     .success-message p {
       margin-bottom: 0;
+    }
+
+    /* Text copy protection — disable on everything, re-enable on headings/links/inputs */
+    body, body * {
+      -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+    }
+    h1, h2, h3, h4, h5, h6, a, code, pre, kbd, samp, input, textarea, select, button, [contenteditable="true"] {
+      -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text;
     }
   </style>
 </head>
