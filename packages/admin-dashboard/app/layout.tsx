@@ -245,8 +245,8 @@ export default async function RootLayout({
         <link rel="manifest" href="/manifest.json" />
 
         {/* Theme color for browser UI */}
-        <meta name="theme-color" content="#ffd700" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191919" />
+        <meta name="theme-color" content="#191818" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191818" />
 
         {/* PWA meta tags for iOS */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
