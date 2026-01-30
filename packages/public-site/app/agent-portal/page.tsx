@@ -2912,30 +2912,35 @@ function AgentPortal() {
               />
             </button>
 
-            {/* Section Title - centered */}
+            {/* Center area: title OR save button (linktree preview mode) */}
             <div className="absolute left-1/2 -translate-x-1/2">
-              <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap">
-                {activeSection === 'onboarding' && 'Onboarding'}
-                {activeSection === 'dashboard' && 'Analytics'}
-                {activeSection === 'support' && 'Get Support'}
-                {activeSection === 'agent-page' && 'Agent Attraction'}
-                {activeSection === 'linktree' && 'Link Page'}
-                {activeSection === 'calls' && 'Team Calls'}
-                {activeSection === 'courses' && 'Courses'}
-                {activeSection === 'templates' && 'Templates'}
-                {activeSection === 'production' && 'Landing Pages'}
-                {activeSection === 'new-agents' && 'New Agents'}
-                {activeSection === 'download' && 'Download App'}
-                {activeSection === 'profile' && 'My Profile'}
-              </span>
+              {activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing ? (
+                <div id="mobile-link-save-slot" />
+              ) : (
+                <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap"
+                  style={{
+                    opacity: isLinktreeTransitioning ? 0 : 1,
+                    transition: 'opacity 0.2s ease',
+                  }}
+                >
+                  {activeSection === 'onboarding' && 'Onboarding'}
+                  {activeSection === 'dashboard' && 'Analytics'}
+                  {activeSection === 'support' && 'Get Support'}
+                  {activeSection === 'agent-page' && 'Agent Attraction'}
+                  {activeSection === 'linktree' && 'Link Page'}
+                  {activeSection === 'calls' && 'Team Calls'}
+                  {activeSection === 'courses' && 'Courses'}
+                  {activeSection === 'templates' && 'Templates'}
+                  {activeSection === 'production' && 'Landing Pages'}
+                  {activeSection === 'new-agents' && 'New Agents'}
+                  {activeSection === 'download' && 'Download App'}
+                  {activeSection === 'profile' && 'My Profile'}
+                </span>
+              )}
             </div>
 
-            {/* Right side: Save button (linktree only, when not in menu) + Burger */}
-            <div className="flex items-center gap-1">
-              {activeSection === 'linktree' && (!isMobileMenuOpen || isLinktreeTransitioning) && !isMobileMenuClosing && (
-                <div id="mobile-link-save-slot" />
-              )}
-
+            {/* Burger Menu Button - 1.5x enlarged */}
+            <div className="flex items-center">
               {/* Burger Menu Button - 1.5x enlarged */}
               <button
                 onClick={() => {
@@ -9873,10 +9878,28 @@ function AgentPagesSection({
 
   // Mobile screen layout (<1024px) uses 6 tabs
   const [mobileLinkTab, setMobileLinkTab] = useState<'profile' | 'style' | 'contact' | 'social' | 'actions' | 'buttons'>('profile');
+  const mobilePillContainerRef = useRef<HTMLDivElement>(null);
   // Notify parent when mobile link tab changes (for bar height)
   useEffect(() => {
     onMobileLinkTabChange?.(mobileLinkTab);
   }, [mobileLinkTab, onMobileLinkTabChange]);
+  // Update pill slider position when active tab changes
+  useEffect(() => {
+    const updateSlider = () => {
+      const el = mobilePillContainerRef.current;
+      if (!el) return;
+      const slider = el.querySelector('.mobile-link-pill-slider') as HTMLElement;
+      if (!slider) return;
+      const activeBtn = el.querySelector(`.mobile-link-pill[data-tab-id="${mobileLinkTab}"]`) as HTMLElement;
+      if (!activeBtn) return;
+      slider.style.left = `${activeBtn.offsetLeft}px`;
+      slider.style.width = `${activeBtn.offsetWidth}px`;
+    };
+    // Run once immediately for initial position, then after CSS transition settles
+    updateSlider();
+    const timer = setTimeout(updateSlider, 350);
+    return () => clearTimeout(timer);
+  }, [mobileLinkTab]);
 
   // Copy link feedback state
   const [copiedLink, setCopiedLink] = useState<'linktree' | 'linkpage' | 'attraction' | null>(null);
@@ -12949,74 +12972,100 @@ return (
     <style>{`
       .mobile-link-tabs::-webkit-scrollbar { display: none; }
       .mobile-link-tabs { -ms-overflow-style: none; scrollbar-width: none; }
-      /* Animated expanding pills */
+      /* Pill tab container */
+      .mobile-link-pill-container {
+        display: flex;
+        align-items: center;
+        position: relative;
+        border-radius: 9999px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        padding: 3px;
+        gap: 2px;
+      }
+      /* Sliding active indicator */
+      .mobile-link-pill-slider {
+        position: absolute;
+        top: 3px;
+        bottom: 3px;
+        border-radius: 9999px;
+        background: #ffd700;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 0;
+      }
+      /* Individual pill button */
       .mobile-link-pill {
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 9999px;
-        height: 36px;
-        min-width: 36px;
-        max-width: 36px;
-        padding: 0;
+        height: 32px;
+        min-width: 32px;
+        padding: 0 4px;
         gap: 0;
         overflow: hidden;
-        transition: max-width 0.3s ease, padding 0.3s ease, gap 0.3s ease, background-color 0.2s ease;
         white-space: nowrap;
         cursor: pointer;
         border: none;
         outline: none;
         flex-shrink: 0;
-      }
-      .mobile-link-pill.active {
-        max-width: 140px;
-        padding: 0 14px;
-        gap: 6px;
+        position: relative;
+        z-index: 1;
+        background: transparent;
+        transition: color 0.25s ease;
       }
       .mobile-link-pill .pill-label {
-        opacity: 0;
+        display: inline-block;
         max-width: 0;
-        transition: opacity 0.2s ease 0s, max-width 0.3s ease;
+        opacity: 0;
         overflow: hidden;
+        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease, margin-left 0.3s ease;
+        margin-left: 0;
       }
       .mobile-link-pill.active .pill-label {
-        opacity: 1;
         max-width: 80px;
-        transition: opacity 0.2s ease 0.1s, max-width 0.3s ease;
+        opacity: 1;
+        margin-left: 5px;
+        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease 0.1s, margin-left 0.3s ease;
+      }
+      @keyframes mobileLinkFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
       }
     `}</style>
     <div className="min-[1024px]:hidden flex flex-col">
-      {/* Animated Expanding Pill Tab Bar */}
+      {/* Pill Tab Bar with sliding indicator */}
       <div
-        className="flex items-center gap-1.5 px-2 py-2.5 mobile-link-tabs sticky top-0 z-[20]"
-        style={{ background: 'rgba(10,10,10,0.95)', backdropFilter: 'blur(8px)' }}
+        className="flex items-center justify-center px-2 py-2.5 mobile-link-tabs sticky top-0 z-[20]"
       >
-        {([
-          { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
-          { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-4 h-4" /> },
-          { id: 'contact' as const, label: 'Contact', icon: <Smartphone className="w-4 h-4" /> },
-          { id: 'social' as const, label: 'Social', icon: <LinkIcon className="w-4 h-4" /> },
-          { id: 'actions' as const, label: 'Actions', icon: <Target className="w-4 h-4" /> },
-          { id: 'buttons' as const, label: 'Buttons', icon: <LayoutTemplate className="w-4 h-4" /> },
-        ]).map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => {
-              setMobileLinkTab(tab.id);
-              if (isMobileMenuOpen) onCloseMobileMenu?.();
-            }}
-            className={`mobile-link-pill ${mobileLinkTab === tab.id ? 'active' : ''}`}
-            style={{
-              background: mobileLinkTab === tab.id ? '#ffd700' : 'rgba(255,255,255,0.05)',
-              border: mobileLinkTab === tab.id ? 'none' : '1px solid rgba(255,255,255,0.1)',
-              color: mobileLinkTab === tab.id ? '#000' : 'rgba(255,255,255,0.6)',
-              fontFamily: 'var(--font-taskor, sans-serif)',
-            }}
-          >
-            {tab.icon}
-            <span className="pill-label text-xs font-bold">{tab.label}</span>
-          </button>
-        ))}
+        <div className="mobile-link-pill-container" ref={mobilePillContainerRef}>
+          <div className="mobile-link-pill-slider" />
+          {([
+            { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
+            { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-4 h-4" /> },
+            { id: 'contact' as const, label: 'Contact', icon: <Smartphone className="w-4 h-4" /> },
+            { id: 'social' as const, label: 'Social', icon: <LinkIcon className="w-4 h-4" /> },
+            { id: 'actions' as const, label: 'Actions', icon: <Target className="w-4 h-4" /> },
+            { id: 'buttons' as const, label: 'Buttons', icon: <LayoutTemplate className="w-4 h-4" /> },
+          ]).map((tab) => (
+            <button
+              key={tab.id}
+              data-tab-id={tab.id}
+              onClick={() => {
+                setMobileLinkTab(tab.id);
+                if (isMobileMenuOpen) onCloseMobileMenu?.();
+              }}
+              className={`mobile-link-pill ${mobileLinkTab === tab.id ? 'active' : ''}`}
+              style={{
+                color: mobileLinkTab === tab.id ? '#000' : 'rgba(255,255,255,0.6)',
+                fontFamily: 'var(--font-taskor, sans-serif)',
+              }}
+            >
+              {tab.icon}
+              <span className="pill-label text-xs font-bold">{tab.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Tab Content Area */}
@@ -13048,7 +13097,7 @@ return (
       );
     })()}
 
-    {/* Mobile Save Button - portaled into header's #mobile-link-save-slot */}
+    {/* Mobile Save Button - portaled into header center (#mobile-link-save-slot) */}
     {typeof window !== 'undefined' && isActive && !isMobileMenuOpen && (() => {
       const saveSlot = document.getElementById('mobile-link-save-slot');
       if (!saveSlot) return null;
@@ -13057,28 +13106,46 @@ return (
           <button
             onClick={handleActivate}
             disabled={isSaving}
-            className="text-[#ffd700] text-xs font-semibold px-2 py-1 rounded hover:bg-[#ffd700]/10 disabled:opacity-50"
-            style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
+            className="py-1.5 px-5 rounded-full font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
+            style={{
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              backgroundColor: '#ffd700',
+              color: '#000',
+              opacity: isSaving ? 0.5 : 1,
+            }}
           >
-            {isSaving ? '...' : 'Activate'}
+            {isSaving ? (
+              <div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+            ) : (
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            )}
+            {isSaving ? 'Activating...' : 'Activate'}
           </button>
         ) : (
           <button
             onClick={hasUnsavedChanges ? handleSave : undefined}
             disabled={isSaving || !hasUnsavedChanges}
-            className="w-8 h-8 flex items-center justify-center rounded disabled:opacity-30"
-            style={{ color: hasUnsavedChanges ? '#ffd700' : '#555' }}
-            title={hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
+            className="py-1.5 px-5 rounded-full font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
+            style={{
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              backgroundColor: hasUnsavedChanges ? '#ffd700' : '#3a3a3a',
+              color: hasUnsavedChanges ? '#000' : '#888',
+              cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'default',
+              opacity: isSaving ? 0.5 : 1,
+            }}
           >
             {isSaving ? (
-              <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+              <div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin" />
             ) : (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
                 <polyline points="17,21 17,13 7,13 7,21" />
                 <polyline points="7,3 7,8 15,8" />
               </svg>
             )}
+            {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
           </button>
         ),
         saveSlot
