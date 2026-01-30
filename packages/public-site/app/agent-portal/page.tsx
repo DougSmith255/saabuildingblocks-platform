@@ -2916,31 +2916,36 @@ function AgentPortal() {
               />
             </button>
 
-            {/* Center area: title OR save button (linktree preview mode) */}
+            {/* Center area: save button (linktree preview) or page title */}
             <div className="absolute left-1/2 -translate-x-1/2">
-              {activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing ? (
-                <div id="mobile-link-save-slot" />
-              ) : (
-                <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap"
-                  style={{
-                    opacity: isLinktreeTransitioning ? 0 : 1,
-                    transition: 'opacity 0.2s ease',
-                  }}
-                >
-                  {activeSection === 'onboarding' && 'Onboarding'}
-                  {activeSection === 'dashboard' && 'Analytics'}
-                  {activeSection === 'support' && 'Get Support'}
-                  {activeSection === 'agent-page' && 'Agent Attraction'}
-                  {activeSection === 'linktree' && 'Link Page'}
-                  {activeSection === 'calls' && 'Team Calls'}
-                  {activeSection === 'courses' && 'Courses'}
-                  {activeSection === 'templates' && 'Templates'}
-                  {activeSection === 'production' && 'Landing Pages'}
-                  {activeSection === 'new-agents' && 'New Agents'}
-                  {activeSection === 'download' && 'Download App'}
-                  {activeSection === 'profile' && 'My Profile'}
-                </span>
-              )}
+              {/* Save slot — always in DOM for portal to find, toggled via display */}
+              <div
+                id="mobile-link-save-slot"
+                style={{
+                  display: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'flex' : 'none',
+                }}
+              />
+              {/* Page title — hidden when save slot is visible */}
+              <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap"
+                style={{
+                  display: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'none' : 'inline',
+                  opacity: isLinktreeTransitioning ? 0 : 1,
+                  transition: 'opacity 0.15s ease-out',
+                }}
+              >
+                {activeSection === 'onboarding' && 'Onboarding'}
+                {activeSection === 'dashboard' && 'Analytics'}
+                {activeSection === 'support' && 'Get Support'}
+                {activeSection === 'agent-page' && 'Agent Attraction'}
+                {activeSection === 'linktree' && 'Link Page'}
+                {activeSection === 'calls' && 'Team Calls'}
+                {activeSection === 'courses' && 'Courses'}
+                {activeSection === 'templates' && 'Templates'}
+                {activeSection === 'production' && 'Landing Pages'}
+                {activeSection === 'new-agents' && 'New Agents'}
+                {activeSection === 'download' && 'Download App'}
+                {activeSection === 'profile' && 'My Profile'}
+              </span>
             </div>
 
             {/* Burger Menu Button - 1.5x enlarged */}
@@ -3022,10 +3027,21 @@ function AgentPortal() {
                       onClick={() => {
                         setActiveSection(item.id);
                         if (item.id === 'linktree') {
-                          // Smooth transition — bar shrinks from menu height to preview height
-                          closeMobileMenu();
+                          // Smooth shrink: bar goes from menu height (85vh) to preview height (350px)
+                          setIsLinktreeTransitioning(true);
+                          setTimeout(() => {
+                            setIsMobileMenuOpen(false);
+                            setIsLinktreeTransitioning(false);
+                            menuOpenedFromLinktreeRef.current = false;
+                          }, 300);
                         } else {
-                          closeMobileMenu();
+                          // Normal slide-down close (always full close, even if currently on linktree)
+                          setIsMobileMenuClosing(true);
+                          setTimeout(() => {
+                            setIsMobileMenuOpen(false);
+                            setIsMobileMenuClosing(false);
+                            menuOpenedFromLinktreeRef.current = false;
+                          }, 250);
                         }
                       }}
                       className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200"
