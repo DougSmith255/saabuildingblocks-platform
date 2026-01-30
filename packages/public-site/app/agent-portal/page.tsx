@@ -2874,12 +2874,9 @@ function AgentPortal() {
             }}
           />
 
-          {/* Normal header - hidden when link page preview is active */}
+          {/* Header - always visible (S logo | Title | Save? | Burger) */}
           <div
             className="relative z-10 flex items-center justify-between px-4 h-16"
-            style={{
-              display: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing) ? 'none' : 'flex',
-            }}
           >
             {/* S Logo - links to dashboard */}
             <button
@@ -2919,24 +2916,31 @@ function AgentPortal() {
               </span>
             </div>
 
-            {/* Burger Menu Button - 1.5x enlarged */}
-            <button
-              onClick={() => {
-                if (isMobileMenuOpen) {
-                  closeMobileMenu();
-                } else {
-                  setIsMobileMenuOpen(true);
-                }
-              }}
-              className={`mobile-menu-burger flex items-center justify-center w-12 h-12 ${isMobileMenuOpen ? 'menu-open' : ''}`}
-              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={isMobileMenuOpen}
-            >
-              <svg viewBox="0 0 32 32" className="hamburger-svg w-9 h-9">
-                <path className="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22" />
-                <path className="line" d="M7 16 27 16" />
-              </svg>
-            </button>
+            {/* Right side: Save button (linktree only, when not in menu) + Burger */}
+            <div className="flex items-center gap-1">
+              {activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && (
+                <div id="mobile-link-save-slot" />
+              )}
+
+              {/* Burger Menu Button - 1.5x enlarged */}
+              <button
+                onClick={() => {
+                  if (isMobileMenuOpen) {
+                    closeMobileMenu();
+                  } else {
+                    setIsMobileMenuOpen(true);
+                  }
+                }}
+                className={`mobile-menu-burger flex items-center justify-center w-12 h-12 ${isMobileMenuOpen ? 'menu-open' : ''}`}
+                aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isMobileMenuOpen}
+              >
+                <svg viewBox="0 0 32 32" className="hamburger-svg w-9 h-9">
+                  <path className="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22" />
+                  <path className="line" d="M7 16 27 16" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           {/* Portal slot for link page preview - always in DOM when on linktree, hidden when menu is open */}
@@ -13004,81 +13008,59 @@ return (
       </div>
     </div>
 
-    {/* Mobile Preview Panel - portaled into #mobile-link-preview-slot in parent bottom bar */}
+    {/* Mobile Preview Body - portaled into #mobile-link-preview-slot (below existing header) */}
     {typeof window !== 'undefined' && isActive && !isMobileMenuOpen && (() => {
       const slot = document.getElementById('mobile-link-preview-slot');
       if (!slot) return null;
       return createPortal(
-        <div className="min-[1024px]:hidden flex flex-col">
-          {/* Panel Header: burger | title | save | X */}
-          <div
-            className="flex items-center justify-between px-3 flex-shrink-0"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', height: '48px' }}
-          >
-            {/* Hamburger - opens main nav */}
-            <button
-              onClick={() => onOpenMobileMenu?.()}
-              className="w-10 h-10 flex items-center justify-center text-white/70 hover:text-white"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            {/* Title */}
-            <span className="text-[#ffd700] text-sm font-semibold" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>Link Page Preview</span>
-            {/* Save/Activate + Close */}
-            <div className="flex items-center gap-1">
-              {!pageData?.activated ? (
-                <button
-                  onClick={handleActivate}
-                  disabled={isSaving}
-                  className="text-[#ffd700] text-xs font-semibold px-2 py-1 rounded hover:bg-[#ffd700]/10 disabled:opacity-50"
-                  style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
-                >
-                  {isSaving ? '...' : 'Activate'}
-                </button>
-              ) : (
-                <button
-                  onClick={hasUnsavedChanges ? handleSave : undefined}
-                  disabled={isSaving || !hasUnsavedChanges}
-                  className="w-8 h-8 flex items-center justify-center rounded disabled:opacity-30"
-                  style={{ color: hasUnsavedChanges ? '#ffd700' : '#555' }}
-                  title={hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
-                >
-                  {isSaving ? (
-                    <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                      <polyline points="17,21 17,13 7,13 7,21" />
-                      <polyline points="7,3 7,8 15,8" />
-                    </svg>
-                  )}
-                </button>
-              )}
-              {/* X close - back to dashboard */}
-              <button
-                onClick={() => onNavigateBack?.()}
-                className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Phone Preview Content — uses bare phone mockup for ALL tabs, always interactive */}
-          <div
-            className="flex-1 overflow-y-auto"
-            style={{
-              background: 'rgba(10,10,10,0.95)',
-              height: mobileLinkTab === 'buttons' ? 'calc(100vh - 52px - 48px)' : '290px',
-              transition: 'height 0.3s ease',
-            }}
-          >
-            {renderPreviewButtonLinksCard(false, true, true)}
-          </div>
+        <div
+          className="min-[1024px]:hidden overflow-y-auto"
+          style={{
+            background: 'rgba(10,10,10,0.95)',
+            height: mobileLinkTab === 'buttons' ? 'calc(100vh - 64px)' : '290px',
+            transition: 'height 0.3s ease',
+          }}
+        >
+          {renderPreviewButtonLinksCard(false, true, true)}
         </div>,
         slot
+      );
+    })()}
+
+    {/* Mobile Save Button - portaled into header's #mobile-link-save-slot */}
+    {typeof window !== 'undefined' && isActive && !isMobileMenuOpen && (() => {
+      const saveSlot = document.getElementById('mobile-link-save-slot');
+      if (!saveSlot) return null;
+      return createPortal(
+        !pageData?.activated ? (
+          <button
+            onClick={handleActivate}
+            disabled={isSaving}
+            className="text-[#ffd700] text-xs font-semibold px-2 py-1 rounded hover:bg-[#ffd700]/10 disabled:opacity-50"
+            style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
+          >
+            {isSaving ? '...' : 'Activate'}
+          </button>
+        ) : (
+          <button
+            onClick={hasUnsavedChanges ? handleSave : undefined}
+            disabled={isSaving || !hasUnsavedChanges}
+            className="w-8 h-8 flex items-center justify-center rounded disabled:opacity-30"
+            style={{ color: hasUnsavedChanges ? '#ffd700' : '#555' }}
+            title={hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
+          >
+            {isSaving ? (
+              <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17,21 17,13 7,13 7,21" />
+                <polyline points="7,3 7,8 15,8" />
+              </svg>
+            )}
+          </button>
+        ),
+        saveSlot
       );
     })()}
 
