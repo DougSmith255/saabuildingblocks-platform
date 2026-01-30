@@ -2795,9 +2795,9 @@ function AgentPortal() {
         />
       )}
 
-      {/* Mobile Bottom Bar - Expandable */}
+      {/* Mobile Bottom Bar - Expandable (hidden when Link Page is active - panel replaces it) */}
       <div
-        className={`min-[1024px]:hidden fixed left-0 right-0 z-[10010] ${
+        className={`min-[1024px]:hidden ${activeSection === 'linktree' ? 'hidden' : ''} fixed left-0 right-0 z-[10010] ${
           isMobileMenuClosing ? 'mobile-menu-panel-closing' : isMobileMenuOpen ? 'mobile-menu-panel' : ''
         }`}
         style={{
@@ -3931,6 +3931,8 @@ function AgentPortal() {
                 setShowLinkPageHelpModal={setShowLinkPageHelpModal}
                 showLinkPageHelpModal={showLinkPageHelpModal}
                 isActive={activeSection === 'linktree'}
+                onNavigateBack={() => setActiveSection('dashboard')}
+                onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
               />
             </div>
             )}
@@ -5863,7 +5865,7 @@ function DashboardView({
                 </div>
                 <div>
                   <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.links.clicks_this_week}</p>
-                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">clicks this month</p>
+                  <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">button clicks this month</p>
                   <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.links.clicks_all_time.toLocaleString()} all time</p>
                 </div>
               </div>
@@ -9642,6 +9644,9 @@ interface AgentPagesSectionProps {
   showLinkPageHelpModal?: boolean; // To hide help button when modal is open
   // Whether this section is currently active/visible
   isActive?: boolean;
+  // Mobile panel callbacks
+  onNavigateBack?: () => void;
+  onOpenMobileMenu?: () => void;
 }
 
 function AgentPagesSection({
@@ -9680,6 +9685,8 @@ function AgentPagesSection({
   setShowLinkPageHelpModal,
   showLinkPageHelpModal = false,
   isActive = false,
+  onNavigateBack,
+  onOpenMobileMenu,
 }: AgentPagesSectionProps) {
   const [pageData, setPageData] = useState<AgentPageData | null>(preloadedPageData?.page || null);
   const [isLoading, setIsLoading] = useState(!preloadedPageData);
@@ -9795,6 +9802,9 @@ function AgentPagesSection({
 
   // Medium screen layout (1024-1649px) uses 3 tabs
   const [linkPageTab, setLinkPageTab] = useState<'profile-contact' | 'style' | 'socials-actions'>('profile-contact');
+
+  // Mobile screen layout (<1024px) uses 6 tabs
+  const [mobileLinkTab, setMobileLinkTab] = useState<'profile' | 'style' | 'contact' | 'social' | 'actions' | 'buttons'>('profile');
 
   // Copy link feedback state
   const [copiedLink, setCopiedLink] = useState<'linktree' | 'linkpage' | 'attraction' | null>(null);
@@ -10864,13 +10874,38 @@ function AgentPagesSection({
           <div className="order-last min-[1100px]:order-first min-[1100px]:w-[340px] min-[1100px]:flex-shrink-0">
             <div className="rounded-xl overflow-hidden" style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.2)',
+              border: '1px solid rgba(255,255,255,0.06)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
-              <div className="px-4 py-3 border-b border-white/10 bg-black/30">
+              <div className="px-4 py-2.5 border-b border-white/10 bg-black/30">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-[#ffd700]">Page Preview</span>
-                  <span className="text-xs text-[#e5e4dd]/50">Agent Attraction Page</span>
+                  <div className="flex items-center gap-2">
+                    <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+                      <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                      <line x1="12" y1="18" x2="12" y2="18" />
+                    </svg>
+                    <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Page Preview</span>
+                  </div>
+                  {pageUrl && (
+                    <a
+                      href={pageUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all"
+                      style={{
+                        background: 'rgba(168, 85, 247, 0.15)',
+                        border: '1px solid rgba(168, 85, 247, 0.3)',
+                        color: '#c084fc',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(168, 85, 247, 0.25)'; e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.5)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(168, 85, 247, 0.15)'; e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.3)'; }}
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+                      </svg>
+                      View Page
+                    </a>
+                  )}
                 </div>
               </div>
               <div className="relative w-full overflow-hidden" style={{ height: '500px', background: 'radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%)' }}>
@@ -10972,104 +11007,73 @@ function AgentPagesSection({
             {/* Which Link to Use Section */}
             <div className="p-5 rounded-xl" style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.15)',
+              border: '1px solid rgba(255,255,255,0.06)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
-              <h3 className="text-lg font-medium text-[#ffd700] mb-4">Should You Share Your Link Page or Agent Attraction URL/QR Codes?</h3>
-              <div className="space-y-4 text-sm text-[#e5e4dd]/80">
-                {/* Option 1: Link Page */}
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#22c55e]/20 border border-[#22c55e]/30 flex items-center justify-center flex-shrink-0">
-                    <span className="text-[#22c55e] font-bold text-xs">1</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-[#e5e4dd] mb-1">Focusing on Production:</p>
-                    <p className="text-[#e5e4dd]/60 text-xs mb-2">Share your <strong className="text-[#22c55e]">Link Page URL/QR code</strong></p>
-                    {/* Subtle Copy Link Page Button */}
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(linktreeUrl);
-                        setCopiedLink('linkpage');
-                        setTimeout(() => setCopiedLink(null), 2000);
-                      }}
-                      disabled={!pageData?.activated}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-medium bg-[#22c55e]/10 border border-[#22c55e]/20 text-[#22c55e]/80 hover:bg-[#22c55e]/20 hover:text-[#22c55e] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-                    >
-                      {copiedLink === 'linkpage' ? (
-                        <>
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                          Copied!
-                        </>
-                      ) : (
-                        <>
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                          </svg>
-                          Copy Link Page URL
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-                {/* Option 2: Attraction Page */}
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#ffd700]/20 border border-[#ffd700]/30 flex items-center justify-center flex-shrink-0">
-                    <span className="text-[#ffd700] font-bold text-xs">2</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-[#e5e4dd] mb-1">Focusing on Agent Attraction:</p>
-                    <p className="text-[#e5e4dd]/60 text-xs mb-2">Share your <strong className="text-[#ffd700]">Agent Attraction Funnel URL/QR code</strong></p>
-                    {/* Subtle Copy Attraction Page Button */}
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(pageUrl);
-                        setCopiedLink('attraction');
-                        setTimeout(() => setCopiedLink(null), 2000);
-                      }}
-                      disabled={!pageData?.activated}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-medium bg-[#ffd700]/10 border border-[#ffd700]/20 text-[#ffd700]/80 hover:bg-[#ffd700]/20 hover:text-[#ffd700] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-                    >
-                      {copiedLink === 'attraction' ? (
-                        <>
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                          Copied!
-                        </>
-                      ) : (
-                        <>
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                          </svg>
-                          Copy Attraction Page URL
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-                {/* Either Way You're Covered */}
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-medium text-[#e5e4dd] mb-1">Either way, your agent attraction is covered.</p>
-                    <p className="text-[#e5e4dd]/60 text-xs">Your Link Page already includes your Agent Attraction Page. Anyone exploring your links, including curious agents, will eventually land on your recruiting funnel.</p>
-                  </div>
-                </div>
+              <h3 className="text-lg font-medium text-[#ffd700] mb-3">Share Your Link Page & Agent Attraction URLs</h3>
+              <p className="text-[#e5e4dd]/60 text-xs mb-4">Share both pages everywhere you can. Your Link Page already includes your Agent Attraction Page, so curious agents exploring your links will land on your recruiting funnel either way.</p>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Copy Link Page URL */}
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(linktreeUrl);
+                    setCopiedLink('linkpage');
+                    setTimeout(() => setCopiedLink(null), 2000);
+                  }}
+                  disabled={!pageData?.activated}
+                  className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-medium bg-[#22c55e]/10 border border-[#22c55e]/20 text-[#22c55e]/80 hover:bg-[#22c55e]/20 hover:text-[#22c55e] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                >
+                  {copiedLink === 'linkpage' ? (
+                    <>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      </svg>
+                      Copy Link Page URL
+                    </>
+                  )}
+                </button>
+                {/* Copy Attraction Page URL */}
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(pageUrl);
+                    setCopiedLink('attraction');
+                    setTimeout(() => setCopiedLink(null), 2000);
+                  }}
+                  disabled={!pageData?.activated}
+                  className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-medium bg-[#ffd700]/10 border border-[#ffd700]/20 text-[#ffd700]/80 hover:bg-[#ffd700]/20 hover:text-[#ffd700] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                >
+                  {copiedLink === 'attraction' ? (
+                    <>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      </svg>
+                      Copy Attraction URL
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
             {/* What Happens Section */}
             <div className="p-5 rounded-xl" style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.15)',
+              border: '1px solid rgba(255,255,255,0.06)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
               <h3 className="text-lg font-medium text-[#ffd700] mb-4">What Happens When Prospects Act</h3>
@@ -11102,7 +11106,7 @@ function AgentPagesSection({
             {/* Where to Share */}
             <div className="p-5 rounded-xl" style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.15)',
+              border: '1px solid rgba(255,255,255,0.06)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
               <h3 className="text-lg font-medium text-[#ffd700] mb-3">Where to Share Your Agent Attraction URL/QR Code</h3>
@@ -11110,20 +11114,20 @@ function AgentPagesSection({
               <div className="grid grid-cols-2 gap-2 mb-3">
                 <div className="flex items-center gap-2 text-[#e5e4dd] p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
                   <svg className="w-5 h-5 text-[#ffd700] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
-                  </svg>
-                  <div>
-                    <span className="font-medium text-sm">Business Cards</span>
-                    <p className="text-[#ffd700]/60 text-[10px]">#1 placement</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-[#e5e4dd] p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
-                  <svg className="w-5 h-5 text-[#ffd700] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
                   </svg>
                   <div>
                     <span className="font-medium text-sm">Social Media Bios</span>
-                    <p className="text-[#ffd700]/60 text-[10px]">#2 placement</p>
+                    <p className="text-[#ffd700]/60 text-[10px]">#1 URL placement</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-[#e5e4dd] p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
+                  <svg className="w-5 h-5 text-[#ffd700] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+                  </svg>
+                  <div>
+                    <span className="font-medium text-sm">Business Cards</span>
+                    <p className="text-[#ffd700]/60 text-[10px]">#1 QR code placement</p>
                   </div>
                 </div>
               </div>
@@ -11135,6 +11139,7 @@ function AgentPagesSection({
                   { icon: 'M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z', label: 'Direct messages' },
                   { icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', label: 'Presentations' },
                   { icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-7-2h2v-4h4v-2h-4V7h-2v4H8v2h4z', label: 'Advertisements' },
+                  { icon: 'M18 4H6C4.9 4 4 4.9 4 6v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-1 6h-4v1h3c.55 0 1 .45 1 1v3c0 .55-.45 1-1 1h-3v1h-2v-1H8v-2h4v-1h-3c-.55 0-1-.45-1-1v-3c0-.55.45-1 1-1h3V7h2v1h3v2z', label: 'Signs - For Sale, Open House, etc.' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2 text-[#e5e4dd]/70 p-2 rounded-lg bg-black/20">
                     <svg className="w-4 h-4 text-[#22c55e] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
@@ -12003,18 +12008,11 @@ function AgentPagesSection({
     </div>
   );
 
-  // Preview / Button Links Card (Gold header) - Shared between desktop and medium screen layouts
-  const renderPreviewButtonLinksCard = (withRowSpan: boolean) => (
-      <div className={`overflow-hidden ${withRowSpan ? 'rounded-xl row-span-2' : 'rounded-xl'}`} style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-        {/* Header with Premium Glow */}
-        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-          <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
-            <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-            <line x1="12" y1="18" x2="12" y2="18" />
-          </svg>
-          <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Preview / Button Links</span>
-        </div>
-
+  // Preview / Button Links Card (Gold header) - Shared between desktop, medium, and mobile layouts
+  // bare=true: skip card wrapper + header, render phone content only (used in mobile panel)
+  const renderPreviewButtonLinksCard = (withRowSpan: boolean, attachRefs: boolean = true, bare: boolean = false) => {
+    const phoneContent = (
+      <>
         {/* Phone Mockup - Premium Styling - overflow visible for button controls */}
         {/* Hide scrollbar for webkit browsers */}
         <style>{`.phone-inner-scroll::-webkit-scrollbar { display: none; }`}</style>
@@ -12029,7 +12027,7 @@ function AgentPagesSection({
           >
             {/* Phone inner bezel - FIXED height with scrollable content, hidden scrollbar */}
             <div
-              ref={phoneInnerRef}
+              ref={attachRefs ? phoneInnerRef : undefined}
               className="phone-inner-scroll rounded-[2.25rem] relative flex flex-col"
               style={{
                 background: 'linear-gradient(180deg, #0a0a0a 0%, #111111 100%)',
@@ -12252,7 +12250,7 @@ function AgentPagesSection({
               })()}
 
               {/* Button Links with Editor - FIX-007/024: controls rendered outside phone inner */}
-              <div ref={buttonLinksContainerRef} className="space-y-1.5 relative z-[1]" style={{ overflow: 'visible' }}>
+              <div ref={attachRefs ? buttonLinksContainerRef : undefined} className="space-y-1.5 relative z-[1]" style={{ overflow: 'visible' }}>
                 {(() => {
                   const linkOrder = linksSettings.linkOrder || ['learn-about'];
                   const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
@@ -12347,7 +12345,7 @@ function AgentPagesSection({
                     return (
                       <div
                         key={linkId}
-                        ref={(el) => { buttonRowRefs.current[linkId] = el; }}
+                        ref={attachRefs ? (el) => { buttonRowRefs.current[linkId] = el; } : undefined}
                         className="group relative"
                         style={{
                           // Only apply transition when actively animating with swap, otherwise instant movement
@@ -12848,11 +12846,266 @@ function AgentPagesSection({
             })()}
           </div>
         </div>
+      </>
+    );
+
+    if (bare) return phoneContent;
+
+    return (
+      <div className={`overflow-hidden ${withRowSpan ? 'rounded-xl row-span-2' : 'rounded-xl'}`} style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+        {/* Header with Premium Glow */}
+        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+          <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+            <line x1="12" y1="18" x2="12" y2="18" />
+          </svg>
+          <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Preview / Button Links</span>
+        </div>
+        {phoneContent}
       </div>
-  );
+    );
+  };
+
+  // Simplified read-only phone preview for mobile non-button tabs
+  // Shows profile image, name, social icons, contact buttons — compact layout
+  const renderMobilePreviewContent = () => {
+    const socialIconColor = getVisibleSocialIconColor(linksSettings.accentColor);
+    const builtInSocialIcons = [
+      { url: formData.facebook_url, icon: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' },
+      { url: formData.instagram_url, icon: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' },
+      { url: formData.twitter_url, icon: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
+      { url: formData.youtube_url, icon: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' },
+      { url: formData.tiktok_url, icon: 'M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z' },
+      { url: formData.linkedin_url, icon: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
+    ].filter(s => s.url);
+    const customSocialIcons = customSocialLinks
+      .filter(link => link && link.url && link.icon && link.icon !== 'Globe')
+      .map(link => ({ url: link.url, icon: LINK_ICONS.find(i => i.name === link.icon)?.path || '' }))
+      .filter(s => s.icon);
+    const socialIcons = [...builtInSocialIcons, ...customSocialIcons];
+
+    const contacts: { type: string; icon: string }[] = [];
+    if (formData.phone && formData.show_call_button !== false) {
+      contacts.push({ type: 'call', icon: 'M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z' });
+    }
+    if (formData.phone && formData.show_text_button !== false) {
+      contacts.push({ type: 'text', icon: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z' });
+    }
+    if (formData.email) {
+      contacts.push({ type: 'email', icon: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6' });
+    }
+
+    return (
+      <div className="flex flex-col items-center py-4 px-3 gap-2" style={{ background: `linear-gradient(to bottom, ${bgGradientTop} 0%, ${bgGradientBottom} 100%)` }}>
+        {/* Profile Image */}
+        <div
+          className="w-16 h-16 rounded-full border-2 flex items-center justify-center overflow-hidden relative"
+          style={{ borderColor: socialIconColor, backgroundColor: 'rgba(40,40,40,0.8)' }}
+        >
+          {getProfileImageUrl() ? (
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                backgroundImage: `url(${getProfileImageUrl()})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
+              }}
+            />
+          ) : (
+            <svg className="w-8 h-8 text-white/40" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          )}
+        </div>
+        {/* Name */}
+        <span
+          className="text-base text-center font-bold"
+          style={{
+            color: isAccentDark ? '#e5e4dd' : linksSettings.accentColor,
+            fontFamily: 'var(--font-taskor, sans-serif)',
+            textShadow: linksSettings.nameGlow !== false
+              ? (isAccentDark
+                  ? `0 0 0.1em ${linksSettings.accentColor}60`
+                  : `0 0 0.13em ${linksSettings.accentColor}8C`)
+              : 'none',
+          }}
+        >
+          {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
+        </span>
+        {/* Social Icons */}
+        {socialIcons.length > 0 && (
+          <div className="flex justify-center gap-1.5 flex-wrap">
+            {socialIcons.map((social, idx) => {
+              const isBuiltIn = idx < builtInSocialIcons.length;
+              return (
+                <div
+                  key={idx}
+                  className="w-7 h-7 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: `${socialIconColor}20`, border: `1px solid ${socialIconColor}40` }}
+                >
+                  {isBuiltIn ? (
+                    <svg className="w-3.5 h-3.5" fill={socialIconColor} viewBox="0 0 24 24"><path d={social.icon} /></svg>
+                  ) : (
+                    <svg className="w-3.5 h-3.5" fill="none" stroke={socialIconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d={social.icon} /></svg>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {/* Contact Buttons */}
+        {contacts.length > 0 && (
+          <div className="flex gap-1 w-full max-w-[260px] mt-1">
+            {contacts.map((contact, idx) => (
+              <div
+                key={idx}
+                className="flex-1 py-2 flex items-center justify-center"
+                style={{
+                  backgroundColor: linksSettings.accentColor,
+                  color: isAccentDark ? '#ffffff' : '#1a1a1a',
+                  borderRadius: contacts.length === 1 ? '0.5rem' : idx === 0 ? '0.5rem 0.25rem 0.25rem 0.5rem' : idx === contacts.length - 1 ? '0.25rem 0.5rem 0.5rem 0.25rem' : '0.25rem',
+                }}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d={contact.icon} />
+                </svg>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
 return (
   <div className="link-page-fluid-root px-2 sm:px-4" style={{ maxWidth: '1600px', margin: '0 auto' }}>
+
+    {/* ====================================================================
+        MOBILE LAYOUT (<1024px) - Pill tabs + card content + preview panel
+        ==================================================================== */}
+    <style>{`
+      .mobile-link-tabs::-webkit-scrollbar { display: none; }
+      .mobile-link-tabs { -ms-overflow-style: none; scrollbar-width: none; }
+      @keyframes mobileLinkPanelUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+      }
+      .mobile-link-panel { animation: mobileLinkPanelUp 0.3s ease-out forwards; }
+    `}</style>
+    <div className="min-[1024px]:hidden flex flex-col">
+      {/* Scrollable Pill Tab Bar */}
+      <div className="flex overflow-x-auto gap-2 px-3 py-3 mobile-link-tabs sticky top-0 z-[20]" style={{ background: 'rgba(10,10,10,0.95)', backdropFilter: 'blur(8px)' }}>
+        {([
+          { id: 'profile' as const, label: 'Profile', icon: <User className="w-3.5 h-3.5" /> },
+          { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-3.5 h-3.5" /> },
+          { id: 'contact' as const, label: 'Contact', icon: <Smartphone className="w-3.5 h-3.5" /> },
+          { id: 'social' as const, label: 'Social', icon: <LinkIcon className="w-3.5 h-3.5" /> },
+          { id: 'actions' as const, label: 'Actions', icon: <Target className="w-3.5 h-3.5" /> },
+          { id: 'buttons' as const, label: 'Buttons', icon: <LayoutTemplate className="w-3.5 h-3.5" /> },
+        ]).map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setMobileLinkTab(tab.id)}
+            className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-xs whitespace-nowrap transition-colors ${
+              mobileLinkTab === tab.id
+                ? 'bg-[#ffd700] text-black font-bold'
+                : 'bg-white/5 border border-white/10 text-white/60'
+            }`}
+            style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
+          >
+            {tab.icon}
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content Area */}
+      <div className="flex-1 overflow-y-auto px-2" style={{ paddingBottom: mobileLinkTab === 'buttons' ? '0' : '310px' }}>
+        {mobileLinkTab === 'profile' && renderProfileCard()}
+        {mobileLinkTab === 'style' && renderStyleCard()}
+        {mobileLinkTab === 'contact' && renderContactCard()}
+        {mobileLinkTab === 'social' && renderSocialLinksCard(2)}
+        {mobileLinkTab === 'actions' && renderPageActionsCard()}
+        {/* No card content for 'buttons' — panel is full height */}
+      </div>
+    </div>
+
+    {/* Mobile Preview Panel - fixed bottom, rendered via portal */}
+    {typeof window !== 'undefined' && isActive && createPortal(
+      <div
+        className="min-[1024px]:hidden fixed left-0 right-0 bottom-0 z-[10008] mobile-link-panel flex flex-col"
+        style={{
+          height: mobileLinkTab === 'buttons' ? 'calc(100vh - 52px)' : '310px',
+          transition: 'height 0.3s ease',
+        }}
+      >
+        {/* Panel Header */}
+        <div
+          className="flex items-center justify-between px-3 flex-shrink-0"
+          style={{ background: 'rgba(14,14,14,0.98)', borderBottom: '1px solid rgba(255,255,255,0.1)', height: '48px' }}
+        >
+          {/* Hamburger - opens main nav */}
+          <button
+            onClick={() => onOpenMobileMenu?.()}
+            className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+          {/* Title */}
+          <span className="text-[#ffd700] text-sm font-semibold" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>Link Page Preview</span>
+          {/* Save/Activate + Close */}
+          <div className="flex items-center gap-1">
+            {!pageData?.activated ? (
+              <button
+                onClick={handleActivate}
+                disabled={isSaving}
+                className="text-[#ffd700] text-xs font-semibold px-2 py-1 rounded hover:bg-[#ffd700]/10 disabled:opacity-50"
+                style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
+              >
+                {isSaving ? '...' : 'Activate'}
+              </button>
+            ) : (
+              <button
+                onClick={hasUnsavedChanges ? handleSave : undefined}
+                disabled={isSaving || !hasUnsavedChanges}
+                className="w-8 h-8 flex items-center justify-center rounded disabled:opacity-30"
+                style={{ color: hasUnsavedChanges ? '#ffd700' : '#555' }}
+                title={hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
+              >
+                {isSaving ? (
+                  <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                    <polyline points="17,21 17,13 7,13 7,21" />
+                    <polyline points="7,3 7,8 15,8" />
+                  </svg>
+                )}
+              </button>
+            )}
+            {/* X close - back to dashboard */}
+            <button
+              onClick={() => onNavigateBack?.()}
+              className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Phone Preview Content */}
+        <div className="flex-1 overflow-y-auto" style={{ background: 'rgba(10,10,10,0.95)' }}>
+          {mobileLinkTab === 'buttons'
+            ? renderPreviewButtonLinksCard(false, true, true)
+            : renderMobilePreviewContent()
+          }
+        </div>
+      </div>,
+      document.body
+    )}
 
     {/* ====================================================================
         NEW 4-COLUMN CARD LAYOUT - Desktop (≥1100px)
@@ -12884,10 +13137,10 @@ return (
           Note: overflow-visible required for button controls to appear outside phone border
           ================================================================ */}
       {/* Preview / Button Links Card - uses shared render function */}
-      {renderPreviewButtonLinksCard(true)}
+      {renderPreviewButtonLinksCard(true, typeof window !== 'undefined' && window.innerWidth >= 1650)}
 
       {/* Social Links Card - uses shared render function with col-span-2 wrapper for desktop grid */}
-      <div className="col-span-2">
+      <div className="col-span-2 [&>div]:h-full">
         {renderSocialLinksCard(4)}
       </div>
 
@@ -12962,7 +13215,7 @@ return (
         {linkPageTab === 'profile-contact' && (
           <div className="flex flex-col gap-4 flex-1">
             <div className="flex-1 flex flex-col [&>div]:flex-1">{renderProfileCard()}</div>
-            <div style={{ height: '430px', flexShrink: 0 }}>{renderContactCard()}</div>
+            <div className="flex-1 flex flex-col [&>div]:flex-1">{renderContactCard()}</div>
           </div>
         )}
 
@@ -12981,11 +13234,9 @@ return (
       </div>
 
       {/* RIGHT COLUMN: Preview (340px fixed) - sticky so it stays in view */}
-      <div className="sticky top-4" style={{ maxHeight: 'calc(100vh - 2rem)', overflowY: 'auto', overflowX: 'hidden', scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}>
-        <style>{`.medium-preview-col::-webkit-scrollbar { display: none; }`}</style>
-        <div className="medium-preview-col">
-          {renderPreviewButtonLinksCard(false)}
-        </div>
+      {/* No overflow restrictions — matches desktop approach so box-shadow renders on all sides */}
+      <div className="sticky top-4">
+        {renderPreviewButtonLinksCard(false, typeof window !== 'undefined' && window.innerWidth >= 1024 && window.innerWidth < 1650)}
       </div>
     </div>
 
