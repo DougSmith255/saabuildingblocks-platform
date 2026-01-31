@@ -12321,13 +12321,12 @@ function AgentPagesSection({
         {/* Hide scrollbar for webkit browsers */}
         <style>{`.phone-inner-scroll::-webkit-scrollbar { display: none; }`}</style>
         <div className="p-4 flex flex-col items-center overflow-visible">
+          <div className="w-full max-w-[300px] relative" style={{ overflow: 'visible' }}>
           <div
-            className="w-full max-w-[300px] rounded-[2.5rem] p-[6px] relative"
+            className="rounded-[2.5rem] p-[6px]"
             style={{
               background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.08), 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
-              overflow: 'visible',
-              isolation: 'isolate', // Force stacking context so controls z-index works
             }}
           >
             {/* Phone inner bezel - FIXED height, non-scrolling wrapper holds background */}
@@ -12339,7 +12338,7 @@ function AgentPagesSection({
                 boxShadow: 'inset 0 0 20px rgba(0,0,0,0.6)',
                 height: '580px', // FIXED height - phone doesn't grow
                 overflow: 'hidden',
-                zIndex: 0, // Explicitly below controls (z-index: 100)
+                zIndex: 0,
               }}
             >
               {/* Star Field Background - stays pinned, does NOT scroll with content */}
@@ -12372,8 +12371,8 @@ function AgentPagesSection({
                   pointerEvents: 'none',
                 }}
               />
-              {/* Notch - stays pinned above scrollable content */}
-              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full" style={{ boxShadow: '0 0 10px rgba(0,0,0,0.5)', zIndex: 10 }} />
+              {/* Notch - hidden on mobile (<1024px) to show more content */}
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full hidden min-[1024px]:block" style={{ boxShadow: '0 0 10px rgba(0,0,0,0.5)', zIndex: 10 }} />
               {/* Scrollable content layer */}
               <div
                 ref={attachRefs ? phoneInnerCallbackRef : undefined}
@@ -12987,9 +12986,9 @@ function AgentPagesSection({
               </div>
             </div>
 
-            {/* FIX-007/024: Button Controls Overlay - rendered OUTSIDE phone inner but INSIDE phone frame */}
-            {/* This allows controls to be visible without being clipped by phone inner's overflow:hidden */}
-            {(() => {
+          </div>
+          {/* Controls — rendered OUTSIDE phone bezel so they sit above the thick border */}
+          {(() => {
               // Build list of all link IDs in current order
               const linkOrder = linksSettings.linkOrder || ['learn-about'];
               const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
@@ -13063,8 +13062,6 @@ function AgentPagesSection({
                           background: '#1a1a1a',
                           borderRadius: '6px',
                           padding: '2px',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.7)',
-                          isolation: 'isolate',
                         }}
                       >
                         <button
@@ -13125,8 +13122,6 @@ function AgentPagesSection({
                           background: '#1a1a1a',
                           borderRadius: '6px',
                           padding: '4px',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.7)',
-                          isolation: 'isolate',
                         }}
                       >
                         <button
@@ -13320,7 +13315,7 @@ return (
         ref={mobileContentRef}
         className="flex-1 overflow-y-auto"
         style={{
-          padding: `0 0 ${mobileLinkTab === 'buttons' ? '0' : '320px'} 0`,
+          padding: `10px 0 ${mobileLinkTab === 'buttons' ? '0' : '320px'} 0`,
           opacity: isMobileTabTransitioning ? 0 : 1,
           transform: isMobileTabTransitioning ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
           transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
