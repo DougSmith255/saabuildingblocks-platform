@@ -2883,18 +2883,18 @@ function AgentPortal() {
           isMobileMenuClosing ? 'mobile-menu-panel-closing' : (isMobileMenuOpen && !menuOpenedFromLinktreeRef.current) ? 'mobile-menu-panel' : ''
         }`}
         style={{
-          bottom: 0,
+          bottom: '20px',
           maxHeight: (() => {
             if (isLinktreeTransitioning) {
               // Shrinking from menu to preview — animate to target height
-              return currentMobileLinkTab === 'buttons' ? '85vh' : '350px';
+              return currentMobileLinkTab === 'buttons' ? '90vh' : '350px';
             }
             if (isMobileMenuOpen || isMobileMenuClosing) return '85vh';
-            if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? '85vh' : '350px';
+            if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? '90vh' : '350px';
             return 'auto';
           })(),
           // Buttons tab: pin height during menu→preview swap so content change doesn't cause a jump
-          minHeight: (isLinktreeTransitioning && currentMobileLinkTab === 'buttons') ? '85vh' : undefined,
+          minHeight: (isLinktreeTransitioning && currentMobileLinkTab === 'buttons') ? '90vh' : undefined,
           transition: 'max-height 0.3s ease, min-height 0.3s ease',
           WebkitTapHighlightColor: 'transparent',
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
@@ -2981,21 +2981,27 @@ function AgentPortal() {
               />
             </button>
 
-            {/* Center area: save button (linktree preview) or page title */}
-            <div className="absolute left-1/2 -translate-x-1/2">
-              {/* Save slot — always in DOM for portal to find, toggled via display */}
+            {/* Center area: save button (linktree preview) or page title — smooth crossfade */}
+            <div className="absolute left-1/2 -translate-x-1/2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {/* Save slot — always in DOM for portal, crossfades with title */}
               <div
                 id="mobile-link-save-slot"
                 style={{
-                  display: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'flex' : 'none',
+                  display: 'flex',
+                  opacity: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 1 : 0,
+                  transform: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'translateY(0) scale(1)' : 'translateY(4px) scale(0.95)',
+                  transition: 'opacity 0.3s ease, transform 0.3s ease',
+                  pointerEvents: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'auto' : 'none',
                 }}
               />
-              {/* Page title — hidden when save slot is visible */}
+              {/* Page title — overlaid, crossfades out when save is visible */}
               <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap"
                 style={{
-                  display: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'none' : 'inline',
-                  opacity: isLinktreeTransitioning ? 0 : 1,
-                  transition: 'opacity 0.15s ease-out',
+                  position: 'absolute',
+                  opacity: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 0 : (isLinktreeTransitioning ? 0 : 1),
+                  transform: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'translateY(-4px) scale(0.95)' : 'translateY(0) scale(1)',
+                  transition: 'opacity 0.3s ease, transform 0.3s ease',
+                  pointerEvents: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'none' : 'auto',
                 }}
               >
                 {activeSection === 'onboarding' && 'Onboarding'}
@@ -3040,17 +3046,17 @@ function AgentPortal() {
             </div>
           </div>
 
-          {/* Link Page pill tab bar — inside the proven-visible mobile bottom bar */}
+          {/* Link Page pill tab bar — animated expanding pills with icons */}
           {activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && (
             <div
               className="relative z-10"
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '3px',
-                padding: '2px 12px 6px 12px',
-                overflowX: 'auto',
-                WebkitOverflowScrolling: 'touch',
+                justifyContent: 'center',
+                gap: '4px',
+                padding: '4px 12px 8px 12px',
+                animation: 'mobileLinkFadeIn 0.25s ease-out',
               }}
             >
               {(['profile', 'style', 'contact', 'social', 'buttons', 'actions'] as const).map((tabId) => {
@@ -3067,22 +3073,42 @@ function AgentPortal() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      gap: isTabActive ? '6px' : '0px',
                       borderRadius: '9999px',
-                      height: '30px',
-                      padding: '0 12px',
+                      height: '36px',
+                      minWidth: '36px',
+                      maxWidth: isTabActive ? '130px' : '36px',
+                      padding: isTabActive ? '0 14px' : '0',
                       cursor: 'pointer',
+                      overflow: 'hidden',
                       whiteSpace: 'nowrap',
                       flexShrink: 0,
-                      background: isTabActive ? '#ffd700' : 'rgba(255,255,255,0.08)',
-                      color: isTabActive ? '#000' : 'rgba(255,255,255,0.6)',
-                      fontSize: '12px',
-                      fontWeight: isTabActive ? 700 : 500,
-                      fontFamily: 'var(--font-amulya, sans-serif)',
-                      border: isTabActive ? 'none' : '1px solid rgba(255,255,255,0.12)',
-                      transition: 'background 0.2s ease, color 0.2s ease',
+                      background: isTabActive ? '#ffd700' : 'rgba(255,255,255,0.06)',
+                      color: isTabActive ? '#000' : 'rgba(255,255,255,0.5)',
+                      border: isTabActive ? 'none' : '1px solid rgba(255,255,255,0.1)',
+                      transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1), gap 0.35s cubic-bezier(0.4,0,0.2,1), background 0.2s ease, color 0.2s ease, border-color 0.2s ease',
                     }}
                   >
-                    {labels[tabId]}
+                    {/* Inline SVG icon — safe cross-browser, no React component imports */}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      {tabId === 'profile' && <><circle cx="12" cy="8" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></>}
+                      {tabId === 'style' && <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/>}
+                      {tabId === 'contact' && <><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r="1"/></>}
+                      {tabId === 'social' && <><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></>}
+                      {tabId === 'buttons' && <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></>}
+                      {tabId === 'actions' && <><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></>}
+                    </svg>
+                    {/* Label — expands when active, collapses when inactive */}
+                    <span style={{
+                      display: 'inline-block',
+                      maxWidth: isTabActive ? '80px' : '0px',
+                      opacity: isTabActive ? 1 : 0,
+                      overflow: 'hidden',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      fontFamily: 'var(--font-amulya, sans-serif)',
+                      transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease 0.05s',
+                    }}>{labels[tabId]}</span>
                   </div>
                 );
               })}
@@ -13299,7 +13325,8 @@ return (
       return createPortal(
         <div
           style={{
-            height: mobileLinkTab === 'buttons' ? 'calc(85vh - 64px)' : '290px',
+            height: mobileLinkTab === 'buttons' ? 'calc(90vh - 100px)' : '280px',
+            marginTop: '-10px',
             overflowY: mobileLinkTab === 'buttons' ? 'auto' : 'hidden',
             transition: 'height 0.3s ease',
           }}
