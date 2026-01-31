@@ -85,6 +85,30 @@ body {
 }
 
 /* ========================================
+   TEXT COPY PROTECTION
+   Block body-text selection site-wide.
+   Headings (h1-h6), links (a), code, and form inputs stay copyable.
+   ======================================== */
+p, li, span, blockquote, td, th, figcaption, label, dd, dt,
+div:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Re-enable selection for headings, links, code, and form elements */
+h1, h2, h3, h4, h5, h6,
+a, code, pre, kbd, samp,
+input, textarea, select, button,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* ========================================
    GLOBAL LINK STYLES (Non-blog pages)
    ======================================== */
 /* Default link styling with yellow glow on hover - ONLY applies to links inside paragraphs */

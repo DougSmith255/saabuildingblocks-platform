@@ -13204,18 +13204,23 @@ return (
         to { opacity: 1; transform: translateY(0) scale(1); }
       }
     `}</style>
-    {/* Floating Pill Tab Bar — portaled to document.body, JS-gated by isMobileWidth for reliable desktop resize detection */}
-    {typeof window !== 'undefined' && isActive && isMobileWidth && createPortal(
+    {/* Mobile Layout (<1024px) — pills + content rendered inline (no portal) for guaranteed visibility on all devices */}
+    {isMobileWidth && <div className="flex flex-col" style={{ overflow: 'visible' }}>
+      {/* Pill Tab Bar — inline at top of mobile layout, sticky so it stays visible when scrolling */}
       <div
         id="mobile-link-pills-portal"
         style={{
-          position: 'fixed',
-          top: '6px',
-          right: '62px',
-          zIndex: 10004,
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '8px 8px 6px 8px',
           opacity: isMobileMenuOpen ? 0 : 1,
           pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
           filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
+          background: 'linear-gradient(to bottom, rgba(25,25,25,0.95) 0%, rgba(25,25,25,0.8) 80%, transparent 100%)',
+          flexShrink: 0,
         }}
       >
           <div className="mobile-link-pill-container" ref={mobilePillContainerRef}>
@@ -13245,17 +13250,13 @@ return (
             </button>
           ))}
           </div>
-      </div>,
-      document.body
-    )}
-
-    {isMobileWidth && <div className="flex flex-col" style={{ overflow: 'visible' }}>
+      </div>
       {/* Tab Content Area — premium fade transition */}
       <div
         ref={mobileContentRef}
         className="flex-1 overflow-y-auto"
         style={{
-          padding: `50px 0 ${mobileLinkTab === 'buttons' ? '0' : '320px'} 0`,
+          padding: `12px 0 ${mobileLinkTab === 'buttons' ? '0' : '320px'} 0`,
           opacity: isMobileTabTransitioning ? 0 : 1,
           transform: isMobileTabTransitioning ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
           transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
