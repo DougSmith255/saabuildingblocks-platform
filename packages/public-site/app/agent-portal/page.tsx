@@ -2829,18 +2829,23 @@ function AgentPortal() {
         }
       `}</style>
 
-      {/* Floating Pixel Help Button - Top Right (Mobile only) */}
+      {/* Floating Pixel Help Button + Link Page Pills - Top Right (Mobile only) */}
       {/* Stays visible behind overlay when slide panels open, hidden only for mobile menu */}
       <div
         className="min-[1024px]:hidden fixed z-[10005] transition-opacity duration-300"
         style={{
           top: '16px',
           right: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
           opacity: isMobileMenuOpen ? 0 : 1,
           pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
           filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
         }}
       >
+        {/* Portal slot for Link Page pill tabs — rendered by AgentPagesSection */}
+        {activeSection === 'linktree' && <div id="mobile-pills-slot" />}
         {activeSection === 'dashboard' ? (
           <PixelHelpButton onClick={() => setShowAnalyticsHelpModal(true)} color="gold" ariaLabel="Analytics Help" size="mobile" className="relative" />
         ) : activeSection === 'calls' ? (
@@ -13204,102 +13209,92 @@ return (
         to { opacity: 1; transform: translateY(0) scale(1); }
       }
     `}</style>
-    {/* Mobile Layout (<1024px) — pills + content rendered inline (no portal) for guaranteed visibility on all devices */}
-    {isMobileWidth && <div className="flex flex-col" style={{ overflow: 'visible' }}>
-      {/* Pill Tab Bar — inline at top of mobile layout, sticky so it stays visible when scrolling */}
-      <div
-        id="mobile-link-pills-portal"
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 100,
+    {/* Mobile Pill Tabs — portaled into the floating help button container (proven visible on all devices) */}
+    {typeof window !== 'undefined' && isActive && isMobileWidth && (() => {
+      const slot = document.getElementById('mobile-pills-slot');
+      if (!slot) return null;
+      return createPortal(
+        <div ref={mobilePillContainerRef} style={{
           display: 'flex',
+          alignItems: 'center',
           justifyContent: 'center',
-          padding: '8px 8px 6px 8px',
-          opacity: isMobileMenuOpen ? 0 : 1,
-          pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
-          filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
-          background: 'linear-gradient(to bottom, rgba(25,25,25,0.95) 0%, rgba(25,25,25,0.8) 80%, transparent 100%)',
-          flexShrink: 0,
-        }}
-      >
-          <div ref={mobilePillContainerRef} style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative',
-            borderRadius: '9999px',
-            background: 'rgba(10,10,10,0.92)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            padding: '3px',
-            gap: '2px',
-          }}>
-            {([
-              { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
-              { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-4 h-4" /> },
-              { id: 'contact' as const, label: 'Contact', icon: <Smartphone className="w-4 h-4" /> },
-              { id: 'social' as const, label: 'Social', icon: <LinkIcon className="w-4 h-4" /> },
-              { id: 'buttons' as const, label: 'Buttons', icon: <LayoutTemplate className="w-4 h-4" /> },
-              { id: 'actions' as const, label: 'Actions', icon: <Target className="w-4 h-4" /> },
-            ]).map((tab) => {
-              const isActive = mobileLinkTab === tab.id;
-              return (
-            <button
-              key={tab.id}
-              data-tab-id={tab.id}
-              onClick={() => {
-                handleMobileTabChange(tab.id);
-                if (isMobileMenuOpen) onCloseMobileMenu?.();
-              }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '9999px',
-                height: '32px',
-                maxWidth: isActive ? '130px' : '36px',
-                minWidth: isActive ? '38px' : '36px',
-                padding: isActive ? '0 12px 0 3px' : '0 5px',
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
-                cursor: 'pointer',
-                border: 'none',
-                outline: 'none',
-                background: isActive ? '#ffd700' : 'transparent',
-                color: isActive ? '#000' : 'rgba(255,255,255,0.6)',
-                fontFamily: 'var(--font-taskor, sans-serif)',
-                transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), min-width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1), background-color 0.2s ease, color 0.2s ease',
-              }}
-            >
-              <span style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '26px',
-                height: '26px',
-                borderRadius: '9999px',
-                border: isActive ? '1.5px solid rgba(0,0,0,0.15)' : '1.5px solid rgba(255,255,255,0.15)',
-                background: isActive ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.04)',
-                flexShrink: 0,
-              }}>{tab.icon}</span>
-              <span style={{
-                display: 'inline-block',
-                maxWidth: isActive ? '80px' : '0',
-                opacity: isActive ? 1 : 0,
-                overflow: 'hidden',
-                marginLeft: isActive ? '5px' : '0',
-                fontSize: '12px',
-                fontWeight: 700,
-                fontFamily: 'var(--font-amulya, sans-serif)',
-                transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease 0.05s, margin-left 0.35s cubic-bezier(0.4,0,0.2,1)',
-              }}>{tab.label}</span>
-            </button>
-              );
-            })}
-          </div>
-      </div>
+          position: 'relative',
+          borderRadius: '9999px',
+          background: 'rgba(10,10,10,0.92)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          padding: '3px',
+          gap: '2px',
+        }}>
+          {([
+            { id: 'profile' as const, label: 'Profile', icon: <User style={{ width: 16, height: 16 }} /> },
+            { id: 'style' as const, label: 'Style', icon: <Sparkles style={{ width: 16, height: 16 }} /> },
+            { id: 'contact' as const, label: 'Contact', icon: <Smartphone style={{ width: 16, height: 16 }} /> },
+            { id: 'social' as const, label: 'Social', icon: <LinkIcon style={{ width: 16, height: 16 }} /> },
+            { id: 'buttons' as const, label: 'Buttons', icon: <LayoutTemplate style={{ width: 16, height: 16 }} /> },
+            { id: 'actions' as const, label: 'Actions', icon: <Target style={{ width: 16, height: 16 }} /> },
+          ]).map((tab) => {
+            const isActiveTab = mobileLinkTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                data-tab-id={tab.id}
+                onClick={() => {
+                  handleMobileTabChange(tab.id);
+                  if (isMobileMenuOpen) onCloseMobileMenu?.();
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '9999px',
+                  height: '32px',
+                  maxWidth: isActiveTab ? '130px' : '36px',
+                  minWidth: isActiveTab ? '38px' : '36px',
+                  padding: isActiveTab ? '0 12px 0 3px' : '0 5px',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  cursor: 'pointer',
+                  border: 'none',
+                  outline: 'none',
+                  background: isActiveTab ? '#ffd700' : 'transparent',
+                  color: isActiveTab ? '#000' : 'rgba(255,255,255,0.6)',
+                  fontFamily: 'var(--font-taskor, sans-serif)',
+                  transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), min-width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1), background-color 0.2s ease, color 0.2s ease',
+                }}
+              >
+                <span style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '9999px',
+                  border: isActiveTab ? '1.5px solid rgba(0,0,0,0.15)' : '1.5px solid rgba(255,255,255,0.15)',
+                  background: isActiveTab ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.04)',
+                  flexShrink: 0,
+                }}>{tab.icon}</span>
+                <span style={{
+                  display: 'inline-block',
+                  maxWidth: isActiveTab ? '80px' : '0',
+                  opacity: isActiveTab ? 1 : 0,
+                  overflow: 'hidden',
+                  marginLeft: isActiveTab ? '5px' : '0',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  fontFamily: 'var(--font-amulya, sans-serif)',
+                  transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease 0.05s, margin-left 0.35s cubic-bezier(0.4,0,0.2,1)',
+                }}>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>,
+        slot
+      );
+    })()}
+    {/* Mobile Layout (<1024px) — content area */}
+    {isMobileWidth && <div className="flex flex-col" style={{ overflow: 'visible' }}>
       {/* Tab Content Area — premium fade transition */}
       <div
         ref={mobileContentRef}
