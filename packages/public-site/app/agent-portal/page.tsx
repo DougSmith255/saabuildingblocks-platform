@@ -13279,8 +13279,8 @@ return (
       <div
         className="fixed z-[10004]"
         style={{
-          top: '6px',
-          right: '54px',
+          top: '2px',
+          right: '50px',
           opacity: isMobileMenuOpen ? 0 : 1,
           pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
           filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
@@ -13341,9 +13341,10 @@ return (
       if (!slot) return null;
       return createPortal(
         <div
-          className="min-[1024px]:hidden overflow-y-auto"
+          className="min-[1024px]:hidden"
           style={{
             height: mobileLinkTab === 'buttons' ? 'calc(85vh - 64px)' : '290px',
+            overflowY: mobileLinkTab === 'buttons' ? 'auto' : 'hidden',
             transition: 'height 0.3s ease',
           }}
         >
