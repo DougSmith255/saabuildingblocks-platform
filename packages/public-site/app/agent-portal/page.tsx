@@ -2888,10 +2888,10 @@ function AgentPortal() {
           maxHeight: (() => {
             if (isLinktreeTransitioning) {
               // Shrinking from menu to preview — animate to target height
-              return currentMobileLinkTab === 'buttons' ? '95vh' : '55vh';
+              return currentMobileLinkTab === 'buttons' ? '95vh' : '345px';
             }
             if (isMobileMenuOpen || isMobileMenuClosing) return '85vh';
-            if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? '95vh' : '55vh';
+            if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? '95vh' : '345px';
             return 'auto';
           })(),
           // Buttons tab: pin height during menu→preview swap so content change doesn't cause a jump
@@ -13338,7 +13338,7 @@ return (
       return createPortal(
         <div
           style={{
-            height: mobileLinkTab === 'buttons' ? 'calc(95vh - 100px)' : 'calc(55vh - 100px)',
+            height: mobileLinkTab === 'buttons' ? 'calc(95vh - 100px)' : '275px',
             marginTop: '-10px',
             overflowY: mobileLinkTab === 'buttons' ? 'auto' : 'hidden',
             transition: 'height 0.3s ease',
