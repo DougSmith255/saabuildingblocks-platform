@@ -3129,6 +3129,7 @@ function AgentPortal() {
               style={{
                 display: ((isMobileMenuOpen && !isLinktreeTransitioning) || isMobileMenuClosing) ? 'none' : 'block',
                 animation: 'mobileLinkFadeIn 0.2s ease-out',
+                overflow: 'hidden',
               }}
             />
           )}
