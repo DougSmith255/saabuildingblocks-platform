@@ -9854,6 +9854,14 @@ function AgentPagesSection({
   isMobileMenuOpen = false,
   onMobileLinkTabChange,
 }: AgentPagesSectionProps) {
+  // Track window width via JS for reliable responsive rendering (CSS media queries can be inconsistent on desktop resize)
+  const [isMobileWidth, setIsMobileWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
+  useEffect(() => {
+    const onResize = () => setIsMobileWidth(window.innerWidth < 1024);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   const [pageData, setPageData] = useState<AgentPageData | null>(preloadedPageData?.page || null);
   const [isLoading, setIsLoading] = useState(!preloadedPageData);
   const [isSaving, setIsSaving] = useState(false);
@@ -13184,11 +13192,8 @@ return (
         to { opacity: 1; transform: translateY(0) scale(1); }
       }
     `}</style>
-    {/* Floating Pill Tab Bar — portaled to document.body so fixed position works regardless of ancestor transforms */}
-    {/* Uses inline styles + explicit media query (not Tailwind class) to ensure visibility on desktop narrowed below 1024px */}
-    {typeof window !== 'undefined' && isActive && createPortal(
-      <>
-      <style>{`@media (min-width: 1024px) { #mobile-link-pills-portal { display: none !important; } }`}</style>
+    {/* Floating Pill Tab Bar — portaled to document.body, JS-gated by isMobileWidth for reliable desktop resize detection */}
+    {typeof window !== 'undefined' && isActive && isMobileWidth && createPortal(
       <div
         id="mobile-link-pills-portal"
         style={{
@@ -13228,12 +13233,11 @@ return (
             </button>
           ))}
           </div>
-      </div>
-      </>,
+      </div>,
       document.body
     )}
 
-    <div className="min-[1024px]:hidden flex flex-col" style={{ overflow: 'visible' }}>
+    {isMobileWidth && <div className="flex flex-col" style={{ overflow: 'visible' }}>
       {/* Tab Content Area — premium fade transition */}
       <div
         ref={mobileContentRef}
@@ -13252,10 +13256,10 @@ return (
         {displayMobileLinkTab === 'actions' && renderPageActionsCard()}
         {/* No card content for 'buttons' — preview panel is full height */}
       </div>
-    </div>
+    </div>}
 
     {/* Mobile Preview Body - portaled into #mobile-link-preview-slot (below existing header) */}
-    {typeof window !== 'undefined' && isActive && !isMobileMenuOpen && (() => {
+    {typeof window !== 'undefined' && isActive && isMobileWidth && !isMobileMenuOpen && (() => {
       const slot = document.getElementById('mobile-link-preview-slot');
       if (!slot) return null;
       return createPortal(
@@ -13274,7 +13278,7 @@ return (
     })()}
 
     {/* Mobile Save Button - portaled into header center (#mobile-link-save-slot) */}
-    {typeof window !== 'undefined' && isActive && !isMobileMenuOpen && (() => {
+    {typeof window !== 'undefined' && isActive && isMobileWidth && !isMobileMenuOpen && (() => {
       const saveSlot = document.getElementById('mobile-link-save-slot');
       if (!saveSlot) return null;
       return createPortal(
