@@ -2834,92 +2834,16 @@ function AgentPortal() {
       {/* Floating Pixel Help Button + Link Page Pills - Top Right (Mobile only) */}
       {/* Stays visible behind overlay when slide panels open, hidden only for mobile menu */}
       <div
-        className="min-[1024px]:hidden fixed z-[10005] transition-opacity duration-300"
+        className="min-[1024px]:hidden flex items-center gap-2 fixed z-[10005] transition-opacity duration-300"
         style={{
           top: '16px',
           right: '16px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
           opacity: isMobileMenuOpen ? 0 : 1,
           pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
           filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
         }}
       >
-        {/* Link Page pill tabs — rendered directly in parent (no portal) */}
-        {activeSection === 'linktree' && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            borderRadius: '9999px',
-            background: 'rgba(10,10,10,0.92)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            padding: '3px',
-            gap: '2px',
-          }}>
-            {(['profile', 'style', 'contact', 'social', 'buttons', 'actions'] as const).map((tabId) => {
-              const isTabActive = currentMobileLinkTab === tabId;
-              const labels: Record<string, string> = { profile: 'Profile', style: 'Style', contact: 'Contact', social: 'Social', buttons: 'Buttons', actions: 'Actions' };
-              const icons: Record<string, string> = { profile: '\u{1F464}', style: '\u2728', contact: '\u{1F4F1}', social: '\u{1F517}', buttons: '\u{1F4CB}', actions: '\u{1F3AF}' };
-              return (
-                <button
-                  key={tabId}
-                  onClick={() => {
-                    setCurrentMobileLinkTab(tabId);
-                    mobileLinkTabChangeRef.current?.(tabId);
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: '9999px',
-                    height: '32px',
-                    maxWidth: isTabActive ? '130px' : '36px',
-                    minWidth: isTabActive ? '38px' : '36px',
-                    padding: isTabActive ? '0 12px 0 3px' : '0 5px',
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                    cursor: 'pointer',
-                    border: 'none',
-                    outline: 'none',
-                    background: isTabActive ? '#ffd700' : 'transparent',
-                    color: isTabActive ? '#000' : 'rgba(255,255,255,0.6)',
-                    fontFamily: 'var(--font-taskor, sans-serif)',
-                    transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), min-width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1), background-color 0.2s ease, color 0.2s ease',
-                    fontSize: '14px',
-                    lineHeight: '1',
-                  }}
-                >
-                  <span style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '26px',
-                    height: '26px',
-                    borderRadius: '9999px',
-                    border: isTabActive ? '1.5px solid rgba(0,0,0,0.15)' : '1.5px solid rgba(255,255,255,0.15)',
-                    background: isTabActive ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.04)',
-                    flexShrink: 0,
-                    fontSize: '13px',
-                  }}>{icons[tabId]}</span>
-                  <span style={{
-                    display: 'inline-block',
-                    maxWidth: isTabActive ? '80px' : '0',
-                    opacity: isTabActive ? 1 : 0,
-                    overflow: 'hidden',
-                    marginLeft: isTabActive ? '5px' : '0',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    fontFamily: 'var(--font-amulya, sans-serif)',
-                    transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease 0.05s, margin-left 0.35s cubic-bezier(0.4,0,0.2,1)',
-                  }}>{labels[tabId]}</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
+        {/* Pills moved to mobile bottom bar — no longer in floating container */}
         {activeSection === 'dashboard' ? (
           <PixelHelpButton onClick={() => setShowAnalyticsHelpModal(true)} color="gold" ariaLabel="Analytics Help" size="mobile" className="relative" />
         ) : activeSection === 'calls' ? (
@@ -3115,6 +3039,55 @@ function AgentPortal() {
               </button>
             </div>
           </div>
+
+          {/* Link Page pill tab bar — inside the proven-visible mobile bottom bar */}
+          {activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && (
+            <div
+              className="relative z-10"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '3px',
+                padding: '2px 12px 6px 12px',
+                overflowX: 'auto',
+                WebkitOverflowScrolling: 'touch',
+              }}
+            >
+              {(['profile', 'style', 'contact', 'social', 'buttons', 'actions'] as const).map((tabId) => {
+                const isTabActive = currentMobileLinkTab === tabId;
+                const labels: Record<string, string> = { profile: 'Profile', style: 'Style', contact: 'Contact', social: 'Social', buttons: 'Buttons', actions: 'Actions' };
+                return (
+                  <div
+                    key={tabId}
+                    onClick={() => {
+                      setCurrentMobileLinkTab(tabId);
+                      mobileLinkTabChangeRef.current?.(tabId);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '9999px',
+                      height: '30px',
+                      padding: '0 12px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0,
+                      background: isTabActive ? '#ffd700' : 'rgba(255,255,255,0.08)',
+                      color: isTabActive ? '#000' : 'rgba(255,255,255,0.6)',
+                      fontSize: '12px',
+                      fontWeight: isTabActive ? 700 : 500,
+                      fontFamily: 'var(--font-amulya, sans-serif)',
+                      border: isTabActive ? 'none' : '1px solid rgba(255,255,255,0.12)',
+                      transition: 'background 0.2s ease, color 0.2s ease',
+                    }}
+                  >
+                    {labels[tabId]}
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Separator line — visible when showing link page preview */}
           {activeSection === 'linktree' && !((isMobileMenuOpen && !isLinktreeTransitioning) || isMobileMenuClosing) && (
