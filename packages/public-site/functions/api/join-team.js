@@ -254,9 +254,9 @@ export async function onRequestPost(context) {
   try {
     // Parse request body
     const body = await request.json();
-    const { firstName, lastName, email, country, sponsorName } = body;
+    const { firstName, lastName, email, country, sponsorName, source } = body;
 
-    console.log('[join-team] Request received:', { firstName, lastName, email, country, sponsorName });
+    console.log('[join-team] Request received:', { firstName, lastName, email, country, sponsorName, source });
 
     // Validate required fields
     if (!firstName || !email) {
@@ -302,8 +302,15 @@ export async function onRequestPost(context) {
       );
     }
 
-    // Build the referral tag - "Agent Referred" for agent pages, "Website Lead" for main site
-    const referralTag = sponsorName ? 'Agent Referred' : 'Website Lead';
+    // Build the referral tag based on source
+    // - "Agent Referred" for agent attraction pages (has sponsorName)
+    // - "VIP Guest Pass" for the VIP popup form
+    // - "Website Lead" for main site join forms
+    const referralTag = sponsorName
+      ? 'Agent Referred'
+      : source === 'vip-guest-pass'
+        ? 'VIP Guest Pass'
+        : 'Website Lead';
 
     // Headers for GHL API
     const ghlHeaders = {
@@ -387,7 +394,7 @@ export async function onRequestPost(context) {
       lastName: lastName || '',
       email,
       tags: [referralTag, 'agent_page_lead'],
-      source: sponsorName || 'Agent Page',
+      source: sponsorName || (source === 'vip-guest-pass' ? 'VIP Guest Pass' : 'Website'),
     };
 
     // Add country if provided

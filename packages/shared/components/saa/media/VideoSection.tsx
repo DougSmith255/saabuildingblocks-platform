@@ -58,7 +58,7 @@ export interface VideoSectionProps {
  * ```tsx
  * <VideoSection
  *   id="watch-and-decide"
- *   title="The Only Video You Need"
+ *   title="The Only Inside Look You Need"
  *   subtitle="Everything about eXp, our team, and the opportunity - explained in full."
  *   videoId="f8c3f1bd9c2db2409ed0e90f60fd4d5b"
  *   posterUrl="https://..."
@@ -67,7 +67,7 @@ export interface VideoSectionProps {
  * ```
  */
 export function VideoSection({
-  title = 'The Only Video You Need',
+  title = 'The Only Inside Look You Need',
   subtitle = 'Everything about eXp, our team, and the opportunity - explained in full. No follow-up research required.',
   videoId,
   posterUrl,

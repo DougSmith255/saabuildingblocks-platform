@@ -21,6 +21,18 @@ const ScrollIndicator = dynamic(
   { ssr: false }
 );
 
+// Dynamic import FloatingVideoButton - "The Inside Look" video pill (bottom-right)
+const FloatingVideoButton = dynamic(
+  () => import('@/components/shared/FloatingVideoButton'),
+  { ssr: false }
+);
+
+// Dynamic import VIPGuestPassPopup - one-time VIP Guest Pass lead capture
+const VIPGuestPassPopup = dynamic(
+  () => import('@/components/shared/VIPGuestPassPopup'),
+  { ssr: false }
+);
+
 import { ExternalLinkHandler } from './ExternalLinkHandler';
 import { ScrollPerformanceOptimizer } from './ScrollPerformanceOptimizer';
 import { ViewportHeightLock } from './ViewportHeightLock';
@@ -101,6 +113,17 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     '/agent-portal',            // Agent portal has nested scroll containers
   ], []);
 
+  // Routes where the floating "Inside Look" video button should NOT appear
+  const noFloatingButtonPrefixes = useMemo(() => [
+    '/blog/',                   // Blog posts - no floating button
+    '/master-controller',       // Admin interface
+    '/login',                   // Auth pages
+    '/agent-portal',            // Agent portal
+    '/activate',                // Account activation
+    '/sign-up',                 // Sign up
+    '/download',                // Download page
+  ], []);
+
   // Check for embed mode via URL search params
   const [isEmbedMode, setIsEmbedMode] = useState(false);
 
@@ -171,6 +194,15 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     );
   }, [pathname, noSmoothScrollPrefixes]);
 
+  // Check if floating video button should be hidden (blog posts, admin, auth)
+  const shouldHideFloatingButton = useMemo(() => {
+    if (!pathname) return false;
+    const normalizedPath = pathname.replace(/\/$/, '');
+    return noFloatingButtonPrefixes.some(prefix =>
+      normalizedPath === prefix || normalizedPath.startsWith(prefix)
+    );
+  }, [pathname, noFloatingButtonPrefixes]);
+
   // Embed mode: minimal wrapper, just the content
   if (isEmbedMode) {
     return <>{children}</>;
@@ -185,6 +217,8 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       <ScrollPerformanceOptimizer />
       <ViewportHeightLock />
       {!shouldHideHeaderFooter && <Header />}
+      {!shouldHideHeaderFooter && !shouldHideFloatingButton && <FloatingVideoButton />}
+      {!shouldHideHeaderFooter && <VIPGuestPassPopup />}
       {/*
         Using div instead of main to avoid nested <main> elements.
         Pages already have their own <main id="main-content"> for accessibility.
