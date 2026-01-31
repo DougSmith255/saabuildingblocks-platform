@@ -4,6 +4,7 @@ import React, { useState, useCallback } from 'react';
 import { SlidePanel } from '../interactive/SlidePanel';
 import { VideoPlayer } from './VideoPlayer';
 import { CTAButton } from '../buttons/CTAButton';
+import { SecondaryButton } from '../buttons/SecondaryButton';
 import { JoinModal, JoinFormData } from '../interactive/JoinModal';
 import { InstructionsModal } from '../interactive/InstructionsModal';
 
@@ -62,12 +63,12 @@ export function VideoSlidePanel({ isOpen, onClose }: VideoSlidePanelProps) {
           </div>
 
           {/* Brief Pitch */}
-          <p className="text-body opacity-80 text-center">
+          <p className="opacity-80 text-center" style={{ fontSize: '16px', color: 'var(--color-body-text)' }}>
             One video. Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full.
           </p>
 
-          {/* CTA */}
-          <div className="flex justify-center">
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <CTAButton
               href="#"
               onClick={(e) => {
@@ -77,6 +78,15 @@ export function VideoSlidePanel({ isOpen, onClose }: VideoSlidePanelProps) {
             >
               JOIN THE ALLIANCE
             </CTAButton>
+            <SecondaryButton
+              href="https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7"
+              onClick={(e) => {
+                e.preventDefault();
+                window.open('https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7', '_blank', 'noopener,noreferrer');
+              }}
+            >
+              BOOK A CALL
+            </SecondaryButton>
           </div>
         </div>
       </SlidePanel>
