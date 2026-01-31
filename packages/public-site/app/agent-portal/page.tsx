@@ -2982,26 +2982,23 @@ function AgentPortal() {
             </button>
 
             {/* Center area: save button (linktree preview) or page title — smooth crossfade */}
-            <div className="absolute left-1/2 -translate-x-1/2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {/* Save slot — always in DOM for portal, crossfades with title */}
+            <div className="absolute left-1/2 -translate-x-1/2">
+              {/* Save slot — conditionally displayed for portal target, fades in/out */}
               <div
                 id="mobile-link-save-slot"
                 style={{
-                  display: 'flex',
+                  display: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing) ? 'flex' : 'none',
                   opacity: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 1 : 0,
-                  transform: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'translateY(0) scale(1)' : 'translateY(4px) scale(0.95)',
+                  transform: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'translateY(0)' : 'translateY(4px)',
                   transition: 'opacity 0.3s ease, transform 0.3s ease',
-                  pointerEvents: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'auto' : 'none',
                 }}
               />
-              {/* Page title — overlaid, crossfades out when save is visible */}
+              {/* Page title — hidden when save slot is visible, smooth opacity */}
               <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap"
                 style={{
-                  position: 'absolute',
-                  opacity: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 0 : (isLinktreeTransitioning ? 0 : 1),
-                  transform: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'translateY(-4px) scale(0.95)' : 'translateY(0) scale(1)',
-                  transition: 'opacity 0.3s ease, transform 0.3s ease',
-                  pointerEvents: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'none' : 'auto',
+                  display: (activeSection === 'linktree' && !isMobileMenuOpen && !isMobileMenuClosing && !isLinktreeTransitioning) ? 'none' : 'inline',
+                  opacity: isLinktreeTransitioning ? 0 : 1,
+                  transition: 'opacity 0.3s ease',
                 }}
               >
                 {activeSection === 'onboarding' && 'Onboarding'}
