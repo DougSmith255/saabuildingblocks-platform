@@ -10083,22 +10083,24 @@ function AgentPagesSection({
     if (newTab === mobileLinkTab || isMobileTabTransitioning) return;
     setMobileLinkTab(newTab);
     setIsMobileTabTransitioning(true);
-    // Scroll ALL scrollable containers to top during fade-out (invisible to user)
-    if (mobileContentRef.current) {
-      mobileContentRef.current.scrollTop = 0;
-    }
-    if (phoneInnerRef.current) {
-      phoneInnerRef.current.scrollTop = 0;
-    }
-    // Also reset the portal preview container scroll
-    const previewSlot = document.getElementById('mobile-link-preview-slot');
-    if (previewSlot) {
-      const scrollChild = previewSlot.firstElementChild as HTMLElement;
-      if (scrollChild) scrollChild.scrollTop = 0;
-    }
+    // Reset ALL scrollable containers to top during fade-out (invisible to user)
+    const resetAllScrolls = () => {
+      if (mobileContentRef.current) mobileContentRef.current.scrollTop = 0;
+      if (phoneInnerRef.current) phoneInnerRef.current.scrollTop = 0;
+      const previewSlot = document.getElementById('mobile-link-preview-slot');
+      if (previewSlot) {
+        previewSlot.scrollTop = 0;
+        const scrollChild = previewSlot.firstElementChild as HTMLElement;
+        if (scrollChild) scrollChild.scrollTop = 0;
+      }
+    };
+    // Reset before content swap (during fade-out)
+    resetAllScrolls();
     setTimeout(() => {
       setDisplayMobileLinkTab(newTab);
       setIsMobileTabTransitioning(false);
+      // Reset again after content swap to catch any browser scroll restoration
+      requestAnimationFrame(resetAllScrolls);
     }, 150);
   }, [mobileLinkTab, isMobileTabTransitioning]);
 
@@ -12607,7 +12609,7 @@ function AgentPagesSection({
                     if (animatingSwap) return;
 
                     const currentIndex = allLinkIds.indexOf(linkId);
-                    if (direction === 'up' && currentIndex > 0) {
+                    if (direction === 'up' && currentIndex > 0 && customLinkMap.has(allLinkIds[currentIndex - 1])) {
                       const swappingId = allLinkIds[currentIndex - 1];
                       // Trigger animation first
                       setAnimatingSwap({ movingId: linkId, swappingId, direction });
@@ -13033,11 +13035,11 @@ function AgentPagesSection({
                 allLinkIds.push('learn-about');
               }
 
-              // Move link function with animation
+              // Move link function with animation — custom buttons only swap with other custom buttons
               const moveLink = (linkId: string, direction: 'up' | 'down') => {
                 if (animatingSwap) return;
                 const currentIndex = allLinkIds.indexOf(linkId);
-                if (direction === 'up' && currentIndex > 0) {
+                if (direction === 'up' && currentIndex > 0 && customLinkMap.has(allLinkIds[currentIndex - 1])) {
                   const swappingId = allLinkIds[currentIndex - 1];
                   // Trigger animation first
                   setAnimatingSwap({ movingId: linkId, swappingId, direction });
@@ -13098,7 +13100,7 @@ function AgentPagesSection({
                       >
                         <button
                           onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'up'); }}
-                          disabled={index === 0}
+                          disabled={index === 0 || !customLinkMap.has(allLinkIds[index - 1])}
                           className="disabled:opacity-30 hover:brightness-125 flex items-center justify-center"
                           style={{
                             width: '14px',
@@ -13114,7 +13116,7 @@ function AgentPagesSection({
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'down'); }}
-                          disabled={allLinkIds[index + 1] === 'learn-about' || index === allLinkIds.length - 1}
+                          disabled={index === allLinkIds.length - 1 || !customLinkMap.has(allLinkIds[index + 1])}
                           className="disabled:opacity-30 hover:brightness-125 flex items-center justify-center"
                           style={{
                             width: '14px',
