@@ -26,16 +26,35 @@ export function VIPGuestPassPopup() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Ref avoids stale closure — scroll/timer callbacks always read current value
+  const hasTriggeredRef = useRef(false);
+
+  const showPopup = useCallback(() => {
+    if (hasTriggeredRef.current) return;
+    hasTriggeredRef.current = true;
+    setHasTriggered(true);
+    setIsOpen(true);
+
+    // Clear timer since we're showing
+    if (timerRef.current) clearTimeout(timerRef.current);
+
+    // Mark as shown in localStorage
+    try {
+      localStorage.setItem(STORAGE_KEY, 'true');
+    } catch {}
+  }, []);
 
   // Check if already shown on mount
   useEffect(() => {
     try {
       if (localStorage.getItem(STORAGE_KEY)) {
+        hasTriggeredRef.current = true;
         setHasTriggered(true);
         return;
       }
     } catch {
       // localStorage unavailable
+      hasTriggeredRef.current = true;
       setHasTriggered(true);
       return;
     }
@@ -47,6 +66,7 @@ export function VIPGuestPassPopup() {
 
     // Set up scroll listener for 50% depth
     const handleScroll = () => {
+      if (hasTriggeredRef.current) return;
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (docHeight > 0 && scrollTop / docHeight >= SCROLL_THRESHOLD) {
@@ -60,21 +80,7 @@ export function VIPGuestPassPopup() {
       if (timerRef.current) clearTimeout(timerRef.current);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
-
-  const showPopup = useCallback(() => {
-    if (hasTriggered) return;
-    setHasTriggered(true);
-    setIsOpen(true);
-
-    // Clear timer since we're showing
-    if (timerRef.current) clearTimeout(timerRef.current);
-
-    // Mark as shown in localStorage
-    try {
-      localStorage.setItem(STORAGE_KEY, 'true');
-    } catch {}
-  }, [hasTriggered]);
+  }, [showPopup]);
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
