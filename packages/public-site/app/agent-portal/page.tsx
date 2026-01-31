@@ -12322,14 +12322,16 @@ function AgentPagesSection({
         <style>{`.phone-inner-scroll::-webkit-scrollbar { display: none; }`}</style>
         <div className="p-4 flex flex-col items-center overflow-visible">
           <div
-            className="w-full max-w-[300px] rounded-[2.5rem] p-[6px] relative overflow-visible"
+            className="w-full max-w-[300px] rounded-[2.5rem] p-[6px] relative"
             style={{
               background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.08), 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
               overflow: 'visible',
+              isolation: 'isolate', // Force stacking context so controls z-index works
             }}
           >
             {/* Phone inner bezel - FIXED height, non-scrolling wrapper holds background */}
+            {/* z-index:0 ensures it stacks BELOW controls (z-index:100) within the isolate context */}
             <div
               className="rounded-[2.25rem] relative"
               style={{
@@ -12337,6 +12339,7 @@ function AgentPagesSection({
                 boxShadow: 'inset 0 0 20px rgba(0,0,0,0.6)',
                 height: '580px', // FIXED height - phone doesn't grow
                 overflow: 'hidden',
+                zIndex: 0, // Explicitly below controls (z-index: 100)
               }}
             >
               {/* Star Field Background - stays pinned, does NOT scroll with content */}
@@ -13054,14 +13057,14 @@ function AgentPagesSection({
                         key={`controls-left-${linkId}`}
                         className="absolute flex flex-col"
                         style={{
-                          left: '-12px',
+                          left: '-14px',
                           top: `${position}px`,
-                          zIndex: 50,
+                          zIndex: 100,
                           background: '#1a1a1a',
                           borderRadius: '6px',
                           padding: '2px',
-                          border: '1px solid rgba(255,215,0,0.25)',
-                          boxShadow: '0 2px 6px rgba(0,0,0,0.5)',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.7)',
+                          isolation: 'isolate',
                         }}
                       >
                         <button
@@ -13116,14 +13119,14 @@ function AgentPagesSection({
                         key={`controls-right-${linkId}`}
                         className="absolute"
                         style={{
-                          right: '-12px',
+                          right: '-14px',
                           top: `${position + 6}px`,
-                          zIndex: 50,
+                          zIndex: 100,
                           background: '#1a1a1a',
                           borderRadius: '6px',
                           padding: '4px',
-                          border: '1px solid rgba(255,215,0,0.25)',
-                          boxShadow: '0 2px 6px rgba(0,0,0,0.5)',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.7)',
+                          isolation: 'isolate',
                         }}
                       >
                         <button
@@ -13276,8 +13279,8 @@ return (
       <div
         className="fixed z-[10004]"
         style={{
-          top: '14px',
-          right: '62px',
+          top: '6px',
+          right: '54px',
           opacity: isMobileMenuOpen ? 0 : 1,
           pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
           filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
