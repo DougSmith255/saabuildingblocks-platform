@@ -13079,10 +13079,11 @@ return (
     <style>{`
       .mobile-link-tabs::-webkit-scrollbar { display: none; }
       .mobile-link-tabs { -ms-overflow-style: none; scrollbar-width: none; }
-      /* Pill tab container — flex:1 prevents width changes between tab switches */
+      /* Pill tab container — full-width track with centered pills */
       .mobile-link-pill-container {
         display: flex;
         align-items: center;
+        justify-content: center;
         position: relative;
         border-radius: 9999px;
         background: rgba(255,255,255,0.04);
@@ -13091,16 +13092,16 @@ return (
         gap: 2px;
         flex: 1;
       }
-      /* Individual pill button — flex:1 so all pills share space equally (no layout shift) */
+      /* Individual pill — inactive: icon circle only, active: expands with label + gold bg */
       .mobile-link-pill {
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 9999px;
         height: 32px;
-        flex: 1;
-        min-width: 0;
-        padding: 0;
+        max-width: 36px;
+        min-width: 36px;
+        padding: 0 5px;
         overflow: hidden;
         white-space: nowrap;
         cursor: pointer;
@@ -13109,21 +13110,19 @@ return (
         position: relative;
         z-index: 1;
         background: transparent;
-        transition: color 0.2s ease;
+        transition: max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                    min-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                    padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                    background-color 0.2s ease,
+                    color 0.2s ease;
       }
-      /* Sliding gold indicator — absolute behind active pill */
-      .mobile-link-pill-slider {
-        position: absolute;
-        top: 3px;
-        bottom: 3px;
-        border-radius: 9999px;
+      .mobile-link-pill.active {
+        max-width: 130px;
+        min-width: 38px;
+        padding: 0 12px 0 3px;
         background: #ffd700;
-        z-index: 0;
-        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                    width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        pointer-events: none;
       }
-      /* Icon circle — fills with gold when active */
+      /* Icon circle */
       .mobile-link-pill .pill-icon-circle {
         display: flex;
         align-items: center;
@@ -13138,24 +13137,24 @@ return (
                     background 0.2s ease;
       }
       .mobile-link-pill.active .pill-icon-circle {
-        border-color: rgba(0,0,0,0.1);
-        background: rgba(0,0,0,0.1);
+        border-color: rgba(0,0,0,0.15);
+        background: rgba(0,0,0,0.08);
       }
-      /* Label — hidden on inactive, visible on active */
+      /* Label — hidden on inactive, expands on active */
       .mobile-link-pill .pill-label {
         display: inline-block;
         max-width: 0;
         opacity: 0;
         overflow: hidden;
         margin-left: 0;
-        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                    opacity 0.2s ease,
-                    margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.25s ease 0.05s,
+                    margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .mobile-link-pill.active .pill-label {
         max-width: 80px;
         opacity: 1;
-        margin-left: 4px;
+        margin-left: 5px;
       }
       @keyframes mobileLinkFadeIn {
         from { opacity: 0; transform: translateY(8px) scale(0.98); }
@@ -13175,20 +13174,6 @@ return (
       >
         <div className="flex items-center px-3 py-2.5">
           <div className="mobile-link-pill-container" ref={mobilePillContainerRef}>
-            {/* Sliding gold indicator — animates between pills */}
-            {(() => {
-              const tabIds = ['profile', 'style', 'contact', 'social', 'buttons', 'actions'];
-              const activeIdx = tabIds.indexOf(mobileLinkTab);
-              return (
-                <div
-                  className="mobile-link-pill-slider"
-                  style={{
-                    left: `calc(${activeIdx} * (100% + 2px) / 6)`,
-                    width: `calc((100% - 10px) / 6)`,
-                  }}
-                />
-              );
-            })()}
             {([
               { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
               { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-4 h-4" /> },
