@@ -2884,15 +2884,14 @@ function AgentPortal() {
         }`}
         style={{
           bottom: 0,
-          paddingBottom: 'calc(20px + env(safe-area-inset-bottom, 0px))',
-          background: 'rgb(10, 10, 10)',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
           maxHeight: (() => {
             if (isLinktreeTransitioning) {
               // Shrinking from menu to preview — animate to target height
-              return currentMobileLinkTab === 'buttons' ? '90vh' : '350px';
+              return currentMobileLinkTab === 'buttons' ? '90vh' : '400px';
             }
             if (isMobileMenuOpen || isMobileMenuClosing) return '85vh';
-            if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? '90vh' : '350px';
+            if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? '90vh' : '400px';
             return 'auto';
           })(),
           // Buttons tab: pin height during menu→preview swap so content change doesn't cause a jump
@@ -10084,8 +10083,12 @@ function AgentPagesSection({
     if (newTab === mobileLinkTab || isMobileTabTransitioning) return;
     setMobileLinkTab(newTab);
     setIsMobileTabTransitioning(true);
-    // Reset ALL scrollable containers to top during fade-out (invisible to user)
+    // Reset ALL scrollable containers to top — including the main scroll container
     const resetAllScrolls = () => {
+      // The actual scroll container is the SmoothScrollContainer wrapper
+      const mainScroll = document.getElementById('agent-portal-scroll-container');
+      if (mainScroll) mainScroll.scrollTop = 0;
+      // Also reset inner containers
       if (mobileContentRef.current) mobileContentRef.current.scrollTop = 0;
       if (phoneInnerRef.current) phoneInnerRef.current.scrollTop = 0;
       const previewSlot = document.getElementById('mobile-link-preview-slot');
@@ -10094,6 +10097,8 @@ function AgentPagesSection({
         const scrollChild = previewSlot.firstElementChild as HTMLElement;
         if (scrollChild) scrollChild.scrollTop = 0;
       }
+      // Fallback: also try window scroll
+      window.scrollTo(0, 0);
     };
     // Reset before content swap (during fade-out)
     resetAllScrolls();
@@ -13091,7 +13096,7 @@ function AgentPagesSection({
                         key={`controls-left-${linkId}`}
                         className="absolute flex flex-col"
                         style={{
-                          left: '-14px',
+                          left: '-16px',
                           top: `${position}px`,
                           zIndex: 100,
                           background: '#1a1a1a',
@@ -13151,7 +13156,7 @@ function AgentPagesSection({
                         key={`controls-right-${linkId}`}
                         className="absolute"
                         style={{
-                          right: '-14px',
+                          right: '-16px',
                           top: `${position + 6}px`,
                           zIndex: 100,
                           background: '#1a1a1a',
@@ -13333,7 +13338,7 @@ return (
       return createPortal(
         <div
           style={{
-            height: mobileLinkTab === 'buttons' ? 'calc(90vh - 100px)' : '280px',
+            height: mobileLinkTab === 'buttons' ? 'calc(90vh - 100px)' : '330px',
             marginTop: '-10px',
             overflowY: mobileLinkTab === 'buttons' ? 'auto' : 'hidden',
             transition: 'height 0.3s ease',
