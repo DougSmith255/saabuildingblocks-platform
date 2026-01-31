@@ -2888,14 +2888,14 @@ function AgentPortal() {
           maxHeight: (() => {
             if (isLinktreeTransitioning) {
               // Shrinking from menu to preview — animate to target height
-              return currentMobileLinkTab === 'buttons' ? '95vh' : '445px';
+              return currentMobileLinkTab === 'buttons' ? '98vh' : '405px';
             }
             if (isMobileMenuOpen || isMobileMenuClosing) return '85vh';
-            if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? '95vh' : '445px';
+            if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? '98vh' : '405px';
             return 'auto';
           })(),
           // Buttons tab: pin height during menu→preview swap so content change doesn't cause a jump
-          minHeight: (isLinktreeTransitioning && currentMobileLinkTab === 'buttons') ? '95vh' : undefined,
+          minHeight: (isLinktreeTransitioning && currentMobileLinkTab === 'buttons') ? '98vh' : undefined,
           transition: 'max-height 0.3s ease, min-height 0.3s ease',
           WebkitTapHighlightColor: 'transparent',
         }}
@@ -13338,7 +13338,7 @@ return (
       return createPortal(
         <div
           style={{
-            height: mobileLinkTab === 'buttons' ? 'calc(95vh - 100px)' : '375px',
+            height: mobileLinkTab === 'buttons' ? 'calc(98vh - 100px)' : '335px',
             marginTop: '-10px',
             overflowY: mobileLinkTab === 'buttons' ? 'auto' : 'hidden',
             transition: 'height 0.3s ease',
