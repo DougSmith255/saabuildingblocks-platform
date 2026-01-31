@@ -10222,6 +10222,20 @@ function AgentPagesSection({
     }
   }, [customLinks.length, addingNewLink]);
 
+  // Prevent page scroll when mouse wheel is over phone preview
+  // React's onWheel is passive by default, so we need a native listener with { passive: false }
+  useEffect(() => {
+    const el = phoneInnerRef.current;
+    if (!el) return;
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      el.scrollTop += e.deltaY;
+    };
+    el.addEventListener('wheel', handleWheel, { passive: false });
+    return () => el.removeEventListener('wheel', handleWheel);
+  }, []);
+
   // Auto-generate slug from display name
   const generatedSlug = `${formData.display_first_name}-${formData.display_last_name}`
     .toLowerCase()
@@ -12225,31 +12239,19 @@ function AgentPagesSection({
               overflow: 'visible',
             }}
           >
-            {/* Phone inner bezel - FIXED height with scrollable content, hidden scrollbar */}
+            {/* Phone inner bezel - FIXED height, non-scrolling wrapper holds background */}
             <div
-              ref={attachRefs ? phoneInnerRef : undefined}
-              className="phone-inner-scroll rounded-[2.25rem] relative flex flex-col"
+              className="rounded-[2.25rem] relative"
               style={{
                 background: 'linear-gradient(180deg, #0a0a0a 0%, #111111 100%)',
                 boxShadow: 'inset 0 0 20px rgba(0,0,0,0.6)',
                 height: '580px', // FIXED height - phone doesn't grow
-                padding: '32px 16px 20px 16px',
-                overflowX: 'hidden',
-                overflowY: 'auto', // Scrollable when content exceeds height
-                scrollbarWidth: 'none', // Firefox
-                msOverflowStyle: 'none', // IE/Edge
-              }}
-              onWheel={(e) => {
-                // Capture scroll events to prevent page scroll when hovering phone
-                e.stopPropagation();
-                if (phoneInnerRef.current) {
-                  phoneInnerRef.current.scrollTop += e.deltaY;
-                }
+                overflow: 'hidden',
               }}
             >
-              {/* Star Field Background - backgroundColor controls the gradient hue */}
+              {/* Star Field Background - stays pinned, does NOT scroll with content */}
               <div
-                className="absolute inset-0 overflow-hidden"
+                className="absolute inset-0 rounded-[2.25rem] overflow-hidden"
                 style={{
                   background: `
                     radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.4) 0%, transparent 100%),
@@ -12277,8 +12279,21 @@ function AgentPagesSection({
                   pointerEvents: 'none',
                 }}
               />
-              {/* Notch */}
+              {/* Notch - stays pinned above scrollable content */}
               <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full" style={{ boxShadow: '0 0 10px rgba(0,0,0,0.5)', zIndex: 10 }} />
+              {/* Scrollable content layer */}
+              <div
+                ref={attachRefs ? phoneInnerRef : undefined}
+                className="phone-inner-scroll absolute inset-0 rounded-[2.25rem] flex flex-col"
+                style={{
+                  padding: '32px 16px 20px 16px',
+                  overflowX: 'hidden',
+                  overflowY: 'auto',
+                  scrollbarWidth: 'none', // Firefox
+                  msOverflowStyle: 'none', // IE/Edge
+                  overscrollBehavior: 'contain', // Prevent scroll chaining to parent
+                }}
+              >
               {/* Profile Photo - FIX-025: Use lightened color for border like social icons */}
               {/* FIX-2a/2b: Added relative z-[1] to ensure content sits above star background */}
               <div className="flex flex-col items-center pt-6 relative z-[1]">
@@ -12925,8 +12940,9 @@ function AgentPagesSection({
                 }
               };
 
-              // Don't render controls until positions are calculated
-              if (Object.keys(buttonPositions).length === 0) return null;
+              // Only render controls on the phone instance that tracks positions (attachRefs=true)
+              // Prevents controls from appearing with wrong positions on mobile portal
+              if (!attachRefs || Object.keys(buttonPositions).length === 0) return null;
 
               return (
                 <>
@@ -13045,6 +13061,7 @@ function AgentPagesSection({
               );
             })()}
           </div>
+          </div>
         </div>
       </>
     );
@@ -13089,32 +13106,37 @@ return (
         gap: 2px;
         flex: 1;
       }
-      /* Individual pill button */
+      /* Individual pill button — flex:1 so all pills share space equally (no layout shift) */
       .mobile-link-pill {
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 9999px;
         height: 32px;
-        min-width: 32px;
-        padding: 0 4px;
-        gap: 0;
+        flex: 1;
+        min-width: 0;
+        padding: 0;
         overflow: hidden;
         white-space: nowrap;
         cursor: pointer;
         border: none;
         outline: none;
-        flex-shrink: 0;
         position: relative;
         z-index: 1;
         background: transparent;
-        transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0.05s,
-                    color 0.2s ease,
-                    padding 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+        transition: color 0.2s ease;
       }
-      .mobile-link-pill.active {
+      /* Sliding gold indicator — absolute behind active pill */
+      .mobile-link-pill-slider {
+        position: absolute;
+        top: 3px;
+        bottom: 3px;
+        border-radius: 9999px;
         background: #ffd700;
-        padding: 0 10px 0 4px;
+        z-index: 0;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
       }
       /* Icon circle — fills with gold when active */
       .mobile-link-pill .pill-icon-circle {
@@ -13127,33 +13149,28 @@ return (
         border: 1.5px solid rgba(255,255,255,0.15);
         background: rgba(255,255,255,0.04);
         flex-shrink: 0;
-        transition: border-color 0.15s ease,
-                    background 0.15s ease,
-                    box-shadow 0.2s ease;
+        transition: border-color 0.2s ease,
+                    background 0.2s ease;
       }
       .mobile-link-pill.active .pill-icon-circle {
         border-color: rgba(0,0,0,0.1);
         background: rgba(0,0,0,0.1);
-        box-shadow: none;
       }
-      /* Label — delayed expand so color fills first */
+      /* Label — hidden on inactive, visible on active */
       .mobile-link-pill .pill-label {
         display: inline-block;
         max-width: 0;
         opacity: 0;
         overflow: hidden;
-        transition: max-width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-                    opacity 0.15s ease,
-                    margin-left 0.25s ease;
         margin-left: 0;
+        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.2s ease,
+                    margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .mobile-link-pill.active .pill-label {
         max-width: 80px;
         opacity: 1;
-        margin-left: 5px;
-        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.12s,
-                    opacity 0.2s ease 0.18s,
-                    margin-left 0.3s ease 0.12s;
+        margin-left: 4px;
       }
       @keyframes mobileLinkFadeIn {
         from { opacity: 0; transform: translateY(8px) scale(0.98); }
@@ -13173,6 +13190,20 @@ return (
       >
         <div className="flex items-center px-3 py-2.5">
           <div className="mobile-link-pill-container" ref={mobilePillContainerRef}>
+            {/* Sliding gold indicator — animates between pills */}
+            {(() => {
+              const tabIds = ['profile', 'style', 'contact', 'social', 'buttons', 'actions'];
+              const activeIdx = tabIds.indexOf(mobileLinkTab);
+              return (
+                <div
+                  className="mobile-link-pill-slider"
+                  style={{
+                    left: `calc(${activeIdx} * (100% + 2px) / 6)`,
+                    width: `calc((100% - 10px) / 6)`,
+                  }}
+                />
+              );
+            })()}
             {([
               { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
               { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-4 h-4" /> },
