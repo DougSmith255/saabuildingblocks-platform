@@ -10236,95 +10236,9 @@ function AgentPagesSection({
     return () => el.removeEventListener('wheel', handleWheel);
   }, [customLinks, linksSettings.linkOrder, mobileLinkTab]);
 
-  // Mobile: unified scroll — touching ANYWHERE (including phone) scrolls as one continuous page.
-  // Priority: content area (cards) scrolls first; once 10px gap at bottom, phone scrolls.
-  // Reverse: phone scrolls up first; once phone at top, content area scrolls up.
-  // IMPORTANT: mobile-only, does not affect >=1024px layouts.
-  useEffect(() => {
-    if (typeof window === 'undefined' || window.innerWidth >= 1024) return;
-    const phoneInner = phoneInnerRef.current;
-    const contentArea = mobileContentRef.current;
-    if (!phoneInner) return;
-
-    let startY = 0;
-
-    // --- Phone touch handlers: redirect to content area first ---
-    const onPhoneTouchStart = (e: TouchEvent) => { startY = e.touches[0].clientY; };
-    const onPhoneTouchMove = (e: TouchEvent) => {
-      const currentY = e.touches[0].clientY;
-      const deltaY = startY - currentY; // positive = finger up = "scroll down"
-      startY = currentY;
-
-      if (contentArea) {
-        const contentMaxScroll = contentArea.scrollHeight - contentArea.clientHeight;
-        const contentAtBottom = contentMaxScroll <= 0 || contentArea.scrollTop >= contentMaxScroll - 10;
-        const contentAtTop = contentArea.scrollTop <= 0;
-
-        if (deltaY > 0 && !contentAtBottom) {
-          // Scrolling down — content area can still scroll, redirect there
-          e.preventDefault();
-          contentArea.scrollTop += deltaY;
-          return;
-        }
-        if (deltaY < 0) {
-          // Scrolling up — phone scrolls back up first
-          if (phoneInner.scrollTop > 0) {
-            // Phone has room to scroll up — let it scroll naturally
-            return;
-          }
-          if (!contentAtTop) {
-            // Phone at top, content can scroll up — redirect to content
-            e.preventDefault();
-            contentArea.scrollTop += deltaY;
-            return;
-          }
-        }
-      }
-      // Content at limit (or no content area) — let phone scroll naturally
-    };
-
-    phoneInner.addEventListener('touchstart', onPhoneTouchStart, { passive: true });
-    phoneInner.addEventListener('touchmove', onPhoneTouchMove, { passive: false });
-
-    // --- Content area touch handlers: chain into phone when at boundary ---
-    let contentStartY = 0;
-    const onContentTouchStart = (e: TouchEvent) => { contentStartY = e.touches[0].clientY; };
-    const onContentTouchMove = (e: TouchEvent) => {
-      const currentY = e.touches[0].clientY;
-      const deltaY = contentStartY - currentY;
-      contentStartY = currentY;
-
-      if (!contentArea) return;
-      const contentMaxScroll = contentArea.scrollHeight - contentArea.clientHeight;
-      const contentAtBottom = contentMaxScroll <= 0 || contentArea.scrollTop >= contentMaxScroll - 10;
-      const contentAtTop = contentArea.scrollTop <= 0;
-
-      if (deltaY > 0 && contentAtBottom && phoneInner) {
-        // Scrolling down at bottom of content — redirect to phone
-        e.preventDefault();
-        phoneInner.scrollTop += deltaY;
-      } else if (deltaY < 0 && contentAtTop && phoneInner && phoneInner.scrollTop > 0) {
-        // Scrolling up at top of content but phone still has scroll — redirect to phone
-        e.preventDefault();
-        phoneInner.scrollTop += deltaY;
-      }
-      // else: natural content scrolling
-    };
-
-    if (contentArea) {
-      contentArea.addEventListener('touchstart', onContentTouchStart, { passive: true });
-      contentArea.addEventListener('touchmove', onContentTouchMove, { passive: false });
-    }
-
-    return () => {
-      phoneInner.removeEventListener('touchstart', onPhoneTouchStart);
-      phoneInner.removeEventListener('touchmove', onPhoneTouchMove);
-      if (contentArea) {
-        contentArea.removeEventListener('touchstart', onContentTouchStart);
-        contentArea.removeEventListener('touchmove', onContentTouchMove);
-      }
-    };
-  }, [mobileLinkTab, customLinks, phoneInnerReady]);
+  // Mobile scroll: native touch scrolling handles everything.
+  // Content area scrolls naturally on non-buttons tabs.
+  // Phone preview scrolls naturally on buttons tab.
 
   // Auto-generate slug from display name
   const generatedSlug = `${formData.display_first_name}-${formData.display_last_name}`
@@ -12320,7 +12234,7 @@ function AgentPagesSection({
         {/* Phone Mockup - Premium Styling - overflow visible for button controls */}
         {/* Hide scrollbar for webkit browsers */}
         <style>{`.phone-inner-scroll::-webkit-scrollbar { display: none; }
-@media (max-width: 1023px) { .phone-inner-scroll { padding-top: 2px !important; overflow-y: hidden !important; } }`}</style>
+@media (max-width: 1023px) { .phone-inner-scroll { padding-top: 2px !important; } }`}</style>
         <div className="p-4 flex flex-col items-center overflow-visible">
           <div className="w-full max-w-[300px] relative" style={{ overflow: 'visible' }}>
           <div
@@ -13270,13 +13184,13 @@ return (
         to { opacity: 1; transform: translateY(0) scale(1); }
       }
     `}</style>
-    <div className="min-[1024px]:hidden flex flex-col" style={{ overflow: 'visible' }}>
-      {/* Floating Pill Tab Bar — fixed next to pixel help button, no card wrapper */}
+    {/* Floating Pill Tab Bar — portaled to document.body so fixed position works regardless of ancestor transforms */}
+    {typeof window !== 'undefined' && isActive && createPortal(
       <div
-        className="fixed z-[10004]"
+        className="min-[1024px]:hidden fixed z-[10004]"
         style={{
-          top: '2px',
-          right: '50px',
+          top: '6px',
+          right: '62px',
           opacity: isMobileMenuOpen ? 0 : 1,
           pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
           filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
@@ -13309,8 +13223,11 @@ return (
             </button>
           ))}
           </div>
-      </div>
+      </div>,
+      document.body
+    )}
 
+    <div className="min-[1024px]:hidden flex flex-col" style={{ overflow: 'visible' }}>
       {/* Tab Content Area — premium fade transition */}
       <div
         ref={mobileContentRef}
@@ -13340,7 +13257,7 @@ return (
           className="min-[1024px]:hidden"
           style={{
             height: mobileLinkTab === 'buttons' ? 'calc(85vh - 64px)' : '290px',
-            overflowY: 'hidden',
+            overflowY: mobileLinkTab === 'buttons' ? 'auto' : 'hidden',
             transition: 'height 0.3s ease',
           }}
         >
