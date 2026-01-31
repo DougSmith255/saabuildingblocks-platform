@@ -9972,12 +9972,17 @@ function AgentPagesSection({
   const [displayMobileLinkTab, setDisplayMobileLinkTab] = useState<'profile' | 'style' | 'contact' | 'social' | 'buttons' | 'actions'>('profile');
   const [isMobileTabTransitioning, setIsMobileTabTransitioning] = useState(false);
   const mobilePillContainerRef = useRef<HTMLDivElement>(null);
+  const mobileContentRef = useRef<HTMLDivElement>(null);
 
   // Premium tab transition: fade out → swap content → fade in
   const handleMobileTabChange = useCallback((newTab: typeof mobileLinkTab) => {
     if (newTab === mobileLinkTab || isMobileTabTransitioning) return;
     setMobileLinkTab(newTab);
     setIsMobileTabTransitioning(true);
+    // Scroll content to top during fade-out (invisible to user)
+    if (mobileContentRef.current) {
+      mobileContentRef.current.scrollTop = 0;
+    }
     setTimeout(() => {
       setDisplayMobileLinkTab(newTab);
       setIsMobileTabTransitioning(false);
@@ -10193,7 +10198,7 @@ function AgentPagesSection({
       clearTimeout(timeoutId4);
       resizeObserver?.disconnect();
     };
-  }, [linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink, animatingSwap]);
+  }, [linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink, animatingSwap, mobileLinkTab]);
 
   // Auto-scroll phone inner to bottom when adding content
   useEffect(() => {
@@ -10207,11 +10212,14 @@ function AgentPagesSection({
     }
   }, [customLinks.length, addingNewLink]);
 
-  // Prevent page scroll when mouse wheel is over phone preview
+  // Prevent page scroll when mouse wheel is over phone preview (desktop only)
   // React's onWheel is passive by default, so we need a native listener with { passive: false }
+  // Re-runs when customLinks/linkOrder change (phone re-renders, ref may update)
   useEffect(() => {
     const el = phoneInnerRef.current;
     if (!el) return;
+    // Only capture wheel on desktop — mobile uses touch scrolling
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) return;
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -10219,7 +10227,59 @@ function AgentPagesSection({
     };
     el.addEventListener('wheel', handleWheel, { passive: false });
     return () => el.removeEventListener('wheel', handleWheel);
-  }, []);
+  }, [customLinks, linksSettings.linkOrder, mobileLinkTab]);
+
+  // Mobile: touch on phone scrolls panel (outer container) first, then phone when panel bottoms out
+  useEffect(() => {
+    if (typeof window === 'undefined' || window.innerWidth >= 1024) return;
+    const phoneInner = phoneInnerRef.current;
+    if (!phoneInner) return;
+
+    // Find the scrollable ancestor panel (the portal wrapper with overflow-y: auto)
+    let scrollParent: HTMLElement | null = phoneInner.parentElement;
+    while (scrollParent) {
+      const cs = getComputedStyle(scrollParent);
+      if (cs.overflowY === 'auto' || cs.overflowY === 'scroll') break;
+      scrollParent = scrollParent.parentElement;
+    }
+    if (!scrollParent) return;
+
+    let startY = 0;
+
+    const onTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      const currentY = e.touches[0].clientY;
+      const deltaY = startY - currentY; // positive = finger moved up = "scroll down"
+
+      const panelMaxScroll = scrollParent!.scrollHeight - scrollParent!.clientHeight;
+      const panelAtBottom = scrollParent!.scrollTop >= panelMaxScroll - 1;
+      const panelAtTop = scrollParent!.scrollTop <= 1;
+
+      if (deltaY > 0 && !panelAtBottom) {
+        // Scrolling down and panel can still scroll — scroll panel, not phone
+        e.preventDefault();
+        scrollParent!.scrollTop += deltaY;
+        startY = currentY;
+      } else if (deltaY < 0 && !panelAtTop) {
+        // Scrolling up and panel can still scroll up — scroll panel, not phone
+        e.preventDefault();
+        scrollParent!.scrollTop += deltaY;
+        startY = currentY;
+      }
+      // else: panel can't scroll in this direction — let phone scroll naturally
+    };
+
+    phoneInner.addEventListener('touchstart', onTouchStart, { passive: true });
+    phoneInner.addEventListener('touchmove', onTouchMove, { passive: false });
+
+    return () => {
+      phoneInner.removeEventListener('touchstart', onTouchStart);
+      phoneInner.removeEventListener('touchmove', onTouchMove);
+    };
+  }, [mobileLinkTab, customLinks]);
 
   // Auto-generate slug from display name
   const generatedSlug = `${formData.display_first_name}-${formData.display_last_name}`
@@ -12949,11 +13009,11 @@ function AgentPagesSection({
                         key={`controls-left-${linkId}`}
                         className="absolute flex flex-col"
                         style={{
-                          left: '-2px', // Position ON phone border - controls extend outward from edge
+                          left: '-8px',
                           top: `${position}px`,
-                          zIndex: 10,
-                          background: '#1d1d1d', // Container background matches phone border
-                          borderRadius: '6px', // All corners rounded
+                          zIndex: 20,
+                          background: '#1d1d1d',
+                          borderRadius: '6px',
                           padding: '2px',
                         }}
                       >
@@ -13009,11 +13069,11 @@ function AgentPagesSection({
                         key={`controls-right-${linkId}`}
                         className="absolute"
                         style={{
-                          right: '-2px', // Position ON phone border - control extends outward from edge
-                          top: `${position + 6}px`, // +6 to vertically center with button
-                          zIndex: 10,
-                          background: '#141414', // Container background darker for right side
-                          borderRadius: '6px', // All corners rounded
+                          right: '-8px',
+                          top: `${position + 6}px`,
+                          zIndex: 20,
+                          background: '#141414',
+                          borderRadius: '6px',
                           padding: '4px',
                         }}
                       >
@@ -13169,7 +13229,7 @@ return (
           background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
           border: '1px solid rgba(255,255,255,0.06)',
           boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-          margin: '8px 8px 8px 8px',
+          margin: '8px 3px 8px 3px',
         }}
       >
         <div className="flex items-center px-3 py-2.5">
@@ -13196,7 +13256,7 @@ return (
               }}
             >
               <span className="pill-icon-circle">{tab.icon}</span>
-              <span className="pill-label text-xs font-bold">{tab.label}</span>
+              <span className="pill-label text-xs font-bold" style={{ fontFamily: 'var(--font-amulya, sans-serif)' }}>{tab.label}</span>
             </button>
           ))}
           </div>
@@ -13205,9 +13265,10 @@ return (
 
       {/* Tab Content Area — premium fade transition */}
       <div
+        ref={mobileContentRef}
         className="flex-1 overflow-y-auto"
         style={{
-          padding: `0 8px ${mobileLinkTab === 'buttons' ? '0' : '320px'} 8px`,
+          padding: `0 3px ${mobileLinkTab === 'buttons' ? '0' : '320px'} 3px`,
           opacity: isMobileTabTransitioning ? 0 : 1,
           transform: isMobileTabTransitioning ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
           transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
@@ -13234,7 +13295,7 @@ return (
             transition: 'height 0.3s ease',
           }}
         >
-          {renderPreviewButtonLinksCard(false, mobileLinkTab === 'buttons', true)}
+          {renderPreviewButtonLinksCard(false, true, true)}
         </div>,
         slot
       );
