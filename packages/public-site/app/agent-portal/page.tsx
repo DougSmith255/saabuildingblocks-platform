@@ -1058,6 +1058,8 @@ function AgentPortal() {
   const mobileMenuTouchStartRef = useRef<{ y: number; time: number } | null>(null);
   // Track which link page tab is active (for mobile bar height)
   const [currentMobileLinkTab, setCurrentMobileLinkTab] = useState<string>('profile');
+  // Ref for parent → child tab change communication (child registers its handler)
+  const mobileLinkTabChangeRef = useRef<((tab: string) => void) | null>(null);
 
   // Smooth close handler for mobile menu
   const closeMobileMenu = useCallback(() => {
@@ -2844,8 +2846,80 @@ function AgentPortal() {
           filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
         }}
       >
-        {/* Portal slot for Link Page pill tabs — rendered by AgentPagesSection */}
-        {activeSection === 'linktree' && <div id="mobile-pills-slot" />}
+        {/* Link Page pill tabs — rendered directly in parent (no portal) */}
+        {activeSection === 'linktree' && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            borderRadius: '9999px',
+            background: 'rgba(10,10,10,0.92)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            padding: '3px',
+            gap: '2px',
+          }}>
+            {(['profile', 'style', 'contact', 'social', 'buttons', 'actions'] as const).map((tabId) => {
+              const isTabActive = currentMobileLinkTab === tabId;
+              const labels: Record<string, string> = { profile: 'Profile', style: 'Style', contact: 'Contact', social: 'Social', buttons: 'Buttons', actions: 'Actions' };
+              const icons: Record<string, string> = { profile: '\u{1F464}', style: '\u2728', contact: '\u{1F4F1}', social: '\u{1F517}', buttons: '\u{1F4CB}', actions: '\u{1F3AF}' };
+              return (
+                <button
+                  key={tabId}
+                  onClick={() => {
+                    setCurrentMobileLinkTab(tabId);
+                    mobileLinkTabChangeRef.current?.(tabId);
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '9999px',
+                    height: '32px',
+                    maxWidth: isTabActive ? '130px' : '36px',
+                    minWidth: isTabActive ? '38px' : '36px',
+                    padding: isTabActive ? '0 12px 0 3px' : '0 5px',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    cursor: 'pointer',
+                    border: 'none',
+                    outline: 'none',
+                    background: isTabActive ? '#ffd700' : 'transparent',
+                    color: isTabActive ? '#000' : 'rgba(255,255,255,0.6)',
+                    fontFamily: 'var(--font-taskor, sans-serif)',
+                    transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), min-width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1), background-color 0.2s ease, color 0.2s ease',
+                    fontSize: '14px',
+                    lineHeight: '1',
+                  }}
+                >
+                  <span style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '26px',
+                    height: '26px',
+                    borderRadius: '9999px',
+                    border: isTabActive ? '1.5px solid rgba(0,0,0,0.15)' : '1.5px solid rgba(255,255,255,0.15)',
+                    background: isTabActive ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.04)',
+                    flexShrink: 0,
+                    fontSize: '13px',
+                  }}>{icons[tabId]}</span>
+                  <span style={{
+                    display: 'inline-block',
+                    maxWidth: isTabActive ? '80px' : '0',
+                    opacity: isTabActive ? 1 : 0,
+                    overflow: 'hidden',
+                    marginLeft: isTabActive ? '5px' : '0',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-amulya, sans-serif)',
+                    transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease 0.05s, margin-left 0.35s cubic-bezier(0.4,0,0.2,1)',
+                  }}>{labels[tabId]}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
         {activeSection === 'dashboard' ? (
           <PixelHelpButton onClick={() => setShowAnalyticsHelpModal(true)} color="gold" ariaLabel="Analytics Help" size="mobile" className="relative" />
         ) : activeSection === 'calls' ? (
@@ -4113,6 +4187,7 @@ function AgentPortal() {
                 onCloseMobileMenu={() => closeMobileMenu()}
                 isMobileMenuOpen={isMobileMenuOpen}
                 onMobileLinkTabChange={(tab: string) => setCurrentMobileLinkTab(tab)}
+                mobileLinkTabChangeRef={mobileLinkTabChangeRef}
               />
             </div>
             )}
@@ -9815,6 +9890,7 @@ interface AgentPagesSectionProps {
   onCloseMobileMenu?: () => void;
   isMobileMenuOpen?: boolean;
   onMobileLinkTabChange?: (tab: string) => void;
+  mobileLinkTabChangeRef?: React.MutableRefObject<((tab: string) => void) | null>;
 }
 
 function AgentPagesSection({
@@ -9858,6 +9934,7 @@ function AgentPagesSection({
   onCloseMobileMenu,
   isMobileMenuOpen = false,
   onMobileLinkTabChange,
+  mobileLinkTabChangeRef,
 }: AgentPagesSectionProps) {
   // Track window width via JS for reliable responsive rendering on all devices including desktop resize
   // Uses matchMedia API (designed for breakpoint detection) + resize fallback for maximum compatibility
@@ -10025,7 +10102,18 @@ function AgentPagesSection({
   useEffect(() => {
     onMobileLinkTabChange?.(mobileLinkTab);
   }, [mobileLinkTab, onMobileLinkTabChange]);
-  // mobilePillContainerRef kept for potential future use
+
+  // Register tab change handler so parent can trigger tab changes
+  useEffect(() => {
+    if (mobileLinkTabChangeRef) {
+      mobileLinkTabChangeRef.current = (tab: string) => {
+        const validTab = tab as typeof mobileLinkTab;
+        if (validTab !== mobileLinkTab && !isMobileTabTransitioning) {
+          handleMobileTabChange(validTab);
+        }
+      };
+    }
+  }, [mobileLinkTabChangeRef, mobileLinkTab, isMobileTabTransitioning, handleMobileTabChange]);
 
   // Copy link feedback state
   const [copiedLink, setCopiedLink] = useState<'linktree' | 'linkpage' | 'attraction' | null>(null);
@@ -13209,91 +13297,7 @@ return (
         to { opacity: 1; transform: translateY(0) scale(1); }
       }
     `}</style>
-    {/* Mobile Pill Tabs — portaled into the floating help button container (proven visible on all devices) */}
-    {typeof window !== 'undefined' && isActive && isMobileWidth && (() => {
-      const slot = document.getElementById('mobile-pills-slot');
-      if (!slot) return null;
-      return createPortal(
-        <div ref={mobilePillContainerRef} style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'relative',
-          borderRadius: '9999px',
-          background: 'rgba(10,10,10,0.92)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          padding: '3px',
-          gap: '2px',
-        }}>
-          {([
-            { id: 'profile' as const, label: 'Profile', icon: <User style={{ width: 16, height: 16 }} /> },
-            { id: 'style' as const, label: 'Style', icon: <Sparkles style={{ width: 16, height: 16 }} /> },
-            { id: 'contact' as const, label: 'Contact', icon: <Smartphone style={{ width: 16, height: 16 }} /> },
-            { id: 'social' as const, label: 'Social', icon: <LinkIcon style={{ width: 16, height: 16 }} /> },
-            { id: 'buttons' as const, label: 'Buttons', icon: <LayoutTemplate style={{ width: 16, height: 16 }} /> },
-            { id: 'actions' as const, label: 'Actions', icon: <Target style={{ width: 16, height: 16 }} /> },
-          ]).map((tab) => {
-            const isActiveTab = mobileLinkTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                data-tab-id={tab.id}
-                onClick={() => {
-                  handleMobileTabChange(tab.id);
-                  if (isMobileMenuOpen) onCloseMobileMenu?.();
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '9999px',
-                  height: '32px',
-                  maxWidth: isActiveTab ? '130px' : '36px',
-                  minWidth: isActiveTab ? '38px' : '36px',
-                  padding: isActiveTab ? '0 12px 0 3px' : '0 5px',
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap',
-                  cursor: 'pointer',
-                  border: 'none',
-                  outline: 'none',
-                  background: isActiveTab ? '#ffd700' : 'transparent',
-                  color: isActiveTab ? '#000' : 'rgba(255,255,255,0.6)',
-                  fontFamily: 'var(--font-taskor, sans-serif)',
-                  transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), min-width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1), background-color 0.2s ease, color 0.2s ease',
-                }}
-              >
-                <span style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '26px',
-                  height: '26px',
-                  borderRadius: '9999px',
-                  border: isActiveTab ? '1.5px solid rgba(0,0,0,0.15)' : '1.5px solid rgba(255,255,255,0.15)',
-                  background: isActiveTab ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.04)',
-                  flexShrink: 0,
-                }}>{tab.icon}</span>
-                <span style={{
-                  display: 'inline-block',
-                  maxWidth: isActiveTab ? '80px' : '0',
-                  opacity: isActiveTab ? 1 : 0,
-                  overflow: 'hidden',
-                  marginLeft: isActiveTab ? '5px' : '0',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  fontFamily: 'var(--font-amulya, sans-serif)',
-                  transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease 0.05s, margin-left 0.35s cubic-bezier(0.4,0,0.2,1)',
-                }}>{tab.label}</span>
-              </button>
-            );
-          })}
-        </div>,
-        slot
-      );
-    })()}
-    {/* Mobile Layout (<1024px) — content area */}
+    {/* Mobile Layout (<1024px) — content area (pills are rendered in parent floating container) */}
     {isMobileWidth && <div className="flex flex-col" style={{ overflow: 'visible' }}>
       {/* Tab Content Area — premium fade transition */}
       <div
