@@ -1069,7 +1069,7 @@ function AgentPortal() {
         setIsMobileMenuOpen(false);
         setIsLinktreeTransitioning(false);
         menuOpenedFromLinktreeRef.current = false;
-      }, 300);
+      }, 200);
       return;
     }
     setIsMobileMenuClosing(true);
@@ -1077,7 +1077,7 @@ function AgentPortal() {
       setIsMobileMenuOpen(false);
       setIsMobileMenuClosing(false);
       menuOpenedFromLinktreeRef.current = false;
-    }, 250); // Match animation duration
+    }, 150); // Match animation duration
   }, [isMobileMenuClosing, isLinktreeTransitioning, activeSection]);
 
   // Onboarding state
@@ -2815,13 +2815,13 @@ function AgentPortal() {
           animation: mobileMenuSlideUp 0.3s ease-out forwards;
         }
         .mobile-menu-panel-closing {
-          animation: mobileMenuSlideDown 0.25s ease-in forwards;
+          animation: mobileMenuSlideDown 0.15s ease-in forwards;
         }
         .mobile-menu-backdrop {
           animation: mobileMenuBackdropIn 0.3s ease-out forwards;
         }
         .mobile-menu-backdrop-closing {
-          animation: mobileMenuBackdropOut 0.25s ease-in forwards;
+          animation: mobileMenuBackdropOut 0.15s ease-in forwards;
         }
         @keyframes mobileLinkFadeIn {
           from { opacity: 0; transform: translateY(8px) scale(0.98); }
@@ -13185,12 +13185,17 @@ return (
       }
     `}</style>
     {/* Floating Pill Tab Bar — portaled to document.body so fixed position works regardless of ancestor transforms */}
+    {/* Uses inline styles + explicit media query (not Tailwind class) to ensure visibility on desktop narrowed below 1024px */}
     {typeof window !== 'undefined' && isActive && createPortal(
+      <>
+      <style>{`@media (min-width: 1024px) { #mobile-link-pills-portal { display: none !important; } }`}</style>
       <div
-        className="min-[1024px]:hidden fixed z-[10004]"
+        id="mobile-link-pills-portal"
         style={{
+          position: 'fixed',
           top: '6px',
           right: '62px',
+          zIndex: 10004,
           opacity: isMobileMenuOpen ? 0 : 1,
           pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
           filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
@@ -13223,7 +13228,8 @@ return (
             </button>
           ))}
           </div>
-      </div>,
+      </div>
+      </>,
       document.body
     )}
 
