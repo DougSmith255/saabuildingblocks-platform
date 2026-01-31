@@ -12319,7 +12319,8 @@ function AgentPagesSection({
       <>
         {/* Phone Mockup - Premium Styling - overflow visible for button controls */}
         {/* Hide scrollbar for webkit browsers */}
-        <style>{`.phone-inner-scroll::-webkit-scrollbar { display: none; }`}</style>
+        <style>{`.phone-inner-scroll::-webkit-scrollbar { display: none; }
+@media (max-width: 1023px) { .phone-inner-scroll { padding-top: 2px !important; } }`}</style>
         <div className="p-4 flex flex-col items-center overflow-visible">
           <div className="w-full max-w-[300px] relative" style={{ overflow: 'visible' }}>
           <div
@@ -13315,7 +13316,7 @@ return (
         ref={mobileContentRef}
         className="flex-1 overflow-y-auto"
         style={{
-          padding: `10px 0 ${mobileLinkTab === 'buttons' ? '0' : '320px'} 0`,
+          padding: `25px 0 ${mobileLinkTab === 'buttons' ? '0' : '320px'} 0`,
           opacity: isMobileTabTransitioning ? 0 : 1,
           transform: isMobileTabTransitioning ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
           transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
