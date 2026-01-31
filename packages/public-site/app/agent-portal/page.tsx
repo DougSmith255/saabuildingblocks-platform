@@ -2890,7 +2890,9 @@ function AgentPortal() {
             if (activeSection === 'linktree') return currentMobileLinkTab === 'buttons' ? '85vh' : '350px';
             return 'auto';
           })(),
-          transition: 'max-height 0.3s ease',
+          // Buttons tab: pin height during menu→preview swap so content change doesn't cause a jump
+          minHeight: (isLinktreeTransitioning && currentMobileLinkTab === 'buttons') ? '85vh' : undefined,
+          transition: 'max-height 0.3s ease, min-height 0.3s ease',
           WebkitTapHighlightColor: 'transparent',
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
