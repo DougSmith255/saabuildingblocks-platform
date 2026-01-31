@@ -2883,7 +2883,9 @@ function AgentPortal() {
           isMobileMenuClosing ? 'mobile-menu-panel-closing' : (isMobileMenuOpen && !menuOpenedFromLinktreeRef.current) ? 'mobile-menu-panel' : ''
         }`}
         style={{
-          bottom: '20px',
+          bottom: 0,
+          paddingBottom: 'calc(20px + env(safe-area-inset-bottom, 0px))',
+          background: 'rgb(10, 10, 10)',
           maxHeight: (() => {
             if (isLinktreeTransitioning) {
               // Shrinking from menu to preview — animate to target height
@@ -2897,7 +2899,6 @@ function AgentPortal() {
           minHeight: (isLinktreeTransitioning && currentMobileLinkTab === 'buttons') ? '90vh' : undefined,
           transition: 'max-height 0.3s ease, min-height 0.3s ease',
           WebkitTapHighlightColor: 'transparent',
-          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
         onTouchStart={(e) => {
           mobileMenuTouchStartRef.current = {
