@@ -10084,9 +10084,18 @@ function AgentPagesSection({
     if (newTab === mobileLinkTab || isMobileTabTransitioning) return;
     setMobileLinkTab(newTab);
     setIsMobileTabTransitioning(true);
-    // Scroll content to top during fade-out (invisible to user)
+    // Scroll ALL scrollable containers to top during fade-out (invisible to user)
     if (mobileContentRef.current) {
       mobileContentRef.current.scrollTop = 0;
+    }
+    if (phoneInnerRef.current) {
+      phoneInnerRef.current.scrollTop = 0;
+    }
+    // Also reset the portal preview container scroll
+    const previewSlot = document.getElementById('mobile-link-preview-slot');
+    if (previewSlot) {
+      const scrollChild = previewSlot.firstElementChild as HTMLElement;
+      if (scrollChild) scrollChild.scrollTop = 0;
     }
     setTimeout(() => {
       setDisplayMobileLinkTab(newTab);
@@ -12763,9 +12772,9 @@ function AgentPagesSection({
                         {/* Edit Mode - URL input and action buttons BELOW the button (no duplicate) */}
                         {isEditing && (
                           <div className="mt-2 space-y-2">
-                            {/* Icon Picker Dropdown - absolute to overlay content - FIX-018 */}
+                            {/* Icon Picker Dropdown - absolute to overlay content ABOVE trigger - FIX-018 */}
                             {showIconPicker === linkId && (
-                              <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 max-h-[150px] overflow-y-auto z-[100] shadow-xl w-48">
+                              <div className="absolute left-0 bottom-full mb-1 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 max-h-[150px] overflow-y-auto z-[100] shadow-xl w-48">
                                 <div className="grid grid-cols-6 gap-1">
                                   {LINK_ICONS.map((icon) => (
                                     <button
@@ -12874,9 +12883,9 @@ function AgentPagesSection({
                         style={{ color: 'inherit', fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400 }}
                       />
                     </div>
-                    {/* Icon Picker Dropdown for new link - absolute to overlay content below - FIX-018 */}
+                    {/* Icon Picker Dropdown for new link - absolute to overlay content ABOVE trigger - FIX-018 */}
                     {showIconPicker === 'new-link' && (
-                      <div className="absolute left-0 right-0 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 max-h-[150px] overflow-y-auto z-[50] shadow-xl" style={{ top: '44px' }}>
+                      <div className="absolute left-0 right-0 p-2 rounded-lg bg-[#0d0d0d] border border-white/20 max-h-[150px] overflow-y-auto z-[50] shadow-xl" style={{ bottom: '100%', marginBottom: '4px' }}>
                         <div className="grid grid-cols-6 gap-1">
                           {LINK_ICONS.map((icon) => (
                             <button
