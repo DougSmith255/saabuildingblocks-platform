@@ -842,9 +842,51 @@ function preloadProfileImage(url: string) {
 }
 
 // Helper to get initial user from localStorage (runs only on client)
+// Check if JWT token is expired by decoding the payload
+function isTokenExpired(): boolean {
+  if (typeof window === 'undefined') return true;
+  const token = localStorage.getItem('agent_portal_token');
+  if (!token) return true;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    if (!payload.exp) return false; // No expiry claim = assume valid
+    // Add 60s buffer so we don't use a token that's about to expire
+    return Date.now() >= (payload.exp * 1000) - 60000;
+  } catch {
+    return true; // Can't decode = invalid token
+  }
+}
+
+// Clear all auth data and redirect to login
+function clearAuthAndRedirect() {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem('agent_portal_token');
+  localStorage.removeItem('agent_portal_user');
+  localStorage.removeItem('agent_portal_page_data');
+  sessionStorage.removeItem('agent_portal_loaded');
+  window.location.href = '/agent-portal/login';
+}
+
+// Check fetch response for 401 (expired/invalid token) and redirect to login
+function isAuthError(response: Response): boolean {
+  if (response.status === 401) {
+    clearAuthAndRedirect();
+    return true;
+  }
+  return false;
+}
+
 // Also starts preloading the profile image immediately via CDN
 function getInitialUser(): UserData | null {
   if (typeof window === 'undefined') return null;
+  // Check token validity before loading user
+  if (isTokenExpired()) {
+    localStorage.removeItem('agent_portal_token');
+    localStorage.removeItem('agent_portal_user');
+    localStorage.removeItem('agent_portal_page_data');
+    sessionStorage.removeItem('agent_portal_loaded');
+    return null;
+  }
   try {
     const stored = localStorage.getItem('agent_portal_user');
     if (stored) {
@@ -964,6 +1006,7 @@ function AgentPortal() {
       const statsRes = await fetch(`${API_URL}/api/tracking/stats?agent_page_id=${pageId}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
+      if (isAuthError(statsRes)) return;
       if (statsRes.ok) {
         const statsJson = await statsRes.json();
         if (statsJson.success) {
@@ -1272,6 +1315,7 @@ function AgentPortal() {
             const pageRes = await fetch(`${API_URL}/api/agent-pages/${uid}`, {
               headers: { 'Authorization': `Bearer ${token}` },
             });
+            if (isAuthError(pageRes)) return;
             if (pageRes.ok) {
               const pageJson = await pageRes.json();
               const pageId = pageJson?.page?.id;
@@ -1279,6 +1323,7 @@ function AgentPortal() {
                 const statsRes = await fetch(`${API_URL}/api/tracking/stats?agent_page_id=${pageId}`, {
                   headers: { 'Authorization': `Bearer ${token}` },
                 });
+                if (isAuthError(statsRes)) return;
                 if (statsRes.ok) {
                   const statsJson = await statsRes.json();
                   if (statsJson.success) {
@@ -1313,6 +1358,7 @@ function AgentPortal() {
             const pageRes = await fetch(`${API_URL}/api/agent-pages/${uid}`, {
               headers: { 'Authorization': `Bearer ${token}` },
             });
+            if (isAuthError(pageRes)) return;
             if (pageRes.ok) {
               const pageJson = await pageRes.json();
               const pageId = pageJson?.page?.id;
@@ -1320,6 +1366,7 @@ function AgentPortal() {
                 const statsRes = await fetch(`${API_URL}/api/tracking/stats?agent_page_id=${pageId}`, {
                   headers: { 'Authorization': `Bearer ${token}` },
                 });
+                if (isAuthError(statsRes)) return;
                 if (statsRes.ok) {
                   const statsJson = await statsRes.json();
                   if (statsJson.success) {
@@ -1359,14 +1406,20 @@ function AgentPortal() {
     }
   }, [isLoading, minLoadTimeElapsed, showLoadingScreen, isLoadingFadingOut]);
 
-  // Check authentication on mount - redirect if not logged in
+  // Check authentication on mount - redirect if not logged in or token expired
   useEffect(() => {
-    // User is already initialized from localStorage in useState
-    // Just need to redirect if not found
-    if (!user) {
-      router.push('/agent-portal/login');
+    if (!user || isTokenExpired()) {
+      clearAuthAndRedirect();
+      return;
     }
-  }, [user, router]);
+    // Periodically check token expiry while app is open (every 60s)
+    const interval = setInterval(() => {
+      if (isTokenExpired()) {
+        clearAuthAndRedirect();
+      }
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   // Preload profile image for faster display (in case it wasn't preloaded during init)
   useEffect(() => {
@@ -1380,7 +1433,10 @@ function AgentPortal() {
     if (user?.id && !isOnboardingLoaded) {
       console.log('[Onboarding] Fetching progress for user:', user.id);
       fetch(`${API_URL}/api/users/onboarding?userId=${user.id}`)
-        .then(res => res.json())
+        .then(res => {
+          if (isAuthError(res)) throw new Error('auth');
+          return res.json();
+        })
         .then(data => {
           console.log('[Onboarding] API Response:', data);
           if (data.success && data.data) {
@@ -1751,6 +1807,7 @@ function AgentPortal() {
         }),
       });
 
+      if (isAuthError(response)) return;
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -2048,6 +2105,7 @@ function AgentPortal() {
         body: dashboardFormData,
       });
 
+      if (isAuthError(dashboardResponse)) return;
       if (!dashboardResponse.ok) {
         const errorData = await dashboardResponse.json();
         throw new Error(errorData.message || 'Failed to upload');
@@ -2252,6 +2310,7 @@ function AgentPortal() {
         body: dashboardFormData,
       });
 
+      if (isAuthError(dashboardResponse)) return;
       if (!dashboardResponse.ok) {
         const errorData = await dashboardResponse.json();
         throw new Error(errorData.message || 'Failed to upload');
@@ -4418,7 +4477,7 @@ function AgentPortal() {
               </div>
               <button
                 onClick={() => {
-                  localStorage.setItem('link_page_intro_dismissed', 'true');
+                  dismissNotification('link_page');
                   setShowLinkPageIntroModal(false);
                 }}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
@@ -4476,7 +4535,7 @@ function AgentPortal() {
             <div className="p-5 border-t border-white/10">
               <button
                 onClick={() => {
-                  localStorage.setItem('link_page_intro_dismissed', 'true');
+                  dismissNotification('link_page');
                   setShowLinkPageIntroModal(false);
                 }}
                 className="w-full px-4 py-3 rounded-lg text-black font-semibold bg-emerald-500 hover:bg-emerald-400 transition-colors"
@@ -10211,6 +10270,7 @@ function AgentPagesSection({
           },
         });
 
+        if (isAuthError(response)) return;
         if (response.ok) {
           const data = await response.json();
           if (data.page) {
@@ -10432,6 +10492,7 @@ function AgentPagesSection({
         }),
       });
 
+      if (isAuthError(response)) return;
       if (response.ok) {
         const data = await response.json();
         setPageData(data.page);
@@ -10471,6 +10532,7 @@ function AgentPagesSection({
           },
         });
 
+        if (isAuthError(createResponse)) return;
         const createData = await createResponse.json();
 
         if (!createResponse.ok || !createData.page) {
