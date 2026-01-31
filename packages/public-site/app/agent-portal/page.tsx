@@ -2815,13 +2815,13 @@ function AgentPortal() {
           animation: mobileMenuSlideUp 0.3s ease-out forwards;
         }
         .mobile-menu-panel-closing {
-          animation: mobileMenuSlideDown 0.15s ease-in forwards;
+          animation: mobileMenuSlideDown 0.25s ease-in forwards;
         }
         .mobile-menu-backdrop {
           animation: mobileMenuBackdropIn 0.3s ease-out forwards;
         }
         .mobile-menu-backdrop-closing {
-          animation: mobileMenuBackdropOut 0.15s ease-in forwards;
+          animation: mobileMenuBackdropOut 0.25s ease-in forwards;
         }
         @keyframes mobileLinkFadeIn {
           from { opacity: 0; transform: translateY(8px) scale(0.98); }
