@@ -9949,6 +9949,11 @@ function AgentPagesSection({
   const buttonRowRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const buttonLinksContainerRef = useRef<HTMLDivElement | null>(null);
   const phoneInnerRef = useRef<HTMLDivElement | null>(null);
+  const [phoneInnerReady, setPhoneInnerReady] = useState(0); // increments when ref mounts, triggers position recalc
+  const phoneInnerCallbackRef = useCallback((node: HTMLDivElement | null) => {
+    phoneInnerRef.current = node;
+    if (node) setPhoneInnerReady(prev => prev + 1);
+  }, []);
   const [buttonPositions, setButtonPositions] = useState<Record<string, number>>({});
 
   // Custom social links state (max 2 custom social icons)
@@ -10200,7 +10205,7 @@ function AgentPagesSection({
       clearTimeout(timeoutId4);
       resizeObserver?.disconnect();
     };
-  }, [linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink, animatingSwap, mobileLinkTab]);
+  }, [linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink, animatingSwap, mobileLinkTab, phoneInnerReady]);
 
   // Auto-scroll phone inner to bottom when adding content
   useEffect(() => {
@@ -10231,57 +10236,95 @@ function AgentPagesSection({
     return () => el.removeEventListener('wheel', handleWheel);
   }, [customLinks, linksSettings.linkOrder, mobileLinkTab]);
 
-  // Mobile: touch on phone scrolls panel (outer container) first, then phone when panel bottoms out
+  // Mobile: unified scroll — touching ANYWHERE (including phone) scrolls as one continuous page.
+  // Priority: content area (cards) scrolls first; once 10px gap at bottom, phone scrolls.
+  // Reverse: phone scrolls up first; once phone at top, content area scrolls up.
+  // IMPORTANT: mobile-only, does not affect >=1024px layouts.
   useEffect(() => {
     if (typeof window === 'undefined' || window.innerWidth >= 1024) return;
     const phoneInner = phoneInnerRef.current;
+    const contentArea = mobileContentRef.current;
     if (!phoneInner) return;
-
-    // Find the scrollable ancestor panel (the portal wrapper with overflow-y: auto)
-    let scrollParent: HTMLElement | null = phoneInner.parentElement;
-    while (scrollParent) {
-      const cs = getComputedStyle(scrollParent);
-      if (cs.overflowY === 'auto' || cs.overflowY === 'scroll') break;
-      scrollParent = scrollParent.parentElement;
-    }
-    if (!scrollParent) return;
 
     let startY = 0;
 
-    const onTouchStart = (e: TouchEvent) => {
-      startY = e.touches[0].clientY;
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
+    // --- Phone touch handlers: redirect to content area first ---
+    const onPhoneTouchStart = (e: TouchEvent) => { startY = e.touches[0].clientY; };
+    const onPhoneTouchMove = (e: TouchEvent) => {
       const currentY = e.touches[0].clientY;
-      const deltaY = startY - currentY; // positive = finger moved up = "scroll down"
+      const deltaY = startY - currentY; // positive = finger up = "scroll down"
+      startY = currentY;
 
-      const panelMaxScroll = scrollParent!.scrollHeight - scrollParent!.clientHeight;
-      const panelAtBottom = scrollParent!.scrollTop >= panelMaxScroll - 1;
-      const panelAtTop = scrollParent!.scrollTop <= 1;
+      if (contentArea) {
+        const contentMaxScroll = contentArea.scrollHeight - contentArea.clientHeight;
+        const contentAtBottom = contentMaxScroll <= 0 || contentArea.scrollTop >= contentMaxScroll - 10;
+        const contentAtTop = contentArea.scrollTop <= 0;
 
-      if (deltaY > 0 && !panelAtBottom) {
-        // Scrolling down and panel can still scroll — scroll panel, not phone
-        e.preventDefault();
-        scrollParent!.scrollTop += deltaY;
-        startY = currentY;
-      } else if (deltaY < 0 && !panelAtTop) {
-        // Scrolling up and panel can still scroll up — scroll panel, not phone
-        e.preventDefault();
-        scrollParent!.scrollTop += deltaY;
-        startY = currentY;
+        if (deltaY > 0 && !contentAtBottom) {
+          // Scrolling down — content area can still scroll, redirect there
+          e.preventDefault();
+          contentArea.scrollTop += deltaY;
+          return;
+        }
+        if (deltaY < 0) {
+          // Scrolling up — phone scrolls back up first
+          if (phoneInner.scrollTop > 0) {
+            // Phone has room to scroll up — let it scroll naturally
+            return;
+          }
+          if (!contentAtTop) {
+            // Phone at top, content can scroll up — redirect to content
+            e.preventDefault();
+            contentArea.scrollTop += deltaY;
+            return;
+          }
+        }
       }
-      // else: panel can't scroll in this direction — let phone scroll naturally
+      // Content at limit (or no content area) — let phone scroll naturally
     };
 
-    phoneInner.addEventListener('touchstart', onTouchStart, { passive: true });
-    phoneInner.addEventListener('touchmove', onTouchMove, { passive: false });
+    phoneInner.addEventListener('touchstart', onPhoneTouchStart, { passive: true });
+    phoneInner.addEventListener('touchmove', onPhoneTouchMove, { passive: false });
+
+    // --- Content area touch handlers: chain into phone when at boundary ---
+    let contentStartY = 0;
+    const onContentTouchStart = (e: TouchEvent) => { contentStartY = e.touches[0].clientY; };
+    const onContentTouchMove = (e: TouchEvent) => {
+      const currentY = e.touches[0].clientY;
+      const deltaY = contentStartY - currentY;
+      contentStartY = currentY;
+
+      if (!contentArea) return;
+      const contentMaxScroll = contentArea.scrollHeight - contentArea.clientHeight;
+      const contentAtBottom = contentMaxScroll <= 0 || contentArea.scrollTop >= contentMaxScroll - 10;
+      const contentAtTop = contentArea.scrollTop <= 0;
+
+      if (deltaY > 0 && contentAtBottom && phoneInner) {
+        // Scrolling down at bottom of content — redirect to phone
+        e.preventDefault();
+        phoneInner.scrollTop += deltaY;
+      } else if (deltaY < 0 && contentAtTop && phoneInner && phoneInner.scrollTop > 0) {
+        // Scrolling up at top of content but phone still has scroll — redirect to phone
+        e.preventDefault();
+        phoneInner.scrollTop += deltaY;
+      }
+      // else: natural content scrolling
+    };
+
+    if (contentArea) {
+      contentArea.addEventListener('touchstart', onContentTouchStart, { passive: true });
+      contentArea.addEventListener('touchmove', onContentTouchMove, { passive: false });
+    }
 
     return () => {
-      phoneInner.removeEventListener('touchstart', onTouchStart);
-      phoneInner.removeEventListener('touchmove', onTouchMove);
+      phoneInner.removeEventListener('touchstart', onPhoneTouchStart);
+      phoneInner.removeEventListener('touchmove', onPhoneTouchMove);
+      if (contentArea) {
+        contentArea.removeEventListener('touchstart', onContentTouchStart);
+        contentArea.removeEventListener('touchmove', onContentTouchMove);
+      }
     };
-  }, [mobileLinkTab, customLinks]);
+  }, [mobileLinkTab, customLinks, phoneInnerReady]);
 
   // Auto-generate slug from display name
   const generatedSlug = `${formData.display_first_name}-${formData.display_last_name}`
@@ -12330,7 +12373,7 @@ function AgentPagesSection({
               <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full" style={{ boxShadow: '0 0 10px rgba(0,0,0,0.5)', zIndex: 10 }} />
               {/* Scrollable content layer */}
               <div
-                ref={attachRefs ? phoneInnerRef : undefined}
+                ref={attachRefs ? phoneInnerCallbackRef : undefined}
                 className="phone-inner-scroll absolute inset-0 rounded-[2.25rem] flex flex-col"
                 style={{
                   padding: '32px 16px 20px 16px',
@@ -13011,12 +13054,14 @@ function AgentPagesSection({
                         key={`controls-left-${linkId}`}
                         className="absolute flex flex-col"
                         style={{
-                          left: '-8px',
+                          left: '-12px',
                           top: `${position}px`,
-                          zIndex: 20,
-                          background: '#1d1d1d',
+                          zIndex: 50,
+                          background: '#1a1a1a',
                           borderRadius: '6px',
                           padding: '2px',
+                          border: '1px solid rgba(255,215,0,0.25)',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.5)',
                         }}
                       >
                         <button
@@ -13071,12 +13116,14 @@ function AgentPagesSection({
                         key={`controls-right-${linkId}`}
                         className="absolute"
                         style={{
-                          right: '-8px',
+                          right: '-12px',
                           top: `${position + 6}px`,
-                          zIndex: 20,
-                          background: '#141414',
+                          zIndex: 50,
+                          background: '#1a1a1a',
                           borderRadius: '6px',
                           padding: '4px',
+                          border: '1px solid rgba(255,215,0,0.25)',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.5)',
                         }}
                       >
                         <button
