@@ -6100,11 +6100,13 @@ function DashboardView({
                         <span className="text-sm text-[#e5e4dd]/80 font-amulya truncate pr-2">{btn.label}</span>
                         <span className="text-sm font-semibold text-[#e5e4dd] tabular-nums shrink-0">{btn.clicks_this_week}</span>
                       </div>
-                      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                      <div className="rounded-full overflow-hidden" style={{ height: '6px', background: 'rgba(255,255,255,0.06)' }}>
                         <div
-                          className="h-full rounded-full transition-all duration-700 ease-out"
+                          className="transition-all duration-700 ease-out"
                           style={{
+                            height: '6px',
                             width: `${Math.max((btn.clicks_this_week / maxClicks) * 100, btn.clicks_this_week > 0 ? 4 : 0)}%`,
+                            borderRadius: '9999px',
                             background: btn.source === 'links' && btn.button_id !== 'learn-about'
                               ? 'linear-gradient(90deg, #00ff88, #00cc6a)'
                               : 'linear-gradient(90deg, #a855f7, #7c3aed)',
