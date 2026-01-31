@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { uploadProfilePicture } from '@/lib/cloudflare-r2';
 import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
+import { requirePageOwner } from '@/app/api/middleware/agentPageAuth';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
@@ -76,6 +77,10 @@ export async function POST(request: NextRequest) {
         400
       );
     }
+
+    // Verify authentication and page ownership
+    const { error: authError } = await requirePageOwner(request, pageId, CORS_HEADERS);
+    if (authError) return authError;
 
     // Validate file type
     if (!ALLOWED_TYPES.includes(file.type)) {

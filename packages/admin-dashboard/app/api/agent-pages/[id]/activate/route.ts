@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
+import { requirePageOwner } from '@/app/api/middleware/agentPageAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,6 +54,10 @@ export async function POST(
         { status: 503, headers: CORS_HEADERS }
       );
     }
+
+    // Verify authentication and page ownership
+    const { error: authError } = await requirePageOwner(request, id, CORS_HEADERS);
+    if (authError) return authError;
 
     // Verify page exists and is not already activated
     const { data: existingPage, error: checkError } = await supabase

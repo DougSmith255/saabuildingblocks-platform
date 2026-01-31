@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseClient } from '@/app/master-controller/lib/supabaseClient';
 import { uploadProfilePicture } from '@/lib/cloudflare-r2';
 import { updateGHLCustomField } from '@/lib/gohighlevel';
+import { verifyAgentAuth } from '@/app/api/middleware/agentPageAuth';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/jpg'];
@@ -75,6 +76,21 @@ export async function POST(request: NextRequest) {
           message: 'User ID is required',
         },
         400
+      );
+    }
+
+    // Verify authentication and ownership (user can only upload their own picture)
+    const auth = await verifyAgentAuth(request);
+    if (!auth.authorized) {
+      return corsResponse(
+        { success: false, error: 'AUTHENTICATION_REQUIRED', message: auth.error || 'Authentication required' },
+        auth.status || 401
+      );
+    }
+    if (auth.userId !== userId && auth.role !== 'admin') {
+      return corsResponse(
+        { success: false, error: 'FORBIDDEN', message: 'Cannot upload picture for another user' },
+        403
       );
     }
 

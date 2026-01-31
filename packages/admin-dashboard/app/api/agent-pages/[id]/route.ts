@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
+import { requirePageOwner } from '@/app/api/middleware/agentPageAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -114,6 +115,10 @@ export async function PATCH(
       );
     }
 
+    // Verify authentication and page ownership
+    const { error: authError } = await requirePageOwner(request, id, CORS_HEADERS);
+    if (authError) return authError;
+
     const body = await request.json();
     const {
       display_first_name,
@@ -212,6 +217,13 @@ export async function PATCH(
 
     if (updateError || !updatedPage) {
       console.error('Error updating agent page:', updateError);
+      // Handle unique constraint violation (slug already taken - race condition)
+      if (updateError?.code === '23505' && updateError?.message?.includes('slug')) {
+        return NextResponse.json(
+          { error: 'This URL slug is already taken. Please choose another.' },
+          { status: 400, headers: CORS_HEADERS }
+        );
+      }
       return NextResponse.json(
         { error: 'Failed to update agent page', details: updateError?.message },
         { status: updateError?.code === 'PGRST116' ? 404 : 500, headers: CORS_HEADERS }
