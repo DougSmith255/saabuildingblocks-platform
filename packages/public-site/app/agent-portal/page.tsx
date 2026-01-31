@@ -13180,7 +13180,7 @@ function AgentPagesSection({
   // renderMobilePreviewContent removed — all tabs now use renderPreviewButtonLinksCard(bare=true)
 
 return (
-  <div className="link-page-fluid-root px-2 sm:px-4" style={{ maxWidth: '1600px', margin: '0 auto', overflow: 'visible' }}>
+  <div className="link-page-fluid-root px-[5px] sm:px-4" style={{ maxWidth: '1600px', margin: '0 auto', overflow: 'visible' }}>
 
     {/* ====================================================================
         MOBILE LAYOUT (<1024px) - Pill tabs + card content + preview panel
@@ -13195,11 +13195,12 @@ return (
         justify-content: center;
         position: relative;
         border-radius: 9999px;
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(10,10,10,0.92);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.1);
         padding: 3px;
         gap: 2px;
-        flex: 1;
       }
       /* Individual pill — inactive: icon circle only, active: expands with label + gold bg */
       .mobile-link-pill {
@@ -13271,17 +13272,17 @@ return (
       }
     `}</style>
     <div className="min-[1024px]:hidden flex flex-col" style={{ overflow: 'visible' }}>
-      {/* Settings Card with Pill Tab Bar */}
+      {/* Floating Pill Tab Bar — fixed next to pixel help button, no card wrapper */}
       <div
-        className="sticky top-0 z-[20] rounded-xl"
+        className="fixed z-[10004]"
         style={{
-          background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-          border: '1px solid rgba(255,255,255,0.06)',
-          boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-          margin: '8px 3px 8px 3px',
+          top: '14px',
+          right: '62px',
+          opacity: isMobileMenuOpen ? 0 : 1,
+          pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
+          filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
         }}
       >
-        <div className="flex items-center px-3 py-2.5">
           <div className="mobile-link-pill-container" ref={mobilePillContainerRef}>
             {([
               { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
@@ -13309,7 +13310,6 @@ return (
             </button>
           ))}
           </div>
-        </div>
       </div>
 
       {/* Tab Content Area — premium fade transition */}
@@ -13317,7 +13317,7 @@ return (
         ref={mobileContentRef}
         className="flex-1 overflow-y-auto"
         style={{
-          padding: `0 3px ${mobileLinkTab === 'buttons' ? '0' : '320px'} 3px`,
+          padding: `0 0 ${mobileLinkTab === 'buttons' ? '0' : '320px'} 0`,
           opacity: isMobileTabTransitioning ? 0 : 1,
           transform: isMobileTabTransitioning ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
           transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
