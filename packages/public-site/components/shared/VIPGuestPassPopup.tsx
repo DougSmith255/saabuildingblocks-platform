@@ -18,7 +18,7 @@ const SCROLL_THRESHOLD = 0.5; // 50% page depth
  * Triggers after 30 seconds OR 50% scroll depth, whichever comes first.
  * Form submits to /api/join-team with source: 'vip-guest-pass'.
  */
-export function VIPGuestPassPopup() {
+export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boolean; onForceClose?: () => void } = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '' });
@@ -82,9 +82,15 @@ export function VIPGuestPassPopup() {
     };
   }, [showPopup]);
 
+  // Allow parent to force-open for testing
+  useEffect(() => {
+    if (forceOpen) setIsOpen(true);
+  }, [forceOpen]);
+
   const handleClose = useCallback(() => {
     setIsOpen(false);
-  }, []);
+    onForceClose?.();
+  }, [onForceClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,7 +128,7 @@ export function VIPGuestPassPopup() {
   };
 
   // Don't render if already triggered and closed
-  if (hasTriggered && !isOpen) return null;
+  if (hasTriggered && !isOpen && !forceOpen) return null;
 
   return (
     <SlidePanel

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useState, useEffect } from 'react';
+import { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Header from '@/components/shared/Header';
@@ -126,6 +126,8 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   // Check for embed mode via URL search params
   const [isEmbedMode, setIsEmbedMode] = useState(false);
+  // TEMP: Debug state for testing VIP Guest Pass popup — remove when done
+  const [forceVipOpen, setForceVipOpen] = useState(false);
 
   useEffect(() => {
     // Check URL for embed=true parameter (client-side only)
@@ -218,7 +220,30 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       <ViewportHeightLock />
       {!shouldHideHeaderFooter && <Header />}
       {!shouldHideHeaderFooter && !shouldHideFloatingButton && <FloatingVideoButton />}
-      {!shouldHideHeaderFooter && <VIPGuestPassPopup />}
+      {!shouldHideHeaderFooter && <VIPGuestPassPopup forceOpen={forceVipOpen} onForceClose={() => setForceVipOpen(false)} />}
+      {/* TEMP: Debug button to test VIP Guest Pass popup — remove when done */}
+      {!shouldHideHeaderFooter && !shouldHideFloatingButton && (
+        <button
+          onClick={() => setForceVipOpen(true)}
+          style={{
+            position: 'fixed',
+            bottom: '24px',
+            right: '220px',
+            zIndex: 10005,
+            padding: '12px 18px',
+            borderRadius: '9999px',
+            background: 'rgba(20,20,20,0.9)',
+            border: '2px solid rgba(60,60,60,0.8)',
+            color: '#ffd700',
+            fontSize: '13px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            letterSpacing: '0.04em',
+          }}
+        >
+          VIP Pass
+        </button>
+      )}
       {/*
         Using div instead of main to avoid nested <main> elements.
         Pages already have their own <main id="main-content"> for accessibility.
