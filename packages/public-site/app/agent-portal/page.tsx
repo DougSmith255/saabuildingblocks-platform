@@ -13234,7 +13234,7 @@ return (
             transition: 'height 0.3s ease',
           }}
         >
-          {renderPreviewButtonLinksCard(false, false, true)}
+          {renderPreviewButtonLinksCard(false, mobileLinkTab === 'buttons', true)}
         </div>,
         slot
       );
