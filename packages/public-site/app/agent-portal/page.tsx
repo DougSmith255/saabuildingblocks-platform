@@ -13223,7 +13223,19 @@ return (
           flexShrink: 0,
         }}
       >
-          <div className="mobile-link-pill-container" ref={mobilePillContainerRef}>
+          <div ref={mobilePillContainerRef} style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            borderRadius: '9999px',
+            background: 'rgba(10,10,10,0.92)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            padding: '3px',
+            gap: '2px',
+          }}>
             {([
               { id: 'profile' as const, label: 'Profile', icon: <User className="w-4 h-4" /> },
               { id: 'style' as const, label: 'Style', icon: <Sparkles className="w-4 h-4" /> },
@@ -13231,7 +13243,9 @@ return (
               { id: 'social' as const, label: 'Social', icon: <LinkIcon className="w-4 h-4" /> },
               { id: 'buttons' as const, label: 'Buttons', icon: <LayoutTemplate className="w-4 h-4" /> },
               { id: 'actions' as const, label: 'Actions', icon: <Target className="w-4 h-4" /> },
-            ]).map((tab) => (
+            ]).map((tab) => {
+              const isActive = mobileLinkTab === tab.id;
+              return (
             <button
               key={tab.id}
               data-tab-id={tab.id}
@@ -13239,16 +13253,51 @@ return (
                 handleMobileTabChange(tab.id);
                 if (isMobileMenuOpen) onCloseMobileMenu?.();
               }}
-              className={`mobile-link-pill ${mobileLinkTab === tab.id ? 'active' : ''}`}
               style={{
-                color: mobileLinkTab === tab.id ? '#000' : 'rgba(255,255,255,0.6)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '9999px',
+                height: '32px',
+                maxWidth: isActive ? '130px' : '36px',
+                minWidth: isActive ? '38px' : '36px',
+                padding: isActive ? '0 12px 0 3px' : '0 5px',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                cursor: 'pointer',
+                border: 'none',
+                outline: 'none',
+                background: isActive ? '#ffd700' : 'transparent',
+                color: isActive ? '#000' : 'rgba(255,255,255,0.6)',
                 fontFamily: 'var(--font-taskor, sans-serif)',
+                transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), min-width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1), background-color 0.2s ease, color 0.2s ease',
               }}
             >
-              <span className="pill-icon-circle">{tab.icon}</span>
-              <span className="pill-label text-xs font-bold" style={{ fontFamily: 'var(--font-amulya, sans-serif)' }}>{tab.label}</span>
+              <span style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '26px',
+                height: '26px',
+                borderRadius: '9999px',
+                border: isActive ? '1.5px solid rgba(0,0,0,0.15)' : '1.5px solid rgba(255,255,255,0.15)',
+                background: isActive ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.04)',
+                flexShrink: 0,
+              }}>{tab.icon}</span>
+              <span style={{
+                display: 'inline-block',
+                maxWidth: isActive ? '80px' : '0',
+                opacity: isActive ? 1 : 0,
+                overflow: 'hidden',
+                marginLeft: isActive ? '5px' : '0',
+                fontSize: '12px',
+                fontWeight: 700,
+                fontFamily: 'var(--font-amulya, sans-serif)',
+                transition: 'max-width 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease 0.05s, margin-left 0.35s cubic-bezier(0.4,0,0.2,1)',
+              }}>{tab.label}</span>
             </button>
-          ))}
+              );
+            })}
           </div>
       </div>
       {/* Tab Content Area — premium fade transition */}
