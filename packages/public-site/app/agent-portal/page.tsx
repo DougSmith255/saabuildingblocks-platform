@@ -9854,12 +9854,24 @@ function AgentPagesSection({
   isMobileMenuOpen = false,
   onMobileLinkTabChange,
 }: AgentPagesSectionProps) {
-  // Track window width via JS for reliable responsive rendering (CSS media queries can be inconsistent on desktop resize)
-  const [isMobileWidth, setIsMobileWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
+  // Track window width via JS for reliable responsive rendering on all devices including desktop resize
+  // Uses matchMedia API (designed for breakpoint detection) + resize fallback for maximum compatibility
+  const [isMobileWidth, setIsMobileWidth] = useState(false);
   useEffect(() => {
+    // matchMedia: purpose-built for breakpoint detection, fires exactly at threshold
+    const mql = window.matchMedia('(max-width: 1023.98px)');
+    const onMediaChange = (e: MediaQueryListEvent | MediaQueryList) => setIsMobileWidth(e.matches);
+    // Sync immediately on mount (fixes SSR hydration where initial state is false)
+    onMediaChange(mql);
+    // Listen for changes
+    mql.addEventListener('change', onMediaChange as (e: MediaQueryListEvent) => void);
+    // Fallback: also listen to resize for browsers that may not fire matchMedia change
     const onResize = () => setIsMobileWidth(window.innerWidth < 1024);
     window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    return () => {
+      mql.removeEventListener('change', onMediaChange as (e: MediaQueryListEvent) => void);
+      window.removeEventListener('resize', onResize);
+    };
   }, []);
 
   const [pageData, setPageData] = useState<AgentPageData | null>(preloadedPageData?.page || null);
@@ -13264,7 +13276,6 @@ return (
       if (!slot) return null;
       return createPortal(
         <div
-          className="min-[1024px]:hidden"
           style={{
             height: mobileLinkTab === 'buttons' ? 'calc(85vh - 64px)' : '290px',
             overflowY: mobileLinkTab === 'buttons' ? 'auto' : 'hidden',
