@@ -3680,8 +3680,8 @@ function AgentPortal() {
             className="transition-all duration-150 ease-out"
             style={{
               opacity: isTabTransitioning ? 0 : 1,
-              filter: isTabTransitioning ? 'blur(8px)' : 'blur(0px)',
-              transform: isTabTransitioning ? 'scale(0.98)' : 'scale(1)',
+              filter: isTabTransitioning ? 'blur(8px)' : 'none',
+              transform: isTabTransitioning ? 'scale(0.98)' : 'none',
             }}
           >
             {/* Onboarding Section - with blur/fade transition on completion */}
@@ -11800,8 +11800,8 @@ function AgentPagesSection({
           </div>
         </div>
 
-        {/* Font + Name Glow - Side by side */}
-        <div className="flex gap-3">
+        {/* Font + Name Glow - Side by side on desktop, stacked on mobile */}
+        <div className="flex flex-wrap gap-3">
           {/* Font */}
           <div className="flex-1">
             <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Font</label>
@@ -12320,7 +12320,7 @@ function AgentPagesSection({
         {/* Phone Mockup - Premium Styling - overflow visible for button controls */}
         {/* Hide scrollbar for webkit browsers */}
         <style>{`.phone-inner-scroll::-webkit-scrollbar { display: none; }
-@media (max-width: 1023px) { .phone-inner-scroll { padding-top: 2px !important; } }`}</style>
+@media (max-width: 1023px) { .phone-inner-scroll { padding-top: 2px !important; overflow-y: hidden !important; } }`}</style>
         <div className="p-4 flex flex-col items-center overflow-visible">
           <div className="w-full max-w-[300px] relative" style={{ overflow: 'visible' }}>
           <div
@@ -13316,7 +13316,7 @@ return (
         ref={mobileContentRef}
         className="flex-1 overflow-y-auto"
         style={{
-          padding: `25px 0 ${mobileLinkTab === 'buttons' ? '0' : '320px'} 0`,
+          padding: `50px 0 ${mobileLinkTab === 'buttons' ? '0' : '320px'} 0`,
           opacity: isMobileTabTransitioning ? 0 : 1,
           transform: isMobileTabTransitioning ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
           transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
@@ -13340,7 +13340,7 @@ return (
           className="min-[1024px]:hidden"
           style={{
             height: mobileLinkTab === 'buttons' ? 'calc(85vh - 64px)' : '290px',
-            overflowY: mobileLinkTab === 'buttons' ? 'auto' : 'hidden',
+            overflowY: 'hidden',
             transition: 'height 0.3s ease',
           }}
         >
