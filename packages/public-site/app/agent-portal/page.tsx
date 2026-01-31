@@ -5978,40 +5978,23 @@ function DashboardView({
               className="flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={{
                 width: '180px',
-                ...(statsStale && !isRefreshing ? {
-                  background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)',
-                  border: '1px solid rgba(34, 197, 94, 0.4)',
-                  color: '#4ade80',
-                  boxShadow: '0 0 12px rgba(34, 197, 94, 0.15)',
-                } : {
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: isRefreshing ? 'rgba(229, 228, 221, 0.3)' : 'rgba(229, 228, 221, 0.5)',
-                }),
+                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)',
+                border: '1px solid rgba(34, 197, 94, 0.4)',
+                color: isRefreshing ? 'rgba(74, 222, 128, 0.4)' : '#4ade80',
+                boxShadow: '0 0 12px rgba(34, 197, 94, 0.15)',
               }}
               onMouseEnter={(e) => {
                 if (isRefreshing) return;
-                if (statsStale) {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(59, 130, 246, 0.25) 100%)';
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.25)';
-                } else {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                  e.currentTarget.style.color = 'rgba(229, 228, 221, 0.8)';
-                }
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(59, 130, 246, 0.25) 100%)';
+                e.currentTarget.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.25)';
               }}
               onMouseLeave={(e) => {
-                if (statsStale && !isRefreshing) {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)';
-                  e.currentTarget.style.boxShadow = '0 0 12px rgba(34, 197, 94, 0.15)';
-                } else {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                  e.currentTarget.style.color = isRefreshing ? 'rgba(229, 228, 221, 0.3)' : 'rgba(229, 228, 221, 0.5)';
-                  e.currentTarget.style.boxShadow = 'none';
-                }
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)';
+                e.currentTarget.style.boxShadow = '0 0 12px rgba(34, 197, 94, 0.15)';
               }}
             >
               <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
-              {isRefreshing ? 'Refreshing...' : statsStale ? 'Refresh Stats' : 'Refresh'}
+              {isRefreshing ? 'Refreshing...' : 'Refresh Stats'}
             </button>
           </div>
 
