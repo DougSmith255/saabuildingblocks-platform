@@ -35,15 +35,27 @@ export function VideoSlidePanel({ isOpen, onClose }: VideoSlidePanelProps) {
       subtitle="Everything eXp offers. Everything SAA provides."
       size="xl"
     >
-      <VideoSection
-        videoId={VIDEO_ID}
-        posterUrl={POSTER_URL}
-        storageKey="homepage_video"
-        unlockThreshold={50}
-        sponsorName={null}
-        hideTitle
-        compact
-      />
+      {/* Content wrapper — flex-centered across the full panel height,
+           matching the eXp guest pass centering pattern */}
+      <div
+        style={{
+          flex: '1 1 0%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '0 16px',
+        }}
+      >
+        <VideoSection
+          videoId={VIDEO_ID}
+          posterUrl={POSTER_URL}
+          storageKey="homepage_video"
+          unlockThreshold={50}
+          sponsorName={null}
+          hideTitle
+          compact
+        />
+      </div>
     </SlidePanel>
   );
 }

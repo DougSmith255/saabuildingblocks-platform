@@ -769,6 +769,7 @@ export function VideoPlayer({
 
         .progress-text {
           margin: 0;
+          font-size: 16px;
         }
 
         /* Responsive adjustments */

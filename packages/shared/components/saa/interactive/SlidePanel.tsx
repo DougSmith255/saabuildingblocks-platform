@@ -172,6 +172,9 @@ export function SlidePanel({
   const accentRgb = theme === 'blue' ? '0, 191, 255' : '255, 215, 0';
   const accentHex = theme === 'blue' ? '#00bfff' : '#ffd700';
 
+  // Whether the panel has a full-bleed background (explicit or auto gold)
+  const hasBackground = !!backgroundElement || theme === 'gold';
+
   // Track when component is mounted (for portal rendering)
   useEffect(() => {
     setMounted(true);
@@ -346,7 +349,7 @@ export function SlidePanel({
         width: '100%',
         maxHeight: '85vh',
         overflowY: 'auto',
-        ...(backgroundElement ? { display: 'flex', flexDirection: 'column' as const, minHeight: '85vh' } : {}),
+        ...(hasBackground ? { display: 'flex', flexDirection: 'column' as const, minHeight: '85vh' } : {}),
         overscrollBehavior: 'contain',
         borderTop: `1px solid rgba(${accentRgb}, 0.2)`,
         borderRadius: '1rem 1rem 0 0',
@@ -376,7 +379,7 @@ export function SlidePanel({
         minWidth: fitContent ? SIZE_CONFIG[size] : undefined, // Keep minimum width for readability
         height: '100dvh',
         overflowY: 'auto',
-        ...(backgroundElement ? { display: 'flex', flexDirection: 'column' as const } : {}),
+        ...(hasBackground ? { display: 'flex', flexDirection: 'column' as const } : {}),
         overscrollBehavior: 'contain',
         borderLeft: `1px solid rgba(${accentRgb}, 0.25)`,
         borderRadius: '1rem 0 0 1rem',
@@ -408,7 +411,7 @@ export function SlidePanel({
     justifyContent: 'space-between',
     padding: '1.25rem',
     borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-    background: backgroundElement
+    background: hasBackground
       ? `linear-gradient(135deg, rgba(${accentRgb}, 0.1) 0%, rgba(18, 18, 18, 0.85) 50%)`
       : `linear-gradient(135deg, rgba(${accentRgb}, 0.1) 0%, rgb(18, 18, 18) 50%)`,
     borderRadius: isMobile ? '1rem 1rem 0.5rem 0.5rem' : '1rem 0 0 0.5rem',
@@ -451,10 +454,10 @@ export function SlidePanel({
 
   const contentStyle: React.CSSProperties = {
     padding: '1.25rem',
-    // When backgroundElement is present, content spans the full panel via
-    // absolute positioning so flex centering works across the entire panel
-    // height (not just below the header).
-    ...(backgroundElement ? {
+    // When a background is present (explicit or auto gold), content spans
+    // the full panel via absolute positioning so flex centering works
+    // across the entire panel height (not just below the header).
+    ...(hasBackground ? {
       position: 'absolute' as const,
       inset: 0,
       zIndex: 1,
@@ -467,8 +470,8 @@ export function SlidePanel({
   const footerStyle: React.CSSProperties = {
     padding: '1.25rem',
     borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-    position: backgroundElement ? 'relative' : undefined,
-    zIndex: backgroundElement ? 1 : undefined,
+    position: hasBackground ? 'relative' : undefined,
+    zIndex: hasBackground ? 1 : undefined,
   };
 
   // Use portal to render at document.body level, escaping any stacking context issues
