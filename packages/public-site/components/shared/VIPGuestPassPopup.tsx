@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { SlidePanel } from '@saa/shared/components/saa/interactive/SlidePanel';
 import { FormInput } from '@saa/shared/components/saa/forms/FormInput';
 import { FormGroup } from '@saa/shared/components/saa/forms/FormGroup';
@@ -11,55 +11,140 @@ const STORAGE_KEY = 'saa_vip_pass_shown';
 const TRIGGER_DELAY_MS = 30000; // 30 seconds
 const SCROLL_THRESHOLD = 0.5; // 50% page depth
 
-/** CSS-only twinkling starfield background */
-function Starfield() {
-  const stars = useMemo(() =>
-    Array.from({ length: 120 }, (_, i) => ({
-      id: i,
-      size: Math.random() * 2 + 1,
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 5}s`,
-      duration: `${Math.random() * 3 + 4}s`,
-    }))
-  , []);
+// Texture URLs for Earth globe
+const EARTH_TEXTURE = 'https://i.postimg.cc/ry0pcyyZ/earth.jpg';
+const EARTH_BUMP = 'https://i.postimg.cc/mgrJfkBt/bump.jpg';
+const EARTH_SPECULAR = 'https://i.postimg.cc/R06YhY3m/spec.jpg';
+const CLOUD_TEXTURE = 'https://i.postimg.cc/k4WhFtFh/cloud.png';
+const SPACE_BG = 'https://i.postimg.cc/br3g30GL/bg.jpg';
+
+/**
+ * Auto-rotating Earth globe rendered with Three.js.
+ * Three.js is dynamically imported so it only loads when the popup is visible.
+ */
+function EarthGlobe({ isVisible }: { isVisible: boolean }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    if (!isVisible || !containerRef.current) return;
+
+    // Prevent double-init
+    if (cleanupRef.current) return;
+
+    const container = containerRef.current;
+
+    // Dynamic import — three.js only loads when popup opens
+    import('three').then((THREE) => {
+      if (!container || !container.isConnected) return;
+
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      // Scene
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
+      camera.position.z = 100;
+
+      // Renderer (transparent so the CSS background image shows through)
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setClearColor(0x000000, 0);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(width, height);
+      container.appendChild(renderer.domElement);
+
+      const loader = new THREE.TextureLoader();
+
+      // Earth
+      const earthGeo = new THREE.SphereGeometry(30, 32, 32);
+      const earthMat = new THREE.MeshPhongMaterial({
+        shininess: 40,
+        bumpScale: 1,
+        map: loader.load(EARTH_TEXTURE),
+        bumpMap: loader.load(EARTH_BUMP),
+        specularMap: loader.load(EARTH_SPECULAR),
+      });
+      const earth = new THREE.Mesh(earthGeo, earthMat);
+      scene.add(earth);
+
+      // Clouds
+      const cloudGeo = new THREE.SphereGeometry(31, 32, 32);
+      const cloudMat = new THREE.MeshBasicMaterial({
+        map: loader.load(CLOUD_TEXTURE),
+        transparent: true,
+        opacity: 0.8,
+      });
+      const cloud = new THREE.Mesh(cloudGeo, cloudMat);
+      scene.add(cloud);
+
+      // Lights
+      const pointLight = new THREE.PointLight(0xffffff);
+      pointLight.position.set(-400, 100, 150);
+      scene.add(pointLight);
+
+      const ambientLight = new THREE.AmbientLight(0x222222);
+      scene.add(ambientLight);
+
+      // Animation loop (auto-rotate only, no mouse control)
+      let frameId = 0;
+      const animate = () => {
+        frameId = requestAnimationFrame(animate);
+        earth.rotation.y += 0.001;
+        cloud.rotation.y += 0.0012;
+        renderer.render(scene, camera);
+      };
+      animate();
+
+      // Handle resize
+      const onResize = () => {
+        if (!container.isConnected) return;
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      };
+      const resizeObserver = new ResizeObserver(onResize);
+      resizeObserver.observe(container);
+
+      // Store cleanup
+      cleanupRef.current = () => {
+        cancelAnimationFrame(frameId);
+        resizeObserver.disconnect();
+        renderer.dispose();
+        earthGeo.dispose();
+        earthMat.dispose();
+        cloudGeo.dispose();
+        cloudMat.dispose();
+        if (container.contains(renderer.domElement)) {
+          container.removeChild(renderer.domElement);
+        }
+        cleanupRef.current = null;
+      };
+    });
+
+    return () => {
+      cleanupRef.current?.();
+    };
+  }, [isVisible]);
 
   return (
     <div
+      ref={containerRef}
       className="absolute inset-0 overflow-hidden pointer-events-none"
       style={{
-        background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)',
+        backgroundImage: `url("${SPACE_BG}")`,
+        backgroundPosition: 'center center',
+        backgroundSize: 'cover',
       }}
-    >
-      {stars.map((s) => (
-        <div
-          key={s.id}
-          className="absolute rounded-full"
-          style={{
-            width: `${s.size}px`,
-            height: `${s.size}px`,
-            top: s.top,
-            left: s.left,
-            backgroundColor: '#fff',
-            boxShadow: '0 0 4px #fff, 0 0 8px #fff, 0 0 16px #00ffff',
-            animation: `vipTwinkle ${s.duration} ${s.delay} infinite ease-in-out`,
-          }}
-        />
-      ))}
-      <style>{`
-        @keyframes vipTwinkle {
-          0%, 100% { opacity: 0.4; transform: scale(0.8); }
-          50% { opacity: 1; transform: scale(1.2); }
-        }
-      `}</style>
-    </div>
+    />
   );
 }
 
 /**
  * VIPGuestPassPopup - One-time eXp World Guest Pass lead capture
  *
- * Blue/space theme with twinkling starfield background.
+ * Blue/space theme with Earth globe background (Three.js).
  * Shows once per visitor (tracked via localStorage).
  * Triggers after 30 seconds OR 50% scroll depth, whichever comes first.
  * Form submits to /api/join-team with source: 'vip-guest-pass'.
@@ -189,12 +274,20 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
         </span>
       }
     >
-      {/* Negative margin extends starfield into the content padding area */}
-      <div className="relative" style={{ margin: '-1.25rem', padding: '1.25rem', minHeight: '380px' }}>
-        {/* Starfield Background */}
-        <Starfield />
+      {/* Negative margin extends background into the content padding area */}
+      <div className="relative" style={{ margin: '-1.25rem', padding: '1.25rem', minHeight: '420px' }}>
+        {/* Earth Globe Background (Three.js + space image) */}
+        <EarthGlobe isVisible={isOpen} />
 
-        {/* Content on top of starfield */}
+        {/* Semi-transparent overlay for text readability */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.6) 100%)',
+          }}
+        />
+
+        {/* Content on top */}
         <div className="relative z-10 flex flex-col gap-5">
           {/* VIP Badge */}
           <div
@@ -202,6 +295,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
             style={{
               background: 'linear-gradient(135deg, rgba(0,191,255,0.15) 0%, rgba(0,127,255,0.08) 100%)',
               border: '1px solid rgba(0,191,255,0.3)',
+              backdropFilter: 'blur(8px)',
               maxWidth: '320px',
               width: '100%',
             }}
@@ -232,6 +326,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
               style={{
                 background: 'rgba(0,191,255,0.1)',
                 border: '1px solid rgba(0,191,255,0.35)',
+                backdropFilter: 'blur(8px)',
               }}
             >
               <p className="font-semibold mb-2" style={{ fontSize: '18px', color: '#00bfff' }}>
