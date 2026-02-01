@@ -112,6 +112,14 @@ export default function Home() {
               overflow: 'visible',
             }}
           >
+            {/* Space cloud/mist backdrop - centered and extends beyond container on all sides */}
+            <div
+              className="hero-3d-backdrop absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%]"
+              style={{
+                background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
+                filter: 'blur(40px)',
+              }}
+            />
             {/* Main image */}
             <img
               src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop"
