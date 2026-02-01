@@ -28,6 +28,9 @@ export type { ModalProps } from './Modal';
 export { SlidePanel } from './SlidePanel';
 export type { SlidePanelProps } from './SlidePanel';
 
+export { GoldenAmbientBackground } from './GoldenAmbientBackground';
+export type { GoldenAmbientBackgroundProps } from './GoldenAmbientBackground';
+
 export { ScrollIndicator } from './ScrollIndicator';
 
 export { CommissionCalculator } from './CommissionCalculator';

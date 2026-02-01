@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { GoldenAmbientBackground } from './GoldenAmbientBackground';
 
 export interface SlidePanelProps {
   /** Whether the panel is open */
@@ -492,7 +493,7 @@ export function SlidePanel({
         onTouchEnd={handleTouchEnd}
       >
         {/* Background Element - renders behind everything, fills entire panel */}
-        {backgroundElement && (
+        {backgroundElement ? (
           <div
             style={{
               position: 'absolute',
@@ -505,7 +506,20 @@ export function SlidePanel({
           >
             {backgroundElement}
           </div>
-        )}
+        ) : theme === 'gold' ? (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 0,
+              overflow: 'hidden',
+              borderRadius: 'inherit',
+              pointerEvents: 'none',
+            }}
+          >
+            <GoldenAmbientBackground isVisible={isOpen && !animatingOut} />
+          </div>
+        ) : null}
 
         {/* Header */}
         <div style={headerStyle}>
