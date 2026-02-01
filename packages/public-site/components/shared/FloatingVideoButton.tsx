@@ -133,36 +133,64 @@ export function FloatingVideoButton() {
           className="relative flex items-center gap-2.5"
           style={{ padding: '12px 22px' }}
         >
-          {/* Play Icon */}
+          {/* Camera Icon — glass effect: grayscale/dim at rest, full color on hover */}
           <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            className="transition-transform duration-300 group-hover:scale-110"
-            style={{ flexShrink: 0 }}
+            viewBox="0 0 256 256"
+            xmlns="http://www.w3.org/2000/svg"
+            className="glass-icon transition-all duration-500 group-hover:glass-icon-hover"
+            style={{ width: '20px', height: '20px', flexShrink: 0 }}
           >
-            <path
-              d="M8 5.14v13.72a1 1 0 001.5.86l11.04-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z"
-              fill="#ffd700"
-              style={{
-                filter: 'drop-shadow(0 0 4px rgba(255,215,0,0.5))',
-              }}
-            />
+            <defs>
+              <linearGradient id="mTop" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="#ea4335" />
+                <stop offset="1" stopColor="#fbbc04" />
+              </linearGradient>
+              <linearGradient id="mRight" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor="#fbbc04" />
+                <stop offset="1" stopColor="#34a853" />
+              </linearGradient>
+              <linearGradient id="mBottom" x1="1" y1="0" x2="0" y2="0">
+                <stop offset="0" stopColor="#34a853" />
+                <stop offset="1" stopColor="#4285f4" />
+              </linearGradient>
+              <linearGradient id="mLeft" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0" stopColor="#4285f4" />
+                <stop offset="1" stopColor="#ea4335" />
+              </linearGradient>
+            </defs>
+            <path d="M 64 60 L 166 60 A 24 24 0 0 1 190 84" stroke="url(#mTop)" strokeWidth="20" strokeLinecap="round" fill="none" />
+            <path d="M 190 84 V 100 L 240 70 V 186 L 190 156 V 172 A 24 24 0 0 1 166 196" stroke="url(#mRight)" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            <path d="M 166 196 L 64 196 A 24 24 0 0 1 40 172" stroke="url(#mBottom)" strokeWidth="20" strokeLinecap="round" fill="none" />
+            <path d="M 40 172 L 40 84 A 24 24 0 0 1 64 60" stroke="url(#mLeft)" strokeWidth="20" strokeLinecap="round" fill="none" />
           </svg>
 
-          {/* Label — hidden on very small screens */}
+          {/* Label — hidden on very small screens, dimmed to match icon */}
           <span
-            className="hidden sm:inline text-sm font-semibold whitespace-nowrap tracking-wide"
+            className="hidden sm:inline text-sm font-semibold whitespace-nowrap tracking-wide transition-all duration-500"
             style={{
-              color: '#ffd700',
-              textShadow: '0 0 8px rgba(255,215,0,0.3)',
+              color: 'rgba(255, 255, 255, 0.5)',
               letterSpacing: '0.04em',
             }}
           >
             The Inside Look
           </span>
         </div>
+
+        {/* Glass icon styles — grayscale/dim at rest, full color on hover */}
+        <style>{`
+          .glass-icon {
+            filter: grayscale(100%) opacity(0.6) brightness(3) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+          }
+          .group:hover .glass-icon {
+            filter: grayscale(0%) opacity(1) brightness(1) drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+            transform: scale(1.1);
+          }
+          .group:hover span {
+            color: rgba(255, 255, 255, 0.95) !important;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
+          }
+        `}</style>
       </button>
 
       {/* Video Slide Panel */}
