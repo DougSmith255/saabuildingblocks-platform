@@ -2,8 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { SlidePanel } from './SlidePanel';
-import { FormInput, FormGroup, FormRow, FormButton, FormMessage } from '../forms';
-import Link from 'next/link';
+import { FormInput, FormGroup, FormRow, FormButton, FormMessage, ConsentCheckbox } from '../forms';
 
 // localStorage key for storing user info
 const FREEBIE_USER_KEY = 'saa_freebie_user';
@@ -292,82 +291,10 @@ export function FreebieDownloadModal({
           </FormGroup>
 
           {/* Consent Checkbox */}
-          <div style={{ marginTop: '1.25rem' }}>
-            <label style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '0.75rem',
-              cursor: 'pointer',
-            }}>
-              {/* Hidden native checkbox */}
-              <input
-                type="checkbox"
-                name="consent"
-                checked={formData.consent}
-                onChange={handleInputChange}
-                style={{
-                  position: 'absolute',
-                  opacity: 0,
-                  width: 0,
-                  height: 0,
-                }}
-              />
-              {/* Custom checkbox */}
-              <span
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  minWidth: '20px',
-                  marginTop: '2px',
-                  borderRadius: '4px',
-                  border: formData.consent ? '2px solid #ffd700' : '2px solid #888888',
-                  backgroundColor: formData.consent ? '#ffd700' : 'transparent',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                {formData.consent && (
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#1a1a1a"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                )}
-              </span>
-              <span style={{
-                fontSize: 'var(--font-size-caption)',
-                color: 'var(--text-muted)',
-                lineHeight: 1.5,
-              }}>
-                I agree to the{' '}
-                <Link
-                  href="/terms-of-use/"
-                  target="_blank"
-                  style={{ color: 'var(--accent-gold)', textDecoration: 'underline' }}
-                >
-                  Terms &amp; Conditions
-                </Link>
-                {' '}and{' '}
-                <Link
-                  href="/privacy-policy/"
-                  target="_blank"
-                  style={{ color: 'var(--accent-gold)', textDecoration: 'underline' }}
-                >
-                  Privacy Policy
-                </Link>
-                {' '}and consent to receive emails.
-              </span>
-            </label>
-          </div>
+          <ConsentCheckbox
+            checked={formData.consent}
+            onChange={(checked) => setFormData(prev => ({ ...prev, consent: checked }))}
+          />
 
           <div style={{ marginTop: '1.5rem' }}>
             <FormButton isLoading={isSubmitting} loadingText="Processing...">

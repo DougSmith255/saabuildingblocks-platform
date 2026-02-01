@@ -6,3 +6,4 @@ export { FormRow, type FormRowProps } from './FormRow';
 export { FormMessage, type FormMessageProps } from './FormMessage';
 export { ModalTitle, type ModalTitleProps } from './ModalTitle';
 export { FormCard, type FormCardProps } from './FormCard';
+export { ConsentCheckbox, type ConsentCheckboxProps } from './ConsentCheckbox';

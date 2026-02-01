@@ -7,6 +7,7 @@ import { FormInput } from '@saa/shared/components/saa/forms/FormInput';
 import { FormGroup } from '@saa/shared/components/saa/forms/FormGroup';
 import { FormRow } from '@saa/shared/components/saa/forms/FormRow';
 import { FormButton } from '@saa/shared/components/saa/forms/FormButton';
+import { ConsentCheckbox } from '@saa/shared/components/saa/forms/ConsentCheckbox';
 
 const STORAGE_KEY = 'saa_vip_pass_shown';
 const TRIGGER_DELAY_MS = 30000;
@@ -484,7 +485,7 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
 export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boolean; onForceClose?: () => void } = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
-  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '' });
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', consent: false });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
@@ -591,6 +592,11 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.firstName.trim() || !formData.email.trim()) return;
+    if (!formData.consent) {
+      setSubmitStatus('error');
+      setErrorMessage('Please accept the terms and conditions to continue.');
+      return;
+    }
 
     setIsSubmitting(true);
     setSubmitStatus('idle');
@@ -754,13 +760,21 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
               </div>
             </div>
 
+            <ConsentCheckbox
+              checked={formData.consent}
+              onChange={(checked) => setFormData(prev => ({ ...prev, consent: checked }))}
+              accentColor="#00bfff"
+              linkColor="#00bfff"
+              textColor="rgba(10, 26, 46, 0.7)"
+            />
+
             {submitStatus === 'error' && (
               <p className="text-sm text-center mt-2" style={{ color: '#ff4444' }}>
                 {errorMessage}
               </p>
             )}
 
-            <div style={{ marginTop: '31px' }}>
+            <div style={{ marginTop: '16px' }}>
               <FormButton
                 type="submit"
                 variant="cyber"
