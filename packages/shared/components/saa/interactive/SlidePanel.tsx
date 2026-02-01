@@ -305,7 +305,7 @@ export function SlidePanel({
         width: '100%',
         maxHeight: '85vh',
         overflowY: 'auto',
-        ...(backgroundElement ? { display: 'flex', flexDirection: 'column' as const } : {}),
+        ...(backgroundElement ? { display: 'flex', flexDirection: 'column' as const, minHeight: '85vh' } : {}),
         overscrollBehavior: 'contain',
         borderTop: `1px solid rgba(${accentRgb}, 0.2)`,
         borderRadius: '1rem 1rem 0 0',
@@ -410,15 +410,16 @@ export function SlidePanel({
 
   const contentStyle: React.CSSProperties = {
     padding: '1.25rem',
-    position: backgroundElement ? 'relative' : undefined,
-    zIndex: backgroundElement ? 1 : undefined,
-    // When backgroundElement is present, make content a flex column that fills
-    // remaining panel height so children can use spacers to position content
+    // When backgroundElement is present, content spans the full panel via
+    // absolute positioning so flex centering works across the entire panel
+    // height (not just below the header).
     ...(backgroundElement ? {
+      position: 'absolute' as const,
+      inset: 0,
+      zIndex: 1,
       display: 'flex',
       flexDirection: 'column' as const,
-      flex: '1 1 0%',
-      minHeight: 0,
+      overflow: 'auto',
     } : {}),
   };
 

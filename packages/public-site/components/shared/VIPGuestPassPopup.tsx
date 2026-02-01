@@ -584,8 +584,9 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
         .vip-form-area label { color: #0a1a2e !important; }
       `}</style>
 
-      {/* Content area — flex-centered, pulled up by header height so it
-           visually centers across the full panel, not just below the header */}
+      {/* Content area — flex-centered across the full panel height.
+           The parent content div is now absolutely positioned (inset: 0)
+           so flex centering works from panel top to bottom. */}
       <div
         className="vip-form-area flex flex-col gap-3"
         style={{
@@ -594,7 +595,6 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
           flexDirection: 'column',
           justifyContent: 'center',
           padding: '0 16px',
-          marginTop: '-76px',
         }}
       >
         {/* Description — dark text readable against bright blue globe */}
