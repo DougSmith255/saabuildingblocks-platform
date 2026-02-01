@@ -76,10 +76,19 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
       const height = container.clientHeight;
       const R = 28; // Globe radius
 
+      // Compute camera distance based on aspect ratio —
+      // narrow/tall panels (desktop sidebar) pull camera back so globe isn't oversized
+      function cameraZForAspect(w: number, h: number) {
+        const aspect = w / h;
+        if (aspect < 0.45) return 120;   // very narrow desktop panel
+        if (aspect < 0.65) return 108;   // typical desktop slide panel
+        return 90;                        // tablet / wider
+      }
+
       // ── Scene ──
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-      camera.position.z = 90;
+      camera.position.z = cameraZForAspect(width, height);
 
       const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setClearColor(0x000000, 0);
@@ -411,12 +420,13 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
       };
       animate();
 
-      // Resize
+      // Resize — also adjusts camera distance for narrow panels
       const onResize = () => {
         if (!container.isConnected) return;
         const w = container.clientWidth;
         const h = container.clientHeight;
         camera.aspect = w / h;
+        camera.position.z = cameraZForAspect(w, h);
         camera.updateProjectionMatrix();
         renderer.setSize(w, h);
         if (composer) composer.setSize(w, h);
@@ -573,14 +583,23 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
         />
       }
     >
-      <div className="flex flex-col gap-5">
+      {/* Frosted backdrop so text/fields are readable over the globe */}
+      <div
+        className="flex flex-col gap-5 rounded-2xl"
+        style={{
+          background: 'rgba(5, 10, 25, 0.72)',
+          backdropFilter: 'blur(14px)',
+          WebkitBackdropFilter: 'blur(14px)',
+          border: '1px solid rgba(0, 191, 255, 0.12)',
+          padding: '20px 18px',
+        }}
+      >
         {/* VIP Badge */}
         <div
           className="text-center py-3 px-4 rounded-xl mx-auto"
           style={{
             background: 'linear-gradient(135deg, rgba(0,191,255,0.15) 0%, rgba(0,127,255,0.08) 100%)',
             border: '1px solid rgba(0,191,255,0.3)',
-            backdropFilter: 'blur(8px)',
             maxWidth: '320px',
             width: '100%',
           }}
@@ -610,7 +629,6 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
             style={{
               background: 'rgba(0,191,255,0.1)',
               border: '1px solid rgba(0,191,255,0.35)',
-              backdropFilter: 'blur(8px)',
             }}
           >
             <p className="font-semibold mb-2" style={{ fontSize: '18px', color: '#00bfff' }}>
@@ -621,63 +639,69 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <FormRow columns={2}>
-              <FormGroup label="First Name" htmlFor="vip-first-name" required>
+          <form onSubmit={handleSubmit}>
+            {/* Name + Email fields grouped tighter */}
+            <div className="space-y-2">
+              <FormRow columns={2}>
+                <FormGroup label="First Name" htmlFor="vip-first-name" required>
+                  <FormInput
+                    type="text"
+                    id="vip-first-name"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                    placeholder="First name"
+                    required
+                  />
+                </FormGroup>
+                <FormGroup label="Last Name" htmlFor="vip-last-name">
+                  <FormInput
+                    type="text"
+                    id="vip-last-name"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
+                    placeholder="Last name"
+                  />
+                </FormGroup>
+              </FormRow>
+              <FormGroup label="Email" htmlFor="vip-email" required>
                 <FormInput
-                  type="text"
-                  id="vip-first-name"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
-                  placeholder="First name"
+                  type="email"
+                  id="vip-email"
+                  name="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="you@example.com"
                   required
                 />
               </FormGroup>
-              <FormGroup label="Last Name" htmlFor="vip-last-name">
-                <FormInput
-                  type="text"
-                  id="vip-last-name"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                  placeholder="Last name"
-                />
-              </FormGroup>
-            </FormRow>
-            <FormGroup label="Email" htmlFor="vip-email" required>
-              <FormInput
-                type="email"
-                id="vip-email"
-                name="email"
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="you@example.com"
-                required
-              />
-            </FormGroup>
+            </div>
 
             {submitStatus === 'error' && (
-              <p className="text-sm text-center" style={{ color: '#ff4444' }}>
+              <p className="text-sm text-center mt-3" style={{ color: '#ff4444' }}>
                 {errorMessage}
               </p>
             )}
 
-            <FormButton
-              type="submit"
-              variant="cyber"
-              isLoading={isSubmitting}
-              loadingText="Claiming..."
-              fullWidth
-              style={{
-                background: 'linear-gradient(135deg, #00bfff 0%, #0077cc 100%)',
-                color: '#ffffff',
-                border: '1px solid rgba(0,191,255,0.5)',
-                boxShadow: '0 0 20px rgba(0,191,255,0.25), 0 4px 15px rgba(0,0,0,0.3)',
-              }}
-            >
-              Claim Your Guest Pass
-            </FormButton>
+            {/* Button spaced further from email */}
+            <div className="mt-6">
+              <FormButton
+                type="submit"
+                variant="cyber"
+                isLoading={isSubmitting}
+                loadingText="Claiming..."
+                fullWidth
+                style={{
+                  background: 'linear-gradient(135deg, #00bfff 0%, #0077cc 100%)',
+                  color: '#ffffff',
+                  border: '1px solid rgba(0,191,255,0.5)',
+                  boxShadow: '0 0 20px rgba(0,191,255,0.25), 0 4px 15px rgba(0,0,0,0.3)',
+                }}
+              >
+                Claim Your Guest Pass
+              </FormButton>
+            </div>
           </form>
         )}
 
