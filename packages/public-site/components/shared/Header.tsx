@@ -273,7 +273,7 @@ export default function Header() {
                 width: '126px',
                 height: '45px',
                 minWidth: '0',
-                minHeight: '45px',
+                minHeight: '0',
                 maxWidth: '126px',
                 maxHeight: '45px',
                 borderRadius: 0,
@@ -703,11 +703,11 @@ export default function Header() {
           }
         }
 
-        /* Base header height — applies to all sizes, overridden by desktop below */
+        /* Base header height — mobile default (85px − 25px = 60px) */
         .header-container {
-          height: 39px;
-          padding-top: 2px;
-          padding-bottom: 2px;
+          height: 60px;
+          padding-top: 0;
+          padding-bottom: 0;
         }
 
         /* Slightly smaller hamburger on mobile (65px → 60px) */

@@ -460,20 +460,21 @@ export function SlidePanel({
 
   const contentStyle: React.CSSProperties = {
     padding: '1.25rem',
-    // When a background is present (explicit or auto gold), content spans
-    // the full panel via absolute positioning so flex centering works
-    // across the entire panel height (not just below the header).
-    // padding-top clears the sticky header (~65px) + 15px gap so content
-    // never tucks behind the header on short screens, while tall screens
-    // still center naturally since the padding goes unused.
+    // When a background is present (explicit or auto gold), content is
+    // absolutely positioned starting BELOW the sticky header so it can
+    // never scroll behind it. Flex centering works within this area.
+    // Using explicit top/left/right/bottom instead of inset+paddingTop
+    // because padding on a scrollable container is itself scrollable.
     ...(hasBackground ? {
       position: 'absolute' as const,
-      inset: 0,
+      top: '80px',
+      left: 0,
+      right: 0,
+      bottom: 0,
       zIndex: 1,
       display: 'flex',
       flexDirection: 'column' as const,
       overflow: 'auto',
-      paddingTop: '80px',
     } : {}),
   };
 
