@@ -305,6 +305,7 @@ export function SlidePanel({
         width: '100%',
         maxHeight: '85vh',
         overflowY: 'auto',
+        ...(backgroundElement ? { display: 'flex', flexDirection: 'column' as const } : {}),
         overscrollBehavior: 'contain',
         borderTop: `1px solid rgba(${accentRgb}, 0.2)`,
         borderRadius: '1rem 1rem 0 0',
@@ -334,6 +335,7 @@ export function SlidePanel({
         minWidth: fitContent ? SIZE_CONFIG[size] : undefined, // Keep minimum width for readability
         height: '100dvh',
         overflowY: 'auto',
+        ...(backgroundElement ? { display: 'flex', flexDirection: 'column' as const } : {}),
         overscrollBehavior: 'contain',
         borderLeft: `1px solid rgba(${accentRgb}, 0.25)`,
         borderRadius: '1rem 0 0 1rem',
@@ -410,6 +412,14 @@ export function SlidePanel({
     padding: '1.25rem',
     position: backgroundElement ? 'relative' : undefined,
     zIndex: backgroundElement ? 1 : undefined,
+    // When backgroundElement is present, make content a flex column that fills
+    // remaining panel height so children can use spacers to position content
+    ...(backgroundElement ? {
+      display: 'flex',
+      flexDirection: 'column' as const,
+      flex: '1 1 0%',
+      minHeight: 0,
+    } : {}),
   };
 
   const footerStyle: React.CSSProperties = {

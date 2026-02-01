@@ -583,64 +583,42 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
         />
       }
     >
-      {/* Frosted backdrop so text/fields are readable over the globe */}
+      {/* Spacer — lets the globe show in the upper portion of the panel */}
+      <div style={{ flex: '1 1 0%', minHeight: '120px' }} />
+
+      {/* Compact frosted form area pinned toward the bottom */}
       <div
-        className="flex flex-col gap-5 rounded-2xl"
+        className="flex flex-col gap-3 rounded-2xl"
         style={{
-          background: 'rgba(5, 10, 25, 0.72)',
+          background: 'rgba(5, 10, 25, 0.75)',
           backdropFilter: 'blur(14px)',
           WebkitBackdropFilter: 'blur(14px)',
           border: '1px solid rgba(0, 191, 255, 0.12)',
-          padding: '20px 18px',
+          padding: '16px 16px 14px',
         }}
       >
-        {/* VIP Badge */}
-        <div
-          className="text-center py-3 px-4 rounded-xl mx-auto"
-          style={{
-            background: 'linear-gradient(135deg, rgba(0,191,255,0.15) 0%, rgba(0,127,255,0.08) 100%)',
-            border: '1px solid rgba(0,191,255,0.3)',
-            maxWidth: '320px',
-            width: '100%',
-          }}
-        >
-          <p
-            className="text-xs uppercase tracking-[0.2em] font-semibold"
-            style={{ color: '#00bfff' }}
-          >
-            Exclusive Access
-          </p>
-        </div>
-
-        {/* Value Prop */}
-        <div className="space-y-3">
-          <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.9, lineHeight: 1.6 }}>
-            eXp World is where 84,000+ agents across 29 countries connect, train, and collaborate
-            in real time — a virtual campus with live events, leadership access, and operational support.
-          </p>
-          <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.8, lineHeight: 1.6 }}>
-            Claim your Guest Pass to experience it firsthand. No commitment, no cost.
-          </p>
-        </div>
+        {/* Short value prop — one line */}
+        <p style={{ fontSize: '15px', color: '#e0f7fa', opacity: 0.85, lineHeight: 1.5, textAlign: 'center' }}>
+          84,000+ agents. 29 countries. One virtual campus. Step inside eXp World — free.
+        </p>
 
         {submitStatus === 'success' ? (
           <div
-            className="text-center py-8 px-4 rounded-xl"
+            className="text-center py-6 px-4 rounded-xl"
             style={{
               background: 'rgba(0,191,255,0.1)',
               border: '1px solid rgba(0,191,255,0.35)',
             }}
           >
-            <p className="font-semibold mb-2" style={{ fontSize: '18px', color: '#00bfff' }}>
+            <p className="font-semibold mb-1" style={{ fontSize: '18px', color: '#00bfff' }}>
               You&apos;re In!
             </p>
-            <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.8 }}>
+            <p style={{ fontSize: '15px', color: '#e0f7fa', opacity: 0.8 }}>
               Check your email for your Guest Pass details.
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
-            {/* Name + Email fields grouped tighter */}
             <div className="space-y-2">
               <FormRow columns={2}>
                 <FormGroup label="First Name" htmlFor="vip-first-name" required>
@@ -679,13 +657,12 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
             </div>
 
             {submitStatus === 'error' && (
-              <p className="text-sm text-center mt-3" style={{ color: '#ff4444' }}>
+              <p className="text-sm text-center mt-2" style={{ color: '#ff4444' }}>
                 {errorMessage}
               </p>
             )}
 
-            {/* Button spaced further from email */}
-            <div className="mt-6">
+            <div className="mt-4">
               <FormButton
                 type="submit"
                 variant="cyber"
@@ -705,8 +682,8 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
           </form>
         )}
 
-        <p className="text-xs text-center" style={{ color: '#e0f7fa', opacity: 0.4 }}>
-          No spam. No obligations. Just an inside look at eXp World.
+        <p className="text-xs text-center" style={{ color: '#e0f7fa', opacity: 0.35 }}>
+          No spam. No obligations.
         </p>
       </div>
     </SlidePanel>
