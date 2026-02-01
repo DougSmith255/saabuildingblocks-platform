@@ -11,16 +11,20 @@ const STORAGE_KEY = 'saa_vip_pass_shown';
 const TRIGGER_DELAY_MS = 30000; // 30 seconds
 const SCROLL_THRESHOLD = 0.5; // 50% page depth
 
-// Texture URLs for Earth globe
-const EARTH_TEXTURE = 'https://i.postimg.cc/ry0pcyyZ/earth.jpg';
-const EARTH_BUMP = 'https://i.postimg.cc/mgrJfkBt/bump.jpg';
-const EARTH_SPECULAR = 'https://i.postimg.cc/R06YhY3m/spec.jpg';
-const CLOUD_TEXTURE = 'https://i.postimg.cc/k4WhFtFh/cloud.png';
-const SPACE_BG = 'https://i.postimg.cc/br3g30GL/bg.jpg';
+// Local texture paths (served from public/, avoids CORS issues with external hosts)
+const EARTH_TEXTURE = '/images/exp-world/earth.jpg';
+const EARTH_BUMP = '/images/exp-world/bump.jpg';
+const EARTH_SPECULAR = '/images/exp-world/spec.jpg';
+const CLOUD_TEXTURE = '/images/exp-world/cloud.png';
+const SPACE_BG = '/images/exp-world/bg.jpg';
+
+// eXp X logo from Cloudflare Image Delivery (same as agent portal)
+const EXP_X_LOGO = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public';
 
 /**
  * Auto-rotating Earth globe rendered with Three.js.
  * Three.js is dynamically imported so it only loads when the popup is visible.
+ * Fills the entire panel background via SlidePanel's backgroundElement prop.
  */
 function EarthGlobe({ isVisible }: { isVisible: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,44 +48,49 @@ function EarthGlobe({ isVisible }: { isVisible: boolean }) {
       // Scene
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
-      camera.position.z = 100;
+      camera.position.z = 160;
 
       // Renderer (transparent so the CSS background image shows through)
-      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      renderer.setClearColor(0x000000, 0);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      const renderer = new THREE.WebGLRenderer({ alpha: true });
+      renderer.setClearColor(0xffffff, 0);
+      renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(width, height);
       container.appendChild(renderer.domElement);
 
       const loader = new THREE.TextureLoader();
 
-      // Earth
+      // Earth terrain
+      const earthTexture = loader.load(EARTH_TEXTURE);
+      const earthBump = loader.load(EARTH_BUMP);
+      const earthSpecular = loader.load(EARTH_SPECULAR);
       const earthGeo = new THREE.SphereGeometry(30, 32, 32);
       const earthMat = new THREE.MeshPhongMaterial({
         shininess: 40,
         bumpScale: 1,
-        map: loader.load(EARTH_TEXTURE),
-        bumpMap: loader.load(EARTH_BUMP),
-        specularMap: loader.load(EARTH_SPECULAR),
+        map: earthTexture,
+        bumpMap: earthBump,
+        specularMap: earthSpecular,
       });
       const earth = new THREE.Mesh(earthGeo, earthMat);
       scene.add(earth);
 
-      // Clouds
+      // Earth cloud layer
+      const cloudTexture = loader.load(CLOUD_TEXTURE);
       const cloudGeo = new THREE.SphereGeometry(31, 32, 32);
       const cloudMat = new THREE.MeshBasicMaterial({
-        map: loader.load(CLOUD_TEXTURE),
+        map: cloudTexture,
         transparent: true,
         opacity: 0.8,
       });
       const cloud = new THREE.Mesh(cloudGeo, cloudMat);
       scene.add(cloud);
 
-      // Lights
+      // Point light (upper left)
       const pointLight = new THREE.PointLight(0xffffff);
       pointLight.position.set(-400, 100, 150);
       scene.add(pointLight);
 
+      // Ambient light
       const ambientLight = new THREE.AmbientLight(0x222222);
       scene.add(ambientLight);
 
@@ -90,7 +99,7 @@ function EarthGlobe({ isVisible }: { isVisible: boolean }) {
       const animate = () => {
         frameId = requestAnimationFrame(animate);
         earth.rotation.y += 0.001;
-        cloud.rotation.y += 0.0012;
+        cloud.rotation.y += 0.001;
         renderer.render(scene, camera);
       };
       animate();
@@ -131,8 +140,9 @@ function EarthGlobe({ isVisible }: { isVisible: boolean }) {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 overflow-hidden pointer-events-none"
       style={{
+        position: 'absolute',
+        inset: 0,
         backgroundImage: `url("${SPACE_BG}")`,
         backgroundPosition: 'center center',
         backgroundSize: 'cover',
@@ -268,141 +278,130 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
       title="eXp World Guest Pass"
       subtitle="Step inside the world's largest virtual real estate campus"
       size="md"
+      theme="blue"
+      backgroundElement={<EarthGlobe isVisible={isOpen} />}
       icon={
-        <span style={{ fontSize: '24px', filter: 'drop-shadow(0 0 6px rgba(0,191,255,0.6))', color: '#00bfff' }}>
-          &#9733;
-        </span>
+        <img
+          src={EXP_X_LOGO}
+          alt="eXp"
+          style={{ width: '24px', height: '24px', objectFit: 'contain' }}
+        />
       }
     >
-      {/* Negative margin extends background into the content padding area */}
-      <div className="relative" style={{ margin: '-1.25rem', padding: '1.25rem', minHeight: '420px' }}>
-        {/* Earth Globe Background (Three.js + space image) */}
-        <EarthGlobe isVisible={isOpen} />
-
-        {/* Semi-transparent overlay for text readability */}
+      <div className="flex flex-col gap-5">
+        {/* VIP Badge */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="text-center py-3 px-4 rounded-xl mx-auto"
           style={{
-            background: 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.6) 100%)',
+            background: 'linear-gradient(135deg, rgba(0,191,255,0.15) 0%, rgba(0,127,255,0.08) 100%)',
+            border: '1px solid rgba(0,191,255,0.3)',
+            backdropFilter: 'blur(8px)',
+            maxWidth: '320px',
+            width: '100%',
           }}
-        />
+        >
+          <p
+            className="text-xs uppercase tracking-[0.2em] font-semibold"
+            style={{ color: '#00bfff' }}
+          >
+            Exclusive Access
+          </p>
+        </div>
 
-        {/* Content on top */}
-        <div className="relative z-10 flex flex-col gap-5">
-          {/* VIP Badge */}
+        {/* Value Prop */}
+        <div className="space-y-3">
+          <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.9, lineHeight: 1.6 }}>
+            eXp World is where 84,000+ agents across 29 countries connect, train, and collaborate
+            in real time — a virtual campus with live events, leadership access, and operational support.
+          </p>
+          <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.8, lineHeight: 1.6 }}>
+            Claim your Guest Pass to experience it firsthand. No commitment, no cost.
+          </p>
+        </div>
+
+        {submitStatus === 'success' ? (
+          /* Success State */
           <div
-            className="text-center py-3 px-4 rounded-xl mx-auto"
+            className="text-center py-8 px-4 rounded-xl"
             style={{
-              background: 'linear-gradient(135deg, rgba(0,191,255,0.15) 0%, rgba(0,127,255,0.08) 100%)',
-              border: '1px solid rgba(0,191,255,0.3)',
+              background: 'rgba(0,191,255,0.1)',
+              border: '1px solid rgba(0,191,255,0.35)',
               backdropFilter: 'blur(8px)',
-              maxWidth: '320px',
-              width: '100%',
             }}
           >
-            <p
-              className="text-xs uppercase tracking-[0.2em] font-semibold"
-              style={{ color: '#00bfff' }}
-            >
-              Exclusive Access
+            <p className="font-semibold mb-2" style={{ fontSize: '18px', color: '#00bfff' }}>
+              You&apos;re In!
+            </p>
+            <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.8 }}>
+              Check your email for your Guest Pass details.
             </p>
           </div>
-
-          {/* Value Prop */}
-          <div className="space-y-3">
-            <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.9, lineHeight: 1.6 }}>
-              eXp World is where 84,000+ agents across 29 countries connect, train, and collaborate
-              in real time — a virtual campus with live events, leadership access, and operational support.
-            </p>
-            <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.8, lineHeight: 1.6 }}>
-              Claim your Guest Pass to experience it firsthand. No commitment, no cost.
-            </p>
-          </div>
-
-          {submitStatus === 'success' ? (
-            /* Success State */
-            <div
-              className="text-center py-8 px-4 rounded-xl"
-              style={{
-                background: 'rgba(0,191,255,0.1)',
-                border: '1px solid rgba(0,191,255,0.35)',
-                backdropFilter: 'blur(8px)',
-              }}
-            >
-              <p className="font-semibold mb-2" style={{ fontSize: '18px', color: '#00bfff' }}>
-                You&apos;re In!
-              </p>
-              <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.8 }}>
-                Check your email for your Guest Pass details.
-              </p>
-            </div>
-          ) : (
-            /* Form */
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <FormRow columns={2}>
-                <FormGroup label="First Name" htmlFor="vip-first-name" required>
-                  <FormInput
-                    type="text"
-                    id="vip-first-name"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
-                    placeholder="First name"
-                    required
-                  />
-                </FormGroup>
-                <FormGroup label="Last Name" htmlFor="vip-last-name">
-                  <FormInput
-                    type="text"
-                    id="vip-last-name"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                    placeholder="Last name"
-                  />
-                </FormGroup>
-              </FormRow>
-              <FormGroup label="Email" htmlFor="vip-email" required>
+        ) : (
+          /* Form */
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <FormRow columns={2}>
+              <FormGroup label="First Name" htmlFor="vip-first-name" required>
                 <FormInput
-                  type="email"
-                  id="vip-email"
-                  name="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                  placeholder="you@example.com"
+                  type="text"
+                  id="vip-first-name"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                  placeholder="First name"
                   required
                 />
               </FormGroup>
+              <FormGroup label="Last Name" htmlFor="vip-last-name">
+                <FormInput
+                  type="text"
+                  id="vip-last-name"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
+                  placeholder="Last name"
+                />
+              </FormGroup>
+            </FormRow>
+            <FormGroup label="Email" htmlFor="vip-email" required>
+              <FormInput
+                type="email"
+                id="vip-email"
+                name="email"
+                value={formData.email}
+                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                placeholder="you@example.com"
+                required
+              />
+            </FormGroup>
 
-              {submitStatus === 'error' && (
-                <p className="text-sm text-center" style={{ color: '#ff4444' }}>
-                  {errorMessage}
-                </p>
-              )}
+            {submitStatus === 'error' && (
+              <p className="text-sm text-center" style={{ color: '#ff4444' }}>
+                {errorMessage}
+              </p>
+            )}
 
-              <FormButton
-                type="submit"
-                variant="cyber"
-                isLoading={isSubmitting}
-                loadingText="Claiming..."
-                fullWidth
-                style={{
-                  background: 'linear-gradient(135deg, #00bfff 0%, #0077cc 100%)',
-                  color: '#ffffff',
-                  border: '1px solid rgba(0,191,255,0.5)',
-                  boxShadow: '0 0 20px rgba(0,191,255,0.25), 0 4px 15px rgba(0,0,0,0.3)',
-                }}
-              >
-                Claim Your Guest Pass
-              </FormButton>
-            </form>
-          )}
+            <FormButton
+              type="submit"
+              variant="cyber"
+              isLoading={isSubmitting}
+              loadingText="Claiming..."
+              fullWidth
+              style={{
+                background: 'linear-gradient(135deg, #00bfff 0%, #0077cc 100%)',
+                color: '#ffffff',
+                border: '1px solid rgba(0,191,255,0.5)',
+                boxShadow: '0 0 20px rgba(0,191,255,0.25), 0 4px 15px rgba(0,0,0,0.3)',
+              }}
+            >
+              Claim Your Guest Pass
+            </FormButton>
+          </form>
+        )}
 
-          {/* Fine print */}
-          <p className="text-xs text-center" style={{ color: '#e0f7fa', opacity: 0.4 }}>
-            No spam. No obligations. Just an inside look at eXp World.
-          </p>
-        </div>
+        {/* Fine print */}
+        <p className="text-xs text-center" style={{ color: '#e0f7fa', opacity: 0.4 }}>
+          No spam. No obligations. Just an inside look at eXp World.
+        </p>
       </div>
     </SlidePanel>
   );

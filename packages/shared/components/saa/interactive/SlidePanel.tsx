@@ -32,6 +32,10 @@ export interface SlidePanelProps {
   hideBackdrop?: boolean;
   /** Z-index offset for stacking panels */
   zIndexOffset?: number;
+  /** Color theme: 'gold' (default) or 'blue' */
+  theme?: 'gold' | 'blue';
+  /** Optional background element rendered behind header+content (e.g., 3D scene) */
+  backgroundElement?: React.ReactNode;
 }
 
 // Size configurations - all desktop panels use 500px width
@@ -114,7 +118,8 @@ function isMobileViewport(): boolean {
  * - Swipe down to close (mobile, only when at top of scroll)
  * - Swipe right to close (desktop)
  * - Body scroll locked when open
- * - Premium glass effect with gold theme
+ * - Premium glass effect with configurable theme (gold/blue)
+ * - Optional background element for immersive content (e.g., 3D scenes)
  */
 export function SlidePanel({
   isOpen,
@@ -131,6 +136,8 @@ export function SlidePanel({
   maxWidth = '85vw',
   hideBackdrop = false,
   zIndexOffset = 0,
+  theme = 'gold',
+  backgroundElement,
 }: SlidePanelProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
@@ -141,6 +148,10 @@ export function SlidePanel({
 
   const SWIPE_THRESHOLD = 80;
   const ANIMATION_DURATION = 250;
+
+  // Theme-driven accent colors (RGB string and hex)
+  const accentRgb = theme === 'blue' ? '0, 191, 255' : '255, 215, 0';
+  const accentHex = theme === 'blue' ? '#00bfff' : '#ffd700';
 
   // Track when component is mounted (for portal rendering)
   useEffect(() => {
@@ -295,7 +306,7 @@ export function SlidePanel({
         maxHeight: '85vh',
         overflowY: 'auto',
         overscrollBehavior: 'contain',
-        borderTop: '1px solid rgba(255, 215, 0, 0.2)',
+        borderTop: `1px solid rgba(${accentRgb}, 0.2)`,
         borderRadius: '1rem 1rem 0 0',
         paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))',
         background: `
@@ -306,7 +317,7 @@ export function SlidePanel({
         WebkitBackdropFilter: 'blur(12px) saturate(1.4)',
         boxShadow: `
           0 -10px 40px rgba(0, 0, 0, 0.5),
-          0 0 40px rgba(255, 215, 0, 0.1),
+          0 0 40px rgba(${accentRgb}, 0.1),
           inset 0 1px 0 rgba(255, 255, 255, 0.08),
           inset 0 -1px 0 rgba(0, 0, 0, 0.3)
         `,
@@ -324,7 +335,7 @@ export function SlidePanel({
         height: '100dvh',
         overflowY: 'auto',
         overscrollBehavior: 'contain',
-        borderLeft: '1px solid rgba(255, 215, 0, 0.25)',
+        borderLeft: `1px solid rgba(${accentRgb}, 0.25)`,
         borderRadius: '1rem 0 0 1rem',
         background: `
           linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 40%),
@@ -335,7 +346,7 @@ export function SlidePanel({
         boxShadow: `
           -20px 0 60px rgba(0, 0, 0, 0.6),
           -5px 0 20px rgba(0, 0, 0, 0.4),
-          0 0 50px rgba(255, 215, 0, 0.08),
+          0 0 50px rgba(${accentRgb}, 0.08),
           inset 1px 0 0 rgba(255, 255, 255, 0.06),
           inset 0 1px 0 rgba(255, 255, 255, 0.04),
           inset 0 -1px 0 rgba(0, 0, 0, 0.2)
@@ -354,23 +365,25 @@ export function SlidePanel({
     justifyContent: 'space-between',
     padding: '1.25rem',
     borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-    background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgb(18, 18, 18) 50%)',
+    background: backgroundElement
+      ? `linear-gradient(135deg, rgba(${accentRgb}, 0.1) 0%, rgba(18, 18, 18, 0.85) 50%)`
+      : `linear-gradient(135deg, rgba(${accentRgb}, 0.1) 0%, rgb(18, 18, 18) 50%)`,
     borderRadius: isMobile ? '1rem 1rem 0.5rem 0.5rem' : '1rem 0 0 0.5rem',
   };
 
   const iconWrapperStyle: React.CSSProperties = {
     padding: '0.5rem',
     borderRadius: '0.5rem',
-    background: 'rgba(255, 215, 0, 0.15)',
-    border: '1px solid rgba(255, 215, 0, 0.3)',
-    boxShadow: '0 0 12px rgba(255, 215, 0, 0.2)',
+    background: `rgba(${accentRgb}, 0.15)`,
+    border: `1px solid rgba(${accentRgb}, 0.3)`,
+    boxShadow: `0 0 12px rgba(${accentRgb}, 0.2)`,
   };
 
   const titleStyle: React.CSSProperties = {
     fontSize: '1.25rem',
     fontWeight: 600,
-    color: '#ffd700',
-    textShadow: '0 0 20px rgba(255, 215, 0, 0.3)',
+    color: accentHex,
+    textShadow: `0 0 20px rgba(${accentRgb}, 0.3)`,
     margin: 0,
   };
 
@@ -385,7 +398,7 @@ export function SlidePanel({
     borderRadius: '0.5rem',
     background: 'transparent',
     border: 'none',
-    color: 'rgba(255, 215, 0, 0.7)',
+    color: `rgba(${accentRgb}, 0.7)`,
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
@@ -395,11 +408,15 @@ export function SlidePanel({
 
   const contentStyle: React.CSSProperties = {
     padding: '1.25rem',
+    position: backgroundElement ? 'relative' : undefined,
+    zIndex: backgroundElement ? 1 : undefined,
   };
 
   const footerStyle: React.CSSProperties = {
     padding: '1.25rem',
     borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+    position: backgroundElement ? 'relative' : undefined,
+    zIndex: backgroundElement ? 1 : undefined,
   };
 
   // Use portal to render at document.body level, escaping any stacking context issues
@@ -423,6 +440,22 @@ export function SlidePanel({
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
+        {/* Background Element - renders behind everything, fills entire panel */}
+        {backgroundElement && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 0,
+              overflow: 'hidden',
+              borderRadius: 'inherit',
+              pointerEvents: 'none',
+            }}
+          >
+            {backgroundElement}
+          </div>
+        )}
+
         {/* Header */}
         <div style={headerStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
