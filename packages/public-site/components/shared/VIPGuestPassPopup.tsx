@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { SlidePanel } from '@saa/shared/components/saa/interactive/SlidePanel';
 import { FormInput } from '@saa/shared/components/saa/forms/FormInput';
 import { FormGroup } from '@saa/shared/components/saa/forms/FormGroup';
@@ -11,9 +11,55 @@ const STORAGE_KEY = 'saa_vip_pass_shown';
 const TRIGGER_DELAY_MS = 30000; // 30 seconds
 const SCROLL_THRESHOLD = 0.5; // 50% page depth
 
+/** CSS-only twinkling starfield background */
+function Starfield() {
+  const stars = useMemo(() =>
+    Array.from({ length: 120 }, (_, i) => ({
+      id: i,
+      size: Math.random() * 2 + 1,
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      delay: `${Math.random() * 5}s`,
+      duration: `${Math.random() * 3 + 4}s`,
+    }))
+  , []);
+
+  return (
+    <div
+      className="absolute inset-0 overflow-hidden pointer-events-none"
+      style={{
+        background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)',
+      }}
+    >
+      {stars.map((s) => (
+        <div
+          key={s.id}
+          className="absolute rounded-full"
+          style={{
+            width: `${s.size}px`,
+            height: `${s.size}px`,
+            top: s.top,
+            left: s.left,
+            backgroundColor: '#fff',
+            boxShadow: '0 0 4px #fff, 0 0 8px #fff, 0 0 16px #00ffff',
+            animation: `vipTwinkle ${s.duration} ${s.delay} infinite ease-in-out`,
+          }}
+        />
+      ))}
+      <style>{`
+        @keyframes vipTwinkle {
+          0%, 100% { opacity: 0.4; transform: scale(0.8); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 /**
- * VIPGuestPassPopup - One-time VIP Guest Pass lead capture
+ * VIPGuestPassPopup - One-time eXp World Guest Pass lead capture
  *
+ * Blue/space theme with twinkling starfield background.
  * Shows once per visitor (tracked via localStorage).
  * Triggers after 30 seconds OR 50% scroll depth, whichever comes first.
  * Form submits to /api/join-team with source: 'vip-guest-pass'.
@@ -134,121 +180,134 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
     <SlidePanel
       isOpen={isOpen}
       onClose={handleClose}
-      title="VIP Guest Pass"
+      title="eXp World Guest Pass"
       subtitle="Step inside the world's largest virtual real estate campus"
       size="md"
       icon={
-        <span style={{ fontSize: '24px', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.6))' }}>
+        <span style={{ fontSize: '24px', filter: 'drop-shadow(0 0 6px rgba(0,191,255,0.6))', color: '#00bfff' }}>
           &#9733;
         </span>
       }
     >
-      <div className="flex flex-col gap-5">
-        {/* VIP Badge */}
-        <div
-          className="text-center py-3 px-4 rounded-xl mx-auto"
-          style={{
-            background: 'linear-gradient(135deg, rgba(255,215,0,0.15) 0%, rgba(255,180,0,0.08) 100%)',
-            border: '1px solid rgba(255,215,0,0.3)',
-            maxWidth: '320px',
-            width: '100%',
-          }}
-        >
-          <p
-            className="text-xs uppercase tracking-[0.2em] font-semibold"
-            style={{ color: '#ffd700' }}
-          >
-            Exclusive Access
-          </p>
-        </div>
+      {/* Negative margin extends starfield into the content padding area */}
+      <div className="relative" style={{ margin: '-1.25rem', padding: '1.25rem', minHeight: '380px' }}>
+        {/* Starfield Background */}
+        <Starfield />
 
-        {/* Value Prop */}
-        <div className="space-y-3">
-          <p className="text-body opacity-90">
-            eXp World is where 84,000+ agents across 29 countries connect, train, and collaborate
-            in real time — a virtual campus with live events, leadership access, and operational support.
-          </p>
-          <p className="text-body opacity-80">
-            Claim your VIP Guest Pass to experience it firsthand. No commitment, no cost.
-          </p>
-        </div>
-
-        {submitStatus === 'success' ? (
-          /* Success State */
+        {/* Content on top of starfield */}
+        <div className="relative z-10 flex flex-col gap-5">
+          {/* VIP Badge */}
           <div
-            className="text-center py-8 px-4 rounded-xl"
+            className="text-center py-3 px-4 rounded-xl mx-auto"
             style={{
-              background: 'rgba(0,255,136,0.08)',
-              border: '1px solid rgba(0,255,136,0.3)',
+              background: 'linear-gradient(135deg, rgba(0,191,255,0.15) 0%, rgba(0,127,255,0.08) 100%)',
+              border: '1px solid rgba(0,191,255,0.3)',
+              maxWidth: '320px',
+              width: '100%',
             }}
           >
-            <p className="text-lg font-semibold mb-2" style={{ color: '#00ff88' }}>
-              You&apos;re In!
-            </p>
-            <p className="text-body opacity-80">
-              Check your email for your VIP Guest Pass details.
+            <p
+              className="text-xs uppercase tracking-[0.2em] font-semibold"
+              style={{ color: '#00bfff' }}
+            >
+              Exclusive Access
             </p>
           </div>
-        ) : (
-          /* Form */
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <FormRow columns={2}>
-              <FormGroup label="First Name" htmlFor="vip-first-name" required>
+
+          {/* Value Prop */}
+          <div className="space-y-3">
+            <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.9, lineHeight: 1.6 }}>
+              eXp World is where 84,000+ agents across 29 countries connect, train, and collaborate
+              in real time — a virtual campus with live events, leadership access, and operational support.
+            </p>
+            <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.8, lineHeight: 1.6 }}>
+              Claim your Guest Pass to experience it firsthand. No commitment, no cost.
+            </p>
+          </div>
+
+          {submitStatus === 'success' ? (
+            /* Success State */
+            <div
+              className="text-center py-8 px-4 rounded-xl"
+              style={{
+                background: 'rgba(0,191,255,0.1)',
+                border: '1px solid rgba(0,191,255,0.35)',
+              }}
+            >
+              <p className="font-semibold mb-2" style={{ fontSize: '18px', color: '#00bfff' }}>
+                You&apos;re In!
+              </p>
+              <p style={{ fontSize: '16px', color: '#e0f7fa', opacity: 0.8 }}>
+                Check your email for your Guest Pass details.
+              </p>
+            </div>
+          ) : (
+            /* Form */
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <FormRow columns={2}>
+                <FormGroup label="First Name" htmlFor="vip-first-name" required>
+                  <FormInput
+                    type="text"
+                    id="vip-first-name"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                    placeholder="First name"
+                    required
+                  />
+                </FormGroup>
+                <FormGroup label="Last Name" htmlFor="vip-last-name">
+                  <FormInput
+                    type="text"
+                    id="vip-last-name"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
+                    placeholder="Last name"
+                  />
+                </FormGroup>
+              </FormRow>
+              <FormGroup label="Email" htmlFor="vip-email" required>
                 <FormInput
-                  type="text"
-                  id="vip-first-name"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
-                  placeholder="First name"
+                  type="email"
+                  id="vip-email"
+                  name="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="you@example.com"
                   required
                 />
               </FormGroup>
-              <FormGroup label="Last Name" htmlFor="vip-last-name">
-                <FormInput
-                  type="text"
-                  id="vip-last-name"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                  placeholder="Last name"
-                />
-              </FormGroup>
-            </FormRow>
-            <FormGroup label="Email" htmlFor="vip-email" required>
-              <FormInput
-                type="email"
-                id="vip-email"
-                name="email"
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="you@example.com"
-                required
-              />
-            </FormGroup>
 
-            {submitStatus === 'error' && (
-              <p className="text-sm text-center" style={{ color: '#ff4444' }}>
-                {errorMessage}
-              </p>
-            )}
+              {submitStatus === 'error' && (
+                <p className="text-sm text-center" style={{ color: '#ff4444' }}>
+                  {errorMessage}
+                </p>
+              )}
 
-            <FormButton
-              type="submit"
-              variant="gold"
-              isLoading={isSubmitting}
-              loadingText="Claiming..."
-              fullWidth
-            >
-              Claim Your VIP Pass
-            </FormButton>
-          </form>
-        )}
+              <FormButton
+                type="submit"
+                variant="cyber"
+                isLoading={isSubmitting}
+                loadingText="Claiming..."
+                fullWidth
+                style={{
+                  background: 'linear-gradient(135deg, #00bfff 0%, #0077cc 100%)',
+                  color: '#ffffff',
+                  border: '1px solid rgba(0,191,255,0.5)',
+                  boxShadow: '0 0 20px rgba(0,191,255,0.25), 0 4px 15px rgba(0,0,0,0.3)',
+                }}
+              >
+                Claim Your Guest Pass
+              </FormButton>
+            </form>
+          )}
 
-        {/* Fine print */}
-        <p className="text-xs text-center opacity-50" style={{ color: 'var(--color-body-text)' }}>
-          No spam. No obligations. Just an inside look at eXp World.
-        </p>
+          {/* Fine print */}
+          <p className="text-xs text-center" style={{ color: '#e0f7fa', opacity: 0.4 }}>
+            No spam. No obligations. Just an inside look at eXp World.
+          </p>
+        </div>
       </div>
     </SlidePanel>
   );
