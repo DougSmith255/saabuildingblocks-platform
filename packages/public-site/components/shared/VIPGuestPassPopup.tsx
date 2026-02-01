@@ -582,16 +582,19 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
       {/* Scoped style — dark form labels + extra spacer on wide screens */}
       <style>{`
         .vip-form-area label { color: #0a1a2e !important; }
-        @media (min-width: 1350px) {
-          .vip-wide-spacer { flex: 0 0 80px !important; }
-        }
       `}</style>
 
-      {/* Spacer — grows on wide screens so content sits lower */}
-      <div className="vip-wide-spacer" style={{ flex: '0 0 20px' }} />
-
-      {/* Content area — no card, sits directly over the globe background */}
-      <div className="vip-form-area flex flex-col gap-3" style={{ padding: '0 16px 14px' }}>
+      {/* Content area — vertically centered over the globe */}
+      <div
+        className="vip-form-area flex flex-col gap-3"
+        style={{
+          flex: '1 1 0%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '0 16px 14px',
+        }}
+      >
         {/* Description — dark text readable against bright blue globe */}
         <p style={{
           fontSize: '14px',
