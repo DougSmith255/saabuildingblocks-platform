@@ -703,10 +703,24 @@ export default function Header() {
           }
         }
 
-        /* Mobile header height - fixed 64px below 1600px breakpoint (xlg) */
+        /* Mobile header height - fixed 39px below 1600px breakpoint (xlg) */
         @media (max-width: 100rem) {
           .header-container {
-            height: 64px !important;
+            height: 39px !important;
+            padding-top: 2px !important;
+            padding-bottom: 2px !important;
+          }
+          .hamburger {
+            width: 48px !important;
+            height: 48px !important;
+            min-width: 48px !important;
+            min-height: 48px !important;
+          }
+          .hamburger-svg {
+            width: 48px !important;
+            height: 48px !important;
+            min-width: 48px !important;
+            min-height: 48px !important;
           }
         }
 

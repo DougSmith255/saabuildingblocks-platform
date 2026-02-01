@@ -183,7 +183,7 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
           }}
         >
         <div
-          className="mobile-menu-content pt-16 pb-32 min-h-screen"
+          className="mobile-menu-content pt-10 pb-32 min-h-screen"
           style={{
             overscrollBehavior: 'none', // Prevent rubber banding on content
           }}
