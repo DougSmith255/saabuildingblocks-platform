@@ -112,14 +112,6 @@ export default function Home() {
               overflow: 'visible',
             }}
           >
-            {/* Space cloud/mist backdrop - centered and extends beyond container on all sides */}
-            <div
-              className="hero-3d-backdrop absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%]"
-              style={{
-                background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
-                filter: 'blur(40px)',
-              }}
-            />
             {/* Main image */}
             <img
               src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop"
@@ -136,11 +128,6 @@ export default function Home() {
               fetchPriority="high"
               decoding="async"
               className="hero-3d-image profile-image w-full h-full object-contain"
-              style={{
-                maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
-                filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
-              }}
             />
           </div>
 
