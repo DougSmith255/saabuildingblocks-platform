@@ -3342,8 +3342,8 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
 
 /* Ensure backdrop-blur elements inherit opacity correctly from the wrapper */
 /* This fixes the issue where button faces with backdrop-blur disappear instantly */
-.hero-content-wrapper * {
-  /* Force elements to composite in same layer as parent for consistent opacity */
+/* EXCLUDES hero-3d-image: backface-visibility: hidden clips its drop-shadow */
+.hero-content-wrapper *:not(.hero-3d-image) {
   backface-visibility: hidden;
 }
 
