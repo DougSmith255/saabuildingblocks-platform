@@ -584,17 +584,21 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
         .vip-form-area label { color: #0a1a2e !important; }
       `}</style>
 
-      {/* Content area — vertically centered over the globe */}
+      {/* Content area — absolutely centered over the full panel (not just below header) */}
       <div
-        className="vip-form-area flex flex-col gap-3"
+        className="vip-form-area"
         style={{
-          flex: '1 1 0%',
+          position: 'absolute',
+          inset: 0,
+          zIndex: 2,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          padding: '0 16px 14px',
+          padding: '0 16px',
+          pointerEvents: 'none',
         }}
       >
+      <div className="flex flex-col gap-3" style={{ pointerEvents: 'auto' }}>
         {/* Description — dark text readable against bright blue globe */}
         <p style={{
           fontSize: '14px',
@@ -710,6 +714,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
         <p className="text-xs text-center" style={{ color: '#0a1a2e', opacity: 0.5 }}>
           No spam. No obligations.
         </p>
+      </div>
       </div>
     </SlidePanel>
   );
