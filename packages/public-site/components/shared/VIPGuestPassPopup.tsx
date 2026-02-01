@@ -671,7 +671,8 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
               You&apos;re In!
             </p>
             <p style={{ fontSize: '15px', color: '#e0f7fa', opacity: 0.9 }}>
-              Check your email for your Guest Pass details.
+              Expect an email from <strong style={{ color: '#00bfff' }}>agentonboarding@exprealty.net</strong> within
+              3 minutes with a link to access eXp World.
             </p>
           </div>
         ) : (
@@ -710,6 +711,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
                   />
                 </FormGroup>
               </FormRow>
+              <div style={{ marginTop: '-4px' }}>
               <FormGroup label="Email" htmlFor="vip-email" required>
                 <FormInput
                   type="email"
@@ -726,6 +728,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
                   }}
                 />
               </FormGroup>
+              </div>
             </div>
 
             {submitStatus === 'error' && (
@@ -734,7 +737,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
               </p>
             )}
 
-            <div className="mt-4">
+            <div style={{ marginTop: '31px' }}>
               <FormButton
                 type="submit"
                 variant="cyber"
