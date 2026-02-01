@@ -228,7 +228,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
           style={{
             position: 'fixed',
             bottom: '24px',
-            right: '220px',
+            right: '320px',
             zIndex: 10005,
             padding: '12px 18px',
             borderRadius: '9999px',

@@ -221,6 +221,15 @@ export function FreebieDownloadModal({
       icon={<DownloadIcon />}
       size="md"
     >
+      <div
+        style={{
+          flex: '1 1 0%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '0 16px',
+        }}
+      >
       {showSuccess ? (
         <div style={{ textAlign: 'center', padding: '2rem 0' }}>
           <div style={{
@@ -371,6 +380,7 @@ export function FreebieDownloadModal({
           )}
         </form>
       )}
+      </div>
     </SlidePanel>
   );
 }

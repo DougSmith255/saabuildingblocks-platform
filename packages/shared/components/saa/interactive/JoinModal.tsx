@@ -163,6 +163,15 @@ export function JoinModal({
       hideBackdrop={hideBackdrop}
       zIndexOffset={zIndexOffset}
     >
+      <div
+        style={{
+          flex: '1 1 0%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '0 16px',
+        }}
+      >
       <form onSubmit={handleSubmit}>
         <FormRow>
           <FormGroup label="First Name" htmlFor="firstName" required>
@@ -220,6 +229,7 @@ export function JoinModal({
           <FormMessage type={message.type}>{message.text}</FormMessage>
         )}
       </form>
+      </div>
     </SlidePanel>
   );
 }

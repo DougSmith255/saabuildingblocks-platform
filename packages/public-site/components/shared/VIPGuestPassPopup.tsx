@@ -501,6 +501,13 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
     try { localStorage.setItem(STORAGE_KEY, 'true'); } catch {}
   }, []);
 
+  // Helper: returns true when any other SlidePanel is currently open.
+  // SlidePanel adds 'slide-panel-open' to <html> whenever it's visible.
+  const isPanelOpen = useCallback(() => {
+    return typeof document !== 'undefined' &&
+      document.documentElement.classList.contains('slide-panel-open');
+  }, []);
+
   useEffect(() => {
     try {
       if (localStorage.getItem(STORAGE_KEY)) {
@@ -514,10 +521,25 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
       return;
     }
 
-    timerRef.current = setTimeout(() => showPopup(), TRIGGER_DELAY_MS);
+    // Interval-based timer that pauses while any panel is open.
+    // Ticks every 500ms; only accumulates elapsed time when no panel is open.
+    let elapsed = 0;
+    const TICK = 500;
+    const intervalId = setInterval(() => {
+      if (hasTriggeredRef.current) return;
+      if (!isPanelOpen()) {
+        elapsed += TICK;
+        if (elapsed >= TRIGGER_DELAY_MS) {
+          showPopup();
+          clearInterval(intervalId);
+        }
+      }
+    }, TICK);
 
     const handleScroll = () => {
       if (hasTriggeredRef.current) return;
+      // Don't trigger while another panel is open
+      if (isPanelOpen()) return;
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (docHeight > 0 && scrollTop / docHeight >= SCROLL_THRESHOLD) showPopup();
@@ -525,10 +547,11 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
+      clearInterval(intervalId);
       if (timerRef.current) clearTimeout(timerRef.current);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [showPopup]);
+  }, [showPopup, isPanelOpen]);
 
   useEffect(() => {
     if (forceOpen) setIsOpen(true);
