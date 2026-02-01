@@ -62,13 +62,8 @@ export function FloatingVideoButton() {
           opacity: shouldShow ? 1 : 0,
           transform: shouldShow ? 'translateY(0)' : 'translateY(80px)',
           pointerEvents: shouldShow ? 'auto' : 'none',
-          // Outer glow + border matching header
           border: '2px solid rgba(60, 60, 60, 0.8)',
-          boxShadow: `
-            0 0 24px rgba(255, 215, 0, 0.12),
-            0 4px 20px rgba(0, 0, 0, 0.5),
-            0 2px 8px rgba(0, 0, 0, 0.3)
-          `,
+          boxShadow: '0 6px 24px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3)',
           overflow: 'hidden',
           position: 'fixed',
         }}
@@ -158,10 +153,10 @@ export function FloatingVideoButton() {
                 <stop offset="1" stopColor="#ea4335" />
               </linearGradient>
             </defs>
-            <path d="M 64 60 L 166 60 A 24 24 0 0 1 190 84" stroke="url(#mTop)" strokeWidth="20" strokeLinecap="round" fill="none" />
-            <path d="M 190 84 V 100 L 240 70 V 186 L 190 156 V 172 A 24 24 0 0 1 166 196" stroke="url(#mRight)" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-            <path d="M 166 196 L 64 196 A 24 24 0 0 1 40 172" stroke="url(#mBottom)" strokeWidth="20" strokeLinecap="round" fill="none" />
-            <path d="M 40 172 L 40 84 A 24 24 0 0 1 64 60" stroke="url(#mLeft)" strokeWidth="20" strokeLinecap="round" fill="none" />
+            <path d="M 64 60 L 166 60 A 24 24 0 0 1 190 84" stroke="url(#mTop)" strokeWidth="28" strokeLinecap="round" fill="none" />
+            <path d="M 190 84 V 100 L 240 70 V 186 L 190 156 V 172 A 24 24 0 0 1 166 196" stroke="url(#mRight)" strokeWidth="28" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            <path d="M 166 196 L 64 196 A 24 24 0 0 1 40 172" stroke="url(#mBottom)" strokeWidth="28" strokeLinecap="round" fill="none" />
+            <path d="M 40 172 L 40 84 A 24 24 0 0 1 64 60" stroke="url(#mLeft)" strokeWidth="28" strokeLinecap="round" fill="none" />
           </svg>
 
           {/* Label — hidden on very small screens, dimmed to match icon */}
@@ -176,15 +171,18 @@ export function FloatingVideoButton() {
           </span>
         </div>
 
-        {/* Glass icon styles — grayscale/dim at rest, full color on hover */}
+        {/* Glass icon + button hover styles */}
         <style>{`
           .glass-icon {
             filter: grayscale(100%) opacity(0.6) brightness(3) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
           }
+          .group:hover {
+            transform: translateY(-4px) scale(1.06) !important;
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+          }
           .group:hover .glass-icon {
             filter: grayscale(0%) opacity(1) brightness(1) drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
-            transform: scale(1.1);
           }
           .group:hover span {
             color: rgba(255, 255, 255, 0.95) !important;
