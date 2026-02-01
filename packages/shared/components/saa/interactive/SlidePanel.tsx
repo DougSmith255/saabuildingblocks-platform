@@ -146,8 +146,23 @@ export function SlidePanel({
   const panelRef = useRef<HTMLDivElement>(null);
   const touchStartRef = useRef<{ x: number; y: number; scrollTop: number } | null>(null);
 
+  // Track previous isOpen to detect external closes (parent setting isOpen=false)
+  const wasOpenRef = useRef(false);
+  const didAnimateCloseRef = useRef(false);
+
   const SWIPE_THRESHOLD = 80;
   const ANIMATION_DURATION = 250;
+
+  // Reset close tracking when panel opens
+  if (isOpen && !wasOpenRef.current) {
+    didAnimateCloseRef.current = false;
+  }
+
+  // Detect external close: isOpen went from true→false without internal handleClose
+  const needsCloseAnimation = wasOpenRef.current && !isOpen && !isClosing && !didAnimateCloseRef.current;
+
+  // Combined flag for animation styles (internal close OR external close)
+  const animatingOut = isClosing || needsCloseAnimation;
 
   // Theme-driven accent colors (RGB string and hex)
   const accentRgb = theme === 'blue' ? '0, 191, 255' : '255, 215, 0';
@@ -171,8 +186,9 @@ export function SlidePanel({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Close with animation
+  // Close with animation (internal — triggered by X button, Escape, swipe, backdrop)
   const handleClose = useCallback(() => {
+    didAnimateCloseRef.current = true;
     setIsClosing(true);
     setTimeout(() => {
       setIsClosing(false);
@@ -186,6 +202,22 @@ export function SlidePanel({
       setHasBeenOpened(true);
     }
   }, [isOpen, hasBeenOpened]);
+
+  // Animate external close (parent set isOpen=false without going through handleClose)
+  useEffect(() => {
+    if (needsCloseAnimation) {
+      didAnimateCloseRef.current = true;
+      setIsClosing(true);
+      setTimeout(() => {
+        setIsClosing(false);
+      }, ANIMATION_DURATION);
+    }
+  }, [needsCloseAnimation]);
+
+  // Keep wasOpenRef in sync (runs after render)
+  useEffect(() => {
+    wasOpenRef.current = isOpen;
+  }, [isOpen]);
 
   // Lock body scroll and hide scrollbar when open
   useEffect(() => {
@@ -272,8 +304,8 @@ export function SlidePanel({
     return null;
   }
 
-  // Don't render if closed and not closing animation
-  if (!isOpen && !isClosing) {
+  // Don't render if closed and no close animation pending/playing
+  if (!isOpen && !isClosing && !needsCloseAnimation) {
     return null;
   }
 
@@ -294,7 +326,7 @@ export function SlidePanel({
     backdropFilter: 'blur(4px)',
     WebkitBackdropFilter: 'blur(4px)',
     isolation: 'isolate',
-    animation: isClosing
+    animation: animatingOut
       ? 'slidePanelBackdropOut 0.25s ease-in forwards'
       : 'slidePanelBackdropIn 0.3s ease-out forwards',
   };
@@ -322,7 +354,7 @@ export function SlidePanel({
           inset 0 1px 0 rgba(255, 255, 255, 0.08),
           inset 0 -1px 0 rgba(0, 0, 0, 0.3)
         `,
-        animation: isClosing
+        animation: animatingOut
           ? 'slidePanelDown 0.25s ease-in forwards'
           : 'slidePanelUp 0.3s ease-out forwards',
       }
@@ -353,7 +385,7 @@ export function SlidePanel({
           inset 0 1px 0 rgba(255, 255, 255, 0.04),
           inset 0 -1px 0 rgba(0, 0, 0, 0.2)
         `,
-        animation: isClosing
+        animation: animatingOut
           ? 'slidePanelLeft 0.25s ease-in forwards'
           : 'slidePanelRight 0.3s ease-out forwards',
       };
