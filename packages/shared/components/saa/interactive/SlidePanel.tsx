@@ -174,6 +174,8 @@ export function SlidePanel({
 
   // Whether the panel has a full-bleed background (explicit or auto gold)
   const hasBackground = !!backgroundElement || theme === 'gold';
+  // Auto gold honeycomb: no explicit backgroundElement, gold theme
+  const hasAutoGold = !backgroundElement && theme === 'gold';
 
   // Track when component is mounted (for portal rendering)
   useEffect(() => {
@@ -354,12 +356,14 @@ export function SlidePanel({
         borderTop: `1px solid rgba(${accentRgb}, 0.2)`,
         borderRadius: '1rem 1rem 0 0',
         paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))',
-        background: `
-          linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
-          linear-gradient(45deg, rgba(18, 18, 18, 0.97), rgba(28, 28, 28, 0.98))
-        `,
-        backdropFilter: 'blur(12px) saturate(1.4)',
-        WebkitBackdropFilter: 'blur(12px) saturate(1.4)',
+        background: hasAutoGold
+          ? 'transparent'
+          : `
+            linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+            linear-gradient(45deg, rgba(18, 18, 18, 0.97), rgba(28, 28, 28, 0.98))
+          `,
+        backdropFilter: hasAutoGold ? undefined : 'blur(12px) saturate(1.4)',
+        WebkitBackdropFilter: hasAutoGold ? undefined : 'blur(12px) saturate(1.4)',
         boxShadow: `
           0 -10px 40px rgba(0, 0, 0, 0.5),
           0 0 40px rgba(${accentRgb}, 0.1),
@@ -383,12 +387,14 @@ export function SlidePanel({
         overscrollBehavior: 'contain',
         borderLeft: `1px solid rgba(${accentRgb}, 0.25)`,
         borderRadius: '1rem 0 0 1rem',
-        background: `
-          linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 40%),
-          linear-gradient(45deg, rgba(14, 14, 14, 0.98), rgba(24, 24, 24, 0.99))
-        `,
-        backdropFilter: 'blur(16px) saturate(1.5)',
-        WebkitBackdropFilter: 'blur(16px) saturate(1.5)',
+        background: hasAutoGold
+          ? 'transparent'
+          : `
+            linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 40%),
+            linear-gradient(45deg, rgba(14, 14, 14, 0.98), rgba(24, 24, 24, 0.99))
+          `,
+        backdropFilter: hasAutoGold ? undefined : 'blur(16px) saturate(1.5)',
+        WebkitBackdropFilter: hasAutoGold ? undefined : 'blur(16px) saturate(1.5)',
         boxShadow: `
           -20px 0 60px rgba(0, 0, 0, 0.6),
           -5px 0 20px rgba(0, 0, 0, 0.4),
@@ -510,18 +516,38 @@ export function SlidePanel({
             {backgroundElement}
           </div>
         ) : theme === 'gold' ? (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              zIndex: 0,
-              overflow: 'hidden',
-              borderRadius: 'inherit',
-              pointerEvents: 'none',
-            }}
-          >
-            <GoldenAmbientBackground isVisible={isOpen && !animatingOut} />
-          </div>
+          <>
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 0,
+                overflow: 'hidden',
+                borderRadius: 'inherit',
+                pointerEvents: 'none',
+              }}
+            >
+              <GoldenAmbientBackground isVisible={isOpen && !animatingOut} />
+            </div>
+            {/* Feathered gradient overlay — soft dark center fading to transparent
+                on all edges so the honeycomb stays visible at the perimeter */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 0,
+                borderRadius: 'inherit',
+                pointerEvents: 'none',
+                background: `radial-gradient(
+                  ellipse 70% 60% at 50% 50%,
+                  rgba(6, 6, 10, 0.75) 0%,
+                  rgba(6, 6, 10, 0.55) 35%,
+                  rgba(6, 6, 10, 0.25) 60%,
+                  rgba(6, 6, 10, 0) 85%
+                )`,
+              }}
+            />
+          </>
         ) : null}
 
         {/* Header */}
