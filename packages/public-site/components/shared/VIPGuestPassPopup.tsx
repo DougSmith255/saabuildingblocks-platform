@@ -583,11 +583,19 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
         />
       }
     >
-      {/* Small spacer — just enough to let the globe crown show */}
-      <div style={{ flex: '0 0 20px' }} />
+      {/* Scoped style — dark form labels + extra spacer on wide screens */}
+      <style>{`
+        .vip-form-area label { color: #0a1a2e !important; }
+        @media (min-width: 1350px) {
+          .vip-wide-spacer { flex: 0 0 80px !important; }
+        }
+      `}</style>
+
+      {/* Spacer — grows on wide screens so content sits lower */}
+      <div className="vip-wide-spacer" style={{ flex: '0 0 20px' }} />
 
       {/* Content area — no card, sits directly over the globe background */}
-      <div className="flex flex-col gap-3" style={{ padding: '0 16px 14px' }}>
+      <div className="vip-form-area flex flex-col gap-3" style={{ padding: '0 16px 14px' }}>
         {/* Description — dark text readable against bright blue globe */}
         <p style={{
           fontSize: '14px',
@@ -601,16 +609,6 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
           eXp World is your hub for live training, on-demand support, and direct
           access to leadership. Set up your own virtual office and meet with
           clients anywhere in the world — all inside eXp World.
-        </p>
-
-        <p style={{
-          fontSize: '15px',
-          color: '#042040',
-          fontWeight: 700,
-          textAlign: 'center',
-          textShadow: '0 0 8px rgba(100,200,255,0.25)',
-        }}>
-          Step inside — free.
         </p>
 
         {submitStatus === 'success' ? (
