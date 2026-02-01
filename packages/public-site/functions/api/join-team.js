@@ -399,9 +399,9 @@ export async function onRequestPost(context) {
         await addContactNote(contactId, noteBody, ghlHeaders);
       }
 
-      // Send welcome email for existing contact
+      // Send welcome email for existing contact (skip for VIP guest pass — they get a different flow)
       const resendApiKey = env.RESEND_API_KEY;
-      if (resendApiKey) {
+      if (resendApiKey && source !== 'vip-guest-pass') {
         const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
         console.log('[join-team] Email result (existing contact):', emailResult);
       }
@@ -485,9 +485,9 @@ export async function onRequestPost(context) {
                 await addContactNote(existingContactId, noteBody, ghlHeaders);
               }
 
-              // Send welcome email
+              // Send welcome email (skip for VIP guest pass)
               const resendApiKey = env.RESEND_API_KEY;
-              if (resendApiKey) {
+              if (resendApiKey && source !== 'vip-guest-pass') {
                 const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
                 console.log('[join-team] Email result (duplicate contact update):', emailResult);
               }
@@ -514,7 +514,7 @@ export async function onRequestPost(context) {
             }
 
             const resendApiKey = env.RESEND_API_KEY;
-            if (resendApiKey) {
+            if (resendApiKey && source !== 'vip-guest-pass') {
               const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
               console.log('[join-team] Email result (tag already exists):', emailResult);
             }
@@ -555,12 +555,12 @@ export async function onRequestPost(context) {
       await addContactNote(newContactId, noteBody, ghlHeaders);
     }
 
-    // Send welcome email
+    // Send welcome email (skip for VIP guest pass)
     const resendApiKey = env.RESEND_API_KEY;
-    if (resendApiKey) {
+    if (resendApiKey && source !== 'vip-guest-pass') {
       const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
       console.log('[join-team] Email result:', emailResult);
-    } else {
+    } else if (!resendApiKey) {
       console.warn('[join-team] RESEND_API_KEY not configured, skipping welcome email');
     }
 
