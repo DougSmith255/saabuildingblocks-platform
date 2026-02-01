@@ -1,12 +1,8 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { SlidePanel } from '../interactive/SlidePanel';
-import { VideoPlayer } from './VideoPlayer';
-import { CTAButton } from '../buttons/CTAButton';
-import { SecondaryButton } from '../buttons/SecondaryButton';
-import { JoinModal, JoinFormData } from '../interactive/JoinModal';
-import { InstructionsModal } from '../interactive/InstructionsModal';
+import { VideoSection } from './VideoSection';
 
 export interface VideoSlidePanelProps {
   isOpen: boolean;
@@ -20,111 +16,35 @@ const POSTER_URL = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-
 /**
  * VideoSlidePanel - The Inside Look video in a slide panel
  *
- * Contains the main explainer video with a CTA to join.
- * Used by the FloatingVideoButton and anywhere a quick video view is needed.
+ * Uses the shared VideoSection component in compact mode so that:
+ * - Video progress is shared with the homepage (same storageKey)
+ * - Book a Call unlocks after 50% watched (handled by VideoSection)
+ * - Join → Instructions modal flow is handled by VideoSection
+ * - Buttons stack vertically (compact mode)
  */
 export function VideoSlidePanel({ isOpen, onClose }: VideoSlidePanelProps) {
-  const [activeModal, setActiveModal] = useState<'join' | 'instructions' | null>(null);
-  const [userName, setUserName] = useState('');
-
-  const handleJoinSuccess = useCallback((data: JoinFormData) => {
-    setUserName(data.firstName);
-    setActiveModal('instructions');
-  }, []);
-
-  const handleCloseModal = useCallback(() => {
-    setActiveModal(null);
-  }, []);
-
   const handleClose = useCallback(() => {
-    setActiveModal(null);
     onClose();
   }, [onClose]);
 
   return (
-    <>
-      <SlidePanel
-        isOpen={isOpen}
-        onClose={handleClose}
-        title="The Inside Look"
-        subtitle="Everything eXp offers. Everything SAA provides."
-        size="xl"
-      >
-        <div className="flex flex-col gap-6">
-          {/* Video Player */}
-          <div className="w-full">
-            <VideoPlayer
-              videoId={VIDEO_ID}
-              posterUrl={POSTER_URL}
-              storageKey="inside_look_panel_video"
-              unlockThreshold={50}
-              hideProgressArea={false}
-            />
-          </div>
-
-          {/* Brief Pitch */}
-          <p className="opacity-80 text-center" style={{ fontSize: '16px', color: 'var(--color-body-text)' }}>
-            One video. Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full.
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <CTAButton
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setActiveModal('join');
-              }}
-            >
-              JOIN THE ALLIANCE
-            </CTAButton>
-            <SecondaryButton
-              href="https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7"
-              onClick={(e) => {
-                e.preventDefault();
-                window.open('https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7', '_blank', 'noopener,noreferrer');
-              }}
-            >
-              BOOK A CALL
-            </SecondaryButton>
-          </div>
-        </div>
-      </SlidePanel>
-
-      {/* Shared Backdrop for modals */}
-      {activeModal !== null && (
-        <div
-          className="fixed inset-0 z-[10025] bg-black/60 backdrop-blur-sm transition-opacity duration-300"
-          onClick={handleCloseModal}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Join Modal */}
-      <JoinModal
-        isOpen={activeModal === 'join' || activeModal === 'instructions'}
-        onClose={handleCloseModal}
-        onSuccess={handleJoinSuccess}
+    <SlidePanel
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="The Inside Look"
+      subtitle="Everything eXp offers. Everything SAA provides."
+      size="xl"
+    >
+      <VideoSection
+        videoId={VIDEO_ID}
+        posterUrl={POSTER_URL}
+        storageKey="homepage_video"
+        unlockThreshold={50}
         sponsorName={null}
-        hideBackdrop={true}
-        zIndexOffset={6}
+        hideTitle
+        compact
       />
-
-      {/* Instructions Modal */}
-      <InstructionsModal
-        isOpen={activeModal === 'instructions'}
-        onClose={handleCloseModal}
-        userName={userName}
-        hideBackdrop={true}
-        zIndexOffset={7}
-        onNotYou={() => {
-          try {
-            localStorage.removeItem('saa_join_submitted');
-          } catch {}
-          setActiveModal('join');
-        }}
-      />
-    </>
+    </SlidePanel>
   );
 }
 

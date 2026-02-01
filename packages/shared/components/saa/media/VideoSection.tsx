@@ -35,6 +35,8 @@ export interface VideoSectionProps {
   bookCallButtonText?: string;
   /** Book a Call URL (default: Calendly link) */
   bookCallUrl?: string;
+  /** Compact layout for panels — removes outer padding, stacks buttons vertically */
+  compact?: boolean;
 }
 
 /**
@@ -80,6 +82,7 @@ export function VideoSection({
   joinButtonText = 'JOIN THE ALLIANCE',
   bookCallButtonText = 'BOOK A CALL',
   bookCallUrl = 'https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7',
+  compact = false,
 }: VideoSectionProps) {
   const [showBookCall, setShowBookCall] = useState(false);
   // Single activePanel state - mirrors New Agents pattern
@@ -111,9 +114,9 @@ export function VideoSection({
   return (
     <section
       id={id}
-      className={`video-section relative py-16 md:py-24 px-4 sm:px-8 md:px-12 ${className}`}
+      className={`video-section relative ${compact ? 'py-0 px-0' : 'py-16 md:py-24 px-4 sm:px-8 md:px-12'} ${className}`}
     >
-      <div className="max-w-[1400px] mx-auto">
+      <div className={compact ? '' : 'max-w-[1400px] mx-auto'}>
         {/* Section Header */}
         {!hideTitle && (
           <div className="text-center mb-8 md:mb-12">
@@ -127,7 +130,7 @@ export function VideoSection({
         )}
 
         {/* Video Player with Progress Tracking */}
-        <div className="max-w-4xl mx-auto">
+        <div className={compact ? '' : 'max-w-4xl mx-auto'}>
           <VideoPlayer
             videoId={videoId}
             posterUrl={posterUrl}
@@ -137,7 +140,7 @@ export function VideoSection({
           />
 
           {/* CTA Buttons */}
-          <div className="video-section-buttons flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+          <div className={`video-section-buttons flex ${compact ? 'flex-col' : 'flex-col sm:flex-row'} gap-4 justify-center items-center mt-8`}>
             {/* Join The Alliance - always visible */}
             <CTAButton
               href="#"
