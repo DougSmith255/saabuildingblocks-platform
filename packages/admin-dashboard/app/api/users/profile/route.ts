@@ -14,6 +14,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { createGHLClient } from '@/lib/gohighlevel-client';
+import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
 import bcrypt from 'bcryptjs';
 
 // CORS headers for cross-origin requests
@@ -223,6 +224,36 @@ export async function PATCH(request: NextRequest) {
       if (agentPageError) {
         console.error('[Profile Update] Error updating agent page:', agentPageError);
         // Don't fail the whole request, just log the error
+      } else {
+        // Sync updated agent page to Cloudflare KV so public link page reflects new name
+        try {
+          const { data: agentPage } = await supabase
+            .from('agent_pages')
+            .select('*')
+            .eq('user_id', userId)
+            .single();
+
+          if (agentPage && agentPage.activated) {
+            const { data: userData } = await supabase
+              .from('users')
+              .select('exp_email, legal_name')
+              .eq('id', userId)
+              .single();
+
+            const kvData: AgentPageKVData = {
+              ...agentPage,
+              exp_email: userData?.exp_email || null,
+              legal_name: userData?.legal_name || null,
+            };
+
+            const kvResult = await syncAgentPageToKV(kvData);
+            if (!kvResult.success) {
+              console.error('[Profile Update] KV sync failed:', kvResult.error);
+            }
+          }
+        } catch (kvError) {
+          console.error('[Profile Update] KV sync error:', kvError);
+        }
       }
     }
 

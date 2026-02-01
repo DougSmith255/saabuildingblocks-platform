@@ -133,7 +133,7 @@ export function ScrollIndicator() {
         className="fixed pointer-events-none"
         style={{
           bottom: 'max(32px, calc(env(safe-area-inset-bottom, 0px) + 24px))',
-          right: '24px',
+          left: '24px',
           opacity,
           transform: `scale(${scale})`,
           transformOrigin: 'center bottom',

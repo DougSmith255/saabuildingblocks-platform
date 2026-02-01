@@ -230,6 +230,22 @@ export async function PATCH(
       );
     }
 
+    // If display name changed, sync back to users table to keep both in sync
+    if (display_first_name !== undefined || display_last_name !== undefined) {
+      const userNameUpdates: Record<string, string> = {};
+      if (display_first_name !== undefined) userNameUpdates.first_name = display_first_name;
+      if (display_last_name !== undefined) userNameUpdates.last_name = display_last_name;
+
+      const { error: userUpdateError } = await supabase
+        .from('users')
+        .update(userNameUpdates)
+        .eq('id', updatedPage.user_id);
+
+      if (userUpdateError) {
+        console.error('[Agent Page Update] Failed to sync display name to users table:', userUpdateError);
+      }
+    }
+
     // Fetch user's exp_email and legal_name for KV sync
     const { data: userData } = await supabase
       .from('users')

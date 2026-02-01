@@ -51,22 +51,23 @@ export function FloatingVideoButton() {
 
   return (
     <>
-      {/* Outer wrapper — handles positioning, visibility, and holds gradient layers */}
+      {/* Outer shell — handles fixed positioning, visibility, show/hide slide-in */}
       <div
-        className="fixed z-[10005] floating-video-wrapper transition-all duration-500"
+        className="fixed z-[10005] transition-all duration-500"
         style={{
           bottom: '24px',
           right: '24px',
-          borderRadius: '14px',
           opacity: shouldShow ? 1 : 0,
           transform: shouldShow ? 'translateY(0)' : 'translateY(80px)',
           pointerEvents: shouldShow ? 'auto' : 'none',
         }}
       >
-        {/* Animated gradient border — sits behind button via z-index */}
-        <div className="fvb-gradient-border" />
-        {/* Blurred glow behind button — same gradient, heavily blurred */}
-        <div className="fvb-gradient-glow" />
+        {/* Hover target — border, glow, and button all rise together */}
+        <div className="floating-video-wrapper" style={{ position: 'relative', borderRadius: '14px' }}>
+          {/* Animated gradient border — sits behind button via z-index */}
+          <div className="fvb-gradient-border" />
+          {/* Blurred glow behind button — same gradient, heavily blurred */}
+          <div className="fvb-gradient-glow" />
 
         {/* Floating Button */}
         <button
@@ -143,11 +144,11 @@ export function FloatingVideoButton() {
             className="relative flex items-center gap-2.5"
             style={{ padding: '10px 16px' }}
           >
-            {/* Camera Icon — glass effect: grayscale/dim at rest, full color on hover */}
+            {/* Camera Icon — desktop only (hidden on mobile) */}
             <svg
               viewBox="0 0 256 256"
               xmlns="http://www.w3.org/2000/svg"
-              className="fvb-glass-icon"
+              className="fvb-glass-icon hidden sm:block"
               style={{ width: '16px', height: '16px', flexShrink: 0 }}
             >
               <defs>
@@ -174,7 +175,20 @@ export function FloatingVideoButton() {
               <path d="M 40 172 L 40 84 A 24 24 0 0 1 64 60" stroke="url(#mLeft)" strokeWidth="28" strokeLinecap="round" fill="none" />
             </svg>
 
-            {/* Label — hidden on very small screens */}
+            {/* Mobile label — "Inside Look" (no icon) */}
+            <span
+              className="sm:hidden text-sm whitespace-nowrap tracking-wide fvb-label"
+              style={{
+                letterSpacing: '0.04em',
+                fontFamily: 'var(--font-taskor)',
+                fontWeight: 400,
+                fontFeatureSettings: '"ss01" 1',
+              }}
+            >
+              Inside Look
+            </span>
+
+            {/* Desktop label — "The Inside Look" (with icon) */}
             <span
               className="hidden sm:inline text-sm whitespace-nowrap tracking-wide fvb-label"
               style={{
@@ -188,6 +202,7 @@ export function FloatingVideoButton() {
             </span>
           </div>
         </button>
+        </div>
       </div>
 
       {/* Scoped styles — only affect .floating-video-btn, not global .group */}
@@ -210,14 +225,23 @@ export function FloatingVideoButton() {
           animation: fvbGradientFlow 20s linear infinite;
         }
         .fvb-gradient-glow {
-          filter: blur(40px);
-          opacity: 0.5;
+          filter: blur(18px);
+          opacity: 0.45;
           z-index: -1;
+          transition: filter 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
         @keyframes fvbGradientFlow {
           0% { background-position: 0 0; }
           50% { background-position: 400% 0; }
           100% { background-position: 0 0; }
+        }
+
+        /* Wrapper hover — whole unit (border + glow + button) rises and scales together */
+        .floating-video-wrapper {
+          transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .floating-video-wrapper:hover {
+          transform: translateY(-3px) scale(1.04);
         }
 
         /* Glass icon — slightly brighter at rest for visibility */
@@ -232,23 +256,25 @@ export function FloatingVideoButton() {
           transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* Button hover — scoped to floating-video-btn only (not global .group) */
-        .floating-video-btn:hover {
-          transform: translateY(-3px) scale(1.04);
+        /* Button hover — box-shadow only (transform handled by wrapper) */
+        .floating-video-btn {
+          transition: box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .floating-video-wrapper:hover .floating-video-btn {
           box-shadow: 0 10px 32px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
         }
-        .floating-video-btn:hover .fvb-glass-icon {
+        .floating-video-wrapper:hover .fvb-glass-icon {
           filter: grayscale(0%) opacity(1) brightness(1) drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
         }
-        .floating-video-btn:hover .fvb-label {
+        .floating-video-wrapper:hover .fvb-label {
           color: rgba(255, 255, 255, 0.95) !important;
           text-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
         }
 
         /* Glow intensifies on hover */
         .floating-video-wrapper:hover .fvb-gradient-glow {
-          opacity: 0.7;
-          filter: blur(50px);
+          opacity: 0.65;
+          filter: blur(28px);
         }
       `}</style>
 

@@ -17,7 +17,7 @@ export interface Env {
 
 // Cache TTL settings
 const CACHE_TTL = {
-  profiles: 60 * 60 * 24 * 365, // 1 year for profile images (they have unique filenames when updated)
+  profiles: 60 * 60 * 24 * 365, // 1 year for profile images (URLs include ?v= cache-bust param when updated)
   default: 60 * 60 * 24 * 30,   // 30 days for other assets
 };
 

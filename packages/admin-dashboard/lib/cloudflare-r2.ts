@@ -158,8 +158,8 @@ export async function uploadProfilePicture(
       console.error('[R2] Failed to create Linktree variant:', resizeError);
     }
 
-    // Return public URL (dashboard variant)
-    const publicUrl = `${R2_PUBLIC_URL}/${key}`;
+    // Return public URL with cache-bust param (dashboard variant)
+    const publicUrl = `${R2_PUBLIC_URL}/${key}?v=${Date.now()}`;
     return { success: true, url: publicUrl };
   } catch (error) {
     console.error('[R2] Error uploading profile picture:', error);
@@ -245,8 +245,8 @@ export async function uploadColorProfilePicture(
     }
     console.log(`[R2] Uploaded color profile: ${key} (${Math.round(colorBuffer.length / 1024)}KB)`);
 
-    // Return public URL
-    const publicUrl = `${R2_PUBLIC_URL}/${key}`;
+    // Return public URL with cache-bust param
+    const publicUrl = `${R2_PUBLIC_URL}/${key}?v=${Date.now()}`;
     return { success: true, url: publicUrl };
   } catch (error) {
     console.error('[R2] Error uploading color profile picture:', error);
