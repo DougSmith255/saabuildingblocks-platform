@@ -128,7 +128,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
 
       {/* Top light bar - half (5px) sticks out above button, behind button face */}
       <div
-        className="cta-light-bar cta-light-bar-pulse w-[30px] h-[10px] rounded-md"
+        className="cta-light-bar cta-light-bar-pulse w-[30px] h-[10px] rounded-md transition-all duration-500 group-hover:w-4/5"
           style={{
             position: 'absolute',
             top: '-5px', // Half of 10px height sticks out above button
@@ -142,7 +142,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
 
       {/* Bottom light bar - half (5px) sticks out below button, half behind, BEHIND button face */}
       <div
-        className="cta-light-bar cta-light-bar-pulse w-[30px] h-[10px] rounded-md"
+        className="cta-light-bar cta-light-bar-pulse w-[30px] h-[10px] rounded-md transition-all duration-500 group-hover:w-4/5"
           style={{
             position: 'absolute',
             bottom: '-5px', // Half of 10px height sticks out below button

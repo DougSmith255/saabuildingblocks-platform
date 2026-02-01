@@ -138,7 +138,7 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
             left: 0,
             right: 0,
             bottom: 0,
-            zIndex: 9985,
+            zIndex: 10006,
             background: 'rgba(15, 15, 15, 0.95)',
             backdropFilter: 'blur(8px)',
             WebkitBackdropFilter: 'blur(8px)',
@@ -155,7 +155,7 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
           role="dialog"
           aria-label="Mobile navigation menu"
           aria-hidden={!isMobileMenuOpen}
-          className={`mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[9990] overflow-y-auto overflow-x-hidden ${
+          className={`mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[10008] overflow-y-auto overflow-x-hidden ${
             isMobileMenuOpen ? 'menu-opening' : 'menu-closing'
           }`}
           style={{

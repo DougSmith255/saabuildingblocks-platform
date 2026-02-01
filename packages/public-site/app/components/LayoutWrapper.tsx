@@ -249,7 +249,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
         Pages already have their own <main id="main-content"> for accessibility.
       */}
       <div
-        style={{ minHeight: '100vh', position: 'relative' }}
+        style={{ minHeight: '100vh', position: 'relative', isolation: 'isolate' }}
         data-no-footer={shouldHideHeaderFooter || shouldHideFooterOnly ? 'true' : undefined}
       >
         {children}
