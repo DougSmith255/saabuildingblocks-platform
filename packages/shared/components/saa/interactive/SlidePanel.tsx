@@ -36,6 +36,8 @@ export interface SlidePanelProps {
   theme?: 'gold' | 'blue';
   /** Optional background element rendered behind header+content (e.g., 3D scene) */
   backgroundElement?: React.ReactNode;
+  /** Ref that exposes the panel's close() method for programmatic closing with animation */
+  closeRef?: React.MutableRefObject<(() => void) | null>;
 }
 
 // Size configurations - all desktop panels use 500px width
@@ -138,6 +140,7 @@ export function SlidePanel({
   zIndexOffset = 0,
   theme = 'gold',
   backgroundElement,
+  closeRef,
 }: SlidePanelProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
@@ -186,15 +189,20 @@ export function SlidePanel({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Close with animation (internal — triggered by X button, Escape, swipe, backdrop)
+  // Close with animation (internal — triggered by X button, Escape, swipe, backdrop,
+  // or programmatically via closeRef)
   const handleClose = useCallback(() => {
+    if (isClosing) return; // prevent double-close
     didAnimateCloseRef.current = true;
     setIsClosing(true);
     setTimeout(() => {
       setIsClosing(false);
       onClose();
     }, ANIMATION_DURATION);
-  }, [onClose]);
+  }, [onClose, isClosing]);
+
+  // Expose close() to parent via ref — allows programmatic close with animation
+  if (closeRef) closeRef.current = handleClose;
 
   // Track if panel has been opened (for keeping in DOM after first open)
   useEffect(() => {

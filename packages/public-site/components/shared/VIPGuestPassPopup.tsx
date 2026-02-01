@@ -483,6 +483,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
   const [errorMessage, setErrorMessage] = useState('');
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasTriggeredRef = useRef(false);
+  const closePanelRef = useRef<(() => void) | null>(null);
 
   const showPopup = useCallback(() => {
     if (hasTriggeredRef.current) return;
@@ -551,7 +552,11 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
       });
       if (!res.ok) throw new Error('Failed to submit');
       setSubmitStatus('success');
-      setTimeout(() => setIsOpen(false), 3000);
+      // Close with animation via SlidePanel's internal close (same as clicking X)
+      setTimeout(() => {
+        if (closePanelRef.current) closePanelRef.current();
+        else setIsOpen(false); // fallback
+      }, 3000);
     } catch {
       setSubmitStatus('error');
       setErrorMessage('Something went wrong. Please try again.');
@@ -572,6 +577,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
     <SlidePanel
       isOpen={isOpen}
       onClose={handleClose}
+      closeRef={closePanelRef}
       title="eXp World Guest Pass"
       subtitle="Step inside the world's largest virtual real estate campus"
       size="md"
