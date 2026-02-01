@@ -21,6 +21,7 @@ import * as fs from 'fs/promises';
 
 const SESSION_DIR = '/tmp/exp-okta-session';
 const STORAGE_STATE_PATH = path.join(SESSION_DIR, 'state.json');
+const CREDENTIALS_PATH = path.join(SESSION_DIR, 'credentials.json');
 const SCREENSHOT_DIR = path.join(SESSION_DIR, 'screenshots');
 const TIMEOUT = 60_000; // 60s max per submission
 const NAV_TIMEOUT = 30_000;
@@ -63,21 +64,45 @@ async function saveScreenshot(page: Page, label: string): Promise<string> {
 /**
  * Handle Okta SSO login flow.
  * Detects whether we're on the Okta login page and authenticates if so.
+ * Uses pressSequentially instead of fill() to trigger Okta's JS event handlers.
  */
 async function handleOktaLogin(page: Page): Promise<void> {
-  const email = process.env.EXP_OKTA_EMAIL;
-  const password = process.env.EXP_OKTA_PASSWORD;
+  // Read credentials from file to avoid dotenv-expand corrupting the $ in password
+  let email = process.env.EXP_OKTA_EMAIL;
+  let password = process.env.EXP_OKTA_PASSWORD;
+
+  try {
+    const creds = JSON.parse(await fs.readFile(CREDENTIALS_PATH, 'utf-8'));
+    if (creds.email) email = creds.email;
+    if (creds.password) password = creds.password;
+  } catch {
+    // Credentials file not found — fall back to env vars
+  }
 
   if (!email || !password) {
-    throw new Error('EXP_OKTA_EMAIL and EXP_OKTA_PASSWORD environment variables are required');
+    throw new Error('EXP_OKTA_EMAIL and EXP_OKTA_PASSWORD are required (env vars or credentials.json)');
   }
 
   // Wait for the Okta username field
   const usernameInput = page.locator('input[name="identifier"], input[name="username"], input#okta-signin-username');
   await usernameInput.waitFor({ state: 'visible', timeout: NAV_TIMEOUT });
 
-  // Enter email
-  await usernameInput.fill(email);
+  // Enter email using keystrokes (Okta needs real key events)
+  await usernameInput.click();
+  await usernameInput.pressSequentially(email, { delay: 30 });
+
+  // Check "Keep me signed in" if available
+  try {
+    const keepSignedIn = page.locator('input[type="checkbox"][name="rememberMe"], label:has-text("Keep me signed in") input[type="checkbox"], [data-se="o-form-input-rememberMe"] input');
+    const checkbox = keepSignedIn.first();
+    if (await checkbox.isVisible({ timeout: 2000 })) {
+      if (!(await checkbox.isChecked())) {
+        await checkbox.check();
+      }
+    }
+  } catch {
+    // "Keep me signed in" not present — fine
+  }
 
   // Click Next/Submit
   const nextButton = page.locator('input[type="submit"][value="Next"], button[type="submit"]:has-text("Next"), input[type="submit"][value="Sign In"]');
@@ -86,9 +111,16 @@ async function handleOktaLogin(page: Page): Promise<void> {
   // Wait for password field (may be on same page or next page)
   const passwordInput = page.locator('input[name="credentials.passcode"], input[name="password"], input[type="password"]');
   await passwordInput.waitFor({ state: 'visible', timeout: NAV_TIMEOUT });
+  await page.waitForTimeout(1000); // pause for Okta animations
 
-  // Enter password
-  await passwordInput.fill(password);
+  // Clear any previous value, then type password using keyboard events
+  await passwordInput.click({ clickCount: 3 }); // select all
+  await page.waitForTimeout(200);
+  await page.keyboard.type(password, { delay: 50 });
+  await page.waitForTimeout(500);
+
+  // Brief pause before clicking Verify
+  await page.waitForTimeout(300);
 
   // Click Verify/Sign In
   const verifyButton = page.locator('input[type="submit"][value="Verify"], button[type="submit"]:has-text("Verify"), input[type="submit"][value="Sign In"]');
@@ -111,9 +143,9 @@ function isOnOktaPage(page: Page): boolean {
  */
 async function isOnInviteForm(page: Page): Promise<boolean> {
   try {
-    // Look for the form fields that appear when logged in
-    const firstNameField = page.locator('input[name="firstName"], input[placeholder*="First Name"], #firstName');
-    return await firstNameField.isVisible({ timeout: 3000 });
+    // Look for the form heading or "Welcome" text that appears when logged in
+    const formHeading = page.getByText('Guest Passport Request', { exact: false });
+    return await formHeading.isVisible({ timeout: 3000 });
   } catch {
     return false;
   }
@@ -184,39 +216,49 @@ export async function submitExpGuestPass(input: GuestPassInput): Promise<GuestPa
 
       // After login, wait for the form to appear
       await page.waitForTimeout(2000);
-    }
 
-    // Persist session for reuse
-    await context.storageState({ path: STORAGE_STATE_PATH });
+    }
 
     // Now fill the guest form
     // Wait for form to be ready
     await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
 
-    // Fill First Name
-    const firstNameInput = page.locator('input[name="firstName"], input#firstName, input[placeholder*="First Name"]').first();
-    await firstNameInput.waitFor({ state: 'visible', timeout: 15_000 });
+    // Wait for the eXp Guest Passport form to load
+    // The form uses label text like "*First Name", "*Last Name", "*Email Address"
+    await page.getByText('First Name').first().waitFor({ state: 'visible', timeout: 15_000 });
+
+    // Persist session AFTER form loads (confirmed logged in)
+    await context.storageState({ path: STORAGE_STATE_PATH });
+
+    // Fill First Name — find the input adjacent to its label
+    const firstNameInput = page.getByLabel('First Name', { exact: false }).first();
     await firstNameInput.fill(input.firstName);
 
     // Fill Last Name
-    const lastNameInput = page.locator('input[name="lastName"], input#lastName, input[placeholder*="Last Name"]').first();
+    const lastNameInput = page.getByLabel('Last Name', { exact: false }).first();
     await lastNameInput.fill(input.lastName);
 
-    // Fill Email
-    const emailInput = page.locator('input[name="email"], input#email, input[placeholder*="Email"], input[type="email"]').first();
+    // Fill Email Address
+    const emailInput = page.getByLabel('Email Address', { exact: false }).first();
     await emailInput.fill(input.email);
 
-    // Check the sponsorship agreement checkbox
-    const checkbox = page.locator('input[type="checkbox"]').first();
-    if (!(await checkbox.isChecked())) {
-      await checkbox.check();
+    // Check the sponsorship agreement checkbox if present
+    try {
+      const checkbox = page.locator('input[type="checkbox"]').first();
+      if (await checkbox.isVisible({ timeout: 3000 })) {
+        if (!(await checkbox.isChecked())) {
+          await checkbox.check();
+        }
+      }
+    } catch {
+      // No checkbox on this form version
     }
 
     // Take a pre-submit screenshot for debugging
     await saveScreenshot(page, 'pre-submit');
 
-    // Click "Request Guest Account"
-    const submitButton = page.locator('button:has-text("Request Guest Account"), input[type="submit"][value*="Request"], button[type="submit"]');
+    // Click the submit button ("Request Guest Account" or similar)
+    const submitButton = page.locator('button:has-text("Request"), input[type="submit"][value*="Request"], button[type="submit"], input[type="submit"]').first();
     await submitButton.click();
 
     // Wait for confirmation (success message or page change)
