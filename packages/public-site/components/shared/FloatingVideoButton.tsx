@@ -57,7 +57,7 @@ export function FloatingVideoButton() {
         style={{
           bottom: '24px',
           right: '24px',
-          borderRadius: '9999px',
+          borderRadius: '12px',
           cursor: 'pointer',
           opacity: shouldShow ? 1 : 0,
           transform: shouldShow ? 'translateY(0)' : 'translateY(80px)',
@@ -73,7 +73,7 @@ export function FloatingVideoButton() {
         <div
           className="absolute inset-0"
           style={{
-            borderRadius: '9999px',
+            borderRadius: '12px',
             background: `
               linear-gradient(45deg, rgb(14, 14, 14), rgb(24, 24, 24)),
               repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
@@ -86,7 +86,7 @@ export function FloatingVideoButton() {
         <div
           className="absolute inset-[1px]"
           style={{
-            borderRadius: '9999px',
+            borderRadius: '12px',
             background: `
               repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
               linear-gradient(45deg, rgb(12, 12, 12), rgb(22, 22, 22))
@@ -98,7 +98,7 @@ export function FloatingVideoButton() {
         <div
           className="absolute inset-0"
           style={{
-            borderRadius: '9999px',
+            borderRadius: '12px',
             opacity: 0.6,
             mixBlendMode: 'overlay',
             background: `linear-gradient(
@@ -117,7 +117,7 @@ export function FloatingVideoButton() {
         <div
           className="absolute inset-0"
           style={{
-            borderRadius: '9999px',
+            borderRadius: '12px',
             background: 'linear-gradient(180deg, rgba(255,215,0,0.08) 0%, transparent 40%)',
             pointerEvents: 'none',
           }}
@@ -126,14 +126,14 @@ export function FloatingVideoButton() {
         {/* Content */}
         <div
           className="relative flex items-center gap-2.5"
-          style={{ padding: '12px 22px' }}
+          style={{ padding: '10px 16px' }}
         >
           {/* Camera Icon — glass effect: grayscale/dim at rest, full color on hover */}
           <svg
             viewBox="0 0 256 256"
             xmlns="http://www.w3.org/2000/svg"
             className="glass-icon transition-all duration-500 group-hover:glass-icon-hover"
-            style={{ width: '26px', height: '26px', flexShrink: 0 }}
+            style={{ width: '16px', height: '16px', flexShrink: 0 }}
           >
             <defs>
               <linearGradient id="mTop" x1="0" y1="0" x2="1" y2="0">
