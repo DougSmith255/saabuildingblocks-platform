@@ -52,6 +52,7 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
     if (cleanupRef.current) return;
 
     const container = containerRef.current;
+    container.style.opacity = '0';
 
     (async () => {
       const THREE = await import('three');
@@ -419,6 +420,11 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
       };
       animate();
 
+      // Fade in after first frame renders (masks any load flash)
+      requestAnimationFrame(() => {
+        if (container.isConnected) container.style.opacity = '1';
+      });
+
       // Resize — also adjusts camera distance for narrow panels
       const onResize = () => {
         if (!container.isConnected) return;
@@ -465,6 +471,7 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
       style={{
         position: 'absolute',
         inset: 0,
+        transition: 'opacity 0.6s ease-in',
       }}
     />
   );
@@ -526,6 +533,32 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
   useEffect(() => {
     if (forceOpen) setIsOpen(true);
   }, [forceOpen]);
+
+  // Pre-warm Three.js modules ~5s before popup trigger so the globe
+  // is ready instantly when the panel opens (no flash-in).
+  // Does NOT load anything on initial page load.
+  useEffect(() => {
+    if (hasTriggered) return;
+    let warmed = false;
+    const preWarm = () => {
+      if (warmed) return;
+      warmed = true;
+      import('three').catch(() => {});
+      import('three/examples/jsm/postprocessing/EffectComposer.js').catch(() => {});
+      import('three/examples/jsm/postprocessing/RenderPass.js').catch(() => {});
+      import('three/examples/jsm/postprocessing/UnrealBloomPass.js').catch(() => {});
+    };
+    const timer = setTimeout(preWarm, Math.max(TRIGGER_DELAY_MS - 5000, 0));
+    const onScroll = () => {
+      const docH = document.documentElement.scrollHeight - window.innerHeight;
+      if (docH > 0 && window.scrollY / docH >= 0.35) {
+        preWarm();
+        window.removeEventListener('scroll', onScroll);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { clearTimeout(timer); window.removeEventListener('scroll', onScroll); };
+  }, [hasTriggered]);
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
