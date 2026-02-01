@@ -7,8 +7,10 @@ export interface ConsentCheckboxProps {
   checked: boolean;
   /** Callback when toggled */
   onChange: (checked: boolean) => void;
-  /** Accent color for the checked state (default: '#ffd700') */
+  /** Accent color for the checked gradient start (default: '#22c55e') */
   accentColor?: string;
+  /** Accent color for the checked gradient end (default: '#16a34a') */
+  accentColorEnd?: string;
   /** Link color for terms/privacy links (default: same as accentColor) */
   linkColor?: string;
   /** Text color for the label (default: 'rgba(220, 219, 213, 0.7)') */
@@ -18,13 +20,16 @@ export interface ConsentCheckboxProps {
 /**
  * ConsentCheckbox — Compliance checkbox with Terms & Privacy links.
  *
- * Uses circle icon styling matching the agent portal onboarding pattern:
- * filled circle when checked, empty circle when unchecked.
+ * Matches the agent portal onboarding checkbox design exactly:
+ * - 24×24 rounded-md square (not circle)
+ * - Unchecked: solid #bfbdb0 fill with inset shadow
+ * - Checked: gradient fill with glow + white checkmark
  */
 export function ConsentCheckbox({
   checked,
   onChange,
-  accentColor = '#ffd700',
+  accentColor = '#22c55e',
+  accentColorEnd = '#16a34a',
   linkColor,
   textColor = 'rgba(220, 219, 213, 0.7)',
 }: ConsentCheckboxProps) {
@@ -44,37 +49,44 @@ export function ConsentCheckbox({
           onChange(!checked);
         }}
       >
-        {/* Circle icon — filled when checked, empty when unchecked */}
-        <span
+        {/* Checkbox — rounded-md square matching agent portal onboarding */}
+        <div
           style={{
-            width: '22px',
-            height: '22px',
-            minWidth: '22px',
+            width: '24px',
+            height: '24px',
+            minWidth: '24px',
             marginTop: '1px',
+            borderRadius: '6px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             transition: 'all 0.2s ease',
+            background: checked
+              ? `linear-gradient(135deg, ${accentColor} 0%, ${accentColorEnd} 100%)`
+              : '#bfbdb0',
+            border: checked
+              ? `1px solid ${accentColor}80`
+              : '1px solid rgba(255,255,255,0.15)',
+            boxShadow: checked
+              ? `0 0 10px ${accentColor}4D, inset 0 1px 0 rgba(255,255,255,0.1)`
+              : 'inset 0 1px 2px rgba(0,0,0,0.2)',
           }}
         >
-          {checked ? (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" fill={accentColor} stroke={accentColor} strokeWidth="2" />
-              <polyline
-                points="8 12 11 15 16 9"
-                fill="none"
-                stroke="#1a1a1a"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          ) : (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="rgba(100,100,100,0.6)" strokeWidth="2" fill="none" />
+          {checked && (
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth={3}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 13l4 4L19 7" />
             </svg>
           )}
-        </span>
+        </div>
 
         <span
           style={{

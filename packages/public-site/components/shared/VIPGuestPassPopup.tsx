@@ -764,6 +764,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
               checked={formData.consent}
               onChange={(checked) => setFormData(prev => ({ ...prev, consent: checked }))}
               accentColor="#00bfff"
+              accentColorEnd="#0066aa"
               linkColor="#00bfff"
               textColor="rgba(10, 26, 46, 0.7)"
             />
