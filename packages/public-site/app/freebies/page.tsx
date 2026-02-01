@@ -131,7 +131,7 @@ export default function Freebies() {
                           src={freebie.image}
                           alt={freebie.title}
                           fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                           unoptimized
                         />
                         {/* Overlay gradient */}

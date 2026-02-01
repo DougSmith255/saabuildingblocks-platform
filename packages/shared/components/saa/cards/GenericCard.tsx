@@ -65,7 +65,7 @@ export function GenericCard({
 
   const baseClasses = 'rounded-xl';
   const hoverClasses = isInteractive
-    ? 'transition-all duration-300 hover:scale-[1.02] cursor-pointer'
+    ? 'transition-all duration-500 ease-out hover:scale-[1.01] cursor-pointer'
     : '';
   const centerClasses = centered ? 'text-center' : '';
   const paddingClass = paddingClasses[padding];
