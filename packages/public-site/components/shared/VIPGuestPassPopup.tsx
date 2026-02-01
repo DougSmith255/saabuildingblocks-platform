@@ -560,7 +560,13 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
     }
   };
 
-  if (hasTriggered && !isOpen && !forceOpen) return null;
+  // Don't render before the popup has ever been triggered
+  if (!hasTriggered && !forceOpen) return null;
+
+  // NOTE: We intentionally do NOT return null when isOpen is false here.
+  // SlidePanel needs to stay mounted briefly after isOpen=false to play
+  // its exit animation (slide out + backdrop fade). SlidePanel handles
+  // its own unmount timing internally.
 
   return (
     <SlidePanel
