@@ -138,7 +138,7 @@ export function FloatingVideoButton() {
             viewBox="0 0 256 256"
             xmlns="http://www.w3.org/2000/svg"
             className="glass-icon transition-all duration-500 group-hover:glass-icon-hover"
-            style={{ width: '20px', height: '20px', flexShrink: 0 }}
+            style={{ width: '26px', height: '26px', flexShrink: 0 }}
           >
             <defs>
               <linearGradient id="mTop" x1="0" y1="0" x2="1" y2="0">
