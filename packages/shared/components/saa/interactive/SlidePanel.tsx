@@ -463,6 +463,9 @@ export function SlidePanel({
     // When a background is present (explicit or auto gold), content spans
     // the full panel via absolute positioning so flex centering works
     // across the entire panel height (not just below the header).
+    // padding-top clears the sticky header (~65px) + 15px gap so content
+    // never tucks behind the header on short screens, while tall screens
+    // still center naturally since the padding goes unused.
     ...(hasBackground ? {
       position: 'absolute' as const,
       inset: 0,
@@ -470,6 +473,7 @@ export function SlidePanel({
       display: 'flex',
       flexDirection: 'column' as const,
       overflow: 'auto',
+      paddingTop: '80px',
     } : {}),
   };
 
