@@ -130,7 +130,7 @@ export function VideoSection({
         )}
 
         {/* Video Player with Progress Tracking */}
-        <div className={compact ? '' : 'max-w-4xl mx-auto'}>
+        <div className={compact ? 'max-w-[85%] mx-auto' : 'max-w-4xl mx-auto'}>
           <VideoPlayer
             videoId={videoId}
             posterUrl={posterUrl}
