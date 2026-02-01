@@ -691,24 +691,37 @@ export default function Header() {
         /* Responsive adjustments */
         @media (max-width: 75rem) {
           .logo-container {
-            width: 98px !important;
-            height: 35px !important;
+            width: 100px !important;
+            height: 36px !important;
           }
         }
 
         @media (max-width: 50rem) {
           .logo-container {
-            width: 84px !important;
-            height: 30px !important;
+            width: 86px !important;
+            height: 31px !important;
           }
         }
 
-        /* Mobile header height - fixed 39px below 1600px breakpoint (xlg) */
+        /* Mobile header height - 39px below 1600px (25px shorter than original 64px) */
+        /* Achieved by: reducing padding 8px→2px (saves 12px) + slightly smaller elements (saves 13px) */
         @media (max-width: 100rem) {
           .header-container {
             height: 39px !important;
-            padding-top: 0px !important;
-            padding-bottom: 0px !important;
+            padding-top: 2px !important;
+            padding-bottom: 2px !important;
+          }
+          .hamburger {
+            width: 60px !important;
+            height: 60px !important;
+            min-width: 60px !important;
+            min-height: 60px !important;
+          }
+          .hamburger-svg {
+            width: 60px !important;
+            height: 60px !important;
+            min-width: 60px !important;
+            min-height: 60px !important;
           }
         }
 
