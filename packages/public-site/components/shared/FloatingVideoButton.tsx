@@ -225,8 +225,8 @@ export function FloatingVideoButton() {
           animation: fvbGradientFlow 20s linear infinite;
         }
         .fvb-gradient-glow {
-          filter: blur(18px);
-          opacity: 0.45;
+          filter: blur(10px);
+          opacity: 0.35;
           z-index: -1;
           transition: filter 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
@@ -273,8 +273,8 @@ export function FloatingVideoButton() {
 
         /* Glow intensifies on hover */
         .floating-video-wrapper:hover .fvb-gradient-glow {
-          opacity: 0.65;
-          filter: blur(28px);
+          opacity: 0.5;
+          filter: blur(18px);
         }
       `}</style>
 
