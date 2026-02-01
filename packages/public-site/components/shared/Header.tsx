@@ -255,12 +255,12 @@ export default function Header() {
               width: '100%',
               maxWidth: '100%',
               margin: '0',
-              padding: '8px 20px', // Reduced from 32px for tighter mobile spacing
+              padding: '0 20px', // Vertical padding handled by CSS media queries
               boxSizing: 'border-box',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              height: '85px', // Fixed height for desktop
+              /* height set via CSS: 85px desktop, 39px mobile */
               transition: 'justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
@@ -703,14 +703,15 @@ export default function Header() {
           }
         }
 
-        /* Mobile header height - 39px below 1600px (25px shorter than original 64px) */
-        /* Achieved by: reducing padding 8px→2px (saves 12px) + slightly smaller elements (saves 13px) */
+        /* Base header height — applies to all sizes, overridden by desktop below */
+        .header-container {
+          height: 39px;
+          padding-top: 2px;
+          padding-bottom: 2px;
+        }
+
+        /* Slightly smaller hamburger on mobile (65px → 60px) */
         @media (max-width: 100rem) {
-          .header-container {
-            height: 39px !important;
-            padding-top: 2px !important;
-            padding-bottom: 2px !important;
-          }
           .hamburger {
             width: 60px !important;
             height: 60px !important;
@@ -732,9 +733,12 @@ export default function Header() {
           }
         }
 
-        /* Ensure header container maintains flexbox on desktop */
+        /* Desktop header — restore full 85px height and padding at ≥1600px */
         @media (min-width: 100rem) {
           .header-container {
+            height: 85px;
+            padding-top: 8px;
+            padding-bottom: 8px;
             padding-left: 32px !important;
             padding-right: 32px !important;
           }
