@@ -209,10 +209,12 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
 }
 
 /**
- * Fire-and-forget: trigger eXp Guest Pass automation on VPS
- * Only fires for VIP Guest Pass submissions (source === 'vip-guest-pass')
+ * Trigger eXp Guest Pass automation on VPS.
+ * Uses context.waitUntil() to keep the Cloudflare Worker alive until the
+ * fetch completes — without this, Cloudflare kills the worker after the
+ * Response is returned and the fetch never reaches the VPS.
  */
-async function triggerExpGuestPassAutomation(firstName, lastName, email, env) {
+function triggerExpGuestPassAutomation(firstName, lastName, email, env, context) {
   const vpsUrl = env.VPS_API_URL || 'https://saabuildingblocks.com';
   const secret = env.AUTOMATION_SECRET;
 
@@ -221,19 +223,19 @@ async function triggerExpGuestPassAutomation(firstName, lastName, email, env) {
     return;
   }
 
-  try {
-    // Fire-and-forget — don't await the full response processing
-    fetch(`${vpsUrl}/api/automations/exp-guest-pass`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ firstName, lastName: lastName || '', email, secret }),
-    }).then(res => {
-      console.log('[join-team] eXp guest pass automation triggered:', { status: res.status, email });
-    }).catch(err => {
-      console.error('[join-team] eXp guest pass automation trigger failed:', err.message);
-    });
-  } catch (err) {
-    console.error('[join-team] eXp guest pass automation exception:', err.message);
+  const promise = fetch(`${vpsUrl}/api/automations/exp-guest-pass`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ firstName, lastName: lastName || '', email, secret }),
+  }).then(res => {
+    console.log('[join-team] eXp guest pass automation triggered:', { status: res.status, email });
+  }).catch(err => {
+    console.error('[join-team] eXp guest pass automation trigger failed:', err.message);
+  });
+
+  // Keep the worker alive until the fetch completes
+  if (context && context.waitUntil) {
+    context.waitUntil(promise);
   }
 }
 
@@ -408,7 +410,7 @@ export async function onRequestPost(context) {
 
       // Trigger eXp Guest Pass automation for VIP submissions
       if (source === 'vip-guest-pass') {
-        triggerExpGuestPassAutomation(firstName, lastName, email, env);
+        triggerExpGuestPassAutomation(firstName, lastName, email, env, context);
       }
 
       return new Response(
@@ -494,7 +496,7 @@ export async function onRequestPost(context) {
 
               // Trigger eXp Guest Pass automation for VIP submissions
               if (source === 'vip-guest-pass') {
-                triggerExpGuestPassAutomation(firstName, lastName, email, env);
+                triggerExpGuestPassAutomation(firstName, lastName, email, env, context);
               }
 
               return new Response(
@@ -521,7 +523,7 @@ export async function onRequestPost(context) {
 
             // Trigger eXp Guest Pass automation for VIP submissions
             if (source === 'vip-guest-pass') {
-              triggerExpGuestPassAutomation(firstName, lastName, email, env);
+              triggerExpGuestPassAutomation(firstName, lastName, email, env, context);
             }
 
             return new Response(
@@ -566,7 +568,7 @@ export async function onRequestPost(context) {
 
     // Trigger eXp Guest Pass automation for VIP submissions
     if (source === 'vip-guest-pass') {
-      triggerExpGuestPassAutomation(firstName, lastName, email, env);
+      triggerExpGuestPassAutomation(firstName, lastName, email, env, context);
     }
 
     return new Response(
