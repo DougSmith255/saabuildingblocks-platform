@@ -12,7 +12,6 @@ const STORAGE_KEY = 'saa_vip_pass_shown';
 const TRIGGER_DELAY_MS = 30000;
 const SCROLL_THRESHOLD = 0.5;
 
-const SPACE_BG = '/images/exp-world/bg.jpg';
 const EXP_X_LOGO = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public';
 
 // --- City coordinates for data arc network ---
@@ -466,9 +465,6 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
       style={{
         position: 'absolute',
         inset: 0,
-        backgroundImage: `url("${SPACE_BG}")`,
-        backgroundPosition: 'center center',
-        backgroundSize: 'cover',
       }}
     />
   );
