@@ -161,10 +161,13 @@ export function FloatingVideoButton() {
 
           {/* Label — hidden on very small screens, dimmed to match icon */}
           <span
-            className="hidden sm:inline text-sm font-semibold whitespace-nowrap tracking-wide transition-all duration-500"
+            className="hidden sm:inline text-sm whitespace-nowrap tracking-wide transition-all duration-500"
             style={{
               color: 'rgba(255, 255, 255, 0.5)',
               letterSpacing: '0.04em',
+              fontFamily: 'var(--font-taskor)',
+              fontWeight: 400,
+              fontFeatureSettings: '"ss01" 1',
             }}
           >
             The Inside Look
