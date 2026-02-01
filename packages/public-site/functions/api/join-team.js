@@ -209,6 +209,35 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
 }
 
 /**
+ * Fire-and-forget: trigger eXp Guest Pass automation on VPS
+ * Only fires for VIP Guest Pass submissions (source === 'vip-guest-pass')
+ */
+async function triggerExpGuestPassAutomation(firstName, lastName, email, env) {
+  const vpsUrl = env.VPS_API_URL || 'https://saabuildingblocks.com';
+  const secret = env.AUTOMATION_SECRET;
+
+  if (!secret) {
+    console.warn('[join-team] AUTOMATION_SECRET not configured — skipping eXp guest pass automation');
+    return;
+  }
+
+  try {
+    // Fire-and-forget — don't await the full response processing
+    fetch(`${vpsUrl}/api/automations/exp-guest-pass`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, lastName: lastName || '', email, secret }),
+    }).then(res => {
+      console.log('[join-team] eXp guest pass automation triggered:', { status: res.status, email });
+    }).catch(err => {
+      console.error('[join-team] eXp guest pass automation trigger failed:', err.message);
+    });
+  } catch (err) {
+    console.error('[join-team] eXp guest pass automation exception:', err.message);
+  }
+}
+
+/**
  * Add a note to a contact in GoHighLevel
  */
 async function addContactNote(contactId, noteBody, ghlHeaders) {
@@ -377,6 +406,11 @@ export async function onRequestPost(context) {
         console.log('[join-team] Email result (existing contact):', emailResult);
       }
 
+      // Trigger eXp Guest Pass automation for VIP submissions
+      if (source === 'vip-guest-pass') {
+        triggerExpGuestPassAutomation(firstName, lastName, email, env);
+      }
+
       return new Response(
         JSON.stringify({
           success: true,
@@ -458,6 +492,11 @@ export async function onRequestPost(context) {
                 console.log('[join-team] Email result (duplicate contact update):', emailResult);
               }
 
+              // Trigger eXp Guest Pass automation for VIP submissions
+              if (source === 'vip-guest-pass') {
+                triggerExpGuestPassAutomation(firstName, lastName, email, env);
+              }
+
               return new Response(
                 JSON.stringify({
                   success: true,
@@ -478,6 +517,11 @@ export async function onRequestPost(context) {
             if (resendApiKey) {
               const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
               console.log('[join-team] Email result (tag already exists):', emailResult);
+            }
+
+            // Trigger eXp Guest Pass automation for VIP submissions
+            if (source === 'vip-guest-pass') {
+              triggerExpGuestPassAutomation(firstName, lastName, email, env);
             }
 
             return new Response(
@@ -518,6 +562,11 @@ export async function onRequestPost(context) {
       console.log('[join-team] Email result:', emailResult);
     } else {
       console.warn('[join-team] RESEND_API_KEY not configured, skipping welcome email');
+    }
+
+    // Trigger eXp Guest Pass automation for VIP submissions
+    if (source === 'vip-guest-pass') {
+      triggerExpGuestPassAutomation(firstName, lastName, email, env);
     }
 
     return new Response(

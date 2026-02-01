@@ -583,37 +583,50 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
         />
       }
     >
-      {/* Spacer — lets the globe show in the upper portion of the panel */}
-      <div style={{ flex: '1 1 0%', minHeight: '120px' }} />
+      {/* Small spacer — just enough to let the globe crown show */}
+      <div style={{ flex: '0 0 20px' }} />
 
-      {/* Compact frosted form area pinned toward the bottom */}
-      <div
-        className="flex flex-col gap-3 rounded-2xl"
-        style={{
-          background: 'rgba(5, 10, 25, 0.75)',
-          backdropFilter: 'blur(14px)',
-          WebkitBackdropFilter: 'blur(14px)',
-          border: '1px solid rgba(0, 191, 255, 0.12)',
-          padding: '16px 16px 14px',
-        }}
-      >
-        {/* Short value prop — one line */}
-        <p style={{ fontSize: '15px', color: '#e0f7fa', opacity: 0.85, lineHeight: 1.5, textAlign: 'center' }}>
-          84,000+ agents. 29 countries. One virtual campus. Step inside eXp World — free.
+      {/* Content area — no card, sits directly over the globe background */}
+      <div className="flex flex-col gap-3" style={{ padding: '0 16px 14px' }}>
+        {/* Description — dark text readable against bright blue globe */}
+        <p style={{
+          fontSize: '14px',
+          color: '#0a1a2e',
+          lineHeight: 1.6,
+          textAlign: 'center',
+          fontWeight: 500,
+          textShadow: '0 0 8px rgba(100,200,255,0.3)',
+        }}>
+          84,000+ agents. 29 countries. One virtual campus.<br />
+          eXp World is your hub for live training, on-demand support, and direct
+          access to leadership. Set up your own virtual office and meet with
+          clients anywhere in the world — all inside eXp World.
+        </p>
+
+        <p style={{
+          fontSize: '15px',
+          color: '#042040',
+          fontWeight: 700,
+          textAlign: 'center',
+          textShadow: '0 0 8px rgba(100,200,255,0.25)',
+        }}>
+          Step inside — free.
         </p>
 
         {submitStatus === 'success' ? (
           <div
             className="text-center py-6 px-4 rounded-xl"
             style={{
-              background: 'rgba(0,191,255,0.1)',
+              background: 'rgba(0,20,50,0.55)',
               border: '1px solid rgba(0,191,255,0.35)',
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
             }}
           >
             <p className="font-semibold mb-1" style={{ fontSize: '18px', color: '#00bfff' }}>
               You&apos;re In!
             </p>
-            <p style={{ fontSize: '15px', color: '#e0f7fa', opacity: 0.8 }}>
+            <p style={{ fontSize: '15px', color: '#e0f7fa', opacity: 0.9 }}>
               Check your email for your Guest Pass details.
             </p>
           </div>
@@ -630,6 +643,11 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
                     onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
                     placeholder="First name"
                     required
+                    style={{
+                      background: 'rgba(2, 8, 22, 0.7)',
+                      border: '1px solid rgba(0, 140, 200, 0.3)',
+                      color: '#e0f0ff',
+                    }}
                   />
                 </FormGroup>
                 <FormGroup label="Last Name" htmlFor="vip-last-name">
@@ -640,6 +658,11 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
                     value={formData.lastName}
                     onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
                     placeholder="Last name"
+                    style={{
+                      background: 'rgba(2, 8, 22, 0.7)',
+                      border: '1px solid rgba(0, 140, 200, 0.3)',
+                      color: '#e0f0ff',
+                    }}
                   />
                 </FormGroup>
               </FormRow>
@@ -652,6 +675,11 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
                   onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                   placeholder="you@example.com"
                   required
+                  style={{
+                    background: 'rgba(2, 8, 22, 0.7)',
+                    border: '1px solid rgba(0, 140, 200, 0.3)',
+                    color: '#e0f0ff',
+                  }}
                 />
               </FormGroup>
             </div>
@@ -670,10 +698,10 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
                 loadingText="Claiming..."
                 fullWidth
                 style={{
-                  background: 'linear-gradient(135deg, #00bfff 0%, #0077cc 100%)',
+                  background: 'linear-gradient(135deg, #00bfff 0%, #0066aa 100%)',
                   color: '#ffffff',
                   border: '1px solid rgba(0,191,255,0.5)',
-                  boxShadow: '0 0 20px rgba(0,191,255,0.25), 0 4px 15px rgba(0,0,0,0.3)',
+                  boxShadow: '0 0 20px rgba(0,191,255,0.3), 0 4px 15px rgba(0,0,0,0.3)',
                 }}
               >
                 Claim Your Guest Pass
@@ -682,7 +710,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
           </form>
         )}
 
-        <p className="text-xs text-center" style={{ color: '#e0f7fa', opacity: 0.35 }}>
+        <p className="text-xs text-center" style={{ color: '#0a1a2e', opacity: 0.5 }}>
           No spam. No obligations.
         </p>
       </div>
