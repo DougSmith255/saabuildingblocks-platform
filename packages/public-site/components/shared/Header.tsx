@@ -720,6 +720,31 @@ export default function Header() {
           }
         }
 
+        /* <1024px: 0.8x logo, 0.9x hamburger, 11px padding */
+        @media (max-width: 64rem) {
+          .header-container {
+            height: 55px;
+          }
+          .logo-container {
+            width: 90px !important;
+            height: 33px !important;
+            max-width: 90px !important;
+            max-height: 33px !important;
+          }
+          .hamburger {
+            width: 53px !important;
+            height: 53px !important;
+            min-width: 53px !important;
+            min-height: 53px !important;
+          }
+          .hamburger-svg {
+            width: 53px !important;
+            height: 53px !important;
+            min-width: 53px !important;
+            min-height: 53px !important;
+          }
+        }
+
         @media (max-width: 550px) {
           .header-container .header-btn,
           .header-container .cta-button {
