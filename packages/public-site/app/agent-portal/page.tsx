@@ -1430,6 +1430,23 @@ function AgentPortal() {
     }
   }, [user?.profilePictureUrl]);
 
+  // Listen for profile-picture-updated events from child components (e.g., agent page section)
+  // so the parent user state stays in sync when uploads happen from within sub-sections
+  useEffect(() => {
+    const handleProfilePictureUpdated = (event: CustomEvent<{ url: string }>) => {
+      setUser(prev => prev ? { ...prev, profilePictureUrl: event.detail.url } : prev);
+      setProfileImageError(false);
+      setProfileImageLoading(true);
+      if (user) {
+        localStorage.setItem('agent_portal_user', JSON.stringify({ ...user, profilePictureUrl: event.detail.url }));
+      }
+    };
+    window.addEventListener('profile-picture-updated', handleProfilePictureUpdated as EventListener);
+    return () => {
+      window.removeEventListener('profile-picture-updated', handleProfilePictureUpdated as EventListener);
+    };
+  }, [user]);
+
   // Fetch onboarding progress when user is loaded
   useEffect(() => {
     if (user?.id && !isOnboardingLoaded) {
@@ -2121,6 +2138,12 @@ function AgentPortal() {
       setProfileImageLoading(true);
       localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
 
+      // Immediately notify agent page section so it shows the new image
+      // (even if the agent page API sync below fails)
+      window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
+        detail: { url: cacheBustUrl }
+      }));
+
       // Step 5: Upload B&W to attraction page
       setDashboardUploadStatus('Syncing to attraction page...');
       let pageResponse = await fetch(`${API_URL}/api/agent-pages/${user.id}`, {
@@ -2328,6 +2351,12 @@ function AgentPortal() {
       setProfileImageLoading(true); // Reset loading state for new image
       localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
 
+      // Immediately notify agent page section so it shows the new image
+      // (even if the agent page API sync below fails)
+      window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
+        detail: { url: cacheBustUrl }
+      }));
+
       // Step 5: Upload same to attraction page (B&W version)
       setStatus('Syncing to attraction page...');
       let pageResponse = await fetch(`${API_URL}/api/agent-pages/${user.id}`, {
@@ -2497,11 +2526,18 @@ function AgentPortal() {
       if (dashboardResponse.ok) {
         const dashboardData = await dashboardResponse.json();
         // Apply toCdnUrl to use edge-cached CDN instead of origin
-        const updatedUser = { ...user!, profilePictureUrl: toCdnUrl(dashboardData.url) };
+        const cacheBustUrl = `${toCdnUrl(dashboardData.url)}?v=${Date.now()}`;
+        const updatedUser = { ...user!, profilePictureUrl: cacheBustUrl };
         setUser(updatedUser);
         setProfileImageError(false); // Reset error state for new image
         setProfileImageLoading(true); // Reset loading state for new image
         localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
+
+        // Immediately notify agent page section so it shows the new image
+        // (even if the agent page API sync below fails)
+        window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
+          detail: { url: cacheBustUrl }
+        }));
       }
 
       // Step 4: Upload same to attraction page

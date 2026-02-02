@@ -2193,17 +2193,16 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       pointer-events: auto;
       position: relative;
       width: 100%;
+      min-height: 85vh;
       max-height: 85vh;
-      overflow-y: auto;
+      overflow: hidden;
       overscroll-behavior: contain;
+      display: flex;
+      flex-direction: column;
       border-top: 1px solid rgba(255, 215, 0, 0.2);
       border-radius: 1rem 1rem 0 0;
       padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
-        linear-gradient(45deg, rgba(18, 18, 18, 0.97), rgba(28, 28, 28, 0.98));
-      backdrop-filter: blur(12px) saturate(1.4);
-      -webkit-backdrop-filter: blur(12px) saturate(1.4);
+      background: transparent;
       box-shadow:
         0 -10px 40px rgba(0, 0, 0, 0.5),
         0 0 40px rgba(255, 215, 0, 0.1),
@@ -2220,17 +2219,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     @media (min-width: 950px) {
       .slide-panel {
         max-width: 500px;
+        min-height: 100dvh;
         max-height: 100dvh;
         height: 100dvh;
         border: none;
         border-left: 1px solid rgba(255, 215, 0, 0.25);
         border-radius: 1rem 0 0 1rem;
         padding-bottom: 0;
-        background:
-          linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 40%),
-          linear-gradient(45deg, rgba(14, 14, 14, 0.98), rgba(24, 24, 24, 0.99));
-        backdrop-filter: blur(16px) saturate(1.5);
-        -webkit-backdrop-filter: blur(16px) saturate(1.5);
+        background: transparent;
         box-shadow:
           -20px 0 60px rgba(0, 0, 0, 0.6),
           -5px 0 20px rgba(0, 0, 0, 0.4),
@@ -2246,17 +2242,17 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       }
     }
 
-    /* Slide Panel Header */
+    /* Slide Panel Header — elevated above honeycomb background */
     .slide-panel-header {
-      position: sticky;
-      top: 0;
+      position: relative;
       z-index: 10;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 1.25rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgb(18, 18, 18) 50%);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(18, 18, 18, 0.85) 50%);
       border-radius: 1rem 1rem 0.5rem 0.5rem;
     }
 
@@ -2322,9 +2318,53 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       background: rgba(255, 255, 255, 0.1);
     }
 
-    /* Slide Panel Content */
+    /* Honeycomb canvas background — fills entire panel behind content */
+    .slide-panel-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease-out;
+    }
+    .slide-panel-bg.visible { opacity: 1; }
+    .slide-panel-bg canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Feathered gradient overlay for content readability */
+    .slide-panel-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: radial-gradient(
+        ellipse 70% 60% at 50% 50%,
+        rgba(6, 6, 10, 0.75) 0%,
+        rgba(6, 6, 10, 0.55) 35%,
+        rgba(6, 6, 10, 0.25) 60%,
+        rgba(6, 6, 10, 0) 85%
+      );
+    }
+
+    /* Slide Panel Content — positioned below sticky header */
     .slide-panel-content {
+      position: absolute;
+      top: 80px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      overflow-y: auto;
+      overscroll-behavior: contain;
       padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
     }
 
     /* Tool Panel (iframe content) */
@@ -2334,14 +2374,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     .slide-panel.tool-panel .slide-panel-content {
       padding: 0;
-      position: relative;
-      min-height: 600px;
     }
 
     .slide-panel.tool-panel iframe {
       display: block;
       width: 100%;
-      height: 650px;
+      flex: 1 1 auto;
+      min-height: 0;
       border: none;
       background: #0a0a0a;
       opacity: 0;
@@ -2374,12 +2413,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       border-top-color: #ffd700;
       border-radius: 50%;
       animation: spinnerRotate 1s linear infinite;
-    }
-
-    @media (max-width: 949px) {
-      .slide-panel.tool-panel iframe {
-        height: calc(85vh - 80px);
-      }
     }
 
     /* Hide scrollbar when slide panel is open */
@@ -4427,6 +4460,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   <!-- Join Slide Panel -->
   <div class="slide-panel-container join-instructions-panel" id="join-modal" role="dialog" aria-modal="true" aria-labelledby="join-panel-title">
     <div class="slide-panel" id="join-panel">
+      <div class="slide-panel-bg" id="join-bg"><canvas id="join-canvas"></canvas></div>
+      <div class="slide-panel-overlay"></div>
       <div class="slide-panel-header">
         <div class="slide-panel-header-left">
           <div class="slide-panel-icon">
@@ -4484,6 +4519,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   <!-- Instructions Slide Panel -->
   <div class="slide-panel-container join-instructions-panel instructions-on-top" id="instructions-modal" role="dialog" aria-modal="true" aria-labelledby="instructions-panel-title">
     <div class="slide-panel" id="instructions-panel">
+      <div class="slide-panel-bg" id="instructions-bg"><canvas id="instructions-canvas"></canvas></div>
+      <div class="slide-panel-overlay"></div>
       <div class="slide-panel-header">
         <div class="slide-panel-header-left">
           <div class="slide-panel-icon">
@@ -4547,6 +4584,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   <div class="slide-panel-container" id="calculator-modal" role="dialog" aria-modal="true" aria-labelledby="calculator-panel-title">
     <div class="slide-panel-backdrop" id="calculator-modal-backdrop"></div>
     <div class="slide-panel tool-panel" id="calculator-panel">
+      <div class="slide-panel-bg" id="calculator-bg"><canvas id="calculator-canvas"></canvas></div>
+      <div class="slide-panel-overlay"></div>
       <div class="slide-panel-header">
         <div class="slide-panel-header-left">
           <div class="slide-panel-icon">
@@ -4574,6 +4613,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   <div class="slide-panel-container" id="revshare-modal" role="dialog" aria-modal="true" aria-labelledby="revshare-panel-title">
     <div class="slide-panel-backdrop" id="revshare-modal-backdrop"></div>
     <div class="slide-panel tool-panel" id="revshare-panel">
+      <div class="slide-panel-bg" id="revshare-bg"><canvas id="revshare-canvas"></canvas></div>
+      <div class="slide-panel-overlay"></div>
       <div class="slide-panel-header">
         <div class="slide-panel-header-left">
           <div class="slide-panel-icon">
@@ -4600,6 +4641,203 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   <script src="https://embed.cloudflarestream.com/embed/sdk.latest.js"></script>
   <script>
     (function() {
+      // -------- Golden Honeycomb Background Animation --------
+      var HoneycombAnim = (function() {
+        var HEX_RADIUS = 32;
+        var PULSE_RING_WIDTH = 90;
+        var PULSE_SPEED_MIN = 1.8;
+        var PULSE_SPEED_MAX = 2.8;
+        var PULSE_INTERVAL_MIN = 80;
+        var PULSE_INTERVAL_MAX = 200;
+        var MAX_PULSES = 3;
+
+        function hexVertices(cx, cy, r) {
+          var verts = [];
+          for (var i = 0; i < 6; i++) {
+            var angle = (Math.PI / 3) * i;
+            verts.push({ x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) });
+          }
+          return verts;
+        }
+
+        function buildGrid(w, h) {
+          var cells = [];
+          var r = HEX_RADIUS;
+          var colWidth = r * 1.5;
+          var rowHeight = r * Math.sqrt(3);
+          var cols = Math.ceil(w / colWidth) + 2;
+          var rows = Math.ceil(h / rowHeight) + 2;
+          for (var col = -1; col < cols; col++) {
+            for (var row = -1; row < rows; row++) {
+              var cx = col * colWidth;
+              var cy = row * rowHeight + (col % 2 === 0 ? 0 : rowHeight * 0.5);
+              cells.push({ cx: cx, cy: cy, verts: hexVertices(cx, cy, r) });
+            }
+          }
+          return cells;
+        }
+
+        function spawnPulse(state) {
+          if (state.w === 0 || state.h === 0 || state.grid.length === 0) return;
+          var origin = state.grid[Math.floor(Math.random() * state.grid.length)];
+          var maxR = Math.sqrt(state.w * state.w + state.h * state.h);
+          state.pulses.push({
+            ox: origin.cx, oy: origin.cy,
+            radius: 0, maxRadius: maxR,
+            speed: PULSE_SPEED_MIN + Math.random() * (PULSE_SPEED_MAX - PULSE_SPEED_MIN),
+            width: PULSE_RING_WIDTH
+          });
+          if (state.pulses.length > MAX_PULSES) state.pulses.shift();
+        }
+
+        function draw(ctx, state) {
+          var w = state.w, h = state.h;
+          if (w === 0 || h === 0) return;
+          var grid = state.grid;
+          var pulses = state.pulses;
+
+          // Deep space background
+          ctx.fillStyle = '#06060a';
+          ctx.fillRect(0, 0, w, h);
+
+          // Subtle radial vignette
+          var vig = ctx.createRadialGradient(w * 0.5, h * 0.45, 0, w * 0.5, h * 0.5, Math.max(w, h) * 0.7);
+          vig.addColorStop(0, 'rgba(20, 16, 8, 0.4)');
+          vig.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = vig;
+          ctx.fillRect(0, 0, w, h);
+
+          // Advance pulses
+          for (var i = pulses.length - 1; i >= 0; i--) {
+            pulses[i].radius += pulses[i].speed;
+            if (pulses[i].radius > pulses[i].maxRadius + pulses[i].width) {
+              pulses.splice(i, 1);
+            }
+          }
+
+          // Draw hex grid
+          for (var gi = 0; gi < grid.length; gi++) {
+            var cell = grid[gi];
+            var intensity = 0;
+            for (var p = 0; p < pulses.length; p++) {
+              var pulse = pulses[p];
+              var dx = cell.cx - pulse.ox;
+              var dy = cell.cy - pulse.oy;
+              var dist = Math.sqrt(dx * dx + dy * dy);
+              var ringDist = Math.abs(dist - pulse.radius);
+              if (ringDist < pulse.width) {
+                var ringIntensity = 1 - ringDist / pulse.width;
+                var ageFade = 1 - pulse.radius / pulse.maxRadius;
+                intensity = Math.max(intensity, ringIntensity * ringIntensity * ageFade);
+              }
+            }
+
+            var v = cell.verts;
+
+            // Hex fill glow
+            if (intensity > 0.05) {
+              ctx.beginPath();
+              ctx.moveTo(v[0].x, v[0].y);
+              for (var j = 1; j < 6; j++) ctx.lineTo(v[j].x, v[j].y);
+              ctx.closePath();
+              ctx.fillStyle = 'rgba(255, 215, 0, ' + (intensity * 0.12) + ')';
+              ctx.fill();
+            }
+
+            // Hex edge
+            ctx.beginPath();
+            ctx.moveTo(v[0].x, v[0].y);
+            for (var j2 = 1; j2 < 6; j2++) ctx.lineTo(v[j2].x, v[j2].y);
+            ctx.closePath();
+            var edgeAlpha = 0.06 + intensity * 0.45;
+            ctx.strokeStyle = 'rgba(255, 215, 0, ' + edgeAlpha + ')';
+            ctx.lineWidth = intensity > 0.1 ? 1.2 : 0.6;
+            ctx.stroke();
+
+            // Bright node dots at vertices when pulsed
+            if (intensity > 0.2) {
+              var dotAlpha = intensity * 0.7;
+              var dotRadius = 1.5 + intensity * 1.5;
+              ctx.fillStyle = 'rgba(255, 230, 100, ' + dotAlpha + ')';
+              for (var j3 = 0; j3 < 6; j3++) {
+                ctx.beginPath();
+                ctx.arc(v[j3].x, v[j3].y, dotRadius, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            }
+          }
+
+          // Pulse origin glow
+          for (var pi = 0; pi < pulses.length; pi++) {
+            var pp = pulses[pi];
+            var af = Math.max(0, 1 - pp.radius / (pp.width * 3));
+            if (af > 0) {
+              var glow = ctx.createRadialGradient(pp.ox, pp.oy, 0, pp.ox, pp.oy, HEX_RADIUS * 2);
+              glow.addColorStop(0, 'rgba(255, 215, 0, ' + (af * 0.25) + ')');
+              glow.addColorStop(1, 'rgba(255, 215, 0, 0)');
+              ctx.fillStyle = glow;
+              ctx.beginPath();
+              ctx.arc(pp.ox, pp.oy, HEX_RADIUS * 2, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        }
+
+        function resize(canvas, bgEl, state) {
+          var rect = bgEl.getBoundingClientRect();
+          var dpr = Math.min(window.devicePixelRatio || 1, 2);
+          var w = Math.round(rect.width);
+          var h = Math.round(rect.height);
+          canvas.width = w * dpr;
+          canvas.height = h * dpr;
+          canvas.style.width = w + 'px';
+          canvas.style.height = h + 'px';
+          var ctx = canvas.getContext('2d');
+          if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          state.w = w;
+          state.h = h;
+          state.grid = buildGrid(w, h);
+        }
+
+        return {
+          start: function(canvas) {
+            var bgEl = canvas.parentElement;
+            var state = { grid: [], pulses: [], frame: 0, nextPulse: 20, raf: 0, w: 0, h: 0, ro: null };
+            resize(canvas, bgEl, state);
+            var ctx = canvas.getContext('2d');
+            if (!ctx) return state;
+
+            // Fade in
+            bgEl.classList.add('visible');
+
+            function tick() {
+              state.frame++;
+              if (state.frame >= state.nextPulse) {
+                spawnPulse(state);
+                state.nextPulse = state.frame + PULSE_INTERVAL_MIN + Math.floor(Math.random() * (PULSE_INTERVAL_MAX - PULSE_INTERVAL_MIN));
+              }
+              draw(ctx, state);
+              state.raf = requestAnimationFrame(tick);
+            }
+            state.raf = requestAnimationFrame(tick);
+
+            // ResizeObserver
+            state.ro = new ResizeObserver(function() { resize(canvas, bgEl, state); });
+            state.ro.observe(bgEl);
+
+            return state;
+          },
+          stop: function(state) {
+            if (!state) return;
+            cancelAnimationFrame(state.raf);
+            if (state.ro) state.ro.disconnect();
+            // Fade out
+            var canvas = null; // bg element handles fade via CSS class removal
+          }
+        };
+      })();
+      // -------- End Honeycomb Animation --------
+
       // Constants
       const STORAGE_KEY = 'agent_attraction_video';
       const UNLOCK_THRESHOLD = 50;
@@ -5037,6 +5275,34 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         }
       }
 
+      // Honeycomb animation state per panel type
+      var honeycombStates = {};
+      var honeycombCanvasIds = {
+        join: 'join-canvas',
+        instructions: 'instructions-canvas',
+        calculator: 'calculator-canvas',
+        revshare: 'revshare-canvas'
+      };
+      var honeycombBgIds = {
+        join: 'join-bg',
+        instructions: 'instructions-bg',
+        calculator: 'calculator-bg',
+        revshare: 'revshare-bg'
+      };
+
+      function startHoneycomb(type) {
+        var canvas = document.getElementById(honeycombCanvasIds[type]);
+        if (!canvas) return;
+        honeycombStates[type] = HoneycombAnim.start(canvas);
+      }
+
+      function stopHoneycomb(type) {
+        HoneycombAnim.stop(honeycombStates[type]);
+        var bg = document.getElementById(honeycombBgIds[type]);
+        if (bg) bg.classList.remove('visible');
+        honeycombStates[type] = null;
+      }
+
       function openModal(type) {
         const elements = getPanel(type);
         if (!elements) return;
@@ -5055,11 +5321,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // Reset closing state
         panelClosing[type] = false;
         elements.panel.classList.remove('closing');
-        elements.backdrop.classList.remove('closing');
+        if (elements.backdrop) elements.backdrop.classList.remove('closing');
 
         elements.container.classList.add('open');
         document.body.classList.add('slide-panel-open');
         document.documentElement.classList.add('slide-panel-open');
+
+        // Start honeycomb animation
+        startHoneycomb(type);
 
         // Add swipe handlers
         elements.panel.addEventListener('touchstart', handlePanelTouchStart, { passive: true });
@@ -5071,6 +5340,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         if (!elements || panelClosing[type]) return;
 
         panelClosing[type] = true;
+
+        // Stop honeycomb animation
+        stopHoneycomb(type);
 
         // Add closing animation classes
         elements.panel.classList.add('closing');
@@ -5113,8 +5385,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           joinModal.classList.add('open');
           joinPanel.classList.remove('closing');
           // Close instructions if it was open
+          stopHoneycomb('instructions');
           instructionsModal.classList.remove('open');
           instructionsPanel.classList.remove('closing');
+          // Start honeycomb on join panel
+          startHoneycomb('join');
         } else if (type === 'instructions') {
           // Keep join panel open (underneath), open instructions on top
           activeJoinPanel = 'instructions';
@@ -5122,6 +5397,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           joinPanel.classList.remove('closing');
           instructionsModal.classList.add('open');
           instructionsPanel.classList.remove('closing');
+          // Start honeycomb on both panels
+          if (!honeycombStates['join']) startHoneycomb('join');
+          startHoneycomb('instructions');
         }
 
         // Add swipe handlers
@@ -5135,6 +5413,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
         const joinPanel = document.getElementById('join-panel');
         const instructionsPanel = document.getElementById('instructions-panel');
+
+        // Stop honeycomb animations
+        stopHoneycomb('join');
+        stopHoneycomb('instructions');
 
         // Add closing animation to visible panels
         if (activeJoinPanel === 'instructions') {

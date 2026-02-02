@@ -260,7 +260,7 @@ export default function Header() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              /* height set via CSS: 85px desktop, 39px mobile */
+              /* height set via CSS: 85px desktop (≥1600px), 60px mobile (<1600px) */
               transition: 'justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
@@ -688,21 +688,6 @@ export default function Header() {
           stroke-dashoffset: -32.42;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 75rem) {
-          .logo-container {
-            width: 100px !important;
-            height: 36px !important;
-          }
-        }
-
-        @media (max-width: 50rem) {
-          .logo-container {
-            width: 86px !important;
-            height: 31px !important;
-          }
-        }
-
         /* Base header height — mobile default (85px − 25px = 60px) */
         .header-container {
           height: 60px;
@@ -710,19 +695,45 @@ export default function Header() {
           padding-bottom: 0;
         }
 
-        /* Slightly smaller hamburger on mobile (65px → 60px) */
+        /* All mobile (<1600px): reduce logo + hamburger to fit 60px header */
         @media (max-width: 100rem) {
+          .logo-container {
+            width: 110px !important;
+            height: 39px !important;
+            max-width: 110px !important;
+            max-height: 39px !important;
+          }
           .hamburger {
-            width: 60px !important;
-            height: 60px !important;
-            min-width: 60px !important;
-            min-height: 60px !important;
+            width: 50px !important;
+            height: 50px !important;
+            min-width: 50px !important;
+            min-height: 50px !important;
           }
           .hamburger-svg {
-            width: 60px !important;
-            height: 60px !important;
-            min-width: 60px !important;
-            min-height: 60px !important;
+            width: 50px !important;
+            height: 50px !important;
+            min-width: 50px !important;
+            min-height: 50px !important;
+          }
+        }
+
+        /* Tablets (<1200px): slightly smaller logo */
+        @media (max-width: 75rem) {
+          .logo-container {
+            width: 94px !important;
+            height: 34px !important;
+            max-width: 94px !important;
+            max-height: 34px !important;
+          }
+        }
+
+        /* Phones (<800px): smallest logo */
+        @media (max-width: 50rem) {
+          .logo-container {
+            width: 80px !important;
+            height: 29px !important;
+            max-width: 80px !important;
+            max-height: 29px !important;
           }
         }
 
