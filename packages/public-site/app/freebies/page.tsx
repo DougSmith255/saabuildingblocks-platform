@@ -160,11 +160,7 @@ export default function Freebies() {
                           {hoveredIndex === index ? (
                             freebie.type === 'canva' ? (
                               <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
-                                  <path strokeDasharray={42} d="M11 5h-6v14h14v-6"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="42;0" /></path>
-                                  <path strokeDasharray={12} strokeDashoffset={12} d="M13 11l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.2s" to={0} /></path>
-                                  <path strokeDasharray={8} strokeDashoffset={8} d="M21 3h-6M21 3v6"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.7s" dur="0.2s" to={0} /></path>
-                                </g>
+                                <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14" />
                               </svg>
                             ) : (
                               <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -174,12 +170,8 @@ export default function Freebies() {
                             )
                           ) : (
                             freebie.type === 'canva' ? (
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <g strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
-                                  <path d="M11 5h-6v14h14v-6" />
-                                  <path d="M13 11l7 -7" />
-                                  <path d="M21 3h-6M21 3v6" />
-                                </g>
+                              <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14" />
                               </svg>
                             ) : (
                               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24">
