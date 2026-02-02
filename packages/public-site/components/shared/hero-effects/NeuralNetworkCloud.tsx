@@ -115,7 +115,7 @@ export function NeuralNetworkCloud() {
 
       // ── Scene ──
       const scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x000a14, 0.008);
+      // No fog — canvas must stay transparent to show star background behind
 
       const aspect = width / height;
       const cameraZ = aspect < 0.6 ? 100 : aspect < 1 ? 85 : 65;
@@ -130,10 +130,13 @@ export function NeuralNetworkCloud() {
       renderer.toneMappingExposure = 1.2;
       container.appendChild(renderer.domElement);
 
-      // Bloom composer
+      // Bloom composer — use alpha-aware render target so canvas stays transparent
       let composer: any = null;
       if (EffectComposer && RenderPass && UnrealBloomPass) {
-        composer = new EffectComposer(renderer);
+        const rt = new THREE.WebGLRenderTarget(width, height, {
+          type: THREE.HalfFloatType,
+        });
+        composer = new EffectComposer(renderer, rt);
         composer.addPass(new RenderPass(scene, camera));
         const bloom = new UnrealBloomPass(
           new THREE.Vector2(width, height), CONFIG.bloomStrength, 0.8, 0.1
