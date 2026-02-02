@@ -53,7 +53,7 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
     if (cleanupRef.current) return;
 
     const container = containerRef.current;
-    container.style.opacity = '0';
+    container.style.opacity = '1';
 
     (async () => {
       const THREE = await import('three');
@@ -421,10 +421,7 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
       };
       animate();
 
-      // Fade in after first frame renders (masks any load flash)
-      requestAnimationFrame(() => {
-        if (container.isConnected) container.style.opacity = '1';
-      });
+      // Globe appears instantly (Three.js pre-warmed during idle time)
 
       // Resize — also adjusts camera distance for narrow panels
       const onResize = () => {
@@ -472,7 +469,7 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
       style={{
         position: 'absolute',
         inset: 0,
-        transition: 'opacity 0.6s ease-in',
+        /* no fade — globe renders instantly with pre-warmed Three.js */
       }}
     />
   );
