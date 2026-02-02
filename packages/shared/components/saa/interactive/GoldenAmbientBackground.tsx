@@ -62,7 +62,7 @@ export function GoldenAmbientBackground({ isVisible }: GoldenAmbientBackgroundPr
   const sizeRef = useRef({ w: 0, h: 0 });
   const frameCountRef = useRef(0);
   const nextPulseRef = useRef(0);
-  const [fadedIn, setFadedIn] = useState(false);
+  // No fade state — canvas draws dark background on first frame, no pop-in
 
   // ---- build hex grid ----
 
@@ -290,11 +290,8 @@ export function GoldenAmbientBackground({ isVisible }: GoldenAmbientBackgroundPr
       frameCountRef.current = 0;
       pulsesRef.current = [];
       loop(ctx);
-
-      requestAnimationFrame(() => setFadedIn(true));
     } else {
       cancelAnimationFrame(rafRef.current);
-      setFadedIn(false);
     }
 
     return () => {
@@ -310,7 +307,7 @@ export function GoldenAmbientBackground({ isVisible }: GoldenAmbientBackgroundPr
         inset: 0,
         overflow: 'hidden',
         borderRadius: 'inherit',
-        opacity: fadedIn ? 1 : 0,
+        opacity: 1,
       }}
     >
       <canvas
