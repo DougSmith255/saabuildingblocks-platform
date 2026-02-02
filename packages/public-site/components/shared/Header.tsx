@@ -727,6 +727,25 @@ export default function Header() {
           }
         }
 
+        /* 800–1600px: tighter vertical spacing around logo (−10px top & bottom) */
+        @media (min-width: 50rem) and (max-width: 99.99rem) {
+          .header-container {
+            height: 40px;
+          }
+          .hamburger {
+            width: 38px !important;
+            height: 38px !important;
+            min-width: 38px !important;
+            min-height: 38px !important;
+          }
+          .hamburger-svg {
+            width: 38px !important;
+            height: 38px !important;
+            min-width: 38px !important;
+            min-height: 38px !important;
+          }
+        }
+
         /* Phones (<800px): smallest logo */
         @media (max-width: 50rem) {
           .logo-container {
