@@ -238,7 +238,7 @@ export default function Header() {
             userSelect: 'none',
           }}
         >
-          {/* Glass Background - 3 layers only - Fades when mobile menu opens */}
+          {/* Glass Background - frosted glass + animated shimmer - Fades when mobile menu opens */}
           <div
             className={`${styles['glassContainer']} ${hasMounted ? 'transition-opacity duration-300' : ''}`}
             style={{
@@ -246,7 +246,7 @@ export default function Header() {
             }}
           >
             <div className={styles['glassBase']} />
-            <div className={styles['shimmerGradient']} />
+            <div className={styles['shimmerLayer']} />
           </div>
 
           <div

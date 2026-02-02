@@ -85,16 +85,19 @@ export function FloatingVideoButton() {
           }}
           aria-label="Watch The Inside Look video"
         >
-          {/* Layer 1: Glass Base — dark gradient + gold vertical lines (matches header glassBase) */}
+          {/* Layer 1: Glass Base — semi-transparent + backdrop blur + gold lines (matches header) */}
           <div
             className="absolute inset-0"
             style={{
               borderRadius: '12px',
               background: `
-                linear-gradient(45deg, rgb(14, 14, 14), rgb(24, 24, 24)),
+                linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
               `,
-              boxShadow: 'inset 0 0 20px rgba(255,255,255,0.04)',
+              backdropFilter: 'blur(8px) saturate(1.5)',
+              WebkitBackdropFilter: 'blur(8px) saturate(1.5)',
+              boxShadow: '0 0 30px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,255,255,0.04)',
+              filter: 'brightness(1.1) contrast(1.1) saturate(1.2)',
             }}
           />
 
@@ -105,27 +108,18 @@ export function FloatingVideoButton() {
               borderRadius: '12px',
               background: `
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
-                linear-gradient(45deg, rgb(12, 12, 12), rgb(22, 22, 22))
+                linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83))
               `,
             }}
           />
 
-          {/* Layer 3: Shimmer gradient (matches header shimmerGradient) */}
+          {/* Layer 3: Animated radar shimmer (matches header shimmerLayer) */}
           <div
-            className="absolute inset-0"
+            className="fvb-shimmer absolute inset-0"
             style={{
               borderRadius: '12px',
-              opacity: 0.6,
+              opacity: 0.7,
               mixBlendMode: 'overlay',
-              background: `linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.05) 0%,
-                rgba(255, 255, 255, 0.15) 20%,
-                rgba(255, 255, 255, 0.25) 40%,
-                rgba(255, 255, 255, 0.15) 60%,
-                rgba(255, 255, 255, 0.05) 80%,
-                rgba(255, 255, 255, 0.02) 100%
-              )`,
             }}
           />
 
@@ -207,6 +201,30 @@ export function FloatingVideoButton() {
 
       {/* Scoped styles — only affect .floating-video-btn, not global .group */}
       <style>{`
+        /* Animated radar shimmer — matches header/footer glass */
+        .fvb-shimmer {
+          background: linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.12) 0%,
+            rgba(255, 255, 255, 0.30) 25%,
+            rgba(255, 255, 255, 0.50) 50%,
+            rgba(255, 255, 255, 0.28) 75%,
+            rgba(255, 255, 255, 0.12) 100%
+          );
+          background-size: 400% 400%;
+          animation: fvbRadarShimmer 6s ease-in-out infinite;
+        }
+        @keyframes fvbRadarShimmer {
+          0%, 100% {
+            background-position: 0% 50%;
+            filter: brightness(1.1);
+          }
+          50% {
+            background-position: 100% 50%;
+            filter: brightness(2.2);
+          }
+        }
+
         /* Animated gradient border */
         .fvb-gradient-border,
         .fvb-gradient-glow {
