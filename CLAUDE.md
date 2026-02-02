@@ -48,7 +48,7 @@ pm2 logs nextjs-saa --lines 20 --nostream
 7. Standards: `/home/claude-flow/docs/CODING-STANDARDS.md`
 8. Protocols: `/home/claude-flow/docs/SWARM-PROTOCOLS.md`
 
-**Services:** Cloudflare, Cloudflare R2, WordPress, Supabase, n8n, GoHighLevel, SSL Certificates
+**Services:** Cloudflare, Cloudflare R2, WordPress, Supabase, GoHighLevel, Plausible CE, SSL Certificates
 
 ---
 
@@ -120,10 +120,8 @@ ls -lh /home/claude-flow/.archive/
 | **3001** | public-site | - | Cloudflare Pages (not PM2) |
 | **3002** | admin-dashboard | claude-flow | Next.js API server (PM2: `nextjs-saa`) |
 | 3306 | MariaDB | - | MySQL database |
-| 5678 | n8n | - | Workflow automation |
 | 6379 | Redis | - | Cache/session store |
-| 8000 | Docker | - | Listmonk |
-| 8200 | Docker | - | Vault |
+| 8000 | Docker | - | Plausible CE (analytics) |
 
 ### PM2 Process Management
 
@@ -160,7 +158,7 @@ pm2 start ...  # NEVER start admin-dashboard here!
 ### ⛔ NEVER DO THESE
 
 - NEVER start admin-dashboard under root's PM2
-- NEVER use ports 3001, 3002, 3306, 5678, 6379, 8000, 8200
+- NEVER use ports 3001, 3002, 3306, 6379, 8000
 - NEVER assume a port is free without checking `netstat -tlnp`
 - NEVER start a duplicate PM2 process
 
@@ -382,7 +380,7 @@ One thorough investigation beats ten incremental patches.
 - **Primary Site:** https://saabuildingblocks.com (PM2 + Cloudflare CDN)
 - **CDN Direct:** https://saabuildingblocks.pages.dev (Cloudflare Pages)
 - **WordPress:** https://wp.saabuildingblocks.com
-- **n8n Dashboard:** https://n8n.saabuildingblocks.com
+
 
 ### Performance Metrics
 - **Global TTFB:** 20-50ms (10x faster than before)
@@ -393,7 +391,6 @@ One thorough investigation beats ten incremental patches.
 
 ### Automation Status
 - ✅ WordPress webhook integration (100%)
-- ⚠️ n8n workflow ready (needs activation - 5 min task)
 - ✅ GitHub Actions CI/CD (100%)
 - ✅ Cloudflare Pages deployment (100%)
 - ✅ Email notifications (100%)
@@ -405,7 +402,7 @@ One thorough investigation beats ten incremental patches.
 pm2 status nextjs-saa && curl -I https://saabuildingblocks.com
 
 # Restart services
-pm2 restart nextjs-saa && docker restart claude-flow-n8n-1
+pm2 restart nextjs-saa
 
 # Deploy to Cloudflare
 cd /home/claude-flow/nextjs-frontend && npm run export:clean && wrangler pages deploy out --project-name=saabuildingblocks
@@ -639,11 +636,6 @@ wp db query "SELECT * FROM wp_saa_rebuild_logs ORDER BY timestamp DESC LIMIT 10"
 
 ### 🚫 DEPRECATED: Old Deployment Methods
 
-**n8n SSH Execution** (DEPRECATED)
-- ❌ Status: Removed 2025-10-13
-- ❌ Reason: Complex, hard to debug, requires VPS access
-- ✅ Replacement: GitHub Actions (simpler, cloud-native)
-
 **File Movement Build Approach** (DEPRECATED - DANGEROUS!)
 - ❌ Status: Never use - breaks production
 - ❌ Reason: Moves Master Controller files during build, fails to restore on error
@@ -789,7 +781,7 @@ npx claude-flow@alpha preferences reset
 ```
 
 **What persists:**
-- Tech stack (Next.js 16, React 19, Tailwind v4, WordPress, Supabase, Cloudflare, n8n)
+- Tech stack (Next.js 16, React 19, Tailwind v4, WordPress, Supabase, Cloudflare)
 - MCP preferences (always-check list, preferred order)
 - Swarm defaults (topology, max agents, strategy)
 - Auto-load settings (patterns, analytics, credentials)

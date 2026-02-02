@@ -1,0 +1,115 @@
+{
+  "summary": {
+    "total_images": 100,
+    "source": "WordPress Media API + Codebase",
+    "last_updated": "2026-02-02"
+  },
+  "recommended_for_about_page": {
+    "hero_section": [
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/06/Smart-agent-alliance-and-the-wolf-pack.webp",
+      "https://wp.saabuildingblocks.com/wp-content/uploads/2026/01/eXp-X-logoo-Icon.png"
+    ],
+    "leadership_section": [
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/06/Karrie-and-Doug-at-Smart-Agent-Alliance.webp",
+      "https://wp.saabuildingblocks.com/wp-content/uploads/2024/05/Smart-Agent-Alliance-Front-Profile-Image-with-Karrie-Hill-and-Doug-Smart-Desktop.webp"
+    ],
+    "features_section": [
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/06/Cloud-Based-Broker-Support.webp",
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/06/eXp-Realty-Frequently-Asked-Questions-eXp-Realty-Agent-Resources.webp",
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/04/Agent-Resources-Why-eXp-Realty-Stays-Ahead-of-the-Pack.webp"
+    ],
+    "financial_section": [
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/06/eXp-Realty-Wealth-Building-Revenue-Share-Income-a.k.a.-Passive-Income-That-Actually-Exists.webp",
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/06/eXp-Realty-vs-Traditional-Brokerages-Stock-Awards-Earn-Equity-While-You-Work.webp"
+    ],
+    "support_community": [
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/06/Smart-Agent-Alliance-Team-Value-Overview.webp",
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/04/Collaboration-that-Matters.webp"
+    ],
+    "legitimacy_comparison": [
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/01/Is-eXp-Realty-a-Pyramid-Scheme-eXp-Realtys-Compensation-Structure.webp",
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/06/eXp-Realty-vs-Traditional-Brokerages-Real-Cost-Difference-for-Top-Producing-Agents.webp"
+    ],
+    "call_to_action": [
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/04/register-for-our-webinar.webp",
+      "https://wp.saabuildingblocks.com/wp-content/uploads/backup/2025/01/Smart-Agent-Alliance-Team-Join-Page.webp"
+    ]
+  },
+  "categories": {
+    "logos_and_branding": {
+      "count": 7,
+      "images": [
+        "eXp-X-logoo-Icon.png",
+        "eXp-Realty-Logo-Image.webp",
+        "SAA-Logo.webp",
+        "Large-SAA-Logo.webp",
+        "SAA-Logo-Website-WebP.webp",
+        "Wolf-Pack-Logo.png",
+        "SAA-X-Wolf-Pack.webp"
+      ]
+    },
+    "people_and_leadership": {
+      "count": 5,
+      "images": [
+        "Karrie-Hill-Smart-Agent-AllianceProfile-Picture.webp",
+        "Doug-Smart-Smart-Agent-AllianceProfile-Picture.webp",
+        "Karrie-and-Doug-at-Smart-Agent-Alliance.webp",
+        "Smart-Agent-Alliance-Front-Profile-Image-with-Karrie-Hill-and-Doug-Smart-Desktop.webp",
+        "Team-SAA-Smart-Agent-Alliance.webp"
+      ]
+    },
+    "exp_structure_and_features": {
+      "count": 25,
+      "subcategories": {
+        "financial_revenue": 6,
+        "sponsorship_mentorship": 8,
+        "agent_support": 5,
+        "technology_tools": 9,
+        "training_lead_gen": 5
+      }
+    },
+    "comparison_and_legitimacy": {
+      "count": 16,
+      "subcategories": {
+        "pyramid_scheme_articles": 6,
+        "why_agents_choose_exp": 10,
+        "comparisons": 6
+      }
+    },
+    "education_and_learning": {
+      "count": 20,
+      "subcategories": {
+        "career_guidance": 5,
+        "real_estate_exams": 4,
+        "team_organizational": 4,
+        "other_resources": 10
+      }
+    },
+    "agent_development_and_support": {
+      "count": 15,
+      "subcategories": {
+        "negotiation_skills": 7,
+        "career_development": 12,
+        "support_and_assistance": 8
+      }
+    },
+    "features_and_programs": {
+      "count": 50,
+      "subcategories": {
+        "exp_specific_tools": 15,
+        "lead_and_revenue_tools": 6,
+        "teams_and_organization": 29
+      }
+    },
+    "content_and_marketing": {
+      "count": 30,
+      "subcategories": {
+        "blog_content": 12,
+        "marketing_and_leads": 5,
+        "listings_and_market": 11,
+        "postcards": 6,
+        "other": 4
+      }
+    }
+  }
+}
