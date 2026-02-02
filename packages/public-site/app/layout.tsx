@@ -332,8 +332,8 @@ export default async function RootLayout({
       <body
         className="font-sans antialiased"
         style={{
-          background: 'radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(25, 25, 25) 100%)',
-          backgroundColor: '#191919',
+          background: 'radial-gradient(at center bottom, rgb(30, 30, 30) 0%, rgb(8, 8, 8) 100%)',
+          backgroundColor: '#080808',
           margin: 0,
           padding: 0,
         }}

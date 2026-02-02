@@ -197,8 +197,8 @@ export default function StarBackgroundCanvas() {
           inset: 0;
           z-index: -2;
           pointer-events: none;
-          background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
-          background-color: rgb(12, 12, 12);
+          background: radial-gradient(at center bottom, rgb(30, 30, 30) 0%, rgb(8, 8, 8) 100%);
+          background-color: rgb(8, 8, 8);
         }
         .star-canvas {
           position: fixed;

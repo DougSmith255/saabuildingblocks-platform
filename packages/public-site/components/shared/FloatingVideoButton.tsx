@@ -85,35 +85,20 @@ export function FloatingVideoButton() {
           }}
           aria-label="Watch The Inside Look video"
         >
-          {/* Layer 1: Glass Base — semi-transparent + backdrop blur + gold lines (matches header) */}
+          {/* Layer 1: Glass Base — frosted mid-gray + backdrop blur (matches header) */}
           <div
             className="absolute inset-0"
             style={{
               borderRadius: '12px',
-              background: `
-                linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
-              `,
-              backdropFilter: 'blur(8px) saturate(1.5)',
-              WebkitBackdropFilter: 'blur(8px) saturate(1.5)',
-              boxShadow: '0 0 30px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,255,255,0.04)',
-              filter: 'brightness(1.1) contrast(1.1) saturate(1.2)',
+              background: 'rgba(50, 50, 50, 0.75)',
+              backdropFilter: 'blur(12px) saturate(1.4)',
+              WebkitBackdropFilter: 'blur(12px) saturate(1.4)',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255, 215, 0, 0.15)',
             }}
           />
 
-          {/* Layer 2: White horizontal grid (matches header glassBase::after) */}
-          <div
-            className="absolute inset-[1px]"
-            style={{
-              borderRadius: '12px',
-              background: `
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
-                linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83))
-              `,
-            }}
-          />
-
-          {/* Layer 3: Animated radar shimmer (matches header shimmerLayer) */}
+          {/* Layer 2: Animated radar shimmer (matches header shimmerLayer) */}
           <div
             className="fvb-shimmer absolute inset-0"
             style={{

@@ -71,19 +71,6 @@ export function NeuralNetworkCloud() {
     (async () => {
       const THREE = await import('three');
 
-      // Try to load bloom post-processing (graceful fallback if unavailable)
-      let EffectComposer: any, RenderPass: any, UnrealBloomPass: any;
-      try {
-        const ec = await import('three/examples/jsm/postprocessing/EffectComposer.js');
-        const rp = await import('three/examples/jsm/postprocessing/RenderPass.js');
-        const bp = await import('three/examples/jsm/postprocessing/UnrealBloomPass.js');
-        EffectComposer = ec.EffectComposer;
-        RenderPass = rp.RenderPass;
-        UnrealBloomPass = bp.UnrealBloomPass;
-      } catch {
-        // Bloom not available — renders without glow
-      }
-
       if (!container || !container.isConnected) return;
 
       const width = container.clientWidth;
@@ -98,7 +85,6 @@ export function NeuralNetworkCloud() {
         activePulses: isMobile ? 20 : 40,
         trailGhostsPerPulse: isMobile ? 0 : 2,
         ambientParticles: isMobile ? 60 : 150,
-        bloomStrength: isMobile ? 1.2 : 1.8,
         spread: isMobile
           ? { x: 50, y: 35, z: 30 }
           : { x: 80, y: 45, z: 50 },
@@ -126,26 +112,8 @@ export function NeuralNetworkCloud() {
       renderer.setClearColor(0x000000, 0);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(width, height);
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.2;
+      // No tone mapping — keep raw additive blending colors, preserve alpha
       container.appendChild(renderer.domElement);
-
-      // Bloom composer — use alpha-aware render target so canvas stays transparent
-      let composer: any = null;
-      if (EffectComposer && RenderPass && UnrealBloomPass) {
-        const rt = new THREE.WebGLRenderTarget(width, height, {
-          type: THREE.HalfFloatType,
-        });
-        composer = new EffectComposer(renderer, rt);
-        composer.addPass(new RenderPass(scene, camera));
-        const bloom = new UnrealBloomPass(
-          new THREE.Vector2(width, height), CONFIG.bloomStrength, 0.8, 0.1
-        );
-        bloom.threshold = 0.1;
-        bloom.strength = CONFIG.bloomStrength;
-        bloom.radius = 0.8;
-        composer.addPass(bloom);
-      }
 
       // ══════════════════════════════════════════════
       // 1. NODES — Gaussian-distributed 3D cloud
@@ -402,12 +370,8 @@ export function NeuralNetworkCloud() {
         }
         ambientGeo.attributes.position.needsUpdate = true;
 
-        // Render
-        if (composer) {
-          composer.render();
-        } else {
-          renderer.render(scene, camera);
-        }
+        // Render — direct render preserves canvas alpha transparency
+        renderer.render(scene, camera);
       };
       animate();
 
@@ -421,7 +385,6 @@ export function NeuralNetworkCloud() {
         camera.position.z = a < 0.6 ? 100 : a < 1 ? 85 : 65;
         camera.updateProjectionMatrix();
         renderer.setSize(w, h);
-        if (composer) composer.setSize(w, h);
       };
       const ro = new ResizeObserver(onResize);
       ro.observe(container);
@@ -441,7 +404,6 @@ export function NeuralNetworkCloud() {
           cancelAnimationFrame(frameId);
           ro.disconnect();
           renderer.dispose();
-          if (composer) composer.dispose();
           scene.traverse((obj: any) => {
             if (obj.geometry) obj.geometry.dispose();
             if (obj.material) {
