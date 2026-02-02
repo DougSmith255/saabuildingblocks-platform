@@ -97,7 +97,7 @@ export default function Freebies() {
           <ParticleStormEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
-              <H1>RESOURCES</H1>
+              <H1>Free Resources</H1>
               <Tagline className="mt-4">
                 Value first. Always.
               </Tagline>
