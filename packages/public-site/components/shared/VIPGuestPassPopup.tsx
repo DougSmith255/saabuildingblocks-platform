@@ -558,9 +558,10 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
     if (forceOpen) setIsOpen(true);
   }, [forceOpen]);
 
-  // Pre-warm Three.js modules ~5s before popup trigger so the globe
+  // Pre-warm Three.js modules during browser idle time so the globe
   // is ready instantly when the panel opens (no flash-in).
-  // Does NOT load anything on initial page load.
+  // Uses requestIdleCallback to avoid impacting initial page load (LCP/FCP),
+  // but loads much earlier than before since the popup WILL fire at 30s.
   useEffect(() => {
     if (hasTriggered) return;
     let warmed = false;
@@ -572,16 +573,19 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
       import('three/examples/jsm/postprocessing/RenderPass.js').catch(() => {});
       import('three/examples/jsm/postprocessing/UnrealBloomPass.js').catch(() => {});
     };
-    const timer = setTimeout(preWarm, Math.max(TRIGGER_DELAY_MS - 5000, 0));
-    const onScroll = () => {
-      const docH = document.documentElement.scrollHeight - window.innerHeight;
-      if (docH > 0 && window.scrollY / docH >= 0.35) {
-        preWarm();
-        window.removeEventListener('scroll', onScroll);
-      }
+    // Load during idle time (typically 1-5s after page load).
+    // Falls back to a 5s timeout for browsers without requestIdleCallback.
+    let idleHandle: number | undefined;
+    let fallbackTimer: ReturnType<typeof setTimeout> | undefined;
+    if (typeof requestIdleCallback === 'function') {
+      idleHandle = requestIdleCallback(preWarm, { timeout: 8000 });
+    } else {
+      fallbackTimer = setTimeout(preWarm, 5000);
+    }
+    return () => {
+      if (idleHandle !== undefined && typeof cancelIdleCallback === 'function') cancelIdleCallback(idleHandle);
+      if (fallbackTimer) clearTimeout(fallbackTimer);
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => { clearTimeout(timer); window.removeEventListener('scroll', onScroll); };
   }, [hasTriggered]);
 
   const handleClose = useCallback(() => {
