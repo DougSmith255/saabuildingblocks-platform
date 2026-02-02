@@ -162,6 +162,7 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#191818" />
   <title>${escapeHTML(title)}</title>
   <meta name="description" content="${escapeHTML(fullName)} - Real Estate Agent at eXp Realty. Connect with me today!" />
   <meta name="robots" content="index, follow" />
@@ -7063,6 +7064,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="${bgGradientTop}" />
   <title>${escapeHTML(title)}</title>
   <meta name="description" content="Connect with ${escapeHTML(fullName)} - Real Estate Agent at eXp Realty" />
   <meta name="robots" content="index, follow" />
