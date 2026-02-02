@@ -8,8 +8,9 @@ import React from 'react';
  * - marigoldCrosshatch: Marigold (#ffbe00) + crosshatch texture
  * - marigoldNoise: Marigold (#ffbe00) + noise texture
  * - emerald: Emerald (#10b981) + horizontal lines texture
+ * - expBlue: eXp Blue (#0066aa) + horizontal lines texture
  */
-export type GlassPanelVariant = 'champagne' | 'marigoldCrosshatch' | 'marigoldNoise' | 'emerald';
+export type GlassPanelVariant = 'champagne' | 'marigoldCrosshatch' | 'marigoldNoise' | 'emerald' | 'expBlue';
 
 export interface GlassPanelProps {
   /** The glass style variant */
@@ -67,6 +68,15 @@ const VARIANTS = {
     textureOpacity: 0.04,
     noiseFrequency: 1.0,
     blur: 16, // Stronger blur
+  },
+  expBlue: {
+    color: { r: 0, g: 102, b: 170 },  // #0066aa
+    colorOpacity: 0.10,
+    borderOpacity: 0.18,
+    texture: 'hlines',
+    textureOpacity: 0.035,
+    noiseFrequency: 1.0,
+    blur: 14,
   },
 } as const;
 
@@ -128,6 +138,7 @@ function getTextureStyle(texture: string, opacity: number, frequency: number): R
  * - marigoldCrosshatch: Gold tint with crosshatch texture
  * - marigoldNoise: Gold tint with noise grain texture
  * - emerald: Green tint with horizontal lines texture
+ * - expBlue: Blue tint with horizontal lines texture + breathing glow
  *
  * Use for:
  * - Section backgrounds that need subtle color differentiation
@@ -159,6 +170,7 @@ export function GlassPanel({
   const textureStyle = getTextureStyle(config.texture, config.textureOpacity, config.noiseFrequency);
   const roundedClass = ROUNDED_CLASSES[rounded];
   const isEmerald = variant === 'emerald';
+  const isExpBlue = variant === 'expBlue';
 
   return (
     <div
@@ -181,6 +193,28 @@ export function GlassPanel({
             className={`absolute inset-0 pointer-events-none z-[3] ${roundedClass}`}
             style={{
               animation: 'emeraldVignetteGlow 4s ease-in-out infinite',
+            }}
+          />
+        </>
+      )}
+
+      {/* expBlue: Breathing glow animation */}
+      {isExpBlue && (
+        <>
+          <style>{`
+            @keyframes expBlueVignetteGlow {
+              0%, 100% {
+                box-shadow: inset 0 0 40px 15px rgba(0, 102, 170, 0.2);
+              }
+              50% {
+                box-shadow: inset 0 0 60px 25px rgba(0, 102, 170, 0.35);
+              }
+            }
+          `}</style>
+          <div
+            className={`absolute inset-0 pointer-events-none z-[3] ${roundedClass}`}
+            style={{
+              animation: 'expBlueVignetteGlow 4s ease-in-out infinite',
             }}
           />
         </>
@@ -215,6 +249,19 @@ export function GlassPanel({
 
       {/* Emerald: 3D darker bottom edge gradient */}
       {isEmerald && (
+        <div
+          className={`absolute bottom-0 left-0 right-0 pointer-events-none z-[2] ${roundedClass}`}
+          style={{
+            height: '80px',
+            background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 30%, transparent 100%)',
+            borderBottomLeftRadius: 'inherit',
+            borderBottomRightRadius: 'inherit',
+          }}
+        />
+      )}
+
+      {/* expBlue: 3D darker bottom edge gradient */}
+      {isExpBlue && (
         <div
           className={`absolute bottom-0 left-0 right-0 pointer-events-none z-[2] ${roundedClass}`}
           style={{

@@ -10,7 +10,7 @@ export interface SecondaryButtonProps {
   onClick?: (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void;
   as?: 'a' | 'button';
   /** Light bar color variant - defaults to gold */
-  variant?: 'gold' | 'green' | 'purple';
+  variant?: 'gold' | 'green' | 'purple' | 'blue';
 }
 
 /**
@@ -50,6 +50,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     gold: { bar: '#ffd700', glowRgb: '255, 215, 0' },
     green: { bar: '#00cc66', glowRgb: '0, 255, 136' },   // Neon green glow
     purple: { bar: '#9933ff', glowRgb: '191, 95, 255' }, // Neon purple glow
+    blue: { bar: '#00bfff', glowRgb: '0, 191, 255' },   // Neon blue glow
   };
   const { bar: lightBarColor, glowRgb } = colorConfig[variant];
 

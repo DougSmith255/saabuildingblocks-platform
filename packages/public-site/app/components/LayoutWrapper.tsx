@@ -126,7 +126,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   // Check for embed mode via URL search params
   const [isEmbedMode, setIsEmbedMode] = useState(false);
-  // TEMP: Debug state for testing VIP Guest Pass popup — remove when done
+  // State for controlling VIP Guest Pass popup (triggered by debug button or custom event)
   const [forceVipOpen, setForceVipOpen] = useState(false);
 
   useEffect(() => {
@@ -136,6 +136,13 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       setIsEmbedMode(params.get('embed') === 'true');
     }
   }, [pathname]);
+
+  // Listen for custom event to open VIP Guest Pass popup from any page
+  useEffect(() => {
+    const handleOpenVip = () => setForceVipOpen(true);
+    window.addEventListener('open-vip-guest-pass', handleOpenVip);
+    return () => window.removeEventListener('open-vip-guest-pass', handleOpenVip);
+  }, []);
 
   // Progressive scroll-based preloading: cache panel background assets
   // so they appear instantly when panels open (no fade/flash)

@@ -7,6 +7,8 @@ export interface HeadingProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  /** Color theme for the heading - 'blue' for eXp Realty pages */
+  theme?: 'default' | 'blue';
 }
 
 /**
@@ -38,7 +40,8 @@ export interface HeadingProps {
 export default function H2({
   children,
   className = '',
-  style = {}
+  style = {},
+  theme = 'default'
 }: HeadingProps) {
   // Safari browser detection for reduced glow effects
   const [isSafari, setIsSafari] = useState(false);
@@ -57,28 +60,45 @@ export default function H2({
   const text = React.Children.toArray(children).join('');
   const words = text.split(' ');
 
-  // Text-shadow for white core glow on the text itself
-  // NOTE: We do NOT use filter: drop-shadow() on H2 because it would affect
-  // the metal backing plate (::before pseudo-element). H2 gets its visual
-  // punch from the metal plate, not from an outer glow.
-  // Glow is spread out for softer, more diffused appearance (less blurry)
-  // Safari: reduced outer glow layers (28px, 40px) to prevent overly strong rendering
-  const textShadow = isSafari
-    ? `
-      0 0 1px #fff,
-      0 0 2px #fff,
-      0 0 8px rgba(255,255,255,0.4),
-      0 0 16px rgba(255,255,255,0.15),
-      0 0 24px rgba(255,255,255,0.05)
-    `
-    : `
-      0 0 1px #fff,
-      0 0 2px #fff,
-      0 0 8px rgba(255,255,255,0.4),
-      0 0 16px rgba(255,255,255,0.2),
-      0 0 28px rgba(255,255,255,0.1),
-      0 0 40px rgba(255,255,255,0.05)
-    `;
+  const isBlue = theme === 'blue';
+  const textColor = isBlue ? '#b0d4e8' : '#bfbdb0';
+
+  // Text-shadow for core glow on the text itself
+  // Blue theme uses cyan-tinted glow; default uses white glow
+  // Safari: reduced outer glow layers to prevent overly strong rendering
+  const textShadow = isBlue
+    ? (isSafari
+      ? `
+        0 0 1px rgba(176,212,232,0.8),
+        0 0 2px rgba(176,212,232,0.6),
+        0 0 8px rgba(0,191,255,0.4),
+        0 0 16px rgba(0,191,255,0.15),
+        0 0 24px rgba(0,191,255,0.05)
+      `
+      : `
+        0 0 1px rgba(176,212,232,0.8),
+        0 0 2px rgba(176,212,232,0.6),
+        0 0 8px rgba(0,191,255,0.4),
+        0 0 16px rgba(0,191,255,0.2),
+        0 0 28px rgba(0,191,255,0.1),
+        0 0 40px rgba(0,191,255,0.05)
+      `)
+    : (isSafari
+      ? `
+        0 0 1px #fff,
+        0 0 2px #fff,
+        0 0 8px rgba(255,255,255,0.4),
+        0 0 16px rgba(255,255,255,0.15),
+        0 0 24px rgba(255,255,255,0.05)
+      `
+      : `
+        0 0 1px #fff,
+        0 0 2px #fff,
+        0 0 8px rgba(255,255,255,0.4),
+        0 0 16px rgba(255,255,255,0.2),
+        0 0 28px rgba(255,255,255,0.1),
+        0 0 40px rgba(255,255,255,0.05)
+      `);
 
   return (
     <>
@@ -140,6 +160,40 @@ export default function H2({
           z-index: -1;
           pointer-events: none;
         }
+
+        /* Blue theme metal plate - dark blue steel */
+        .h2-word-blue::before {
+          content: "";
+          position: absolute;
+          top: -0.25em;
+          left: -0.3em;
+          right: -0.3em;
+          bottom: -0.25em;
+          background: linear-gradient(180deg, #1a3a5c 0%, #142e4a 40%, #0e2238 100%);
+          border-radius: 0.15em;
+          z-index: -1;
+          border-top: 2px solid rgba(100,180,220,0.45);
+          border-left: 1px solid rgba(60,130,180,0.35);
+          border-right: 1px solid rgba(20,60,100,0.6);
+          border-bottom: 2px solid rgba(0,0,0,0.7);
+          box-shadow:
+            inset 0 1px 0 rgba(100,180,220,0.12),
+            inset 0 -1px 2px rgba(0,0,0,0.25),
+            0 4px 8px rgba(0,0,0,0.5),
+            0 2px 4px rgba(0,0,0,0.3);
+        }
+        .h2-word-blue::after {
+          content: "";
+          position: absolute;
+          top: -0.25em;
+          left: -0.3em;
+          right: -0.3em;
+          height: 50%;
+          background: linear-gradient(180deg, rgba(100,180,220,0.06) 0%, rgba(100,180,220,0.02) 50%, transparent 100%);
+          border-radius: 0.15em 0.15em 0 0;
+          z-index: -1;
+          pointer-events: none;
+        }
       `}</style>
 
       <h2
@@ -153,11 +207,11 @@ export default function H2({
           <React.Fragment key={wordIndex}>
             {wordIndex > 0 && ' '}
             <span
-              className="h2-word"
+              className={isBlue ? 'h2-word-blue' : 'h2-word'}
               style={{
                 display: 'inline-block',
                 position: 'relative',
-                color: '#bfbdb0',
+                color: textColor,
                 textShadow,
               }}
             >

@@ -5,6 +5,12 @@ import { H1, H2, Tagline, GlassPanel, Icon3D, CTAButton, SecondaryButton, JoinMo
 import { VideoSlidePanel } from '@saa/shared/components/saa/media/VideoSlidePanel';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { SatelliteConstellationEffect } from '@/components/shared/hero-effects/SatelliteConstellationEffect';
+import dynamic from 'next/dynamic';
+
+const HolographicGlobe = dynamic(
+  () => import('@/components/shared/HolographicGlobe').then(mod => mod.HolographicGlobe),
+  { ssr: false }
+);
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
@@ -361,7 +367,7 @@ function RotatingStats() {
             key={idx}
             className="w-2 h-2 rounded-full transition-all duration-300"
             style={{
-              background: idx === currentIndex ? 'var(--color-gold)' : 'rgba(255,255,255,0.3)',
+              background: idx === currentIndex ? '#00bfff' : 'rgba(255,255,255,0.3)',
               transform: idx === currentIndex ? 'scale(1.2)' : 'scale(1)',
             }}
           />
@@ -377,7 +383,7 @@ function AwardsRibbon() {
   useCarouselAnimation(trackRef);
 
   return (
-    <GlassPanel variant="marigoldCrosshatch" rounded="3xl" opacity={0.12}>
+    <GlassPanel variant="expBlue" rounded="3xl" opacity={0.12}>
       <section className="py-4 md:py-6 overflow-visible">
         <div className="max-w-[1900px] mx-auto px-4 md:px-8 mb-4">
           <div className="md:hidden">
@@ -398,15 +404,15 @@ function AwardsRibbon() {
 
         {/* Ticker Band - full width */}
         <div className="relative w-screen -ml-[50vw] left-1/2">
-          {/* Portal Edges */}
+          {/* Portal Edges - blue */}
           <div
             className="absolute left-0 z-20 pointer-events-none"
             style={{
               top: '-16px', bottom: '-16px', width: '12px',
               borderRadius: '0 12px 12px 0',
-              background: `radial-gradient(ellipse 200% 50% at 0% 50%, rgba(255,200,50,0.35) 0%, rgba(255,180,0,0.2) 40%, rgba(180,140,0,0.1) 70%, rgba(100,80,0,0.05) 100%)`,
-              borderRight: '1px solid rgba(255,190,0,0.4)',
-              boxShadow: 'inset -3px 0 6px rgba(255,200,50,0.2), inset -1px 0 2px rgba(255,220,100,0.3), 3px 0 12px rgba(0,0,0,0.6), 6px 0 24px rgba(0,0,0,0.3)',
+              background: `radial-gradient(ellipse 200% 50% at 0% 50%, rgba(0,150,255,0.35) 0%, rgba(0,120,200,0.2) 40%, rgba(0,80,150,0.1) 70%, rgba(0,40,80,0.05) 100%)`,
+              borderRight: '1px solid rgba(0,150,255,0.4)',
+              boxShadow: 'inset -3px 0 6px rgba(0,150,255,0.2), inset -1px 0 2px rgba(0,180,255,0.3), 3px 0 12px rgba(0,0,0,0.6), 6px 0 24px rgba(0,0,0,0.3)',
               transform: 'perspective(500px) rotateY(-3deg)', transformOrigin: 'right center',
             }}
           />
@@ -415,9 +421,9 @@ function AwardsRibbon() {
             style={{
               top: '-16px', bottom: '-16px', width: '12px',
               borderRadius: '12px 0 0 12px',
-              background: `radial-gradient(ellipse 200% 50% at 100% 50%, rgba(255,200,50,0.35) 0%, rgba(255,180,0,0.2) 40%, rgba(180,140,0,0.1) 70%, rgba(100,80,0,0.05) 100%)`,
-              borderLeft: '1px solid rgba(255,190,0,0.4)',
-              boxShadow: 'inset 3px 0 6px rgba(255,200,50,0.2), inset 1px 0 2px rgba(255,220,100,0.3), -3px 0 12px rgba(0,0,0,0.6), -6px 0 24px rgba(0,0,0,0.3)',
+              background: `radial-gradient(ellipse 200% 50% at 100% 50%, rgba(0,150,255,0.35) 0%, rgba(0,120,200,0.2) 40%, rgba(0,80,150,0.1) 70%, rgba(0,40,80,0.05) 100%)`,
+              borderLeft: '1px solid rgba(0,150,255,0.4)',
+              boxShadow: 'inset 3px 0 6px rgba(0,150,255,0.2), inset 1px 0 2px rgba(0,180,255,0.3), -3px 0 12px rgba(0,0,0,0.6), -6px 0 24px rgba(0,0,0,0.3)',
               transform: 'perspective(500px) rotateY(3deg)', transformOrigin: 'left center',
             }}
           />
@@ -444,8 +450,8 @@ function AwardsRibbon() {
                   <span
                     className="mx-6 text-lg"
                     style={{
-                      color: '#ffd700',
-                      textShadow: '0 0 8px rgba(255,215,0,0.7), 0 0 16px rgba(255,215,0,0.5), 0 0 24px rgba(255,215,0,0.3)',
+                      color: '#00bfff',
+                      textShadow: '0 0 8px rgba(0,191,255,0.7), 0 0 16px rgba(0,191,255,0.5), 0 0 24px rgba(0,191,255,0.3)',
                     }}
                   >★</span>
                 </div>
@@ -554,19 +560,19 @@ function UnmatchedFlipCards() {
             style={{
               backfaceVisibility: 'hidden',
               background: 'rgba(20,20,20,0.85)',
-              border: '1px solid rgba(255,215,0,0.3)',
-              boxShadow: '0 0 30px rgba(255,215,0,0.1), inset 0 1px 0 rgba(255,255,255,0.05)',
+              border: '1px solid rgba(0,191,255,0.3)',
+              boxShadow: '0 0 30px rgba(0,191,255,0.1), inset 0 1px 0 rgba(255,255,255,0.05)',
             }}
             onClick={() => handleCardClick(activeCard)}
           >
             <span className="text-4xl">{FLIP_CARDS[activeCard].icon}</span>
             <h3
               className="text-2xl font-bold text-center"
-              style={{ color: '#ffd700' }}
+              style={{ color: '#00bfff' }}
             >
               {FLIP_CARDS[activeCard].front}
             </h3>
-            <p className="text-xs uppercase tracking-widest opacity-50" style={{ color: '#dcdbd5' }}>
+            <p className="text-xs uppercase tracking-widest opacity-50 text-body">
               Tap to reveal
             </p>
           </div>
@@ -578,15 +584,12 @@ function UnmatchedFlipCards() {
               backfaceVisibility: 'hidden',
               transform: 'rotateX(180deg)',
               background: 'rgba(20,20,20,0.92)',
-              border: '1px solid rgba(255,215,0,0.2)',
-              boxShadow: '0 0 30px rgba(255,215,0,0.08)',
+              border: '1px solid rgba(0,191,255,0.2)',
+              boxShadow: '0 0 30px rgba(0,191,255,0.08)',
             }}
             onClick={() => handleCardClick(activeCard)}
           >
-            <p
-              className="text-base text-center leading-relaxed"
-              style={{ color: '#dcdbd5' }}
-            >
+            <p className="text-body text-base text-center leading-relaxed">
               {FLIP_CARDS[activeCard].back}
             </p>
           </div>
@@ -601,14 +604,14 @@ function UnmatchedFlipCards() {
             onClick={() => handleCardClick(idx)}
             className="flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-300"
             style={{
-              background: idx === activeCard ? 'rgba(255,215,0,0.15)' : 'rgba(255,255,255,0.05)',
-              border: `1px solid ${idx === activeCard ? 'rgba(255,215,0,0.4)' : 'rgba(255,255,255,0.1)'}`,
+              background: idx === activeCard ? 'rgba(0,191,255,0.15)' : 'rgba(255,255,255,0.05)',
+              border: `1px solid ${idx === activeCard ? 'rgba(0,191,255,0.4)' : 'rgba(255,255,255,0.1)'}`,
             }}
           >
             <span className="text-sm">{card.icon}</span>
             <span
               className="text-xs font-medium hidden sm:inline"
-              style={{ color: idx === activeCard ? '#ffd700' : 'rgba(255,255,255,0.5)' }}
+              style={{ color: idx === activeCard ? '#00bfff' : 'rgba(255,255,255,0.5)' }}
             >
               {card.front}
             </span>
@@ -694,15 +697,15 @@ function PlatformScrollCards() {
 
   return (
     <div className="relative w-screen -ml-[50vw] left-1/2">
-      {/* Portal Edges */}
+      {/* Portal Edges - blue */}
       <div
         className="absolute left-0 z-20 pointer-events-none"
         style={{
           top: '-8px', bottom: '-8px', width: '12px',
           borderRadius: '0 12px 12px 0',
-          background: `radial-gradient(ellipse 200% 50% at 0% 50%, rgba(255,200,50,0.35) 0%, rgba(255,180,0,0.2) 40%, rgba(180,140,0,0.1) 70%, rgba(100,80,0,0.05) 100%)`,
-          borderRight: '1px solid rgba(255,190,0,0.4)',
-          boxShadow: 'inset -3px 0 6px rgba(255,200,50,0.2), 3px 0 12px rgba(0,0,0,0.6)',
+          background: `radial-gradient(ellipse 200% 50% at 0% 50%, rgba(0,150,255,0.35) 0%, rgba(0,120,200,0.2) 40%, rgba(0,80,150,0.1) 70%, rgba(0,40,80,0.05) 100%)`,
+          borderRight: '1px solid rgba(0,150,255,0.4)',
+          boxShadow: 'inset -3px 0 6px rgba(0,150,255,0.2), 3px 0 12px rgba(0,0,0,0.6)',
           transform: 'perspective(500px) rotateY(-3deg)', transformOrigin: 'right center',
         }}
       />
@@ -711,9 +714,9 @@ function PlatformScrollCards() {
         style={{
           top: '-8px', bottom: '-8px', width: '12px',
           borderRadius: '12px 0 0 12px',
-          background: `radial-gradient(ellipse 200% 50% at 100% 50%, rgba(255,200,50,0.35) 0%, rgba(255,180,0,0.2) 40%, rgba(180,140,0,0.1) 70%, rgba(100,80,0,0.05) 100%)`,
-          borderLeft: '1px solid rgba(255,190,0,0.4)',
-          boxShadow: 'inset 3px 0 6px rgba(255,200,50,0.2), -3px 0 12px rgba(0,0,0,0.6)',
+          background: `radial-gradient(ellipse 200% 50% at 100% 50%, rgba(0,150,255,0.35) 0%, rgba(0,120,200,0.2) 40%, rgba(0,80,150,0.1) 70%, rgba(0,40,80,0.05) 100%)`,
+          borderLeft: '1px solid rgba(0,150,255,0.4)',
+          boxShadow: 'inset 3px 0 6px rgba(0,150,255,0.2), -3px 0 12px rgba(0,0,0,0.6)',
           transform: 'perspective(500px) rotateY(3deg)', transformOrigin: 'left center',
         }}
       />
@@ -737,37 +740,33 @@ function PlatformScrollCards() {
               background: idx === activeIndex
                 ? 'rgba(20,20,20,0.9)'
                 : 'rgba(20,20,20,0.6)',
-              borderTop: `1px solid ${idx === activeIndex ? 'rgba(255,215,0,0.3)' : 'rgba(255,255,255,0.08)'}`,
-              borderBottom: `1px solid ${idx === activeIndex ? 'rgba(255,215,0,0.3)' : 'rgba(255,255,255,0.08)'}`,
+              borderTop: `1px solid ${idx === activeIndex ? 'rgba(0,191,255,0.3)' : 'rgba(255,255,255,0.08)'}`,
+              borderBottom: `1px solid ${idx === activeIndex ? 'rgba(0,191,255,0.3)' : 'rgba(255,255,255,0.08)'}`,
               filter: idx === activeIndex ? 'none' : 'blur(0.5px) grayscale(0.3)',
             }}
           >
             <div className="max-w-3xl mx-auto">
               <h3
                 className="text-2xl md:text-3xl font-bold mb-1"
-                style={{ color: '#ffd700' }}
+                style={{ color: '#00bfff' }}
               >
                 {card.headline}
               </h3>
-              <p
-                className="text-sm mb-5 italic"
-                style={{ color: '#dcdbd5', opacity: 0.7 }}
-              >
+              <p className="text-body text-sm mb-5 italic" style={{ opacity: 0.7 }}>
                 {card.subhead}
               </p>
               <ul className="space-y-2 mb-6">
                 {card.bullets.map((bullet, bIdx) => (
                   <li
                     key={bIdx}
-                    className="flex items-start gap-3 text-sm md:text-base"
-                    style={{ color: '#dcdbd5' }}
+                    className="text-body flex items-start gap-3 text-sm md:text-base"
                   >
-                    <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }}>&#9656;</span>
+                    <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>&#9656;</span>
                     {bullet}
                   </li>
                 ))}
               </ul>
-              <SecondaryButton variant="green" href="#">
+              <SecondaryButton variant="blue" href="#">
                 {card.btnText}
               </SecondaryButton>
             </div>
@@ -783,7 +782,7 @@ function PlatformScrollCards() {
             onClick={() => handleCardClick(idx)}
             className="w-8 h-1.5 rounded-full transition-all duration-300"
             style={{
-              background: idx === activeIndex ? '#ffd700' : 'rgba(255,255,255,0.2)',
+              background: idx === activeIndex ? '#00bfff' : 'rgba(255,255,255,0.2)',
             }}
           />
         ))}
@@ -847,9 +846,9 @@ function IncomeTabSection() {
             onClick={() => setActiveTab(idx)}
             className="flex-1 min-w-[80px] px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300"
             style={{
-              background: idx === activeTab ? 'rgba(255,215,0,0.12)' : 'transparent',
-              color: idx === activeTab ? '#ffd700' : 'rgba(255,255,255,0.5)',
-              borderBottom: idx === activeTab ? '2px solid #ffd700' : '2px solid transparent',
+              background: idx === activeTab ? 'rgba(0,191,255,0.12)' : 'transparent',
+              color: idx === activeTab ? '#00bfff' : 'rgba(255,255,255,0.5)',
+              borderBottom: idx === activeTab ? '2px solid #00bfff' : '2px solid transparent',
             }}
           >
             {tab.label}
@@ -869,10 +868,10 @@ function IncomeTabSection() {
           {INCOME_TABS[activeTab].content.map((item, idx) => (
             <li
               key={idx}
-              className="flex items-start gap-3 text-base"
-              style={{ color: '#dcdbd5', animation: 'fadeIn 0.3s ease-out' }}
+              className="text-body flex items-start gap-3 text-base"
+              style={{ animation: 'fadeIn 0.3s ease-out' }}
             >
-              <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '3px' }}>&#9670;</span>
+              <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '3px' }}>&#9670;</span>
               {item}
             </li>
           ))}
@@ -880,7 +879,7 @@ function IncomeTabSection() {
       </div>
 
       {activeTab === 3 && (
-        <p className="text-sm mt-3 opacity-60 italic" style={{ color: '#dcdbd5' }}>
+        <p className="text-body text-sm mt-3 opacity-60 italic">
           Revenue share is an option, not an obligation.
         </p>
       )}
@@ -915,16 +914,16 @@ function EcosystemBentoGrid() {
           border: '1px solid rgba(255,255,255,0.08)',
         }}
       >
-        <h3 className="text-xl font-bold mb-1" style={{ color: '#ffd700' }}>Leads</h3>
-        <p className="text-xs uppercase tracking-widest mb-4" style={{ color: '#dcdbd5', opacity: 0.5 }}>
+        <h3 className="text-xl font-bold mb-1" style={{ color: '#00bfff' }}>Leads</h3>
+        <p className="text-body text-xs uppercase tracking-widest mb-4" style={{ opacity: 0.5 }}>
           Optional opportunities, not empty promises
         </p>
-        <p className="text-sm leading-relaxed mb-4" style={{ color: '#dcdbd5', opacity: 0.85 }}>
+        <p className="text-body text-sm leading-relaxed mb-4">
           eXp provides a lead ecosystem designed to support different business models at different stages.
           Lead programs vary by source and strategy, allowing agents to engage selectively rather than commit to a single funnel.
           Some programs are referral-based. Some require ad spend. Some are organic and included. None are required.
         </p>
-        <SecondaryButton variant="green" href="#">
+        <SecondaryButton variant="blue" href="#">
           Explore eXp leads
         </SecondaryButton>
       </div>
@@ -937,26 +936,25 @@ function EcosystemBentoGrid() {
           border: '1px solid rgba(255,255,255,0.08)',
         }}
       >
-        <h3 className="text-xl font-bold mb-1" style={{ color: '#ffd700' }}>Divisions</h3>
-        <p className="text-xs uppercase tracking-widest mb-4" style={{ color: '#dcdbd5', opacity: 0.5 }}>
+        <h3 className="text-xl font-bold mb-1" style={{ color: '#00bfff' }}>Divisions</h3>
+        <p className="text-body text-xs uppercase tracking-widest mb-4" style={{ opacity: 0.5 }}>
           Specialize without switching brokerages
         </p>
         <div className="grid grid-cols-2 gap-2 mb-4">
           {DIVISIONS.map((div, idx) => (
             <div
               key={idx}
-              className="px-3 py-2 rounded-lg text-xs font-medium text-center"
+              className="text-body px-3 py-2 rounded-lg text-xs font-medium text-center"
               style={{
-                background: 'rgba(255,215,0,0.06)',
-                border: '1px solid rgba(255,215,0,0.15)',
-                color: '#dcdbd5',
+                background: 'rgba(0,191,255,0.06)',
+                border: '1px solid rgba(0,191,255,0.15)',
               }}
             >
               {div}
             </div>
           ))}
         </div>
-        <SecondaryButton variant="green" href="#">
+        <SecondaryButton variant="blue" href="#">
           Explore eXp divisions
         </SecondaryButton>
       </div>
@@ -969,30 +967,91 @@ function EcosystemBentoGrid() {
           border: '1px solid rgba(255,255,255,0.08)',
         }}
       >
-        <h3 className="text-xl font-bold mb-1" style={{ color: '#ffd700' }}>Solutions</h3>
-        <p className="text-xs uppercase tracking-widest mb-4" style={{ color: '#dcdbd5', opacity: 0.5 }}>
+        <h3 className="text-xl font-bold mb-1" style={{ color: '#00bfff' }}>Solutions</h3>
+        <p className="text-body text-xs uppercase tracking-widest mb-4" style={{ opacity: 0.5 }}>
           Partnerships that remove friction
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
           {SOLUTIONS.map((solution, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm"
+              className="text-body flex items-center gap-2 px-3 py-2 rounded-lg text-sm"
               style={{
                 background: 'rgba(255,255,255,0.03)',
                 border: '1px solid rgba(255,255,255,0.06)',
-                color: '#dcdbd5',
               }}
             >
-              <span style={{ color: '#ffd700', fontSize: '10px' }}>&#9632;</span>
+              <span style={{ color: '#00bfff', fontSize: '10px' }}>&#9632;</span>
               {solution}
             </div>
           ))}
         </div>
-        <SecondaryButton variant="green" href="#">
+        <SecondaryButton variant="blue" href="#">
           Explore eXp solutions
         </SecondaryButton>
       </div>
+    </div>
+  );
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   eXp World Section — HolographicGlobe background + Guest Pass CTA
+   ═══════════════════════════════════════════════════════════════ */
+
+function ExpWorldSection() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [isGlobeVisible, setIsGlobeVisible] = useState(false);
+
+  // IntersectionObserver: pause globe when section scrolls out of view
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsGlobeVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleGuestPass = () => {
+    window.dispatchEvent(new CustomEvent('open-vip-guest-pass'));
+  };
+
+  return (
+    <div ref={sectionRef} className="relative w-screen -ml-[50vw] left-1/2">
+      <GlassPanel variant="expBlue" rounded="3xl" opacity={0.12}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-6 overflow-hidden" style={{ minHeight: '500px' }}>
+          {/* HolographicGlobe as background */}
+          <div className="absolute inset-0 z-0">
+            <HolographicGlobe isVisible={isGlobeVisible} />
+            {/* Feathered overlay for text readability */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: 'radial-gradient(ellipse 80% 70% at 50% 50%, rgba(0,10,30,0.3) 0%, rgba(0,10,30,0.7) 60%, rgba(0,10,30,0.9) 100%)',
+              }}
+            />
+          </div>
+
+          {/* Content */}
+          <div className="relative z-10 max-w-[900px] mx-auto text-center">
+            <H2 theme="blue">eXp World</H2>
+            <p className="text-body mt-4 mb-4 max-w-2xl mx-auto text-lg leading-relaxed">
+              eXp World is a fully immersive virtual campus — built for collaboration, not commutes.
+            </p>
+            <p className="text-body mb-8 max-w-2xl mx-auto">
+              84,000+ agents across 29 countries connect in real time for live training, leadership access,
+              team meetings, and client-facing rooms. Set up your own virtual office and work from anywhere in the world.
+            </p>
+            <SecondaryButton variant="blue" as="button" onClick={handleGuestPass}>
+              Get Your Guest Pass
+            </SecondaryButton>
+          </div>
+        </section>
+      </GlassPanel>
     </div>
   );
 }
@@ -1055,70 +1114,70 @@ export default function AboutExpRealty() {
       <AwardsRibbon />
 
 
-      {/* ════ BLOCK A: Why eXp Exists ════ */}
+      {/* ════ BLOCK A: Why eXp Exists — Normal dark bg ════ */}
       <section className="py-10 px-4 sm:px-6">
         <div className="max-w-[1200px] mx-auto">
-          <GlassPanel variant="champagne" rounded="2xl" opacity={0.08}>
-            <div className="p-6 md:p-10">
-              <H2>Why eXp Exists</H2>
-              <p className="text-body mt-4 mb-8 max-w-3xl" style={{ opacity: 0.85 }}>
-                Most brokerages are built to maximize commission today, with little consideration for scale, ownership, or life beyond production.
-                eXp was built around commission <em>and</em> three more:
-              </p>
+          <H2 theme="blue">Why eXp Exists</H2>
+          <p className="text-body mt-4 mb-8 max-w-3xl">
+            Most brokerages are built to maximize commission today, with little consideration for scale, ownership, or life beyond production.
+            eXp was built around commission <em>and</em> three more:
+          </p>
 
-              {/* 3-Column Pillars */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                {[
-                  { num: '01', title: 'Ownership', desc: 'In a publicly traded company' },
-                  { num: '02', title: 'Leverage', desc: 'Through scale, systems, and collaboration' },
-                  { num: '03', title: 'Longevity', desc: 'Income that continues after your last closing' },
-                ].map((pillar) => (
-                  <div
-                    key={pillar.num}
-                    className="text-center p-6 rounded-xl"
-                    style={{
-                      background: 'rgba(20,20,20,0.5)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    <p
-                      className="text-3xl font-bold mb-2"
-                      style={{ color: '#ffd700', opacity: 0.6 }}
-                    >
-                      {pillar.num}
-                    </p>
-                    <h3
-                      className="text-lg font-bold mb-2"
-                      style={{ color: '#e5e4dd' }}
-                    >
-                      {pillar.title}
-                    </h3>
-                    <p className="text-sm" style={{ color: '#dcdbd5', opacity: 0.8 }}>
-                      {pillar.desc}
-                    </p>
-                  </div>
-                ))}
+          {/* 3-Column Pillars */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {[
+              { num: '01', title: 'Ownership', desc: 'In a publicly traded company' },
+              { num: '02', title: 'Leverage', desc: 'Through scale, systems, and collaboration' },
+              { num: '03', title: 'Longevity', desc: 'Income that continues after your last closing' },
+            ].map((pillar) => (
+              <div
+                key={pillar.num}
+                className="text-center p-6 rounded-xl"
+                style={{
+                  background: 'rgba(20,20,20,0.5)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                }}
+              >
+                <p
+                  className="text-3xl font-bold mb-2"
+                  style={{ color: '#00bfff', opacity: 0.6 }}
+                >
+                  {pillar.num}
+                </p>
+                <h3
+                  className="text-lg font-bold mb-2"
+                  style={{ color: '#e5e4dd' }}
+                >
+                  {pillar.title}
+                </h3>
+                <p className="text-body text-sm">
+                  {pillar.desc}
+                </p>
               </div>
+            ))}
+          </div>
 
-              <p className="text-body" style={{ opacity: 0.8 }}>
-                This structure supports agents while they are actively producing and provides options when they are ready to slow down, step back, or think beyond their next deal.
-              </p>
-            </div>
-          </GlassPanel>
+          <p className="text-body">
+            This structure supports agents while they are actively producing and provides options when they are ready to slow down, step back, or think beyond their next deal.
+          </p>
         </div>
       </section>
 
 
-      {/* ════ BLOCK B: Where eXp Stands Apart ════ */}
+      {/* ════ eXp World — BLUE GLASS + HolographicGlobe bg ════ */}
+      <ExpWorldSection />
+
+
+      {/* ════ BLOCK B: Where eXp Stands Apart — Normal dark bg ════ */}
       <section className="py-10 px-4 sm:px-6">
         <div className="max-w-[1200px] mx-auto">
-          <H2>Where eXp Stands Apart</H2>
-          <p className="text-body mt-4 mb-8 max-w-3xl" style={{ opacity: 0.85 }}>
+          <H2 theme="blue">Where eXp Stands Apart</H2>
+          <p className="text-body mt-4 mb-8 max-w-3xl">
             These advantages are structural, not promotional. Unlike franchise brokerages, eXp Realty does not rely on office-based profit centers.
           </p>
           <UnmatchedFlipCards />
           <div className="mt-6 flex justify-center">
-            <SecondaryButton variant="green" href="#">
+            <SecondaryButton variant="blue" href="#">
               Explore the full case for eXp
             </SecondaryButton>
           </div>
@@ -1126,28 +1185,32 @@ export default function AboutExpRealty() {
       </section>
 
 
-      {/* ════ BLOCK C: The Platform ════ */}
-      <section className="py-10 px-4 sm:px-6">
-        <div className="max-w-[1200px] mx-auto mb-6">
-          <H2>The Platform</H2>
-          <p className="text-body mt-4" style={{ opacity: 0.85 }}>
-            Support, technology, and community — integrated into one operating system.
-          </p>
-        </div>
-        <PlatformScrollCards />
-      </section>
+      {/* ════ BLOCK C: The Platform — BLUE GLASS full-width ════ */}
+      <div className="relative w-screen -ml-[50vw] left-1/2">
+        <GlassPanel variant="expBlue" rounded="3xl" opacity={0.10}>
+          <section className="py-10 px-4 sm:px-6">
+            <div className="max-w-[1200px] mx-auto mb-6">
+              <H2 theme="blue">The Platform</H2>
+              <p className="text-body mt-4">
+                Support, technology, and community — integrated into one operating system.
+              </p>
+            </div>
+            <PlatformScrollCards />
+          </section>
+        </GlassPanel>
+      </div>
 
 
-      {/* ════ BLOCK D: The Economics ════ */}
+      {/* ════ BLOCK D: The Economics — Normal dark bg ════ */}
       <section className="py-10 px-4 sm:px-6">
         <div className="max-w-[1200px] mx-auto">
-          <H2>The Economics</H2>
-          <p className="text-body mt-4 mb-8 max-w-3xl" style={{ opacity: 0.85 }}>
+          <H2 theme="blue">The Economics</H2>
+          <p className="text-body mt-4 mb-8 max-w-3xl">
             Most brokerages offer one income stream. eXp offers three: commission, stock, and revenue share.
           </p>
           <IncomeTabSection />
           <div className="mt-6 flex justify-center">
-            <SecondaryButton variant="green" href="#">
+            <SecondaryButton variant="blue" href="#">
               Explore eXp income
             </SecondaryButton>
           </div>
@@ -1155,91 +1218,91 @@ export default function AboutExpRealty() {
       </section>
 
 
-      {/* ════ BLOCK E: The Ecosystem ════ */}
-      <section className="py-10 px-4 sm:px-6">
-        <div className="max-w-[1200px] mx-auto">
-          <H2>The Ecosystem</H2>
-          <p className="text-body mt-4 mb-8 max-w-3xl" style={{ opacity: 0.85 }}>
-            Leads, divisions, and solutions — all within one brokerage. Your license stays the same. Your opportunities expand.
-          </p>
-          <EcosystemBentoGrid />
-        </div>
-      </section>
-
-
-      {/* ════ BLOCK F: Is eXp Right For You? + Closing CTA ════ */}
-      <section className="py-10 px-4 sm:px-6">
-        <div className="max-w-[1200px] mx-auto">
-          {/* Part 1: Fit + SAA Positioning */}
-          <div className="mb-10">
-            <H2>Is eXp Right For You?</H2>
-            <p className="text-body mt-4 mb-4" style={{ opacity: 0.85 }}>
-              eXp works best for agents who value:
-            </p>
-            <ul className="space-y-2 mb-6">
-              {[
-                'Independence over hierarchy',
-                'Systems over micromanagement',
-                'Long-term optionality over short-term perks',
-              ].map((item, idx) => (
-                <li key={idx} className="flex items-center gap-3" style={{ color: '#dcdbd5' }}>
-                  <span style={{ color: '#ffd700' }}>&#9670;</span>
-                  <span className="text-base">{item}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="text-body" style={{ opacity: 0.8 }}>
-              Smart Agent Alliance operates inside eXp Realty as a sponsor organization, providing additional systems, training, and community to agents who choose it.
-            </p>
-          </div>
-
-          {/* Part 2: The Bottom Line CTA */}
-          <GlassPanel variant="marigoldCrosshatch" rounded="2xl" opacity={0.1}>
-            <div className="p-8 md:p-12 text-center">
-              <H2>The Bottom Line</H2>
-
-              {/* 4 Keywords */}
-              <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-6 mb-8">
-                {['Profitable', 'Scalable', 'Agent-centric', 'Global'].map((word) => (
-                  <span
-                    key={word}
-                    className="text-lg md:text-xl font-bold tracking-wide"
-                    style={{ color: '#ffd700' }}
-                  >
-                    {word}.
-                  </span>
-                ))}
-              </div>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
-                <CTAButton
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActivePanel('join');
-                  }}
-                >
-                  JOIN THE ALLIANCE
-                </CTAButton>
-                <CTAButton
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActivePanel('video');
-                  }}
-                >
-                  WATCH THE INSIDE LOOK
-                </CTAButton>
-              </div>
-
-              <SecondaryButton href="/about">
-                Learn about SAA
-              </SecondaryButton>
+      {/* ════ BLOCKS E+F: Ecosystem + CTA — BLUE GLASS full-width ════ */}
+      <div className="relative w-screen -ml-[50vw] left-1/2">
+        <GlassPanel variant="expBlue" rounded="3xl" opacity={0.10}>
+          <section className="py-10 px-4 sm:px-6">
+            <div className="max-w-[1200px] mx-auto">
+              <H2 theme="blue">The Ecosystem</H2>
+              <p className="text-body mt-4 mb-8 max-w-3xl">
+                Leads, divisions, and solutions — all within one brokerage. Your license stays the same. Your opportunities expand.
+              </p>
+              <EcosystemBentoGrid />
             </div>
-          </GlassPanel>
-        </div>
-      </section>
+          </section>
+
+          <section className="py-10 px-4 sm:px-6">
+            <div className="max-w-[1200px] mx-auto">
+              {/* Part 1: Fit + SAA Positioning */}
+              <div className="mb-10">
+                <H2 theme="blue">Is eXp Right For You?</H2>
+                <p className="text-body mt-4 mb-4">
+                  eXp works best for agents who value:
+                </p>
+                <ul className="space-y-2 mb-6">
+                  {[
+                    'Independence over hierarchy',
+                    'Systems over micromanagement',
+                    'Long-term optionality over short-term perks',
+                  ].map((item, idx) => (
+                    <li key={idx} className="text-body flex items-center gap-3">
+                      <span style={{ color: '#00bfff' }}>&#9670;</span>
+                      <span className="text-base">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-body">
+                  Smart Agent Alliance operates inside eXp Realty as a sponsor organization, providing additional systems, training, and community to agents who choose it.
+                </p>
+              </div>
+
+              {/* Part 2: The Bottom Line CTA */}
+              <div className="p-8 md:p-12 text-center">
+                <H2 theme="blue">The Bottom Line</H2>
+
+                {/* 4 Keywords */}
+                <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-6 mb-8">
+                  {['Profitable', 'Scalable', 'Agent-centric', 'Global'].map((word) => (
+                    <span
+                      key={word}
+                      className="text-lg md:text-xl font-bold tracking-wide"
+                      style={{ color: '#00bfff' }}
+                    >
+                      {word}.
+                    </span>
+                  ))}
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
+                  <CTAButton
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActivePanel('join');
+                    }}
+                  >
+                    JOIN THE ALLIANCE
+                  </CTAButton>
+                  <CTAButton
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActivePanel('video');
+                    }}
+                  >
+                    WATCH THE INSIDE LOOK
+                  </CTAButton>
+                </div>
+
+                <SecondaryButton href="/about">
+                  Learn about SAA
+                </SecondaryButton>
+              </div>
+            </div>
+          </section>
+        </GlassPanel>
+      </div>
 
 
       {/* ════ MODALS ════ */}
