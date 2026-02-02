@@ -334,17 +334,17 @@ export function SlidePanel({
     return null;
   }
 
-  // Don't render if closed and no close animation pending/playing
-  if (!isOpen && !isClosing && !needsCloseAnimation) {
-    return null;
-  }
+  // After first open, keep in DOM but hidden (display:none) when fully closed.
+  // This preserves children (iframes, canvases, Three.js scenes) so they
+  // don't have to rebuild from scratch on every reopen — no pop-in.
+  const hiddenAfterClose = !isOpen && !isClosing && !needsCloseAnimation;
 
   // Inline styles
   const containerStyle: React.CSSProperties = {
     position: 'fixed',
     inset: 0,
     zIndex: 100000 + zIndexOffset,
-    display: 'flex',
+    display: hiddenAfterClose ? 'none' : 'flex',
     alignItems: isMobile ? 'flex-end' : 'stretch',
     justifyContent: isMobile ? 'center' : 'flex-end',
   };

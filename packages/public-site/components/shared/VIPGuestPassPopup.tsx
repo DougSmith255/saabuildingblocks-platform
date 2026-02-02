@@ -46,11 +46,37 @@ const ARC_PAIRS = [
  */
 function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const cleanupRef = useRef<(() => void) | null>(null);
+  // Scene lifecycle: init once, then pause/resume on visibility changes.
+  // Full dispose only on actual component unmount — no rebuild on reopen.
+  const sceneRef = useRef<{
+    pause: () => void;
+    resume: () => void;
+    dispose: () => void;
+  } | null>(null);
+  const initedRef = useRef(false);
 
+  // Pause/resume based on visibility (after init)
   useEffect(() => {
-    if (!isVisible || !containerRef.current) return;
-    if (cleanupRef.current) return;
+    if (!sceneRef.current) return;
+    if (isVisible) {
+      sceneRef.current.resume();
+    } else {
+      sceneRef.current.pause();
+    }
+  }, [isVisible]);
+
+  // Full dispose on unmount only
+  useEffect(() => {
+    return () => {
+      sceneRef.current?.dispose();
+      sceneRef.current = null;
+    };
+  }, []);
+
+  // Initialize Three.js scene once on first visibility
+  useEffect(() => {
+    if (!isVisible || initedRef.current || !containerRef.current) return;
+    initedRef.current = true;
 
     const container = containerRef.current;
     container.style.opacity = '1';
@@ -356,8 +382,10 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
       // ── ANIMATION LOOP ──
       let time = 0;
       let frameId = 0;
+      let paused = false;
 
       const animate = () => {
+        if (paused) return;
         frameId = requestAnimationFrame(animate);
         time += 0.016;
 
@@ -437,30 +465,36 @@ function HolographicGlobe({ isVisible }: { isVisible: boolean }) {
       const ro = new ResizeObserver(onResize);
       ro.observe(container);
 
-      // Cleanup
-      cleanupRef.current = () => {
-        cancelAnimationFrame(frameId);
-        ro.disconnect();
-        renderer.dispose();
-        if (composer) composer.dispose();
-        // Traverse and dispose all geometries/materials
-        scene.traverse((obj: any) => {
-          if (obj.geometry) obj.geometry.dispose();
-          if (obj.material) {
-            if (Array.isArray(obj.material)) obj.material.forEach((m: any) => m.dispose());
-            else obj.material.dispose();
+      // Store scene controls for pause/resume/dispose
+      sceneRef.current = {
+        pause: () => {
+          paused = true;
+          cancelAnimationFrame(frameId);
+        },
+        resume: () => {
+          if (!paused) return;
+          paused = false;
+          animate();
+        },
+        dispose: () => {
+          cancelAnimationFrame(frameId);
+          ro.disconnect();
+          renderer.dispose();
+          if (composer) composer.dispose();
+          scene.traverse((obj: any) => {
+            if (obj.geometry) obj.geometry.dispose();
+            if (obj.material) {
+              if (Array.isArray(obj.material)) obj.material.forEach((m: any) => m.dispose());
+              else obj.material.dispose();
+            }
+          });
+          if (container.contains(renderer.domElement)) {
+            container.removeChild(renderer.domElement);
           }
-        });
-        if (container.contains(renderer.domElement)) {
-          container.removeChild(renderer.domElement);
-        }
-        cleanupRef.current = null;
+        },
       };
     })();
-
-    return () => {
-      cleanupRef.current?.();
-    };
+    // No cleanup here — handled by separate unmount effect
   }, [isVisible]);
 
   return (
