@@ -695,7 +695,30 @@ export default function Header() {
           padding-bottom: 0;
         }
 
-        /* Logo & hamburger: single size for all screens (breakpoints added later) */
+        /* <1300px: 0.9x logo & hamburger, 13px padding */
+        @media (max-width: 81.25rem) {
+          .header-container {
+            height: 67px;
+          }
+          .logo-container {
+            width: 113px !important;
+            height: 41px !important;
+            max-width: 113px !important;
+            max-height: 41px !important;
+          }
+          .hamburger {
+            width: 59px !important;
+            height: 59px !important;
+            min-width: 59px !important;
+            min-height: 59px !important;
+          }
+          .hamburger-svg {
+            width: 59px !important;
+            height: 59px !important;
+            min-width: 59px !important;
+            min-height: 59px !important;
+          }
+        }
 
         @media (max-width: 550px) {
           .header-container .header-btn,
