@@ -18,6 +18,7 @@ export { ConstellationMapEffect } from './ConstellationMapEffect';
 export { ParticleStormEffect } from './ParticleStormEffect';
 export { AsteroidBeltEffect } from './AsteroidBeltEffect';
 export { DataStreamEffect } from './DataStreamEffect';
+export { NeuralNetworkCloud } from './NeuralNetworkCloud';
 export { StickyHeroWrapper } from './StickyHeroWrapper';
 export { DeferredEffect } from './DeferredEffect';
 export { RevealMaskEffect } from '../RevealMaskEffect';
@@ -34,4 +35,5 @@ export {
   LazySpiralGalaxyEffect,
   LazyConstellationMapEffect,
   LazyParticleStormEffect,
+  LazyNeuralNetworkCloud,
 } from './LazyHeroEffects';

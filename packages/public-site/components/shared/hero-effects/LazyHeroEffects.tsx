@@ -97,3 +97,8 @@ export const LazyParticleStormEffect = createImmediateEffect(
   () => import('./ParticleStormEffect').then(mod => ({ default: mod.ParticleStormEffect })),
   'LazyParticleStormEffect'
 );
+
+export const LazyNeuralNetworkCloud = createImmediateEffect(
+  () => import('./NeuralNetworkCloud').then(mod => ({ default: mod.NeuralNetworkCloud })),
+  'LazyNeuralNetworkCloud'
+);
