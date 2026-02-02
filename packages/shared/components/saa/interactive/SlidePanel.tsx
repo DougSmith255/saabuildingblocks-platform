@@ -148,6 +148,8 @@ export function SlidePanel({
   const [isMobile, setIsMobile] = useState(true);
   const [mounted, setMounted] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(80);
   const touchStartRef = useRef<{ x: number; y: number; scrollTop: number } | null>(null);
 
   // Track previous isOpen to detect external closes (parent setting isOpen=false)
@@ -194,6 +196,20 @@ export function SlidePanel({
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Measure header height dynamically so content never overlaps
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header || !isOpen) return;
+    const update = () => {
+      const h = header.getBoundingClientRect().height;
+      if (h > 0) setHeaderHeight(h);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(header);
+    return () => ro.disconnect();
+  }, [isOpen]);
 
   // Close with animation (internal — triggered by X button, Escape, swipe, backdrop,
   // or programmatically via closeRef)
@@ -467,7 +483,7 @@ export function SlidePanel({
     // because padding on a scrollable container is itself scrollable.
     ...(hasBackground ? {
       position: 'absolute' as const,
-      top: '80px',
+      top: `${headerHeight}px`,
       left: 0,
       right: 0,
       bottom: 0,
@@ -556,7 +572,7 @@ export function SlidePanel({
         ) : null}
 
         {/* Header */}
-        <div style={headerStyle}>
+        <div ref={headerRef} style={headerStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             {icon && <div style={iconWrapperStyle}>{icon}</div>}
             <div>

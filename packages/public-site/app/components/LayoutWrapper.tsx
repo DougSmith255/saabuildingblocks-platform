@@ -137,6 +137,24 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     }
   }, [pathname]);
 
+  // Progressive scroll-based preloading: cache panel background assets
+  // so they appear instantly when panels open (no fade/flash)
+  useEffect(() => {
+    let preloaded = false;
+    const preload = () => {
+      if (preloaded) return;
+      const docH = document.documentElement.scrollHeight - window.innerHeight;
+      if (docH <= 0 || window.scrollY / docH < 0.1) return;
+      preloaded = true;
+      window.removeEventListener('scroll', preload);
+      // Preload Inside Look video poster into browser cache
+      const img = new Image();
+      img.src = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-smart-agent-alliance-explained/desktop';
+    };
+    window.addEventListener('scroll', preload, { passive: true });
+    return () => window.removeEventListener('scroll', preload);
+  }, []);
+
   // Check if current path matches any no-header-footer route (SSR-safe)
   const shouldHideHeaderFooter = useMemo(() => {
     // Embed mode hides everything

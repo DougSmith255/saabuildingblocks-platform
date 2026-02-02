@@ -311,7 +311,6 @@ export function GoldenAmbientBackground({ isVisible }: GoldenAmbientBackgroundPr
         overflow: 'hidden',
         borderRadius: 'inherit',
         opacity: fadedIn ? 1 : 0,
-        transition: 'opacity 0.6s ease-out',
       }}
     >
       <canvas
