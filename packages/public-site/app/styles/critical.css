@@ -340,29 +340,7 @@ p a {
   stroke-width: 3;
 }
 
-/* Header Container - Fixed 80px height for mobile (<1600px) */
-@media (max-width: 100rem) {
-  .header-container {
-    height: 80px !important;
-    min-height: 80px !important;
-    max-height: 80px !important;
-  }
-}
-
-/* Logo Container - Prevent width change on hydration */
-@media (max-width: 75rem) {
-  .logo-container {
-    width: 110px !important;
-    height: 39px !important;
-  }
-}
-
-@media (max-width: 50rem) {
-  .logo-container {
-    width: 95px !important;
-    height: 34px !important;
-  }
-}
+/* Header & logo sizing now controlled entirely by Header.tsx */
 
 /* Removed conflicting mobile padding - Header.tsx has correct symmetric padding */
 
