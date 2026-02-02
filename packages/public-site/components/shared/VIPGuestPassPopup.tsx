@@ -210,6 +210,9 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
           flexDirection: 'column',
           justifyContent: 'center',
           padding: '0 16px',
+          maxWidth: '600px',
+          margin: '0 auto',
+          width: '100%',
         }}
       >
         {/* Description — dark text readable against bright blue globe */}
