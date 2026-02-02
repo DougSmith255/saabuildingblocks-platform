@@ -688,9 +688,9 @@ export default function Header() {
           stroke-dashoffset: -32.42;
         }
 
-        /* Base header height — mobile default (85px − 25px = 60px) */
+        /* Base header height — all mobile (<1600px) */
         .header-container {
-          height: 60px;
+          height: 40px;
           padding-top: 0;
           padding-bottom: 0;
         }
@@ -712,13 +712,6 @@ export default function Header() {
             height: 34px !important;
             max-width: 94px !important;
             max-height: 34px !important;
-          }
-        }
-
-        /* 800–1600px: tighter vertical spacing (−10px top & bottom) */
-        @media (min-width: 50rem) and (max-width: 99.99rem) {
-          .header-container {
-            height: 40px;
           }
         }
 

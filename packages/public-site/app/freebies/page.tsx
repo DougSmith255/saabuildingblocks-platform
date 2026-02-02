@@ -23,6 +23,7 @@ interface Freebie {
 export default function Freebies() {
   const [selectedFreebie, setSelectedFreebie] = useState<Freebie | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const freebies: Freebie[] = [
     {
@@ -96,7 +97,7 @@ export default function Freebies() {
           <ParticleStormEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
-              <H1>FREE RESOURCES</H1>
+              <H1>RESOURCES</H1>
               <Tagline className="mt-4">
                 Value first. Always.
               </Tagline>
@@ -110,7 +111,7 @@ export default function Freebies() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1400px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Your Free Arsenal</H2>
+              <H2>Your Arsenal</H2>
               <p className="text-body mt-4 max-w-2xl mx-auto">
                 Tools that actually move the needle. Click any card to grab your copy.
               </p>
@@ -121,6 +122,8 @@ export default function Freebies() {
                 <button
                   key={index}
                   onClick={() => handleFreebieClick(freebie)}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
                   className="group block text-left w-full"
                 >
                   <GenericCard hover padding="md" className="h-full overflow-hidden">
@@ -153,14 +156,38 @@ export default function Freebies() {
                           {freebie.description}
                         </p>
                         <span className="inline-flex items-center gap-2 text-[#ffd700] font-medium group-hover:gap-3 transition-all" style={{ fontSize: 'var(--font-size-caption)' }}>
-                          {freebie.type === 'canva' ? 'Get Template' : 'Download Free'}
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            {freebie.type === 'canva' ? (
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          {freebie.type === 'canva' ? 'Get Template' : 'Download'}
+                          {hoveredIndex === index ? (
+                            freebie.type === 'canva' ? (
+                              <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
+                                  <path strokeDasharray={42} d="M11 5h-6v14h14v-6"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="42;0" /></path>
+                                  <path strokeDasharray={12} strokeDashoffset={12} d="M13 11l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.2s" to={0} /></path>
+                                  <path strokeDasharray={8} strokeDashoffset={8} d="M21 3h-6M21 3v6"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.7s" dur="0.2s" to={0} /></path>
+                                </g>
+                              </svg>
                             ) : (
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            )}
-                          </svg>
+                              <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path fill="none" stroke="currentColor" strokeDasharray={60} strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 19h11c2.21 0 4 -1.79 4 -4c0 -2.21 -1.79 -4 -4 -4h-1v-1c0 -2.76 -2.24 -5 -5 -5c-2.42 0 -4.44 1.72 -4.9 4h-0.1c-2.76 0 -5 2.24 -5 5c0 2.76 2.24 5 5 5Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="60;0" /></path>
+                                <path fill="currentColor" d="M10.5 10h3v0h2.5l-4 0l-4 0h2.5Z"><animate fill="freeze" attributeName="d" begin="0.6s" dur="0.4s" keyTimes="0;0.4;1" values="M10.5 10h3v0h2.5l-4 0l-4 0h2.5Z;M10.5 10h3v0h2.5l-4 4l-4 -4h2.5Z;M10.5 10h3v3h2.5l-4 4l-4 -4h2.5Z" /></path>
+                              </svg>
+                            )
+                          ) : (
+                            freebie.type === 'canva' ? (
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <g strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
+                                  <path d="M11 5h-6v14h14v-6" />
+                                  <path d="M13 11l7 -7" />
+                                  <path d="M21 3h-6M21 3v6" />
+                                </g>
+                              </svg>
+                            ) : (
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 19h11c2.21 0 4 -1.79 4 -4c0 -2.21 -1.79 -4 -4 -4h-1v-1c0 -2.76 -2.24 -5 -5 -5c-2.42 0 -4.44 1.72 -4.9 4h-0.1c-2.76 0 -5 2.24 -5 5c0 2.76 2.24 5 5 5Z" />
+                                <path fill="currentColor" d="M10.5 10h3v3h2.5l-4 4l-4 -4h2.5Z" />
+                              </svg>
+                            )
+                          )}
                         </span>
                       </div>
                     </div>
