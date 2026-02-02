@@ -112,7 +112,8 @@ export function NeuralNetworkCloud() {
       renderer.setClearColor(0x000000, 0);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(width, height);
-      // No tone mapping — keep raw additive blending colors, preserve alpha
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.5;
       container.appendChild(renderer.domElement);
 
       // ══════════════════════════════════════════════
@@ -144,10 +145,10 @@ export function NeuralNetworkCloud() {
       nodeGeo.setAttribute('position', new THREE.Float32BufferAttribute(nodePositions, 3));
       const nodeMat = new THREE.PointsMaterial({
         color: 0x00bfff,
-        size: 2.5,
+        size: 3.5,
         sizeAttenuation: true,
         transparent: true,
-        opacity: 0.55,
+        opacity: 0.7,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
@@ -203,9 +204,9 @@ export function NeuralNetworkCloud() {
       const lineGeo = new THREE.BufferGeometry();
       lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
       const lineMat = new THREE.LineBasicMaterial({
-        color: 0x0066aa,
+        color: 0x0088cc,
         transparent: true,
-        opacity: 0.1,
+        opacity: 0.15,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
@@ -231,11 +232,11 @@ export function NeuralNetworkCloud() {
       pulseGeo.setAttribute('position', new THREE.Float32BufferAttribute(pulsePositions, 3));
       pulseGeo.setAttribute('size', new THREE.Float32BufferAttribute(pulseSizes, 1));
       const pulseMat = new THREE.PointsMaterial({
-        color: 0x44ccff,
-        size: 5,
+        color: 0x66ddff,
+        size: 7,
         sizeAttenuation: true,
         transparent: true,
-        opacity: 0.9,
+        opacity: 1.0,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
@@ -261,11 +262,11 @@ export function NeuralNetworkCloud() {
       const ambientGeo = new THREE.BufferGeometry();
       ambientGeo.setAttribute('position', new THREE.Float32BufferAttribute(ambientPositions, 3));
       const ambientMat = new THREE.PointsMaterial({
-        color: 0x4488cc,
-        size: 0.4,
+        color: 0x5599dd,
+        size: 0.6,
         sizeAttenuation: true,
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.5,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
@@ -289,7 +290,7 @@ export function NeuralNetworkCloud() {
         camera.lookAt(0, 0, 0);
 
         // Pulse node opacity subtly
-        nodeMat.opacity = 0.5 + Math.sin(time * 0.8) * 0.08;
+        nodeMat.opacity = 0.65 + Math.sin(time * 0.8) * 0.1;
 
         // ── Update signal pulses ──
         const pPos = pulseGeo.attributes.position.array as Float32Array;
