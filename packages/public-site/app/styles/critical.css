@@ -313,13 +313,10 @@ p a {
   }
 }
 
-/* Hamburger Menu - Prevent FOUC by providing base positioning immediately */
-/* COMPOSITED: Uses only transform and opacity (GPU-accelerated) */
-/* Fixed positioning for 80px mobile header - centered vertically */
+/* Hamburger Menu - Prevent FOUC by providing base styles immediately */
+/* Position is static (flows inside header flex container) */
 .hamburger {
-  position: fixed;
-  top: 7.5px; /* (80px header - 65px button) / 2 = 7.5px */
-  right: 15px;
+  position: static;
   width: 65px;
   height: 65px;
   cursor: pointer;

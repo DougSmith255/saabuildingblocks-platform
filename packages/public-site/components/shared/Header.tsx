@@ -688,9 +688,9 @@ export default function Header() {
           stroke-dashoffset: -32.42;
         }
 
-        /* Base header height — all mobile (<1600px) */
+        /* Base header height — all mobile (<1600px): 15px + 45px logo + 15px = 75px */
         .header-container {
-          height: 40px;
+          height: 75px;
           padding-top: 0;
           padding-bottom: 0;
         }
