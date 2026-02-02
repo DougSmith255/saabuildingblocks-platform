@@ -695,35 +695,7 @@ export default function Header() {
           padding-bottom: 0;
         }
 
-        /* All mobile (<1600px): reduce logo to fit shorter header */
-        @media (max-width: 100rem) {
-          .logo-container {
-            width: 110px !important;
-            height: 39px !important;
-            max-width: 110px !important;
-            max-height: 39px !important;
-          }
-        }
-
-        /* Tablets (<1200px): slightly smaller logo */
-        @media (max-width: 75rem) {
-          .logo-container {
-            width: 94px !important;
-            height: 34px !important;
-            max-width: 94px !important;
-            max-height: 34px !important;
-          }
-        }
-
-        /* Phones (<800px): smallest logo */
-        @media (max-width: 50rem) {
-          .logo-container {
-            width: 80px !important;
-            height: 29px !important;
-            max-width: 80px !important;
-            max-height: 29px !important;
-          }
-        }
+        /* Logo & hamburger: single size for all screens (breakpoints added later) */
 
         @media (max-width: 550px) {
           .header-container .header-btn,
