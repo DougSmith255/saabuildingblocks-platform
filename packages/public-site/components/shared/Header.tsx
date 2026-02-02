@@ -695,25 +695,13 @@ export default function Header() {
           padding-bottom: 0;
         }
 
-        /* All mobile (<1600px): reduce logo + hamburger to fit 60px header */
+        /* All mobile (<1600px): reduce logo to fit shorter header */
         @media (max-width: 100rem) {
           .logo-container {
             width: 110px !important;
             height: 39px !important;
             max-width: 110px !important;
             max-height: 39px !important;
-          }
-          .hamburger {
-            width: 50px !important;
-            height: 50px !important;
-            min-width: 50px !important;
-            min-height: 50px !important;
-          }
-          .hamburger-svg {
-            width: 50px !important;
-            height: 50px !important;
-            min-width: 50px !important;
-            min-height: 50px !important;
           }
         }
 
@@ -727,22 +715,10 @@ export default function Header() {
           }
         }
 
-        /* 800–1600px: tighter vertical spacing around logo (−10px top & bottom) */
+        /* 800–1600px: tighter vertical spacing (−10px top & bottom) */
         @media (min-width: 50rem) and (max-width: 99.99rem) {
           .header-container {
             height: 40px;
-          }
-          .hamburger {
-            width: 38px !important;
-            height: 38px !important;
-            min-width: 38px !important;
-            min-height: 38px !important;
-          }
-          .hamburger-svg {
-            width: 38px !important;
-            height: 38px !important;
-            min-width: 38px !important;
-            min-height: 38px !important;
           }
         }
 
