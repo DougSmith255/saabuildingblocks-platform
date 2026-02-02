@@ -1,10 +1,15 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { H1, H2, Tagline, GlassPanel, Icon3D, CTAButton, SecondaryButton, JoinModal, InstructionsModal } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, GlassPanel, Icon3D, CTAButton, SecondaryButton, JoinModal, InstructionsModal, CyberCard, GenericCard } from '@saa/shared/components/saa';
 import { VideoSlidePanel } from '@saa/shared/components/saa/media/VideoSlidePanel';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { SatelliteConstellationEffect } from '@/components/shared/hero-effects/SatelliteConstellationEffect';
+import {
+  BarChart3, Star, Lightbulb, Handshake, Building,
+  TrendingUp, Clock, Headset, Cpu, Users, DollarSign,
+  Receipt, GitBranch, Globe, Check
+} from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 const HolographicGlobe = dynamic(
@@ -103,34 +108,33 @@ function AnimatedStat({
   prefix = '',
   targetNumber,
   suffix = '',
-  label
+  label,
+  icon,
 }: {
   prefix?: string;
   targetNumber: number;
   suffix?: string;
   label: string;
+  icon?: React.ReactNode;
 }) {
   const { displayValue, elementRef, hasAnimated } = useScrambleCounter(targetNumber, 2000);
 
   return (
-    <div
-      className="text-center p-6 rounded-xl"
-      style={{
-        background: 'rgba(20,20,20,0.75)',
-        border: '1px solid rgba(255,255,255,0.1)',
-      }}
-    >
-      <p className="stat-3d-text text-4xl lg:text-5xl font-bold mb-2 tabular-nums">
-        <span>{prefix}</span>
-        <span ref={elementRef}>
-          {hasAnimated ? targetNumber.toLocaleString() : displayValue.toLocaleString()}
-        </span>
-        <span>{suffix}</span>
-      </p>
+    <CyberCard padding="md" centered>
+      <div className="flex items-center justify-center gap-3 mb-2">
+        {icon && <Icon3D color="#00bfff" size={28}>{icon}</Icon3D>}
+        <p className="stat-3d-text text-4xl lg:text-5xl font-bold tabular-nums">
+          <span>{prefix}</span>
+          <span ref={elementRef}>
+            {hasAnimated ? targetNumber.toLocaleString() : displayValue.toLocaleString()}
+          </span>
+          <span>{suffix}</span>
+        </p>
+      </div>
       <p className="text-sm uppercase tracking-wider" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
         {label}
       </p>
-    </div>
+    </CyberCard>
   );
 }
 
@@ -148,6 +152,16 @@ const LOGOS = [
   { id: 'forbes-logo', alt: 'Forbes', src: `${CLOUDFLARE_BASE}/forbes-logo/public` },
   { id: 'glassdoor-logo', alt: 'Glassdoor', src: `${CLOUDFLARE_BASE}/glassdoor-logo/public` },
   { id: 'realtrends-logo', alt: 'RealTrends', src: `${CLOUDFLARE_BASE}/realtrends-logo/public` },
+  { id: 'wsj-logo', alt: 'Wall Street Journal', src: `${CLOUDFLARE_BASE}/wsj-logo/public` },
+  { id: 'cnbc-logo', alt: 'CNBC', src: `${CLOUDFLARE_BASE}/cnbc-logo/public` },
+  { id: 'fox-business-logo', alt: 'Fox Business', src: `${CLOUDFLARE_BASE}/fox-business-logo/public` },
+];
+
+// Stat icons for Awards Ribbon
+const STAT_ICONS = [
+  <Building key="building" className="w-5 h-5" />,
+  <Users key="users" className="w-5 h-5" />,
+  <Globe key="globe" className="w-5 h-5" />,
 ];
 
 // Carousel hook
@@ -397,6 +411,7 @@ function AwardsRibbon() {
                 targetNumber={stat.targetNumber}
                 suffix={stat.suffix}
                 label={stat.label}
+                icon={STAT_ICONS[index]}
               />
             ))}
           </div>
@@ -462,14 +477,14 @@ function AwardsRibbon() {
 
         {/* Logo Bar */}
         <div className="max-w-[1900px] mx-auto">
-          <div className="flex justify-center items-center gap-10 md:gap-16 mt-2 px-4">
+          <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10 mt-2 px-4">
             {LOGOS.map((logo) => (
-              <Icon3D key={logo.id} size={logo.id === 'glassdoor-logo' ? 156 : 120}>
+              <Icon3D key={logo.id} color="#00bfff" size={logo.id === 'glassdoor-logo' ? 140 : 100}>
                 <img
                   src={logo.src}
                   alt={logo.alt}
-                  className={`w-auto object-contain ${logo.id === 'glassdoor-logo' ? 'h-[78px] md:h-[78px]' : 'h-20 md:h-[60px]'}`}
-                  style={{ filter: 'brightness(0) invert(0.8)' }}
+                  className={`w-auto object-contain ${logo.id === 'glassdoor-logo' ? 'h-[60px] md:h-[70px]' : 'h-14 md:h-[50px]'}`}
+                  style={{ filter: 'brightness(0.7) sepia(1) hue-rotate(180deg) saturate(0.5)' }}
                 />
               </Icon3D>
             ))}
@@ -485,139 +500,52 @@ function AwardsRibbon() {
    BLOCK B: "Where eXp Stands Apart" — 3D Flip Card Stack
    ═══════════════════════════════════════════════════════════════ */
 
-const FLIP_CARDS = [
+const DIFFERENTIATORS = [
   {
-    front: 'Profitability',
-    icon: '📊',
-    back: 'The only cumulatively profitable publicly traded real estate brokerage in recent years.',
+    title: 'Profitability',
+    icon: <BarChart3 className="w-6 h-6" />,
+    description: 'The only cumulatively profitable publicly traded real estate brokerage in recent years.',
   },
   {
-    front: 'Agent Satisfaction',
-    icon: '⭐',
-    back: 'Consistently the highest-ranked brokerage on Glassdoor\'s anonymous agent reviews — eight consecutive years.',
+    title: 'Agent Satisfaction',
+    icon: <Star className="w-6 h-6" />,
+    description: 'Consistently the highest-ranked brokerage on Glassdoor\'s anonymous agent reviews — eight consecutive years.',
   },
   {
-    front: 'Innovation',
-    icon: '🔮',
-    back: 'A cloud-based model that reinvests in systems, support, and agent programs instead of physical offices and franchise layers.',
+    title: 'Innovation',
+    icon: <Lightbulb className="w-6 h-6" />,
+    description: 'A cloud-based model that reinvests in systems, support, and agent programs instead of physical offices and franchise layers.',
   },
   {
-    front: 'Sponsor Support',
-    icon: '🤝',
-    back: 'The only brokerage that allows sponsors to independently build and deliver additional support programs.',
+    title: 'Sponsor Support',
+    icon: <Handshake className="w-6 h-6" />,
+    description: 'The only brokerage that allows sponsors to independently build and deliver additional support programs.',
   },
 ];
 
-function UnmatchedFlipCards() {
-  const [activeCard, setActiveCard] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
-  const autoFlipRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  // Auto-rotate every 4 seconds
-  useEffect(() => {
-    autoFlipRef.current = setInterval(() => {
-      setIsFlipped(true);
-      setTimeout(() => {
-        setIsFlipped(false);
-        setTimeout(() => {
-          setActiveCard(prev => (prev + 1) % FLIP_CARDS.length);
-        }, 400);
-      }, 2500);
-    }, 4000);
-
-    return () => {
-      if (autoFlipRef.current) clearInterval(autoFlipRef.current);
-    };
-  }, []);
-
-  const handleCardClick = (index: number) => {
-    if (autoFlipRef.current) clearInterval(autoFlipRef.current);
-    if (index === activeCard) {
-      setIsFlipped(!isFlipped);
-    } else {
-      setIsFlipped(false);
-      setActiveCard(index);
-    }
-  };
-
+function DifferentiatorsGrid() {
   return (
-    <div className="flex flex-col items-center gap-6">
-      {/* Card Container */}
-      <div
-        className="relative w-full max-w-md mx-auto"
-        style={{ perspective: '1200px', height: '220px' }}
-      >
-        <div
-          className="absolute inset-0 transition-transform duration-700 ease-in-out"
-          style={{
-            transformStyle: 'preserve-3d',
-            transform: isFlipped ? 'rotateX(180deg)' : 'rotateX(0deg)',
-          }}
-        >
-          {/* Front */}
-          <div
-            className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-8 cursor-pointer"
-            style={{
-              backfaceVisibility: 'hidden',
-              background: 'rgba(20,20,20,0.85)',
-              border: '1px solid rgba(0,191,255,0.3)',
-              boxShadow: '0 0 30px rgba(0,191,255,0.1), inset 0 1px 0 rgba(255,255,255,0.05)',
-            }}
-            onClick={() => handleCardClick(activeCard)}
-          >
-            <span className="text-4xl">{FLIP_CARDS[activeCard].icon}</span>
-            <h3
-              className="text-2xl font-bold text-center"
-              style={{ color: '#00bfff' }}
-            >
-              {FLIP_CARDS[activeCard].front}
-            </h3>
-            <p className="text-xs uppercase tracking-widest opacity-50 text-body">
-              Tap to reveal
-            </p>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {DIFFERENTIATORS.map((item, idx) => (
+        <CyberCard key={idx} padding="lg" interactive>
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 mt-1">
+              <Icon3D color="#00bfff" size={44}>{item.icon}</Icon3D>
+            </div>
+            <div>
+              <h3
+                className="text-xl font-bold mb-2"
+                style={{ color: '#00bfff' }}
+              >
+                {item.title}
+              </h3>
+              <p className="text-body text-sm leading-relaxed">
+                {item.description}
+              </p>
+            </div>
           </div>
-
-          {/* Back */}
-          <div
-            className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center p-8 cursor-pointer"
-            style={{
-              backfaceVisibility: 'hidden',
-              transform: 'rotateX(180deg)',
-              background: 'rgba(20,20,20,0.92)',
-              border: '1px solid rgba(0,191,255,0.2)',
-              boxShadow: '0 0 30px rgba(0,191,255,0.08)',
-            }}
-            onClick={() => handleCardClick(activeCard)}
-          >
-            <p className="text-body text-base text-center leading-relaxed">
-              {FLIP_CARDS[activeCard].back}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Progress dots */}
-      <div className="flex gap-3">
-        {FLIP_CARDS.map((card, idx) => (
-          <button
-            key={idx}
-            onClick={() => handleCardClick(idx)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-300"
-            style={{
-              background: idx === activeCard ? 'rgba(0,191,255,0.15)' : 'rgba(255,255,255,0.05)',
-              border: `1px solid ${idx === activeCard ? 'rgba(0,191,255,0.4)' : 'rgba(255,255,255,0.1)'}`,
-            }}
-          >
-            <span className="text-sm">{card.icon}</span>
-            <span
-              className="text-xs font-medium hidden sm:inline"
-              style={{ color: idx === activeCard ? '#00bfff' : 'rgba(255,255,255,0.5)' }}
-            >
-              {card.front}
-            </span>
-          </button>
-        ))}
-      </div>
+        </CyberCard>
+      ))}
     </div>
   );
 }
@@ -631,6 +559,7 @@ const PLATFORM_CARDS = [
   {
     headline: 'Support',
     subhead: 'Built to keep pace with ambition',
+    icon: <Headset className="w-6 h-6" />,
     bullets: [
       '2,000+ salaried support staff',
       '24/7 Expert Care help desk',
@@ -643,6 +572,7 @@ const PLATFORM_CARDS = [
   {
     headline: 'Technology',
     subhead: 'Fewer logins. Better workflows.',
+    icon: <Cpu className="w-6 h-6" />,
     bullets: [
       'Choice of CRM: BoldTrail, Lofty, or Cloze',
       'IDX websites — eXp-branded or custom',
@@ -655,6 +585,7 @@ const PLATFORM_CARDS = [
   {
     headline: 'Community',
     subhead: 'An operating layer, not a social layer',
+    icon: <Users className="w-6 h-6" />,
     bullets: [
       'Live collaboration inside eXp World',
       'Global referral opportunities',
@@ -742,16 +673,20 @@ function PlatformScrollCards() {
                 : 'rgba(20,20,20,0.6)',
               borderTop: `1px solid ${idx === activeIndex ? 'rgba(0,191,255,0.3)' : 'rgba(255,255,255,0.08)'}`,
               borderBottom: `1px solid ${idx === activeIndex ? 'rgba(0,191,255,0.3)' : 'rgba(255,255,255,0.08)'}`,
+              boxShadow: idx === activeIndex ? '0 0 30px rgba(0,191,255,0.08)' : 'none',
               filter: idx === activeIndex ? 'none' : 'blur(0.5px) grayscale(0.3)',
             }}
           >
             <div className="max-w-3xl mx-auto">
-              <h3
-                className="text-2xl md:text-3xl font-bold mb-1"
-                style={{ color: '#00bfff' }}
-              >
-                {card.headline}
-              </h3>
+              <div className="flex items-center gap-3 mb-1">
+                <Icon3D color="#00bfff" size={36}>{card.icon}</Icon3D>
+                <h3
+                  className="text-2xl md:text-3xl font-bold"
+                  style={{ color: '#00bfff' }}
+                >
+                  {card.headline}
+                </h3>
+              </div>
               <p className="text-body text-sm mb-5 italic" style={{ opacity: 0.7 }}>
                 {card.subhead}
               </p>
@@ -761,7 +696,7 @@ function PlatformScrollCards() {
                     key={bIdx}
                     className="text-body flex items-start gap-3 text-sm md:text-base"
                   >
-                    <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>&#9656;</span>
+                    <Check className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#00bfff' }} />
                     {bullet}
                   </li>
                 ))}
@@ -796,26 +731,32 @@ function PlatformScrollCards() {
    BLOCK D: "The Economics" — Tabbed Interface
    ═══════════════════════════════════════════════════════════════ */
 
-const INCOME_TABS = [
+const INCOME_STREAMS = [
   {
-    label: 'Commission',
-    content: [
+    title: 'Commission',
+    icon: <DollarSign className="w-6 h-6" />,
+    highlight: '$16K cap',
+    bullets: [
       '80/20 split until a $16,000 annual cap',
       '100% commission after cap',
-      'ICON agents earn the $16,000 cap back in company stock',
+      'ICON agents earn the $16K cap back in stock',
     ],
   },
   {
-    label: 'Stock',
-    content: [
+    title: 'Stock',
+    icon: <TrendingUp className="w-6 h-6" />,
+    highlight: 'EXPI',
+    bullets: [
       'Production-based stock awards',
       'Optional discounted stock purchase program',
       'Ownership in a publicly traded company',
     ],
   },
   {
-    label: 'Fees',
-    content: [
+    title: 'Fees',
+    icon: <Receipt className="w-6 h-6" />,
+    highlight: '$85/mo',
+    bullets: [
       '$85 per month flat fee',
       'No desk fees',
       'No franchise fees',
@@ -823,66 +764,54 @@ const INCOME_TABS = [
     ],
   },
   {
-    label: 'Revenue Share',
-    content: [
-      'Seven-tier revenue share paid from company revenue',
+    title: 'Revenue Share',
+    icon: <GitBranch className="w-6 h-6" />,
+    highlight: '7-tier',
+    bullets: [
+      'Seven-tier revenue share from company revenue',
       'Can continue after retirement',
       'Can be passed on to heirs',
       'No recruiting requirement',
     ],
+    footnote: 'Revenue share is an option, not an obligation.',
   },
 ];
 
-function IncomeTabSection() {
-  const [activeTab, setActiveTab] = useState(0);
-
+function IncomeCardsSection() {
   return (
-    <div>
-      {/* Tab Bar */}
-      <div className="flex flex-wrap gap-1 mb-6 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
-        {INCOME_TABS.map((tab, idx) => (
-          <button
-            key={idx}
-            onClick={() => setActiveTab(idx)}
-            className="flex-1 min-w-[80px] px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300"
-            style={{
-              background: idx === activeTab ? 'rgba(0,191,255,0.12)' : 'transparent',
-              color: idx === activeTab ? '#00bfff' : 'rgba(255,255,255,0.5)',
-              borderBottom: idx === activeTab ? '2px solid #00bfff' : '2px solid transparent',
-            }}
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+      {INCOME_STREAMS.map((stream, idx) => (
+        <GenericCard key={idx} padding="md" hover>
+          <div className="flex items-center gap-3 mb-3">
+            <Icon3D color="#00bfff" size={40}>{stream.icon}</Icon3D>
+            <h3 className="text-lg font-bold" style={{ color: '#00bfff' }}>
+              {stream.title}
+            </h3>
+          </div>
+          <p
+            className="text-3xl font-bold mb-4 tabular-nums"
+            style={{ color: '#e5e4dd' }}
           >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Tab Content */}
-      <div
-        className="rounded-xl p-6 min-h-[180px]"
-        style={{
-          background: 'rgba(20,20,20,0.6)',
-          border: '1px solid rgba(255,255,255,0.08)',
-        }}
-      >
-        <ul className="space-y-3">
-          {INCOME_TABS[activeTab].content.map((item, idx) => (
-            <li
-              key={idx}
-              className="text-body flex items-start gap-3 text-base"
-              style={{ animation: 'fadeIn 0.3s ease-out' }}
-            >
-              <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '3px' }}>&#9670;</span>
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {activeTab === 3 && (
-        <p className="text-body text-sm mt-3 opacity-60 italic">
-          Revenue share is an option, not an obligation.
-        </p>
-      )}
+            {stream.highlight}
+          </p>
+          <ul className="space-y-2">
+            {stream.bullets.map((bullet, bIdx) => (
+              <li
+                key={bIdx}
+                className="text-body flex items-start gap-2 text-sm"
+              >
+                <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '3px', fontSize: '8px' }}>&#9670;</span>
+                {bullet}
+              </li>
+            ))}
+          </ul>
+          {stream.footnote && (
+            <p className="text-body text-xs mt-3 opacity-50 italic">
+              {stream.footnote}
+            </p>
+          )}
+        </GenericCard>
+      ))}
     </div>
   );
 }
@@ -903,92 +832,94 @@ const SOLUTIONS = [
   'Utility & closing services', 'Continuing education',
 ];
 
+const DIVISION_COLORS: Record<string, string> = {
+  'Residential': '#00bfff',
+  'Commercial': '#00d4aa',
+  'Luxury': '#ffd700',
+  'Land & Ranch': '#8b7355',
+  'Sports & Entertainment': '#ff6b9d',
+  'Referral-only': '#a78bfa',
+};
+
 function EcosystemBentoGrid() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
       {/* Leads Cell — wider */}
-      <div
-        className="md:col-span-7 rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
-        style={{
-          background: 'rgba(20,20,20,0.7)',
-          border: '1px solid rgba(255,255,255,0.08)',
-        }}
-      >
-        <h3 className="text-xl font-bold mb-1" style={{ color: '#00bfff' }}>Leads</h3>
-        <p className="text-body text-xs uppercase tracking-widest mb-4" style={{ opacity: 0.5 }}>
-          Optional opportunities, not empty promises
-        </p>
-        <p className="text-body text-sm leading-relaxed mb-4">
-          eXp provides a lead ecosystem designed to support different business models at different stages.
-          Lead programs vary by source and strategy, allowing agents to engage selectively rather than commit to a single funnel.
-          Some programs are referral-based. Some require ad spend. Some are organic and included. None are required.
-        </p>
-        <SecondaryButton variant="blue" href="#">
-          Explore eXp leads
-        </SecondaryButton>
+      <div className="md:col-span-7">
+        <GenericCard padding="md" hover>
+          <h3 className="text-xl font-bold mb-1" style={{ color: '#00bfff' }}>Leads</h3>
+          <p className="text-body text-xs uppercase tracking-widest mb-4" style={{ opacity: 0.5 }}>
+            Optional opportunities, not empty promises
+          </p>
+          <p className="text-body text-sm leading-relaxed mb-4">
+            eXp provides a lead ecosystem designed to support different business models at different stages.
+            Lead programs vary by source and strategy, allowing agents to engage selectively rather than commit to a single funnel.
+            Some programs are referral-based. Some require ad spend. Some are organic and included. None are required.
+          </p>
+          <SecondaryButton variant="blue" href="#">
+            Explore eXp leads
+          </SecondaryButton>
+        </GenericCard>
       </div>
 
       {/* Divisions Cell */}
-      <div
-        className="md:col-span-5 rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
-        style={{
-          background: 'rgba(20,20,20,0.7)',
-          border: '1px solid rgba(255,255,255,0.08)',
-        }}
-      >
-        <h3 className="text-xl font-bold mb-1" style={{ color: '#00bfff' }}>Divisions</h3>
-        <p className="text-body text-xs uppercase tracking-widest mb-4" style={{ opacity: 0.5 }}>
-          Specialize without switching brokerages
-        </p>
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          {DIVISIONS.map((div, idx) => (
-            <div
-              key={idx}
-              className="text-body px-3 py-2 rounded-lg text-xs font-medium text-center"
-              style={{
-                background: 'rgba(0,191,255,0.06)',
-                border: '1px solid rgba(0,191,255,0.15)',
-              }}
-            >
-              {div}
-            </div>
-          ))}
-        </div>
-        <SecondaryButton variant="blue" href="#">
-          Explore eXp divisions
-        </SecondaryButton>
+      <div className="md:col-span-5">
+        <GenericCard padding="md" hover>
+          <h3 className="text-xl font-bold mb-1" style={{ color: '#00bfff' }}>Divisions</h3>
+          <p className="text-body text-xs uppercase tracking-widest mb-4" style={{ opacity: 0.5 }}>
+            Specialize without switching brokerages
+          </p>
+          <div className="grid grid-cols-2 gap-2 mb-4">
+            {DIVISIONS.map((div, idx) => (
+              <div
+                key={idx}
+                className="text-body px-3 py-2.5 rounded-lg text-xs font-semibold text-center"
+                style={{
+                  background: 'rgba(0,191,255,0.06)',
+                  border: `1px solid ${DIVISION_COLORS[div] || 'rgba(0,191,255,0.15)'}33`,
+                  boxShadow: `0 0 8px ${DIVISION_COLORS[div] || 'rgba(0,191,255,0.15)'}11`,
+                }}
+              >
+                <span
+                  className="inline-block w-2 h-2 rounded-full mr-1.5"
+                  style={{ background: DIVISION_COLORS[div] || '#00bfff', verticalAlign: 'middle' }}
+                />
+                {div}
+              </div>
+            ))}
+          </div>
+          <SecondaryButton variant="blue" href="#">
+            Explore eXp divisions
+          </SecondaryButton>
+        </GenericCard>
       </div>
 
       {/* Solutions Cell — full width */}
-      <div
-        className="md:col-span-12 rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
-        style={{
-          background: 'rgba(20,20,20,0.7)',
-          border: '1px solid rgba(255,255,255,0.08)',
-        }}
-      >
-        <h3 className="text-xl font-bold mb-1" style={{ color: '#00bfff' }}>Solutions</h3>
-        <p className="text-body text-xs uppercase tracking-widest mb-4" style={{ opacity: 0.5 }}>
-          Partnerships that remove friction
-        </p>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
-          {SOLUTIONS.map((solution, idx) => (
-            <div
-              key={idx}
-              className="text-body flex items-center gap-2 px-3 py-2 rounded-lg text-sm"
-              style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.06)',
-              }}
-            >
-              <span style={{ color: '#00bfff', fontSize: '10px' }}>&#9632;</span>
-              {solution}
-            </div>
-          ))}
-        </div>
-        <SecondaryButton variant="blue" href="#">
-          Explore eXp solutions
-        </SecondaryButton>
+      <div className="md:col-span-12">
+        <GenericCard padding="md" hover>
+          <h3 className="text-xl font-bold mb-1" style={{ color: '#00bfff' }}>Solutions</h3>
+          <p className="text-body text-xs uppercase tracking-widest mb-4" style={{ opacity: 0.5 }}>
+            Partnerships that remove friction
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+            {SOLUTIONS.map((solution, idx) => (
+              <div
+                key={idx}
+                className="text-body flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm"
+                style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                }}
+              >
+                <Check className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#00bfff' }} />
+                {solution}
+              </div>
+            ))}
+          </div>
+          <SecondaryButton variant="blue" href="#">
+            Explore eXp solutions
+          </SecondaryButton>
+        </GenericCard>
       </div>
     </div>
   );
@@ -1022,22 +953,29 @@ function ExpWorldSection() {
 
   return (
     <div ref={sectionRef} className="relative w-screen -ml-[50vw] left-1/2">
-      <GlassPanel variant="expBlue" rounded="3xl" opacity={0.12}>
-        <section className="relative py-16 md:py-24 px-4 sm:px-6 overflow-hidden" style={{ minHeight: '500px' }}>
-          {/* HolographicGlobe as background */}
-          <div className="absolute inset-0 z-0">
-            <HolographicGlobe isVisible={isGlobeVisible} />
-            {/* Feathered overlay for text readability */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: 'radial-gradient(ellipse 80% 70% at 50% 50%, rgba(0,10,30,0.3) 0%, rgba(0,10,30,0.7) 60%, rgba(0,10,30,0.9) 100%)',
-              }}
-            />
-          </div>
+      <section className="relative py-16 md:py-24 px-4 sm:px-6 overflow-hidden" style={{ minHeight: '500px' }}>
+        {/* HolographicGlobe as background — screen blend makes black transparent */}
+        <div className="absolute inset-0 z-0" style={{ mixBlendMode: 'screen' }}>
+          <HolographicGlobe isVisible={isGlobeVisible} />
+        </div>
 
-          {/* Content */}
-          <div className="relative z-10 max-w-[900px] mx-auto text-center">
+        {/* Content with backdrop blur for text readability */}
+        <div className="relative z-10 max-w-[900px] mx-auto text-center">
+          <img
+            src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
+            alt=""
+            className="w-12 h-12 mx-auto mb-4 object-contain"
+            style={{ opacity: 0.5, filter: 'brightness(0) invert(1)' }}
+            aria-hidden="true"
+          />
+          <div
+            className="rounded-2xl px-6 py-8 md:px-10 md:py-10"
+            style={{
+              background: 'rgba(0,10,30,0.55)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+            }}
+          >
             <H2 theme="blue">eXp World</H2>
             <p className="text-body mt-4 mb-4 max-w-2xl mx-auto text-lg leading-relaxed">
               eXp World is a fully immersive virtual campus — built for collaboration, not commutes.
@@ -1046,12 +984,15 @@ function ExpWorldSection() {
               84,000+ agents across 29 countries connect in real time for live training, leadership access,
               team meetings, and client-facing rooms. Set up your own virtual office and work from anywhere in the world.
             </p>
-            <SecondaryButton variant="blue" as="button" onClick={handleGuestPass}>
-              Get Your Guest Pass
-            </SecondaryButton>
+            <CTAButton
+              href="#"
+              onClick={(e) => { e.preventDefault(); handleGuestPass(); }}
+            >
+              GET YOUR GUEST PASS
+            </CTAButton>
           </div>
-        </section>
-      </GlassPanel>
+        </div>
+      </section>
     </div>
   );
 }
@@ -1096,14 +1037,28 @@ export default function AboutExpRealty() {
       <StickyHeroWrapper>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <SatelliteConstellationEffect />
+          {/* eXp logo watermark */}
+          <img
+            src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
+            alt=""
+            className="absolute inset-0 m-auto w-[300px] h-[300px] md:w-[450px] md:h-[450px] object-contain pointer-events-none select-none"
+            style={{ opacity: 0.06, filter: 'brightness(0) invert(1)' }}
+            aria-hidden="true"
+          />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>ABOUT EXP REALTY</H1>
-              <Tagline className="mt-4">
+              <Tagline className="mt-4 text-lg md:text-xl">
                 World&apos;s #1 independent brokerage.
               </Tagline>
               <p className="text-body mt-4" style={{ opacity: 0.9 }}>
                 Production-focused. Future-proofed.
+              </p>
+              <p
+                className="mt-3 text-sm md:text-base font-medium tracking-widest uppercase"
+                style={{ color: '#00bfff', opacity: 0.7 }}
+              >
+                S&amp;P 600 &middot; 84,000+ agents &middot; 29 countries
               </p>
             </div>
           </div>
@@ -1123,24 +1078,28 @@ export default function AboutExpRealty() {
             eXp was built around commission <em>and</em> three more:
           </p>
 
-          {/* 3-Column Pillars */}
+          {/* Glowing separator */}
+          <div
+            className="mb-8"
+            style={{
+              height: '1px',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(0,191,255,0.3) 30%, rgba(0,191,255,0.5) 50%, rgba(0,191,255,0.3) 70%, transparent 100%)',
+              boxShadow: '0 0 8px rgba(0,191,255,0.15)',
+            }}
+          />
+
+          {/* 3-Column Pillars with CyberCards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {[
-              { num: '01', title: 'Ownership', desc: 'In a publicly traded company' },
-              { num: '02', title: 'Leverage', desc: 'Through scale, systems, and collaboration' },
-              { num: '03', title: 'Longevity', desc: 'Income that continues after your last closing' },
+              { num: '01', title: 'Ownership', desc: 'In a publicly traded company', icon: <Building className="w-6 h-6" /> },
+              { num: '02', title: 'Leverage', desc: 'Through scale, systems, and collaboration', icon: <TrendingUp className="w-6 h-6" /> },
+              { num: '03', title: 'Longevity', desc: 'Income that continues after your last closing', icon: <Clock className="w-6 h-6" /> },
             ].map((pillar) => (
-              <div
-                key={pillar.num}
-                className="text-center p-6 rounded-xl"
-                style={{
-                  background: 'rgba(20,20,20,0.5)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                }}
-              >
+              <CyberCard key={pillar.num} padding="lg" centered>
+                <Icon3D color="#00bfff" size={48}>{pillar.icon}</Icon3D>
                 <p
-                  className="text-3xl font-bold mb-2"
-                  style={{ color: '#00bfff', opacity: 0.6 }}
+                  className="text-3xl font-bold mt-3 mb-1"
+                  style={{ color: '#00bfff', opacity: 0.5 }}
                 >
                   {pillar.num}
                 </p>
@@ -1153,7 +1112,7 @@ export default function AboutExpRealty() {
                 <p className="text-body text-sm">
                   {pillar.desc}
                 </p>
-              </div>
+              </CyberCard>
             ))}
           </div>
 
@@ -1175,7 +1134,7 @@ export default function AboutExpRealty() {
           <p className="text-body mt-4 mb-8 max-w-3xl">
             These advantages are structural, not promotional. Unlike franchise brokerages, eXp Realty does not rely on office-based profit centers.
           </p>
-          <UnmatchedFlipCards />
+          <DifferentiatorsGrid />
           <div className="mt-6 flex justify-center">
             <SecondaryButton variant="blue" href="#">
               Explore the full case for eXp
@@ -1208,7 +1167,7 @@ export default function AboutExpRealty() {
           <p className="text-body mt-4 mb-8 max-w-3xl">
             Most brokerages offer one income stream. eXp offers three: commission, stock, and revenue share.
           </p>
-          <IncomeTabSection />
+          <IncomeCardsSection />
           <div className="mt-6 flex justify-center">
             <SecondaryButton variant="blue" href="#">
               Explore eXp income
@@ -1239,15 +1198,15 @@ export default function AboutExpRealty() {
                 <p className="text-body mt-4 mb-4">
                   eXp works best for agents who value:
                 </p>
-                <ul className="space-y-2 mb-6">
+                <ul className="space-y-3 mb-6">
                   {[
                     'Independence over hierarchy',
                     'Systems over micromanagement',
                     'Long-term optionality over short-term perks',
                   ].map((item, idx) => (
                     <li key={idx} className="text-body flex items-center gap-3">
-                      <span style={{ color: '#00bfff' }}>&#9670;</span>
-                      <span className="text-base">{item}</span>
+                      <Icon3D color="#00bfff" size={28}><Check className="w-4 h-4" /></Icon3D>
+                      <span className="text-base md:text-lg">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -1260,13 +1219,18 @@ export default function AboutExpRealty() {
               <div className="p-8 md:p-12 text-center">
                 <H2 theme="blue">The Bottom Line</H2>
 
-                {/* 4 Keywords */}
+                {/* 4 Keywords with glow */}
                 <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-6 mb-8">
                   {['Profitable', 'Scalable', 'Agent-centric', 'Global'].map((word) => (
                     <span
                       key={word}
-                      className="text-lg md:text-xl font-bold tracking-wide"
-                      style={{ color: '#00bfff' }}
+                      className="text-lg md:text-xl font-bold tracking-wide px-4 py-1.5 rounded-lg"
+                      style={{
+                        color: '#00bfff',
+                        background: 'rgba(0,191,255,0.06)',
+                        border: '1px solid rgba(0,191,255,0.15)',
+                        boxShadow: '0 0 12px rgba(0,191,255,0.08)',
+                      }}
                     >
                       {word}.
                     </span>

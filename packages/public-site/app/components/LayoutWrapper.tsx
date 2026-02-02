@@ -246,29 +246,6 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       {!shouldHideHeaderFooter && <Header />}
       {!shouldHideHeaderFooter && !shouldHideFloatingButton && <FloatingVideoButton />}
       {!shouldHideHeaderFooter && <VIPGuestPassPopup forceOpen={forceVipOpen} onForceClose={() => setForceVipOpen(false)} />}
-      {/* TEMP: Debug button to test VIP Guest Pass popup — remove when done */}
-      {!shouldHideHeaderFooter && !shouldHideFloatingButton && (
-        <button
-          onClick={() => setForceVipOpen(true)}
-          style={{
-            position: 'fixed',
-            bottom: '24px',
-            right: '320px',
-            zIndex: 10005,
-            padding: '10px 16px',
-            borderRadius: '12px',
-            background: 'rgba(20,20,20,0.9)',
-            border: '2px solid rgba(60,60,60,0.8)',
-            color: '#ffd700',
-            fontSize: '13px',
-            fontWeight: 600,
-            cursor: 'pointer',
-            letterSpacing: '0.04em',
-          }}
-        >
-          VIP Pass
-        </button>
-      )}
       {/*
         Using div instead of main to avoid nested <main> elements.
         Pages already have their own <main id="main-content"> for accessibility.
