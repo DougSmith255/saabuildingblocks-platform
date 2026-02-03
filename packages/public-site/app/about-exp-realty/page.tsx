@@ -538,48 +538,71 @@ const FEATURES: { icon: LucideIcon; keyword: string; type: 'pillar' | 'advantage
   },
 ];
 
+const MISTY_GOLDEN_BG = `
+  radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
+  radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
+  radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
+  radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
+  radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
+  linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
+`;
+const DARK_CARD_BG = 'linear-gradient(180deg, rgba(30,30,30,0.98), rgba(15,15,15,0.99))';
+
 function FeatureChip({
   icon: Icon,
   keyword,
-  isPillar,
   isActive,
   onSelect,
 }: {
   icon: LucideIcon;
   keyword: string;
-  isPillar: boolean;
   isActive: boolean;
   onSelect: () => void;
 }) {
   return (
-    <CyberCard interactive padding="sm" centered>
+    <div
+      className="rounded-xl relative overflow-hidden"
+      style={{
+        border: isActive ? '2px solid rgba(180,150,50,0.5)' : '1px solid rgba(255,255,255,0.1)',
+        boxShadow: isActive
+          ? '0 0 20px 4px rgba(255,200,80,0.3), 0 0 40px 8px rgba(255,180,50,0.15)'
+          : 'none',
+        transition: 'border 0.4s ease, box-shadow 0.4s ease',
+      }}
+    >
+      {/* Dark base background */}
+      <div className="absolute inset-0 rounded-xl" style={{ background: DARK_CARD_BG }} />
+      {/* Misty golden overlay — active only */}
+      <div
+        className="absolute inset-0 rounded-xl"
+        style={{
+          background: MISTY_GOLDEN_BG,
+          opacity: isActive ? 1 : 0,
+          transition: isActive ? 'opacity 0.7s ease-out' : 'opacity 0.2s ease-out',
+        }}
+      />
+
       <button
         type="button"
         onClick={onSelect}
         aria-pressed={isActive}
-        className="flex flex-col items-center gap-2 w-full cursor-pointer"
-        style={{
-          borderTop: isPillar ? '1px solid rgba(255,215,0,0.25)' : undefined,
-          transition: 'transform 250ms ease-out, box-shadow 250ms ease-out',
-          transform: isActive ? 'translateY(-2px)' : 'translateY(0)',
-          boxShadow: isActive
-            ? '0 0 12px rgba(255,215,0,0.3), 0 0 4px rgba(255,215,0,0.2)'
-            : 'none',
-          borderRadius: '8px',
-          outline: isActive ? '1px solid rgba(255,215,0,0.4)' : '1px solid transparent',
-        }}
+        className="relative z-10 flex flex-col items-center gap-2 w-full cursor-pointer p-3"
       >
-        <Icon3D color="#c4a94d" size={36}>
+        <Icon3D color={isActive ? '#4a3a10' : '#c4a94d'} size={36}>
           <Icon size={20} />
         </Icon3D>
         <h3
           className="text-xs font-bold uppercase tracking-wider"
-          style={{ color: isActive ? '#ffd700' : '#e5e4dd' }}
+          style={{
+            color: isActive ? '#2a1f05' : '#e5e4dd',
+            fontFamily: 'var(--font-family-h3)',
+            transition: 'color 0.4s ease',
+          }}
         >
           {keyword}
         </h3>
       </button>
-    </CyberCard>
+    </div>
   );
 }
 
@@ -603,7 +626,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
 
   return (
     <CyberCard padding="md" centered={false}>
-      <div className="relative min-h-[220px] flex flex-col justify-center p-4 md:p-6">
+      <div className="relative h-full flex flex-col justify-center p-4 md:p-6" style={{ minHeight: '320px' }}>
         <div
           style={{
             transition: phase === 'out'
@@ -618,7 +641,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
               <displayed.icon size={32} />
             </Icon3D>
             <h3
-              className="text-xl md:text-2xl font-bold uppercase tracking-wider"
+              className="text-h3"
               style={{ color: '#ffd700' }}
             >
               {displayed.keyword}
@@ -640,8 +663,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
           </div>
 
           <p
-            className="text-sm md:text-base leading-relaxed mb-4"
-            style={{ color: 'var(--color-body-text)' }}
+            className="text-body leading-relaxed mb-4"
           >
             {displayed.detail}
           </p>
@@ -753,7 +775,7 @@ function SpotlightConsole() {
         </div>
 
         {/* Desktop: two-column grid */}
-        <div className="hidden lg:grid grid-cols-[45%_55%] gap-6 items-start">
+        <div className="hidden lg:grid grid-cols-[45%_55%] gap-6 items-stretch">
           {/* Left: chips grid */}
           <div
             style={{
@@ -774,7 +796,6 @@ function SpotlightConsole() {
                   <FeatureChip
                     icon={f.icon}
                     keyword={f.keyword}
-                    isPillar={f.type === 'pillar'}
                     isActive={activeIndex === i}
                     onSelect={() => handleSelect(i)}
                   />
@@ -794,7 +815,6 @@ function SpotlightConsole() {
                   <FeatureChip
                     icon={f.icon}
                     keyword={f.keyword}
-                    isPillar={f.type === 'pillar'}
                     isActive={activeIndex === i + 3}
                     onSelect={() => handleSelect(i + 3)}
                   />
@@ -814,7 +834,6 @@ function SpotlightConsole() {
                   <FeatureChip
                     icon={f.icon}
                     keyword={f.keyword}
-                    isPillar={f.type === 'pillar'}
                     isActive={activeIndex === i + 5}
                     onSelect={() => handleSelect(i + 5)}
                   />
@@ -892,7 +911,6 @@ function SpotlightConsole() {
                   <FeatureChip
                     icon={f.icon}
                     keyword={f.keyword}
-                    isPillar={f.type === 'pillar'}
                     isActive={activeIndex === i}
                     onSelect={() => handleSelect(i)}
                   />
