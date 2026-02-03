@@ -3,30 +3,51 @@
 import { useRef, useEffect } from 'react';
 
 /**
- * Golden Rain Effect — Canvas 2D hero background
+ * Liquid Gold Streams Effect — Canvas 2D hero background
  *
- * 3D gold coins tumble and fall. Each coin has visible rim thickness
- * rendered via stacked offset layers of a darker rim sprite behind the
- * face sprite — the classic 2D game coin technique. Coins fade out at
- * the top and bottom edges for seamless blending.
+ * Viscous golden streams flow and branch across the canvas, simulating
+ * liquid gold / molten metal. Streams have variable thickness with
+ * surface tension (bulge/narrow), hard specular highlights, and small
+ * droplets that break off and follow gravity.
+ *
+ * Distinct from AuroraNetworkEffect: this is fluid/liquid (thick, gravity-
+ * influenced, metallic specular) vs gaseous/ethereal (thin ribbons, additive glow).
  *
  * Architecture: three useEffect hooks, stateRef, own rAF loop with scroll boost.
  */
 
 // --- Types ---
 
-interface Coin {
+interface StreamPoint {
   x: number;
   y: number;
-  vy: number;
+  thickness: number;
+}
+
+interface Stream {
+  points: StreamPoint[];
+  baseY: number;           // entry Y position (left edge)
+  speed: number;           // horizontal flow speed
+  phaseOffset: number;     // wave uniqueness
+  amplitude: number;       // vertical wave size
+  frequency: number;       // wave frequency
+  freq2: number;           // second harmonic
+  amp2: number;            // second harmonic amplitude
+  baseThickness: number;   // average thickness
+  branchAt: number;        // X fraction where this stream branches
+  opacity: number;         // base opacity
+  tier: 'primary' | 'secondary' | 'accent';
+}
+
+interface Droplet {
+  x: number;
+  y: number;
   vx: number;
-  spin: number;
-  spinSpeed: number;
-  size: number;
-  wobblePhase: number;
-  wobbleSpeed: number;
-  wobbleAmp: number;
-  depth: number;       // 0.3–1.0: affects brightness, size, speed
+  vy: number;
+  radius: number;
+  opacity: number;
+  life: number;
+  maxLife: number;
 }
 
 interface AnimState {
@@ -35,10 +56,8 @@ interface AnimState {
   w: number;
   h: number;
   dpr: number;
-  coins: Coin[];
-  faceSprite: HTMLCanvasElement;
-  rimSprite: HTMLCanvasElement;
-  spriteR: number;
+  streams: Stream[];
+  droplets: Droplet[];
   time: number;
   lastTimestamp: number;
   scrollBoost: number;
@@ -48,148 +67,113 @@ interface AnimState {
   animateFn: ((ts: number) => void) | null;
 }
 
-// --- Pre-render bright coin face sprite ---
+// --- Color helpers ---
 
-function createFaceSprite(radius: number): HTMLCanvasElement {
-  const size = radius * 2 + 4;
-  const oc = document.createElement('canvas');
-  oc.width = size;
-  oc.height = size;
-  const c = oc.getContext('2d')!;
-  const cx = size / 2;
-  const cy = size / 2;
-  const r = radius;
+function goldColor(lightness: number, alpha: number): string {
+  // lightness 0 = deep amber, 0.5 = gold, 1.0 = bright highlight
+  const r = Math.round(180 + lightness * 75);
+  const g = Math.round(120 + lightness * 100);
+  const b = Math.round(10 + lightness * 40);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
 
-  // Metallic face gradient (offset highlight = upper-left light source)
-  const face = c.createRadialGradient(cx - r * 0.25, cy - r * 0.25, 0, cx, cy, r);
-  face.addColorStop(0, '#fff5cc');
-  face.addColorStop(0.15, '#ffe066');
-  face.addColorStop(0.45, '#ffd700');
-  face.addColorStop(0.70, '#e6ac00');
-  face.addColorStop(1.0, '#b8860b');
+// --- Stream factory ---
 
-  c.beginPath();
-  c.arc(cx, cy, r, 0, Math.PI * 2);
-  c.fillStyle = face;
-  c.fill();
+function buildStreams(w: number, h: number, isMobile: boolean): Stream[] {
+  const streams: Stream[] = [];
 
-  // Outer rim ring — thicker for definition
-  c.beginPath();
-  c.arc(cx, cy, r, 0, Math.PI * 2);
-  c.strokeStyle = 'rgba(140,100,0,0.55)';
-  c.lineWidth = 2;
-  c.stroke();
+  // Primary streams: thick, bright, dominant flow
+  const primaryCount = isMobile ? 2 : 3;
+  const primaryYs = isMobile
+    ? [0.30, 0.65]
+    : [0.22, 0.48, 0.75];
 
-  // Inner raised rim
-  c.beginPath();
-  c.arc(cx, cy, r * 0.78, 0, Math.PI * 2);
-  c.strokeStyle = 'rgba(255,240,180,0.28)';
-  c.lineWidth = 1.2;
-  c.stroke();
-
-  // Embossed star detail in center (subtle relief)
-  c.globalCompositeOperation = 'lighter';
-  const starR = r * 0.32;
-  const innerR = starR * 0.42;
-  const points = 5;
-  c.beginPath();
-  for (let i = 0; i < points * 2; i++) {
-    const angle = (i * Math.PI) / points - Math.PI / 2;
-    const pr = i % 2 === 0 ? starR : innerR;
-    const sx = cx + Math.cos(angle) * pr;
-    const sy = cy + Math.sin(angle) * pr;
-    if (i === 0) c.moveTo(sx, sy);
-    else c.lineTo(sx, sy);
+  for (let i = 0; i < primaryCount; i++) {
+    streams.push({
+      points: [],
+      baseY: primaryYs[i],
+      speed: 0.015 + Math.random() * 0.008,
+      phaseOffset: Math.random() * Math.PI * 2,
+      amplitude: h * (0.04 + Math.random() * 0.025),
+      frequency: 0.003 + Math.random() * 0.001,
+      freq2: 0.007 + Math.random() * 0.003,
+      amp2: h * (0.015 + Math.random() * 0.01),
+      baseThickness: isMobile ? 14 : 20,
+      branchAt: 0.35 + Math.random() * 0.25,
+      opacity: 1.0,
+      tier: 'primary',
+    });
   }
-  c.closePath();
-  c.fillStyle = 'rgba(255,250,220,0.10)';
-  c.fill();
-  c.strokeStyle = 'rgba(255,240,180,0.06)';
-  c.lineWidth = 0.5;
-  c.stroke();
 
-  // Specular crescent (upper-left)
-  const spec = c.createRadialGradient(
-    cx - r * 0.3, cy - r * 0.3, 0,
-    cx - r * 0.15, cy - r * 0.15, r * 0.6
-  );
-  spec.addColorStop(0, 'rgba(255,255,240,0.45)');
-  spec.addColorStop(0.5, 'rgba(255,255,200,0.12)');
-  spec.addColorStop(1, 'rgba(255,255,200,0)');
-  c.beginPath();
-  c.arc(cx - r * 0.15, cy - r * 0.15, r * 0.6, 0, Math.PI * 2);
-  c.fillStyle = spec;
-  c.fill();
+  // Secondary streams: thinner, offset, fill visual space
+  const secondaryCount = isMobile ? 2 : 3;
+  const secondaryYs = isMobile
+    ? [0.15, 0.82]
+    : [0.12, 0.38, 0.88];
 
-  return oc;
+  for (let i = 0; i < secondaryCount; i++) {
+    streams.push({
+      points: [],
+      baseY: secondaryYs[i],
+      speed: 0.012 + Math.random() * 0.006,
+      phaseOffset: Math.random() * Math.PI * 2,
+      amplitude: h * (0.03 + Math.random() * 0.02),
+      frequency: 0.004 + Math.random() * 0.002,
+      freq2: 0.009 + Math.random() * 0.003,
+      amp2: h * (0.01 + Math.random() * 0.008),
+      baseThickness: isMobile ? 8 : 12,
+      branchAt: 0.4 + Math.random() * 0.3,
+      opacity: 0.7,
+      tier: 'secondary',
+    });
+  }
+
+  // Accent streams: thin, subtle, background depth
+  if (!isMobile) {
+    const accentYs = [0.05, 0.55, 0.95];
+    for (let i = 0; i < 3; i++) {
+      streams.push({
+        points: [],
+        baseY: accentYs[i],
+        speed: 0.010 + Math.random() * 0.005,
+        phaseOffset: Math.random() * Math.PI * 2,
+        amplitude: h * (0.02 + Math.random() * 0.015),
+        frequency: 0.005 + Math.random() * 0.002,
+        freq2: 0.011 + Math.random() * 0.004,
+        amp2: h * (0.008 + Math.random() * 0.006),
+        baseThickness: 5,
+        branchAt: 0.5 + Math.random() * 0.3,
+        opacity: 0.35,
+        tier: 'accent',
+      });
+    }
+  }
+
+  return streams;
 }
 
-// --- Pre-render darker rim/edge sprite ---
+// --- Compute stream Y at a given X ---
 
-function createRimSprite(radius: number): HTMLCanvasElement {
-  const size = radius * 2 + 4;
-  const oc = document.createElement('canvas');
-  oc.width = size;
-  oc.height = size;
-  const c = oc.getContext('2d')!;
-  const cx = size / 2;
-  const cy = size / 2;
-  const r = radius;
-
-  // Darker metallic gradient for the rim/edge
-  const rim = c.createRadialGradient(cx - r * 0.2, cy - r * 0.2, 0, cx, cy, r);
-  rim.addColorStop(0, '#c9a200');
-  rim.addColorStop(0.3, '#a68600');
-  rim.addColorStop(0.7, '#8B6914');
-  rim.addColorStop(1.0, '#6B4F0A');
-
-  c.beginPath();
-  c.arc(cx, cy, r, 0, Math.PI * 2);
-  c.fillStyle = rim;
-  c.fill();
-
-  // Rim detail rings
-  c.beginPath();
-  c.arc(cx, cy, r, 0, Math.PI * 2);
-  c.strokeStyle = 'rgba(90,65,0,0.5)';
-  c.lineWidth = 1.5;
-  c.stroke();
-
-  c.beginPath();
-  c.arc(cx, cy, r * 0.90, 0, Math.PI * 2);
-  c.strokeStyle = 'rgba(180,140,20,0.25)';
-  c.lineWidth = 0.8;
-  c.stroke();
-
-  return oc;
+function streamY(stream: Stream, x: number, time: number, h: number): number {
+  const t = time;
+  const baseY = stream.baseY * h;
+  const wave1 = Math.sin(x * stream.frequency + t * stream.speed * 60 + stream.phaseOffset) * stream.amplitude;
+  const wave2 = Math.sin(x * stream.freq2 + t * stream.speed * 40 + stream.phaseOffset * 1.7) * stream.amp2;
+  const drift = Math.sin(t * 0.15 + stream.phaseOffset) * h * 0.015;
+  return baseY + wave1 + wave2 + drift;
 }
 
-// --- Coin factory ---
+// --- Compute surface-tension thickness variation ---
 
-function createCoin(w: number, h: number, isMobile: boolean, initialSpread: boolean): Coin {
-  const depth = 0.3 + Math.random() * 0.7;
-  const baseSize = isMobile ? 7 : 9;
-  const size = baseSize + depth * (isMobile ? 9 : 14);
-  return {
-    x: Math.random() * w,
-    y: initialSpread
-      ? Math.random() * (h + 100) - 50
-      : -size * 2 - Math.random() * h * 0.4,
-    vy: (35 + depth * 55) * (isMobile ? 0.8 : 1),
-    vx: (Math.random() - 0.5) * 12,
-    spin: Math.random() * Math.PI * 2,
-    spinSpeed: (1.5 + Math.random() * 3) * (Math.random() < 0.5 ? 1 : -1),
-    size,
-    wobblePhase: Math.random() * Math.PI * 2,
-    wobbleSpeed: 0.4 + Math.random() * 0.8,
-    wobbleAmp: 8 + Math.random() * 18,
-    depth,
-  };
-}
-
-function buildCoins(w: number, h: number, isMobile: boolean): Coin[] {
-  const count = isMobile ? 22 : 42;
-  return Array.from({ length: count }, () => createCoin(w, h, isMobile, true));
+function streamThickness(stream: Stream, x: number, time: number, w: number): number {
+  const base = stream.baseThickness;
+  // Slow bulge/narrow cycle (surface tension)
+  const bulge = Math.sin(x * 0.008 + time * 0.4 + stream.phaseOffset) * base * 0.35;
+  // Faster subtle ripple
+  const ripple = Math.sin(x * 0.025 + time * 1.2 + stream.phaseOffset * 2.3) * base * 0.12;
+  // Thin near edges for natural flow look
+  const edgeFade = Math.min(x / (w * 0.08), 1) * Math.min((w - x) / (w * 0.08), 1);
+  return Math.max(2, (base + bulge + ripple) * edgeFade);
 }
 
 // --- Component ---
@@ -263,10 +247,8 @@ export function GoldenRainEffect() {
     ctx.scale(dpr, dpr);
 
     const isMobile = w < 768;
-    const spriteR = 24;
-    const faceSprite = createFaceSprite(spriteR);
-    const rimSprite = createRimSprite(spriteR);
-    const coins = buildCoins(w, h, isMobile);
+    const streams = buildStreams(w, h, isMobile);
+    const droplets: Droplet[] = [];
 
     // --- Scroll boost listener ---
     let lastScrollY = window.scrollY;
@@ -281,7 +263,7 @@ export function GoldenRainEffect() {
     // --- Store state ---
     const state: AnimState = {
       canvas, ctx, w, h, dpr,
-      coins, faceSprite, rimSprite, spriteR,
+      streams, droplets,
       time: 0,
       lastTimestamp: 0,
       scrollBoost: 0,
@@ -309,9 +291,13 @@ export function GoldenRainEffect() {
       s.h = newH;
       s.dpr = newDpr;
       s.isMobile = newW < 768;
-      s.coins = buildCoins(newW, newH, s.isMobile);
+      s.streams = buildStreams(newW, newH, s.isMobile);
+      s.droplets.length = 0;
     });
     ro.observe(container);
+
+    // Droplet spawn timer
+    let dropletTimer = 0;
 
     state.animateFn = animate;
     state.frameId = requestAnimationFrame(animate);
@@ -336,160 +322,259 @@ export function GoldenRainEffect() {
 
       s.time += dt * (1 + s.scrollBoost);
 
-      const { ctx: c, w: cw, h: ch, time: t } = s;
+      const { ctx: c, w: cw, h: ch, time: t, streams: stms, droplets: drops } = s;
 
       c.clearRect(0, 0, cw, ch);
 
-      // Sort back-to-front so closer coins draw on top
-      s.coins.sort((a, b) => a.depth - b.depth);
+      // --- Spawn droplets from streams ---
+      dropletTimer += dt;
+      if (dropletTimer > 0.08) {
+        dropletTimer = 0;
+        const maxDroplets = s.isMobile ? 25 : 50;
+        if (drops.length < maxDroplets) {
+          // Pick a random primary/secondary stream
+          const candidates = stms.filter(st => st.tier !== 'accent');
+          if (candidates.length > 0) {
+            const src = candidates[Math.floor(Math.random() * candidates.length)];
+            const spawnX = Math.random() * cw;
+            const spawnY = streamY(src, spawnX, t, ch);
+            const thick = streamThickness(src, spawnX, t, cw);
+            drops.push({
+              x: spawnX + (Math.random() - 0.5) * thick,
+              y: spawnY + (Math.random() - 0.5) * thick * 0.5,
+              vx: (Math.random() - 0.5) * 15,
+              vy: 20 + Math.random() * 40,  // gravity pull
+              radius: 1.5 + Math.random() * 3,
+              opacity: 0.5 + Math.random() * 0.5,
+              life: 0,
+              maxLife: 1.5 + Math.random() * 2,
+            });
+          }
+        }
+      }
 
-      // Rim thickness: number of stacked layers for 3D effect
-      const RIM_LAYERS = s.isMobile ? 4 : 6;
+      // --- Draw streams (back to front: accent → secondary → primary) ---
+      const tierOrder: Array<'accent' | 'secondary' | 'primary'> = ['accent', 'secondary', 'primary'];
 
-      for (const coin of s.coins) {
-        // --- Update physics ---
-        coin.y += coin.vy * dt * (1 + s.scrollBoost * 0.5);
-        coin.spin += coin.spinSpeed * dt;
+      for (const tier of tierOrder) {
+        const tierStreams = stms.filter(st => st.tier === tier);
 
-        const wobbleX = Math.sin(t * coin.wobbleSpeed + coin.wobblePhase) * coin.wobbleAmp;
-        const drawX = coin.x + wobbleX + coin.vx * Math.sin(t * 0.3 + coin.wobblePhase);
-        const drawY = coin.y;
+        for (const stream of tierStreams) {
+          const step = s.isMobile ? 4 : 3;
+          const opMul = stream.opacity;
 
-        // Respawn above viewport when fallen past bottom
-        if (drawY > ch + coin.size * 3) {
-          coin.x = Math.random() * cw;
-          coin.y = -coin.size * 2 - Math.random() * 60;
-          coin.wobblePhase = Math.random() * Math.PI * 2;
+          // Build path points
+          const pts: { x: number; y: number; thick: number }[] = [];
+          for (let x = 0; x <= cw; x += step) {
+            const y = streamY(stream, x, t, ch);
+            const thick = streamThickness(stream, x, t, cw);
+            pts.push({ x, y, thick });
+          }
+
+          if (pts.length < 2) continue;
+
+          // --- Pass 1: Outer glow (wide, low opacity, warm amber) ---
+          c.globalCompositeOperation = 'lighter';
+          c.globalAlpha = 1;
+
+          c.beginPath();
+          c.moveTo(pts[0].x, pts[0].y);
+          for (let i = 1; i < pts.length; i++) {
+            c.lineTo(pts[i].x, pts[i].y);
+          }
+          c.strokeStyle = goldColor(0.2, 0.04 * opMul);
+          c.lineWidth = pts[Math.floor(pts.length / 2)].thick * 4;
+          c.lineCap = 'round';
+          c.lineJoin = 'round';
+          c.stroke();
+
+          // --- Pass 2: Mid glow (warm gold) ---
+          c.beginPath();
+          c.moveTo(pts[0].x, pts[0].y);
+          for (let i = 1; i < pts.length; i++) {
+            c.lineTo(pts[i].x, pts[i].y);
+          }
+          c.strokeStyle = goldColor(0.4, 0.08 * opMul);
+          c.lineWidth = pts[Math.floor(pts.length / 2)].thick * 2.2;
+          c.stroke();
+
+          // --- Pass 3: Main body (source-over for solid liquid look) ---
+          c.globalCompositeOperation = 'source-over';
+
+          // Draw as a filled shape using thickness envelope
+          c.beginPath();
+          // Top edge (left to right)
+          c.moveTo(pts[0].x, pts[0].y - pts[0].thick * 0.5);
+          for (let i = 1; i < pts.length; i++) {
+            c.lineTo(pts[i].x, pts[i].y - pts[i].thick * 0.5);
+          }
+          // Bottom edge (right to left)
+          for (let i = pts.length - 1; i >= 0; i--) {
+            c.lineTo(pts[i].x, pts[i].y + pts[i].thick * 0.5);
+          }
+          c.closePath();
+
+          // Metallic gradient fill across the thickness
+          const midIdx = Math.floor(pts.length / 2);
+          const midY = pts[midIdx].y;
+          const midThick = pts[midIdx].thick;
+          const bodyGrad = c.createLinearGradient(0, midY - midThick, 0, midY + midThick);
+          bodyGrad.addColorStop(0, `rgba(90,65,10,${0.35 * opMul})`);
+          bodyGrad.addColorStop(0.2, `rgba(160,120,20,${0.55 * opMul})`);
+          bodyGrad.addColorStop(0.4, `rgba(220,175,40,${0.70 * opMul})`);
+          bodyGrad.addColorStop(0.5, `rgba(255,215,60,${0.80 * opMul})`);
+          bodyGrad.addColorStop(0.6, `rgba(220,175,40,${0.70 * opMul})`);
+          bodyGrad.addColorStop(0.8, `rgba(140,100,15,${0.50 * opMul})`);
+          bodyGrad.addColorStop(1, `rgba(80,55,5,${0.30 * opMul})`);
+          c.fillStyle = bodyGrad;
+          c.fill();
+
+          // --- Pass 4: Specular highlight (bright line along top edge) ---
+          c.globalCompositeOperation = 'lighter';
+
+          // Animated specular position shifts over time
+          const specShift = Math.sin(t * 0.3 + stream.phaseOffset) * 0.15;
+
+          c.beginPath();
+          c.moveTo(pts[0].x, pts[0].y - pts[0].thick * (0.25 + specShift));
+          for (let i = 1; i < pts.length; i++) {
+            const specY = pts[i].y - pts[i].thick * (0.25 + specShift);
+            c.lineTo(pts[i].x, specY);
+          }
+          c.strokeStyle = `rgba(255,250,220,${0.25 * opMul})`;
+          c.lineWidth = Math.max(1, stream.baseThickness * 0.15);
+          c.lineCap = 'round';
+          c.stroke();
+
+          // Brighter core specular (thinner, more intense)
+          c.beginPath();
+          c.moveTo(pts[0].x, pts[0].y - pts[0].thick * (0.3 + specShift));
+          for (let i = 1; i < pts.length; i++) {
+            c.lineTo(pts[i].x, pts[i].y - pts[i].thick * (0.3 + specShift));
+          }
+          c.strokeStyle = `rgba(255,255,245,${0.15 * opMul})`;
+          c.lineWidth = Math.max(0.5, stream.baseThickness * 0.06);
+          c.stroke();
+
+          // --- Pass 5: Bottom shadow edge ---
+          c.globalCompositeOperation = 'source-over';
+          c.beginPath();
+          c.moveTo(pts[0].x, pts[0].y + pts[0].thick * 0.45);
+          for (let i = 1; i < pts.length; i++) {
+            c.lineTo(pts[i].x, pts[i].y + pts[i].thick * 0.45);
+          }
+          c.strokeStyle = `rgba(60,40,0,${0.20 * opMul})`;
+          c.lineWidth = Math.max(1, stream.baseThickness * 0.12);
+          c.stroke();
+
+          // --- Branch rendering ---
+          // At the branch point, draw a thinner tributary splitting downward
+          if (stream.tier !== 'accent') {
+            const branchX = cw * stream.branchAt;
+            const branchStartY = streamY(stream, branchX, t, ch);
+            const branchLen = cw * (0.25 + Math.random() * 0.01); // consistent per frame via seed
+            const branchThick = stream.baseThickness * 0.5;
+
+            c.globalCompositeOperation = 'lighter';
+            c.beginPath();
+
+            const branchPts: { x: number; y: number }[] = [];
+            for (let bx = 0; bx <= branchLen; bx += step) {
+              const progress = bx / branchLen;
+              const bxAbs = branchX + bx;
+              if (bxAbs > cw) break;
+              // Branch curves downward (gravity)
+              const by = branchStartY
+                + progress * progress * ch * 0.15
+                + Math.sin(bxAbs * 0.01 + t * 0.5 + stream.phaseOffset * 3) * 12;
+              branchPts.push({ x: bxAbs, y: by });
+            }
+
+            if (branchPts.length > 1) {
+              // Branch glow
+              c.beginPath();
+              c.moveTo(branchPts[0].x, branchPts[0].y);
+              for (let i = 1; i < branchPts.length; i++) {
+                c.lineTo(branchPts[i].x, branchPts[i].y);
+              }
+              c.strokeStyle = goldColor(0.3, 0.06 * opMul);
+              c.lineWidth = branchThick * 2;
+              c.stroke();
+
+              // Branch body
+              c.globalCompositeOperation = 'source-over';
+              c.beginPath();
+              c.moveTo(branchPts[0].x, branchPts[0].y);
+              for (let i = 1; i < branchPts.length; i++) {
+                c.lineTo(branchPts[i].x, branchPts[i].y);
+              }
+              // Taper the branch
+              c.strokeStyle = goldColor(0.5, 0.45 * opMul);
+              c.lineWidth = branchThick;
+              c.stroke();
+
+              // Branch specular
+              c.globalCompositeOperation = 'lighter';
+              c.beginPath();
+              c.moveTo(branchPts[0].x, branchPts[0].y - branchThick * 0.3);
+              for (let i = 1; i < branchPts.length; i++) {
+                c.lineTo(branchPts[i].x, branchPts[i].y - branchThick * 0.3);
+              }
+              c.strokeStyle = `rgba(255,250,220,${0.12 * opMul})`;
+              c.lineWidth = 1;
+              c.stroke();
+            }
+          }
+        }
+      }
+
+      // --- Update and draw droplets ---
+      c.globalCompositeOperation = 'lighter';
+      for (let i = drops.length - 1; i >= 0; i--) {
+        const d = drops[i];
+        d.life += dt;
+        if (d.life > d.maxLife || d.y > ch + 20) {
+          drops.splice(i, 1);
+          continue;
         }
 
-        // Skip if above viewport
-        if (drawY < -coin.size * 3) continue;
+        d.vy += 60 * dt; // gravity
+        d.x += d.vx * dt;
+        d.y += d.vy * dt;
+        d.vx *= 0.98; // drag
 
-        // --- Rotation ---
-        const facingRatio = Math.cos(coin.spin);
-        const absFacing = Math.abs(facingRatio);
-        const scaleX = Math.max(absFacing, 0.08);
+        const lifeRatio = d.life / d.maxLife;
+        const fadeAlpha = lifeRatio < 0.1
+          ? lifeRatio / 0.1
+          : lifeRatio > 0.7
+            ? 1 - (lifeRatio - 0.7) / 0.3
+            : 1;
 
-        const depthAlpha = 0.25 + coin.depth * 0.75;
-        const drawSize = coin.size * 2;
-        // Rim offset per layer in px (scaled by coin size for consistency)
-        const rimStep = coin.size * 0.06;
+        const alpha = d.opacity * fadeAlpha;
 
-        // --- Glow halo (additive) ---
-        c.globalCompositeOperation = 'lighter';
-        c.globalAlpha = 1;
-        const glowR = coin.size * 2.5;
-        const glow = c.createRadialGradient(drawX, drawY, 0, drawX, drawY, glowR);
-        glow.addColorStop(0, `rgba(255,215,0,${(0.12 * depthAlpha).toFixed(3)})`);
-        glow.addColorStop(0.4, `rgba(255,180,0,${(0.04 * depthAlpha).toFixed(3)})`);
-        glow.addColorStop(1, 'rgba(255,150,0,0)');
+        // Droplet glow
+        const glowR = d.radius * 3;
+        const glow = c.createRadialGradient(d.x, d.y, 0, d.x, d.y, glowR);
+        glow.addColorStop(0, `rgba(255,200,50,${(0.15 * alpha).toFixed(3)})`);
+        glow.addColorStop(1, 'rgba(255,180,30,0)');
         c.beginPath();
-        c.arc(drawX, drawY, glowR, 0, Math.PI * 2);
+        c.arc(d.x, d.y, glowR, 0, Math.PI * 2);
         c.fillStyle = glow;
         c.fill();
 
-        // --- Motion trail ---
+        // Droplet body
+        c.globalCompositeOperation = 'source-over';
+        c.beginPath();
+        c.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
+        c.fillStyle = `rgba(255,215,60,${(0.7 * alpha).toFixed(3)})`;
+        c.fill();
+
+        // Specular dot on droplet
         c.globalCompositeOperation = 'lighter';
         c.beginPath();
-        c.moveTo(drawX, drawY);
-        c.lineTo(drawX - coin.vx * 0.05, drawY - coin.vy * 0.06);
-        c.strokeStyle = `rgba(255,215,0,${(0.10 * depthAlpha).toFixed(3)})`;
-        c.lineWidth = coin.size * 0.35;
-        c.lineCap = 'round';
-        c.stroke();
-
-        // --- Coin body (source-over for solid coins) ---
-        c.globalCompositeOperation = 'source-over';
-
-        if (absFacing < 0.12) {
-          // Edge-on view: thick gold band with shading
-          c.globalAlpha = depthAlpha;
-          const edgeW = coin.size * 0.18;
-          const edgeH = coin.size * 0.95;
-
-          // Dark edge body
-          c.beginPath();
-          c.ellipse(drawX, drawY, edgeW, edgeH, 0, 0, Math.PI * 2);
-          c.fillStyle = '#8B6914';
-          c.fill();
-
-          // Rim groove lines
-          c.strokeStyle = 'rgba(107,79,10,0.6)';
-          c.lineWidth = 0.6;
-          const grooves = 5;
-          for (let g = 0; g < grooves; g++) {
-            const gy = drawY - edgeH * 0.7 + (edgeH * 1.4 * g) / (grooves - 1);
-            c.beginPath();
-            c.moveTo(drawX - edgeW * 0.8, gy);
-            c.lineTo(drawX + edgeW * 0.8, gy);
-            c.stroke();
-          }
-
-          // Highlight on left edge
-          c.beginPath();
-          c.ellipse(drawX - edgeW * 0.3, drawY, edgeW * 0.3, edgeH * 0.85, 0, 0, Math.PI * 2);
-          c.fillStyle = 'rgba(255,215,0,0.25)';
-          c.fill();
-
-          // Outer ring
-          c.beginPath();
-          c.ellipse(drawX, drawY, edgeW, edgeH, 0, 0, Math.PI * 2);
-          c.strokeStyle = 'rgba(255,215,0,0.35)';
-          c.lineWidth = 0.8;
-          c.stroke();
-        } else {
-          // 3D coin: draw rim layers (back to front), then face on top
-
-          // --- Rim layers (stacked below face for thickness) ---
-          // More layers visible when coin is angled (rim shows more)
-          const angleFactor = 1 - absFacing; // 0 when face-on, ~1 when edge-on
-          const visibleLayers = Math.max(2, Math.round(RIM_LAYERS * (0.35 + angleFactor * 0.65)));
-
-          for (let i = visibleLayers; i >= 1; i--) {
-            const layerOffset = i * rimStep;
-            // Each layer gets slightly darker toward the back
-            const layerDim = 1 - (i / (visibleLayers + 1)) * 0.25;
-            c.globalAlpha = depthAlpha * layerDim;
-
-            c.save();
-            c.translate(drawX, drawY + layerOffset);
-            c.scale(scaleX, 1);
-            c.drawImage(
-              s.rimSprite,
-              -drawSize / 2, -drawSize / 2,
-              drawSize, drawSize
-            );
-            c.restore();
-          }
-
-          // --- Face (on top, at base position) ---
-          c.globalAlpha = depthAlpha;
-          c.save();
-          c.translate(drawX, drawY);
-          c.scale(scaleX, 1);
-
-          c.drawImage(
-            s.faceSprite,
-            -drawSize / 2, -drawSize / 2,
-            drawSize, drawSize
-          );
-
-          // Rotating specular highlight
-          const hAngle = coin.spin * 0.4 + coin.wobblePhase;
-          const hx = Math.cos(hAngle) * coin.size * 0.2;
-          const hy = Math.sin(hAngle) * coin.size * 0.2 - coin.size * 0.1;
-          const hl = c.createRadialGradient(hx, hy, 0, hx, hy, coin.size * 0.5);
-          hl.addColorStop(0, 'rgba(255,255,240,0.22)');
-          hl.addColorStop(1, 'rgba(255,255,200,0)');
-          c.beginPath();
-          c.arc(0, 0, coin.size * 0.95, 0, Math.PI * 2);
-          c.fillStyle = hl;
-          c.fill();
-
-          c.restore();
-        }
-
-        c.globalAlpha = 1;
+        c.arc(d.x - d.radius * 0.3, d.y - d.radius * 0.3, d.radius * 0.4, 0, Math.PI * 2);
+        c.fillStyle = `rgba(255,255,240,${(0.4 * alpha).toFixed(3)})`;
+        c.fill();
       }
 
       // --- Center void mask (text readability) ---
@@ -514,23 +599,36 @@ export function GoldenRainEffect() {
       c.fill();
       c.restore();
 
-      // --- Bottom edge fade (coins dissolve instead of hard cut) ---
-      const bottomFade = ch * 0.18;
-      const bFadeGrad = c.createLinearGradient(0, ch - bottomFade, 0, ch);
-      bFadeGrad.addColorStop(0, 'rgba(0,0,0,0)');
-      bFadeGrad.addColorStop(0.6, 'rgba(0,0,0,0.5)');
-      bFadeGrad.addColorStop(1, 'rgba(0,0,0,0.95)');
-      c.fillStyle = bFadeGrad;
+      // --- Edge fades ---
+      const bottomFade = ch * 0.15;
+      const bGrad = c.createLinearGradient(0, ch - bottomFade, 0, ch);
+      bGrad.addColorStop(0, 'rgba(0,0,0,0)');
+      bGrad.addColorStop(0.6, 'rgba(0,0,0,0.5)');
+      bGrad.addColorStop(1, 'rgba(0,0,0,0.95)');
+      c.fillStyle = bGrad;
       c.fillRect(0, ch - bottomFade, cw, bottomFade);
 
-      // --- Top edge fade (coins appear gradually) ---
-      const topFade = ch * 0.10;
-      const tFadeGrad = c.createLinearGradient(0, 0, 0, topFade);
-      tFadeGrad.addColorStop(0, 'rgba(0,0,0,0.85)');
-      tFadeGrad.addColorStop(0.5, 'rgba(0,0,0,0.3)');
-      tFadeGrad.addColorStop(1, 'rgba(0,0,0,0)');
-      c.fillStyle = tFadeGrad;
+      const topFade = ch * 0.08;
+      const tGrad = c.createLinearGradient(0, 0, 0, topFade);
+      tGrad.addColorStop(0, 'rgba(0,0,0,0.80)');
+      tGrad.addColorStop(0.5, 'rgba(0,0,0,0.25)');
+      tGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      c.fillStyle = tGrad;
       c.fillRect(0, 0, cw, topFade);
+
+      // Left/right edge fades
+      const sideFade = cw * 0.06;
+      const lGrad = c.createLinearGradient(0, 0, sideFade, 0);
+      lGrad.addColorStop(0, 'rgba(0,0,0,0.70)');
+      lGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      c.fillStyle = lGrad;
+      c.fillRect(0, 0, sideFade, ch);
+
+      const rGrad = c.createLinearGradient(cw - sideFade, 0, cw, 0);
+      rGrad.addColorStop(0, 'rgba(0,0,0,0)');
+      rGrad.addColorStop(1, 'rgba(0,0,0,0.70)');
+      c.fillStyle = rGrad;
+      c.fillRect(cw - sideFade, 0, sideFade, ch);
 
       s.frameId = requestAnimationFrame(animate);
     }
