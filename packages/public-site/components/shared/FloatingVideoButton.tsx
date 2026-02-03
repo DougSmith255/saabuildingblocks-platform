@@ -85,15 +85,16 @@ export function FloatingVideoButton() {
           }}
           aria-label="Watch The Inside Look video"
         >
-          {/* Layer 1: Dark glass base + gold vertical lines (matches header glassBase) */}
+          {/* Layer 1: Dark glass base + gold dot grid (matches CyberCard prismatic glass) */}
           <div
             className="absolute inset-0"
             style={{
               borderRadius: '12px',
               background: `
-                linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
+                linear-gradient(135deg, rgba(10, 10, 10, 0.95), rgba(26, 26, 26, 0.9)),
+                radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.03) 1px, transparent 1px)
               `,
+              backgroundSize: 'auto, 25px 25px',
               backdropFilter: 'blur(8px) saturate(1.5)',
               WebkitBackdropFilter: 'blur(8px) saturate(1.5)',
               boxShadow: '0 0 30px rgba(0,0,0,0.4), inset 0 0 30px rgba(255,255,255,0.05)',
@@ -101,15 +102,13 @@ export function FloatingVideoButton() {
             }}
           />
 
-          {/* Layer 2: Horizontal white grid (matches header glassBase::after) */}
+          {/* Layer 2: White dot grid overlay (finer grid for depth) */}
           <div
             className="absolute inset-[1px]"
             style={{
               borderRadius: '12px',
-              background: `
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
-                linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83))
-              `,
+              background: 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.025) 1px, transparent 1px)',
+              backgroundSize: '18px 18px',
             }}
           />
 
