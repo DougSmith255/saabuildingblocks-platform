@@ -102,3 +102,8 @@ export const LazyNeuralNetworkCloud = createImmediateEffect(
   () => import('./NeuralNetworkCloud').then(mod => ({ default: mod.NeuralNetworkCloud })),
   'LazyNeuralNetworkCloud'
 );
+
+export const LazyAuroraNetworkEffect = createImmediateEffect(
+  () => import('./AuroraNetworkEffect').then(mod => ({ default: mod.AuroraNetworkEffect })),
+  'LazyAuroraNetworkEffect'
+);

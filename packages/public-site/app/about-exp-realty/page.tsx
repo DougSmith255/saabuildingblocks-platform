@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { H1, Tagline, GlassPanel, Icon3D, CyberCard } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
+import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHeroEffects';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
@@ -484,6 +485,7 @@ export default function AboutExpRealty() {
       {/* ════ Hero Section ════ */}
       <StickyHeroWrapper>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+          <LazyAuroraNetworkEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>ABOUT EXP REALTY</H1>
