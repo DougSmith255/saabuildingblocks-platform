@@ -618,12 +618,15 @@ export function SlidePanel({
 
         {/* Content */}
         <div style={contentStyle}>
+          {/* Top spacer: rigid — prevents content from overlapping the header */}
           {hasBackground && (
             <div style={{ minHeight: contentInset, flexShrink: 0 }} aria-hidden="true" />
           )}
           {children}
+          {/* Bottom spacer: collapsible — provides centering symmetry when there's
+              room, but shrinks to 20px when content is tall so nothing gets cut off */}
           {hasBackground && (
-            <div style={{ minHeight: contentInset, flexShrink: 0 }} aria-hidden="true" />
+            <div style={{ minHeight: 20, height: contentInset, flexShrink: 1 }} aria-hidden="true" />
           )}
         </div>
 
