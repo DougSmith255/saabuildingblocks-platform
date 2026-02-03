@@ -588,7 +588,7 @@ function FeatureChip({
         aria-pressed={isActive}
         className="relative z-10 flex flex-col items-center justify-center gap-2 w-full h-full cursor-pointer p-3"
       >
-        <Icon3D color="#c4a94d" size={36}>
+        <Icon3D color="#c4a94d" size={36} invert={isActive}>
           <Icon size={20} />
         </Icon3D>
         <h3

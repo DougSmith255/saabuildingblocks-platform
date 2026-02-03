@@ -7,6 +7,8 @@ export interface Icon3DProps {
   color?: string;
   /** Size of the icon in pixels - controls the wrapper dimensions */
   size?: number;
+  /** Invert layers: dark face on light/cream shadows (for use on bright backgrounds) */
+  invert?: boolean;
   /** Additional CSS classes */
   className?: string;
   /** Additional inline styles */
@@ -57,6 +59,7 @@ export function Icon3D({
   children,
   color = '#c4a94d',
   size,
+  invert = false,
   className = '',
   style = {},
 }: Icon3DProps) {
@@ -64,13 +67,21 @@ export function Icon3D({
   const highlight = adjustColor(color, 0.3); // Lighter version for top-left highlight
   const midShadow = darkenColor(color, 0.4); // Darker version for depth
 
-  // Optimized 4-layer metal effect - colors now match the input color
-  const filter = `
-    drop-shadow(-1px -1px 0 ${highlight})
-    drop-shadow(1px 1px 0 ${midShadow})
-    drop-shadow(3px 3px 0 #2a2a1d)
-    drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))
-  `;
+  // Normal: light face, dark shadows | Inverted: dark face, light/cream shadows
+  const faceColor = invert ? darkenColor(color, 0.7) : color;
+  const filter = invert
+    ? `
+      drop-shadow(-1px -1px 0 ${adjustColor(color, 0.45)})
+      drop-shadow(1px 1px 0 ${color})
+      drop-shadow(3px 3px 0 ${midShadow})
+      drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.3))
+    `
+    : `
+      drop-shadow(-1px -1px 0 ${highlight})
+      drop-shadow(1px 1px 0 ${midShadow})
+      drop-shadow(3px 3px 0 #2a2a1d)
+      drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))
+    `;
 
   return (
     <span
@@ -79,7 +90,7 @@ export function Icon3D({
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: color,
+        color: faceColor,
         filter: filter.trim(),
         transform: 'perspective(500px) rotateX(8deg)',
         ...(size && { width: size, height: size }),
