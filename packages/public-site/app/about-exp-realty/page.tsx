@@ -370,14 +370,11 @@ function RotatingStats() {
 }
 
 // Awards Ribbon Component with Glass Panel (full-width)
-function AwardsRibbon() {
-  const trackRef = useRef<HTMLDivElement>(null);
-  useCarouselAnimation(trackRef);
-
+function StatsBar() {
   return (
     <GlassPanel variant="expBlue" rounded="3xl" opacity={0.12}>
-      <section className="py-4 md:py-6 overflow-visible">
-        <div className="max-w-[1900px] mx-auto px-4 md:px-8 mb-4">
+      <section className="py-4 md:py-6">
+        <div className="max-w-[1900px] mx-auto px-4 md:px-8">
           <div className="md:hidden">
             <RotatingStats />
           </div>
@@ -392,83 +389,102 @@ function AwardsRibbon() {
               />
             ))}
           </div>
-        </div>
 
-        {/* Ticker Band - full width */}
-        <div className="relative w-screen -ml-[50vw] left-1/2">
-          {/* Portal Edges - blue */}
-          <div
-            className="absolute left-0 z-20 pointer-events-none"
-            style={{
-              top: '-16px', bottom: '-16px', width: '12px',
-              borderRadius: '0 12px 12px 0',
-              background: `radial-gradient(ellipse 200% 50% at 0% 50%, rgba(0,150,255,0.35) 0%, rgba(0,120,200,0.2) 40%, rgba(0,80,150,0.1) 70%, rgba(0,40,80,0.05) 100%)`,
-              borderRight: '1px solid rgba(0,150,255,0.4)',
-              boxShadow: 'inset -3px 0 6px rgba(0,150,255,0.2), inset -1px 0 2px rgba(0,180,255,0.3), 3px 0 12px rgba(0,0,0,0.6), 6px 0 24px rgba(0,0,0,0.3)',
-              transform: 'perspective(500px) rotateY(-3deg)', transformOrigin: 'right center',
-            }}
-          />
-          <div
-            className="absolute right-0 z-20 pointer-events-none"
-            style={{
-              top: '-16px', bottom: '-16px', width: '12px',
-              borderRadius: '12px 0 0 12px',
-              background: `radial-gradient(ellipse 200% 50% at 100% 50%, rgba(0,150,255,0.35) 0%, rgba(0,120,200,0.2) 40%, rgba(0,80,150,0.1) 70%, rgba(0,40,80,0.05) 100%)`,
-              borderLeft: '1px solid rgba(0,150,255,0.4)',
-              boxShadow: 'inset 3px 0 6px rgba(0,150,255,0.2), inset 1px 0 2px rgba(0,180,255,0.3), -3px 0 12px rgba(0,0,0,0.6), -6px 0 24px rgba(0,0,0,0.3)',
-              transform: 'perspective(500px) rotateY(3deg)', transformOrigin: 'left center',
-            }}
-          />
-
-          <div
-            className="relative overflow-hidden"
-            style={{
-              marginLeft: '12px', marginRight: '12px',
-              background: 'rgba(20,20,20,0.75)',
-              borderTop: '1px solid rgba(255,255,255,0.1)',
-              borderBottom: '1px solid rgba(255,255,255,0.1)',
-            }}
+          {/* Problem statement */}
+          <p
+            className="mt-6 text-center max-w-3xl mx-auto text-base md:text-lg leading-relaxed"
+            style={{ color: 'var(--color-body-text)', opacity: 0.85 }}
           >
-            <ShadowOverlays />
-            <div ref={trackRef} className="flex items-center py-5" style={{ willChange: 'transform' }}>
-              {[...AWARDS, ...AWARDS].map((award, i) => (
-                <div key={i} className="flex items-center flex-shrink-0">
-                  <span
-                    className="text-sm md:text-base font-semibold uppercase tracking-wide whitespace-nowrap"
-                    style={{ color: 'var(--color-header-text)' }}
-                  >
-                    {award}
-                  </span>
-                  <span
-                    className="mx-6 text-lg"
-                    style={{
-                      color: '#00bfff',
-                      textShadow: '0 0 8px rgba(0,191,255,0.7), 0 0 16px rgba(0,191,255,0.5), 0 0 24px rgba(0,191,255,0.3)',
-                    }}
-                  >★</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Logo Bar */}
-        <div className="max-w-[1900px] mx-auto">
-          <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10 mt-2 px-4">
-            {LOGOS.map((logo) => (
-              <Icon3D key={logo.id} color="#00bfff" size={logo.id === 'glassdoor-logo' ? 140 : 100}>
-                <img
-                  src={logo.src}
-                  alt={logo.alt}
-                  className={`w-auto object-contain ${logo.id === 'glassdoor-logo' ? 'h-[60px] md:h-[70px]' : 'h-14 md:h-[50px]'}`}
-                  style={{ filter: 'brightness(0.7) sepia(1) hue-rotate(180deg) saturate(0.5)' }}
-                />
-              </Icon3D>
-            ))}
-          </div>
+            Most real estate brokerages create friction in daily production and offer no durable plan for what comes after it.
+            {' '}Agents are left to solve efficiency, scale, and long-term income on their own.
+          </p>
         </div>
       </section>
     </GlassPanel>
+  );
+}
+
+// Awards ticker + validation logos — rendered inside SpotlightConsole
+function ValidationRibbon() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  useCarouselAnimation(trackRef);
+
+  return (
+    <div className="mt-8">
+      {/* Ticker Band - full width */}
+      <div className="relative w-screen -ml-[50vw] left-1/2">
+        {/* Portal Edges - blue */}
+        <div
+          className="absolute left-0 z-20 pointer-events-none"
+          style={{
+            top: '-16px', bottom: '-16px', width: '12px',
+            borderRadius: '0 12px 12px 0',
+            background: `radial-gradient(ellipse 200% 50% at 0% 50%, rgba(0,150,255,0.35) 0%, rgba(0,120,200,0.2) 40%, rgba(0,80,150,0.1) 70%, rgba(0,40,80,0.05) 100%)`,
+            borderRight: '1px solid rgba(0,150,255,0.4)',
+            boxShadow: 'inset -3px 0 6px rgba(0,150,255,0.2), inset -1px 0 2px rgba(0,180,255,0.3), 3px 0 12px rgba(0,0,0,0.6), 6px 0 24px rgba(0,0,0,0.3)',
+            transform: 'perspective(500px) rotateY(-3deg)', transformOrigin: 'right center',
+          }}
+        />
+        <div
+          className="absolute right-0 z-20 pointer-events-none"
+          style={{
+            top: '-16px', bottom: '-16px', width: '12px',
+            borderRadius: '12px 0 0 12px',
+            background: `radial-gradient(ellipse 200% 50% at 100% 50%, rgba(0,150,255,0.35) 0%, rgba(0,120,200,0.2) 40%, rgba(0,80,150,0.1) 70%, rgba(0,40,80,0.05) 100%)`,
+            borderLeft: '1px solid rgba(0,150,255,0.4)',
+            boxShadow: 'inset 3px 0 6px rgba(0,150,255,0.2), inset 1px 0 2px rgba(0,180,255,0.3), -3px 0 12px rgba(0,0,0,0.6), -6px 0 24px rgba(0,0,0,0.3)',
+            transform: 'perspective(500px) rotateY(3deg)', transformOrigin: 'left center',
+          }}
+        />
+
+        <div
+          className="relative overflow-hidden"
+          style={{
+            marginLeft: '12px', marginRight: '12px',
+            background: 'rgba(20,20,20,0.75)',
+            borderTop: '1px solid rgba(255,255,255,0.1)',
+            borderBottom: '1px solid rgba(255,255,255,0.1)',
+          }}
+        >
+          <ShadowOverlays />
+          <div ref={trackRef} className="flex items-center py-5" style={{ willChange: 'transform' }}>
+            {[...AWARDS, ...AWARDS].map((award, i) => (
+              <div key={i} className="flex items-center flex-shrink-0">
+                <span
+                  className="text-sm md:text-base font-semibold uppercase tracking-wide whitespace-nowrap"
+                  style={{ color: 'var(--color-header-text)' }}
+                >
+                  {award}
+                </span>
+                <span
+                  className="mx-6 text-lg"
+                  style={{
+                    color: '#00bfff',
+                    textShadow: '0 0 8px rgba(0,191,255,0.7), 0 0 16px rgba(0,191,255,0.5), 0 0 24px rgba(0,191,255,0.3)',
+                  }}
+                >★</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Validation logos */}
+      <div className="max-w-[1900px] mx-auto">
+        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10 mt-4 px-4">
+          {LOGOS.map((logo) => (
+            <Icon3D key={logo.id} color="#00bfff" size={logo.id === 'glassdoor-logo' ? 140 : 100}>
+              <img
+                src={logo.src}
+                alt={logo.alt}
+                className={`w-auto object-contain ${logo.id === 'glassdoor-logo' ? 'h-[60px] md:h-[70px]' : 'h-14 md:h-[50px]'}`}
+                style={{ filter: 'brightness(0.7) sepia(1) hue-rotate(180deg) saturate(0.5)' }}
+              />
+            </Icon3D>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -726,7 +742,13 @@ function SpotlightConsole() {
             className="mt-4 max-w-3xl mx-auto text-base md:text-lg leading-relaxed"
             style={{ color: 'var(--color-body-text)' }}
           >
-            Built on three core pillars and four structural advantages that set eXp apart from every other brokerage.
+            Most brokerages are built to maximize commission today, with little consideration for scale, ownership, or life beyond production.
+          </p>
+          <p
+            className="mt-2 max-w-3xl mx-auto text-sm md:text-base leading-relaxed"
+            style={{ color: 'var(--color-body-text)', opacity: 0.75 }}
+          >
+            eXp was built around production and three more — backed by advantages that are structural, not promotional.
           </p>
         </div>
 
@@ -909,14 +931,30 @@ function SpotlightConsole() {
           </div>
         </div>
 
-        {/* CTA */}
+        {/* Validation ribbon — independent third-party proof */}
         <div
-          className="mt-8 text-center"
           style={{
             opacity: isVisible ? 1 : 0,
             transition: 'opacity 600ms ease-out 500ms',
           }}
         >
+          <ValidationRibbon />
+        </div>
+
+        {/* Closing statement + CTA */}
+        <div
+          className="mt-8 text-center"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transition: 'opacity 600ms ease-out 600ms',
+          }}
+        >
+          <p
+            className="max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-6"
+            style={{ color: 'var(--color-body-text)', opacity: 0.8 }}
+          >
+            This structure supports agents while they are actively producing and provides options when they are ready to slow down, step back, or think beyond their next deal.
+          </p>
           <CTAButton href="#">Explore eXp&apos;s Unmatched Advantages</CTAButton>
         </div>
       </div>
@@ -944,18 +982,18 @@ export default function AboutExpRealty() {
             <div className="relative z-10">
               <H1>ABOUT EXP REALTY</H1>
               <Tagline className="mt-4 text-lg md:text-xl">
-                World&apos;s #1 independent brokerage.
+                World&apos;s #1 independent brokerage
               </Tagline>
               <p className="text-body mt-4" style={{ opacity: 0.9 }}>
-                Production-focused. Future-proofed.
+                Built for efficient production and life beyond your last deal.
               </p>
             </div>
           </div>
         </section>
       </StickyHeroWrapper>
 
-      {/* ════ Awards Ribbon ════ */}
-      <AwardsRibbon />
+      {/* ════ Stats Bar ════ */}
+      <StatsBar />
 
       {/* ════ Section 1: Why eXp Exists ════ */}
       <SpotlightConsole />
