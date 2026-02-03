@@ -653,7 +653,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
             </Icon3D>
             <h3
               className="text-h3"
-              style={{ color: '#e5e4dd' }}
+              style={{ color: '#e5e4dd', fontFamily: 'var(--font-taskor)' }}
             >
               {displayed.keyword}
             </h3>
@@ -778,7 +778,7 @@ function SpotlightConsole() {
           }}
         >
           <H2>WHY EXP EXISTS</H2>
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[950px] mx-auto">
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[1420px] mx-auto">
             <div
               className="rounded-lg p-5 text-left"
               style={{
@@ -787,9 +787,13 @@ function SpotlightConsole() {
               }}
             >
               <span
-                className="block text-xs font-semibold uppercase tracking-wider mb-2"
+                className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-2"
                 style={{ color: '#c0513f' }}
               >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                </svg>
                 The Problem
               </span>
               <p
@@ -807,9 +811,14 @@ function SpotlightConsole() {
               }}
             >
               <span
-                className="block text-xs font-semibold uppercase tracking-wider mb-2"
+                className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-2"
                 style={{ color: '#00bfff' }}
               >
+                <img
+                  src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
+                  alt="eXp"
+                  style={{ width: '14px', height: '14px', objectFit: 'contain' }}
+                />
                 The Answer
               </span>
               <p
