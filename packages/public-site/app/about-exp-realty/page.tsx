@@ -384,7 +384,7 @@ function RotatingStats() {
 // Awards Ribbon Component with Glass Panel (full-width)
 function StatsBar() {
   return (
-    <GlassPanel variant="expBlue" rounded="3xl" opacity={0.12}>
+    <GlassPanel variant="champagne">
       <section className="py-4 md:py-6">
         <div className="max-w-[1900px] mx-auto px-4 md:px-8">
           <div className="md:hidden">
@@ -1055,16 +1055,6 @@ export default function AboutExpRealty() {
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Blue H1 glow breathe animation override */
-        @keyframes h1GlowBreathe {
-          0%, 100% {
-            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(0, 191, 255, 0.25));
-          }
-          50% {
-            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(0, 191, 255, 0.45));
-          }
-        }
-
         /* Blue CTA light bars + glow */
         .about-exp-blue-theme .cta-light-bar {
           background: #00bfff !important;
@@ -1140,6 +1130,18 @@ export default function AboutExpRealty() {
 
       {/* ════ Section 1: Why eXp Exists ════ */}
       <SpotlightConsole />
+
+      {/* Blue H1 glow — must render AFTER H1 component so this keyframe wins */}
+      <style>{`
+        @keyframes h1GlowBreathe {
+          0%, 100% {
+            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(0, 191, 255, 0.25));
+          }
+          50% {
+            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(0, 191, 255, 0.45));
+          }
+        }
+      `}</style>
     </main>
   );
 }
