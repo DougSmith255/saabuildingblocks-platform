@@ -1447,6 +1447,68 @@ function AgentPortal() {
     };
   }, [user]);
 
+  // Cross-device sync: refetch profile image when tab regains focus
+  useEffect(() => {
+    if (!user?.id) return;
+
+    let lastCheck = 0;
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState !== 'visible') return;
+      if (Date.now() - lastCheck < 5000) return;
+      lastCheck = Date.now();
+
+      const token = localStorage.getItem('agent_portal_token');
+      if (!token) return;
+
+      try {
+        const res = await fetch(`${API_URL}/api/auth/session`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        const serverUrl = toCdnUrl(data.user?.profile_picture_url);
+
+        if (serverUrl && serverUrl !== user.profilePictureUrl) {
+          const cacheBustUrl = `${serverUrl}?v=${Date.now()}`;
+          setUser(prev => prev ? { ...prev, profilePictureUrl: cacheBustUrl } : prev);
+          setProfileImageError(false);
+          setProfileImageLoading(true);
+          localStorage.setItem('agent_portal_user', JSON.stringify({
+            ...user, profilePictureUrl: cacheBustUrl
+          }));
+          window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
+            detail: { url: cacheBustUrl }
+          }));
+        }
+
+        // Also refetch agent page data for link page images
+        const pageRes = await fetch(`${API_URL}/api/agent-pages/${user.id}`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        if (pageRes.ok) {
+          const pageJson = await pageRes.json();
+          if (pageJson.page) {
+            const serverPageImageUrl = pageJson.page.profile_image_url;
+            if (serverPageImageUrl) {
+              window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
+                detail: { url: `${serverPageImageUrl}?v=${Date.now()}` }
+              }));
+            }
+            const serverColorUrl = pageJson.page.profile_image_color_url;
+            if (serverColorUrl) {
+              window.dispatchEvent(new CustomEvent('agent-page-color-image-updated', {
+                detail: { url: `${serverColorUrl}?v=${Date.now()}` }
+              }));
+            }
+          }
+        }
+      } catch { /* silent */ }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [user]);
+
   // Fetch onboarding progress when user is loaded
   useEffect(() => {
     if (user?.id && !isOnboardingLoaded) {

@@ -36,7 +36,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
     setHasTriggered(true);
     setIsOpen(true);
     if (timerRef.current) clearTimeout(timerRef.current);
-    try { localStorage.setItem(STORAGE_KEY, 'true'); } catch {}
+    try { sessionStorage.setItem(STORAGE_KEY, 'true'); } catch {}
   }, []);
 
   // Helper: returns true when any other SlidePanel is currently open.
@@ -47,8 +47,11 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
   }, []);
 
   useEffect(() => {
+    // Migration: clear permanent localStorage key so existing devices aren't blocked forever
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+
     try {
-      if (localStorage.getItem(STORAGE_KEY)) {
+      if (sessionStorage.getItem(STORAGE_KEY)) {
         hasTriggeredRef.current = true;
         setHasTriggered(true);
         return;

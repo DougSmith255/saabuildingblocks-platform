@@ -3,51 +3,43 @@
 import { useRef, useEffect } from 'react';
 
 /**
- * Liquid Gold Streams Effect — Canvas 2D hero background
+ * Raining Benjamins Effect — Canvas 2D hero background
  *
- * Viscous golden streams flow and branch across the canvas, simulating
- * liquid gold / molten metal. Streams have variable thickness with
- * surface tension (bulge/narrow), hard specular highlights, and small
- * droplets that break off and follow gravity.
- *
- * Distinct from AuroraNetworkEffect: this is fluid/liquid (thick, gravity-
- * influenced, metallic specular) vs gaseous/ethereal (thin ribbons, additive glow).
+ * Cinematic slow-motion $100 bills falling with 3D rotation (affine-
+ * approximated), golden rim lighting, and depth-layered parallax.
+ * Bills are pre-rendered to offscreen canvases (front + back faces)
+ * for performance.
  *
  * Architecture: three useEffect hooks, stateRef, own rAF loop with scroll boost.
  */
 
 // --- Types ---
 
-interface StreamPoint {
+type DepthLayer = 'near' | 'mid' | 'far';
+
+interface Bill {
   x: number;
   y: number;
-  thickness: number;
+  rotX: number;
+  rotY: number;
+  rotZ: number;
+  rotXSpeed: number;
+  rotYSpeed: number;
+  rotZSpeed: number;
+  hFreq: number;         // horizontal flutter frequency
+  hPhase: number;        // horizontal flutter phase offset
+  hAmplitude: number;    // horizontal flutter amplitude
+  layer: DepthLayer;
+  scale: number;
+  baseOpacity: number;
+  fallSpeed: number;     // base vertical speed (px/s)
 }
 
-interface Stream {
-  points: StreamPoint[];
-  baseY: number;           // entry Y position (left edge)
-  speed: number;           // horizontal flow speed
-  phaseOffset: number;     // wave uniqueness
-  amplitude: number;       // vertical wave size
-  frequency: number;       // wave frequency
-  freq2: number;           // second harmonic
-  amp2: number;            // second harmonic amplitude
-  baseThickness: number;   // average thickness
-  branchAt: number;        // X fraction where this stream branches
-  opacity: number;         // base opacity
-  tier: 'primary' | 'secondary' | 'accent';
-}
-
-interface Droplet {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  radius: number;
-  opacity: number;
-  life: number;
-  maxLife: number;
+interface BillSprites {
+  front: HTMLCanvasElement;
+  back: HTMLCanvasElement;
+  width: number;
+  height: number;
 }
 
 interface AnimState {
@@ -56,8 +48,8 @@ interface AnimState {
   w: number;
   h: number;
   dpr: number;
-  streams: Stream[];
-  droplets: Droplet[];
+  bills: Bill[];
+  sprites: BillSprites;
   time: number;
   lastTimestamp: number;
   scrollBoost: number;
@@ -67,113 +59,182 @@ interface AnimState {
   animateFn: ((ts: number) => void) | null;
 }
 
-// --- Color helpers ---
+// --- Depth layer config ---
 
-function goldColor(lightness: number, alpha: number): string {
-  // lightness 0 = deep amber, 0.5 = gold, 1.0 = bright highlight
-  const r = Math.round(180 + lightness * 75);
-  const g = Math.round(120 + lightness * 100);
-  const b = Math.round(10 + lightness * 40);
-  return `rgba(${r},${g},${b},${alpha})`;
+const LAYER_CONFIG: Record<DepthLayer, { scale: number; opacity: number; speedMul: number }> = {
+  near: { scale: 1.2, opacity: 0.9, speedMul: 1.4 },
+  mid:  { scale: 0.8, opacity: 0.6, speedMul: 1.0 },
+  far:  { scale: 0.4, opacity: 0.3, speedMul: 0.6 },
+};
+
+// --- Bill sprite renderer ---
+
+function renderBillSprite(
+  width: number,
+  height: number,
+  dpr: number,
+  side: 'front' | 'back'
+): HTMLCanvasElement {
+  const c = document.createElement('canvas');
+  const pw = Math.round(width * dpr);
+  const ph = Math.round(height * dpr);
+  c.width = pw;
+  c.height = ph;
+  const ctx = c.getContext('2d')!;
+  ctx.scale(dpr, dpr);
+
+  const isFront = side === 'front';
+  const baseGreen = isFront ? '#1a472a' : '#164025';
+  const borderGreen = isFront ? '#2d6b3f' : '#245a35';
+  const inset = 3;
+
+  // Base fill
+  ctx.fillStyle = baseGreen;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, width, height, 4);
+  ctx.fill();
+
+  // Lighter inset border
+  ctx.strokeStyle = borderGreen;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect(inset, inset, width - inset * 2, height - inset * 2, 2);
+  ctx.stroke();
+
+  // Crosshatch engraving texture
+  ctx.save();
+  ctx.globalAlpha = 0.08;
+  ctx.strokeStyle = '#88bb88';
+  ctx.lineWidth = 0.5;
+  // Diagonal set 1
+  for (let i = -height; i < width + height; i += 6) {
+    ctx.beginPath();
+    ctx.moveTo(i, 0);
+    ctx.lineTo(i + height, height);
+    ctx.stroke();
+  }
+  // Diagonal set 2
+  for (let i = -height; i < width + height; i += 6) {
+    ctx.beginPath();
+    ctx.moveTo(i + height, 0);
+    ctx.lineTo(i, height);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Inner shadow gradient from edges
+  const edgeShadow = ctx.createLinearGradient(0, 0, 0, height);
+  edgeShadow.addColorStop(0, 'rgba(0,0,0,0.15)');
+  edgeShadow.addColorStop(0.15, 'rgba(0,0,0,0)');
+  edgeShadow.addColorStop(0.85, 'rgba(0,0,0,0)');
+  edgeShadow.addColorStop(1, 'rgba(0,0,0,0.15)');
+  ctx.fillStyle = edgeShadow;
+  ctx.fillRect(0, 0, width, height);
+
+  const sideShadow = ctx.createLinearGradient(0, 0, width, 0);
+  sideShadow.addColorStop(0, 'rgba(0,0,0,0.1)');
+  sideShadow.addColorStop(0.1, 'rgba(0,0,0,0)');
+  sideShadow.addColorStop(0.9, 'rgba(0,0,0,0)');
+  sideShadow.addColorStop(1, 'rgba(0,0,0,0.1)');
+  ctx.fillStyle = sideShadow;
+  ctx.fillRect(0, 0, width, height);
+
+  // Large "100" centered
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#c4a34a';
+  ctx.font = `bold ${Math.round(height * 0.41)}px Georgia, "Times New Roman", serif`;
+  ctx.globalAlpha = 0.85;
+  ctx.fillText('100', width / 2, height / 2 + 1);
+  ctx.restore();
+
+  if (isFront) {
+    // Oval portrait placeholder
+    ctx.save();
+    const ovalCx = width * 0.5;
+    const ovalCy = height * 0.48;
+    const ovalRx = height * 0.22;
+    const ovalRy = height * 0.28;
+    ctx.globalAlpha = 0.25;
+    ctx.fillStyle = '#0d3018';
+    ctx.beginPath();
+    ctx.ellipse(ovalCx, ovalCy, ovalRx, ovalRy, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Highlight arc
+    ctx.globalAlpha = 0.12;
+    ctx.strokeStyle = '#88bb88';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.ellipse(ovalCx, ovalCy, ovalRx - 1, ovalRy - 1, 0, -Math.PI * 0.6, Math.PI * 0.1);
+    ctx.stroke();
+    ctx.restore();
+
+    // Corner "100" numerals
+    ctx.save();
+    ctx.fillStyle = '#c4a34a';
+    ctx.globalAlpha = 0.5;
+    const cornerSize = Math.round(height * 0.16);
+    ctx.font = `bold ${cornerSize}px Georgia, "Times New Roman", serif`;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('100', inset + 3, inset + 2);
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText('100', width - inset - 3, height - inset - 2);
+    ctx.restore();
+  }
+
+  return c;
 }
 
-// --- Stream factory ---
+// --- Build bill sprites ---
 
-function buildStreams(w: number, h: number, isMobile: boolean): Stream[] {
-  const streams: Stream[] = [];
+function buildSprites(dpr: number): BillSprites {
+  const width = 160;
+  const height = 68;
+  return {
+    front: renderBillSprite(width, height, dpr, 'front'),
+    back: renderBillSprite(width, height, dpr, 'back'),
+    width,
+    height,
+  };
+}
 
-  // Primary streams: thick, bright, dominant flow
-  const primaryCount = isMobile ? 2 : 3;
-  const primaryYs = isMobile
-    ? [0.30, 0.65]
-    : [0.22, 0.48, 0.75];
+// --- Build bill population ---
 
-  for (let i = 0; i < primaryCount; i++) {
-    streams.push({
-      points: [],
-      baseY: primaryYs[i],
-      speed: 0.015 + Math.random() * 0.008,
-      phaseOffset: Math.random() * Math.PI * 2,
-      amplitude: h * (0.04 + Math.random() * 0.025),
-      frequency: 0.003 + Math.random() * 0.001,
-      freq2: 0.007 + Math.random() * 0.003,
-      amp2: h * (0.015 + Math.random() * 0.01),
-      baseThickness: isMobile ? 14 : 20,
-      branchAt: 0.35 + Math.random() * 0.25,
-      opacity: 1.0,
-      tier: 'primary',
-    });
-  }
+function buildBills(w: number, h: number, isMobile: boolean): Bill[] {
+  const bills: Bill[] = [];
+  const counts: Record<DepthLayer, number> = isMobile
+    ? { near: 2 + Math.round(Math.random()), mid: 4 + Math.round(Math.random()), far: 4 }
+    : { near: 4 + Math.round(Math.random()), mid: 8 + Math.round(Math.random() * 2), far: 6 + Math.round(Math.random()) };
 
-  // Secondary streams: thinner, offset, fill visual space
-  const secondaryCount = isMobile ? 2 : 3;
-  const secondaryYs = isMobile
-    ? [0.15, 0.82]
-    : [0.12, 0.38, 0.88];
-
-  for (let i = 0; i < secondaryCount; i++) {
-    streams.push({
-      points: [],
-      baseY: secondaryYs[i],
-      speed: 0.012 + Math.random() * 0.006,
-      phaseOffset: Math.random() * Math.PI * 2,
-      amplitude: h * (0.03 + Math.random() * 0.02),
-      frequency: 0.004 + Math.random() * 0.002,
-      freq2: 0.009 + Math.random() * 0.003,
-      amp2: h * (0.01 + Math.random() * 0.008),
-      baseThickness: isMobile ? 8 : 12,
-      branchAt: 0.4 + Math.random() * 0.3,
-      opacity: 0.7,
-      tier: 'secondary',
-    });
-  }
-
-  // Accent streams: thin, subtle, background depth
-  if (!isMobile) {
-    const accentYs = [0.05, 0.55, 0.95];
-    for (let i = 0; i < 3; i++) {
-      streams.push({
-        points: [],
-        baseY: accentYs[i],
-        speed: 0.010 + Math.random() * 0.005,
-        phaseOffset: Math.random() * Math.PI * 2,
-        amplitude: h * (0.02 + Math.random() * 0.015),
-        frequency: 0.005 + Math.random() * 0.002,
-        freq2: 0.011 + Math.random() * 0.004,
-        amp2: h * (0.008 + Math.random() * 0.006),
-        baseThickness: 5,
-        branchAt: 0.5 + Math.random() * 0.3,
-        opacity: 0.35,
-        tier: 'accent',
+  const layers: DepthLayer[] = ['far', 'mid', 'near'];
+  for (const layer of layers) {
+    const cfg = LAYER_CONFIG[layer];
+    for (let i = 0; i < counts[layer]; i++) {
+      const baseSpeed = 30 + Math.random() * 30; // 30-60 px/s
+      bills.push({
+        x: Math.random() * w,
+        y: -Math.random() * h * 1.5, // spread above canvas
+        rotX: Math.random() * Math.PI * 2,
+        rotY: Math.random() * Math.PI * 2,
+        rotZ: (Math.random() - 0.5) * 0.6,
+        rotXSpeed: 0.2 + Math.random() * 0.6,
+        rotYSpeed: 0.2 + Math.random() * 0.6,
+        rotZSpeed: (Math.random() - 0.5) * 0.3,
+        hFreq: 0.5 + Math.random() * 1.0,
+        hPhase: Math.random() * Math.PI * 2,
+        hAmplitude: 20 + Math.random() * 40,
+        layer,
+        scale: cfg.scale,
+        baseOpacity: cfg.opacity,
+        fallSpeed: baseSpeed * cfg.speedMul,
       });
     }
   }
 
-  return streams;
-}
-
-// --- Compute stream Y at a given X ---
-
-function streamY(stream: Stream, x: number, time: number, h: number): number {
-  const t = time;
-  const baseY = stream.baseY * h;
-  const wave1 = Math.sin(x * stream.frequency + t * stream.speed * 60 + stream.phaseOffset) * stream.amplitude;
-  const wave2 = Math.sin(x * stream.freq2 + t * stream.speed * 40 + stream.phaseOffset * 1.7) * stream.amp2;
-  const drift = Math.sin(t * 0.15 + stream.phaseOffset) * h * 0.015;
-  return baseY + wave1 + wave2 + drift;
-}
-
-// --- Compute surface-tension thickness variation ---
-
-function streamThickness(stream: Stream, x: number, time: number, w: number): number {
-  const base = stream.baseThickness;
-  // Slow bulge/narrow cycle (surface tension)
-  const bulge = Math.sin(x * 0.008 + time * 0.4 + stream.phaseOffset) * base * 0.35;
-  // Faster subtle ripple
-  const ripple = Math.sin(x * 0.025 + time * 1.2 + stream.phaseOffset * 2.3) * base * 0.12;
-  // Thin near edges for natural flow look
-  const edgeFade = Math.min(x / (w * 0.08), 1) * Math.min((w - x) / (w * 0.08), 1);
-  return Math.max(2, (base + bulge + ripple) * edgeFade);
+  return bills;
 }
 
 // --- Component ---
@@ -247,8 +308,8 @@ export function GoldenRainEffect() {
     ctx.scale(dpr, dpr);
 
     const isMobile = w < 768;
-    const streams = buildStreams(w, h, isMobile);
-    const droplets: Droplet[] = [];
+    const sprites = buildSprites(dpr);
+    const bills = buildBills(w, h, isMobile);
 
     // --- Scroll boost listener ---
     let lastScrollY = window.scrollY;
@@ -263,7 +324,7 @@ export function GoldenRainEffect() {
     // --- Store state ---
     const state: AnimState = {
       canvas, ctx, w, h, dpr,
-      streams, droplets,
+      bills, sprites,
       time: 0,
       lastTimestamp: 0,
       scrollBoost: 0,
@@ -291,13 +352,10 @@ export function GoldenRainEffect() {
       s.h = newH;
       s.dpr = newDpr;
       s.isMobile = newW < 768;
-      s.streams = buildStreams(newW, newH, s.isMobile);
-      s.droplets.length = 0;
+      s.sprites = buildSprites(newDpr);
+      s.bills = buildBills(newW, newH, s.isMobile);
     });
     ro.observe(container);
-
-    // Droplet spawn timer
-    let dropletTimer = 0;
 
     state.animateFn = animate;
     state.frameId = requestAnimationFrame(animate);
@@ -306,6 +364,84 @@ export function GoldenRainEffect() {
       window.removeEventListener('scroll', onScroll);
       ro.disconnect();
     };
+
+    // --- Draw a single bill with 3D affine transform ---
+    function drawBill(
+      c: CanvasRenderingContext2D,
+      bill: Bill,
+      sp: BillSprites,
+      alpha: number
+    ) {
+      const cosY = Math.cos(bill.rotY);
+      const cosX = Math.cos(bill.rotX);
+      const sinY = Math.sin(bill.rotY);
+
+      // Foreshortening
+      const scaleX = Math.abs(cosY) * bill.scale;
+      const scaleY = Math.abs(cosX) * bill.scale;
+
+      // Skip if too thin to see
+      if (scaleX < 0.05 || scaleY < 0.05) return;
+
+      const skewFactor = sinY * 0.3;
+
+      // Pick face
+      const sprite = cosY >= 0 ? sp.front : sp.back;
+
+      c.save();
+      c.globalAlpha = alpha;
+      c.translate(bill.x, bill.y);
+      // Affine: [scaleX, skew, skew, scaleY, 0, 0] then rotZ
+      c.transform(scaleX, skewFactor * scaleY, skewFactor * scaleX, scaleY, 0, 0);
+      c.rotate(bill.rotZ);
+      c.drawImage(sprite, -sp.width / 2, -sp.height / 2, sp.width, sp.height);
+      c.restore();
+    }
+
+    // --- Draw golden rim glow behind a bill ---
+    function drawGlow(
+      c: CanvasRenderingContext2D,
+      bill: Bill,
+      sp: BillSprites,
+      intensity: number
+    ) {
+      const cosY = Math.cos(bill.rotY);
+      const absScale = bill.scale;
+      // Diagonal of bill for glow radius
+      const diag = Math.sqrt(sp.width * sp.width + sp.height * sp.height) * absScale;
+      const radiusMul = bill.layer === 'near' ? 1.4 : 1.2;
+      const r = diag * radiusMul * 0.5;
+
+      // Brighter when nearly edge-on (rim light visible)
+      const edgeFactor = 1 - Math.abs(cosY);
+      const alpha = intensity * (0.3 + edgeFactor * 0.7);
+
+      const grad = c.createRadialGradient(bill.x, bill.y, 0, bill.x, bill.y, r);
+      grad.addColorStop(0, `rgba(255,200,50,${(alpha * 0.5).toFixed(3)})`);
+      grad.addColorStop(0.5, `rgba(255,180,30,${(alpha * 0.2).toFixed(3)})`);
+      grad.addColorStop(1, 'rgba(255,160,20,0)');
+
+      c.beginPath();
+      c.arc(bill.x, bill.y, r, 0, Math.PI * 2);
+      c.fillStyle = grad;
+      c.fill();
+
+      // Edge highlight when nearly edge-on
+      if (edgeFactor > 0.6) {
+        const edgeAlpha = (edgeFactor - 0.6) * 2.5 * intensity;
+        const edgeLen = sp.height * absScale * 0.5;
+        c.save();
+        c.translate(bill.x, bill.y);
+        c.rotate(bill.rotZ);
+        c.strokeStyle = `rgba(255,220,80,${edgeAlpha.toFixed(3)})`;
+        c.lineWidth = 2 * absScale;
+        c.beginPath();
+        c.moveTo(0, -edgeLen);
+        c.lineTo(0, edgeLen);
+        c.stroke();
+        c.restore();
+      }
+    }
 
     // --- Animation frame ---
     function animate(timestamp: number) {
@@ -320,268 +456,76 @@ export function GoldenRainEffect() {
       s.scrollBoost = scrollBoost;
       scrollBoost *= 0.92;
 
-      s.time += dt * (1 + s.scrollBoost);
+      s.time += dt;
 
-      const { ctx: c, w: cw, h: ch, time: t, streams: stms, droplets: drops } = s;
+      const { ctx: c, w: cw, h: ch, bills: allBills, sprites: sp } = s;
+      const t = s.time;
+      const boost = 1 + s.scrollBoost;
+
+      // --- Update bill positions ---
+      const margin = sp.height * 1.5;
+      for (const bill of allBills) {
+        bill.y += bill.fallSpeed * boost * dt;
+        bill.x += Math.sin(t * bill.hFreq + bill.hPhase) * bill.hAmplitude * dt;
+
+        // Rotation with slight sine wobble
+        bill.rotX += bill.rotXSpeed * dt + Math.sin(t * 0.7 + bill.hPhase) * 0.05 * dt;
+        bill.rotY += bill.rotYSpeed * dt + Math.sin(t * 0.5 + bill.hPhase * 1.3) * 0.04 * dt;
+        bill.rotZ += bill.rotZSpeed * dt;
+
+        // Wrap when below canvas
+        if (bill.y > ch + margin) {
+          bill.y = -margin - Math.random() * margin;
+          bill.x = Math.random() * cw;
+        }
+        // Wrap horizontal
+        if (bill.x < -margin) bill.x = cw + margin * 0.5;
+        if (bill.x > cw + margin) bill.x = -margin * 0.5;
+      }
+
+      // --- Separate by layer ---
+      const farBills = allBills.filter(b => b.layer === 'far');
+      const midBills = allBills.filter(b => b.layer === 'mid');
+      const nearBills = allBills.filter(b => b.layer === 'near');
 
       c.clearRect(0, 0, cw, ch);
 
-      // --- Spawn droplets from streams ---
-      dropletTimer += dt;
-      if (dropletTimer > 0.08) {
-        dropletTimer = 0;
-        const maxDroplets = s.isMobile ? 25 : 50;
-        if (drops.length < maxDroplets) {
-          // Pick a random primary/secondary stream
-          const candidates = stms.filter(st => st.tier !== 'accent');
-          if (candidates.length > 0) {
-            const src = candidates[Math.floor(Math.random() * candidates.length)];
-            const spawnX = Math.random() * cw;
-            const spawnY = streamY(src, spawnX, t, ch);
-            const thick = streamThickness(src, spawnX, t, cw);
-            drops.push({
-              x: spawnX + (Math.random() - 0.5) * thick,
-              y: spawnY + (Math.random() - 0.5) * thick * 0.5,
-              vx: (Math.random() - 0.5) * 15,
-              vy: 20 + Math.random() * 40,  // gravity pull
-              radius: 1.5 + Math.random() * 3,
-              opacity: 0.5 + Math.random() * 0.5,
-              life: 0,
-              maxLife: 1.5 + Math.random() * 2,
-            });
-          }
-        }
+      // 1. Far bills (smallest, most transparent)
+      c.globalCompositeOperation = 'source-over';
+      for (const bill of farBills) {
+        drawBill(c, bill, sp, bill.baseOpacity);
       }
 
-      // --- Draw streams (back to front: accent → secondary → primary) ---
-      const tierOrder: Array<'accent' | 'secondary' | 'primary'> = ['accent', 'secondary', 'primary'];
-
-      for (const tier of tierOrder) {
-        const tierStreams = stms.filter(st => st.tier === tier);
-
-        for (const stream of tierStreams) {
-          const step = s.isMobile ? 4 : 3;
-          const opMul = stream.opacity;
-
-          // Build path points
-          const pts: { x: number; y: number; thick: number }[] = [];
-          for (let x = 0; x <= cw; x += step) {
-            const y = streamY(stream, x, t, ch);
-            const thick = streamThickness(stream, x, t, cw);
-            pts.push({ x, y, thick });
-          }
-
-          if (pts.length < 2) continue;
-
-          // --- Pass 1: Outer glow (wide, low opacity, warm amber) ---
-          c.globalCompositeOperation = 'lighter';
-          c.globalAlpha = 1;
-
-          c.beginPath();
-          c.moveTo(pts[0].x, pts[0].y);
-          for (let i = 1; i < pts.length; i++) {
-            c.lineTo(pts[i].x, pts[i].y);
-          }
-          c.strokeStyle = goldColor(0.2, 0.04 * opMul);
-          c.lineWidth = pts[Math.floor(pts.length / 2)].thick * 4;
-          c.lineCap = 'round';
-          c.lineJoin = 'round';
-          c.stroke();
-
-          // --- Pass 2: Mid glow (warm gold) ---
-          c.beginPath();
-          c.moveTo(pts[0].x, pts[0].y);
-          for (let i = 1; i < pts.length; i++) {
-            c.lineTo(pts[i].x, pts[i].y);
-          }
-          c.strokeStyle = goldColor(0.4, 0.08 * opMul);
-          c.lineWidth = pts[Math.floor(pts.length / 2)].thick * 2.2;
-          c.stroke();
-
-          // --- Pass 3: Main body (source-over for solid liquid look) ---
-          c.globalCompositeOperation = 'source-over';
-
-          // Draw as a filled shape using thickness envelope
-          c.beginPath();
-          // Top edge (left to right)
-          c.moveTo(pts[0].x, pts[0].y - pts[0].thick * 0.5);
-          for (let i = 1; i < pts.length; i++) {
-            c.lineTo(pts[i].x, pts[i].y - pts[i].thick * 0.5);
-          }
-          // Bottom edge (right to left)
-          for (let i = pts.length - 1; i >= 0; i--) {
-            c.lineTo(pts[i].x, pts[i].y + pts[i].thick * 0.5);
-          }
-          c.closePath();
-
-          // Metallic gradient fill across the thickness
-          const midIdx = Math.floor(pts.length / 2);
-          const midY = pts[midIdx].y;
-          const midThick = pts[midIdx].thick;
-          const bodyGrad = c.createLinearGradient(0, midY - midThick, 0, midY + midThick);
-          bodyGrad.addColorStop(0, `rgba(90,65,10,${0.35 * opMul})`);
-          bodyGrad.addColorStop(0.2, `rgba(160,120,20,${0.55 * opMul})`);
-          bodyGrad.addColorStop(0.4, `rgba(220,175,40,${0.70 * opMul})`);
-          bodyGrad.addColorStop(0.5, `rgba(255,215,60,${0.80 * opMul})`);
-          bodyGrad.addColorStop(0.6, `rgba(220,175,40,${0.70 * opMul})`);
-          bodyGrad.addColorStop(0.8, `rgba(140,100,15,${0.50 * opMul})`);
-          bodyGrad.addColorStop(1, `rgba(80,55,5,${0.30 * opMul})`);
-          c.fillStyle = bodyGrad;
-          c.fill();
-
-          // --- Pass 4: Specular highlight (bright line along top edge) ---
-          c.globalCompositeOperation = 'lighter';
-
-          // Animated specular position shifts over time
-          const specShift = Math.sin(t * 0.3 + stream.phaseOffset) * 0.15;
-
-          c.beginPath();
-          c.moveTo(pts[0].x, pts[0].y - pts[0].thick * (0.25 + specShift));
-          for (let i = 1; i < pts.length; i++) {
-            const specY = pts[i].y - pts[i].thick * (0.25 + specShift);
-            c.lineTo(pts[i].x, specY);
-          }
-          c.strokeStyle = `rgba(255,250,220,${0.25 * opMul})`;
-          c.lineWidth = Math.max(1, stream.baseThickness * 0.15);
-          c.lineCap = 'round';
-          c.stroke();
-
-          // Brighter core specular (thinner, more intense)
-          c.beginPath();
-          c.moveTo(pts[0].x, pts[0].y - pts[0].thick * (0.3 + specShift));
-          for (let i = 1; i < pts.length; i++) {
-            c.lineTo(pts[i].x, pts[i].y - pts[i].thick * (0.3 + specShift));
-          }
-          c.strokeStyle = `rgba(255,255,245,${0.15 * opMul})`;
-          c.lineWidth = Math.max(0.5, stream.baseThickness * 0.06);
-          c.stroke();
-
-          // --- Pass 5: Bottom shadow edge ---
-          c.globalCompositeOperation = 'source-over';
-          c.beginPath();
-          c.moveTo(pts[0].x, pts[0].y + pts[0].thick * 0.45);
-          for (let i = 1; i < pts.length; i++) {
-            c.lineTo(pts[i].x, pts[i].y + pts[i].thick * 0.45);
-          }
-          c.strokeStyle = `rgba(60,40,0,${0.20 * opMul})`;
-          c.lineWidth = Math.max(1, stream.baseThickness * 0.12);
-          c.stroke();
-
-          // --- Branch rendering ---
-          // At the branch point, draw a thinner tributary splitting downward
-          if (stream.tier !== 'accent') {
-            const branchX = cw * stream.branchAt;
-            const branchStartY = streamY(stream, branchX, t, ch);
-            const branchLen = cw * (0.25 + Math.random() * 0.01); // consistent per frame via seed
-            const branchThick = stream.baseThickness * 0.5;
-
-            c.globalCompositeOperation = 'lighter';
-            c.beginPath();
-
-            const branchPts: { x: number; y: number }[] = [];
-            for (let bx = 0; bx <= branchLen; bx += step) {
-              const progress = bx / branchLen;
-              const bxAbs = branchX + bx;
-              if (bxAbs > cw) break;
-              // Branch curves downward (gravity)
-              const by = branchStartY
-                + progress * progress * ch * 0.15
-                + Math.sin(bxAbs * 0.01 + t * 0.5 + stream.phaseOffset * 3) * 12;
-              branchPts.push({ x: bxAbs, y: by });
-            }
-
-            if (branchPts.length > 1) {
-              // Branch glow
-              c.beginPath();
-              c.moveTo(branchPts[0].x, branchPts[0].y);
-              for (let i = 1; i < branchPts.length; i++) {
-                c.lineTo(branchPts[i].x, branchPts[i].y);
-              }
-              c.strokeStyle = goldColor(0.3, 0.06 * opMul);
-              c.lineWidth = branchThick * 2;
-              c.stroke();
-
-              // Branch body
-              c.globalCompositeOperation = 'source-over';
-              c.beginPath();
-              c.moveTo(branchPts[0].x, branchPts[0].y);
-              for (let i = 1; i < branchPts.length; i++) {
-                c.lineTo(branchPts[i].x, branchPts[i].y);
-              }
-              // Taper the branch
-              c.strokeStyle = goldColor(0.5, 0.45 * opMul);
-              c.lineWidth = branchThick;
-              c.stroke();
-
-              // Branch specular
-              c.globalCompositeOperation = 'lighter';
-              c.beginPath();
-              c.moveTo(branchPts[0].x, branchPts[0].y - branchThick * 0.3);
-              for (let i = 1; i < branchPts.length; i++) {
-                c.lineTo(branchPts[i].x, branchPts[i].y - branchThick * 0.3);
-              }
-              c.strokeStyle = `rgba(255,250,220,${0.12 * opMul})`;
-              c.lineWidth = 1;
-              c.stroke();
-            }
-          }
-        }
-      }
-
-      // --- Update and draw droplets ---
+      // 2. Mid-depth golden rim glow (additive)
       c.globalCompositeOperation = 'lighter';
-      for (let i = drops.length - 1; i >= 0; i--) {
-        const d = drops[i];
-        d.life += dt;
-        if (d.life > d.maxLife || d.y > ch + 20) {
-          drops.splice(i, 1);
-          continue;
-        }
-
-        d.vy += 60 * dt; // gravity
-        d.x += d.vx * dt;
-        d.y += d.vy * dt;
-        d.vx *= 0.98; // drag
-
-        const lifeRatio = d.life / d.maxLife;
-        const fadeAlpha = lifeRatio < 0.1
-          ? lifeRatio / 0.1
-          : lifeRatio > 0.7
-            ? 1 - (lifeRatio - 0.7) / 0.3
-            : 1;
-
-        const alpha = d.opacity * fadeAlpha;
-
-        // Droplet glow
-        const glowR = d.radius * 3;
-        const glow = c.createRadialGradient(d.x, d.y, 0, d.x, d.y, glowR);
-        glow.addColorStop(0, `rgba(255,200,50,${(0.15 * alpha).toFixed(3)})`);
-        glow.addColorStop(1, 'rgba(255,180,30,0)');
-        c.beginPath();
-        c.arc(d.x, d.y, glowR, 0, Math.PI * 2);
-        c.fillStyle = glow;
-        c.fill();
-
-        // Droplet body
-        c.globalCompositeOperation = 'source-over';
-        c.beginPath();
-        c.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
-        c.fillStyle = `rgba(255,215,60,${(0.7 * alpha).toFixed(3)})`;
-        c.fill();
-
-        // Specular dot on droplet
-        c.globalCompositeOperation = 'lighter';
-        c.beginPath();
-        c.arc(d.x - d.radius * 0.3, d.y - d.radius * 0.3, d.radius * 0.4, 0, Math.PI * 2);
-        c.fillStyle = `rgba(255,255,240,${(0.4 * alpha).toFixed(3)})`;
-        c.fill();
+      for (const bill of midBills) {
+        drawGlow(c, bill, sp, 0.4);
       }
 
-      // --- Center void mask (text readability) ---
+      // 3. Mid bills
+      c.globalCompositeOperation = 'source-over';
+      for (const bill of midBills) {
+        drawBill(c, bill, sp, bill.baseOpacity);
+      }
+
+      // 4. Near golden rim glow (additive, brighter)
+      c.globalCompositeOperation = 'lighter';
+      for (const bill of nearBills) {
+        drawGlow(c, bill, sp, 0.7);
+      }
+
+      // 5. Near bills (largest, sharpest)
+      c.globalCompositeOperation = 'source-over';
+      for (const bill of nearBills) {
+        drawBill(c, bill, sp, bill.baseOpacity);
+      }
+
+      // 6. Edge fades + center void mask
       c.globalCompositeOperation = 'destination-out';
 
+      // Center void
       const voidW = cw * (s.isMobile ? 0.30 : 0.35);
-      const voidH = ch * (s.isMobile ? 0.22 : 0.28);
+      const voidH = ch * (s.isMobile ? 0.20 : 0.25);
       const vcx = cw / 2;
       const vcy = ch / 2;
 
@@ -599,7 +543,7 @@ export function GoldenRainEffect() {
       c.fill();
       c.restore();
 
-      // --- Edge fades ---
+      // Bottom fade
       const bottomFade = ch * 0.15;
       const bGrad = c.createLinearGradient(0, ch - bottomFade, 0, ch);
       bGrad.addColorStop(0, 'rgba(0,0,0,0)');
@@ -608,6 +552,7 @@ export function GoldenRainEffect() {
       c.fillStyle = bGrad;
       c.fillRect(0, ch - bottomFade, cw, bottomFade);
 
+      // Top fade
       const topFade = ch * 0.08;
       const tGrad = c.createLinearGradient(0, 0, 0, topFade);
       tGrad.addColorStop(0, 'rgba(0,0,0,0.80)');
@@ -616,7 +561,7 @@ export function GoldenRainEffect() {
       c.fillStyle = tGrad;
       c.fillRect(0, 0, cw, topFade);
 
-      // Left/right edge fades
+      // Side fades
       const sideFade = cw * 0.06;
       const lGrad = c.createLinearGradient(0, 0, sideFade, 0);
       lGrad.addColorStop(0, 'rgba(0,0,0,0.70)');
