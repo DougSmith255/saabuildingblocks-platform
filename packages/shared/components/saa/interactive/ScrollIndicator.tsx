@@ -122,6 +122,14 @@ export function ScrollIndicator() {
             drop-shadow(0 0 1px rgba(255,255,255,0.6))
             drop-shadow(0 0 2px rgba(255,255,255,0.3));
         }
+
+        /* On screens < 1024px, center arrows behind the Inside Look button */
+        @media (max-width: 1023px) {
+          #global-scroll-indicator {
+            left: auto !important;
+            right: 92px;
+          }
+        }
       `}</style>
 
       <div

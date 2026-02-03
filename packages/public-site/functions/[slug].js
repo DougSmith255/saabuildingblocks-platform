@@ -4379,10 +4379,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div class="text-center mb-8 md:mb-12">
               <h2 class="text-h2 h2-container">
                 <span class="h2-word">The</span>
-                <span class="h2-word">Only</span>
-                <span class="h2-word">Video</span>
-                <span class="h2-word">You</span>
-                <span class="h2-word">Need</span>
+                <span class="h2-word">Inside</span>
+                <span class="h2-word">Look</span>
               </h2>
               <p class="text-body mt-4 max-w-2xl mx-auto opacity-80">Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full.</p>
             </div>

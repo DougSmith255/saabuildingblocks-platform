@@ -23,7 +23,7 @@ export function WatchAndDecide() {
     <div className="relative">
       <VideoSection
         id="watch-and-decide"
-        title="The Only Inside Look You Need"
+        title="The Inside Look"
         subtitle="Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full."
         videoId={VIDEO_ID}
         posterUrl={POSTER_URL}

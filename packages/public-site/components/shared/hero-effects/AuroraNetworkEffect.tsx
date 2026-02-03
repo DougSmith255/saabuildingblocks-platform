@@ -114,7 +114,7 @@ function computeBandY(band: AuroraBand, x: number, w: number, h: number, time: n
 
 // --- Build bands ---
 
-function buildBands(isMobile: boolean): AuroraBand[] {
+function buildBands(): AuroraBand[] {
   const bands: AuroraBand[] = [];
   const F = [1.0, 1.618, 2.718, 4.414];
 
@@ -139,12 +139,10 @@ function buildBands(isMobile: boolean): AuroraBand[] {
   }
 
   // Secondary bands — medium brightness, "mid-depth"
-  const secondaries = isMobile
-    ? [{ baseY: 0.28, tilt: -0.10, core: '#00aaff', edge: '#7030a0', ph: 1.4, dAmp: 0.02 }]
-    : [
-        { baseY: 0.24, tilt: -0.10, core: '#00aaff', edge: '#7030a0', ph: 1.4, dAmp: 0.02 },
-        { baseY: 0.76, tilt:  0.12, core: '#00ccaa', edge: '#5060c0', ph: 3.8, dAmp: 0.018 },
-      ];
+  const secondaries = [
+    { baseY: 0.24, tilt: -0.10, core: '#00aaff', edge: '#7030a0', ph: 1.4, dAmp: 0.02 },
+    { baseY: 0.76, tilt:  0.12, core: '#00ccaa', edge: '#5060c0', ph: 3.8, dAmp: 0.018 },
+  ];
   for (const cfg of secondaries) {
     bands.push({
       tier: 'secondary', baseY: cfg.baseY, tilt: cfg.tilt,
@@ -160,19 +158,17 @@ function buildBands(isMobile: boolean): AuroraBand[] {
   }
 
   // Accent band — subtle, "furthest back"
-  if (!isMobile) {
-    bands.push({
-      tier: 'accent', baseY: 0.48, tilt: -0.06,
-      coreColor: '#0088ff', edgeColor: '#6040a0',
-      harmonics: [
-        { freq: F[0] * 2.4, amp: 0.07,  phaseOff: 4.2,       speedMul: 0.18 },
-        { freq: F[1] * 2.4, amp: 0.035, phaseOff: 4.2 + 1.5, speedMul: 0.35 },
-        { freq: F[2] * 2.4, amp: 0.016, phaseOff: 4.2 + 3.3, speedMul: 0.52 },
-        { freq: F[3] * 2.4, amp: 0.007, phaseOff: 4.2 + 5.8, speedMul: 0.72 },
-      ],
-      driftPhase: 2.9, driftSpeed: 0.06, driftAmp: 0.015,
-    });
-  }
+  bands.push({
+    tier: 'accent', baseY: 0.48, tilt: -0.06,
+    coreColor: '#0088ff', edgeColor: '#6040a0',
+    harmonics: [
+      { freq: F[0] * 2.4, amp: 0.07,  phaseOff: 4.2,       speedMul: 0.18 },
+      { freq: F[1] * 2.4, amp: 0.035, phaseOff: 4.2 + 1.5, speedMul: 0.35 },
+      { freq: F[2] * 2.4, amp: 0.016, phaseOff: 4.2 + 3.3, speedMul: 0.52 },
+      { freq: F[3] * 2.4, amp: 0.007, phaseOff: 4.2 + 5.8, speedMul: 0.72 },
+    ],
+    driftPhase: 2.9, driftSpeed: 0.06, driftAmp: 0.015,
+  });
 
   return bands;
 }
@@ -247,7 +243,7 @@ export function AuroraNetworkEffect() {
     ctx.scale(dpr, dpr);
 
     const isMobile = w < 768;
-    const bands = buildBands(isMobile);
+    const bands = buildBands();
 
     // --- Scroll boost listener ---
     let lastScrollY = window.scrollY;
@@ -294,7 +290,7 @@ export function AuroraNetworkEffect() {
       s.isMobile = newW < 768;
 
       // Rebuild bands for new breakpoint
-      s.bands = buildBands(s.isMobile);
+      s.bands = buildBands();
     });
     ro.observe(container);
 

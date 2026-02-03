@@ -132,11 +132,11 @@ export function FloatingVideoButton() {
             className="relative flex items-center gap-2.5"
             style={{ padding: '10px 16px' }}
           >
-            {/* Camera Icon — desktop only (hidden on mobile) */}
+            {/* Camera Icon */}
             <svg
               viewBox="0 0 256 256"
               xmlns="http://www.w3.org/2000/svg"
-              className="fvb-glass-icon hidden sm:block"
+              className="fvb-glass-icon"
               style={{ width: '16px', height: '16px', flexShrink: 0 }}
             >
               <defs>
@@ -163,22 +163,9 @@ export function FloatingVideoButton() {
               <path d="M 40 172 L 40 84 A 24 24 0 0 1 64 60" stroke="url(#mLeft)" strokeWidth="28" strokeLinecap="round" fill="none" />
             </svg>
 
-            {/* Mobile label — "Inside Look" (no icon) */}
+            {/* Label */}
             <span
-              className="sm:hidden text-sm whitespace-nowrap tracking-wide fvb-label"
-              style={{
-                letterSpacing: '0.04em',
-                fontFamily: 'var(--font-taskor)',
-                fontWeight: 400,
-                fontFeatureSettings: '"ss01" 1',
-              }}
-            >
-              Inside Look
-            </span>
-
-            {/* Desktop label — "The Inside Look" (with icon) */}
-            <span
-              className="hidden sm:inline text-sm whitespace-nowrap tracking-wide fvb-label"
+              className="text-sm whitespace-nowrap tracking-wide fvb-label"
               style={{
                 letterSpacing: '0.04em',
                 fontFamily: 'var(--font-taskor)',
@@ -287,6 +274,17 @@ export function FloatingVideoButton() {
         .floating-video-wrapper:hover .fvb-gradient-glow {
           opacity: 0.5;
           filter: blur(18px);
+        }
+
+        /* Reduce rainbow border by 1px on screens < 1024px */
+        @media (max-width: 1023px) {
+          .fvb-gradient-border,
+          .fvb-gradient-glow {
+            left: -1px !important;
+            top: -1px !important;
+            width: calc(100% + 2px) !important;
+            height: calc(100% + 2px) !important;
+          }
         }
       `}</style>
 
