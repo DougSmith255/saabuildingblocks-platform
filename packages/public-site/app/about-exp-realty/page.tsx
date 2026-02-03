@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { H1, Tagline, GlassPanel, Icon3D, CyberCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCard, CTAButton } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHeroEffects';
+import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, ChevronDown } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
@@ -472,6 +474,214 @@ function AwardsRibbon() {
 
 
 /* ═══════════════════════════════════════════════════════════════
+   SECTION 1: WHY EXP EXISTS
+   ═══════════════════════════════════════════════════════════════ */
+
+const PILLARS = [
+  {
+    icon: Building2,
+    keyword: 'Ownership',
+    teaser: 'In a publicly traded company',
+    detail: 'eXp Realty is publicly traded on the NASDAQ (EXPI). Agents can earn stock awards through production, attracting new agents, and reaching milestones. This is not a perk. It is ownership in the company you help build.',
+  },
+  {
+    icon: Layers,
+    keyword: 'Leverage',
+    teaser: 'Through scale, systems, and collaboration',
+    detail: 'eXp operates across 29+ countries with 84,000+ agents. Instead of local office overhead, agents access cloud-based tools, global referral networks, and systems built for efficiency at scale.',
+  },
+  {
+    icon: Infinity,
+    keyword: 'Longevity',
+    teaser: 'Through income that continues after your last closing',
+    detail: 'Revenue sharing at eXp is not a bonus. It is a structural income stream tied to your network. When agents you attract to eXp succeed, you earn a share of their production even if you slow down, step back, or retire.',
+  },
+];
+
+const ADVANTAGES = [
+  {
+    icon: TrendingUp,
+    keyword: 'Profitability',
+    detail: 'The only cumulatively profitable publicly traded real estate brokerage in recent years.',
+  },
+  {
+    icon: Award,
+    keyword: 'Agent Rankings',
+    detail: 'Consistently ranked the highest-ranked brokerage by Glassdoor\u2019s anonymous agent reviews.',
+  },
+  {
+    icon: Cloud,
+    keyword: 'Innovation',
+    detail: 'A cloud-based model that reinvests in systems, support, and agent programs instead of physical offices and franchise layers.',
+  },
+  {
+    icon: Users,
+    keyword: 'Sponsor Support',
+    detail: 'The only brokerage that allows sponsors to independently build and deliver additional support.',
+  },
+];
+
+function ExpandableCard({
+  icon: Icon,
+  keyword,
+  teaser,
+  detail,
+  isOpen,
+  onToggle,
+}: {
+  icon: LucideIcon;
+  keyword: string;
+  teaser?: string;
+  detail: string;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <CyberCard interactive centered={false} padding="md">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className="w-full text-left"
+      >
+        <div className="flex flex-col items-center text-center gap-3">
+          <Icon3D color="#c4a94d" size={48}>
+            <Icon size={28} />
+          </Icon3D>
+          <h3 className="text-lg font-bold uppercase tracking-wider">{keyword}</h3>
+          {teaser && (
+            <p className="text-sm" style={{ color: 'var(--color-body-text)', opacity: 0.7 }}>
+              {teaser}
+            </p>
+          )}
+          <ChevronDown
+            size={20}
+            className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+            style={{ color: '#c4a94d' }}
+          />
+        </div>
+        <div
+          className={`overflow-hidden transition-all duration-300 ease-out ${
+            isOpen ? 'max-h-[200px] opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <p
+            className="pt-4 text-sm leading-relaxed text-center"
+            style={{ color: 'var(--color-body-text)' }}
+          >
+            {detail}
+          </p>
+        </div>
+      </button>
+    </CyberCard>
+  );
+}
+
+function WhyExpExistsSection() {
+  const [openPillar, setOpenPillar] = useState<number | null>(null);
+  const [openAdvantage, setOpenAdvantage] = useState<number | null>(null);
+
+  return (
+    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
+      <div className="max-w-[1900px] mx-auto">
+        {/* ── Part A: Why eXp Exists ── */}
+        <div className="text-center mb-12">
+          <H2>WHY EXP EXISTS</H2>
+          <p
+            className="mt-6 max-w-3xl mx-auto text-base md:text-lg leading-relaxed"
+            style={{ color: 'var(--color-body-text)' }}
+          >
+            Most brokerages are built to maximize commission today, with little consideration for
+            scale, ownership, or life beyond production. eXp was built around three pillars that
+            go further.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {PILLARS.map((pillar, i) => (
+            <ExpandableCard
+              key={pillar.keyword}
+              icon={pillar.icon}
+              keyword={pillar.keyword}
+              teaser={pillar.teaser}
+              detail={pillar.detail}
+              isOpen={openPillar === i}
+              onToggle={() => setOpenPillar(openPillar === i ? null : i)}
+            />
+          ))}
+        </div>
+
+        <p
+          className="mt-10 text-center max-w-3xl mx-auto text-sm md:text-base leading-relaxed"
+          style={{ color: 'var(--color-body-text)', opacity: 0.8 }}
+        >
+          This structure supports agents while they are actively producing and provides options
+          when they are ready to slow down, step back, or think beyond their next deal.
+        </p>
+
+        {/* ── Gold Divider ── */}
+        <div className="flex items-center justify-center my-16 md:my-20">
+          <div
+            className="flex-1 h-px max-w-xs"
+            style={{
+              background: 'linear-gradient(to right, transparent, rgba(196,169,77,0.5))',
+            }}
+          />
+          <div
+            className="w-2 h-2 rounded-full mx-4"
+            style={{
+              background: '#c4a94d',
+              boxShadow: '0 0 8px rgba(196,169,77,0.6), 0 0 16px rgba(196,169,77,0.3)',
+            }}
+          />
+          <div
+            className="flex-1 h-px max-w-xs"
+            style={{
+              background: 'linear-gradient(to left, transparent, rgba(196,169,77,0.5))',
+            }}
+          />
+        </div>
+
+        {/* ── Part B: Where eXp Is Unmatched ── */}
+        <GlassPanel variant="emerald" rounded="3xl">
+          <div className="py-12 md:py-16 px-4 sm:px-8 md:px-12">
+            <div className="text-center mb-10">
+              <H2>WHERE EXP IS UNMATCHED</H2>
+              <p
+                className="mt-6 max-w-3xl mx-auto text-sm md:text-base leading-relaxed"
+                style={{ color: 'var(--color-body-text)' }}
+              >
+                These advantages are structural, not promotional. Unlike franchise brokerages,
+                eXp Realty does not rely on office-based profit centers. The following advantages
+                are supported by third-party data and independent analysis.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {ADVANTAGES.map((advantage, i) => (
+                <ExpandableCard
+                  key={advantage.keyword}
+                  icon={advantage.icon}
+                  keyword={advantage.keyword}
+                  detail={advantage.detail}
+                  isOpen={openAdvantage === i}
+                  onToggle={() => setOpenAdvantage(openAdvantage === i ? null : i)}
+                />
+              ))}
+            </div>
+
+            <div className="mt-10 text-center">
+              <CTAButton href="#">Explore eXp&apos;s Unmatched Advantages</CTAButton>
+            </div>
+          </div>
+        </GlassPanel>
+      </div>
+    </section>
+  );
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
    MAIN PAGE COMPONENT
    ═══════════════════════════════════════════════════════════════ */
 
@@ -502,6 +712,9 @@ export default function AboutExpRealty() {
 
       {/* ════ Awards Ribbon ════ */}
       <AwardsRibbon />
+
+      {/* ════ Section 1: Why eXp Exists ════ */}
+      <WhyExpExistsSection />
     </main>
   );
 }
