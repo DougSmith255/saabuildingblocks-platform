@@ -20,6 +20,7 @@ export { AsteroidBeltEffect } from './AsteroidBeltEffect';
 export { DataStreamEffect } from './DataStreamEffect';
 export { NeuralNetworkCloud } from './NeuralNetworkCloud';
 export { AuroraNetworkEffect } from './AuroraNetworkEffect';
+export { GoldenNexusPortalEffect } from './GoldenNexusPortalEffect';
 export { StickyHeroWrapper } from './StickyHeroWrapper';
 export { DeferredEffect } from './DeferredEffect';
 export { RevealMaskEffect } from '../RevealMaskEffect';
@@ -38,4 +39,5 @@ export {
   LazyParticleStormEffect,
   LazyNeuralNetworkCloud,
   LazyAuroraNetworkEffect,
+  LazyGoldenNexusPortalEffect,
 } from './LazyHeroEffects';

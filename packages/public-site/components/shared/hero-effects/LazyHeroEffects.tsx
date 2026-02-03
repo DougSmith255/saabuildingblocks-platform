@@ -107,3 +107,8 @@ export const LazyAuroraNetworkEffect = createImmediateEffect(
   () => import('./AuroraNetworkEffect').then(mod => ({ default: mod.AuroraNetworkEffect })),
   'LazyAuroraNetworkEffect'
 );
+
+export const LazyGoldenNexusPortalEffect = createImmediateEffect(
+  () => import('./GoldenNexusPortalEffect').then(mod => ({ default: mod.GoldenNexusPortalEffect })),
+  'LazyGoldenNexusPortalEffect'
+);

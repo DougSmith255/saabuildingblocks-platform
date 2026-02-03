@@ -5,7 +5,7 @@ import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, FAQ, ProfileCyberFr
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
-import { GreenLaserGridEffect } from '@/components/shared/hero-effects/GreenLaserGridEffect';
+import { LazyGoldenNexusPortalEffect } from '@/components/shared/hero-effects/LazyHeroEffects';
 import { WatchAndDecide } from '@/app/components/sections/WatchAndDecide';
 
 // Profile images from Cloudflare Images CDN
@@ -68,7 +68,7 @@ export default function JoinExpSponsorTeam() {
       {/* Hero Section - fadeSpeed 1.5 = fades out 50% faster */}
       <StickyHeroWrapper fadeSpeed={1.5}>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-          <GreenLaserGridEffect />
+          <LazyGoldenNexusPortalEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>JOIN SMART AGENT ALLIANCE</H1>
