@@ -85,31 +85,25 @@ export function FloatingVideoButton() {
           }}
           aria-label="Watch The Inside Look video"
         >
-          {/* Layer 1: Dark glass base + gold vertical lines (matches admin-dashboard glassBase) */}
+          {/* Layer 1: Dark base (matches agent portal L-frame) */}
+          <div
+            className="absolute inset-0"
+            style={{
+              borderRadius: '12px',
+              background: 'linear-gradient(180deg, rgb(14, 14, 14) 0%, rgb(10, 10, 10) 100%)',
+            }}
+          />
+
+          {/* Layer 2: Crosshatch glass texture (exact agent portal L-frame values) */}
           <div
             className="absolute inset-0"
             style={{
               borderRadius: '12px',
               background: `
-                linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
-              backdropFilter: 'blur(8px) saturate(1.5)',
-              WebkitBackdropFilter: 'blur(8px) saturate(1.5)',
-              boxShadow: '0 0 30px rgba(0,0,0,0.4), inset 0 0 30px rgba(255,255,255,0.05)',
-              filter: 'brightness(1.1) contrast(1.1) saturate(1.2)',
-            }}
-          />
-
-          {/* Layer 2: Horizontal white grid + dark base (matches admin-dashboard glassBase::after) */}
-          <div
-            className="absolute inset-[1px]"
-            style={{
-              borderRadius: '12px',
-              background: `
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
-                linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83))
-              `,
+              backgroundAttachment: 'fixed',
             }}
           />
 
