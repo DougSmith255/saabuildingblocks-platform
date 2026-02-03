@@ -111,10 +111,11 @@ function AnimatedStat({
     <CyberCard padding="md" centered>
       <div className="flex items-center justify-center gap-3 mb-2">
         <p
-          className="stat-3d-text text-4xl lg:text-5xl font-bold tabular-nums"
+          className="text-4xl lg:text-5xl font-bold tabular-nums"
           style={{
             color: '#00bfff',
             textShadow: '-1px -1px 0 #80d4ff, 1px 1px 0 #3d8a9d, 2px 2px 0 #2d6a7d, 3px 3px 0 #1d4a5d, 4px 4px 0 #1d2a3d, 5px 5px 4px rgba(0,0,0,0.5)',
+            display: 'inline-block',
           }}
         >
           <span>{prefix}</span>
@@ -353,10 +354,11 @@ function RotatingStats() {
         }`}
       >
         <p
-          className="stat-3d-text text-4xl font-bold mb-2 tabular-nums"
+          className="text-4xl font-bold mb-2 tabular-nums"
           style={{
             color: '#00bfff',
             textShadow: '-1px -1px 0 #80d4ff, 1px 1px 0 #3d8a9d, 2px 2px 0 #2d6a7d, 3px 3px 0 #1d4a5d, 4px 4px 0 #1d2a3d, 5px 5px 4px rgba(0,0,0,0.5)',
+            display: 'inline-block',
           }}
         >
           {currentStat.prefix}{displayValue}{currentStat.suffix}
@@ -778,7 +780,7 @@ function SpotlightConsole() {
           }}
         >
           <H2>WHY EXP EXISTS</H2>
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[1420px] mx-auto">
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[1425px] mx-auto">
             <div
               className="rounded-lg p-5 text-left"
               style={{
@@ -786,20 +788,17 @@ function SpotlightConsole() {
                 borderLeft: '4px solid #c0513f',
               }}
             >
-              <span
-                className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-2"
-                style={{ color: '#c0513f' }}
+              <h3
+                className="flex items-center gap-2 text-h3 uppercase tracking-wider mb-3"
+                style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)' }}
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <circle cx="12" cy="12" r="10" />
                   <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
                 </svg>
                 The Problem
-              </span>
-              <p
-                className="text-sm md:text-base leading-relaxed"
-                style={{ color: 'var(--color-body-text)' }}
-              >
+              </h3>
+              <p className="text-body leading-relaxed">
                 Most brokerages are built to maximize commission today, with little consideration for scale, ownership, or life beyond production.
               </p>
             </div>
@@ -810,21 +809,18 @@ function SpotlightConsole() {
                 borderLeft: '4px solid #00bfff',
               }}
             >
-              <span
-                className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-2"
-                style={{ color: '#00bfff' }}
+              <h3
+                className="flex items-center gap-2 text-h3 uppercase tracking-wider mb-3"
+                style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)' }}
               >
                 <img
                   src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
                   alt="eXp"
-                  style={{ width: '14px', height: '14px', objectFit: 'contain' }}
+                  style={{ width: '18px', height: '18px', objectFit: 'contain' }}
                 />
                 The Answer
-              </span>
-              <p
-                className="text-sm md:text-base leading-relaxed"
-                style={{ color: 'var(--color-body-text)' }}
-              >
+              </h3>
+              <p className="text-body leading-relaxed">
                 eXp was designed around production and three structural pillars — ownership, leverage, and longevity — backed by advantages no other brokerage can match.
               </p>
             </div>
@@ -1039,7 +1035,7 @@ function SpotlightConsole() {
           >
             This structure supports agents while they are actively producing and provides options when they are ready to slow down, step back, or think beyond their next deal.
           </p>
-          <CTAButton href="#">Explore eXp&apos;s Unmatched Advantages</CTAButton>
+          <CTAButton href="#">See the Advantages</CTAButton>
         </div>
       </div>
     </section>
