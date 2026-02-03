@@ -9,7 +9,7 @@
     "build": "next build",
     "postbuild": "npm run sync-images && npm run generate:sitemap && npm run generate:routes",
     "generate:sitemap": "next-sitemap",
-    "generate:routes": "echo '{\"version\":1,\"include\":[\"/*\"],\"exclude\":[\"/fonts/*\",\"/_next/*\",\"/*.ico\",\"/*.txt\",\"/*.xml\",\"/*.json\",\"/*.png\",\"/*.jpg\",\"/*.webp\"]}' > out/_routes.json && chmod 644 out/_routes.json",
+    "generate:routes": "bash scripts/generate-routes-json.sh",
     "start": "next start -p 3001",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
