@@ -584,7 +584,7 @@ function WhyExpExistsSection() {
   return (
     <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
       <div className="max-w-[1900px] mx-auto">
-        {/* ── Part A: Why eXp Exists ── */}
+        {/* ── Section heading + opening statement ── */}
         <div className="text-center mb-12">
           <H2>WHY EXP EXISTS</H2>
           <p
@@ -597,6 +597,7 @@ function WhyExpExistsSection() {
           </p>
         </div>
 
+        {/* ── Three pillars ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {PILLARS.map((pillar, i) => (
             <ExpandableCard
@@ -619,62 +620,41 @@ function WhyExpExistsSection() {
           when they are ready to slow down, step back, or think beyond their next deal.
         </p>
 
-        {/* ── Gold Divider ── */}
-        <div className="flex items-center justify-center my-16 md:my-20">
-          <div
-            className="flex-1 h-px max-w-xs"
-            style={{
-              background: 'linear-gradient(to right, transparent, rgba(196,169,77,0.5))',
-            }}
-          />
-          <div
-            className="w-2 h-2 rounded-full mx-4"
-            style={{
-              background: '#c4a94d',
-              boxShadow: '0 0 8px rgba(196,169,77,0.6), 0 0 16px rgba(196,169,77,0.3)',
-            }}
-          />
-          <div
-            className="flex-1 h-px max-w-xs"
-            style={{
-              background: 'linear-gradient(to left, transparent, rgba(196,169,77,0.5))',
-            }}
-          />
+        {/* ── Where eXp Is Unmatched (sub-section) ── */}
+        <div className="mt-16 md:mt-20">
+          <GlassPanel variant="emerald" rounded="3xl">
+            <div className="py-12 md:py-16 px-4 sm:px-8 md:px-12">
+              <div className="text-center mb-10">
+                <H2>WHERE EXP IS UNMATCHED</H2>
+                <p
+                  className="mt-6 max-w-3xl mx-auto text-sm md:text-base leading-relaxed"
+                  style={{ color: 'var(--color-body-text)' }}
+                >
+                  These advantages are structural, not promotional. Unlike franchise brokerages,
+                  eXp Realty does not rely on office-based profit centers. The following advantages
+                  are supported by third-party data and independent analysis.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                {ADVANTAGES.map((advantage, i) => (
+                  <ExpandableCard
+                    key={advantage.keyword}
+                    icon={advantage.icon}
+                    keyword={advantage.keyword}
+                    detail={advantage.detail}
+                    isOpen={openAdvantage === i}
+                    onToggle={() => setOpenAdvantage(openAdvantage === i ? null : i)}
+                  />
+                ))}
+              </div>
+
+              <div className="mt-10 text-center">
+                <CTAButton href="#">Explore eXp&apos;s Unmatched Advantages</CTAButton>
+              </div>
+            </div>
+          </GlassPanel>
         </div>
-
-        {/* ── Part B: Where eXp Is Unmatched ── */}
-        <GlassPanel variant="emerald" rounded="3xl">
-          <div className="py-12 md:py-16 px-4 sm:px-8 md:px-12">
-            <div className="text-center mb-10">
-              <H2>WHERE EXP IS UNMATCHED</H2>
-              <p
-                className="mt-6 max-w-3xl mx-auto text-sm md:text-base leading-relaxed"
-                style={{ color: 'var(--color-body-text)' }}
-              >
-                These advantages are structural, not promotional. Unlike franchise brokerages,
-                eXp Realty does not rely on office-based profit centers. The following advantages
-                are supported by third-party data and independent analysis.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              {ADVANTAGES.map((advantage, i) => (
-                <ExpandableCard
-                  key={advantage.keyword}
-                  icon={advantage.icon}
-                  keyword={advantage.keyword}
-                  detail={advantage.detail}
-                  isOpen={openAdvantage === i}
-                  onToggle={() => setOpenAdvantage(openAdvantage === i ? null : i)}
-                />
-              ))}
-            </div>
-
-            <div className="mt-10 text-center">
-              <CTAButton href="#">Explore eXp&apos;s Unmatched Advantages</CTAButton>
-            </div>
-          </div>
-        </GlassPanel>
       </div>
     </section>
   );

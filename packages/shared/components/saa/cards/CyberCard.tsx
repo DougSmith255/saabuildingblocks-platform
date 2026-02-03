@@ -95,9 +95,9 @@ export function CyberCard({
           /* Brushed gunmetal gradient - matches H2 metal plate */
           background: linear-gradient(
             180deg,
-            #3d3d3d 0%,
-            #2f2f2f 40%,
-            #252525 100%
+            #2a2a2a 0%,
+            #1f1f1f 40%,
+            #171717 100%
           );
 
           /* Rounded corners */
@@ -156,9 +156,9 @@ export function CyberCard({
           /* Lighten the card background */
           background: linear-gradient(
             180deg,
-            #4a4a4a 0%,
-            #3c3c3c 40%,
-            #323232 100%
+            #373737 0%,
+            #2c2c2c 40%,
+            #242424 100%
           );
           /* Yellow border like GenericCard */
           border-color: rgba(255,215,0,0.6);
