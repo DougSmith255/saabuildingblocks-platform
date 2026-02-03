@@ -101,8 +101,8 @@ function createParticle(w: number, h: number, ringRadius: number): SpiralParticl
     theta: Math.random() * Math.PI * 2,
     radius: startRadius,
     startRadius,
-    dTheta: (0.4 + Math.random() * 0.6) * (Math.random() < 0.5 ? 1 : -1),
-    dRadius: 30 + Math.random() * 50,
+    dTheta: (0.3 + Math.random() * 0.45) * (Math.random() < 0.5 ? 1 : -1),
+    dRadius: 45 + Math.random() * 65,
     phase: Math.random() * Math.PI * 2,
     size: 1.5 + Math.random() * 2,
     trail: [],
@@ -115,8 +115,8 @@ function resetParticle(p: SpiralParticle, w: number, h: number, ringRadius: numb
   p.startRadius = minSpawn + Math.random() * (maxSpawn - minSpawn);
   p.radius = p.startRadius;
   p.theta = Math.random() * Math.PI * 2;
-  p.dTheta = (0.4 + Math.random() * 0.6) * (Math.random() < 0.5 ? 1 : -1);
-  p.dRadius = 30 + Math.random() * 50;
+  p.dTheta = (0.3 + Math.random() * 0.45) * (Math.random() < 0.5 ? 1 : -1);
+  p.dRadius = 45 + Math.random() * 65;
   p.phase = Math.random() * Math.PI * 2;
   p.size = 1.5 + Math.random() * 2;
   p.trail.length = 0;
@@ -397,7 +397,7 @@ export function GoldenNexusPortalEffect() {
         p.theta += p.dTheta * dt * (1 + wobble) * angularBoost;
 
         // Radial decay accelerates as radius shrinks (gravity-well)
-        const gravityPull = 1 + (p.startRadius - p.radius) * 0.002;
+        const gravityPull = 1 + (p.startRadius - p.radius) * 0.003;
         p.radius -= p.dRadius * dt * gravityPull;
 
         // Position with elliptical squish

@@ -3,53 +3,39 @@
 import { useRef, useEffect } from 'react';
 
 /**
- * Aurora Network Effect — Canvas 2D hero background
+ * Aurora Effect — Canvas 2D hero background
  *
- * Aurora energy ribbons + constellation network with signal pulses.
- * Uses Canvas 2D (not Three.js) to guarantee transparent background —
- * clearRect() preserves alpha so the star background shows through.
+ * Wide, flowing curtains of light inspired by aurora borealis.
+ * 6-pass additive rendering per band creates vibrant, glowing ribbons
+ * with bright cyan/green cores that bloom outward into purple/magenta edges.
+ * Bands sweep at different tilts to create depth — as if arcing overhead.
  *
- * Architecture mirrors NeuralNetworkCloud.tsx:
- * - Three useEffect hooks (IntersectionObserver, unmount cleanup, init-once)
- * - stateRef holds all mutable animation state (no React re-renders)
- * - Own rAF loop with inline scroll-boost logic
+ * Uses Canvas 2D with clearRect() to preserve alpha so the star
+ * background shows through.
+ *
+ * Architecture: three useEffect hooks, stateRef holds all mutable
+ * animation state (no React re-renders), own rAF loop with scroll boost.
  */
 
 // --- Types ---
-interface AuroraRibbon {
-  frequency: number;
-  amplitude: number;
-  phase: number;
-  yOffset: number;
-  driftSpeed: number;
-  color: { r: number; g: number; b: number };
+
+interface Harmonic {
+  freq: number;
+  amp: number;
+  phaseOff: number;
+  speedMul: number;
 }
 
-interface NetworkNode {
-  x: number;
-  y: number;
-  baseX: number;
+interface AuroraBand {
+  tier: 'primary' | 'secondary' | 'accent';
   baseY: number;
-  driftPhaseX: number;
-  driftPhaseY: number;
-  driftSpeedX: number;
-  driftSpeedY: number;
-  driftAmplitude: number;
-  breathPhase: number;
-  breathSpeed: number;
-  radius: number;
-}
-
-interface Connection {
-  from: number;
-  to: number;
-}
-
-interface SignalPulse {
-  connectionIndex: number;
-  progress: number;
-  speed: number;
-  trail: { x: number; y: number }[];
+  tilt: number;         // Y shift across canvas width (creates diagonal sweep)
+  coreColor: string;    // bright inner color (cyan/green)
+  edgeColor: string;    // outer glow color (purple/magenta shift)
+  harmonics: Harmonic[];
+  driftPhase: number;
+  driftSpeed: number;
+  driftAmp: number;
 }
 
 interface AnimState {
@@ -58,19 +44,137 @@ interface AnimState {
   w: number;
   h: number;
   dpr: number;
-  ribbons: AuroraRibbon[];
-  nodes: NetworkNode[];
-  connections: Connection[];
-  adjacency: number[][];
-  pulses: SignalPulse[];
+  bands: AuroraBand[];
   time: number;
   lastTimestamp: number;
   scrollBoost: number;
   paused: boolean;
   frameId: number;
   isMobile: boolean;
-  trailGhosts: number;
   animateFn: ((ts: number) => void) | null;
+}
+
+// --- Pass configs: [lineWidth, opacityMultiplier, colorBlend] ---
+// colorBlend: 0 = pure edge color, 1 = pure core color
+const DESKTOP_PASSES: [number, number, number][] = [
+  [70, 0.030, 0.0],   // far glow — purple/edge
+  [45, 0.050, 0.15],  // outer glow
+  [28, 0.080, 0.35],  // mid glow
+  [14, 0.140, 0.65],  // inner glow
+  [6,  0.280, 0.88],  // core
+  [2,  0.500, 1.0],   // hot core — whitened
+];
+
+const MOBILE_PASSES: [number, number, number][] = [
+  [42, 0.030, 0.0],
+  [27, 0.050, 0.15],
+  [16, 0.080, 0.35],
+  [8,  0.140, 0.65],
+  [3.5, 0.280, 0.88],
+  [1.5, 0.500, 1.0],
+];
+
+const TIER_MUL: Record<string, number> = { primary: 1.0, secondary: 0.65, accent: 0.40 };
+const TIER_ORDER: Record<string, number> = { accent: 0, secondary: 1, primary: 2 };
+
+// --- Helpers ---
+
+function hexToRgb(hex: string): [number, number, number] {
+  const v = parseInt(hex.slice(1), 16);
+  return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+}
+
+function lerpColor(
+  a: [number, number, number],
+  b: [number, number, number],
+  t: number
+): [number, number, number] {
+  return [
+    Math.round(a[0] + (b[0] - a[0]) * t),
+    Math.round(a[1] + (b[1] - a[1]) * t),
+    Math.round(a[2] + (b[2] - a[2]) * t),
+  ];
+}
+
+function computeBandY(band: AuroraBand, x: number, w: number, h: number, time: number): number {
+  // Base Y with tilt — band arcs diagonally across the canvas
+  const xNorm = x / w;
+  let y = (band.baseY + (xNorm - 0.5) * band.tilt) * h;
+
+  // Sum 4 harmonics for organic non-repeating shape
+  for (const harm of band.harmonics) {
+    y += Math.sin(x * harm.freq / w + time * harm.speedMul + harm.phaseOff) * harm.amp * h;
+  }
+
+  // Slow vertical drift
+  y += Math.sin(time * band.driftSpeed + band.driftPhase) * h * band.driftAmp;
+
+  return y;
+}
+
+// --- Build bands ---
+
+function buildBands(isMobile: boolean): AuroraBand[] {
+  const bands: AuroraBand[] = [];
+  const F = [1.0, 1.618, 2.718, 4.414];
+
+  // Primary bands — brightest, widest sweep, "closest" to viewer
+  // Opposite tilts create crisscross depth pattern
+  const primaries = [
+    { baseY: 0.38, tilt: -0.18, core: '#00e5ff', edge: '#8040c0', ph: 0,   dAmp: 0.03 },
+    { baseY: 0.62, tilt:  0.15, core: '#00ffaa', edge: '#6050b0', ph: 2.1, dAmp: 0.025 },
+  ];
+  for (const cfg of primaries) {
+    bands.push({
+      tier: 'primary', baseY: cfg.baseY, tilt: cfg.tilt,
+      coreColor: cfg.core, edgeColor: cfg.edge,
+      harmonics: [
+        { freq: F[0] * 2.0, amp: 0.12,  phaseOff: cfg.ph,       speedMul: 0.30 },
+        { freq: F[1] * 2.0, amp: 0.06,  phaseOff: cfg.ph + 1.2, speedMul: 0.50 },
+        { freq: F[2] * 2.0, amp: 0.028, phaseOff: cfg.ph + 3.7, speedMul: 0.75 },
+        { freq: F[3] * 2.0, amp: 0.012, phaseOff: cfg.ph + 5.1, speedMul: 1.00 },
+      ],
+      driftPhase: cfg.ph * 0.7, driftSpeed: 0.12, driftAmp: cfg.dAmp,
+    });
+  }
+
+  // Secondary bands — medium brightness, "mid-depth"
+  const secondaries = isMobile
+    ? [{ baseY: 0.28, tilt: -0.10, core: '#00aaff', edge: '#7030a0', ph: 1.4, dAmp: 0.02 }]
+    : [
+        { baseY: 0.24, tilt: -0.10, core: '#00aaff', edge: '#7030a0', ph: 1.4, dAmp: 0.02 },
+        { baseY: 0.76, tilt:  0.12, core: '#00ccaa', edge: '#5060c0', ph: 3.8, dAmp: 0.018 },
+      ];
+  for (const cfg of secondaries) {
+    bands.push({
+      tier: 'secondary', baseY: cfg.baseY, tilt: cfg.tilt,
+      coreColor: cfg.core, edgeColor: cfg.edge,
+      harmonics: [
+        { freq: F[0] * 1.8, amp: 0.09,  phaseOff: cfg.ph,       speedMul: 0.22 },
+        { freq: F[1] * 1.8, amp: 0.045, phaseOff: cfg.ph + 0.9, speedMul: 0.40 },
+        { freq: F[2] * 1.8, amp: 0.020, phaseOff: cfg.ph + 2.8, speedMul: 0.60 },
+        { freq: F[3] * 1.8, amp: 0.009, phaseOff: cfg.ph + 4.6, speedMul: 0.85 },
+      ],
+      driftPhase: cfg.ph * 0.5, driftSpeed: 0.08, driftAmp: cfg.dAmp,
+    });
+  }
+
+  // Accent band — subtle, "furthest back"
+  if (!isMobile) {
+    bands.push({
+      tier: 'accent', baseY: 0.48, tilt: -0.06,
+      coreColor: '#0088ff', edgeColor: '#6040a0',
+      harmonics: [
+        { freq: F[0] * 2.4, amp: 0.07,  phaseOff: 4.2,       speedMul: 0.18 },
+        { freq: F[1] * 2.4, amp: 0.035, phaseOff: 4.2 + 1.5, speedMul: 0.35 },
+        { freq: F[2] * 2.4, amp: 0.016, phaseOff: 4.2 + 3.3, speedMul: 0.52 },
+        { freq: F[3] * 2.4, amp: 0.007, phaseOff: 4.2 + 5.8, speedMul: 0.72 },
+      ],
+      driftPhase: 2.9, driftSpeed: 0.06, driftAmp: 0.015,
+    });
+  }
+
+  return bands;
 }
 
 export function AuroraNetworkEffect() {
@@ -142,126 +246,7 @@ export function AuroraNetworkEffect() {
     ctx.scale(dpr, dpr);
 
     const isMobile = w < 768;
-
-    // --- Configuration ---
-    const ribbonCount = isMobile ? 2 : 3;
-    const nodeCount = isMobile ? 40 : 80;
-    const maxConnsPerNode = isMobile ? 2 : 3;
-    const connDistance = isMobile ? 150 : 200;
-    const pulseCount = isMobile ? 10 : 20;
-    const trailGhosts = isMobile ? 1 : 3;
-
-    // --- Create Aurora Ribbons ---
-    const ribbonColors = [
-      { r: 0, g: 191, b: 255 },  // Bright cyan #00bfff
-      { r: 0, g: 102, b: 204 },  // Deep blue #0066cc
-      { r: 0, g: 221, b: 170 },  // Teal-green #00ddaa
-    ];
-
-    const ribbons: AuroraRibbon[] = [];
-    for (let i = 0; i < ribbonCount; i++) {
-      ribbons.push({
-        frequency: 0.003 + i * 0.001,
-        amplitude: h * (0.08 + i * 0.04),
-        phase: i * Math.PI * 0.7,
-        yOffset: h * (0.3 + i * 0.2),
-        driftSpeed: 0.3 + i * 0.15,
-        color: ribbonColors[i % ribbonColors.length],
-      });
-    }
-
-    // --- Create Nodes (Gaussian distribution with center void) ---
-    const nodes: NetworkNode[] = [];
-    const voidW = w * 0.4;
-    const voidH = h * 0.3;
-    const cx = w / 2;
-    const cy = h / 2;
-
-    function gaussianRandom(): number {
-      let u = 0, v = 0;
-      while (u === 0) u = Math.random();
-      while (v === 0) v = Math.random();
-      return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-    }
-
-    let placed = 0;
-    while (placed < nodeCount) {
-      const x = cx + gaussianRandom() * (w * 0.3);
-      const y = cy + gaussianRandom() * (h * 0.3);
-
-      // Reject nodes inside center void ellipse
-      const dx = (x - cx) / (voidW / 2);
-      const dy = (y - cy) / (voidH / 2);
-      if (dx * dx + dy * dy < 1) continue;
-
-      // Reject nodes outside canvas bounds (with padding)
-      if (x < 20 || x > w - 20 || y < 20 || y > h - 20) continue;
-
-      nodes.push({
-        x, y,
-        baseX: x,
-        baseY: y,
-        driftPhaseX: Math.random() * Math.PI * 2,
-        driftPhaseY: Math.random() * Math.PI * 2,
-        driftSpeedX: 0.2 + Math.random() * 0.3,
-        driftSpeedY: 0.2 + Math.random() * 0.3,
-        driftAmplitude: 3 + Math.random() * 5,
-        breathPhase: Math.random() * Math.PI * 2,
-        breathSpeed: 0.5 + Math.random() * 0.5,
-        radius: 1.5 + Math.random() * 1.5,
-      });
-      placed++;
-    }
-
-    // --- Build Connections ---
-    const connections: Connection[] = [];
-    const connCounts = new Uint8Array(nodeCount);
-    const adjacency: number[][] = Array.from({ length: nodeCount }, () => []);
-
-    // Sort nodes by x for spatial optimization
-    const sortedIndices = Array.from({ length: nodeCount }, (_, i) => i);
-    sortedIndices.sort((a, b) => nodes[a].baseX - nodes[b].baseX);
-
-    for (let si = 0; si < sortedIndices.length; si++) {
-      const a = sortedIndices[si];
-      if (connCounts[a] >= maxConnsPerNode) continue;
-
-      for (let sj = si + 1; sj < sortedIndices.length; sj++) {
-        const b = sortedIndices[sj];
-        // Early exit: if x-distance alone exceeds threshold, no further nodes can connect
-        if (nodes[b].baseX - nodes[a].baseX > connDistance) break;
-
-        if (connCounts[b] >= maxConnsPerNode) continue;
-
-        const dx = nodes[a].baseX - nodes[b].baseX;
-        const dy = nodes[a].baseY - nodes[b].baseY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < connDistance) {
-          const connIdx = connections.length;
-          connections.push({ from: a, to: b });
-          connCounts[a]++;
-          connCounts[b]++;
-          adjacency[a].push(connIdx);
-          adjacency[b].push(connIdx);
-
-          if (connCounts[a] >= maxConnsPerNode) break;
-        }
-      }
-    }
-
-    // --- Create Signal Pulses ---
-    const pulses: SignalPulse[] = [];
-    if (connections.length > 0) {
-      for (let i = 0; i < pulseCount; i++) {
-        pulses.push({
-          connectionIndex: Math.floor(Math.random() * connections.length),
-          progress: Math.random(),
-          speed: 0.3 + Math.random() * 0.5,
-          trail: [],
-        });
-      }
-    }
+    const bands = buildBands(isMobile);
 
     // --- Scroll boost listener ---
     let lastScrollY = window.scrollY;
@@ -277,14 +262,13 @@ export function AuroraNetworkEffect() {
     // --- Store state ---
     const state: AnimState = {
       canvas, ctx, w, h, dpr,
-      ribbons, nodes, connections, adjacency, pulses,
+      bands,
       time: 0,
       lastTimestamp: 0,
       scrollBoost: 0,
       paused: false,
       frameId: 0,
       isMobile,
-      trailGhosts,
       animateFn: null,
     };
     stateRef.current = state;
@@ -308,89 +292,8 @@ export function AuroraNetworkEffect() {
       s.dpr = newDpr;
       s.isMobile = newW < 768;
 
-      // Regenerate ribbons for new dimensions
-      for (let i = 0; i < s.ribbons.length; i++) {
-        s.ribbons[i].amplitude = newH * (0.08 + i * 0.04);
-        s.ribbons[i].yOffset = newH * (0.3 + i * 0.2);
-      }
-
-      // Regenerate nodes
-      const newNodeCount = s.isMobile ? 40 : 80;
-      const newVoidW = newW * 0.4;
-      const newVoidH = newH * 0.3;
-      const newCx = newW / 2;
-      const newCy = newH / 2;
-      const newMaxConns = s.isMobile ? 2 : 3;
-      const newConnDist = s.isMobile ? 150 : 200;
-
-      s.nodes.length = 0;
-      let p = 0;
-      while (p < newNodeCount) {
-        const x = newCx + gaussianRandom() * (newW * 0.3);
-        const y = newCy + gaussianRandom() * (newH * 0.3);
-        const ddx = (x - newCx) / (newVoidW / 2);
-        const ddy = (y - newCy) / (newVoidH / 2);
-        if (ddx * ddx + ddy * ddy < 1) continue;
-        if (x < 20 || x > newW - 20 || y < 20 || y > newH - 20) continue;
-
-        s.nodes.push({
-          x, y, baseX: x, baseY: y,
-          driftPhaseX: Math.random() * Math.PI * 2,
-          driftPhaseY: Math.random() * Math.PI * 2,
-          driftSpeedX: 0.2 + Math.random() * 0.3,
-          driftSpeedY: 0.2 + Math.random() * 0.3,
-          driftAmplitude: 3 + Math.random() * 5,
-          breathPhase: Math.random() * Math.PI * 2,
-          breathSpeed: 0.5 + Math.random() * 0.5,
-          radius: 1.5 + Math.random() * 1.5,
-        });
-        p++;
-      }
-
-      // Rebuild connections
-      s.connections.length = 0;
-      s.adjacency.length = 0;
-      for (let i = 0; i < newNodeCount; i++) s.adjacency.push([]);
-      const newConnCounts = new Uint8Array(newNodeCount);
-      const newSorted = Array.from({ length: newNodeCount }, (_, i) => i);
-      newSorted.sort((a, b) => s.nodes[a].baseX - s.nodes[b].baseX);
-
-      for (let si = 0; si < newSorted.length; si++) {
-        const a = newSorted[si];
-        if (newConnCounts[a] >= newMaxConns) continue;
-        for (let sj = si + 1; sj < newSorted.length; sj++) {
-          const b = newSorted[sj];
-          if (s.nodes[b].baseX - s.nodes[a].baseX > newConnDist) break;
-          if (newConnCounts[b] >= newMaxConns) continue;
-          const ddx2 = s.nodes[a].baseX - s.nodes[b].baseX;
-          const ddy2 = s.nodes[a].baseY - s.nodes[b].baseY;
-          const dist = Math.sqrt(ddx2 * ddx2 + ddy2 * ddy2);
-          if (dist < newConnDist) {
-            const ci = s.connections.length;
-            s.connections.push({ from: a, to: b });
-            newConnCounts[a]++;
-            newConnCounts[b]++;
-            s.adjacency[a].push(ci);
-            s.adjacency[b].push(ci);
-            if (newConnCounts[a] >= newMaxConns) break;
-          }
-        }
-      }
-
-      // Reset pulses
-      const newPulseCount = s.isMobile ? 10 : 20;
-      s.pulses.length = 0;
-      s.trailGhosts = s.isMobile ? 1 : 3;
-      if (s.connections.length > 0) {
-        for (let i = 0; i < newPulseCount; i++) {
-          s.pulses.push({
-            connectionIndex: Math.floor(Math.random() * s.connections.length),
-            progress: Math.random(),
-            speed: 0.3 + Math.random() * 0.5,
-            trail: [],
-          });
-        }
-      }
+      // Rebuild bands for new breakpoint
+      s.bands = buildBands(s.isMobile);
     });
     ro.observe(container);
 
@@ -400,19 +303,10 @@ export function AuroraNetworkEffect() {
     // Start animation
     state.frameId = requestAnimationFrame(animate);
 
-    // Cleanup scroll listener stored on state for unmount
-    const cleanup = () => {
+    return () => {
       window.removeEventListener('scroll', onScroll);
       ro.disconnect();
     };
-    // Attach cleanup to dispose
-    const origDispose = () => {
-      cancelAnimationFrame(state.frameId);
-      cleanup();
-      canvas.remove();
-    };
-    // Store for unmount
-    (stateRef as any)._cleanup = origDispose;
 
     // --- Animation frame ---
     function animate(timestamp: number) {
@@ -432,38 +326,51 @@ export function AuroraNetworkEffect() {
       s.time += dt * (1 + s.scrollBoost);
 
       const { ctx: c, w: cw, h: ch, time: t } = s;
+      const step = s.isMobile ? 4 : 3;
+      const passes = s.isMobile ? MOBILE_PASSES : DESKTOP_PASSES;
 
       // Clear — transparent background
       c.clearRect(0, 0, cw, ch);
 
       // ═══════════════════════════════════════
-      // 1. AURORA RIBBONS
+      // AURORA BANDS (back to front: accent → secondary → primary)
       // ═══════════════════════════════════════
       c.globalCompositeOperation = 'lighter';
-      const ribbonLineWidth = s.isMobile ? 60 : 120;
 
-      for (const ribbon of s.ribbons) {
-        const { frequency, amplitude, phase, yOffset, driftSpeed, color } = ribbon;
-        const passes = 4;
+      // Sort back-to-front
+      const sorted = [...s.bands].sort(
+        (a, b) => TIER_ORDER[a.tier] - TIER_ORDER[b.tier]
+      );
 
-        for (let pass = 0; pass < passes; pass++) {
-          const widthMul = 1 + pass * 0.8;
-          const opacityMul = 0.02 / (pass + 1);
+      for (const band of sorted) {
+        const coreRgb = hexToRgb(band.coreColor);
+        const edgeRgb = hexToRgb(band.edgeColor);
+        const tierMul = TIER_MUL[band.tier];
+
+        // 6 passes from widest/dimmest to narrowest/brightest
+        for (const [lw, opMul, blend] of passes) {
+          // Blend between edge color (outer) and core color (inner)
+          const [cr, cg, cb] = lerpColor(edgeRgb, coreRgb, blend);
+          // For the hot core pass, push toward white
+          const white: [number, number, number] = [255, 255, 255];
+          const [fr, fg, fb] = blend >= 1.0
+            ? lerpColor(coreRgb, white, 0.35)
+            : [cr, cg, cb];
+
+          const opacity = opMul * tierMul;
 
           c.beginPath();
-          c.lineWidth = ribbonLineWidth * widthMul;
-          c.strokeStyle = `rgba(${color.r},${color.g},${color.b},${opacityMul})`;
+          c.lineWidth = lw;
+          c.strokeStyle = `rgba(${fr},${fg},${fb},${opacity})`;
           c.lineCap = 'round';
+          c.lineJoin = 'round';
 
-          for (let px = -50; px <= cw + 50; px += 4) {
-            const xNorm = px / cw;
-            const y = yOffset
-              + Math.sin(px * frequency + t * driftSpeed + phase) * amplitude
-              + Math.sin(px * frequency * 1.7 + t * driftSpeed * 0.6 + phase * 2.3) * amplitude * 0.3;
-
-            // Reduce opacity in center zone for text readability
-            if (px === -50) {
+          let first = true;
+          for (let px = -40; px <= cw + 40; px += step) {
+            const y = computeBandY(band, px, cw, ch, t);
+            if (first) {
               c.moveTo(px, y);
+              first = false;
             } else {
               c.lineTo(px, y);
             }
@@ -473,148 +380,28 @@ export function AuroraNetworkEffect() {
       }
 
       // ═══════════════════════════════════════
-      // 2. CONNECTIONS (faint curved bezier lines)
+      // CENTER VOID MASK (text readability)
       // ═══════════════════════════════════════
-      c.globalCompositeOperation = 'source-over';
+      c.globalCompositeOperation = 'destination-out';
 
-      for (const conn of s.connections) {
-        const nA = s.nodes[conn.from];
-        const nB = s.nodes[conn.to];
+      const voidW = cw * (s.isMobile ? 0.30 : 0.35);
+      const voidH = ch * (s.isMobile ? 0.20 : 0.25);
+      const vcx = cw / 2;
+      const vcy = ch / 2;
 
-        // Check if connection crosses center — reduce opacity
-        const midX = (nA.x + nB.x) / 2;
-        const midY = (nA.y + nB.y) / 2;
-        const dcx = (midX - cw / 2) / (cw * 0.2);
-        const dcy = (midY - ch / 2) / (ch * 0.15);
-        const inCenter = dcx * dcx + dcy * dcy < 1;
-        const opacity = inCenter ? 0.04 : 0.08;
+      const voidGrad = c.createRadialGradient(vcx, vcy, 0, vcx, vcy, 1);
+      voidGrad.addColorStop(0, 'rgba(0,0,0,0.85)');
+      voidGrad.addColorStop(0.6, 'rgba(0,0,0,0.4)');
+      voidGrad.addColorStop(1, 'rgba(0,0,0,0)');
 
-        // Bezier curve with slight arc
-        const cpX = midX + (nA.y - nB.y) * 0.15;
-        const cpY = midY - (nA.x - nB.x) * 0.15;
-
-        c.beginPath();
-        c.moveTo(nA.x, nA.y);
-        c.quadraticCurveTo(cpX, cpY, nB.x, nB.y);
-        c.strokeStyle = `rgba(51,85,119,${opacity})`;
-        c.lineWidth = 1;
-        c.stroke();
-      }
-
-      // ═══════════════════════════════════════
-      // 3. NODES (glowing dots with radial gradients)
-      // ═══════════════════════════════════════
-      c.globalCompositeOperation = 'lighter';
-
-      for (const node of s.nodes) {
-        // Update drift
-        node.x = node.baseX + Math.sin(t * node.driftSpeedX + node.driftPhaseX) * node.driftAmplitude;
-        node.y = node.baseY + Math.cos(t * node.driftSpeedY + node.driftPhaseY) * node.driftAmplitude;
-
-        // Breathing pulse
-        const breath = 0.6 + Math.sin(t * node.breathSpeed + node.breathPhase) * 0.4;
-        const r = node.radius * (1 + breath * 0.3);
-        const glowRadius = r * 6;
-
-        // Radial gradient halo
-        const grad = c.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowRadius);
-        grad.addColorStop(0, `rgba(68,204,255,${0.7 * breath})`);
-        grad.addColorStop(0.3, `rgba(68,204,255,${0.2 * breath})`);
-        grad.addColorStop(1, 'rgba(68,204,255,0)');
-
-        c.beginPath();
-        c.arc(node.x, node.y, glowRadius, 0, Math.PI * 2);
-        c.fillStyle = grad;
-        c.fill();
-
-        // Core dot
-        c.beginPath();
-        c.arc(node.x, node.y, r, 0, Math.PI * 2);
-        c.fillStyle = `rgba(136,238,255,${0.8 * breath})`;
-        c.fill();
-      }
-
-      // ═══════════════════════════════════════
-      // 4. SIGNAL PULSES
-      // ═══════════════════════════════════════
-      if (s.connections.length > 0) {
-        for (const pulse of s.pulses) {
-          pulse.progress += pulse.speed * dt;
-
-          // Route to next connection on arrival
-          if (pulse.progress >= 1.0) {
-            const conn = s.connections[pulse.connectionIndex];
-            const destNode = conn.to;
-            const outgoing = s.adjacency[destNode];
-
-            if (outgoing && outgoing.length > 0) {
-              if (outgoing.length > 1) {
-                const candidates = outgoing.filter(ci => ci !== pulse.connectionIndex);
-                pulse.connectionIndex = candidates.length > 0
-                  ? candidates[Math.floor(Math.random() * candidates.length)]
-                  : outgoing[Math.floor(Math.random() * outgoing.length)];
-              } else {
-                pulse.connectionIndex = outgoing[0];
-              }
-            } else {
-              pulse.connectionIndex = Math.floor(Math.random() * s.connections.length);
-            }
-            pulse.progress = 0;
-            pulse.speed = 0.3 + Math.random() * 0.5;
-          }
-
-          // Interpolate position
-          const conn = s.connections[pulse.connectionIndex];
-          if (!conn) continue;
-          const nFrom = s.nodes[conn.from];
-          const nTo = s.nodes[conn.to];
-          if (!nFrom || !nTo) continue;
-
-          const px = nFrom.x + (nTo.x - nFrom.x) * pulse.progress;
-          const py = nFrom.y + (nTo.y - nFrom.y) * pulse.progress;
-
-          // Store trail position
-          pulse.trail.unshift({ x: px, y: py });
-          if (pulse.trail.length > s.trailGhosts + 1) {
-            pulse.trail.length = s.trailGhosts + 1;
-          }
-
-          // Draw trail ghosts
-          for (let g = pulse.trail.length - 1; g >= 1; g--) {
-            const ghost = pulse.trail[g];
-            const ghostOpacity = 0.3 * (1 - g / (s.trailGhosts + 1));
-            const ghostRadius = 3 - g * 0.5;
-
-            if (ghostRadius > 0) {
-              const gGrad = c.createRadialGradient(ghost.x, ghost.y, 0, ghost.x, ghost.y, ghostRadius * 3);
-              gGrad.addColorStop(0, `rgba(136,238,255,${ghostOpacity})`);
-              gGrad.addColorStop(1, 'rgba(136,238,255,0)');
-
-              c.beginPath();
-              c.arc(ghost.x, ghost.y, ghostRadius * 3, 0, Math.PI * 2);
-              c.fillStyle = gGrad;
-              c.fill();
-            }
-          }
-
-          // Draw pulse head
-          const headGrad = c.createRadialGradient(px, py, 0, px, py, 12);
-          headGrad.addColorStop(0, 'rgba(200,245,255,0.9)');
-          headGrad.addColorStop(0.3, 'rgba(136,238,255,0.4)');
-          headGrad.addColorStop(1, 'rgba(136,238,255,0)');
-
-          c.beginPath();
-          c.arc(px, py, 12, 0, Math.PI * 2);
-          c.fillStyle = headGrad;
-          c.fill();
-
-          // Bright core
-          c.beginPath();
-          c.arc(px, py, 2, 0, Math.PI * 2);
-          c.fillStyle = 'rgba(220,250,255,0.9)';
-          c.fill();
-        }
-      }
+      c.save();
+      c.translate(vcx, vcy);
+      c.scale(voidW, voidH);
+      c.beginPath();
+      c.arc(0, 0, 1, 0, Math.PI * 2);
+      c.fillStyle = voidGrad;
+      c.fill();
+      c.restore();
 
       s.frameId = requestAnimationFrame(animate);
     }
