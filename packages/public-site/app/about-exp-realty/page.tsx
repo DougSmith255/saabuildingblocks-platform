@@ -392,7 +392,7 @@ function StatsBar() {
 
           {/* Problem statement */}
           <p
-            className="mt-6 text-center max-w-3xl mx-auto text-base md:text-lg leading-relaxed"
+            className="mt-6 text-center max-w-[900px] mx-auto text-base md:text-lg leading-relaxed"
             style={{ color: 'var(--color-body-text)', opacity: 0.85 }}
           >
             Most real estate brokerages create friction in daily production and offer no durable plan for what comes after it.
@@ -498,19 +498,19 @@ const FEATURES: { icon: LucideIcon; keyword: string; type: 'pillar' | 'advantage
     icon: Building2,
     keyword: 'Ownership',
     type: 'pillar',
-    detail: 'eXp Realty is publicly traded on the NASDAQ (EXPI). Agents can earn stock awards through production, attracting new agents, and reaching milestones. This is not a perk. It is ownership in the company you help build.',
+    detail: 'eXp is publicly traded (EXPI). Agents earn stock through production and milestones — real ownership in the company they help build.',
   },
   {
     icon: Layers,
     keyword: 'Leverage',
     type: 'pillar',
-    detail: 'eXp operates across 29+ countries with 84,000+ agents. Instead of local office overhead, agents access cloud-based tools, global referral networks, and systems built for efficiency at scale.',
+    detail: '84,000+ agents across 29 countries. Cloud-based tools, global referrals, and systems built for scale — without office overhead.',
   },
   {
     icon: Infinity,
     keyword: 'Longevity',
     type: 'pillar',
-    detail: 'Revenue sharing at eXp is not a bonus. It is a structural income stream tied to your network. When agents you attract to eXp succeed, you earn a share of their production even if you slow down, step back, or retire.',
+    detail: 'Revenue share is a structural income stream. When agents you attract produce, you earn — even after you slow down or step back.',
   },
   {
     icon: TrendingUp,
@@ -761,16 +761,16 @@ function SpotlightConsole() {
         >
           <H2>WHY EXP EXISTS</H2>
           <p
-            className="mt-4 max-w-3xl mx-auto text-base md:text-lg leading-relaxed"
+            className="mt-4 max-w-[900px] mx-auto text-base md:text-lg leading-relaxed"
             style={{ color: 'var(--color-body-text)' }}
           >
             Most brokerages are built to maximize commission today, with little consideration for scale, ownership, or life beyond production.
           </p>
           <p
-            className="mt-2 max-w-3xl mx-auto text-sm md:text-base leading-relaxed"
+            className="mt-2 max-w-[900px] mx-auto text-sm md:text-base leading-relaxed"
             style={{ color: 'var(--color-body-text)', opacity: 0.75 }}
           >
-            eXp was built around production and three more — backed by advantages that are structural, not promotional.
+            eXp was designed around production and three structural pillars — ownership, leverage, and longevity — backed by advantages no other brokerage can match.
           </p>
         </div>
 
@@ -956,6 +956,12 @@ function SpotlightConsole() {
             transition: 'opacity 600ms ease-out 500ms',
           }}
         >
+          <p
+            className="text-center max-w-[900px] mx-auto text-sm md:text-base leading-relaxed mb-2"
+            style={{ color: 'var(--color-body-text)', opacity: 0.65 }}
+          >
+            Independent validation from third-party organizations
+          </p>
           <ValidationRibbon />
         </div>
 
@@ -968,7 +974,7 @@ function SpotlightConsole() {
           }}
         >
           <p
-            className="max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-6"
+            className="max-w-[900px] mx-auto text-sm md:text-base leading-relaxed mb-6"
             style={{ color: 'var(--color-body-text)', opacity: 0.8 }}
           >
             This structure supports agents while they are actively producing and provides options when they are ready to slow down, step back, or think beyond their next deal.
