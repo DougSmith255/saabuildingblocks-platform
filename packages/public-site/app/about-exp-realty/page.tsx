@@ -471,16 +471,15 @@ function ValidationRibbon() {
 
       {/* Validation logos */}
       <div className="max-w-[1900px] mx-auto">
-        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10 mt-4 px-4">
+        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10 mt-2 px-4">
           {LOGOS.map((logo) => (
-            <Icon3D key={logo.id} color="#00bfff" size={logo.id === 'glassdoor-logo' ? 140 : 100}>
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                className={`w-auto object-contain ${logo.id === 'glassdoor-logo' ? 'h-[60px] md:h-[70px]' : 'h-14 md:h-[50px]'}`}
-                style={{ filter: 'brightness(0.7) sepia(1) hue-rotate(180deg) saturate(0.5)' }}
-              />
-            </Icon3D>
+            <img
+              key={logo.id}
+              src={logo.src}
+              alt={logo.alt}
+              className={`w-auto object-contain ${logo.id === 'glassdoor-logo' ? 'h-[60px] md:h-[70px]' : 'h-14 md:h-[50px]'}`}
+              style={{ opacity: 0.7 }}
+            />
           ))}
         </div>
       </div>
@@ -538,13 +537,13 @@ const FEATURES: { icon: LucideIcon; keyword: string; type: 'pillar' | 'advantage
   },
 ];
 
-const MISTY_GOLDEN_BG = `
-  radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
-  radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
-  radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
-  radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
-  radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
-  linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
+const MISTY_BLUE_BG = `
+  radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.85) 0%, transparent 50%),
+  radial-gradient(ellipse 100% 60% at 70% 80%, rgba(140,220,255,0.7) 0%, transparent 40%),
+  radial-gradient(ellipse 80% 100% at 50% 50%, rgba(80,210,255,0.75) 0%, transparent 60%),
+  radial-gradient(ellipse 60% 40% at 20% 70%, rgba(60,190,255,0.55) 0%, transparent 50%),
+  radial-gradient(ellipse 90% 70% at 80% 30%, rgba(180,230,255,0.5) 0%, transparent 45%),
+  linear-gradient(180deg, rgba(180,230,255,0.92) 0%, rgba(120,210,255,0.88) 50%, rgba(60,180,240,0.92) 100%)
 `;
 const DARK_CARD_BG = 'linear-gradient(180deg, rgba(30,30,30,0.98), rgba(15,15,15,0.99))';
 
@@ -563,20 +562,20 @@ function FeatureChip({
     <div
       className="rounded-xl relative h-full"
       style={{
-        border: isActive ? '2px solid rgba(180,150,50,0.5)' : '2px solid rgba(255,255,255,0.06)',
+        border: isActive ? '2px solid rgba(50,150,220,0.5)' : '2px solid rgba(255,255,255,0.06)',
         boxShadow: isActive
-          ? '0 0 20px 4px rgba(255,200,80,0.3), 0 0 40px 8px rgba(255,180,50,0.15)'
+          ? '0 0 20px 4px rgba(0,160,255,0.3), 0 0 40px 8px rgba(0,120,200,0.15)'
           : 'none',
         transition: 'border 0.4s ease, box-shadow 0.4s ease',
       }}
     >
       {/* Dark base background */}
       <div className="absolute inset-0 rounded-xl overflow-hidden" style={{ background: DARK_CARD_BG }} />
-      {/* Misty golden overlay — active only */}
+      {/* Misty blue overlay — active only */}
       <div
         className="absolute inset-0 rounded-xl overflow-hidden"
         style={{
-          background: MISTY_GOLDEN_BG,
+          background: MISTY_BLUE_BG,
           opacity: isActive ? 1 : 0,
           transition: isActive ? 'opacity 0.7s ease-out' : 'opacity 0.2s ease-out',
         }}
@@ -588,13 +587,13 @@ function FeatureChip({
         aria-pressed={isActive}
         className="relative z-10 flex flex-col items-center justify-center gap-2 w-full h-full cursor-pointer p-3"
       >
-        <Icon3D color="#c4a94d" size={36} invert={isActive}>
+        <Icon3D color="#00bfff" size={36} invert={isActive}>
           <Icon size={20} />
         </Icon3D>
         <h3
           className="text-xs font-bold uppercase tracking-wider"
           style={{
-            color: isActive ? '#2a1f05' : '#e5e4dd',
+            color: isActive ? '#0a1520' : '#e5e4dd',
             fontFamily: 'var(--font-family-h3)',
             transition: 'color 0.4s ease',
           }}
@@ -637,7 +636,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
           }}
         >
           <div className="flex items-center gap-4 mb-4">
-            <Icon3D color="#c4a94d" size={56}>
+            <Icon3D color="#00bfff" size={56}>
               <displayed.icon size={32} />
             </Icon3D>
             <h3
@@ -649,12 +648,12 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
           </div>
 
           {/* Animated gold separator */}
-          <div className="relative h-[2px] mb-4 overflow-hidden" style={{ background: 'rgba(255,215,0,0.1)' }}>
+          <div className="relative h-[2px] mb-4 overflow-hidden" style={{ background: 'rgba(0,191,255,0.1)' }}>
             <div
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(90deg, #ffd700, #c4a94d)',
+                background: 'linear-gradient(90deg, #00bfff, #4da6c4)',
                 transform: phase === 'in' ? 'scaleX(1)' : 'scaleX(0)',
                 transformOrigin: 'left',
                 transition: 'transform 400ms ease-out 200ms',
@@ -671,11 +670,9 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
           <span
             className="inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full"
             style={{
-              background: displayed.type === 'pillar'
-                ? 'rgba(255,215,0,0.12)'
-                : 'rgba(0,191,255,0.12)',
-              color: displayed.type === 'pillar' ? '#ffd700' : '#00bfff',
-              border: `1px solid ${displayed.type === 'pillar' ? 'rgba(255,215,0,0.25)' : 'rgba(0,191,255,0.25)'}`,
+              background: 'rgba(0,191,255,0.12)',
+              color: '#00bfff',
+              border: '1px solid rgba(0,191,255,0.25)',
             }}
           >
             {displayed.type === 'pillar' ? 'CORE PILLAR' : 'STRUCTURAL ADVANTAGE'}
@@ -794,12 +791,12 @@ function SpotlightConsole() {
               className="rounded-lg p-5 text-left"
               style={{
                 background: 'rgba(20,20,20,0.6)',
-                borderLeft: '4px solid #ffd700',
+                borderLeft: '4px solid #00bfff',
               }}
             >
               <span
                 className="block text-xs font-semibold uppercase tracking-wider mb-2"
-                style={{ color: '#ffd700' }}
+                style={{ color: '#00bfff' }}
               >
                 The Answer
               </span>
@@ -892,8 +889,8 @@ function SpotlightConsole() {
                   aria-label={`Go to ${FEATURES[i].keyword}`}
                   className="w-2 h-2 rounded-full transition-all duration-300"
                   style={{
-                    background: i === activeIndex ? '#ffd700' : 'rgba(255,255,255,0.25)',
-                    boxShadow: i === activeIndex ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                    background: i === activeIndex ? '#00bfff' : 'rgba(255,255,255,0.25)',
+                    boxShadow: i === activeIndex ? '0 0 8px rgba(0,191,255,0.6)' : 'none',
                     transform: i === activeIndex ? 'scale(1.3)' : 'scale(1)',
                   }}
                 />
@@ -982,8 +979,8 @@ function SpotlightConsole() {
                 aria-label={`Go to ${FEATURES[i].keyword}`}
                 className="w-2 h-2 rounded-full transition-all duration-300"
                 style={{
-                  background: i === activeIndex ? '#ffd700' : 'rgba(255,255,255,0.25)',
-                  boxShadow: i === activeIndex ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                  background: i === activeIndex ? '#00bfff' : 'rgba(255,255,255,0.25)',
+                  boxShadow: i === activeIndex ? '0 0 8px rgba(0,191,255,0.6)' : 'none',
                   transform: i === activeIndex ? 'scale(1.3)' : 'scale(1)',
                 }}
               />
@@ -999,7 +996,7 @@ function SpotlightConsole() {
           }}
         >
           <p
-            className="text-center max-w-[900px] mx-auto text-sm md:text-base leading-relaxed mb-2"
+            className="text-center max-w-[900px] mx-auto text-sm md:text-base leading-relaxed mt-6 mb-1"
             style={{ color: 'var(--color-body-text)', opacity: 0.65 }}
           >
             Independent validation from third-party organizations
@@ -1034,11 +1031,65 @@ function SpotlightConsole() {
    ═══════════════════════════════════════════════════════════════ */
 
 export default function AboutExpRealty() {
+  // Apply blue theme class to body so header/logo overrides work outside #main-content
+  useEffect(() => {
+    document.body.classList.add('about-exp-blue-theme');
+    return () => document.body.classList.remove('about-exp-blue-theme');
+  }, []);
 
   return (
     <main id="main-content">
-      {/* Fade-in keyframe */}
-      <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+      {/* Page-level blue theme overrides */}
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Blue stat numbers */
+        #main-content .stat-3d-text {
+          color: #00bfff !important;
+          text-shadow:
+            -1px -1px 0 #80d4ff,
+            1px 1px 0 #3d8a9d,
+            2px 2px 0 #2d6a7d,
+            3px 3px 0 #1d4a5d,
+            4px 4px 0 #1d2a3d,
+            5px 5px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Blue H1 override */
+        #main-content .heading-3d-wrapper h1 {
+          color: #00bfff !important;
+        }
+        #main-content .heading-3d-wrapper h1 .heading-3d-metal-plate {
+          background: linear-gradient(180deg, #a0d8ef 0%, #00bfff 45%, #0090c0 100%) !important;
+          -webkit-background-clip: text !important;
+          background-clip: text !important;
+        }
+
+        /* Blue CTA light bars + glow */
+        .about-exp-blue-theme .cta-light-bar {
+          background: #00bfff !important;
+        }
+        .about-exp-blue-theme .cta-light-bar-pulse {
+          --glow-color: 0, 191, 255 !important;
+        }
+
+        /* Blue header logo gradient */
+        .about-exp-blue-theme #headerLogoGradient stop:nth-child(1) {
+          stop-color: #b0e0ff !important;
+        }
+        .about-exp-blue-theme #headerLogoGradient stop:nth-child(2) {
+          stop-color: #00bfff !important;
+        }
+        .about-exp-blue-theme #headerLogoGradient stop:nth-child(3) {
+          stop-color: #0090c0 !important;
+        }
+
+        /* Blue hover borders on header CTA */
+        .about-exp-blue-theme .header-btn a:hover {
+          border-left-color: rgba(0, 191, 255, 0.4) !important;
+          border-right-color: rgba(0, 191, 255, 0.4) !important;
+        }
+      `}</style>
 
       {/* ════ Hero Section ════ */}
       <StickyHeroWrapper>
