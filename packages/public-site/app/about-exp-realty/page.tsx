@@ -561,7 +561,7 @@ function FeatureChip({
 }) {
   return (
     <div
-      className="rounded-xl relative overflow-hidden"
+      className="rounded-xl relative h-full"
       style={{
         border: isActive ? '2px solid rgba(180,150,50,0.5)' : '1px solid rgba(255,255,255,0.1)',
         boxShadow: isActive
@@ -571,10 +571,10 @@ function FeatureChip({
       }}
     >
       {/* Dark base background */}
-      <div className="absolute inset-0 rounded-xl" style={{ background: DARK_CARD_BG }} />
+      <div className="absolute inset-0 rounded-xl overflow-hidden" style={{ background: DARK_CARD_BG }} />
       {/* Misty golden overlay — active only */}
       <div
-        className="absolute inset-0 rounded-xl"
+        className="absolute inset-0 rounded-xl overflow-hidden"
         style={{
           background: MISTY_GOLDEN_BG,
           opacity: isActive ? 1 : 0,
@@ -586,9 +586,9 @@ function FeatureChip({
         type="button"
         onClick={onSelect}
         aria-pressed={isActive}
-        className="relative z-10 flex flex-col items-center gap-2 w-full cursor-pointer p-3"
+        className="relative z-10 flex flex-col items-center justify-center gap-2 w-full h-full cursor-pointer p-3"
       >
-        <Icon3D color={isActive ? '#4a3a10' : '#c4a94d'} size={36}>
+        <Icon3D color="#c4a94d" size={36}>
           <Icon size={20} />
         </Icon3D>
         <h3
@@ -625,8 +625,8 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
   }, [feature, transitionKey, displayedKey]);
 
   return (
-    <CyberCard padding="md" centered={false}>
-      <div className="relative h-full flex flex-col justify-center p-4 md:p-6" style={{ minHeight: '320px' }}>
+    <CyberCard padding="md" centered={false} className="h-full">
+      <div className="relative h-full flex flex-col justify-center">
         <div
           style={{
             transition: phase === 'out'
@@ -637,12 +637,12 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
           }}
         >
           <div className="flex items-center gap-4 mb-4">
-            <Icon3D color="#ffd700" size={56}>
+            <Icon3D color="#c4a94d" size={56}>
               <displayed.icon size={32} />
             </Icon3D>
             <h3
               className="text-h3"
-              style={{ color: '#ffd700' }}
+              style={{ color: '#e5e4dd' }}
             >
               {displayed.keyword}
             </h3>
@@ -688,41 +688,35 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
 
 function SpotlightConsole() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const lastInteraction = useRef(0);
+  const [isStopped, setIsStopped] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const chipsRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [chipsInView, setChipsInView] = useState(false);
   const chipRailRef = useRef<HTMLDivElement>(null);
 
-  // Auto-rotation
+  // Auto-rotation — only runs after chips are scrolled into view, stops permanently on click
   useEffect(() => {
+    if (!chipsInView || isStopped) return;
     const interval = setInterval(() => {
-      if (isPaused) {
-        // Check if 8s has passed since last interaction
-        if (Date.now() - lastInteraction.current > 8000) {
-          setIsPaused(false);
-        }
-        return;
-      }
       setActiveIndex((prev) => (prev + 1) % FEATURES.length);
-    }, 5000);
+    }, 3500);
     return () => clearInterval(interval);
-  }, [isPaused]);
+  }, [chipsInView, isStopped]);
 
-  // Scroll active chip into view on mobile
+  // Scroll active chip into view on mobile — only when chips are in view
   useEffect(() => {
-    if (!chipRailRef.current) return;
+    if (!chipsInView || !chipRailRef.current) return;
     const rail = chipRailRef.current;
     const activeChip = rail.children[activeIndex] as HTMLElement | undefined;
     if (activeChip) {
       activeChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
-  }, [activeIndex]);
+  }, [activeIndex, chipsInView]);
 
   const handleSelect = useCallback((index: number) => {
     setActiveIndex(index);
-    setIsPaused(true);
-    lastInteraction.current = Date.now();
+    setIsStopped(true);
   }, []);
 
   // Section entry animation via IntersectionObserver
@@ -742,12 +736,27 @@ function SpotlightConsole() {
     return () => observer.disconnect();
   }, []);
 
+  // Chips grid visibility — gates auto-rotation so it only starts when cards are on screen
+  useEffect(() => {
+    const el = chipsRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setChipsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       ref={sectionRef}
       className="pt-12 pb-10 px-4 sm:px-8 md:px-12"
-      onMouseEnter={() => { setIsPaused(true); lastInteraction.current = Date.now(); }}
-      onMouseLeave={() => { lastInteraction.current = Date.now(); }}
     >
       <div className="max-w-[1400px] mx-auto">
         {/* H2 + intro */}
@@ -760,27 +769,59 @@ function SpotlightConsole() {
           }}
         >
           <H2>WHY EXP EXISTS</H2>
-          <p
-            className="mt-4 max-w-[900px] mx-auto text-base md:text-lg leading-relaxed"
-            style={{ color: 'var(--color-body-text)' }}
-          >
-            Most brokerages are built to maximize commission today, with little consideration for scale, ownership, or life beyond production.
-          </p>
-          <p
-            className="mt-2 max-w-[900px] mx-auto text-sm md:text-base leading-relaxed"
-            style={{ color: 'var(--color-body-text)', opacity: 0.75 }}
-          >
-            eXp was designed around production and three structural pillars — ownership, leverage, and longevity — backed by advantages no other brokerage can match.
-          </p>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[950px] mx-auto">
+            <div
+              className="rounded-lg p-5 text-left"
+              style={{
+                background: 'rgba(20,20,20,0.6)',
+                borderLeft: '4px solid #c0513f',
+              }}
+            >
+              <span
+                className="block text-xs font-semibold uppercase tracking-wider mb-2"
+                style={{ color: '#c0513f' }}
+              >
+                The Problem
+              </span>
+              <p
+                className="text-sm md:text-base leading-relaxed"
+                style={{ color: 'var(--color-body-text)' }}
+              >
+                Most brokerages are built to maximize commission today, with little consideration for scale, ownership, or life beyond production.
+              </p>
+            </div>
+            <div
+              className="rounded-lg p-5 text-left"
+              style={{
+                background: 'rgba(20,20,20,0.6)',
+                borderLeft: '4px solid #ffd700',
+              }}
+            >
+              <span
+                className="block text-xs font-semibold uppercase tracking-wider mb-2"
+                style={{ color: '#ffd700' }}
+              >
+                The Answer
+              </span>
+              <p
+                className="text-sm md:text-base leading-relaxed"
+                style={{ color: 'var(--color-body-text)' }}
+              >
+                eXp was designed around production and three structural pillars — ownership, leverage, and longevity — backed by advantages no other brokerage can match.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Desktop: two-column grid */}
-        <div className="hidden lg:grid grid-cols-[45%_55%] gap-6 items-stretch">
+        <div ref={chipsRef} className="hidden lg:grid grid-cols-[45%_55%] gap-6" style={{ height: '308px', overflow: 'visible' }}>
           {/* Left: chips grid */}
           <div
             style={{
+              height: '308px',
               opacity: isVisible ? 1 : 0,
               transition: 'opacity 500ms ease-out 200ms',
+              overflow: 'visible',
             }}
           >
             <div className="grid grid-cols-3 gap-3">
@@ -863,6 +904,7 @@ function SpotlightConsole() {
           {/* Right: detail panel */}
           <div
             style={{
+              height: '308px',
               opacity: isVisible ? 1 : 0,
               transform: isVisible ? 'translateX(0)' : 'translateX(20px)',
               transition: 'opacity 700ms ease-out 300ms, transform 700ms ease-out 300ms',
