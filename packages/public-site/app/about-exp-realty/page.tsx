@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCard, CTAButton } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHeroEffects';
-import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, ChevronDown } from 'lucide-react';
+import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
@@ -477,181 +477,446 @@ function AwardsRibbon() {
    SECTION 1: WHY EXP EXISTS
    ═══════════════════════════════════════════════════════════════ */
 
-const PILLARS = [
+const FEATURES: { icon: LucideIcon; keyword: string; type: 'pillar' | 'advantage'; detail: string }[] = [
   {
     icon: Building2,
     keyword: 'Ownership',
-    teaser: 'In a publicly traded company',
+    type: 'pillar',
     detail: 'eXp Realty is publicly traded on the NASDAQ (EXPI). Agents can earn stock awards through production, attracting new agents, and reaching milestones. This is not a perk. It is ownership in the company you help build.',
   },
   {
     icon: Layers,
     keyword: 'Leverage',
-    teaser: 'Through scale, systems, and collaboration',
+    type: 'pillar',
     detail: 'eXp operates across 29+ countries with 84,000+ agents. Instead of local office overhead, agents access cloud-based tools, global referral networks, and systems built for efficiency at scale.',
   },
   {
     icon: Infinity,
     keyword: 'Longevity',
-    teaser: 'Through income that continues after your last closing',
+    type: 'pillar',
     detail: 'Revenue sharing at eXp is not a bonus. It is a structural income stream tied to your network. When agents you attract to eXp succeed, you earn a share of their production even if you slow down, step back, or retire.',
   },
-];
-
-const ADVANTAGES = [
   {
     icon: TrendingUp,
     keyword: 'Profitability',
+    type: 'advantage',
     detail: 'The only cumulatively profitable publicly traded real estate brokerage in recent years.',
   },
   {
     icon: Award,
     keyword: 'Agent Rankings',
+    type: 'advantage',
     detail: 'Consistently ranked the highest-ranked brokerage by Glassdoor\u2019s anonymous agent reviews.',
   },
   {
     icon: Cloud,
     keyword: 'Innovation',
+    type: 'advantage',
     detail: 'A cloud-based model that reinvests in systems, support, and agent programs instead of physical offices and franchise layers.',
   },
   {
     icon: Users,
     keyword: 'Sponsor Support',
+    type: 'advantage',
     detail: 'The only brokerage that allows sponsors to independently build and deliver additional support.',
   },
 ];
 
-function ExpandableCard({
+function FeatureChip({
   icon: Icon,
   keyword,
-  teaser,
-  detail,
-  isOpen,
-  onToggle,
+  isPillar,
+  isActive,
+  onSelect,
 }: {
   icon: LucideIcon;
   keyword: string;
-  teaser?: string;
-  detail: string;
-  isOpen: boolean;
-  onToggle: () => void;
+  isPillar: boolean;
+  isActive: boolean;
+  onSelect: () => void;
 }) {
   return (
-    <CyberCard interactive centered={false} padding="md">
+    <CyberCard interactive padding="sm" centered>
       <button
         type="button"
-        onClick={onToggle}
-        aria-expanded={isOpen}
-        className="w-full text-left"
+        onClick={onSelect}
+        aria-pressed={isActive}
+        className="flex flex-col items-center gap-2 w-full cursor-pointer"
+        style={{
+          borderTop: isPillar ? '1px solid rgba(255,215,0,0.25)' : undefined,
+          transition: 'transform 250ms ease-out, box-shadow 250ms ease-out',
+          transform: isActive ? 'translateY(-2px)' : 'translateY(0)',
+          boxShadow: isActive
+            ? '0 0 12px rgba(255,215,0,0.3), 0 0 4px rgba(255,215,0,0.2)'
+            : 'none',
+          borderRadius: '8px',
+          outline: isActive ? '1px solid rgba(255,215,0,0.4)' : '1px solid transparent',
+        }}
       >
-        <div className="flex flex-col items-center text-center gap-3">
-          <Icon3D color="#c4a94d" size={48}>
-            <Icon size={28} />
-          </Icon3D>
-          <h3 className="text-lg font-bold uppercase tracking-wider">{keyword}</h3>
-          {teaser && (
-            <p className="text-sm" style={{ color: 'var(--color-body-text)', opacity: 0.7 }}>
-              {teaser}
-            </p>
-          )}
-          <ChevronDown
-            size={20}
-            className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
-            style={{ color: '#c4a94d' }}
-          />
-        </div>
-        <div
-          className={`overflow-hidden transition-all duration-300 ease-out ${
-            isOpen ? 'max-h-[200px] opacity-100' : 'max-h-0 opacity-0'
-          }`}
+        <Icon3D color="#c4a94d" size={36}>
+          <Icon size={20} />
+        </Icon3D>
+        <h3
+          className="text-xs font-bold uppercase tracking-wider"
+          style={{ color: isActive ? '#ffd700' : '#e5e4dd' }}
         >
-          <p
-            className="pt-4 text-sm leading-relaxed text-center"
-            style={{ color: 'var(--color-body-text)' }}
-          >
-            {detail}
-          </p>
-        </div>
+          {keyword}
+        </h3>
       </button>
     </CyberCard>
   );
 }
 
-function WhyExpExistsSection() {
-  const [openPillar, setOpenPillar] = useState<number | null>(null);
-  const [openAdvantage, setOpenAdvantage] = useState<number | null>(null);
+function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[number]; transitionKey: number }) {
+  const Icon = feature.icon;
+  const [displayed, setDisplayed] = useState(feature);
+  const [displayedKey, setDisplayedKey] = useState(transitionKey);
+  const [phase, setPhase] = useState<'in' | 'out'>('in');
+
+  useEffect(() => {
+    if (transitionKey === displayedKey) return;
+    // Start exit animation
+    setPhase('out');
+    const timer = setTimeout(() => {
+      setDisplayed(feature);
+      setDisplayedKey(transitionKey);
+      setPhase('in');
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [feature, transitionKey, displayedKey]);
 
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
-      <div className="max-w-[1900px] mx-auto">
-        {/* ── Section heading + opening statement ── */}
-        <div className="text-center mb-12">
-          <H2>WHY EXP EXISTS</H2>
+    <CyberCard padding="md" centered={false}>
+      <div className="relative min-h-[220px] flex flex-col justify-center p-4 md:p-6">
+        <div
+          style={{
+            transition: phase === 'out'
+              ? 'opacity 200ms ease-out, transform 200ms ease-out'
+              : 'opacity 300ms ease-out 150ms, transform 300ms ease-out 150ms',
+            opacity: phase === 'out' ? 0 : 1,
+            transform: phase === 'out' ? 'translateY(-8px)' : 'translateY(0)',
+          }}
+        >
+          <div className="flex items-center gap-4 mb-4">
+            <Icon3D color="#ffd700" size={56}>
+              <displayed.icon size={32} />
+            </Icon3D>
+            <h3
+              className="text-xl md:text-2xl font-bold uppercase tracking-wider"
+              style={{ color: '#ffd700' }}
+            >
+              {displayed.keyword}
+            </h3>
+          </div>
+
+          {/* Animated gold separator */}
+          <div className="relative h-[2px] mb-4 overflow-hidden" style={{ background: 'rgba(255,215,0,0.1)' }}>
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(90deg, #ffd700, #c4a94d)',
+                transform: phase === 'in' ? 'scaleX(1)' : 'scaleX(0)',
+                transformOrigin: 'left',
+                transition: 'transform 400ms ease-out 200ms',
+              }}
+            />
+          </div>
+
           <p
-            className="mt-6 max-w-3xl mx-auto text-base md:text-lg leading-relaxed"
+            className="text-sm md:text-base leading-relaxed mb-4"
             style={{ color: 'var(--color-body-text)' }}
           >
-            Most brokerages are built to maximize commission today, with little consideration for
-            scale, ownership, or life beyond production. eXp was built around three pillars that
-            go further.
+            {displayed.detail}
           </p>
-        </div>
 
-        {/* ── Three pillars ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {PILLARS.map((pillar, i) => (
-            <ExpandableCard
-              key={pillar.keyword}
-              icon={pillar.icon}
-              keyword={pillar.keyword}
-              teaser={pillar.teaser}
-              detail={pillar.detail}
-              isOpen={openPillar === i}
-              onToggle={() => setOpenPillar(openPillar === i ? null : i)}
-            />
-          ))}
+          <span
+            className="inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full"
+            style={{
+              background: displayed.type === 'pillar'
+                ? 'rgba(255,215,0,0.12)'
+                : 'rgba(0,191,255,0.12)',
+              color: displayed.type === 'pillar' ? '#ffd700' : '#00bfff',
+              border: `1px solid ${displayed.type === 'pillar' ? 'rgba(255,215,0,0.25)' : 'rgba(0,191,255,0.25)'}`,
+            }}
+          >
+            {displayed.type === 'pillar' ? 'CORE PILLAR' : 'STRUCTURAL ADVANTAGE'}
+          </span>
         </div>
+      </div>
+    </CyberCard>
+  );
+}
 
-        <p
-          className="mt-10 text-center max-w-3xl mx-auto text-sm md:text-base leading-relaxed"
-          style={{ color: 'var(--color-body-text)', opacity: 0.8 }}
+function SpotlightConsole() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const lastInteraction = useRef(0);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const chipRailRef = useRef<HTMLDivElement>(null);
+
+  // Auto-rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isPaused) {
+        // Check if 8s has passed since last interaction
+        if (Date.now() - lastInteraction.current > 8000) {
+          setIsPaused(false);
+        }
+        return;
+      }
+      setActiveIndex((prev) => (prev + 1) % FEATURES.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
+  // Scroll active chip into view on mobile
+  useEffect(() => {
+    if (!chipRailRef.current) return;
+    const rail = chipRailRef.current;
+    const activeChip = rail.children[activeIndex] as HTMLElement | undefined;
+    if (activeChip) {
+      activeChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, [activeIndex]);
+
+  const handleSelect = useCallback((index: number) => {
+    setActiveIndex(index);
+    setIsPaused(true);
+    lastInteraction.current = Date.now();
+  }, []);
+
+  // Section entry animation via IntersectionObserver
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="pt-12 pb-10 px-4 sm:px-8 md:px-12"
+      onMouseEnter={() => { setIsPaused(true); lastInteraction.current = Date.now(); }}
+      onMouseLeave={() => { lastInteraction.current = Date.now(); }}
+    >
+      <div className="max-w-[1400px] mx-auto">
+        {/* H2 + intro */}
+        <div
+          className="text-center mb-8"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 600ms cubic-bezier(0.16,1,0.3,1), transform 600ms cubic-bezier(0.16,1,0.3,1)',
+          }}
         >
-          This structure supports agents while they are actively producing and provides options
-          when they are ready to slow down, step back, or think beyond their next deal.
-        </p>
-
-        {/* ── Where eXp Is Unmatched (sub-section) ── */}
-        <div className="mt-14 md:mt-18 text-center">
-          <h3
-            className="text-lg md:text-xl font-bold uppercase tracking-widest"
-            style={{ color: '#e5e4dd', letterSpacing: '0.15em' }}
-          >
-            Where eXp Is Unmatched
-          </h3>
+          <H2>WHY EXP EXISTS</H2>
           <p
-            className="mt-4 max-w-3xl mx-auto text-sm md:text-base leading-relaxed"
-            style={{ color: 'var(--color-body-text)', opacity: 0.8 }}
+            className="mt-4 max-w-3xl mx-auto text-base md:text-lg leading-relaxed"
+            style={{ color: 'var(--color-body-text)' }}
           >
-            These advantages are structural, not promotional. Unlike franchise brokerages,
-            eXp Realty does not rely on office-based profit centers. The following advantages
-            are supported by third-party data and independent analysis.
+            Built on three core pillars and four structural advantages that set eXp apart from every other brokerage.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto mt-10">
-          {ADVANTAGES.map((advantage, i) => (
-            <ExpandableCard
-              key={advantage.keyword}
-              icon={advantage.icon}
-              keyword={advantage.keyword}
-              detail={advantage.detail}
-              isOpen={openAdvantage === i}
-              onToggle={() => setOpenAdvantage(openAdvantage === i ? null : i)}
-            />
-          ))}
+        {/* Desktop: two-column grid */}
+        <div className="hidden lg:grid grid-cols-[45%_55%] gap-6 items-start">
+          {/* Left: chips grid */}
+          <div
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transition: 'opacity 500ms ease-out 200ms',
+            }}
+          >
+            <div className="grid grid-cols-3 gap-3">
+              {FEATURES.slice(0, 3).map((f, i) => (
+                <div
+                  key={f.keyword}
+                  style={{
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'scale(1)' : 'scale(0.92)',
+                    transition: `opacity 400ms ease-out ${200 + i * 80}ms, transform 400ms ease-out ${200 + i * 80}ms`,
+                  }}
+                >
+                  <FeatureChip
+                    icon={f.icon}
+                    keyword={f.keyword}
+                    isPillar={f.type === 'pillar'}
+                    isActive={activeIndex === i}
+                    onSelect={() => handleSelect(i)}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-3 mt-3">
+              {FEATURES.slice(3, 5).map((f, i) => (
+                <div
+                  key={f.keyword}
+                  style={{
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'scale(1)' : 'scale(0.92)',
+                    transition: `opacity 400ms ease-out ${440 + i * 80}ms, transform 400ms ease-out ${440 + i * 80}ms`,
+                  }}
+                >
+                  <FeatureChip
+                    icon={f.icon}
+                    keyword={f.keyword}
+                    isPillar={f.type === 'pillar'}
+                    isActive={activeIndex === i + 3}
+                    onSelect={() => handleSelect(i + 3)}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-3 mt-3">
+              {FEATURES.slice(5, 7).map((f, i) => (
+                <div
+                  key={f.keyword}
+                  style={{
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'scale(1)' : 'scale(0.92)',
+                    transition: `opacity 400ms ease-out ${600 + i * 80}ms, transform 400ms ease-out ${600 + i * 80}ms`,
+                  }}
+                >
+                  <FeatureChip
+                    icon={f.icon}
+                    keyword={f.keyword}
+                    isPillar={f.type === 'pillar'}
+                    isActive={activeIndex === i + 5}
+                    onSelect={() => handleSelect(i + 5)}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Progress dots */}
+            <div className="flex justify-center gap-2 mt-4">
+              {FEATURES.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => handleSelect(i)}
+                  aria-label={`Go to ${FEATURES[i].keyword}`}
+                  className="w-2 h-2 rounded-full transition-all duration-300"
+                  style={{
+                    background: i === activeIndex ? '#ffd700' : 'rgba(255,255,255,0.25)',
+                    boxShadow: i === activeIndex ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                    transform: i === activeIndex ? 'scale(1.3)' : 'scale(1)',
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Right: detail panel */}
+          <div
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateX(0)' : 'translateX(20px)',
+              transition: 'opacity 700ms ease-out 300ms, transform 700ms ease-out 300ms',
+            }}
+          >
+            <DetailPanel feature={FEATURES[activeIndex]} transitionKey={activeIndex} />
+          </div>
         </div>
 
-        <div className="mt-10 text-center">
+        {/* Mobile / Tablet: single column with horizontal chip rail */}
+        <div className="lg:hidden">
+          {/* Horizontal chip rail */}
+          <div
+            className="relative mb-4"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transition: 'opacity 500ms ease-out 200ms',
+            }}
+          >
+            {/* Left fade mask */}
+            <div
+              className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none w-6"
+              style={{ background: 'linear-gradient(to right, rgba(10,10,10,0.9), transparent)' }}
+            />
+            {/* Right fade mask */}
+            <div
+              className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none w-6"
+              style={{ background: 'linear-gradient(to left, rgba(10,10,10,0.9), transparent)' }}
+            />
+
+            <div
+              ref={chipRailRef}
+              className="flex gap-3 overflow-x-auto pb-2 px-2"
+              style={{
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'none',
+              }}
+            >
+              {FEATURES.map((f, i) => (
+                <div
+                  key={f.keyword}
+                  className="flex-shrink-0"
+                  style={{ scrollSnapAlign: 'center', width: '100px' }}
+                >
+                  <FeatureChip
+                    icon={f.icon}
+                    keyword={f.keyword}
+                    isPillar={f.type === 'pillar'}
+                    isActive={activeIndex === i}
+                    onSelect={() => handleSelect(i)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Detail panel (full width) */}
+          <div
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateY(0)' : 'translateY(16px)',
+              transition: 'opacity 600ms ease-out 400ms, transform 600ms ease-out 400ms',
+            }}
+          >
+            <DetailPanel feature={FEATURES[activeIndex]} transitionKey={activeIndex} />
+          </div>
+
+          {/* Progress dots */}
+          <div className="flex justify-center gap-2 mt-4">
+            {FEATURES.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => handleSelect(i)}
+                aria-label={`Go to ${FEATURES[i].keyword}`}
+                className="w-2 h-2 rounded-full transition-all duration-300"
+                style={{
+                  background: i === activeIndex ? '#ffd700' : 'rgba(255,255,255,0.25)',
+                  boxShadow: i === activeIndex ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                  transform: i === activeIndex ? 'scale(1.3)' : 'scale(1)',
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div
+          className="mt-8 text-center"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transition: 'opacity 600ms ease-out 500ms',
+          }}
+        >
           <CTAButton href="#">Explore eXp&apos;s Unmatched Advantages</CTAButton>
         </div>
       </div>
@@ -693,7 +958,7 @@ export default function AboutExpRealty() {
       <AwardsRibbon />
 
       {/* ════ Section 1: Why eXp Exists ════ */}
-      <WhyExpExistsSection />
+      <SpotlightConsole />
     </main>
   );
 }

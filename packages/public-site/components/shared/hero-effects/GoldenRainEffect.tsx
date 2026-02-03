@@ -216,8 +216,8 @@ export function GoldenRainEffect() {
       const { ctx: c, w: cw, h: ch, goldBillLayer: bill } = s;
       c.clearRect(0, 0, cw, ch);
 
-      // ── 1. Draw gold-tinted bill at moderate opacity ──
-      c.globalAlpha = 0.45;
+      // ── 1. Draw gold-tinted bill at near-invisible base ──
+      c.globalAlpha = 0.08;
       c.globalCompositeOperation = 'source-over';
       c.drawImage(bill, 0, 0, cw, ch);
 
@@ -227,12 +227,12 @@ export function GoldenRainEffect() {
       c.globalAlpha = 1;
 
       // Beam timing: sweep + pause
-      const sweepDuration = 5;
-      const pauseDuration = 2.5;
+      const sweepDuration = 10;
+      const pauseDuration = 0.8;
       const totalCycle = sweepDuration + pauseDuration;
       const cycleTime = s.time % totalCycle;
 
-      const beamHalf = cw * 0.2; // half-width of the beam
+      const beamHalf = cw * 0.35; // half-width of the beam
 
       if (cycleTime < sweepDuration) {
         const t = cycleTime / sweepDuration;
@@ -248,19 +248,26 @@ export function GoldenRainEffect() {
           beamX - beamHalf, 0,
           beamX + beamHalf, 0
         );
-        // Soft gradient edges simulating light falloff
+        // Wider gradient falloff for softer light edges
         beamGrad.addColorStop(0, 'rgba(255,255,255,0)');
-        beamGrad.addColorStop(0.10, 'rgba(255,255,255,0.02)');
-        beamGrad.addColorStop(0.25, 'rgba(255,255,255,0.15)');
-        beamGrad.addColorStop(0.40, 'rgba(255,255,255,0.55)');
+        beamGrad.addColorStop(0.05, 'rgba(255,255,255,0.01)');
+        beamGrad.addColorStop(0.15, 'rgba(255,255,255,0.10)');
+        beamGrad.addColorStop(0.30, 'rgba(255,255,255,0.40)');
         beamGrad.addColorStop(0.50, 'rgba(255,255,255,0.85)');
-        beamGrad.addColorStop(0.60, 'rgba(255,255,255,0.55)');
-        beamGrad.addColorStop(0.75, 'rgba(255,255,255,0.15)');
-        beamGrad.addColorStop(0.90, 'rgba(255,255,255,0.02)');
+        beamGrad.addColorStop(0.70, 'rgba(255,255,255,0.40)');
+        beamGrad.addColorStop(0.85, 'rgba(255,255,255,0.10)');
+        beamGrad.addColorStop(0.95, 'rgba(255,255,255,0.01)');
         beamGrad.addColorStop(1, 'rgba(255,255,255,0)');
 
+        // Draw beam at a slight angle (~6 degrees)
+        c.save();
+        c.translate(cw / 2, ch / 2);
+        c.rotate(6 * Math.PI / 180);
+        c.translate(-cw / 2, -ch / 2);
         c.fillStyle = beamGrad;
-        c.fillRect(0, 0, cw, ch);
+        // Expand fill rect to cover corners after rotation
+        c.fillRect(-cw * 0.1, -ch * 0.1, cw * 1.2, ch * 1.2);
+        c.restore();
       }
       // During pause: mask is empty → entire bill invisible
 
@@ -285,8 +292,14 @@ export function GoldenRainEffect() {
         glowGrad.addColorStop(0.75, 'rgba(255,220,80,0.4)');
         glowGrad.addColorStop(1, 'rgba(255,215,0,0)');
 
+        // Match the beam angle for glow
+        c.save();
+        c.translate(cw / 2, ch / 2);
+        c.rotate(6 * Math.PI / 180);
+        c.translate(-cw / 2, -ch / 2);
         c.fillStyle = glowGrad;
-        c.fillRect(0, 0, cw, ch);
+        c.fillRect(-cw * 0.1, -ch * 0.1, cw * 1.2, ch * 1.2);
+        c.restore();
       }
 
       // ── 4. Edge fades for seamless blend into dark background ──
