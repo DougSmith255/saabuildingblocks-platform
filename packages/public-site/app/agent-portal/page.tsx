@@ -10947,7 +10947,10 @@ function AgentPagesSection({
             const uploadResult = await uploadResponse.json();
             if (uploadResult.data?.url) {
               const cacheBustUrl = `${uploadResult.data.url}?v=${Date.now()}`;
-              setPageData((prev: AgentPageData | null) => prev ? { ...prev, image_url: cacheBustUrl } : prev);
+              setPageData((prev: AgentPageData | null) => prev ? { ...prev, profile_image_url: cacheBustUrl } : prev);
+              window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
+                detail: { url: cacheBustUrl }
+              }));
             }
           }
 
@@ -10967,7 +10970,10 @@ function AgentPagesSection({
             const colorResult = await colorResponse.json();
             if (colorResult.data?.url) {
               const colorCacheBustUrl = `${colorResult.data.url}?v=${Date.now()}`;
-              setPageData((prev: AgentPageData | null) => prev ? { ...prev, color_image_url: colorCacheBustUrl } : prev);
+              setPageData((prev: AgentPageData | null) => prev ? { ...prev, profile_image_color_url: colorCacheBustUrl } : prev);
+              window.dispatchEvent(new CustomEvent('agent-page-color-image-updated', {
+                detail: { url: colorCacheBustUrl }
+              }));
             }
           }
         }
