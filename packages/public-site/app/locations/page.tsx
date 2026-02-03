@@ -3,7 +3,7 @@
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
-import { ConstellationMapEffect } from '@/components/shared/hero-effects/ConstellationMapEffect';
+import { AuroraNetworkEffect } from '@/components/shared/hero-effects/AuroraNetworkEffect';
 
 /**
  * eXp Realty Global Locations Page
@@ -60,7 +60,7 @@ export default function Locations() {
       {/* Hero Section */}
       <StickyHeroWrapper>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-          <ConstellationMapEffect />
+          <AuroraNetworkEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>GLOBAL PRESENCE</H1>

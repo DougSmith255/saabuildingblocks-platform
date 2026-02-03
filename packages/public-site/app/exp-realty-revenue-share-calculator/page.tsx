@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { H1, H2, Tagline, CTAButton } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
-import { GreenLaserGridEffect } from '@/components/shared/hero-effects/GreenLaserGridEffect';
+import { GoldenRainEffect } from '@/components/shared/hero-effects/GoldenRainEffect';
 
 /**
  * Revenue Share Tier Configuration
@@ -898,7 +898,7 @@ function RevenueShareCalculatorContent() {
       {/* Hero Section */}
       <StickyHeroWrapper fadeSpeed={1.5}>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-          <GreenLaserGridEffect />
+          <GoldenRainEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>7 TIERS OF OPPORTUNITY</H1>

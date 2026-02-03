@@ -21,6 +21,7 @@ export { DataStreamEffect } from './DataStreamEffect';
 export { NeuralNetworkCloud } from './NeuralNetworkCloud';
 export { AuroraNetworkEffect } from './AuroraNetworkEffect';
 export { GoldenNexusPortalEffect } from './GoldenNexusPortalEffect';
+export { GoldenRainEffect } from './GoldenRainEffect';
 export { StickyHeroWrapper } from './StickyHeroWrapper';
 export { DeferredEffect } from './DeferredEffect';
 export { RevealMaskEffect } from '../RevealMaskEffect';
@@ -40,4 +41,5 @@ export {
   LazyNeuralNetworkCloud,
   LazyAuroraNetworkEffect,
   LazyGoldenNexusPortalEffect,
+  LazyGoldenRainEffect,
 } from './LazyHeroEffects';

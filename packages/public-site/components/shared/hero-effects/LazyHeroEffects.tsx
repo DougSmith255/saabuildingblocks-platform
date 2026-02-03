@@ -112,3 +112,8 @@ export const LazyGoldenNexusPortalEffect = createImmediateEffect(
   () => import('./GoldenNexusPortalEffect').then(mod => ({ default: mod.GoldenNexusPortalEffect })),
   'LazyGoldenNexusPortalEffect'
 );
+
+export const LazyGoldenRainEffect = createImmediateEffect(
+  () => import('./GoldenRainEffect').then(mod => ({ default: mod.GoldenRainEffect })),
+  'LazyGoldenRainEffect'
+);
