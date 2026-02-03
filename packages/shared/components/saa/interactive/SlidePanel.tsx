@@ -149,7 +149,9 @@ export function SlidePanel({
   const [mounted, setMounted] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-  const [headerHeight, setHeaderHeight] = useState(80);
+  // Default must be generous enough for mobile where long titles wrap to 3+ lines.
+  // ResizeObserver corrects this to the exact value after first paint.
+  const [headerHeight, setHeaderHeight] = useState(140);
   const touchStartRef = useRef<{ x: number; y: number; scrollTop: number } | null>(null);
 
   // Track previous isOpen to detect external closes (parent setting isOpen=false)

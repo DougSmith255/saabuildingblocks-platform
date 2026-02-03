@@ -621,39 +621,38 @@ function WhyExpExistsSection() {
         </p>
 
         {/* ── Where eXp Is Unmatched (sub-section) ── */}
-        <div className="mt-16 md:mt-20">
-          <GlassPanel variant="emerald" rounded="3xl">
-            <div className="py-12 md:py-16 px-4 sm:px-8 md:px-12">
-              <div className="text-center mb-10">
-                <H2>WHERE EXP IS UNMATCHED</H2>
-                <p
-                  className="mt-6 max-w-3xl mx-auto text-sm md:text-base leading-relaxed"
-                  style={{ color: 'var(--color-body-text)' }}
-                >
-                  These advantages are structural, not promotional. Unlike franchise brokerages,
-                  eXp Realty does not rely on office-based profit centers. The following advantages
-                  are supported by third-party data and independent analysis.
-                </p>
-              </div>
+        <div className="mt-14 md:mt-18 text-center">
+          <h3
+            className="text-lg md:text-xl font-bold uppercase tracking-widest"
+            style={{ color: '#e5e4dd', letterSpacing: '0.15em' }}
+          >
+            Where eXp Is Unmatched
+          </h3>
+          <p
+            className="mt-4 max-w-3xl mx-auto text-sm md:text-base leading-relaxed"
+            style={{ color: 'var(--color-body-text)', opacity: 0.8 }}
+          >
+            These advantages are structural, not promotional. Unlike franchise brokerages,
+            eXp Realty does not rely on office-based profit centers. The following advantages
+            are supported by third-party data and independent analysis.
+          </p>
+        </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                {ADVANTAGES.map((advantage, i) => (
-                  <ExpandableCard
-                    key={advantage.keyword}
-                    icon={advantage.icon}
-                    keyword={advantage.keyword}
-                    detail={advantage.detail}
-                    isOpen={openAdvantage === i}
-                    onToggle={() => setOpenAdvantage(openAdvantage === i ? null : i)}
-                  />
-                ))}
-              </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto mt-10">
+          {ADVANTAGES.map((advantage, i) => (
+            <ExpandableCard
+              key={advantage.keyword}
+              icon={advantage.icon}
+              keyword={advantage.keyword}
+              detail={advantage.detail}
+              isOpen={openAdvantage === i}
+              onToggle={() => setOpenAdvantage(openAdvantage === i ? null : i)}
+            />
+          ))}
+        </div>
 
-              <div className="mt-10 text-center">
-                <CTAButton href="#">Explore eXp&apos;s Unmatched Advantages</CTAButton>
-              </div>
-            </div>
-          </GlassPanel>
+        <div className="mt-10 text-center">
+          <CTAButton href="#">Explore eXp&apos;s Unmatched Advantages</CTAButton>
         </div>
       </div>
     </section>

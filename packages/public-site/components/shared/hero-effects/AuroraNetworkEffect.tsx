@@ -66,12 +66,12 @@ const DESKTOP_PASSES: [number, number, number][] = [
 ];
 
 const MOBILE_PASSES: [number, number, number][] = [
-  [42, 0.030, 0.0],
-  [27, 0.050, 0.15],
-  [16, 0.080, 0.35],
-  [8,  0.140, 0.65],
-  [3.5, 0.280, 0.88],
-  [1.5, 0.500, 1.0],
+  [70, 0.030, 0.0],   // match desktop widths so streams look full-size
+  [45, 0.050, 0.15],
+  [28, 0.080, 0.35],
+  [14, 0.140, 0.65],
+  [6,  0.280, 0.88],
+  [2,  0.500, 1.0],
 ];
 
 const TIER_MUL: Record<string, number> = { primary: 1.0, secondary: 0.65, accent: 0.40 };
@@ -209,7 +209,7 @@ export function AuroraNetworkEffect() {
     return () => observer.disconnect();
   }, []);
 
-  // Dispose on unmount
+  // Dispose on unmount (reset initedRef so re-mount in Strict Mode works)
   useEffect(() => {
     return () => {
       const s = stateRef.current;
@@ -218,6 +218,7 @@ export function AuroraNetworkEffect() {
         s.canvas.remove();
         stateRef.current = null;
       }
+      initedRef.current = false;
     };
   }, []);
 

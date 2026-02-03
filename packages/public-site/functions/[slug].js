@@ -3177,7 +3177,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       margin-top: 0;
     }
     .founder-bio-content.open {
-      max-height: 200px;
+      max-height: 500px;
       opacity: 1;
       margin-top: 0.75rem;
     }
