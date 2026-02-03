@@ -477,22 +477,26 @@ export function SlidePanel({
   const contentStyle: React.CSSProperties = {
     padding: '1.25rem',
     // When a background is present (explicit or auto gold), content is
-    // absolutely positioned starting BELOW the sticky header so it can
-    // never scroll behind it. Flex centering works within this area.
-    // Using explicit top/left/right/bottom instead of inset+paddingTop
-    // because padding on a scrollable container is itself scrollable.
+    // absolutely positioned spanning the FULL panel height so that
+    // justify-content: center in children centers relative to the whole
+    // panel, not just the area below the header. Symmetric spacers
+    // (rendered inside) prevent content from overlapping the header.
     ...(hasBackground ? {
       position: 'absolute' as const,
-      top: `${headerHeight}px`,
+      top: 0,
       left: 0,
       right: 0,
       bottom: 0,
+      padding: '0 1.25rem',
       zIndex: 1,
       display: 'flex',
       flexDirection: 'column' as const,
       overflow: 'auto',
     } : {}),
   };
+
+  // Minimum gap from header bottom to content (used as symmetric spacers)
+  const contentInset = headerHeight + 15;
 
   const footerStyle: React.CSSProperties = {
     padding: '1.25rem',
@@ -613,7 +617,15 @@ export function SlidePanel({
         </div>
 
         {/* Content */}
-        <div style={contentStyle}>{children}</div>
+        <div style={contentStyle}>
+          {hasBackground && (
+            <div style={{ minHeight: contentInset, flexShrink: 0 }} aria-hidden="true" />
+          )}
+          {children}
+          {hasBackground && (
+            <div style={{ minHeight: contentInset, flexShrink: 0 }} aria-hidden="true" />
+          )}
+        </div>
 
         {/* Footer (if provided) */}
         {footer && <div style={footerStyle}>{footer}</div>}
