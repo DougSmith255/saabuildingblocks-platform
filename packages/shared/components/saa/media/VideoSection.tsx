@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { VideoPlayer } from './VideoPlayer';
 import { CTAButton } from '../buttons/CTAButton';
 import { SecondaryButton } from '../buttons/SecondaryButton';
@@ -88,6 +89,12 @@ export function VideoSection({
   // Single activePanel state - mirrors New Agents pattern
   const [activePanel, setActivePanel] = useState<'join' | 'instructions' | null>(null);
   const [userName, setUserName] = useState('');
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
+
+  // Get portal mount point after hydration
+  useEffect(() => {
+    setPortalRoot(document.body);
+  }, []);
 
   // Check localStorage for existing progress on mount
   useEffect(() => {
@@ -177,40 +184,45 @@ export function VideoSection({
         </div>
       </div>
 
-      {/* Shared Backdrop for both panels - matches New Agents pattern */}
-      {activePanel !== null && (
-        <div
-          className="fixed inset-0 z-[10019] bg-black/60 backdrop-blur-sm transition-opacity duration-300"
-          onClick={handleCloseModal}
-          aria-hidden="true"
-        />
+      {/* Portal: Overlay + Modals rendered at document.body to escape GlassPanel stacking context */}
+      {portalRoot && createPortal(
+        <>
+          {/* Shared Backdrop for both panels */}
+          {activePanel !== null && (
+            <div
+              className="fixed inset-0 z-[10019] bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+              onClick={handleCloseModal}
+              aria-hidden="true"
+            />
+          )}
+
+          {/* Join Modal */}
+          <JoinModal
+            isOpen={activePanel === 'join' || activePanel === 'instructions'}
+            onClose={handleCloseModal}
+            onSuccess={handleJoinSuccess}
+            sponsorName={sponsorName}
+            hideBackdrop={true}
+            zIndexOffset={0}
+          />
+
+          {/* Instructions Modal */}
+          <InstructionsModal
+            isOpen={activePanel === 'instructions'}
+            onClose={handleCloseModal}
+            userName={userName}
+            hideBackdrop={true}
+            zIndexOffset={1}
+            onNotYou={() => {
+              try {
+                localStorage.removeItem('saa_join_submitted');
+              } catch {}
+              setActivePanel('join');
+            }}
+          />
+        </>,
+        portalRoot
       )}
-
-      {/* Join Modal - stays open when instructions opens (like category panel in New Agents) */}
-      <JoinModal
-        isOpen={activePanel === 'join' || activePanel === 'instructions'}
-        onClose={handleCloseModal}
-        onSuccess={handleJoinSuccess}
-        sponsorName={sponsorName}
-        hideBackdrop={true}
-        zIndexOffset={0}
-      />
-
-      {/* Instructions Modal - slides on top of join modal (like document panel in New Agents) */}
-      <InstructionsModal
-        isOpen={activePanel === 'instructions'}
-        onClose={handleCloseModal}
-        userName={userName}
-        hideBackdrop={true}
-        zIndexOffset={1}
-        onNotYou={() => {
-          // Clear the cached data and show join form
-          try {
-            localStorage.removeItem('saa_join_submitted');
-          } catch {}
-          setActivePanel('join');
-        }}
-      />
     </section>
   );
 }

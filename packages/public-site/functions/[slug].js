@@ -685,7 +685,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       left: -0.3em;
       right: -0.3em;
       bottom: -0.25em;
-      background: linear-gradient(180deg, #3d3d3d 0%, #2f2f2f 40%, #252525 100%);
+      background: linear-gradient(180deg, #2a2a2a 0%, #1f1f1f 40%, #171717 100%);
       border-radius: 0.15em;
       z-index: -1;
       border-top: 2px solid rgba(180,180,180,0.45);
@@ -3574,7 +3574,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 <body>
   <!-- Star Field Background -->
   <canvas id="star-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; background: transparent;"></canvas>
-  <div style="position: fixed; inset: 0; z-index: -2; background: radial-gradient(ellipse at bottom, #282828 0%, #0c0c0c 100%);"></div>
+  <div style="position: fixed; inset: 0; z-index: -2; background: radial-gradient(at center bottom, rgb(30, 30, 30) 0%, rgb(8, 8, 8) 100%); background-color: rgb(8, 8, 8);"></div>
 
   <main id="main-content">
     <!-- Hero Section - Fixed -->

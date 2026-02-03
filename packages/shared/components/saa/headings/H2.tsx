@@ -133,7 +133,7 @@ export default function H2({
           left: -0.3em;
           right: -0.3em;
           bottom: -0.25em;
-          background: linear-gradient(180deg, #3d3d3d 0%, #2f2f2f 40%, #252525 100%);
+          background: linear-gradient(180deg, #2a2a2a 0%, #1f1f1f 40%, #171717 100%);
           border-radius: 0.15em;
           z-index: -1;
           border-top: 2px solid rgba(180,180,180,0.45);
@@ -169,7 +169,7 @@ export default function H2({
           left: -0.3em;
           right: -0.3em;
           bottom: -0.25em;
-          background: linear-gradient(180deg, #1a3a5c 0%, #142e4a 40%, #0e2238 100%);
+          background: linear-gradient(180deg, #122a47 0%, #0d2138 40%, #081828 100%);
           border-radius: 0.15em;
           z-index: -1;
           border-top: 2px solid rgba(100,180,220,0.45);

@@ -32,12 +32,9 @@ export function ScrollIndicator() {
     globalInstanceCount++;
     instanceIdRef.current = globalInstanceCount;
     const isFirst = globalInstanceCount === 1;
-
-    console.log(`[ScrollIndicator] Instance ${instanceIdRef.current} mounted, isFirst: ${isFirst}`);
     setIsFirstInstance(isFirst);
 
     return () => {
-      console.log(`[ScrollIndicator] Instance ${instanceIdRef.current} unmounted`);
       globalInstanceCount--;
     };
   }, []);
@@ -132,7 +129,7 @@ export function ScrollIndicator() {
         data-source="layout-wrapper"
         className="fixed pointer-events-none"
         style={{
-          bottom: 'max(32px, calc(env(safe-area-inset-bottom, 0px) + 24px))',
+          bottom: 'max(12px, calc(env(safe-area-inset-bottom, 0px) + 4px))',
           left: '24px',
           opacity,
           transform: `scale(${scale})`,
