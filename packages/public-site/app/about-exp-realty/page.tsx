@@ -110,7 +110,13 @@ function AnimatedStat({
   return (
     <CyberCard padding="md" centered>
       <div className="flex items-center justify-center gap-3 mb-2">
-        <p className="stat-3d-text text-4xl lg:text-5xl font-bold tabular-nums">
+        <p
+          className="stat-3d-text text-4xl lg:text-5xl font-bold tabular-nums"
+          style={{
+            color: '#00bfff',
+            textShadow: '-1px -1px 0 #80d4ff, 1px 1px 0 #3d8a9d, 2px 2px 0 #2d6a7d, 3px 3px 0 #1d4a5d, 4px 4px 0 #1d2a3d, 5px 5px 4px rgba(0,0,0,0.5)',
+          }}
+        >
           <span>{prefix}</span>
           <span ref={elementRef}>
             {hasAnimated ? targetNumber.toLocaleString() : displayValue.toLocaleString()}
@@ -346,7 +352,13 @@ function RotatingStats() {
           isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
         }`}
       >
-        <p className="stat-3d-text text-4xl font-bold mb-2 tabular-nums">
+        <p
+          className="stat-3d-text text-4xl font-bold mb-2 tabular-nums"
+          style={{
+            color: '#00bfff',
+            textShadow: '-1px -1px 0 #80d4ff, 1px 1px 0 #3d8a9d, 2px 2px 0 #2d6a7d, 3px 3px 0 #1d4a5d, 4px 4px 0 #1d2a3d, 5px 5px 4px rgba(0,0,0,0.5)',
+          }}
+        >
           {currentStat.prefix}{displayValue}{currentStat.suffix}
         </p>
         <p className="text-sm uppercase tracking-wider" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
@@ -1043,26 +1055,14 @@ export default function AboutExpRealty() {
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Blue stat numbers */
-        #main-content .stat-3d-text {
-          color: #00bfff !important;
-          text-shadow:
-            -1px -1px 0 #80d4ff,
-            1px 1px 0 #3d8a9d,
-            2px 2px 0 #2d6a7d,
-            3px 3px 0 #1d4a5d,
-            4px 4px 0 #1d2a3d,
-            5px 5px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Blue H1 override */
-        #main-content .heading-3d-wrapper h1 {
-          color: #00bfff !important;
-        }
-        #main-content .heading-3d-wrapper h1 .heading-3d-metal-plate {
-          background: linear-gradient(180deg, #a0d8ef 0%, #00bfff 45%, #0090c0 100%) !important;
-          -webkit-background-clip: text !important;
-          background-clip: text !important;
+        /* Blue H1 glow breathe animation override */
+        @keyframes h1GlowBreathe {
+          0%, 100% {
+            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(0, 191, 255, 0.25));
+          }
+          50% {
+            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(0, 191, 255, 0.45));
+          }
         }
 
         /* Blue CTA light bars + glow */
@@ -1073,14 +1073,17 @@ export default function AboutExpRealty() {
           --glow-color: 0, 191, 255 !important;
         }
 
-        /* Blue header logo gradient */
-        .about-exp-blue-theme #headerLogoGradient stop:nth-child(1) {
+        /* Blue header + footer logo gradients */
+        .about-exp-blue-theme #headerLogoGradient stop:nth-child(1),
+        .about-exp-blue-theme #footerLogoGradient stop:nth-child(1) {
           stop-color: #b0e0ff !important;
         }
-        .about-exp-blue-theme #headerLogoGradient stop:nth-child(2) {
+        .about-exp-blue-theme #headerLogoGradient stop:nth-child(2),
+        .about-exp-blue-theme #footerLogoGradient stop:nth-child(2) {
           stop-color: #00bfff !important;
         }
-        .about-exp-blue-theme #headerLogoGradient stop:nth-child(3) {
+        .about-exp-blue-theme #headerLogoGradient stop:nth-child(3),
+        .about-exp-blue-theme #footerLogoGradient stop:nth-child(3) {
           stop-color: #0090c0 !important;
         }
 
@@ -1088,6 +1091,12 @@ export default function AboutExpRealty() {
         .about-exp-blue-theme .header-btn a:hover {
           border-left-color: rgba(0, 191, 255, 0.4) !important;
           border-right-color: rgba(0, 191, 255, 0.4) !important;
+        }
+
+        /* Blue scroll progress bar */
+        .about-exp-blue-theme .scroll-progress-bar > div {
+          background-color: #00bfff !important;
+          box-shadow: 0 0 10px rgba(0, 191, 255, 0.5), 0 0 20px rgba(0, 191, 255, 0.3) !important;
         }
       `}</style>
 
@@ -1097,7 +1106,24 @@ export default function AboutExpRealty() {
           <LazyAuroraNetworkEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
-              <H1>ABOUT EXP REALTY</H1>
+              <H1
+                style={{
+                  color: '#00bfff',
+                  textShadow: `
+                    0 0 0.01em #fff,
+                    0 0 0.02em #fff,
+                    0 0 0.03em rgba(255,255,255,0.8),
+                    0 0 0.09em rgba(0, 191, 255, 0.8),
+                    0 0 0.13em rgba(0, 191, 255, 0.55),
+                    0 0 0.18em rgba(0, 140, 200, 0.35),
+                    0.03em 0.03em 0 #2a2a2a,
+                    0.045em 0.045em 0 #1a1a1a,
+                    0.06em 0.06em 0 #0f0f0f,
+                    0.075em 0.075em 0 #080808
+                  `,
+                  filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(0, 191, 255, 0.25))',
+                }}
+              >ABOUT EXP REALTY</H1>
               <Tagline className="mt-4 text-lg md:text-xl">
                 World&apos;s #1 independent brokerage
               </Tagline>
