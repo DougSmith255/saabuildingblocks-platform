@@ -563,7 +563,7 @@ function FeatureChip({
     <div
       className="rounded-xl relative h-full"
       style={{
-        border: isActive ? '2px solid rgba(180,150,50,0.5)' : '1px solid rgba(255,255,255,0.1)',
+        border: isActive ? '2px solid rgba(180,150,50,0.5)' : '2px solid rgba(255,255,255,0.06)',
         boxShadow: isActive
           ? '0 0 20px 4px rgba(255,200,80,0.3), 0 0 40px 8px rgba(255,180,50,0.15)'
           : 'none',
@@ -700,7 +700,7 @@ function SpotlightConsole() {
     if (!chipsInView || isStopped) return;
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % FEATURES.length);
-    }, 3500);
+    }, 4000);
     return () => clearInterval(interval);
   }, [chipsInView, isStopped]);
 
