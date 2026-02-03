@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef } from 'react';
 import { H1, Tagline, CommissionCalculator } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
-import { CalculatorDataStreamEffect } from './CalculatorDataStreamEffect';
+import { GoldenRainEffect } from '@/components/shared/hero-effects/GoldenRainEffect';
 
 /**
  * eXp Commission & Fees Calculator Page
@@ -96,7 +96,7 @@ function CalculatorContent() {
       {/* Hero Section - fadeSpeed 1.5 for quicker fade */}
       <StickyHeroWrapper fadeSpeed={1.5}>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-          <CalculatorDataStreamEffect />
+          <GoldenRainEffect />
           <div className="relative z-10 max-w-[1900px] mx-auto w-full text-center">
             <div className="relative z-10">
               <H1>KNOW YOUR NUMBERS</H1>
