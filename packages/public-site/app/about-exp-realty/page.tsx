@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCard, CTAButton } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHeroEffects';
-import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users } from 'lucide-react';
+import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, DollarSign, Receipt } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
@@ -89,6 +89,32 @@ function useScrambleCounter(
   }, [animate, triggerOnView, hasAnimated]);
 
   return { displayValue, elementRef, hasAnimated };
+}
+
+/**
+ * Scroll Reveal Hook — fires once when element enters viewport
+ */
+function useScrollReveal(threshold: number = 0.3) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return { ref, isVisible };
 }
 
 /**
@@ -524,6 +550,69 @@ const FEATURES: { icon: LucideIcon; keyword: string; type: 'pillar' | 'advantage
   },
 ];
 
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 2: INCOME & OWNERSHIP — Constants
+   ═══════════════════════════════════════════════════════════════ */
+
+const BLUE_3D_SHADOW = '-1px -1px 0 #80d4ff, 1px 1px 0 #3d8a9d, 2px 2px 0 #2d6a7d, 3px 3px 0 #1d4a5d, 4px 4px 0 #1d2a3d, 5px 5px 4px rgba(0,0,0,0.5)';
+
+const INCOME_STREAMS: {
+  icon: LucideIcon;
+  title: string;
+  keyMetric: string;
+  keyMetricSub?: string;
+  keyMetricColor?: string;
+  keyMetricFont?: string;
+  bullets: string[];
+}[] = [
+  {
+    icon: DollarSign,
+    title: 'Commission',
+    keyMetric: '80/20',
+    keyMetricSub: '$16K CAP',
+    bullets: [
+      '80/20 split until cap',
+      '100% after cap',
+      'ICON agents earn cap back',
+    ],
+  },
+  {
+    icon: TrendingUp,
+    title: 'Stock Ownership',
+    keyMetric: 'EXPI',
+    keyMetricColor: '#00ff88',
+    keyMetricFont: 'monospace',
+    bullets: [
+      'Production-based awards',
+      'Optional discounted purchase',
+      'Public company ownership',
+    ],
+  },
+  {
+    icon: Receipt,
+    title: 'Simple Fees',
+    keyMetric: '$85/mo',
+    bullets: [
+      '$85/month flat',
+      'No desk fees',
+      'No franchise/royalty fees',
+    ],
+  },
+];
+
+const REVENUE_SHARE = {
+  tierCount: 7,
+  bullets: [
+    '7-tier from company revenue',
+    'Continues after retirement',
+    'Passed to heirs',
+    'No recruiting requirement',
+  ],
+  closing: 'Revenue share exists as an option, not an obligation.',
+};
+
+const TIER_WIDTHS = [100, 85, 72, 60, 48, 32, 16];
+
 const MISTY_BLUE_BG = `
   radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.85) 0%, transparent 50%),
   radial-gradient(ellipse 100% 60% at 70% 80%, rgba(140,220,255,0.7) 0%, transparent 40%),
@@ -735,39 +824,43 @@ function TypewriterLines() {
   const cursor = <span className="inline-block w-[2px] h-[1em] align-text-bottom ml-[1px]" style={{ background: 'currentColor', animation: 'cursorBlink 0.6s steps(1) infinite' }} />;
 
   return (
-    <div ref={containerRef} className="mt-6 space-y-2 max-w-[900px] mx-auto">
+    <div ref={containerRef} className="mt-6 max-w-[900px] mx-auto text-center" style={{ paddingBottom: '20px' }}>
       <style>{`@keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
 
-      <p className="text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
-        <span
+      <div className="mb-3">
+        <p
           className="font-bold uppercase tracking-wider"
-          style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
+          style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1', fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6 }}
         >
           <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{ display: 'inline', verticalAlign: '-0.15em', marginRight: '0.3em' }}>
             <circle cx="12" cy="12" r="10" />
             <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
           </svg>
-          The Problem:{' '}
-        </span>
-        {problemText}
-        {(phase === 'problem') && cursor}
-      </p>
+          The Problem
+        </p>
+        <p className="text-body" style={{ fontSize: 'clamp(15px, calc(13.73px + 0.51vw), 20px)', lineHeight: 1.6, minHeight: '1.6em' }}>
+          {problemText}
+          {(phase === 'problem') && cursor}
+        </p>
+      </div>
 
-      <p className="text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
-        <span
+      <div>
+        <p
           className="font-bold uppercase tracking-wider"
-          style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
+          style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1', fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6 }}
         >
           <img
             src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
             alt="eXp"
             style={{ display: 'inline', width: '1em', height: '1em', objectFit: 'contain', verticalAlign: '-0.15em', marginRight: '0.3em' }}
           />
-          The Answer:{' '}
-        </span>
-        {answerText}
-        {(phase === 'answer') && cursor}
-      </p>
+          The Answer
+        </p>
+        <p className="text-body" style={{ fontSize: 'clamp(15px, calc(13.73px + 0.51vw), 20px)', lineHeight: 1.6, minHeight: '1.6em' }}>
+          {answerText}
+          {(phase === 'answer') && cursor}
+        </p>
+      </div>
     </div>
   );
 }
@@ -910,15 +1003,15 @@ function SpotlightConsole() {
         <div className="lg:hidden">
           {/* Horizontal chip rail — breaks out of section padding to reach screen edges */}
           <div className="relative mb-4 -mx-4 sm:-mx-8 md:-mx-12">
-            {/* Left fade mask — wide enough to cover the approach */}
+            {/* Left fade mask — wide enough to cover the approach, shortened 15px from bottom */}
             <div
-              className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none w-10 sm:w-14 md:w-16"
-              style={{ background: 'linear-gradient(to right, rgb(10,10,10), transparent)' }}
+              className="absolute left-0 top-0 z-10 pointer-events-none w-10 sm:w-14 md:w-16"
+              style={{ bottom: '15px', background: 'linear-gradient(to right, rgb(10,10,10), transparent)' }}
             />
             {/* Right fade mask */}
             <div
-              className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none w-10 sm:w-14 md:w-16"
-              style={{ background: 'linear-gradient(to left, rgb(10,10,10), transparent)' }}
+              className="absolute right-0 top-0 z-10 pointer-events-none w-10 sm:w-14 md:w-16"
+              style={{ bottom: '15px', background: 'linear-gradient(to left, rgb(10,10,10), transparent)' }}
             />
 
             <div
@@ -1015,6 +1108,374 @@ function SpotlightConsole() {
         </div>
       </div>
     </section>
+  );
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 2: INCOME & OWNERSHIP
+   ═══════════════════════════════════════════════════════════════ */
+
+function IncomeOwnershipSection() {
+  const introReveal = useScrollReveal(0.3);
+  const comparisonReveal = useScrollReveal(0.3);
+  const panelsReveal = useScrollReveal(0.2);
+  const spotlightReveal = useScrollReveal(0.2);
+
+  // Scramble counters for the 1 vs 3 comparison
+  const oneCounter = useScrambleCounter(1, 1200, false);
+  const threeCounter = useScrambleCounter(3, 1200, false);
+  const [oneStarted, setOneStarted] = useState(false);
+  const [threeStarted, setThreeStarted] = useState(false);
+
+  // Start counters when comparison section comes into view
+  useEffect(() => {
+    if (comparisonReveal.isVisible && !oneStarted) {
+      setOneStarted(true);
+    }
+  }, [comparisonReveal.isVisible, oneStarted]);
+
+  useEffect(() => {
+    if (comparisonReveal.isVisible && !threeStarted) {
+      const timer = setTimeout(() => setThreeStarted(true), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [comparisonReveal.isVisible, threeStarted]);
+
+  // Tier bar scramble counter
+  const tierCounter = useScrambleCounter(7, 1500, false);
+  const [tierStarted, setTierStarted] = useState(false);
+
+  useEffect(() => {
+    if (spotlightReveal.isVisible && !tierStarted) {
+      setTierStarted(true);
+    }
+  }, [spotlightReveal.isVisible, tierStarted]);
+
+  return (
+    <GlassPanel variant="expBlue">
+      <section className="py-16 px-4 sm:px-8 md:px-12">
+        <div className="max-w-[1400px] mx-auto">
+
+          {/* A. H2 Heading */}
+          <div className="text-center mb-8">
+            <H2 theme="blue">INCOME & OWNERSHIP</H2>
+          </div>
+
+          {/* B. Intro Text */}
+          <div
+            ref={introReveal.ref}
+            className="text-center max-w-[800px] mx-auto mb-12"
+            style={{
+              opacity: introReveal.isVisible ? 1 : 0,
+              transform: introReveal.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 500ms ease-out, transform 500ms ease-out',
+            }}
+          >
+            <p className="text-body leading-relaxed mb-3">
+              eXp&apos;s income model supports production first, with optional paths beyond transactions.
+            </p>
+            <p className="text-body leading-relaxed">
+              Most brokerages offer one income stream. eXp offers{' '}
+              <span style={{ color: '#00bfff', fontWeight: 700 }}>three</span>.
+            </p>
+          </div>
+
+          {/* C. "1 vs 3" Comparison */}
+          <div
+            ref={comparisonReveal.ref}
+            className="grid grid-cols-[1fr_auto_1fr] sm:grid-cols-[1fr_auto_1fr] gap-3 sm:gap-4 items-center max-w-[700px] mx-auto mb-14"
+          >
+            {/* Left — Most Brokerages */}
+            <div
+              style={{
+                opacity: comparisonReveal.isVisible ? 1 : 0,
+                transform: comparisonReveal.isVisible ? 'translateX(0)' : 'translateX(-40px)',
+                transition: 'opacity 600ms ease-out, transform 600ms ease-out',
+              }}
+            >
+              <CyberCard padding="md" centered>
+                <p
+                  className="text-5xl sm:text-6xl lg:text-7xl font-bold tabular-nums"
+                  style={{
+                    color: 'rgba(255,255,255,0.35)',
+                    textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+                  }}
+                >
+                  {oneStarted ? (oneCounter.hasAnimated ? '1' : oneCounter.displayValue) : '0'}
+                </p>
+                <p
+                  className="text-xs sm:text-sm uppercase tracking-wider mt-2"
+                  style={{ color: 'var(--color-body-text)', opacity: 0.5 }}
+                >
+                  INCOME STREAM
+                </p>
+                <p
+                  className="text-[10px] sm:text-xs uppercase tracking-widest mt-1"
+                  style={{ color: 'var(--color-body-text)', opacity: 0.35 }}
+                >
+                  Most Brokerages
+                </p>
+              </CyberCard>
+            </div>
+
+            {/* VS pill */}
+            <div
+              style={{
+                opacity: comparisonReveal.isVisible ? 1 : 0,
+                transform: comparisonReveal.isVisible ? 'scale(1)' : 'scale(0.5)',
+                transition: 'opacity 400ms ease-out 100ms, transform 400ms ease-out 100ms',
+              }}
+            >
+              <span
+                className="inline-block text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full"
+                style={{
+                  background: 'rgba(0,191,255,0.15)',
+                  color: '#00bfff',
+                  border: '1px solid rgba(0,191,255,0.3)',
+                  fontFamily: 'var(--font-family-h3)',
+                }}
+              >
+                VS
+              </span>
+            </div>
+
+            {/* Right — eXp Realty */}
+            <div
+              style={{
+                opacity: comparisonReveal.isVisible ? 1 : 0,
+                transform: comparisonReveal.isVisible ? 'translateX(0)' : 'translateX(40px)',
+                transition: 'opacity 600ms ease-out 200ms, transform 600ms ease-out 200ms',
+              }}
+            >
+              <CyberCard padding="md" centered>
+                <div style={{ position: 'relative' }}>
+                  {/* Blue glow ring behind the card */}
+                  <div
+                    className="absolute inset-0 rounded-xl pointer-events-none"
+                    style={{
+                      boxShadow: '0 0 30px rgba(0,191,255,0.2), inset 0 0 30px rgba(0,191,255,0.05)',
+                    }}
+                  />
+                  <p
+                    className="text-5xl sm:text-6xl lg:text-7xl font-bold tabular-nums"
+                    style={{
+                      color: '#00bfff',
+                      textShadow: BLUE_3D_SHADOW,
+                    }}
+                  >
+                    <span ref={threeCounter.elementRef}>
+                      {threeStarted ? (threeCounter.hasAnimated ? '3' : threeCounter.displayValue) : '0'}
+                    </span>
+                  </p>
+                  <p
+                    className="text-xs sm:text-sm uppercase tracking-wider mt-2"
+                    style={{ color: '#e5e4dd', opacity: 0.8 }}
+                  >
+                    INCOME STREAMS
+                  </p>
+                  <p
+                    className="text-[10px] sm:text-xs uppercase tracking-widest mt-1"
+                    style={{ color: '#00bfff', opacity: 0.7 }}
+                  >
+                    eXp Realty
+                  </p>
+                </div>
+              </CyberCard>
+            </div>
+          </div>
+
+          {/* D. Three Income Stream Panels */}
+          <div
+            ref={panelsReveal.ref}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14"
+          >
+            {INCOME_STREAMS.map((stream, i) => (
+              <div
+                key={stream.title}
+                style={{
+                  opacity: panelsReveal.isVisible ? 1 : 0,
+                  transform: panelsReveal.isVisible ? 'translateY(0)' : 'translateY(30px)',
+                  transition: `opacity 500ms ease-out ${i * 150}ms, transform 500ms ease-out ${i * 150}ms`,
+                }}
+              >
+                <CyberCard padding="md" centered>
+                  <div className="flex flex-col items-center">
+                    <Icon3D color="#00bfff" size={40}>
+                      <stream.icon size={22} />
+                    </Icon3D>
+
+                    {/* Key metric */}
+                    <p
+                      className="text-3xl sm:text-4xl font-bold mt-3 mb-1 tabular-nums"
+                      style={{
+                        color: stream.keyMetricColor || '#00bfff',
+                        textShadow: BLUE_3D_SHADOW,
+                        fontFamily: stream.keyMetricFont || 'inherit',
+                      }}
+                    >
+                      {stream.keyMetric}
+                    </p>
+                    {stream.keyMetricSub && (
+                      <p
+                        className="text-sm font-bold uppercase tracking-wider mb-2"
+                        style={{ color: '#00bfff', opacity: 0.7 }}
+                      >
+                        {stream.keyMetricSub}
+                      </p>
+                    )}
+
+                    {/* Title */}
+                    <h3
+                      className="text-base font-bold uppercase tracking-wider mb-3"
+                      style={{
+                        color: '#e5e4dd',
+                        fontFamily: 'var(--font-family-h3)',
+                      }}
+                    >
+                      {stream.title}
+                    </h3>
+
+                    {/* Bullet list */}
+                    <ul className="space-y-1.5 text-left w-full">
+                      {stream.bullets.map((bullet) => (
+                        <li
+                          key={bullet}
+                          className="text-sm leading-relaxed flex items-start gap-2"
+                          style={{ color: 'var(--color-body-text)' }}
+                        >
+                          <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>&#x2022;</span>
+                          {bullet}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </CyberCard>
+              </div>
+            ))}
+          </div>
+
+          {/* E. Revenue Share Spotlight */}
+          <div
+            ref={spotlightReveal.ref}
+            className="mb-12"
+            style={{
+              opacity: spotlightReveal.isVisible ? 1 : 0,
+              transform: spotlightReveal.isVisible ? 'translateY(0)' : 'translateY(40px)',
+              transition: 'opacity 700ms ease-out, transform 700ms ease-out',
+            }}
+          >
+            <div
+              className="rounded-2xl p-6 sm:p-8 md:p-10"
+              style={{
+                background: 'rgba(0,40,80,0.3)',
+                border: '1px solid rgba(0,191,255,0.25)',
+                boxShadow: 'inset 0 0 40px rgba(0,120,255,0.08), 0 0 30px rgba(0,100,200,0.1)',
+              }}
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-8 lg:gap-12">
+                {/* Text side */}
+                <div className="order-2 lg:order-1 flex flex-col justify-center">
+                  {/* Badge */}
+                  <span
+                    className="inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4 w-fit"
+                    style={{
+                      background: 'rgba(0,191,255,0.12)',
+                      color: '#00bfff',
+                      border: '1px solid rgba(0,191,255,0.25)',
+                    }}
+                  >
+                    UNIQUE DIFFERENTIATOR
+                  </span>
+
+                  <h3
+                    className="text-2xl sm:text-3xl font-bold uppercase tracking-wider mb-4"
+                    style={{
+                      color: '#e5e4dd',
+                      fontFamily: 'var(--font-family-h3)',
+                    }}
+                  >
+                    Revenue Share
+                  </h3>
+
+                  <ul className="space-y-2 mb-4">
+                    {REVENUE_SHARE.bullets.map((bullet) => (
+                      <li
+                        key={bullet}
+                        className="text-sm sm:text-base leading-relaxed flex items-start gap-2"
+                        style={{ color: 'var(--color-body-text)' }}
+                      >
+                        <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>&#x2022;</span>
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <p
+                    className="text-sm sm:text-base italic"
+                    style={{ color: '#00bfff', opacity: 0.85 }}
+                  >
+                    {REVENUE_SHARE.closing}
+                  </p>
+                </div>
+
+                {/* Tier visualization side */}
+                <div className="order-1 lg:order-2 flex flex-col items-center justify-center">
+                  {/* Large "7" counter */}
+                  <div className="text-center mb-6">
+                    <p
+                      className="text-6xl sm:text-7xl font-bold tabular-nums"
+                      style={{
+                        color: '#00bfff',
+                        textShadow: BLUE_3D_SHADOW,
+                      }}
+                    >
+                      <span ref={tierCounter.elementRef}>
+                        {tierStarted ? (tierCounter.hasAnimated ? '7' : tierCounter.displayValue) : '0'}
+                      </span>
+                    </p>
+                    <p
+                      className="text-sm uppercase tracking-widest mt-1"
+                      style={{ color: '#e5e4dd', opacity: 0.7 }}
+                    >
+                      TIERS
+                    </p>
+                  </div>
+
+                  {/* Tier bars */}
+                  <div className="w-full max-w-[280px] space-y-2">
+                    {TIER_WIDTHS.map((targetWidth, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <span
+                          className="text-[10px] tabular-nums w-4 text-right flex-shrink-0"
+                          style={{ color: 'rgba(255,255,255,0.4)' }}
+                        >
+                          {i + 1}
+                        </span>
+                        <div
+                          className="h-3 rounded-full"
+                          style={{
+                            width: spotlightReveal.isVisible ? `${targetWidth}%` : '0%',
+                            background: `linear-gradient(90deg, rgba(0,120,255,0.6), rgba(0,191,255,0.8))`,
+                            boxShadow: '0 0 8px rgba(0,191,255,0.3)',
+                            transition: `width 600ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 100}ms`,
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* F. CTA */}
+          <div className="text-center">
+            <CTAButton href="#">Explore eXp Income</CTAButton>
+          </div>
+        </div>
+      </section>
+    </GlassPanel>
   );
 }
 
@@ -1125,6 +1586,9 @@ export default function AboutExpRealty() {
 
       {/* ════ Section 1: Why eXp Exists ════ */}
       <SpotlightConsole />
+
+      {/* ════ Section 2: Income & Ownership ════ */}
+      <IncomeOwnershipSection />
 
       {/* Blue H1 glow — must render AFTER H1 component so this keyframe wins */}
       <style>{`
