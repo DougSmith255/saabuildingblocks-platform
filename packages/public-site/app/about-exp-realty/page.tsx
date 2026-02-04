@@ -576,6 +576,16 @@ const INCOME_STREAMS: {
     ],
   },
   {
+    icon: Receipt,
+    title: 'Simple Fees',
+    keyMetric: '$85/mo',
+    bullets: [
+      '$85/month flat',
+      'No desk fees',
+      'No franchise/royalty fees',
+    ],
+  },
+  {
     icon: TrendingUp,
     title: 'Stock Ownership',
     keyMetric: 'EXPI',
@@ -584,16 +594,6 @@ const INCOME_STREAMS: {
       'Production-based awards',
       'Optional discounted purchase',
       'Public company ownership',
-    ],
-  },
-  {
-    icon: Receipt,
-    title: 'Simple Fees',
-    keyMetric: '$85/mo',
-    bullets: [
-      '$85/month flat',
-      'No desk fees',
-      'No franchise/royalty fees',
     ],
   },
 ];
@@ -1254,10 +1254,12 @@ function IncomeOwnershipSection() {
 
                     {/* Title */}
                     <h3
-                      className="text-base font-bold uppercase tracking-wider mb-3"
+                      className="text-base uppercase tracking-wider mb-3"
                       style={{
                         color: '#e5e4dd',
-                        fontFamily: 'var(--font-family-h3)',
+                        fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
+                        fontFeatureSettings: '"ss01" 1',
+                        fontWeight: 400,
                       }}
                     >
                       {stream.title}
