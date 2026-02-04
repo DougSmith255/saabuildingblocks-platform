@@ -620,14 +620,12 @@ function FeatureChip({
 }
 
 function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[number]; transitionKey: number }) {
-  const Icon = feature.icon;
   const [displayed, setDisplayed] = useState(feature);
   const [displayedKey, setDisplayedKey] = useState(transitionKey);
   const [phase, setPhase] = useState<'in' | 'out'>('in');
 
   useEffect(() => {
     if (transitionKey === displayedKey) return;
-    // Start exit animation
     setPhase('out');
     const timer = setTimeout(() => {
       setDisplayed(feature);
@@ -639,9 +637,28 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
 
   return (
     <CyberCard padding="md" centered={false} className="h-full">
-      <div className="relative h-full flex flex-col justify-center">
+      <div className="relative h-full flex flex-col justify-center overflow-hidden">
+        {/* Watermark icon — large faded background icon */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            right: '-8px',
+            bottom: '-8px',
+            opacity: phase === 'out' ? 0 : 0.04,
+            transform: phase === 'out' ? 'scale(0.8)' : 'scale(1)',
+            transition: phase === 'out'
+              ? 'opacity 200ms ease-out, transform 200ms ease-out'
+              : 'opacity 500ms ease-out 300ms, transform 500ms ease-out 300ms',
+            color: '#00bfff',
+          }}
+        >
+          <displayed.icon size={140} strokeWidth={1} />
+        </div>
+
         <div
           style={{
+            position: 'relative',
+            zIndex: 1,
             transition: phase === 'out'
               ? 'opacity 200ms ease-out, transform 200ms ease-out'
               : 'opacity 300ms ease-out 150ms, transform 300ms ease-out 150ms',
@@ -649,35 +666,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
             transform: phase === 'out' ? 'translateY(-8px)' : 'translateY(0)',
           }}
         >
-          <div className="flex items-center gap-4 mb-4">
-            <Icon3D color="#00bfff" size={56}>
-              <displayed.icon size={32} />
-            </Icon3D>
-            <h3
-              className="text-h3"
-              style={{ color: '#e5e4dd', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
-            >
-              {displayed.keyword}
-            </h3>
-          </div>
-
-          {/* Animated gold separator */}
-          <div className="relative h-[2px] mb-4 overflow-hidden" style={{ background: 'rgba(0,191,255,0.1)' }}>
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(90deg, #00bfff, #4da6c4)',
-                transform: phase === 'in' ? 'scaleX(1)' : 'scaleX(0)',
-                transformOrigin: 'left',
-                transition: 'transform 400ms ease-out 200ms',
-              }}
-            />
-          </div>
-
-          <p
-            className="text-body leading-relaxed mb-4"
-          >
+          <p className="text-body leading-relaxed mb-4">
             {displayed.detail}
           </p>
 
@@ -700,9 +689,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
 function SpotlightConsole() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isStopped, setIsStopped] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
   const chipsRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
   const [chipsInView, setChipsInView] = useState(false);
   const chipRailRef = useRef<HTMLDivElement>(null);
 
@@ -730,23 +717,6 @@ function SpotlightConsole() {
     setIsStopped(true);
   }, []);
 
-  // Section entry animation via IntersectionObserver
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   // Chips grid visibility — gates auto-rotation so it only starts when cards are on screen
   useEffect(() => {
     const el = chipsRef.current;
@@ -765,20 +735,10 @@ function SpotlightConsole() {
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className="pt-12 pb-10 px-4 sm:px-8 md:px-12"
-    >
+    <section className="pt-12 pb-10 px-4 sm:px-8 md:px-12">
       <div className="max-w-[1400px] mx-auto">
         {/* H2 + intro */}
-        <div
-          className="text-center mb-8"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 600ms cubic-bezier(0.16,1,0.3,1), transform 600ms cubic-bezier(0.16,1,0.3,1)',
-          }}
-        >
+        <div className="text-center mb-8">
           <H2>WHY EXP EXISTS</H2>
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[1425px] mx-auto">
             <div
@@ -833,21 +793,12 @@ function SpotlightConsole() {
           <div
             style={{
               height: '308px',
-              opacity: isVisible ? 1 : 0,
-              transition: 'opacity 500ms ease-out 200ms',
               overflow: 'visible',
             }}
           >
             <div className="grid grid-cols-3 gap-3">
               {FEATURES.slice(0, 3).map((f, i) => (
-                <div
-                  key={f.keyword}
-                  style={{
-                    opacity: isVisible ? 1 : 0,
-                    transform: isVisible ? 'scale(1)' : 'scale(0.92)',
-                    transition: `opacity 400ms ease-out ${200 + i * 80}ms, transform 400ms ease-out ${200 + i * 80}ms`,
-                  }}
-                >
+                <div key={f.keyword}>
                   <FeatureChip
                     icon={f.icon}
                     keyword={f.keyword}
@@ -859,14 +810,7 @@ function SpotlightConsole() {
             </div>
             <div className="grid grid-cols-2 gap-3 mt-3">
               {FEATURES.slice(3, 5).map((f, i) => (
-                <div
-                  key={f.keyword}
-                  style={{
-                    opacity: isVisible ? 1 : 0,
-                    transform: isVisible ? 'scale(1)' : 'scale(0.92)',
-                    transition: `opacity 400ms ease-out ${440 + i * 80}ms, transform 400ms ease-out ${440 + i * 80}ms`,
-                  }}
-                >
+                <div key={f.keyword}>
                   <FeatureChip
                     icon={f.icon}
                     keyword={f.keyword}
@@ -878,14 +822,7 @@ function SpotlightConsole() {
             </div>
             <div className="grid grid-cols-2 gap-3 mt-3">
               {FEATURES.slice(5, 7).map((f, i) => (
-                <div
-                  key={f.keyword}
-                  style={{
-                    opacity: isVisible ? 1 : 0,
-                    transform: isVisible ? 'scale(1)' : 'scale(0.92)',
-                    transition: `opacity 400ms ease-out ${600 + i * 80}ms, transform 400ms ease-out ${600 + i * 80}ms`,
-                  }}
-                >
+                <div key={f.keyword}>
                   <FeatureChip
                     icon={f.icon}
                     keyword={f.keyword}
@@ -916,14 +853,7 @@ function SpotlightConsole() {
           </div>
 
           {/* Right: detail panel */}
-          <div
-            style={{
-              height: '308px',
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateX(0)' : 'translateX(20px)',
-              transition: 'opacity 700ms ease-out 300ms, transform 700ms ease-out 300ms',
-            }}
-          >
+          <div style={{ height: '308px' }}>
             <DetailPanel feature={FEATURES[activeIndex]} transitionKey={activeIndex} />
           </div>
         </div>
@@ -931,13 +861,7 @@ function SpotlightConsole() {
         {/* Mobile / Tablet: single column with horizontal chip rail */}
         <div className="lg:hidden">
           {/* Horizontal chip rail */}
-          <div
-            className="relative mb-4"
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transition: 'opacity 500ms ease-out 200ms',
-            }}
-          >
+          <div className="relative mb-4">
             {/* Left fade mask */}
             <div
               className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none w-6"
@@ -976,13 +900,7 @@ function SpotlightConsole() {
           </div>
 
           {/* Detail panel (full width) */}
-          <div
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateY(0)' : 'translateY(16px)',
-              transition: 'opacity 600ms ease-out 400ms, transform 600ms ease-out 400ms',
-            }}
-          >
+          <div>
             <DetailPanel feature={FEATURES[activeIndex]} transitionKey={activeIndex} />
           </div>
 
@@ -1006,12 +924,7 @@ function SpotlightConsole() {
         </div>
 
         {/* Validation ribbon — independent third-party proof */}
-        <div
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transition: 'opacity 600ms ease-out 500ms',
-          }}
-        >
+        <div>
           <p
             className="text-center max-w-[900px] mx-auto text-sm md:text-base leading-relaxed mt-10 mb-[-14px]"
             style={{ color: 'var(--color-body-text)', opacity: 0.65 }}
@@ -1024,10 +937,6 @@ function SpotlightConsole() {
         {/* Closing statement + CTA */}
         <div
           className="mt-8 text-center"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transition: 'opacity 600ms ease-out 600ms',
-          }}
         >
           <p
             className="max-w-[900px] mx-auto text-sm md:text-base leading-relaxed mb-6"
