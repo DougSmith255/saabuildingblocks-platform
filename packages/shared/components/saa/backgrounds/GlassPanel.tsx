@@ -10,7 +10,7 @@ import React from 'react';
  * - emerald: Emerald (#10b981) + horizontal lines texture
  * - expBlue: eXp Blue (#0066aa) + horizontal lines texture
  */
-export type GlassPanelVariant = 'champagne' | 'marigoldCrosshatch' | 'marigoldNoise' | 'emerald' | 'expBlue';
+export type GlassPanelVariant = 'champagne' | 'marigoldCrosshatch' | 'marigoldNoise' | 'emerald' | 'expBlue' | 'expBlueCrosshatch';
 
 export interface GlassPanelProps {
   /** The glass style variant */
@@ -76,6 +76,15 @@ const VARIANTS = {
     texture: 'hlines',
     textureOpacity: 0.035,
     noiseFrequency: 1.0,
+    blur: 14,
+  },
+  expBlueCrosshatch: {
+    color: { r: 0, g: 102, b: 170 },  // #0066aa
+    colorOpacity: 0.06,
+    borderOpacity: 0.14,
+    texture: 'crosshatch',
+    textureOpacity: 0.03,
+    noiseFrequency: 0.8,
     blur: 14,
   },
 } as const;
@@ -170,7 +179,7 @@ export function GlassPanel({
   const textureStyle = getTextureStyle(config.texture, config.textureOpacity, config.noiseFrequency);
   const roundedClass = ROUNDED_CLASSES[rounded];
   const isEmerald = variant === 'emerald';
-  const isExpBlue = variant === 'expBlue';
+  const isExpBlue = variant === 'expBlue' || variant === 'expBlueCrosshatch';
 
   return (
     <div

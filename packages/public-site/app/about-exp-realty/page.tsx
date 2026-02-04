@@ -561,7 +561,6 @@ const INCOME_STREAMS: {
   title: string;
   keyMetric: string;
   keyMetricSub?: string;
-  keyMetricColor?: string;
   keyMetricFont?: string;
   bullets: string[];
 }[] = [
@@ -580,7 +579,6 @@ const INCOME_STREAMS: {
     icon: TrendingUp,
     title: 'Stock Ownership',
     keyMetric: 'EXPI',
-    keyMetricColor: '#00ff88',
     keyMetricFont: 'monospace',
     bullets: [
       'Production-based awards',
@@ -838,9 +836,14 @@ function TypewriterLines() {
           </svg>
           The Problem
         </p>
-        <p className="text-body" style={{ fontSize: 'clamp(15px, calc(13.73px + 0.51vw), 20px)', lineHeight: 1.6, minHeight: '1.6em' }}>
-          {problemText}
-          {(phase === 'problem') && cursor}
+        <p className="text-body" style={{ fontSize: 'clamp(15px, calc(13.73px + 0.51vw), 20px)', lineHeight: 1.6 }}>
+          <span style={{ position: 'relative', display: 'inline-block' }}>
+            <span style={{ visibility: 'hidden' }}>{PROBLEM}</span>
+            <span style={{ position: 'absolute', left: 0, top: 0, whiteSpace: 'nowrap' }}>
+              {problemText}
+              {(phase === 'problem') && cursor}
+            </span>
+          </span>
         </p>
       </div>
 
@@ -856,9 +859,14 @@ function TypewriterLines() {
           />
           The Answer
         </p>
-        <p className="text-body" style={{ fontSize: 'clamp(15px, calc(13.73px + 0.51vw), 20px)', lineHeight: 1.6, minHeight: '1.6em' }}>
-          {answerText}
-          {(phase === 'answer') && cursor}
+        <p className="text-body" style={{ fontSize: 'clamp(15px, calc(13.73px + 0.51vw), 20px)', lineHeight: 1.6 }}>
+          <span style={{ position: 'relative', display: 'inline-block' }}>
+            <span style={{ visibility: 'hidden' }}>{ANSWER}</span>
+            <span style={{ position: 'absolute', left: 0, top: 0, whiteSpace: 'nowrap' }}>
+              {answerText}
+              {(phase === 'answer') && cursor}
+            </span>
+          </span>
         </p>
       </div>
     </div>
@@ -1153,13 +1161,13 @@ function IncomeOwnershipSection() {
   }, [spotlightReveal.isVisible, tierStarted]);
 
   return (
-    <GlassPanel variant="expBlue">
+    <GlassPanel variant="expBlueCrosshatch">
       <section className="py-16 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1400px] mx-auto">
 
           {/* A. H2 Heading */}
           <div className="text-center mb-8">
-            <H2 theme="blue">INCOME & OWNERSHIP</H2>
+            <H2>INCOME & OWNERSHIP</H2>
           </div>
 
           {/* B. Intro Text */}
@@ -1172,12 +1180,10 @@ function IncomeOwnershipSection() {
               transition: 'opacity 500ms ease-out, transform 500ms ease-out',
             }}
           >
-            <p className="text-body leading-relaxed mb-3">
-              eXp&apos;s income model supports production first, with optional paths beyond transactions.
-            </p>
             <p className="text-body leading-relaxed">
               Most brokerages offer one income stream. eXp offers{' '}
-              <span style={{ color: '#00bfff', fontWeight: 700 }}>three</span>.
+              <span style={{ color: '#00bfff', fontWeight: 700 }}>three</span>
+              {' '}— production first, with optional paths beyond transactions.
             </p>
           </div>
 
@@ -1186,7 +1192,7 @@ function IncomeOwnershipSection() {
             ref={comparisonReveal.ref}
             className="grid grid-cols-[1fr_auto_1fr] sm:grid-cols-[1fr_auto_1fr] gap-3 sm:gap-4 items-center max-w-[700px] mx-auto mb-14"
           >
-            {/* Left — Most Brokerages */}
+            {/* Left — Most Brokerages (generic flat card) */}
             <div
               style={{
                 opacity: comparisonReveal.isVisible ? 1 : 0,
@@ -1194,11 +1200,17 @@ function IncomeOwnershipSection() {
                 transition: 'opacity 600ms ease-out, transform 600ms ease-out',
               }}
             >
-              <CyberCard padding="md" centered>
+              <div
+                className="rounded-xl p-5 sm:p-6 text-center"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(35,35,35,0.85), rgba(20,20,20,0.9))',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                }}
+              >
                 <p
                   className="text-5xl sm:text-6xl lg:text-7xl font-bold tabular-nums"
                   style={{
-                    color: 'rgba(255,255,255,0.35)',
+                    color: 'rgba(255,255,255,0.3)',
                     textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
                   }}
                 >
@@ -1206,17 +1218,17 @@ function IncomeOwnershipSection() {
                 </p>
                 <p
                   className="text-xs sm:text-sm uppercase tracking-wider mt-2"
-                  style={{ color: 'var(--color-body-text)', opacity: 0.5 }}
+                  style={{ color: 'var(--color-body-text)', opacity: 0.4 }}
                 >
                   INCOME STREAM
                 </p>
                 <p
                   className="text-[10px] sm:text-xs uppercase tracking-widest mt-1"
-                  style={{ color: 'var(--color-body-text)', opacity: 0.35 }}
+                  style={{ color: 'var(--color-body-text)', opacity: 0.3 }}
                 >
                   Most Brokerages
                 </p>
-              </CyberCard>
+              </div>
             </div>
 
             {/* VS pill */}
@@ -1240,23 +1252,19 @@ function IncomeOwnershipSection() {
               </span>
             </div>
 
-            {/* Right — eXp Realty */}
+            {/* Right — eXp Realty (CyberCard with blue glow border) */}
             <div
               style={{
                 opacity: comparisonReveal.isVisible ? 1 : 0,
                 transform: comparisonReveal.isVisible ? 'translateX(0)' : 'translateX(40px)',
                 transition: 'opacity 600ms ease-out 200ms, transform 600ms ease-out 200ms',
+                borderRadius: '0.75rem',
+                boxShadow: '0 0 20px rgba(0,191,255,0.2), 0 0 40px rgba(0,120,200,0.1)',
+                border: '1px solid rgba(0,191,255,0.3)',
               }}
             >
               <CyberCard padding="md" centered>
-                <div style={{ position: 'relative' }}>
-                  {/* Blue glow ring behind the card */}
-                  <div
-                    className="absolute inset-0 rounded-xl pointer-events-none"
-                    style={{
-                      boxShadow: '0 0 30px rgba(0,191,255,0.2), inset 0 0 30px rgba(0,191,255,0.05)',
-                    }}
-                  />
+                <div>
                   <p
                     className="text-5xl sm:text-6xl lg:text-7xl font-bold tabular-nums"
                     style={{
@@ -1307,23 +1315,18 @@ function IncomeOwnershipSection() {
 
                     {/* Key metric */}
                     <p
-                      className="text-3xl sm:text-4xl font-bold mt-3 mb-1 tabular-nums"
+                      className="font-bold mt-3 mb-1 tabular-nums flex items-baseline justify-center gap-2"
                       style={{
-                        color: stream.keyMetricColor || '#00bfff',
+                        color: '#00bfff',
                         textShadow: BLUE_3D_SHADOW,
                         fontFamily: stream.keyMetricFont || 'inherit',
                       }}
                     >
-                      {stream.keyMetric}
+                      <span className="text-3xl sm:text-4xl">{stream.keyMetric}</span>
+                      {stream.keyMetricSub && (
+                        <span className="text-sm sm:text-base uppercase tracking-wider" style={{ opacity: 0.7 }}>{stream.keyMetricSub}</span>
+                      )}
                     </p>
-                    {stream.keyMetricSub && (
-                      <p
-                        className="text-sm font-bold uppercase tracking-wider mb-2"
-                        style={{ color: '#00bfff', opacity: 0.7 }}
-                      >
-                        {stream.keyMetricSub}
-                      </p>
-                    )}
 
                     {/* Title */}
                     <h3
@@ -1337,7 +1340,7 @@ function IncomeOwnershipSection() {
                     </h3>
 
                     {/* Bullet list */}
-                    <ul className="space-y-1.5 text-left w-full">
+                    <ul className="space-y-1.5 text-left">
                       {stream.bullets.map((bullet) => (
                         <li
                           key={bullet}
@@ -1412,11 +1415,13 @@ function IncomeOwnershipSection() {
                   </ul>
 
                   <p
-                    className="text-sm sm:text-base italic"
+                    className="text-sm sm:text-base italic mb-4"
                     style={{ color: '#00bfff', opacity: 0.85 }}
                   >
                     {REVENUE_SHARE.closing}
                   </p>
+
+                  <CTAButton href="/exp-realty-revenue-share-calculator">Try the Calculator</CTAButton>
                 </div>
 
                 {/* Tier visualization side */}
@@ -1496,13 +1501,6 @@ export default function AboutExpRealty() {
       {/* Page-level blue theme overrides */}
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Scale up chip icons and labels on wide screens — native sizing to avoid blur */
-        @media (min-width: 1400px) {
-          .chip-icon-wrap .icon-3d { width: 54px !important; height: 54px !important; }
-          .chip-icon-wrap .icon-3d svg { width: 30px !important; height: 30px !important; }
-          .chip-label { font-size: 0.875rem; }
-        }
 
         /* Blue CTA light bars + glow */
         .about-exp-blue-theme .cta-light-bar {
