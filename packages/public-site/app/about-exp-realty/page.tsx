@@ -762,29 +762,43 @@ function TypewriterLines() {
   const cursor = <span className="inline-block w-[2px] h-[1em] align-text-bottom ml-[1px]" style={{ background: 'currentColor', animation: 'cursorBlink 0.6s steps(1) infinite' }} />;
 
   return (
-    <div ref={containerRef} className="mt-6 space-y-2 max-w-[900px] mx-auto text-center">
+    <div ref={containerRef} className="mt-6 space-y-2 max-w-[900px] mx-auto">
       <style>{`@keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
 
-      <p className="text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
-        <span
-          className="font-bold uppercase tracking-wider"
-          style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
-        >
-          The Problem:{' '}
+      <p className="flex items-baseline gap-2 text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
+        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#c0513f" strokeWidth="2.5" strokeLinecap="round" className="flex-shrink-0 self-center">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+        </svg>
+        <span>
+          <span
+            className="font-bold uppercase tracking-wider"
+            style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
+          >
+            The Problem:{' '}
+          </span>
+          {problemText}
+          {(phase === 'problem') && cursor}
         </span>
-        {problemText}
-        {(phase === 'problem') && cursor}
       </p>
 
-      <p className="text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
-        <span
-          className="font-bold uppercase tracking-wider"
-          style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
-        >
-          The Answer:{' '}
+      <p className="flex items-baseline gap-2 text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
+        <img
+          src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
+          alt="eXp"
+          className="flex-shrink-0 self-center"
+          style={{ width: '1em', height: '1em', objectFit: 'contain' }}
+        />
+        <span>
+          <span
+            className="font-bold uppercase tracking-wider"
+            style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
+          >
+            The Answer:{' '}
+          </span>
+          {answerText}
+          {(phase === 'answer') && cursor}
         </span>
-        {answerText}
-        {(phase === 'answer') && cursor}
       </p>
     </div>
   );
@@ -1031,10 +1045,11 @@ export default function AboutExpRealty() {
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Scale up chip icons and labels on wide screens */
+        /* Scale up chip icons and labels on wide screens — native sizing to avoid blur */
         @media (min-width: 1400px) {
-          .chip-icon-wrap { transform: scale(1.5); transform-origin: center; }
-          .chip-label { font-size: 0.875rem; /* 14px — 1.5x of 0.75rem (12px) */ }
+          .chip-icon-wrap .icon-3d { width: 54px !important; height: 54px !important; }
+          .chip-icon-wrap .icon-3d svg { width: 30px !important; height: 30px !important; }
+          .chip-label { font-size: 0.875rem; }
         }
 
         /* Blue CTA light bars + glow */

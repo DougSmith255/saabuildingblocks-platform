@@ -200,7 +200,7 @@ export default function Header() {
       {/* Header */}
       <header
         role="banner"
-        className="fixed top-0 left-0 right-0 z-[10010]"
+        className={`fixed top-0 left-0 right-0 z-[10010]${pathname === '/about-exp-realty' ? ' header-blue-burger' : ''}`}
         style={{
           background: 'transparent',
           overflow: 'visible',
@@ -672,6 +672,13 @@ export default function Header() {
         .hamburger.menu-open .line,
         .hamburger-svg .line {
           stroke: #ffd700 !important;
+        }
+
+        /* Blue stroke on about-exp-realty page */
+        .header-blue-burger .hamburger .line,
+        .header-blue-burger .hamburger.menu-open .line,
+        .header-blue-burger .hamburger-svg .line {
+          stroke: #00bfff !important;
         }
 
         .line-top-bottom {
