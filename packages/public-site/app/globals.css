@@ -15,6 +15,11 @@
    Old page compresses + fades out, new page expands + fades in.
    ======================================== */
 
+/* Enable cross-document view transitions for same-origin navigation */
+@view-transition {
+  navigation: auto;
+}
+
 /* Cross-fade override: disable default morph, use custom keyframes */
 ::view-transition-old(root) {
   animation: vt-compress-out 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
