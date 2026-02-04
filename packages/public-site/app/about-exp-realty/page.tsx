@@ -1315,13 +1315,9 @@ function IncomeOwnershipSection() {
               <div key={stream.title}>
                 <CyberCard padding="md" centered>
                   <div className="flex flex-col items-center">
-                    <Icon3D color="#00bfff" size={40}>
-                      <stream.icon size={22} />
-                    </Icon3D>
-
                     {/* Key metric */}
                     <p
-                      className="font-bold mt-3 mb-1 tabular-nums flex items-baseline justify-center gap-2"
+                      className="font-bold mb-1 tabular-nums flex items-baseline justify-center gap-2"
                       style={{
                         color: '#00bfff',
                         textShadow: BLUE_3D_SHADOW,
@@ -1336,12 +1332,13 @@ function IncomeOwnershipSection() {
 
                     {/* Title */}
                     <h3
-                      className="text-base uppercase tracking-wider mb-3"
+                      className="uppercase tracking-wider mb-3"
                       style={{
                         color: '#e5e4dd',
                         fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
                         fontFeatureSettings: '"ss01" 1',
                         fontWeight: 400,
+                        fontSize: 'var(--font-size-h4)',
                       }}
                     >
                       {stream.title}
@@ -1420,10 +1417,10 @@ function IncomeOwnershipSection() {
                 </div>
 
                 {/* Concentric rings — bleeds to card edges on desktop */}
-                <div className="order-1 lg:order-2 flex items-center justify-center lg:block overflow-hidden relative max-h-[clamp(200px,40vw,340px)] lg:max-h-none lg:-mr-10">
+                <div className="order-1 lg:order-2 flex items-center justify-center lg:block overflow-hidden relative max-h-[clamp(200px,40vw,340px)] lg:max-h-none">
                   <div
                     ref={tierBarsReveal.ref}
-                    className="relative w-full flex-shrink-0 lg:absolute lg:top-1/2 lg:left-0 lg:-translate-y-1/2"
+                    className="relative w-full flex-shrink-0 lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2"
                     style={{ aspectRatio: '1' }}
                   >
                     {/* Rings */}

@@ -22,6 +22,8 @@ export default function Header() {
     if (typeof window === 'undefined') return false;
     return (window as any).__headerSlideInPlayed === true;
   });
+  // Temporarily disable transition during route changes to prevent visible slide-down
+  const [skipTransition, setSkipTransition] = useState(false);
 
   // Track pathname for route change detection
   const pathname = usePathname();
@@ -55,7 +57,9 @@ export default function Header() {
   }, []);
 
   // Reset header visibility on route change - ensures header is visible on new pages
+  // Skip transition so header doesn't visibly slide down from hidden position
   useEffect(() => {
+    setSkipTransition(true);
     setIsHidden(false);
     // Reset scroll state ref on route change
     if (scrollStateRef.current) {
@@ -64,6 +68,12 @@ export default function Header() {
       scrollStateRef.current.scrollDirection = null;
       scrollStateRef.current.isHidden = false;
     }
+    // Re-enable transition after position change has been painted
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setSkipTransition(false);
+      });
+    });
   }, [pathname]);
 
   // Font loading handled by page-level settling mask
@@ -215,7 +225,7 @@ export default function Header() {
         {/* First load: slides down from off-screen; After: normal scroll hide/show */}
         {/* Fades out when mobile menu is open */}
         <div
-          className={`header-bg-container ${hasMounted ? 'transition-transform duration-300' : ''} ease-in-out`}
+          className={`header-bg-container ${hasMounted && !skipTransition ? 'transition-transform duration-300' : ''} ease-in-out`}
           style={{
             width: '100%',
             maxWidth: '100%',

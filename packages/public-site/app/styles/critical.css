@@ -113,23 +113,7 @@ main {
   background: transparent;
 }
 
-/* Page fade-in keyframes — triggered by LayoutWrapper on every page load/navigation */
-@keyframes pageContentFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Respect reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  [style*="pageContentFadeIn"] {
-    opacity: 1 !important;
-    animation: none !important;
-  }
-}
+/* Page content wrapper — no animation (removed) */
 
 /* Container for centering content */
 .container {

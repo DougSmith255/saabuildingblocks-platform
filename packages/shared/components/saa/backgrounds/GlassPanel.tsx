@@ -181,6 +181,7 @@ export function GlassPanel({
   return (
     <div
       className={`relative overflow-hidden ${roundedClass} ${className}`}
+      style={{ backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)' }}
     >
       {/* Emerald: Vignette glow animation */}
       {isEmerald && (
@@ -246,7 +247,6 @@ export function GlassPanel({
             inset 0 -10px 25px -8px rgba(0,0,0,0.6),
             inset 0 -25px 50px -20px rgba(0,0,0,0.45)
           `,
-          backdropFilter: 'blur(2px)',
         }}
       >
         {/* Texture overlay */}
