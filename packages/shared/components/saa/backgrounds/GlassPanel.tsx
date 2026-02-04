@@ -179,7 +179,7 @@ export function GlassPanel({
   const textureStyle = getTextureStyle(config.texture, config.textureOpacity, config.noiseFrequency);
   const roundedClass = ROUNDED_CLASSES[rounded];
   const isEmerald = variant === 'emerald';
-  const isExpBlue = variant === 'expBlue' || variant === 'expBlueCrosshatch';
+  const isExpBlue = variant === 'expBlue';
 
   return (
     <div
