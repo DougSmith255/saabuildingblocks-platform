@@ -64,6 +64,22 @@ const getInitialIs404 = (): boolean => {
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const pageContentRef = useRef<HTMLDivElement>(null);
+  const prevPathRef = useRef(pathname);
+
+  // Replay fade-in animation on client-side navigation
+  useEffect(() => {
+    if (prevPathRef.current !== pathname) {
+      const el = pageContentRef.current;
+      if (el) {
+        el.style.animation = 'none';
+        el.offsetHeight; // Force reflow to reset animation
+        el.style.opacity = '0';
+        el.style.animation = 'pageContentFadeIn 0.4s ease-out 0.1s forwards';
+      }
+      prevPathRef.current = pathname;
+    }
+  }, [pathname]);
 
   // Use a ref to check 404 status synchronously before first render
   // This prevents the header from ever being added to the DOM on 404 pages
@@ -251,7 +267,8 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
         Pages already have their own <main id="main-content"> for accessibility.
       */}
       <div
-        style={{ minHeight: '100vh', position: 'relative', isolation: 'isolate' }}
+        ref={pageContentRef}
+        style={{ minHeight: '100vh', position: 'relative', isolation: 'isolate', opacity: 0, animation: 'pageContentFadeIn 0.4s ease-out 0.1s forwards' }}
         data-no-footer={shouldHideHeaderFooter || shouldHideFooterOnly ? 'true' : undefined}
       >
         {children}

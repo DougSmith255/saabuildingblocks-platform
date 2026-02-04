@@ -113,12 +113,7 @@ main {
   background: transparent;
 }
 
-/* Page Transition - Fade in main content on every page load */
-#main-content {
-  opacity: 0;
-  animation: pageContentFadeIn 0.4s ease-out 0.1s forwards;
-}
-
+/* Page fade-in keyframes — triggered by LayoutWrapper on every page load/navigation */
 @keyframes pageContentFadeIn {
   from {
     opacity: 0;
@@ -130,9 +125,9 @@ main {
 
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  #main-content {
-    opacity: 1;
-    animation: none;
+  [style*="pageContentFadeIn"] {
+    opacity: 1 !important;
+    animation: none !important;
   }
 }
 
