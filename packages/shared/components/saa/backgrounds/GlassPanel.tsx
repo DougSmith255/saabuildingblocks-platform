@@ -85,7 +85,6 @@ const VARIANTS = {
     texture: 'crosshatch',
     textureOpacity: 0.03,
     noiseFrequency: 0.8,
-    blur: 14,
   },
 } as const;
 
@@ -249,7 +248,7 @@ export function GlassPanel({
             inset 0 -10px 25px -8px rgba(0,0,0,0.6),
             inset 0 -25px 50px -20px rgba(0,0,0,0.45)
           `,
-          backdropFilter: `blur(${'blur' in config ? config.blur : 12}px)`,
+          backdropFilter: `blur(${'blur' in config ? config.blur : 2}px)`,
         }}
       >
         {/* Texture overlay */}

@@ -568,9 +568,8 @@ const INCOME_STREAMS: {
     icon: DollarSign,
     title: 'Commission',
     keyMetric: '80/20',
-    keyMetricSub: '$16K CAP',
     bullets: [
-      '80/20 split until cap',
+      '80/20 split until $16K cap',
       '100% after cap',
       'ICON agents earn cap back',
     ],
@@ -1421,10 +1420,10 @@ function IncomeOwnershipSection() {
                 </div>
 
                 {/* Concentric rings — bleeds to card edges on desktop */}
-                <div className="order-1 lg:order-2 flex items-center justify-center overflow-hidden max-h-[clamp(200px,40vw,340px)] lg:max-h-none lg:-my-10 lg:-mr-10">
+                <div className="order-1 lg:order-2 flex items-center justify-center lg:block overflow-hidden relative max-h-[clamp(200px,40vw,340px)] lg:max-h-none lg:-mr-10">
                   <div
                     ref={tierBarsReveal.ref}
-                    className="relative w-full flex-shrink-0"
+                    className="relative w-full flex-shrink-0 lg:absolute lg:top-1/2 lg:left-0 lg:-translate-y-1/2"
                     style={{ aspectRatio: '1' }}
                   >
                     {/* Rings */}
