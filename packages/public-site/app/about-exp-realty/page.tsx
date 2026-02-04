@@ -754,7 +754,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
  */
 function TypewriterLines() {
   const PROBLEM = 'Most brokerages trade your future for today\u2019s commission.';
-  const ANSWER = 'eXp was built around what comes after the sale.';
+  const ANSWER = 'eXp was built around what comes after the last sale.';
   const CHAR_DELAY = 30;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -1102,16 +1102,8 @@ function SpotlightConsole() {
           <ValidationRibbon />
         </div>
 
-        {/* Closing statement + CTA */}
-        <div
-          className="mt-8 text-center"
-        >
-          <p
-            className="max-w-[900px] mx-auto text-sm md:text-base leading-relaxed mb-6"
-            style={{ color: 'var(--color-body-text)', opacity: 0.8 }}
-          >
-            This structure supports agents while they are actively producing and provides options when they are ready to slow down, step back, or think beyond their next deal.
-          </p>
+        {/* CTA */}
+        <div className="mt-8 text-center">
           <CTAButton href="#">See the Advantages</CTAButton>
         </div>
       </div>
