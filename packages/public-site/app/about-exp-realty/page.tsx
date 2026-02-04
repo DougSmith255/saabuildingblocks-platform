@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCard, CTAButton } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCard, CyberCardGold, CTAButton, SecondaryButton } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHeroEffects';
 import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, DollarSign, Receipt } from 'lucide-react';
@@ -1117,40 +1117,12 @@ function SpotlightConsole() {
    ═══════════════════════════════════════════════════════════════ */
 
 function IncomeOwnershipSection() {
-  const introReveal = useScrollReveal(0.3);
-  const comparisonReveal = useScrollReveal(0.3);
-  const panelsReveal = useScrollReveal(0.2);
-  const spotlightReveal = useScrollReveal(0.2);
-
-  // Scramble counters for the 1 vs 3 comparison
-  const oneCounter = useScrambleCounter(1, 1200, false);
-  const threeCounter = useScrambleCounter(3, 1200, false);
-  const [oneStarted, setOneStarted] = useState(false);
-  const [threeStarted, setThreeStarted] = useState(false);
-
-  // Start counters when comparison section comes into view
-  useEffect(() => {
-    if (comparisonReveal.isVisible && !oneStarted) {
-      setOneStarted(true);
-    }
-  }, [comparisonReveal.isVisible, oneStarted]);
-
-  useEffect(() => {
-    if (comparisonReveal.isVisible && !threeStarted) {
-      const timer = setTimeout(() => setThreeStarted(true), 200);
-      return () => clearTimeout(timer);
-    }
-  }, [comparisonReveal.isVisible, threeStarted]);
-
-  // Tier bar scramble counter
-  const tierCounter = useScrambleCounter(7, 1500, false);
-  const [tierStarted, setTierStarted] = useState(false);
-
-  useEffect(() => {
-    if (spotlightReveal.isVisible && !tierStarted) {
-      setTierStarted(true);
-    }
-  }, [spotlightReveal.isVisible, tierStarted]);
+  // Scramble counters — trigger on scroll into view
+  const oneCounter = useScrambleCounter(1, 1200);
+  const threeCounter = useScrambleCounter(3, 1200);
+  const tierCounter = useScrambleCounter(7, 1500);
+  // Tier bars cascade animation — trigger once on scroll
+  const tierBarsReveal = useScrollReveal(0.3);
 
   return (
     <GlassPanel variant="expBlueCrosshatch">
@@ -1163,15 +1135,7 @@ function IncomeOwnershipSection() {
           </div>
 
           {/* B. Intro Text */}
-          <div
-            ref={introReveal.ref}
-            className="text-center max-w-[800px] mx-auto mb-12"
-            style={{
-              opacity: introReveal.isVisible ? 1 : 0,
-              transform: introReveal.isVisible ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'opacity 500ms ease-out, transform 500ms ease-out',
-            }}
-          >
+          <div className="text-center max-w-[800px] mx-auto mb-12">
             <p className="text-body leading-relaxed">
               Most brokerages offer one income stream. eXp offers{' '}
               <span style={{ color: '#00bfff', fontWeight: 700 }}>three</span>
@@ -1180,18 +1144,9 @@ function IncomeOwnershipSection() {
           </div>
 
           {/* C. "1 vs 3" Comparison */}
-          <div
-            ref={comparisonReveal.ref}
-            className="grid grid-cols-[1fr_auto_1fr] sm:grid-cols-[1fr_auto_1fr] gap-3 sm:gap-4 items-center max-w-[700px] mx-auto mb-14"
-          >
+          <div className="grid grid-cols-[1fr_auto_1fr] sm:grid-cols-[1fr_auto_1fr] gap-3 sm:gap-4 items-center max-w-[700px] mx-auto mb-14">
             {/* Left — Most Brokerages (generic flat card) */}
-            <div
-              style={{
-                opacity: comparisonReveal.isVisible ? 1 : 0,
-                transform: comparisonReveal.isVisible ? 'translateX(0)' : 'translateX(-40px)',
-                transition: 'opacity 600ms ease-out, transform 600ms ease-out',
-              }}
-            >
+            <div>
               <div
                 className="rounded-xl p-5 sm:p-6 text-center"
                 style={{
@@ -1206,7 +1161,9 @@ function IncomeOwnershipSection() {
                     textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
                   }}
                 >
-                  {oneStarted ? (oneCounter.hasAnimated ? '1' : oneCounter.displayValue) : '0'}
+                  <span ref={oneCounter.elementRef}>
+                    {oneCounter.hasAnimated ? '1' : oneCounter.displayValue}
+                  </span>
                 </p>
                 <p
                   className="text-xs sm:text-sm uppercase tracking-wider mt-2"
@@ -1224,13 +1181,7 @@ function IncomeOwnershipSection() {
             </div>
 
             {/* VS pill */}
-            <div
-              style={{
-                opacity: comparisonReveal.isVisible ? 1 : 0,
-                transform: comparisonReveal.isVisible ? 'scale(1)' : 'scale(0.5)',
-                transition: 'opacity 400ms ease-out 100ms, transform 400ms ease-out 100ms',
-              }}
-            >
+            <div>
               <span
                 className="inline-block text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full"
                 style={{
@@ -1244,18 +1195,9 @@ function IncomeOwnershipSection() {
               </span>
             </div>
 
-            {/* Right — eXp Realty (CyberCard with blue glow border) */}
-            <div
-              style={{
-                opacity: comparisonReveal.isVisible ? 1 : 0,
-                transform: comparisonReveal.isVisible ? 'translateX(0)' : 'translateX(40px)',
-                transition: 'opacity 600ms ease-out 200ms, transform 600ms ease-out 200ms',
-                borderRadius: '0.75rem',
-                boxShadow: '0 0 20px rgba(0,191,255,0.2), 0 0 40px rgba(0,120,200,0.1)',
-                border: '1px solid rgba(0,191,255,0.3)',
-              }}
-            >
-              <CyberCard padding="md" centered>
+            {/* Right — eXp Realty (CyberCardGold) */}
+            <div>
+              <CyberCardGold padding="md" centered>
                 <div>
                   <p
                     className="text-5xl sm:text-6xl lg:text-7xl font-bold tabular-nums"
@@ -1265,7 +1207,7 @@ function IncomeOwnershipSection() {
                     }}
                   >
                     <span ref={threeCounter.elementRef}>
-                      {threeStarted ? (threeCounter.hasAnimated ? '3' : threeCounter.displayValue) : '0'}
+                      {threeCounter.hasAnimated ? '3' : threeCounter.displayValue}
                     </span>
                   </p>
                   <p
@@ -1281,24 +1223,14 @@ function IncomeOwnershipSection() {
                     eXp Realty
                   </p>
                 </div>
-              </CyberCard>
+              </CyberCardGold>
             </div>
           </div>
 
           {/* D. Three Income Stream Panels */}
-          <div
-            ref={panelsReveal.ref}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14"
-          >
-            {INCOME_STREAMS.map((stream, i) => (
-              <div
-                key={stream.title}
-                style={{
-                  opacity: panelsReveal.isVisible ? 1 : 0,
-                  transform: panelsReveal.isVisible ? 'translateY(0)' : 'translateY(30px)',
-                  transition: `opacity 500ms ease-out ${i * 150}ms, transform 500ms ease-out ${i * 150}ms`,
-                }}
-              >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+            {INCOME_STREAMS.map((stream) => (
+              <div key={stream.title}>
                 <CyberCard padding="md" centered>
                   <div className="flex flex-col items-center">
                     <Icon3D color="#00bfff" size={40}>
@@ -1351,15 +1283,7 @@ function IncomeOwnershipSection() {
           </div>
 
           {/* E. Revenue Share Spotlight */}
-          <div
-            ref={spotlightReveal.ref}
-            className="mb-12"
-            style={{
-              opacity: spotlightReveal.isVisible ? 1 : 0,
-              transform: spotlightReveal.isVisible ? 'translateY(0)' : 'translateY(40px)',
-              transition: 'opacity 700ms ease-out, transform 700ms ease-out',
-            }}
-          >
+          <div className="mb-12">
             <div
               className="rounded-2xl p-6 sm:p-8 md:p-10"
               style={{
@@ -1413,7 +1337,7 @@ function IncomeOwnershipSection() {
                     {REVENUE_SHARE.closing}
                   </p>
 
-                  <CTAButton href="/exp-realty-revenue-share-calculator">Try the Calculator</CTAButton>
+                  <SecondaryButton href="/exp-realty-revenue-share-calculator" variant="blue">Revenue Share Visualizer</SecondaryButton>
                 </div>
 
                 {/* Tier visualization side */}
@@ -1428,7 +1352,7 @@ function IncomeOwnershipSection() {
                       }}
                     >
                       <span ref={tierCounter.elementRef}>
-                        {tierStarted ? (tierCounter.hasAnimated ? '7' : tierCounter.displayValue) : '0'}
+                        {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
                       </span>
                     </p>
                     <p
@@ -1440,7 +1364,7 @@ function IncomeOwnershipSection() {
                   </div>
 
                   {/* Tier bars */}
-                  <div className="w-full max-w-[280px] space-y-2">
+                  <div ref={tierBarsReveal.ref} className="w-full max-w-[280px] space-y-2">
                     {TIER_WIDTHS.map((targetWidth, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <span
@@ -1452,7 +1376,7 @@ function IncomeOwnershipSection() {
                         <div
                           className="h-3 rounded-full"
                           style={{
-                            width: spotlightReveal.isVisible ? `${targetWidth}%` : '0%',
+                            width: tierBarsReveal.isVisible ? `${targetWidth}%` : '0%',
                             background: `linear-gradient(90deg, rgba(0,120,255,0.6), rgba(0,191,255,0.8))`,
                             boxShadow: '0 0 8px rgba(0,191,255,0.3)',
                             transition: `width 600ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 100}ms`,
