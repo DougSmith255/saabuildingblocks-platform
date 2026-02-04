@@ -7,10 +7,10 @@ import { useRef, useEffect } from 'react';
  *
  * A large $100 bill image revealed by a sweeping light-beam mask.
  * The image is invisible except where the beam passes — gradient
- * edges on the beam simulate natural light falloff. A subtle golden
+ * edges on the beam simulate natural light falloff. A subtle
  * glow follows the beam center.
  *
- * Pre-renders the gold-tinted bill to an offscreen canvas so the
+ * Pre-renders the tinted bill to an offscreen canvas so the
  * animation loop only composites the static layer with a moving mask.
  */
 
@@ -29,7 +29,8 @@ interface ScanState {
 }
 
 /**
- * Pre-render the $100 bill with a gold tint onto an offscreen canvas.
+ * Pre-render the $100 bill with a warm-white tint onto an offscreen canvas.
+ * Image is drawn at 80% size, centered.
  * Called once on load and again on resize.
  */
 function renderGoldBill(
@@ -44,28 +45,33 @@ function renderGoldBill(
   const oc = offscreen.getContext('2d')!;
   oc.scale(dpr, dpr);
 
-  // Calculate "cover" dimensions — fill the canvas entirely
+  // Calculate "cover" dimensions — fill the canvas entirely, then scale to 80%
   const imgAspect = img.naturalWidth / img.naturalHeight;
   const canvasAspect = w / h;
   let dw: number, dh: number, dx: number, dy: number;
 
   if (canvasAspect > imgAspect) {
-    // Canvas is wider — fit width, overflow height
     dw = w;
     dh = w / imgAspect;
     dx = 0;
     dy = (h - dh) / 2;
   } else {
-    // Canvas is taller — fit height, overflow width
     dh = h;
     dw = h * imgAspect;
     dx = (w - dw) / 2;
     dy = 0;
   }
 
+  // Scale to 80% and center
+  const scale = 0.8;
+  const sdw = dw * scale;
+  const sdh = dh * scale;
+  const sdx = dx + (dw - sdw) / 2;
+  const sdy = dy + (dh - sdh) / 2;
+
   // Draw the bill at full opacity
   oc.globalAlpha = 1;
-  oc.drawImage(img, dx, dy, dw, dh);
+  oc.drawImage(img, sdx, sdy, sdw, sdh);
 
   // Apply a subtle warm-white tint (source-atop only tints existing pixels)
   oc.globalCompositeOperation = 'source-atop';
@@ -163,7 +169,8 @@ export function GoldenRainEffect() {
       w,
       h,
       dpr,
-      time: 0,
+      // Start time offset so beam is already visible within ~1s of image load
+      time: 1.5,
       lastTimestamp: 0,
       paused: false,
       frameId: 0,
@@ -201,7 +208,14 @@ export function GoldenRainEffect() {
       state.animateFn = animate;
       state.frameId = requestAnimationFrame(animate);
     };
+    // Eager-load for fast first paint
+    img.fetchPriority = 'high';
     img.src = '/images/hero/100-dollar-bill.png';
+
+    // --- Animation constants ---
+    const SWEEP_ANGLE = 15 * Math.PI / 180; // 15-degree diagonal sweep
+    const cosA = Math.cos(SWEEP_ANGLE);
+    const sinA = Math.sin(SWEEP_ANGLE);
 
     // --- Animation frame ---
     function animate(timestamp: number) {
@@ -222,10 +236,14 @@ export function GoldenRainEffect() {
       const totalCycle = sweepDuration + pauseDuration;
       const cycleTime = s.time % totalCycle;
 
-      const beamHalf = cw * 0.35; // half-width of the beam
+      // Narrower beam — 18% of canvas width per side
+      const beamHalf = cw * 0.18;
 
-      // Compute beam position (shared by mask + glow)
-      let beamX = -beamHalf * 1.5; // off-screen default during pause
+      // The diagonal sweep distance (hypotenuse accounting for angle)
+      const sweepDist = cw / cosA + beamHalf * 3;
+
+      // Compute beam center along the diagonal sweep axis
+      let progress = -beamHalf * 1.5; // off-screen default during pause
       let isSweeping = false;
 
       if (cycleTime < sweepDuration) {
@@ -235,69 +253,64 @@ export function GoldenRainEffect() {
         const eased = t < 0.5
           ? 4 * t * t * t
           : 1 - Math.pow(-2 * t + 2, 3) / 2;
-        beamX = -beamHalf * 1.5 + eased * (cw + beamHalf * 3);
+        progress = -beamHalf * 1.5 + eased * sweepDist;
       }
 
+      // Beam center in screen coordinates — sweep along the angled path
+      const beamX = progress * cosA;
+      const beamY = -progress * sinA + ch * 0.5 * sinA; // offset to center vertically
+
       // ── 1. Draw bill revealed by beam mask ──
-      // Draw bill at full opacity, then use destination-in to mask it
       c.globalAlpha = 0.35;
       c.globalCompositeOperation = 'source-over';
       c.drawImage(bill, 0, 0, cw, ch);
 
       // ── 2. Apply beam mask (destination-in) ──
-      // Only keeps pixels where the mask is non-transparent.
       c.globalCompositeOperation = 'destination-in';
       c.globalAlpha = 1;
 
-      // Always draw the mask — during pause it's off-screen so nothing shows
-      const beamGrad = c.createLinearGradient(
-        beamX - beamHalf, 0,
-        beamX + beamHalf, 0
-      );
-      // Brighter beam with softer edges
+      // Create gradient perpendicular to the beam angle
+      // Gradient axis is along the sweep direction (the angle)
+      const gx1 = beamX - beamHalf * cosA;
+      const gy1 = beamY + beamHalf * sinA;
+      const gx2 = beamX + beamHalf * cosA;
+      const gy2 = beamY - beamHalf * sinA;
+
+      const beamGrad = c.createLinearGradient(gx1, gy1, gx2, gy2);
+      // Flat plateau in center with sharp falloff at edges
       beamGrad.addColorStop(0, 'rgba(255,255,255,0)');
-      beamGrad.addColorStop(0.05, 'rgba(255,255,255,0.02)');
-      beamGrad.addColorStop(0.15, 'rgba(255,255,255,0.15)');
-      beamGrad.addColorStop(0.30, 'rgba(255,255,255,0.55)');
-      beamGrad.addColorStop(0.50, 'rgba(255,255,255,1.0)');
-      beamGrad.addColorStop(0.70, 'rgba(255,255,255,0.55)');
-      beamGrad.addColorStop(0.85, 'rgba(255,255,255,0.15)');
-      beamGrad.addColorStop(0.95, 'rgba(255,255,255,0.02)');
+      beamGrad.addColorStop(0.06, 'rgba(255,255,255,0)');
+      beamGrad.addColorStop(0.14, 'rgba(255,255,255,0.9)');
+      beamGrad.addColorStop(0.20, 'rgba(255,255,255,1.0)');
+      beamGrad.addColorStop(0.80, 'rgba(255,255,255,1.0)');
+      beamGrad.addColorStop(0.86, 'rgba(255,255,255,0.9)');
+      beamGrad.addColorStop(0.94, 'rgba(255,255,255,0)');
       beamGrad.addColorStop(1, 'rgba(255,255,255,0)');
 
-      // Draw beam at a slight angle (~6 degrees)
-      c.save();
-      c.translate(cw / 2, ch / 2);
-      c.rotate(6 * Math.PI / 180);
-      c.translate(-cw / 2, -ch / 2);
       c.fillStyle = beamGrad;
-      // Expand fill rect to cover corners after rotation
-      c.fillRect(-cw * 0.1, -ch * 0.1, cw * 1.2, ch * 1.2);
-      c.restore();
+      // Fill entire canvas — gradient controls visibility
+      c.fillRect(-cw * 0.2, -ch * 0.2, cw * 1.4, ch * 1.4);
 
       // ── 3. White-light glow bloom along the beam ──
       c.globalCompositeOperation = 'lighter';
 
       if (isSweeping) {
         c.globalAlpha = 0.10;
-        const glowGrad = c.createLinearGradient(
-          beamX - beamHalf * 0.6, 0,
-          beamX + beamHalf * 0.6, 0
-        );
+        const glowHalf = beamHalf * 0.5;
+        const glx1 = beamX - glowHalf * cosA;
+        const gly1 = beamY + glowHalf * sinA;
+        const glx2 = beamX + glowHalf * cosA;
+        const gly2 = beamY - glowHalf * sinA;
+
+        const glowGrad = c.createLinearGradient(glx1, gly1, glx2, gly2);
         glowGrad.addColorStop(0, 'rgba(220,230,240,0)');
-        glowGrad.addColorStop(0.25, 'rgba(230,240,250,0.4)');
+        glowGrad.addColorStop(0.20, 'rgba(230,240,250,0.4)');
         glowGrad.addColorStop(0.50, 'rgba(245,250,255,1)');
-        glowGrad.addColorStop(0.75, 'rgba(230,240,250,0.4)');
+        glowGrad.addColorStop(0.80, 'rgba(230,240,250,0.4)');
         glowGrad.addColorStop(1, 'rgba(220,230,240,0)');
 
-        // Match the beam angle for glow
-        c.save();
-        c.translate(cw / 2, ch / 2);
-        c.rotate(6 * Math.PI / 180);
-        c.translate(-cw / 2, -ch / 2);
         c.fillStyle = glowGrad;
-        c.fillRect(-cw * 0.1, -ch * 0.1, cw * 1.2, ch * 1.2);
-        c.restore();
+        c.fillRect(-cw * 0.2, -ch * 0.2, cw * 1.4, ch * 1.4);
       }
 
       // ── 4. Edge fades for seamless blend into dark background ──

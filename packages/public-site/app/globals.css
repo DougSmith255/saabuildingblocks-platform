@@ -10,6 +10,41 @@
 }
 
 /* ========================================
+   VIEW TRANSITIONS — compress/expand page navigation
+   Mirrors admin-dashboard agent-portal tab transitions.
+   Old page compresses + fades out, new page expands + fades in.
+   ======================================== */
+
+/* Cross-fade override: disable default morph, use custom keyframes */
+::view-transition-old(root) {
+  animation: vt-compress-out 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+::view-transition-new(root) {
+  animation: vt-expand-in 0.32s cubic-bezier(0, 0, 0.2, 1) 0.06s both;
+}
+
+@keyframes vt-compress-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+@keyframes vt-expand-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========================================
    FORM INPUT AUTOFILL OVERRIDE
    Prevents browser from changing input styling on autofill
    ======================================== */

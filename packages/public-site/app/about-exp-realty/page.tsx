@@ -655,7 +655,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
             </Icon3D>
             <h3
               className="text-h3"
-              style={{ color: '#e5e4dd', fontFamily: 'var(--font-taskor)' }}
+              style={{ color: '#e5e4dd', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
             >
               {displayed.keyword}
             </h3>
@@ -1013,7 +1013,7 @@ function SpotlightConsole() {
           }}
         >
           <p
-            className="text-center max-w-[900px] mx-auto text-sm md:text-base leading-relaxed mt-6 mb-1"
+            className="text-center max-w-[900px] mx-auto text-sm md:text-base leading-relaxed mt-10 mb-[-14px]"
             style={{ color: 'var(--color-body-text)', opacity: 0.65 }}
           >
             Independent validation from third-party organizations
