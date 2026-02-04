@@ -609,7 +609,10 @@ const REVENUE_SHARE = {
   closing: 'Revenue share exists as an option, not an obligation.',
 };
 
-const TIER_WIDTHS = [100, 85, 72, 60, 48, 32, 16];
+const RING_COUNT = 7;
+const RING_BASE_PCT = 22;  // innermost diameter as % of container
+const RING_MAX_PCT = 95;   // outermost diameter as % of container
+const RING_STEP_PCT = (RING_MAX_PCT - RING_BASE_PCT) / (RING_COUNT - 1);
 
 const MISTY_BLUE_BG = `
   radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.85) 0%, transparent 50%),
@@ -1112,6 +1115,91 @@ function SpotlightConsole() {
 }
 
 
+/**
+ * Rising Particles — lightweight canvas effect for Revenue Share panel
+ */
+function RisingParticles() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const COUNT = 25;
+
+    interface Particle {
+      x: number;
+      y: number;
+      r: number;
+      speed: number;
+      drift: number;
+      opacity: number;
+    }
+
+    let particles: Particle[] = [];
+    let rafId: number;
+
+    const init = () => {
+      particles = Array.from({ length: COUNT }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 1.5 + Math.random() * 1.5,
+        speed: 0.3 + Math.random() * 0.5,
+        drift: (Math.random() - 0.5) * 0.4,
+        opacity: 0.1 + Math.random() * 0.25,
+      }));
+    };
+
+    const resize = () => {
+      const rect = canvas.parentElement?.getBoundingClientRect();
+      if (!rect) return;
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      if (particles.length === 0) init();
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of particles) {
+        p.y -= p.speed;
+        p.x += p.drift;
+        if (p.y < -p.r) {
+          p.y = canvas.height + p.r;
+          p.x = Math.random() * canvas.width;
+        }
+        if (p.x < -p.r) p.x = canvas.width + p.r;
+        if (p.x > canvas.width + p.r) p.x = -p.r;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0,191,255,${p.opacity})`;
+        ctx.fill();
+      }
+      rafId = requestAnimationFrame(draw);
+    };
+
+    resize();
+    rafId = requestAnimationFrame(draw);
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas.parentElement!);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      ro.disconnect();
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 z-0 pointer-events-none"
+      aria-hidden="true"
+    />
+  );
+}
+
 /* ═══════════════════════════════════════════════════════════════
    SECTION 2: INCOME & OWNERSHIP
    ═══════════════════════════════════════════════════════════════ */
@@ -1287,14 +1375,15 @@ function IncomeOwnershipSection() {
           {/* E. Revenue Share Spotlight */}
           <div className="mb-12">
             <div
-              className="rounded-2xl p-6 sm:p-8 md:p-10"
+              className="relative overflow-hidden rounded-2xl p-6 sm:p-8 md:p-10"
               style={{
                 background: 'rgba(0,40,80,0.3)',
                 border: '1px solid rgba(0,191,255,0.25)',
                 boxShadow: 'inset 0 0 40px rgba(0,120,255,0.08), 0 0 30px rgba(0,100,200,0.1)',
               }}
             >
-              <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-8 lg:gap-12">
+              <RisingParticles />
+              <div className="relative z-[1] grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-8 lg:gap-12">
                 {/* Text side */}
                 <div className="order-2 lg:order-1 flex flex-col justify-center">
                   {/* Badge */}
@@ -1342,50 +1431,77 @@ function IncomeOwnershipSection() {
                   <SecondaryButton href="/exp-realty-revenue-share-calculator" variant="blue">Revshare Visualizer</SecondaryButton>
                 </div>
 
-                {/* Tier visualization side */}
-                <div className="order-1 lg:order-2 flex flex-col items-center justify-center">
-                  {/* Large "7" counter */}
-                  <div className="text-center mb-6">
-                    <p
-                      className="text-6xl sm:text-7xl font-bold tabular-nums"
-                      style={{
-                        color: '#00bfff',
-                        textShadow: BLUE_3D_SHADOW,
-                      }}
-                    >
-                      <span ref={tierCounter.elementRef}>
-                        {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
-                      </span>
-                    </p>
-                    <p
-                      className="text-sm uppercase tracking-widest mt-1"
-                      style={{ color: '#e5e4dd', opacity: 0.7 }}
-                    >
-                      TIERS
-                    </p>
-                  </div>
-
-                  {/* Tier bars */}
-                  <div ref={tierBarsReveal.ref} className="w-full max-w-[280px] space-y-2">
-                    {TIER_WIDTHS.map((targetWidth, i) => (
-                      <div key={i} className="flex items-center gap-2">
-                        <span
-                          className="text-[10px] tabular-nums w-4 text-right flex-shrink-0"
-                          style={{ color: 'rgba(255,255,255,0.4)' }}
-                        >
-                          {i + 1}
-                        </span>
+                {/* Concentric rings visualization — clipped at card edges */}
+                <div
+                  className="order-1 lg:order-2 flex items-center justify-center overflow-hidden"
+                  style={{ maxHeight: 'clamp(200px, 40vw, 340px)' }}
+                >
+                  <div
+                    ref={tierBarsReveal.ref}
+                    className="relative w-full flex-shrink-0"
+                    style={{ aspectRatio: '1' }}
+                  >
+                    {/* Rings */}
+                    {Array.from({ length: RING_COUNT }, (_, i) => {
+                      const pct = RING_BASE_PCT + i * RING_STEP_PCT;
+                      const opacity = 0.6 - i * 0.05;
+                      return (
                         <div
-                          className="h-3 rounded-full"
+                          key={i}
+                          className="absolute rounded-full"
                           style={{
-                            width: tierBarsReveal.isVisible ? `${targetWidth}%` : '0%',
-                            background: `linear-gradient(90deg, rgba(0,120,255,0.6), rgba(0,191,255,0.8))`,
-                            boxShadow: '0 0 8px rgba(0,191,255,0.3)',
-                            transition: `width 600ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 100}ms`,
+                            width: `${pct}%`,
+                            height: `${pct}%`,
+                            top: '50%',
+                            left: '50%',
+                            transform: tierBarsReveal.isVisible
+                              ? 'translate(-50%,-50%) scale(1)'
+                              : 'translate(-50%,-50%) scale(0)',
+                            opacity: tierBarsReveal.isVisible ? 1 : 0,
+                            border: `1px solid rgba(0,191,255,${opacity})`,
+                            boxShadow: `0 0 8px rgba(0,191,255,${opacity * 0.5})`,
+                            transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
+                            animation: tierBarsReveal.isVisible && i === RING_COUNT - 1
+                              ? 'ringPulse 3s ease-in-out 2.5s infinite'
+                              : undefined,
                           }}
-                        />
-                      </div>
-                    ))}
+                        >
+                          {/* Tier number label on ring edge — lg only */}
+                          <span
+                            className="absolute hidden lg:block text-[11px] tabular-nums"
+                            style={{
+                              top: '50%',
+                              right: '-3px',
+                              transform: 'translate(100%, -50%)',
+                              color: `rgba(255,255,255,${0.3 + (RING_COUNT - 1 - i) * 0.05})`,
+                            }}
+                          >
+                            {i + 1}
+                          </span>
+                        </div>
+                      );
+                    })}
+
+                    {/* Center: "7" counter + TIERS label */}
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+                      <p
+                        className="text-7xl sm:text-8xl font-bold tabular-nums leading-none"
+                        style={{
+                          color: '#00bfff',
+                          textShadow: BLUE_3D_SHADOW,
+                        }}
+                      >
+                        <span ref={tierCounter.elementRef}>
+                          {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
+                        </span>
+                      </p>
+                      <p
+                        className="text-base uppercase tracking-widest mt-1"
+                        style={{ color: '#e5e4dd', opacity: 0.7 }}
+                      >
+                        TIERS
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1419,12 +1535,15 @@ export default function AboutExpRealty() {
       {/* Page-level blue theme overrides */}
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes ringPulse { 0%,100% { box-shadow: 0 0 8px rgba(0,191,255,0.08); } 50% { box-shadow: 0 0 14px rgba(0,191,255,0.25), 0 0 28px rgba(0,191,255,0.1); } }
 
-        /* Blue CTA light bars + glow */
-        .about-exp-blue-theme .cta-light-bar {
+        /* Blue CTA light bars + glow — scoped to main content + header (not slide panels) */
+        .about-exp-blue-theme #main-content .cta-light-bar,
+        .about-exp-blue-theme header .cta-light-bar {
           background: #00bfff !important;
         }
-        .about-exp-blue-theme .cta-light-bar-pulse {
+        .about-exp-blue-theme #main-content .cta-light-bar-pulse,
+        .about-exp-blue-theme header .cta-light-bar-pulse {
           --glow-color: 0, 191, 255 !important;
         }
 
@@ -1461,8 +1580,8 @@ export default function AboutExpRealty() {
           stroke: #00bfff !important;
         }
 
-        /* Blue CyberCardGold — override gold border + glow to match page theme */
-        .about-exp-blue-theme .cyber-card-gold-frame {
+        /* Blue CyberCardGold — scoped to main content only (not slide panels) */
+        .about-exp-blue-theme #main-content .cyber-card-gold-frame {
           border-color: #00bfff;
           box-shadow:
             0 0 4px 1px rgba(0, 191, 255, 0.5),
@@ -1471,7 +1590,7 @@ export default function AboutExpRealty() {
             0 0 24px 6px rgba(0, 191, 255, 0.1),
             0 4px 12px rgba(0,0,0,0.3);
         }
-        .about-exp-blue-theme .cyber-card-gold-frame::after {
+        .about-exp-blue-theme #main-content .cyber-card-gold-frame::after {
           box-shadow:
             0 0 6px 2px rgba(0, 191, 255, 0.6),
             0 0 12px 4px rgba(0, 191, 255, 0.4),
@@ -1479,7 +1598,7 @@ export default function AboutExpRealty() {
             0 0 32px 10px rgba(0, 191, 255, 0.12),
             0 6px 16px rgba(0,0,0,0.35);
         }
-        .about-exp-blue-theme .cyber-card-gold-frame::before {
+        .about-exp-blue-theme #main-content .cyber-card-gold-frame::before {
           border-color: rgba(255,255,255,0.5);
         }
       `}</style>

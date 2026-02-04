@@ -2243,9 +2243,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       }
     }
 
-    /* Slide Panel Header — elevated above honeycomb background */
+    /* Slide Panel Header — sticky above honeycomb background */
     .slide-panel-header {
-      position: relative;
+      position: sticky;
+      top: 0;
       z-index: 10;
       flex-shrink: 0;
       display: flex;
@@ -2253,7 +2254,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       justify-content: space-between;
       padding: 1.25rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(18, 18, 18, 0.85) 50%);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(18, 18, 18, 0.95) 50%);
       border-radius: 1rem 1rem 0.5rem 0.5rem;
     }
 
@@ -2353,14 +2354,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       );
     }
 
-    /* Slide Panel Content — positioned below sticky header */
+    /* Slide Panel Content — flows below sticky header */
     .slide-panel-content {
-      position: absolute;
-      top: 80px;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      position: relative;
       z-index: 1;
+      flex: 1 1 0%;
+      min-height: 0;
       overflow-y: auto;
       overscroll-behavior: contain;
       padding: 1.25rem;
@@ -2383,7 +2382,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       flex: 1 1 auto;
       min-height: 0;
       border: none;
-      background: #0a0a0a;
+      background: transparent;
       opacity: 0;
       transition: opacity 0.4s ease-in-out;
     }
@@ -4475,7 +4474,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div class="slide-panel-content">
+      <div class="slide-panel-content" style="justify-content: center;">
         <form id="join-form">
           <div class="form-row">
             <div class="form-group">
