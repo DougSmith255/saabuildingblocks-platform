@@ -788,16 +788,16 @@ function SpotlightConsole() {
                 borderLeft: '4px solid #c0513f',
               }}
             >
-              <h3
-                className="flex items-center gap-2 text-lg md:text-xl font-bold uppercase tracking-wider mb-3"
-                style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)' }}
+              <p
+                className="flex items-center gap-2 font-bold uppercase tracking-wider mb-3"
+                style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)', fontSize: 'clamp(18px, calc(16.73px + 0.51vw), 32px)' }}
               >
                 <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <circle cx="12" cy="12" r="10" />
                   <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
                 </svg>
                 The Problem
-              </h3>
+              </p>
               <p className="text-body leading-relaxed">
                 Most brokerages are built to maximize commission today, with little consideration for scale, ownership, or life beyond production.
               </p>
@@ -809,9 +809,9 @@ function SpotlightConsole() {
                 borderLeft: '4px solid #00bfff',
               }}
             >
-              <h3
-                className="flex items-center gap-2 text-lg md:text-xl font-bold uppercase tracking-wider mb-3"
-                style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)' }}
+              <p
+                className="flex items-center gap-2 font-bold uppercase tracking-wider mb-3"
+                style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)', fontSize: 'clamp(18px, calc(16.73px + 0.51vw), 32px)' }}
               >
                 <img
                   src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
@@ -819,7 +819,7 @@ function SpotlightConsole() {
                   style={{ width: '1em', height: '1em', objectFit: 'contain' }}
                 />
                 The Answer
-              </h3>
+              </p>
               <p className="text-body leading-relaxed">
                 eXp was designed around production and three structural pillars — ownership, leverage, and longevity — backed by advantages no other brokerage can match.
               </p>

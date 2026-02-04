@@ -67,16 +67,16 @@ function renderGoldBill(
   oc.globalAlpha = 1;
   oc.drawImage(img, dx, dy, dw, dh);
 
-  // Apply a gold color tint (source-atop only tints existing pixels)
+  // Apply a subtle warm-white tint (source-atop only tints existing pixels)
   oc.globalCompositeOperation = 'source-atop';
-  oc.globalAlpha = 0.45;
-  oc.fillStyle = '#b89a3d';
+  oc.globalAlpha = 0.25;
+  oc.fillStyle = '#d0cfc8';
   oc.fillRect(0, 0, w, h);
 
-  // Boost contrast of the tinted bill
+  // Light contrast boost
   oc.globalCompositeOperation = 'multiply';
-  oc.globalAlpha = 0.3;
-  oc.fillStyle = '#d4a843';
+  oc.globalAlpha = 0.15;
+  oc.fillStyle = '#e0ddd0';
   oc.fillRect(0, 0, w, h);
 
   oc.globalCompositeOperation = 'source-over';
@@ -216,8 +216,31 @@ export function GoldenRainEffect() {
       const { ctx: c, w: cw, h: ch, goldBillLayer: bill } = s;
       c.clearRect(0, 0, cw, ch);
 
-      // ── 1. Draw gold-tinted bill at near-invisible base ──
-      c.globalAlpha = 0.08;
+      // Beam timing: sweep + pause
+      const sweepDuration = 13;
+      const pauseDuration = 0.15;
+      const totalCycle = sweepDuration + pauseDuration;
+      const cycleTime = s.time % totalCycle;
+
+      const beamHalf = cw * 0.35; // half-width of the beam
+
+      // Compute beam position (shared by mask + glow)
+      let beamX = -beamHalf * 1.5; // off-screen default during pause
+      let isSweeping = false;
+
+      if (cycleTime < sweepDuration) {
+        isSweeping = true;
+        const t = cycleTime / sweepDuration;
+        // Smooth ease-in-out
+        const eased = t < 0.5
+          ? 4 * t * t * t
+          : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        beamX = -beamHalf * 1.5 + eased * (cw + beamHalf * 3);
+      }
+
+      // ── 1. Draw bill revealed by beam mask ──
+      // Draw bill at full opacity, then use destination-in to mask it
+      c.globalAlpha = 0.35;
       c.globalCompositeOperation = 'source-over';
       c.drawImage(bill, 0, 0, cw, ch);
 
@@ -226,71 +249,46 @@ export function GoldenRainEffect() {
       c.globalCompositeOperation = 'destination-in';
       c.globalAlpha = 1;
 
-      // Beam timing: sweep + pause
-      const sweepDuration = 10;
-      const pauseDuration = 0.8;
-      const totalCycle = sweepDuration + pauseDuration;
-      const cycleTime = s.time % totalCycle;
+      // Always draw the mask — during pause it's off-screen so nothing shows
+      const beamGrad = c.createLinearGradient(
+        beamX - beamHalf, 0,
+        beamX + beamHalf, 0
+      );
+      // Brighter beam with softer edges
+      beamGrad.addColorStop(0, 'rgba(255,255,255,0)');
+      beamGrad.addColorStop(0.05, 'rgba(255,255,255,0.02)');
+      beamGrad.addColorStop(0.15, 'rgba(255,255,255,0.15)');
+      beamGrad.addColorStop(0.30, 'rgba(255,255,255,0.55)');
+      beamGrad.addColorStop(0.50, 'rgba(255,255,255,1.0)');
+      beamGrad.addColorStop(0.70, 'rgba(255,255,255,0.55)');
+      beamGrad.addColorStop(0.85, 'rgba(255,255,255,0.15)');
+      beamGrad.addColorStop(0.95, 'rgba(255,255,255,0.02)');
+      beamGrad.addColorStop(1, 'rgba(255,255,255,0)');
 
-      const beamHalf = cw * 0.35; // half-width of the beam
+      // Draw beam at a slight angle (~6 degrees)
+      c.save();
+      c.translate(cw / 2, ch / 2);
+      c.rotate(6 * Math.PI / 180);
+      c.translate(-cw / 2, -ch / 2);
+      c.fillStyle = beamGrad;
+      // Expand fill rect to cover corners after rotation
+      c.fillRect(-cw * 0.1, -ch * 0.1, cw * 1.2, ch * 1.2);
+      c.restore();
 
-      if (cycleTime < sweepDuration) {
-        const t = cycleTime / sweepDuration;
-        // Smooth ease-in-out
-        const eased = t < 0.5
-          ? 4 * t * t * t
-          : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-        // Beam sweeps from off-left to off-right
-        const beamX = -beamHalf * 1.5 + eased * (cw + beamHalf * 3);
-
-        const beamGrad = c.createLinearGradient(
-          beamX - beamHalf, 0,
-          beamX + beamHalf, 0
-        );
-        // Wider gradient falloff for softer light edges
-        beamGrad.addColorStop(0, 'rgba(255,255,255,0)');
-        beamGrad.addColorStop(0.05, 'rgba(255,255,255,0.01)');
-        beamGrad.addColorStop(0.15, 'rgba(255,255,255,0.10)');
-        beamGrad.addColorStop(0.30, 'rgba(255,255,255,0.40)');
-        beamGrad.addColorStop(0.50, 'rgba(255,255,255,0.85)');
-        beamGrad.addColorStop(0.70, 'rgba(255,255,255,0.40)');
-        beamGrad.addColorStop(0.85, 'rgba(255,255,255,0.10)');
-        beamGrad.addColorStop(0.95, 'rgba(255,255,255,0.01)');
-        beamGrad.addColorStop(1, 'rgba(255,255,255,0)');
-
-        // Draw beam at a slight angle (~6 degrees)
-        c.save();
-        c.translate(cw / 2, ch / 2);
-        c.rotate(6 * Math.PI / 180);
-        c.translate(-cw / 2, -ch / 2);
-        c.fillStyle = beamGrad;
-        // Expand fill rect to cover corners after rotation
-        c.fillRect(-cw * 0.1, -ch * 0.1, cw * 1.2, ch * 1.2);
-        c.restore();
-      }
-      // During pause: mask is empty → entire bill invisible
-
-      // ── 3. Golden glow bloom along the beam ──
+      // ── 3. White-light glow bloom along the beam ──
       c.globalCompositeOperation = 'lighter';
 
-      if (cycleTime < sweepDuration) {
-        const t = cycleTime / sweepDuration;
-        const eased = t < 0.5
-          ? 4 * t * t * t
-          : 1 - Math.pow(-2 * t + 2, 3) / 2;
-        const beamX = -beamHalf * 1.5 + eased * (cw + beamHalf * 3);
-
-        c.globalAlpha = 0.06;
+      if (isSweeping) {
+        c.globalAlpha = 0.10;
         const glowGrad = c.createLinearGradient(
           beamX - beamHalf * 0.6, 0,
           beamX + beamHalf * 0.6, 0
         );
-        glowGrad.addColorStop(0, 'rgba(255,215,0,0)');
-        glowGrad.addColorStop(0.25, 'rgba(255,220,80,0.4)');
-        glowGrad.addColorStop(0.50, 'rgba(255,235,130,1)');
-        glowGrad.addColorStop(0.75, 'rgba(255,220,80,0.4)');
-        glowGrad.addColorStop(1, 'rgba(255,215,0,0)');
+        glowGrad.addColorStop(0, 'rgba(220,230,240,0)');
+        glowGrad.addColorStop(0.25, 'rgba(230,240,250,0.4)');
+        glowGrad.addColorStop(0.50, 'rgba(245,250,255,1)');
+        glowGrad.addColorStop(0.75, 'rgba(230,240,250,0.4)');
+        glowGrad.addColorStop(1, 'rgba(220,230,240,0)');
 
         // Match the beam angle for glow
         c.save();
