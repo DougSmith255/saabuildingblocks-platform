@@ -179,7 +179,7 @@ export function GlassPanel({
   const textureStyle = getTextureStyle(config.texture, config.textureOpacity, config.noiseFrequency);
   const roundedClass = ROUNDED_CLASSES[rounded];
   const isEmerald = variant === 'emerald';
-  const isExpBlue = variant === 'expBlue' || variant === 'expBlueCrosshatch';
+  const isExpBlue = variant === 'expBlue';
 
   return (
     <div
@@ -249,7 +249,7 @@ export function GlassPanel({
             inset 0 -10px 25px -8px rgba(0,0,0,0.6),
             inset 0 -25px 50px -20px rgba(0,0,0,0.45)
           `,
-          backdropFilter: `blur(${'blur' in config ? config.blur : 2}px)`,
+          backdropFilter: `blur(${'blur' in config ? config.blur : 12}px)`,
         }}
       >
         {/* Texture overlay */}
