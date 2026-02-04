@@ -62,12 +62,11 @@ const VARIANTS = {
   },
   emerald: {
     color: { r: 16, g: 185, b: 129 },
-    colorOpacity: 0.12, // Increased from 0.045 for less transparency
+    colorOpacity: 0.12,
     borderOpacity: 0.2,
     texture: 'hlines',
     textureOpacity: 0.04,
     noiseFrequency: 1.0,
-    blur: 16, // Stronger blur
   },
   expBlue: {
     color: { r: 0, g: 102, b: 170 },  // #0066aa
@@ -76,7 +75,6 @@ const VARIANTS = {
     texture: 'hlines',
     textureOpacity: 0.035,
     noiseFrequency: 1.0,
-    blur: 14,
   },
   expBlueCrosshatch: {
     color: { r: 0, g: 102, b: 170 },  // #0066aa
@@ -248,7 +246,7 @@ export function GlassPanel({
             inset 0 -10px 25px -8px rgba(0,0,0,0.6),
             inset 0 -25px 50px -20px rgba(0,0,0,0.45)
           `,
-          backdropFilter: `blur(${'blur' in config ? config.blur : 8}px)`,
+          backdropFilter: 'blur(2px)',
         }}
       >
         {/* Texture overlay */}
