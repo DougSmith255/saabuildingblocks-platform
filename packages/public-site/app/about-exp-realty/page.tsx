@@ -921,7 +921,7 @@ function SpotlightConsole() {
   }, []);
 
   return (
-    <section className="pt-12 pb-10 px-4 sm:px-8 md:px-12">
+    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
       <div className="max-w-[1400px] mx-auto">
         {/* H2 */}
         <div className="text-center mb-8">
@@ -1208,7 +1208,7 @@ function IncomeOwnershipSection() {
 
   return (
     <GlassPanel variant="expBlueCrosshatch">
-      <section className="py-16 px-4 sm:px-8 md:px-12">
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1400px] mx-auto">
 
           {/* A. H2 Heading */}
@@ -1563,6 +1563,12 @@ export default function AboutExpRealty() {
         .about-exp-blue-theme .hamburger.menu-open .line,
         .about-exp-blue-theme .hamburger-svg .line {
           stroke: #00bfff !important;
+        }
+
+        /* Blue footer rocket/flame icon + glow */
+        .about-exp-blue-theme .rocket-icon {
+          fill: #00bfff !important;
+          filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.8)) !important;
         }
 
         /* Blue CyberCardGold — scoped to main content only (not slide panels) */
