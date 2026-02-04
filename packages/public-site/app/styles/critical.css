@@ -113,16 +113,10 @@ main {
   background: transparent;
 }
 
-/* Page Transition - Fade in main content ONLY on client-side navigation */
-/* Initial page load: Content visible immediately (no animation) */
-/* Navigation: PageTransition.tsx adds .page-transitioning class to trigger fade-in */
+/* Page Transition - Fade in main content on every page load */
 #main-content {
-  opacity: 1;
-}
-
-/* Animation ONLY triggers after client-side navigation (class added by PageTransition.tsx) */
-#main-content.page-transitioning {
-  animation: pageContentFadeIn 200ms ease-out forwards;
+  opacity: 0;
+  animation: pageContentFadeIn 0.4s ease-out 0.1s forwards;
 }
 
 @keyframes pageContentFadeIn {
@@ -136,9 +130,9 @@ main {
 
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  #main-content.page-transitioning {
-    animation: none;
+  #main-content {
     opacity: 1;
+    animation: none;
   }
 }
 
