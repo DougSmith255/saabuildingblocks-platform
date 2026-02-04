@@ -141,12 +141,6 @@ const AWARDS = [
   "RealTrends 500 Top-Ranked Brokerage",
 ];
 
-// Logo sources
-const LOGOS = [
-  { id: 'forbes-logo', alt: 'Forbes', src: `${CLOUDFLARE_BASE}/forbes-logo/public` },
-  { id: 'glassdoor-logo', alt: 'Glassdoor', src: `${CLOUDFLARE_BASE}/glassdoor-logo/public` },
-  { id: 'realtrends-logo', alt: 'RealTrends', src: `${CLOUDFLARE_BASE}/realtrends-logo/public` },
-];
 
 
 // Carousel hook
@@ -483,20 +477,6 @@ function ValidationRibbon() {
         </div>
       </div>
 
-      {/* Validation logos */}
-      <div className="max-w-[1900px] mx-auto">
-        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10 mt-2 px-4">
-          {LOGOS.map((logo) => (
-            <img
-              key={logo.id}
-              src={logo.src}
-              alt={logo.alt}
-              className={`w-auto object-contain ${logo.id === 'glassdoor-logo' ? 'h-[60px] md:h-[70px]' : 'h-14 md:h-[50px]'}`}
-              style={{ opacity: 0.7 }}
-            />
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
@@ -599,7 +579,7 @@ function FeatureChip({
         type="button"
         onClick={onSelect}
         aria-pressed={isActive}
-        className="relative z-10 flex flex-col items-center justify-center gap-2 w-full h-full cursor-pointer p-3"
+        className="relative z-10 flex flex-col items-center justify-center gap-2 w-full h-full cursor-pointer px-[5px] py-3"
       >
         <span className="chip-icon-wrap">
           <Icon3D color="#00bfff" size={36} invert={isActive}>
@@ -639,7 +619,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
 
   return (
     <CyberCard padding="md" centered={false} className="h-full">
-      <div className="relative h-full flex flex-col justify-center overflow-hidden">
+      <div className="relative h-full flex flex-col justify-center overflow-visible">
         {/* Watermark icon — large faded background icon */}
         <div
           className="absolute pointer-events-none"
@@ -765,8 +745,8 @@ function TypewriterLines() {
     <div ref={containerRef} className="mt-6 space-y-2 max-w-[900px] mx-auto">
       <style>{`@keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
 
-      <p className="flex items-baseline gap-2 text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
-        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#c0513f" strokeWidth="2.5" strokeLinecap="round" className="flex-shrink-0 self-center">
+      <p className="flex items-center gap-2 text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
+        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#c0513f" strokeWidth="2.5" strokeLinecap="round" className="flex-shrink-0">
           <circle cx="12" cy="12" r="10" />
           <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
         </svg>
@@ -782,11 +762,11 @@ function TypewriterLines() {
         </span>
       </p>
 
-      <p className="flex items-baseline gap-2 text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
+      <p className="flex items-center gap-2 text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
         <img
           src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
           alt="eXp"
-          className="flex-shrink-0 self-center"
+          className="flex-shrink-0"
           style={{ width: '1em', height: '1em', objectFit: 'contain' }}
         />
         <span>
@@ -824,7 +804,9 @@ function SpotlightConsole() {
   useEffect(() => {
     if (!chipsInView || !chipRailRef.current) return;
     const rail = chipRailRef.current;
-    const activeChip = rail.children[activeIndex] as HTMLElement | undefined;
+    // Chips are inside a centering wrapper div
+    const inner = rail.firstElementChild;
+    const activeChip = inner?.children[activeIndex] as HTMLElement | undefined;
     if (activeChip) {
       activeChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
@@ -861,8 +843,11 @@ function SpotlightConsole() {
           <TypewriterLines />
         </div>
 
+        {/* Chips visibility sentinel — gates auto-rotation on both desktop and mobile */}
+        <div ref={chipsRef}>
+
         {/* Desktop: two-column grid with dots below */}
-        <div ref={chipsRef} className="hidden lg:block">
+        <div className="hidden lg:block">
           <div className="grid grid-cols-[45%_55%] gap-6" style={{ height: '284px', overflow: 'visible' }}>
             {/* Left: chips grid */}
             <div
@@ -936,48 +921,66 @@ function SpotlightConsole() {
 
         {/* Mobile / Tablet: single column with horizontal chip rail */}
         <div className="lg:hidden">
-          {/* Horizontal chip rail */}
-          <div className="relative mb-4">
-            {/* Left fade mask */}
+          {/* Horizontal chip rail — breaks out of section padding to reach screen edges */}
+          <div className="relative mb-4 -mx-4 sm:-mx-8 md:-mx-12">
+            {/* Left fade mask — wide enough to cover the approach */}
             <div
-              className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none w-6"
-              style={{ background: 'linear-gradient(to right, rgba(10,10,10,0.9), transparent)' }}
+              className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none w-10 sm:w-14 md:w-16"
+              style={{ background: 'linear-gradient(to right, rgb(10,10,10), transparent)' }}
             />
             {/* Right fade mask */}
             <div
-              className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none w-6"
-              style={{ background: 'linear-gradient(to left, rgba(10,10,10,0.9), transparent)' }}
+              className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none w-10 sm:w-14 md:w-16"
+              style={{ background: 'linear-gradient(to left, rgb(10,10,10), transparent)' }}
             />
 
             <div
               ref={chipRailRef}
-              className="flex gap-3 overflow-x-auto pb-2 px-2"
+              className="overflow-x-auto px-4 sm:px-8 md:px-12"
               style={{
                 scrollSnapType: 'x mandatory',
                 WebkitOverflowScrolling: 'touch',
                 scrollbarWidth: 'none',
+                paddingTop: '28px',
+                paddingBottom: '28px',
+                marginTop: '-28px',
+                marginBottom: '-28px',
               }}
             >
-              {FEATURES.map((f, i) => (
-                <div
-                  key={f.keyword}
-                  className="flex-shrink-0"
-                  style={{ scrollSnapAlign: 'center', width: '100px' }}
-                >
-                  <FeatureChip
-                    icon={f.icon}
-                    keyword={f.keyword}
-                    isActive={activeIndex === i}
-                    onSelect={() => handleSelect(i)}
-                  />
-                </div>
-              ))}
+              <div className="flex gap-3 w-fit mx-auto">
+                {FEATURES.map((f, i) => (
+                  <div
+                    key={f.keyword}
+                    className="flex-shrink-0"
+                    style={{ scrollSnapAlign: 'center', width: '100px' }}
+                  >
+                    <FeatureChip
+                      icon={f.icon}
+                      keyword={f.keyword}
+                      isActive={activeIndex === i}
+                      onSelect={() => handleSelect(i)}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Detail panel (full width) */}
-          <div>
-            <DetailPanel feature={FEATURES[activeIndex]} transitionKey={activeIndex} />
+          {/* Detail panel (full width) — grid overlay for stable height (tallest panel wins) */}
+          <div style={{ display: 'grid' }}>
+            {FEATURES.map((f, i) => (
+              <div
+                key={f.keyword}
+                aria-hidden={i !== activeIndex}
+                style={{
+                  gridArea: '1 / 1',
+                  visibility: i === activeIndex ? 'visible' : 'hidden',
+                  pointerEvents: i === activeIndex ? 'auto' : 'none',
+                }}
+              >
+                <DetailPanel feature={f} transitionKey={i === activeIndex ? activeIndex : -1} />
+              </div>
+            ))}
           </div>
 
           {/* Progress dots */}
@@ -998,6 +1001,7 @@ function SpotlightConsole() {
             ))}
           </div>
         </div>
+        </div>{/* end chipsRef sentinel */}
 
         {/* Validation ribbon — independent third-party proof */}
         <div>
@@ -1084,6 +1088,13 @@ export default function AboutExpRealty() {
         .about-exp-blue-theme .scroll-progress-bar > div {
           background-color: #00bfff !important;
           box-shadow: 0 0 10px rgba(0, 191, 255, 0.5), 0 0 20px rgba(0, 191, 255, 0.3) !important;
+        }
+
+        /* Blue burger menu */
+        .about-exp-blue-theme .hamburger .line,
+        .about-exp-blue-theme .hamburger.menu-open .line,
+        .about-exp-blue-theme .hamburger-svg .line {
+          stroke: #00bfff !important;
         }
       `}</style>
 
