@@ -398,14 +398,7 @@ function StatsBar() {
             ))}
           </div>
 
-          {/* Problem statement */}
-          <p
-            className="mt-6 text-center max-w-[900px] mx-auto text-base md:text-lg leading-relaxed"
-            style={{ color: 'var(--color-body-text)', opacity: 0.85 }}
-          >
-            Most real estate brokerages create friction in daily production and offer no durable plan for what comes after it.
-            {' '}Agents are left to solve efficiency, scale, and long-term income on their own.
-          </p>
+          <TypewriterLines />
         </div>
       </section>
     </GlassPanel>
@@ -745,40 +738,35 @@ function TypewriterLines() {
     <div ref={containerRef} className="mt-6 space-y-2 max-w-[900px] mx-auto">
       <style>{`@keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
 
-      <p className="flex items-center gap-2 text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
-        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#c0513f" strokeWidth="2.5" strokeLinecap="round" className="flex-shrink-0">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-        </svg>
-        <span>
-          <span
-            className="font-bold uppercase tracking-wider"
-            style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
-          >
-            The Problem:{' '}
-          </span>
-          {problemText}
-          {(phase === 'problem') && cursor}
+      <p className="text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
+        <span
+          className="font-bold uppercase tracking-wider"
+          style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
+        >
+          <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{ display: 'inline', verticalAlign: '-0.15em', marginRight: '0.3em' }}>
+            <circle cx="12" cy="12" r="10" />
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+          </svg>
+          The Problem:{' '}
         </span>
+        {problemText}
+        {(phase === 'problem') && cursor}
       </p>
 
-      <p className="flex items-center gap-2 text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
-        <img
-          src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
-          alt="eXp"
-          className="flex-shrink-0"
-          style={{ width: '1em', height: '1em', objectFit: 'contain' }}
-        />
-        <span>
-          <span
-            className="font-bold uppercase tracking-wider"
-            style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
-          >
-            The Answer:{' '}
-          </span>
-          {answerText}
-          {(phase === 'answer') && cursor}
+      <p className="text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
+        <span
+          className="font-bold uppercase tracking-wider"
+          style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
+        >
+          <img
+            src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
+            alt="eXp"
+            style={{ display: 'inline', width: '1em', height: '1em', objectFit: 'contain', verticalAlign: '-0.15em', marginRight: '0.3em' }}
+          />
+          The Answer:{' '}
         </span>
+        {answerText}
+        {(phase === 'answer') && cursor}
       </p>
     </div>
   );
@@ -837,10 +825,9 @@ function SpotlightConsole() {
   return (
     <section className="pt-12 pb-10 px-4 sm:px-8 md:px-12">
       <div className="max-w-[1400px] mx-auto">
-        {/* H2 + intro */}
+        {/* H2 */}
         <div className="text-center mb-8">
           <H2>WHY EXP EXISTS</H2>
-          <TypewriterLines />
         </div>
 
         {/* Chips visibility sentinel — gates auto-rotation on both desktop and mobile */}
@@ -952,7 +939,7 @@ function SpotlightConsole() {
                   <div
                     key={f.keyword}
                     className="flex-shrink-0"
-                    style={{ scrollSnapAlign: 'center', width: '100px' }}
+                    style={{ scrollSnapAlign: 'center', width: '110px' }}
                   >
                     <FeatureChip
                       icon={f.icon}
@@ -967,7 +954,7 @@ function SpotlightConsole() {
           </div>
 
           {/* Detail panel (full width) — grid overlay for stable height (tallest panel wins) */}
-          <div style={{ display: 'grid' }}>
+          <div style={{ display: 'grid', position: 'relative', zIndex: 1 }}>
             {FEATURES.map((f, i) => (
               <div
                 key={f.keyword}
