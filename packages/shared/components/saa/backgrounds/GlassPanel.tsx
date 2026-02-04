@@ -248,7 +248,7 @@ export function GlassPanel({
             inset 0 -10px 25px -8px rgba(0,0,0,0.6),
             inset 0 -25px 50px -20px rgba(0,0,0,0.45)
           `,
-          backdropFilter: `blur(${'blur' in config ? config.blur : 2}px)`,
+          backdropFilter: `blur(${'blur' in config ? config.blur : 8}px)`,
         }}
       >
         {/* Texture overlay */}
