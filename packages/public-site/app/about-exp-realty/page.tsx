@@ -1337,7 +1337,7 @@ function IncomeOwnershipSection() {
                     {REVENUE_SHARE.closing}
                   </p>
 
-                  <SecondaryButton href="/exp-realty-revenue-share-calculator" variant="blue">Revenue Share Visualizer</SecondaryButton>
+                  <SecondaryButton href="/exp-realty-revenue-share-calculator" variant="blue">Revshare Visualizer</SecondaryButton>
                 </div>
 
                 {/* Tier visualization side */}
