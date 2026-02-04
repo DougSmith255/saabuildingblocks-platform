@@ -601,11 +601,13 @@ function FeatureChip({
         aria-pressed={isActive}
         className="relative z-10 flex flex-col items-center justify-center gap-2 w-full h-full cursor-pointer p-3"
       >
-        <Icon3D color="#00bfff" size={36} invert={isActive}>
-          <Icon size={20} />
-        </Icon3D>
+        <span className="chip-icon-wrap">
+          <Icon3D color="#00bfff" size={36} invert={isActive}>
+            <Icon size={20} />
+          </Icon3D>
+        </span>
         <h3
-          className="text-xs font-bold uppercase tracking-wider"
+          className="chip-label text-xs font-bold uppercase tracking-wider"
           style={{
             color: isActive ? '#0a1520' : '#e5e4dd',
             fontFamily: 'var(--font-family-h3)',
@@ -686,6 +688,108 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
   );
 }
 
+/**
+ * TypewriterLines — sequential typing animation for problem/solution one-liners.
+ * Problem types out first, then the answer. Triggered once when scrolled into view.
+ */
+function TypewriterLines() {
+  const PROBLEM = 'Most brokerages trade your future for today\u2019s commission.';
+  const ANSWER = 'eXp was built around what comes after the sale.';
+  const CHAR_DELAY = 30;
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [problemText, setProblemText] = useState('');
+  const [answerText, setAnswerText] = useState('');
+  const [phase, setPhase] = useState<'idle' | 'problem' | 'gap' | 'answer' | 'done'>('idle');
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Trigger on scroll into view
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setPhase('problem');
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Type problem
+  useEffect(() => {
+    if (phase !== 'problem') return;
+    let i = 0;
+    timerRef.current = setInterval(() => {
+      i++;
+      setProblemText(PROBLEM.slice(0, i));
+      if (i >= PROBLEM.length) {
+        clearInterval(timerRef.current!);
+        timerRef.current = null;
+        setPhase('gap');
+      }
+    }, CHAR_DELAY);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [phase]);
+
+  // Brief pause between lines
+  useEffect(() => {
+    if (phase !== 'gap') return;
+    const t = setTimeout(() => setPhase('answer'), 350);
+    return () => clearTimeout(t);
+  }, [phase]);
+
+  // Type answer
+  useEffect(() => {
+    if (phase !== 'answer') return;
+    let j = 0;
+    timerRef.current = setInterval(() => {
+      j++;
+      setAnswerText(ANSWER.slice(0, j));
+      if (j >= ANSWER.length) {
+        clearInterval(timerRef.current!);
+        timerRef.current = null;
+        setPhase('done');
+      }
+    }, CHAR_DELAY);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [phase]);
+
+  const cursor = <span className="inline-block w-[2px] h-[1em] align-text-bottom ml-[1px]" style={{ background: 'currentColor', animation: 'cursorBlink 0.6s steps(1) infinite' }} />;
+
+  return (
+    <div ref={containerRef} className="mt-6 space-y-2 max-w-[900px] mx-auto text-center">
+      <style>{`@keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
+
+      <p className="text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
+        <span
+          className="font-bold uppercase tracking-wider"
+          style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
+        >
+          The Problem:{' '}
+        </span>
+        {problemText}
+        {(phase === 'problem') && cursor}
+      </p>
+
+      <p className="text-body" style={{ fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6, minHeight: '1.6em' }}>
+        <span
+          className="font-bold uppercase tracking-wider"
+          style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1' }}
+        >
+          The Answer:{' '}
+        </span>
+        {answerText}
+        {(phase === 'answer') && cursor}
+      </p>
+    </div>
+  );
+}
+
 function SpotlightConsole() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isStopped, setIsStopped] = useState(false);
@@ -740,121 +844,79 @@ function SpotlightConsole() {
         {/* H2 + intro */}
         <div className="text-center mb-8">
           <H2>WHY EXP EXISTS</H2>
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[1425px] mx-auto">
-            <div
-              className="rounded-lg p-5 text-left"
-              style={{
-                background: 'rgba(20,20,20,0.6)',
-                borderLeft: '4px solid #c0513f',
-              }}
-            >
-              <p
-                className="flex items-center gap-2 font-bold uppercase tracking-wider mb-3"
-                style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)', fontSize: 'clamp(18px, calc(16.73px + 0.51vw), 32px)' }}
-              >
-                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-                </svg>
-                The Problem
-              </p>
-              <p className="text-body leading-relaxed">
-                Most brokerages are built to maximize commission today, with little consideration for scale, ownership, or life beyond production.
-              </p>
-            </div>
-            <div
-              className="rounded-lg p-5 text-left"
-              style={{
-                background: 'rgba(20,20,20,0.6)',
-                borderLeft: '4px solid #00bfff',
-              }}
-            >
-              <p
-                className="flex items-center gap-2 font-bold uppercase tracking-wider mb-3"
-                style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)', fontSize: 'clamp(18px, calc(16.73px + 0.51vw), 32px)' }}
-              >
-                <img
-                  src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
-                  alt="eXp"
-                  style={{ width: '1em', height: '1em', objectFit: 'contain' }}
-                />
-                The Answer
-              </p>
-              <p className="text-body leading-relaxed">
-                eXp was designed around production and three structural pillars — ownership, leverage, and longevity — backed by advantages no other brokerage can match.
-              </p>
-            </div>
-          </div>
+          <TypewriterLines />
         </div>
 
-        {/* Desktop: two-column grid */}
-        <div ref={chipsRef} className="hidden lg:grid grid-cols-[45%_55%] gap-6" style={{ height: '308px', overflow: 'visible' }}>
-          {/* Left: chips grid */}
-          <div
-            style={{
-              height: '308px',
-              overflow: 'visible',
-            }}
-          >
-            <div className="grid grid-cols-3 gap-3">
-              {FEATURES.slice(0, 3).map((f, i) => (
-                <div key={f.keyword}>
-                  <FeatureChip
-                    icon={f.icon}
-                    keyword={f.keyword}
-                    isActive={activeIndex === i}
-                    onSelect={() => handleSelect(i)}
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-cols-2 gap-3 mt-3">
-              {FEATURES.slice(3, 5).map((f, i) => (
-                <div key={f.keyword}>
-                  <FeatureChip
-                    icon={f.icon}
-                    keyword={f.keyword}
-                    isActive={activeIndex === i + 3}
-                    onSelect={() => handleSelect(i + 3)}
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-cols-2 gap-3 mt-3">
-              {FEATURES.slice(5, 7).map((f, i) => (
-                <div key={f.keyword}>
-                  <FeatureChip
-                    icon={f.icon}
-                    keyword={f.keyword}
-                    isActive={activeIndex === i + 5}
-                    onSelect={() => handleSelect(i + 5)}
-                  />
-                </div>
-              ))}
+        {/* Desktop: two-column grid with dots below */}
+        <div ref={chipsRef} className="hidden lg:block">
+          <div className="grid grid-cols-[45%_55%] gap-6" style={{ height: '284px', overflow: 'visible' }}>
+            {/* Left: chips grid */}
+            <div
+              style={{
+                height: '284px',
+                overflow: 'visible',
+              }}
+            >
+              <div className="grid grid-cols-3 gap-3">
+                {FEATURES.slice(0, 3).map((f, i) => (
+                  <div key={f.keyword}>
+                    <FeatureChip
+                      icon={f.icon}
+                      keyword={f.keyword}
+                      isActive={activeIndex === i}
+                      onSelect={() => handleSelect(i)}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="grid grid-cols-2 gap-3 mt-3">
+                {FEATURES.slice(3, 5).map((f, i) => (
+                  <div key={f.keyword}>
+                    <FeatureChip
+                      icon={f.icon}
+                      keyword={f.keyword}
+                      isActive={activeIndex === i + 3}
+                      onSelect={() => handleSelect(i + 3)}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="grid grid-cols-2 gap-3 mt-3">
+                {FEATURES.slice(5, 7).map((f, i) => (
+                  <div key={f.keyword}>
+                    <FeatureChip
+                      icon={f.icon}
+                      keyword={f.keyword}
+                      isActive={activeIndex === i + 5}
+                      onSelect={() => handleSelect(i + 5)}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Progress dots */}
-            <div className="flex justify-center gap-2 mt-4">
-              {FEATURES.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => handleSelect(i)}
-                  aria-label={`Go to ${FEATURES[i].keyword}`}
-                  className="w-2 h-2 rounded-full transition-all duration-300"
-                  style={{
-                    background: i === activeIndex ? '#00bfff' : 'rgba(255,255,255,0.25)',
-                    boxShadow: i === activeIndex ? '0 0 8px rgba(0,191,255,0.6)' : 'none',
-                    transform: i === activeIndex ? 'scale(1.3)' : 'scale(1)',
-                  }}
-                />
-              ))}
+            {/* Right: detail panel */}
+            <div style={{ height: '284px' }}>
+              <DetailPanel feature={FEATURES[activeIndex]} transitionKey={activeIndex} />
             </div>
           </div>
 
-          {/* Right: detail panel */}
-          <div style={{ height: '308px' }}>
-            <DetailPanel feature={FEATURES[activeIndex]} transitionKey={activeIndex} />
+          {/* Progress dots — centered below the full row */}
+          <div className="flex justify-center gap-2 mt-4">
+            {FEATURES.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => handleSelect(i)}
+                aria-label={`Go to ${FEATURES[i].keyword}`}
+                className="w-2 h-2 rounded-full transition-all duration-300"
+                style={{
+                  background: i === activeIndex ? '#00bfff' : 'rgba(255,255,255,0.25)',
+                  boxShadow: i === activeIndex ? '0 0 8px rgba(0,191,255,0.6)' : 'none',
+                  transform: i === activeIndex ? 'scale(1.3)' : 'scale(1)',
+                }}
+              />
+            ))}
           </div>
         </div>
 
@@ -968,6 +1030,12 @@ export default function AboutExpRealty() {
       {/* Page-level blue theme overrides */}
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Scale up chip icons and labels on wide screens */
+        @media (min-width: 1400px) {
+          .chip-icon-wrap { transform: scale(1.5); transform-origin: center; }
+          .chip-label { font-size: 0.875rem; /* 14px — 1.5x of 0.75rem (12px) */ }
+        }
 
         /* Blue CTA light bars + glow */
         .about-exp-blue-theme .cta-light-bar {
