@@ -648,76 +648,64 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       50% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45)); }
     }
 
-    /* H2 Metal Backing Effect */
-    .h2-container {
-      display: flex;
-      justify-content: center;
-      gap: 0.3em;
-      flex-wrap: wrap;
-      position: relative;
-      padding-left: 0.25em;
-      padding-right: 0.25em;
+    /* H2 3D Text Effect */
+    .h2-3d {
+      text-align: center;
       font-feature-settings: "ss01" 1;
-      max-width: 1400px;
       margin-left: auto;
       margin-right: auto;
       margin-bottom: 2.5rem;
-    }
-    @media (min-width: 768px) {
-      .h2-container {
-        gap: 0.5em;
-        padding-left: 0.35em;
-        padding-right: 0.35em;
-      }
-    }
-
-    .h2-word {
-      display: inline-block;
-      position: relative;
+      max-width: 1400px;
       color: #bfbdb0;
-      text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 8px rgba(255,255,255,0.4), 0 0 16px rgba(255,255,255,0.2), 0 0 28px rgba(255,255,255,0.1), 0 0 40px rgba(255,255,255,0.05);
+      text-shadow:
+        /* WHITE CORE */
+        0 0 0.01em #fff,
+        0 0 0.02em #fff,
+        0 0 0.03em rgba(255,255,255,0.8),
+        /* WARM WHITE GLOW */
+        0 0 0.05em rgba(255,250,240,0.9),
+        0 0 0.09em rgba(255, 255, 255, 0.6),
+        0 0 0.13em rgba(255, 255, 255, 0.35),
+        0 0 0.18em rgba(200, 200, 200, 0.2),
+        /* METAL BACKING (3D depth - thicker) */
+        0.02em 0.02em 0 #2a2a2a,
+        0.04em 0.04em 0 #222222,
+        0.06em 0.06em 0 #1a1a1a,
+        0.08em 0.08em 0 #141414,
+        0.10em 0.10em 0 #0f0f0f,
+        0.12em 0.12em 0 #080808;
+      transform: perspective(800px) rotateX(8deg);
+      filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
+    }
+    .h2-3d.text-left {
+      text-align: left;
+      margin-left: 0;
     }
 
-    .h2-word::before {
-      content: "";
-      position: absolute;
-      top: -0.25em;
-      left: -0.3em;
-      right: -0.3em;
-      bottom: -0.25em;
-      background: linear-gradient(180deg, #2a2a2a 0%, #1f1f1f 40%, #171717 100%);
-      border-radius: 0.15em;
-      z-index: -1;
-      border-top: 2px solid rgba(180,180,180,0.45);
-      border-left: 1px solid rgba(130,130,130,0.35);
-      border-right: 1px solid rgba(60,60,60,0.6);
-      border-bottom: 2px solid rgba(0,0,0,0.7);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 2px rgba(0,0,0,0.25),
-        0 4px 8px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .h2-word::after {
-      content: "";
-      position: absolute;
-      top: -0.25em;
-      left: -0.3em;
-      right: -0.3em;
-      height: 50%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 50%, transparent 100%);
-      border-radius: 0.15em 0.15em 0 0;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    /* Tagline */
+    /* Tagline - 3D Text Effect (matches H2) */
     .tagline {
       text-align: center;
-      transform: rotateX(15deg);
-      position: relative;
-      color: #bfbdb0;
       font-feature-settings: "ss01" 1;
-      text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8);
-      filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));
+      color: #bfbdb0;
+      text-shadow:
+        /* WHITE CORE */
+        0 0 0.01em #fff,
+        0 0 0.02em #fff,
+        0 0 0.03em rgba(255,255,255,0.8),
+        /* WARM WHITE GLOW */
+        0 0 0.05em rgba(255,250,240,0.9),
+        0 0 0.09em rgba(255, 255, 255, 0.6),
+        0 0 0.13em rgba(255, 255, 255, 0.35),
+        0 0 0.18em rgba(200, 200, 200, 0.2),
+        /* METAL BACKING (3D depth - thicker) */
+        0.02em 0.02em 0 #2a2a2a,
+        0.04em 0.04em 0 #222222,
+        0.06em 0.06em 0 #1a1a1a,
+        0.08em 0.08em 0 #141414,
+        0.10em 0.10em 0 #0f0f0f,
+        0.12em 0.12em 0 #080808;
+      transform: perspective(800px) rotateX(8deg);
+      filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
     }
 
     /* Tagline ellipse gradient background for readability */
@@ -3675,13 +3663,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       <div style="max-width: 1500px; margin: 0 auto;">
         <!-- Header - always visible, no animation -->
         <div class="text-center mb-12" style="max-width: 1600px; margin-left: auto; margin-right: auto;">
-          <h2 class="text-h2 h2-container">
-            <span class="h2-word">Why</span>
-            <span class="h2-word">Smart</span>
-            <span class="h2-word">Agent</span>
-            <span class="h2-word">Alliance</span>
-            <span class="h2-word">(SAA)?</span>
-          </h2>
+          <h2 class="text-h2 h2-3d">Why Smart Agent Alliance (SAA)?</h2>
         </div>
         <div class="why-saa-grid">
           <!-- Left Card - visible immediately -->
@@ -3753,11 +3735,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <!-- Left Content -->
               <div>
                 <!-- H2 - always visible, no animation -->
-                <h2 class="text-h2 h2-container" style="justify-content: flex-start; text-align: left;">
-                  <span class="h2-word">Proven</span>
-                  <span class="h2-word">at</span>
-                  <span class="h2-word">Scale</span>
-                </h2>
+                <h2 class="text-h2 h2-3d text-left">Proven at Scale</h2>
 
                 <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
                   <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem;">
@@ -3805,13 +3783,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <section style="padding: var(--section-padding-y) 1.5rem; position: relative;" id="what-you-get-section">
       <div style="max-width: 1500px; margin: 0 auto; position: relative; z-index: 10;">
         <div class="text-center" style="margin-bottom: 3rem;">
-          <h2 class="text-h2 h2-container">
-            <span class="h2-word">What</span>
-            <span class="h2-word">You</span>
-            <span class="h2-word">Get</span>
-            <span class="h2-word">with</span>
-            <span class="h2-word">SAA</span>
-          </h2>
+          <h2 class="text-h2 h2-3d">What You Get with SAA</h2>
           <p class="text-body" style="opacity: 0.6; margin-top: 1rem; max-width: 700px; margin-left: auto; margin-right: auto;">Smart Agent Alliance provides systems, training, income infrastructure, and collaboration through five core pillars.</p>
         </div>
 
@@ -3922,15 +3894,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div style="max-width: 1600px; margin: 0 auto;">
               <!-- Section Header -->
               <div class="text-center" style="margin-bottom: 2rem;">
-                <h2 class="text-h2 h2-container" style="max-width: 100%;">
-                  <span class="h2-word">Why</span>
-                  <span class="h2-word">This</span>
-                  <span class="h2-word">Only</span>
-                  <span class="h2-word">Works</span>
-                  <span class="h2-word">at</span>
-                  <span class="h2-word">eXp</span>
-                  <span class="h2-word">Realty</span>
-                </h2>
+                <h2 class="text-h2 h2-3d" style="max-width: 100%;">Why This Only Works at eXp Realty</h2>
               </div>
 
               <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: start;" class="why-only-grid-responsive">
@@ -3993,11 +3957,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <!-- Media Logos Section (Why eXp Realty?) - 5-Card Layout -->
     <section class="media-logos-section scroll-reveal" id="media-logos-section">
       <div class="text-center px-4 relative" style="z-index: 10;">
-        <h2 class="text-h2 h2-container" style="max-width: 100%;">
-          <span class="h2-word">Why</span>
-          <span class="h2-word">eXp</span>
-          <span class="h2-word">Realty?</span>
-        </h2>
+        <h2 class="text-h2 h2-3d" style="max-width: 100%;">Why eXp Realty?</h2>
 
         <!-- Cards Grid: 3 on top, 2 on bottom -->
         <div class="mx-auto mb-8" style="max-width: 1800px;">
@@ -4226,11 +4186,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div style="max-width: 1500px; margin: 0 auto; position: relative; z-index: 10;">
             <!-- Header - always visible, no animation -->
             <div style="text-align: center; margin-bottom: 3rem;">
-              <h2 class="text-h2 h2-container">
-                <span class="h2-word">Your</span>
-                <span class="h2-word">Support</span>
-                <span class="h2-word">Network</span>
-              </h2>
+              <h2 class="text-h2 h2-3d">Your Support Network</h2>
             </div>
 
             <!-- Three column layout - Agent, Doug, Karrie -->
@@ -4324,15 +4280,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <div id="built-future-content" style="position: relative;">
           <!-- Section Header - extra top padding for H2 metal backing plate -->
           <div style="text-align: center; margin-bottom: 1rem; padding-top: 1rem; padding-left: 1.5rem; padding-right: 1.5rem;">
-            <h2 class="text-h2 h2-container" style="max-width: 100%;">
-              <span class="h2-word">Built</span>
-              <span class="h2-word">for</span>
-              <span class="h2-word">Where</span>
-              <span class="h2-word">Real</span>
-              <span class="h2-word">Estate</span>
-              <span class="h2-word">Is</span>
-              <span class="h2-word">Going</span>
-            </h2>
+            <h2 class="text-h2 h2-3d" style="max-width: 100%;">Built for Where Real Estate Is Going</h2>
           </div>
           <p class="text-body" style="opacity: 0.7; margin-bottom: 3rem; text-align: center; max-width: 42rem; margin-left: auto; margin-right: auto; padding-left: 1.5rem; padding-right: 1.5rem;">The future of real estate is cloud-based, global, and technology-driven. SAA is already there.</p>
 
@@ -4376,11 +4324,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <section id="watch-and-decide" class="section py-16 md:py-24 px-4">
           <div style="max-width: 1900px; margin: 0 auto;">
             <div class="text-center mb-8 md:mb-12">
-              <h2 class="text-h2 h2-container">
-                <span class="h2-word">The</span>
-                <span class="h2-word">Inside</span>
-                <span class="h2-word">Look</span>
-              </h2>
+              <h2 class="text-h2 h2-3d">The Inside Look</h2>
               <p class="text-body mt-4 max-w-2xl mx-auto opacity-80">Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full.</p>
             </div>
             <div class="max-w-4xl mx-auto">

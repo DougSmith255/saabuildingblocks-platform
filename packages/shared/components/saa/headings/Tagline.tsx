@@ -63,7 +63,7 @@ export default function Tagline({
 
   return (
     <p
-      className={`text-h2 ${className}`}
+      className={`text-tagline ${className}`}
       style={{
         textAlign: 'center',
         fontFeatureSettings: '"ss01" 1',

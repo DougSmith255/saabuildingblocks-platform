@@ -172,69 +172,64 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       50% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45)); }
     }
 
-    /* H2 Metal Backing Effect */
-    .h2-container {
-      display: flex;
-      justify-content: center;
-      gap: 0.5em;
-      flex-wrap: wrap;
-      position: relative;
-      padding-left: 0.35em;
-      padding-right: 0.35em;
+    /* H2 3D Text Effect */
+    .h2-3d {
+      text-align: center;
       font-feature-settings: "ss01" 1;
-      max-width: 1400px;
       margin-left: auto;
       margin-right: auto;
       margin-bottom: 2.5rem;
-    }
-
-    .h2-word {
-      display: inline-block;
-      position: relative;
+      max-width: 1400px;
       color: #bfbdb0;
-      text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4);
+      text-shadow:
+        /* WHITE CORE */
+        0 0 0.01em #fff,
+        0 0 0.02em #fff,
+        0 0 0.03em rgba(255,255,255,0.8),
+        /* WARM WHITE GLOW */
+        0 0 0.05em rgba(255,250,240,0.9),
+        0 0 0.09em rgba(255, 255, 255, 0.6),
+        0 0 0.13em rgba(255, 255, 255, 0.35),
+        0 0 0.18em rgba(200, 200, 200, 0.2),
+        /* METAL BACKING (3D depth - thicker) */
+        0.02em 0.02em 0 #2a2a2a,
+        0.04em 0.04em 0 #222222,
+        0.06em 0.06em 0 #1a1a1a,
+        0.08em 0.08em 0 #141414,
+        0.10em 0.10em 0 #0f0f0f,
+        0.12em 0.12em 0 #080808;
+      transform: perspective(800px) rotateX(8deg);
+      filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
+    }
+    .h2-3d.text-left {
+      text-align: left;
+      margin-left: 0;
     }
 
-    .h2-word::before {
-      content: "";
-      position: absolute;
-      top: -0.25em;
-      left: -0.3em;
-      right: -0.3em;
-      bottom: -0.25em;
-      background: linear-gradient(180deg, #3d3d3d 0%, #2f2f2f 40%, #252525 100%);
-      border-radius: 0.15em;
-      z-index: -1;
-      border-top: 2px solid rgba(180,180,180,0.45);
-      border-left: 1px solid rgba(130,130,130,0.35);
-      border-right: 1px solid rgba(60,60,60,0.6);
-      border-bottom: 2px solid rgba(0,0,0,0.7);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 2px rgba(0,0,0,0.25),
-        0 4px 8px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .h2-word::after {
-      content: "";
-      position: absolute;
-      top: -0.25em;
-      left: -0.3em;
-      right: -0.3em;
-      height: 50%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 50%, transparent 100%);
-      border-radius: 0.15em 0.15em 0 0;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    /* Tagline */
+    /* Tagline - 3D Text Effect (matches H2) */
     .tagline {
       text-align: center;
-      transform: rotateX(15deg);
-      position: relative;
-      color: #bfbdb0;
       font-feature-settings: "ss01" 1;
-      text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8);
-      filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));
+      color: #bfbdb0;
+      text-shadow:
+        /* WHITE CORE */
+        0 0 0.01em #fff,
+        0 0 0.02em #fff,
+        0 0 0.03em rgba(255,255,255,0.8),
+        /* WARM WHITE GLOW */
+        0 0 0.05em rgba(255,250,240,0.9),
+        0 0 0.09em rgba(255, 255, 255, 0.6),
+        0 0 0.13em rgba(255, 255, 255, 0.35),
+        0 0 0.18em rgba(200, 200, 200, 0.2),
+        /* METAL BACKING (3D depth - thicker) */
+        0.02em 0.02em 0 #2a2a2a,
+        0.04em 0.04em 0 #222222,
+        0.06em 0.06em 0 #1a1a1a,
+        0.08em 0.08em 0 #141414,
+        0.10em 0.10em 0 #0f0f0f,
+        0.12em 0.12em 0 #080808;
+      transform: perspective(800px) rotateX(8deg);
+      filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
     }
 
     /* Tagline ellipse gradient background for readability */
@@ -1576,12 +1571,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
     <section class="section py-24 md:py-32 px-6 overflow-hidden relative">
       <div class="section-content scroll-reveal" id="why-saa-section">
         <div class="text-center mb-12">
-          <h2 class="text-h2 h2-container">
-            <span class="h2-word">Why</span>
-            <span class="h2-word">Smart</span>
-            <span class="h2-word">Agent</span>
-            <span class="h2-word">Alliance?</span>
-          </h2>
+          <h2 class="text-h2 h2-3d">Why Smart Agent Alliance?</h2>
         </div>
         <div class="grid md:grid-cols-12 gap-4 md:gap-6">
           <div style="grid-column: span 7 / span 7;">
@@ -1636,11 +1626,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
     <!-- Media Logos Section (Why eXp Realty?) -->
     <section class="media-logos-section scroll-reveal" id="media-logos-section">
       <div class="text-center px-4 relative" style="z-index: 10;">
-        <h2 class="text-h2 h2-container">
-          <span class="h2-word">Why</span>
-          <span class="h2-word">eXp</span>
-          <span class="h2-word">Realty?</span>
-        </h2>
+        <h2 class="text-h2 h2-3d">Why eXp Realty?</h2>
         <p class="text-body mx-auto opacity-80 mb-8" style="max-width: 900px;">
           The largest independent brokerage in the world and the only cumulatively profitable public company in real estate. As an S&P 600 SmallCap company and the first cloud-based brokerage, eXp is frequently featured in major national and global media outlets.
         </p>
@@ -1667,13 +1653,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
         <section id="watch-and-decide" class="section py-16 md:py-24 px-4">
           <div style="max-width: 1900px; margin: 0 auto;">
             <div class="text-center mb-8 md:mb-12">
-              <h2 class="text-h2 h2-container">
-                <span class="h2-word">The</span>
-                <span class="h2-word">Only</span>
-                <span class="h2-word">Video</span>
-                <span class="h2-word">You</span>
-                <span class="h2-word">Need</span>
-              </h2>
+              <h2 class="text-h2 h2-3d">The Only Video You Need</h2>
               <p class="text-body mt-4 max-w-2xl mx-auto opacity-80">Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full.</p>
             </div>
             <div class="max-w-4xl mx-auto">

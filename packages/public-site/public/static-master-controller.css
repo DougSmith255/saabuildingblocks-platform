@@ -1,14 +1,14 @@
 /**
  * Master Controller Static CSS
  * Auto-generated from Supabase database (SINGLE SOURCE OF TRUTH)
- * Generated: 2026-02-05T22:35:56.917Z
+ * Generated: 2026-02-05T23:35:38.135Z
  *
  * This file contains design system tokens from the Master Controller.
  * Include this in your static HTML exports to apply typography, colors,
  * and spacing settings without requiring dynamic JavaScript.
  *
  * Database timestamps (last updated):
- * - Typography: 2026-02-05T22:35:29.641+00:00
+ * - Typography: 2026-02-05T23:34:45.236+00:00
  * - Colors: 2025-11-05T00:51:06.405+00:00
  * - Spacing: N/A
  *
@@ -101,7 +101,7 @@
       --font-weight-caption: 400;
       --font-family-caption: var(--font-amulya), sans-serif;
       --text-color-caption: #bfbdb0;
-      --font-size-tagline: clamp(21px, calc(18.18px + 1.13vw), 52px);
+      --font-size-tagline: clamp(24px, calc(20.73px + 1.31vw), 60px);
       --line-height-tagline: 1.1;
       --letter-spacing-tagline: 0em;
       --font-weight-tagline: 400;
