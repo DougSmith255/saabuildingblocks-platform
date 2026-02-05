@@ -15,25 +15,18 @@ const ICON_GOLD = '#c4a94d';
 
 const BENEFITS = [
   {
-    icon: Users,
-    title: "Connected Leadership and Community",
-    subtitle: "Leadership",
-    description: "Big enough to back you. Small enough to know you. Real access, real wins, real support.",
-    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public',
-  },
-  {
-    icon: DollarSign,
-    title: "Passive Income Infrastructure",
-    subtitle: "Income",
-    description: "We handle the structure so you can build long-term income without relying solely on transactions.",
-    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public',
-  },
-  {
     icon: Bot,
     title: "Done-For-You Production Systems",
     subtitle: "Systems",
     description: "Curated systems designed to save time, not create tech overload.",
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public',
+  },
+  {
+    icon: Users,
+    title: "Connected Leadership and Community",
+    subtitle: "Leadership",
+    description: "Big enough to back you. Small enough to know you. Real access, real wins, real support.",
+    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public',
   },
   {
     icon: GraduationCap,
@@ -43,9 +36,16 @@ const BENEFITS = [
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public',
   },
   {
+    icon: DollarSign,
+    title: "Passive Income Infrastructure",
+    subtitle: "Income",
+    description: "We handle the structure so you can build long-term income without relying solely on transactions.",
+    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public',
+  },
+  {
     icon: Globe,
     title: "Private Referrals & Global Collaboration",
-    subtitle: "Referrals",
+    subtitle: "Referral",
     description: "Warm introductions and deal flow inside a global agent network.",
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public',
   },
