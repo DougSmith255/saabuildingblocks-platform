@@ -168,7 +168,7 @@ export function VideoSection({
                 pointerEvents: showBookCall ? 'auto' : 'none',
               }}
             >
-              <SecondaryButton
+              <CTAButton
                 href={bookCallUrl}
                 onClick={(e) => {
                   e.preventDefault();
@@ -178,7 +178,7 @@ export function VideoSection({
                 }}
               >
                 {bookCallButtonText}
-              </SecondaryButton>
+              </CTAButton>
             </div>
           </div>
         </div>
