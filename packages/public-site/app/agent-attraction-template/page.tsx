@@ -525,7 +525,7 @@ function ScrollIndicator() {
       <div
         className="fixed pointer-events-none"
         style={{
-          bottom: 'max(32px, calc(env(safe-area-inset-bottom, 0px) + 24px))',
+          bottom: 'max(12px, calc(env(safe-area-inset-bottom, 0px) + 4px))',
           right: '24px', opacity, transform: `scale(${scale})`, transformOrigin: 'center bottom',
           transition: 'opacity 0.3s ease-out, transform 0.3s ease-out', zIndex: -1,
         }}

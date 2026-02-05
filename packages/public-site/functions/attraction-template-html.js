@@ -496,7 +496,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
     /* Scroll Indicator */
     .scroll-indicator {
       position: fixed;
-      bottom: max(32px, calc(env(safe-area-inset-bottom, 0px) + 24px));
+      bottom: max(12px, calc(env(safe-area-inset-bottom, 0px) + 4px));
       right: 24px;
       pointer-events: none;
       z-index: -1;
