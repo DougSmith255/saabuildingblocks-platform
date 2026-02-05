@@ -87,14 +87,6 @@ export function ValuePillarsTab() {
           borderRadius: '50%',
         }}
       />
-      {/* Dark tint layer — semi-transparent so star backdrop-filter blur shows through */}
-      <div
-        className="absolute inset-0 rounded-3xl"
-        style={{
-          background: 'linear-gradient(180deg, rgba(22, 22, 22, 0.7) 0%, rgba(15, 15, 15, 0.75) 100%)',
-          pointerEvents: 'none',
-        }}
-      />
       {/* White vignette glow animation */}
       <style>{`
         @keyframes whiteVignetteGlow {
@@ -138,7 +130,7 @@ export function ValuePillarsTab() {
             <div className="flex flex-col gap-3 text-left">
               <div className="flex items-center gap-3">
                 <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>01</span>
-                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents.</span>
+                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents. <a href="/about-exp-realty" style={{ color: '#bca24a', textDecoration: 'underline', textUnderlineOffset: '3px' }}>Learn how sponsorship works at eXp</a></span>
               </div>
               <div className="flex items-center gap-3">
                 <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>02</span>

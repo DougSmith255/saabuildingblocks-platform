@@ -167,7 +167,7 @@ export default function Home() {
                   SMART AGENT ALLIANCE
                 </H1>
                 <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
-                  For Real Estate Agents Considering eXp Realty
+                  For Agents Who Want More
                 </Tagline>
               </div>
             </div>
