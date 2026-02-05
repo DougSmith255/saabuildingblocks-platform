@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { extractPlainText } from '../../../utils/extractPlainText';
 
 export interface HeadingProps {
   children: React.ReactNode;
@@ -12,20 +11,14 @@ export interface HeadingProps {
 }
 
 /**
- * H2 Component - Optimized for Performance
- *
- * PERFORMANCE OPTIMIZATIONS:
- * - Single text node per word (was per-character rendering)
- * - CSS text-shadow for glow effects (GPU accelerated)
- * - Metal backing plate via ::before/::after pseudo-elements
- * - ~80% reduction in DOM nodes
+ * H2 Component - Continuous Metal Plate Per Line
  *
  * Features:
  * - Neon glow using text-shadow (matches Tagline style)
- * - 3D transform with rotateX
- * - Metal backing plate per word
+ * - Metal backing plate that spans entire line (no gaps between words)
+ * - box-decoration-break: clone for automatic line-by-line plates
+ * - When text wraps, each line gets its own fitted plate
  * - Alt glyphs for N, E, M via font-feature-settings "ss01"
- * - Body text color (#bfbdb0)
  *
  * SEO/ACCESSIBILITY:
  * - Uses real letters in DOM (Google reads correctly)
@@ -52,13 +45,6 @@ export default function H2({
     const isSafariBrowser = ua.includes('safari') && !ua.includes('chrome') && !ua.includes('chromium');
     setIsSafari(isSafariBrowser);
   }, []);
-
-  // Extract plain text for SEO/accessibility
-  const plainText = extractPlainText(children);
-
-  // Convert children to string and split into words
-  const text = React.Children.toArray(children).join('');
-  const words = text.split(' ');
 
   const isBlue = theme === 'blue';
   const textColor = isBlue ? '#b0d4e8' : '#bfbdb0';
@@ -100,126 +86,63 @@ export default function H2({
         0 0 40px rgba(255,255,255,0.05)
       `);
 
+  // Metal plate styles - applied to inline span, cloned per line
+  const metalPlateStyle: React.CSSProperties = isBlue
+    ? {
+        background: 'linear-gradient(180deg, #122a47 0%, #0d2138 40%, #081828 100%)',
+        borderTop: '2px solid rgba(100,180,220,0.45)',
+        borderLeft: '1px solid rgba(60,130,180,0.35)',
+        borderRight: '1px solid rgba(20,60,100,0.6)',
+        borderBottom: '2px solid rgba(0,0,0,0.7)',
+        boxShadow: `
+          inset 0 1px 0 rgba(100,180,220,0.12),
+          inset 0 -1px 2px rgba(0,0,0,0.25),
+          0 4px 8px rgba(0,0,0,0.5),
+          0 2px 4px rgba(0,0,0,0.3)
+        `,
+      }
+    : {
+        background: 'linear-gradient(180deg, #2a2a2a 0%, #1f1f1f 40%, #171717 100%)',
+        borderTop: '2px solid rgba(180,180,180,0.45)',
+        borderLeft: '1px solid rgba(130,130,130,0.35)',
+        borderRight: '1px solid rgba(60,60,60,0.6)',
+        borderBottom: '2px solid rgba(0,0,0,0.7)',
+        boxShadow: `
+          inset 0 1px 0 rgba(255,255,255,0.12),
+          inset 0 -1px 2px rgba(0,0,0,0.25),
+          0 4px 8px rgba(0,0,0,0.5),
+          0 2px 4px rgba(0,0,0,0.3)
+        `,
+      };
+
   return (
-    <>
-      <style>{`
-        /* Responsive H2 container - tighter spacing on mobile */
-        .h2-container {
-          display: flex;
-          justify-content: center;
-          gap: 0.3em;
-          flex-wrap: wrap;
-          position: relative;
-          padding-left: 0.25em;
-          padding-right: 0.25em;
-          font-feature-settings: "ss01" 1;
-          margin-left: auto;
-          margin-right: auto;
-          margin-bottom: 2.5rem;
-        }
-        @media (min-width: 768px) {
-          .h2-container {
-            gap: 0.5em;
-            padding-left: 0.35em;
-            padding-right: 0.35em;
-          }
-        }
-
-        /* Metal backing plate - 3D brushed gunmetal effect with glossy highlights */
-        .h2-word::before {
-          content: "";
-          position: absolute;
-          top: -0.25em;
-          left: -0.3em;
-          right: -0.3em;
-          bottom: -0.25em;
-          background: linear-gradient(180deg, #2a2a2a 0%, #1f1f1f 40%, #171717 100%);
-          border-radius: 0.15em;
-          z-index: -1;
-          border-top: 2px solid rgba(180,180,180,0.45);
-          border-left: 1px solid rgba(130,130,130,0.35);
-          border-right: 1px solid rgba(60,60,60,0.6);
-          border-bottom: 2px solid rgba(0,0,0,0.7);
-          box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.12),
-            inset 0 -1px 2px rgba(0,0,0,0.25),
-            0 4px 8px rgba(0,0,0,0.5),
-            0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        /* Glossy highlight overlay on metal plate */
-        .h2-word::after {
-          content: "";
-          position: absolute;
-          top: -0.25em;
-          left: -0.3em;
-          right: -0.3em;
-          height: 50%;
-          background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 50%, transparent 100%);
-          border-radius: 0.15em 0.15em 0 0;
-          z-index: -1;
-          pointer-events: none;
-        }
-
-        /* Blue theme metal plate - dark blue steel */
-        .h2-word-blue::before {
-          content: "";
-          position: absolute;
-          top: -0.25em;
-          left: -0.3em;
-          right: -0.3em;
-          bottom: -0.25em;
-          background: linear-gradient(180deg, #122a47 0%, #0d2138 40%, #081828 100%);
-          border-radius: 0.15em;
-          z-index: -1;
-          border-top: 2px solid rgba(100,180,220,0.45);
-          border-left: 1px solid rgba(60,130,180,0.35);
-          border-right: 1px solid rgba(20,60,100,0.6);
-          border-bottom: 2px solid rgba(0,0,0,0.7);
-          box-shadow:
-            inset 0 1px 0 rgba(100,180,220,0.12),
-            inset 0 -1px 2px rgba(0,0,0,0.25),
-            0 4px 8px rgba(0,0,0,0.5),
-            0 2px 4px rgba(0,0,0,0.3);
-        }
-        .h2-word-blue::after {
-          content: "";
-          position: absolute;
-          top: -0.25em;
-          left: -0.3em;
-          right: -0.3em;
-          height: 50%;
-          background: linear-gradient(180deg, rgba(100,180,220,0.06) 0%, rgba(100,180,220,0.02) 50%, transparent 100%);
-          border-radius: 0.15em 0.15em 0 0;
-          z-index: -1;
-          pointer-events: none;
-        }
-      `}</style>
-
-      <h2
-        className={`text-h2 h2-container ${className}`}
+    <h2
+      className={`text-h2 ${className}`}
+      style={{
+        textAlign: 'center',
+        fontFeatureSettings: '"ss01" 1',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginBottom: '2.5rem',
+        maxWidth: style.maxWidth || '1400px',
+        ...style
+      }}
+    >
+      <span
         style={{
-          maxWidth: style.maxWidth || '1400px',
-          ...style
+          display: 'inline',
+          color: textColor,
+          textShadow,
+          padding: '0.25em 0.4em',
+          borderRadius: '0.15em',
+          // Clone the box decoration (background, border, etc.) for each line fragment
+          boxDecorationBreak: 'clone',
+          WebkitBoxDecorationBreak: 'clone',
+          ...metalPlateStyle,
         }}
       >
-        {words.map((word, wordIndex) => (
-          <React.Fragment key={wordIndex}>
-            {wordIndex > 0 && ' '}
-            <span
-              className={isBlue ? 'h2-word-blue' : 'h2-word'}
-              style={{
-                display: 'inline-block',
-                position: 'relative',
-                color: textColor,
-                textShadow,
-              }}
-            >
-              {word}
-            </span>
-          </React.Fragment>
-        ))}
-      </h2>
-    </>
+        {children}
+      </span>
+    </h2>
   );
 }
