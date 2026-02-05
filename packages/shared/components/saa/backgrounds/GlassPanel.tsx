@@ -181,7 +181,23 @@ export function GlassPanel({
   return (
     <div
       className={`relative overflow-hidden ${roundedClass} ${className}`}
-      style={{ backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)' }}
+      style={{
+        background: `linear-gradient(180deg, rgba(${r},${g},${b},${effectiveOpacity * 0.8}) 0%, rgba(${r},${g},${b},${effectiveOpacity}) 50%, rgba(${r},${g},${b},${effectiveOpacity * 0.8}) 100%)`,
+        boxShadow: `
+          0 8px 32px rgba(0,0,0,0.4),
+          0 4px 12px rgba(0,0,0,0.25),
+          inset 0 1px 0 0 rgba(255,255,255,0.35),
+          inset 0 2px 4px 0 rgba(255,255,255,0.2),
+          inset 0 8px 20px -8px rgba(${r},${g},${b},0.3),
+          inset 0 20px 40px -20px rgba(255,255,255,0.15),
+          inset 0 -1px 0 0 rgba(0,0,0,0.7),
+          inset 0 -2px 6px 0 rgba(0,0,0,0.5),
+          inset 0 -10px 25px -8px rgba(0,0,0,0.6),
+          inset 0 -25px 50px -20px rgba(0,0,0,0.45)
+        `,
+        backdropFilter: 'blur(2px)',
+        WebkitBackdropFilter: 'blur(2px)',
+      }}
     >
       {/* Emerald: Vignette glow animation */}
       {isEmerald && (
@@ -227,31 +243,8 @@ export function GlassPanel({
         </>
       )}
 
-      {/* Glass plate with 3D curved edges using inset box-shadows */}
-      <div
-        className={`absolute inset-0 pointer-events-none overflow-hidden z-[1] ${roundedClass}`}
-        style={{
-          background: `linear-gradient(180deg, rgba(${r},${g},${b},${effectiveOpacity * 0.8}) 0%, rgba(${r},${g},${b},${effectiveOpacity}) 50%, rgba(${r},${g},${b},${effectiveOpacity * 0.8}) 100%)`,
-          boxShadow: `
-            /* External shadow for depth */
-            0 8px 32px rgba(0,0,0,0.4),
-            0 4px 12px rgba(0,0,0,0.25),
-            /* Top highlight - curves with border-radius */
-            inset 0 1px 0 0 rgba(255,255,255,0.35),
-            inset 0 2px 4px 0 rgba(255,255,255,0.2),
-            inset 0 8px 20px -8px rgba(${r},${g},${b},0.3),
-            inset 0 20px 40px -20px rgba(255,255,255,0.15),
-            /* Bottom shadow - curves with border-radius */
-            inset 0 -1px 0 0 rgba(0,0,0,0.7),
-            inset 0 -2px 6px 0 rgba(0,0,0,0.5),
-            inset 0 -10px 25px -8px rgba(0,0,0,0.6),
-            inset 0 -25px 50px -20px rgba(0,0,0,0.45)
-          `,
-        }}
-      >
-        {/* Texture overlay */}
-        <div className="absolute inset-0" style={textureStyle} />
-      </div>
+      {/* Texture overlay */}
+      <div className={`absolute inset-0 pointer-events-none z-[1] ${roundedClass}`} style={textureStyle} />
 
       {/* Emerald: 3D darker bottom edge gradient */}
       {isEmerald && (
