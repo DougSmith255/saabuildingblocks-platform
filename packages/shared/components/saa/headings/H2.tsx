@@ -130,14 +130,11 @@ export default function H2({
     >
       <span
         style={{
-          display: 'inline',
+          display: 'inline-block',
           color: textColor,
           textShadow,
           padding: '0.25em 0.4em',
           borderRadius: '0.15em',
-          // Clone the box decoration (background, border, etc.) for each line fragment
-          boxDecorationBreak: 'clone',
-          WebkitBoxDecorationBreak: 'clone',
           ...metalPlateStyle,
         }}
       >
