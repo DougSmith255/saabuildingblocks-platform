@@ -613,10 +613,10 @@ const SUPPORT_TECH_STATS = [
 ];
 
 const SUPPORT_BULLETS = [
-  { icon: Shield, text: 'Full-service support across brokers, tech, transactions, and accounting' },
+  { icon: Shield, text: 'Full-service support across brokers, tech, and transactions' },
   { icon: Headphones, text: '24/7 Expert Care help desk plus AI assistant Mira' },
   { icon: GraduationCap, text: 'Live onboarding that gets agents operational quickly' },
-  { icon: Handshake, text: 'Structured mentor program for newer agents through first three transactions' },
+  { icon: Handshake, text: 'Mentor program through first three transactions' },
   { icon: Video, text: '50+ weekly live trainings plus full on-demand library' },
   { icon: Building2, text: 'Physical workspaces via Regus offices worldwide' },
 ];
