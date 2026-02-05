@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { CTAButton } from '@saa/shared/components/saa';
 
 interface NavItem {
@@ -48,6 +49,8 @@ interface DesktopNavProps {
  */
 export default function DesktopNav({ isPortalClicked, handlePortalClick }: DesktopNavProps) {
   const [hoveredDropdown, setHoveredDropdown] = useState<number | null>(null);
+  const pathname = usePathname();
+  const isAboutExpPage = pathname?.replace(/\/$/, '') === '/about-exp-realty';
 
   // Note: 404 pages hide the entire header via CSS :has() selector,
   // so this component won't be rendered on 404 pages at all.
@@ -99,7 +102,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
                     style={{
                       width: 0,
                       height: 0,
-                      borderLeft: '6px solid #ffffff',
+                      borderLeft: `6px solid ${isAboutExpPage ? '#00bfff' : '#ffffff'}`,
                       borderTop: '4px solid transparent',
                       borderBottom: '4px solid transparent',
                       transform: hoveredDropdown === index ? 'rotate(90deg) translateZ(0)' : 'rotate(0deg) translateZ(0)',

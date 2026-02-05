@@ -159,6 +159,7 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
           role="dialog"
           aria-label="Mobile navigation menu"
           aria-hidden={!isMobileMenuOpen}
+          data-lenis-prevent
           className={`mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[10008] overflow-y-auto overflow-x-hidden ${
             isMobileMenuOpen ? 'menu-opening' : 'menu-closing'
           }`}

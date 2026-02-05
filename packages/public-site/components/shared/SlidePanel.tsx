@@ -359,6 +359,7 @@ export function SlidePanel({
           role="dialog"
           aria-modal="true"
           aria-labelledby="slide-panel-title"
+          data-lenis-prevent
         >
           {/* Backdrop - conditionally rendered */}
           {!hideBackdrop && (
