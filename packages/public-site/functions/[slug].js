@@ -5301,6 +5301,30 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         honeycombStates[type] = null;
       }
 
+      // Wheel scroll lock — prevents page scroll behind panels
+      var scrollLockCount = 0;
+      function panelScrollLockHandler(e) {
+        var content = e.target.closest('.slide-panel-content');
+        if (!content) { e.preventDefault(); return; }
+        // Prevent over-scrolling past edges from scrolling the page
+        var atTop = content.scrollTop === 0 && e.deltaY < 0;
+        var atBottom = content.scrollTop + content.clientHeight >= content.scrollHeight - 1 && e.deltaY > 0;
+        if (atTop || atBottom) e.preventDefault();
+      }
+      function enablePanelScrollLock() {
+        scrollLockCount++;
+        if (scrollLockCount === 1) {
+          document.addEventListener('wheel', panelScrollLockHandler, { passive: false });
+        }
+      }
+      function disablePanelScrollLock() {
+        scrollLockCount--;
+        if (scrollLockCount <= 0) {
+          scrollLockCount = 0;
+          document.removeEventListener('wheel', panelScrollLockHandler);
+        }
+      }
+
       function openModal(type) {
         const elements = getPanel(type);
         if (!elements) return;
@@ -5324,6 +5348,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         elements.container.classList.add('open');
         document.body.classList.add('slide-panel-open');
         document.documentElement.classList.add('slide-panel-open');
+        enablePanelScrollLock();
 
         // Start honeycomb animation
         startHoneycomb(type);
@@ -5353,6 +5378,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           if (elements.backdrop) elements.backdrop.classList.remove('closing');
           document.body.classList.remove('slide-panel-open');
           document.documentElement.classList.remove('slide-panel-open');
+          disablePanelScrollLock();
           panelClosing[type] = false;
 
           // Clear iframe src when closing
@@ -5376,6 +5402,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         sharedBackdrop.classList.add('visible');
         document.body.classList.add('slide-panel-open');
         document.documentElement.classList.add('slide-panel-open');
+        enablePanelScrollLock();
 
         if (type === 'join') {
           // Open join panel only
@@ -5431,6 +5458,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           sharedBackdrop.classList.remove('visible');
           document.body.classList.remove('slide-panel-open');
           document.documentElement.classList.remove('slide-panel-open');
+          disablePanelScrollLock();
           activeJoinPanel = null;
         }, ANIMATION_DURATION);
       }

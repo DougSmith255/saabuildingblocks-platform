@@ -153,6 +153,42 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
             zIndex: 5, // Behind button face (z-10)
           }}
         />
+
+      {/* Left side glow bar */}
+      <div
+        className="cta-light-bar cta-light-bar-pulse cta-light-bar-side rounded-md transition-all duration-500"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '-5px',
+            transform: 'translateY(-50%)',
+            width: '10px',
+            height: '18px',
+            background: brandGold,
+            borderRadius: '6px',
+            animationDelay: lightPulseDelay,
+            zIndex: 5,
+            '--glow-color': '255, 215, 0',
+          } as React.CSSProperties}
+        />
+
+      {/* Right side glow bar */}
+      <div
+        className="cta-light-bar cta-light-bar-pulse cta-light-bar-side rounded-md transition-all duration-500"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            right: '-5px',
+            transform: 'translateY(-50%)',
+            width: '10px',
+            height: '18px',
+            background: brandGold,
+            borderRadius: '6px',
+            animationDelay: lightPulseDelay,
+            zIndex: 5,
+            '--glow-color': '255, 215, 0',
+          } as React.CSSProperties}
+        />
       </div>
     </div>
   );

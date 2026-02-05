@@ -102,12 +102,13 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
                     style={{
                       width: 0,
                       height: 0,
-                      borderLeft: `6px solid ${isAboutExpPage ? '#00bfff' : '#ffffff'}`,
+                      borderLeft: `6px solid ${hoveredDropdown === index && isAboutExpPage ? '#00bfff' : '#ffffff'}`,
                       borderTop: '4px solid transparent',
                       borderBottom: '4px solid transparent',
                       transform: hoveredDropdown === index ? 'rotate(90deg) translateZ(0)' : 'rotate(0deg) translateZ(0)',
                       transformOrigin: 'center',
-                      willChange: 'transform, border-left-color',
+                      filter: hoveredDropdown === index && isAboutExpPage ? 'drop-shadow(0 0 6px rgba(0, 191, 255, 0.8))' : 'none',
+                      willChange: 'transform, border-left-color, filter',
                     }}
                   />
                 </button>
