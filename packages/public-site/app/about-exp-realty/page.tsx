@@ -5,7 +5,7 @@ import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCard, CyberCardGold, CTAButto
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHeroEffects';
 import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, DollarSign, Receipt,
-  Shield, Headphones, GraduationCap, Video,
+  Shield, Headphones, GraduationCap, Video, Handshake,
   Contact, Globe, Laptop, ClipboardCheck, BarChart3, Palette,
 } from 'lucide-react';
 import { HolographicGlobe } from '../../components/shared/HolographicGlobe';
@@ -615,7 +615,8 @@ const SUPPORT_TECH_STATS = [
 const SUPPORT_BULLETS = [
   { icon: Shield, text: 'Full-service support across brokers, tech, transactions, and accounting' },
   { icon: Headphones, text: '24/7 Expert Care help desk plus AI assistant Mira' },
-  { icon: GraduationCap, text: 'Live onboarding and mentor program through first three transactions' },
+  { icon: GraduationCap, text: 'Live onboarding that gets agents operational quickly' },
+  { icon: Handshake, text: 'Structured mentor program for newer agents through first three transactions' },
   { icon: Video, text: '50+ weekly live trainings plus full on-demand library' },
   { icon: Building2, text: 'Physical workspaces via Regus offices worldwide' },
 ];
@@ -626,7 +627,7 @@ const TECH_BULLETS = [
   { icon: Laptop, text: 'eXp World virtual campus for collaboration' },
   { icon: ClipboardCheck, text: 'Transaction management and compliance tools' },
   { icon: BarChart3, text: 'Performance analytics and tracking dashboards' },
-  { icon: Palette, text: 'Canva Pro marketing tools plus automation for capping agents' },
+  { icon: Palette, text: 'Canva Pro tools plus automation for capping agents' },
 ];
 
 const REVENUE_SHARE = {
@@ -1784,12 +1785,12 @@ function SupportTechnologySection() {
                 {SUPPORT_BULLETS.map((bullet) => (
                   <li
                     key={bullet.text}
-                    className="text-body text-sm leading-relaxed flex items-start gap-3"
+                    className="text-body text-sm leading-relaxed flex items-center gap-3"
                     style={{ color: 'var(--color-body-text)' }}
                   >
                     <bullet.icon
                       size={16}
-                      style={{ color: '#00bfff', flexShrink: 0, marginTop: '3px', opacity: 0.8 }}
+                      style={{ color: '#00bfff', flexShrink: 0, opacity: 0.8 }}
                     />
                     {bullet.text}
                   </li>
@@ -1830,12 +1831,12 @@ function SupportTechnologySection() {
                 {TECH_BULLETS.map((bullet) => (
                   <li
                     key={bullet.text}
-                    className="text-body text-sm leading-relaxed flex items-start gap-3"
+                    className="text-body text-sm leading-relaxed flex items-center gap-3"
                     style={{ color: 'var(--color-body-text)' }}
                   >
                     <bullet.icon
                       size={16}
-                      style={{ color: '#00bfff', flexShrink: 0, marginTop: '3px', opacity: 0.8 }}
+                      style={{ color: '#00bfff', flexShrink: 0, opacity: 0.8 }}
                     />
                     {bullet.text}
                   </li>
