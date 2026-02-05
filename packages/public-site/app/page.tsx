@@ -166,10 +166,10 @@ export default function Home() {
                 >
                   SMART AGENT ALLIANCE
                 </H1>
-                <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
+                <Tagline className="hero-tagline-mobile-spacing" style={{ marginBottom: '0.25rem' }} counterSuffix={<TaglineCounterSuffix />}>
                   For Agents Who Want More
                 </Tagline>
-                <p className="text-body mt-4 opacity-90" style={{ fontSize: 'clamp(14px, 2.5vw, 18px)' }}>
+                <p className="text-body opacity-90">
                   Everything you need to build a real estate business with lasting income.
                 </p>
               </div>
