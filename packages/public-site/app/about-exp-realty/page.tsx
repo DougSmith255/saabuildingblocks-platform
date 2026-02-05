@@ -1697,8 +1697,6 @@ const transparentCardStyle: React.CSSProperties = {
 };
 
 function SupportTechnologySection() {
-  const statRowReveal = useScrollReveal(0.3);
-  const cardsReveal = useScrollReveal(0.2);
   const sectionRef = useRef<HTMLElement>(null);
   const [globeVisible, setGlobeVisible] = useState(false);
 
@@ -1731,16 +1729,9 @@ function SupportTechnologySection() {
         </div>
 
         {/* Stat badges row — desktop */}
-        <div ref={statRowReveal.ref} className="hidden md:grid grid-cols-4 gap-4 mb-10">
+        <div className="hidden md:grid grid-cols-4 gap-4 mb-10">
           {SUPPORT_TECH_STATS.map((stat, i) => (
-            <div
-              key={i}
-              style={{
-                opacity: statRowReveal.isVisible ? 1 : 0,
-                transform: statRowReveal.isVisible ? 'translateY(0)' : 'translateY(8px)',
-                transition: `opacity 600ms ease-out ${i * 150}ms, transform 600ms ease-out ${i * 150}ms`,
-              }}
-            >
+            <div key={i}>
               <AnimatedStat {...stat} />
             </div>
           ))}
@@ -1751,18 +1742,11 @@ function SupportTechnologySection() {
           <RotatingSupportTechStats />
         </div>
 
-        {/* Two-column detail cards */}
-        <div ref={cardsReveal.ref} className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Support Card */}
-          <div
-            className="h-full"
-            style={{
-              opacity: cardsReveal.isVisible ? 1 : 0,
-              transform: cardsReveal.isVisible ? 'translateY(0)' : 'translateY(8px)',
-              transition: 'opacity 600ms ease-out, transform 600ms ease-out',
-            }}
-          >
-            <div style={transparentCardStyle} className="h-full">
+        {/* Two-column detail cards with CTAs */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Support Column */}
+          <div className="flex flex-col gap-4">
+            <div style={transparentCardStyle} className="flex-1">
               <h3
                 className="uppercase tracking-wider mb-2"
                 style={{
@@ -1797,18 +1781,14 @@ function SupportTechnologySection() {
                 ))}
               </ul>
             </div>
+            <div className="flex justify-center">
+              <SecondaryButton href="#" variant="blue">Explore eXp Support</SecondaryButton>
+            </div>
           </div>
 
-          {/* Technology Card */}
-          <div
-            className="h-full"
-            style={{
-              opacity: cardsReveal.isVisible ? 1 : 0,
-              transform: cardsReveal.isVisible ? 'translateY(0)' : 'translateY(8px)',
-              transition: 'opacity 600ms ease-out 200ms, transform 600ms ease-out 200ms',
-            }}
-          >
-            <div style={transparentCardStyle} className="h-full">
+          {/* Technology Column */}
+          <div className="flex flex-col gap-4">
+            <div style={transparentCardStyle} className="flex-1">
               <h3
                 className="uppercase tracking-wider mb-2"
                 style={{
@@ -1858,13 +1838,10 @@ function SupportTechnologySection() {
                 ))}
               </ul>
             </div>
+            <div className="flex justify-center">
+              <SecondaryButton href="#" variant="blue">Explore eXp Technology</SecondaryButton>
+            </div>
           </div>
-        </div>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-wrap justify-center gap-4 mt-6">
-          <SecondaryButton href="#" variant="blue">Explore eXp Support</SecondaryButton>
-          <SecondaryButton href="#" variant="blue">Explore eXp Technology</SecondaryButton>
         </div>
       </div>
     </section>
