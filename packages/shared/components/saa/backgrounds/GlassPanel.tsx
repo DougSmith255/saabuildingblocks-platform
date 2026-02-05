@@ -23,6 +23,8 @@ export interface GlassPanelProps {
   rounded?: 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full';
   /** Override the default opacity (0-1). Higher = less transparent */
   opacity?: number;
+  /** Disable backdrop blur */
+  noBlur?: boolean;
   /** Add a rounded cutout at the bottom (for overlapping sections) */
   bottomCutout?: {
     /** Height of the cutout area */
@@ -167,6 +169,7 @@ export function GlassPanel({
   className = '',
   rounded = '3xl',
   opacity,
+  noBlur,
   bottomCutout,
 }: GlassPanelProps) {
   const config = VARIANTS[variant];
@@ -195,8 +198,7 @@ export function GlassPanel({
           inset 0 -10px 25px -8px rgba(0,0,0,0.6),
           inset 0 -25px 50px -20px rgba(0,0,0,0.45)
         `,
-        backdropFilter: 'blur(2px)',
-        WebkitBackdropFilter: 'blur(2px)',
+        ...(noBlur ? {} : { backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)' }),
       }}
     >
       {/* Emerald: Vignette glow animation */}

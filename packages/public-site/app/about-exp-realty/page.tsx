@@ -1240,7 +1240,7 @@ function IncomeOwnershipSection() {
   const tierBarsReveal = useScrollReveal(0.3);
 
   return (
-    <GlassPanel variant="expBlueCrosshatch">
+    <GlassPanel variant="expBlueCrosshatch" noBlur>
       <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1400px] mx-auto">
 
