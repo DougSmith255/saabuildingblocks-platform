@@ -1,14 +1,14 @@
 /**
  * Master Controller Static CSS
  * Auto-generated from Supabase database (SINGLE SOURCE OF TRUTH)
- * Generated: 2025-12-11T01:54:51.233Z
+ * Generated: 2026-02-05T22:29:58.906Z
  *
  * This file contains design system tokens from the Master Controller.
  * Include this in your static HTML exports to apply typography, colors,
  * and spacing settings without requiring dynamic JavaScript.
  *
  * Database timestamps (last updated):
- * - Typography: 2025-12-11T01:52:56.924+00:00
+ * - Typography: 2026-02-05T22:22:49.158+00:00
  * - Colors: 2025-11-05T00:51:06.405+00:00
  * - Spacing: N/A
  *
@@ -33,13 +33,13 @@
       --color-mediumGray: #404040;
 
   /* Typography */
-  --font-size-h1: clamp(38px, calc(27.82px + 4.07vw), 150px);
+  --font-size-h1: clamp(30px, calc(19.09px + 4.36vw), 150px);
       --line-height-h1: 1.1;
       --letter-spacing-h1: 0em;
       --font-weight-h1: 400;
       --font-family-h1: var(--font-taskor), sans-serif;
       --text-color-h1: #ffd700;
-      --font-size-h2: clamp(28px, calc(24.00px + 1.60vw), 72px);
+      --font-size-h2: clamp(28px, calc(24.36px + 1.45vw), 68px);
       --line-height-h2: 1.1;
       --letter-spacing-h2: -0.01em;
       --font-weight-h2: 700;
@@ -69,26 +69,26 @@
       --font-weight-h6: 700;
       --font-family-h6: var(--font-amulya), sans-serif;
       --text-color-h6: #e5e4dd;
-      --font-size-body: clamp(16px, calc(14.91px + 0.44vw), 28px);
+      --font-size-body: clamp(16px, calc(15.09px + 0.36vw), 26px);
       --line-height-body: 1.4;
       --letter-spacing-body: 0em;
       --font-weight-body: 400;
       --font-family-body: var(--font-synonym), sans-serif;
       --text-color-body: #bfbdb0;
-      --font-size-link: clamp(16px, calc(14.91px + 0.44vw), 28px);
+      --font-size-link: clamp(16px, calc(15.09px + 0.36vw), 26px);
       --line-height-link: 1.4;
       --letter-spacing-link: 0em;
       --font-weight-link: 400;
       --font-family-link: var(--font-synonym), sans-serif;
       --text-color-link: #ffd700;
-      --font-size-quote: clamp(18px, calc(16.73px + 0.51vw), 32px);
+      --font-size-quote: clamp(18px, calc(17.09px + 0.36vw), 28px);
       --line-height-quote: 1.4;
       --letter-spacing-quote: 0em;
       --font-weight-quote: 400;
       --font-family-quote: var(--font-amulya), sans-serif;
       --font-style-quote: italic;
       --text-color-quote: #bfbdb0;
-      --font-size-button: clamp(16px, calc(14.55px + 0.58vw), 32px);
+      --font-size-button: clamp(16px, calc(14.73px + 0.51vw), 30px);
       --line-height-button: 1.2;
       --letter-spacing-button: 0.05em;
       --font-weight-button: 600;
@@ -101,7 +101,7 @@
       --font-weight-caption: 400;
       --font-family-caption: var(--font-amulya), sans-serif;
       --text-color-caption: #bfbdb0;
-      --font-size-tagline: clamp(21px, calc(17.45px + 1.42vw), 60px);
+      --font-size-tagline: clamp(21px, calc(18.18px + 1.13vw), 52px);
       --line-height-tagline: 1.1;
       --letter-spacing-tagline: 0em;
       --font-weight-tagline: 400;
@@ -119,6 +119,13 @@
       --font-weight-menuMainItem: 500;
       --font-family-menuMainItem: var(--font-synonym), sans-serif;
       --text-color-menuMainItem: #e5e4dd;
+      --font-size-secondaryButton: clamp(14px, calc(13.00px + 0.40vw), 25px);
+      --line-height-secondaryButton: 1.4;
+      --letter-spacing-secondaryButton: 0.05em;
+      --font-weight-secondaryButton: 600;
+      --font-family-secondaryButton: var(--font-taskor), sans-serif;
+      --text-transform-secondaryButton: uppercase;
+      --text-color-secondaryButton: #e5e4dd;
 
   /* Spacing */
   --spacing-container-padding: clamp(16px, calc(10.18px + 2.33vw), 80px);
