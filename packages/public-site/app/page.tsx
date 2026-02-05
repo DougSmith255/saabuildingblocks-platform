@@ -196,7 +196,7 @@ export default function Home() {
       <MediaLogos />
       <MeetTheFounders />
       <BuiltForFuture />
-      <GlassPanel variant="champagne">
+      <GlassPanel variant="champagne" noBlur>
         <WatchAndDecide />
       </GlassPanel>
 
