@@ -38,7 +38,7 @@ export default function H2({
   const isBlue = theme === 'blue';
   const textColor = isBlue ? '#b0d4e8' : '#bfbdb0';
 
-  // 3D text-shadow effect (matches H1 style)
+  // 3D text-shadow effect (matches H1 style, thicker depth)
   // White core + colored glow + offset metal backing shadows
   const textShadow = isBlue
     ? `
@@ -51,11 +51,13 @@ export default function H2({
       0 0 0.09em rgba(0, 191, 255, 0.8),
       0 0 0.13em rgba(0, 191, 255, 0.55),
       0 0 0.18em rgba(0, 150, 200, 0.35),
-      /* METAL BACKING (3D depth) */
-      0.03em 0.03em 0 #1a2a3a,
-      0.045em 0.045em 0 #0f1a25,
-      0.06em 0.06em 0 #081018,
-      0.075em 0.075em 0 #040810
+      /* METAL BACKING (3D depth - thicker) */
+      0.02em 0.02em 0 #1a2a3a,
+      0.04em 0.04em 0 #152535,
+      0.06em 0.06em 0 #0f1a25,
+      0.08em 0.08em 0 #0a1520,
+      0.10em 0.10em 0 #081018,
+      0.12em 0.12em 0 #040810
     `
     : `
       /* WHITE CORE */
@@ -67,21 +69,23 @@ export default function H2({
       0 0 0.09em rgba(255, 255, 255, 0.6),
       0 0 0.13em rgba(255, 255, 255, 0.35),
       0 0 0.18em rgba(200, 200, 200, 0.2),
-      /* METAL BACKING (3D depth) */
-      0.03em 0.03em 0 #2a2a2a,
-      0.045em 0.045em 0 #1a1a1a,
-      0.06em 0.06em 0 #0f0f0f,
-      0.075em 0.075em 0 #080808
+      /* METAL BACKING (3D depth - thicker) */
+      0.02em 0.02em 0 #2a2a2a,
+      0.04em 0.04em 0 #222222,
+      0.06em 0.06em 0 #1a1a1a,
+      0.08em 0.08em 0 #141414,
+      0.10em 0.10em 0 #0f0f0f,
+      0.12em 0.12em 0 #080808
     `;
 
   return (
     <h2
       className={`text-h2 ${className}`}
       style={{
-        textAlign: 'center',
+        textAlign: style.textAlign || 'center',
         fontFeatureSettings: '"ss01" 1',
-        marginLeft: 'auto',
-        marginRight: 'auto',
+        marginLeft: style.textAlign === 'left' ? '0' : 'auto',
+        marginRight: style.textAlign === 'right' ? '0' : 'auto',
         marginBottom: '2.5rem',
         maxWidth: style.maxWidth || '1400px',
         color: textColor,

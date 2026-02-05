@@ -86,7 +86,7 @@ export function ProvenAtScale() {
           {/* Left - Content (8 columns) */}
           <div className="md:col-span-8">
             {/* H2 - always visible, no animation */}
-            <H2 className="text-center md:text-left" style={{ justifyContent: 'flex-start' }}>{HEADLINE}</H2>
+            <H2 style={{ textAlign: 'left' }}>{HEADLINE}</H2>
 
             <div className="space-y-4 mb-8">
               {STATS.map((stat, i) => {

@@ -1,5 +1,4 @@
 import React from 'react';
-import { extractPlainText } from '../../../utils/extractPlainText';
 
 export interface TaglineProps {
   children: React.ReactNode;
@@ -16,24 +15,18 @@ export interface TaglineProps {
 }
 
 /**
- * Tagline Component - Server Component (No JavaScript Required)
- *
- * PERFORMANCE OPTIMIZATIONS:
- * - Pure Server Component (no 'use client')
- * - Single DOM node for text (was ~30+ nodes with per-character rendering)
- * - CSS text-shadow for glow effects (GPU accelerated)
- * - ~95% reduction in DOM nodes
+ * Tagline Component - 3D Text Effect (matches H2 style)
  *
  * Features:
- * - Neon glow using text-shadow (matches H1 style, tagline colors)
- * - 3D transform with rotateX
- * - Alt glyphs for N, E, M via font-feature-settings "ss01"
- * - Body text color (#bfbdb0)
+ * - 3D text effect using layered text-shadows (same as H2)
+ * - White core glow with warm white outer glow
+ * - Metal backing shadow (offset grays for depth)
+ * - Perspective transform with rotateX
+ * - Uses H2 sizing from Master Controller
  *
  * SEO/ACCESSIBILITY:
  * - Uses real letters in DOM (Google reads correctly)
  * - Copy/paste gives real letters
- * - Font's ss01 stylistic set renders alternate glyphs visually
  *
  * @example
  * ```tsx
@@ -46,35 +39,38 @@ export default function Tagline({
   style = {},
   counterSuffix,
 }: TaglineProps) {
-  // Extract plain text for SEO/accessibility
-  const plainText = extractPlainText(children);
+  const textColor = '#bfbdb0';
 
-  // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
-  // White core in text-shadow, glow via filter: drop-shadow
+  // 3D text-shadow effect (matches H2 style)
   const textShadow = `
-    /* WHITE CORE (3) - em units for scaling */
+    /* WHITE CORE */
     0 0 0.01em #fff,
     0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8)
-  `;
-
-  // GPU-accelerated glow via filter
-  const filter = `
-    drop-shadow(0 0 0.04em #bfbdb0)
-    drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
+    0 0 0.03em rgba(255,255,255,0.8),
+    /* WARM WHITE GLOW */
+    0 0 0.05em rgba(255,250,240,0.9),
+    0 0 0.09em rgba(255, 255, 255, 0.6),
+    0 0 0.13em rgba(255, 255, 255, 0.35),
+    0 0 0.18em rgba(200, 200, 200, 0.2),
+    /* METAL BACKING (3D depth - thicker) */
+    0.02em 0.02em 0 #2a2a2a,
+    0.04em 0.04em 0 #222222,
+    0.06em 0.06em 0 #1a1a1a,
+    0.08em 0.08em 0 #141414,
+    0.10em 0.10em 0 #0f0f0f,
+    0.12em 0.12em 0 #080808
   `;
 
   return (
     <p
-      className={`text-tagline ${className}`}
+      className={`text-h2 ${className}`}
       style={{
         textAlign: 'center',
-        transform: 'rotateX(15deg)',
-        position: 'relative',
-        color: '#bfbdb0',
         fontFeatureSettings: '"ss01" 1',
+        color: textColor,
         textShadow,
-        filter: filter.trim(),
+        transform: 'perspective(800px) rotateX(8deg)',
+        filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
         ...style
       }}
     >
