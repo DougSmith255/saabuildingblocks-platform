@@ -4,7 +4,11 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCard, CyberCardGold, CTAButton, SecondaryButton } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHeroEffects';
-import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, DollarSign, Receipt } from 'lucide-react';
+import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, DollarSign, Receipt,
+  Shield, Headphones, GraduationCap, Video,
+  Contact, Globe, Laptop, ClipboardCheck, BarChart3, Palette,
+} from 'lucide-react';
+import { HolographicGlobe } from '../../components/shared/HolographicGlobe';
 import type { LucideIcon } from 'lucide-react';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
@@ -609,20 +613,20 @@ const SUPPORT_TECH_STATS = [
 ];
 
 const SUPPORT_BULLETS = [
-  'Full-service support across brokers, tech, transactions, and accounting',
-  '24/7 Expert Care help desk plus AI assistant Mira',
-  'Live onboarding and mentor program through first three transactions',
-  '50+ weekly live trainings plus full on-demand library',
-  'Physical workspaces via Regus offices worldwide',
+  { icon: Shield, text: 'Full-service support across brokers, tech, transactions, and accounting' },
+  { icon: Headphones, text: '24/7 Expert Care help desk plus AI assistant Mira' },
+  { icon: GraduationCap, text: 'Live onboarding and mentor program through first three transactions' },
+  { icon: Video, text: '50+ weekly live trainings plus full on-demand library' },
+  { icon: Building2, text: 'Physical workspaces via Regus offices worldwide' },
 ];
 
 const TECH_BULLETS = [
-  'CRM included: BoldTrail, Lofty, or Cloze',
-  'IDX-powered website options, eXp-branded or custom',
-  'eXp World virtual campus for collaboration',
-  'Transaction management and compliance tools',
-  'Performance analytics and tracking dashboards',
-  'Canva Pro marketing tools plus automation for capping agents',
+  { icon: Contact, text: 'CRM included: BoldTrail, Lofty, or Cloze' },
+  { icon: Globe, text: 'IDX-powered website options, eXp-branded or custom' },
+  { icon: Laptop, text: 'eXp World virtual campus for collaboration' },
+  { icon: ClipboardCheck, text: 'Transaction management and compliance tools' },
+  { icon: BarChart3, text: 'Performance analytics and tracking dashboards' },
+  { icon: Palette, text: 'Canva Pro marketing tools plus automation for capping agents' },
 ];
 
 const REVENUE_SHARE = {
@@ -1682,13 +1686,43 @@ function RotatingSupportTechStats() {
   );
 }
 
+const transparentCardStyle: React.CSSProperties = {
+  background: 'rgba(0, 15, 40, 0.35)',
+  border: '1px solid rgba(0, 191, 255, 0.15)',
+  borderRadius: '16px',
+  backdropFilter: 'blur(8px)',
+  WebkitBackdropFilter: 'blur(8px)',
+  padding: '24px',
+};
+
 function SupportTechnologySection() {
   const statRowReveal = useScrollReveal(0.3);
   const cardsReveal = useScrollReveal(0.2);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [globeVisible, setGlobeVisible] = useState(false);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setGlobeVisible(entry.isIntersecting),
+      { rootMargin: '200px' }
+    );
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
-      <div className="max-w-[1400px] mx-auto">
+    <section ref={sectionRef} className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12 overflow-hidden">
+      {/* HolographicGlobe background */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ opacity: 0.4, zIndex: 0 }}
+      >
+        <HolographicGlobe isVisible={globeVisible} />
+      </div>
+
+      {/* Content — above globe */}
+      <div className="relative max-w-[1400px] mx-auto" style={{ zIndex: 1 }}>
 
         {/* H2 Heading */}
         <div className="text-center mb-8">
@@ -1727,7 +1761,7 @@ function SupportTechnologySection() {
               transition: 'opacity 600ms ease-out, transform 600ms ease-out',
             }}
           >
-            <CyberCard padding="md" centered={false} className="h-full">
+            <div style={transparentCardStyle} className="h-full">
               <h3
                 className="uppercase tracking-wider mb-2"
                 style={{
@@ -1746,19 +1780,22 @@ function SupportTechnologySection() {
               >
                 Independent, but not unprotected.
               </p>
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {SUPPORT_BULLETS.map((bullet) => (
                   <li
-                    key={bullet}
-                    className="text-body text-sm leading-relaxed flex items-start gap-2"
+                    key={bullet.text}
+                    className="text-body text-sm leading-relaxed flex items-start gap-3"
                     style={{ color: 'var(--color-body-text)' }}
                   >
-                    <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>&#x2022;</span>
-                    {bullet}
+                    <bullet.icon
+                      size={16}
+                      style={{ color: '#00bfff', flexShrink: 0, marginTop: '3px', opacity: 0.8 }}
+                    />
+                    {bullet.text}
                   </li>
                 ))}
               </ul>
-            </CyberCard>
+            </div>
           </div>
 
           {/* Technology Card */}
@@ -1770,7 +1807,7 @@ function SupportTechnologySection() {
               transition: 'opacity 600ms ease-out 200ms, transform 600ms ease-out 200ms',
             }}
           >
-            <CyberCard padding="md" centered={false} className="h-full">
+            <div style={transparentCardStyle} className="h-full">
               <h3
                 className="uppercase tracking-wider mb-2"
                 style={{
@@ -1789,30 +1826,36 @@ function SupportTechnologySection() {
               >
                 Included in the flat brokerage fee.
               </p>
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {TECH_BULLETS.map((bullet) => (
                   <li
-                    key={bullet}
-                    className="text-body text-sm leading-relaxed flex items-start gap-2"
+                    key={bullet.text}
+                    className="text-body text-sm leading-relaxed flex items-start gap-3"
                     style={{ color: 'var(--color-body-text)' }}
                   >
-                    <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>&#x2022;</span>
-                    {bullet}
+                    <bullet.icon
+                      size={16}
+                      style={{ color: '#00bfff', flexShrink: 0, marginTop: '3px', opacity: 0.8 }}
+                    />
+                    {bullet.text}
                   </li>
                 ))}
               </ul>
-            </CyberCard>
+            </div>
           </div>
         </div>
 
         {/* CTA Buttons */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="flex justify-center">
-            <SecondaryButton href="#" variant="blue">Explore eXp Support</SecondaryButton>
-          </div>
-          <div className="flex justify-center">
-            <SecondaryButton href="#" variant="blue">Explore eXp Technology</SecondaryButton>
-          </div>
+        <div className="flex flex-wrap justify-center gap-4 mt-6">
+          <SecondaryButton href="#" variant="blue">Explore eXp Support</SecondaryButton>
+          <SecondaryButton href="#" variant="blue">Explore eXp Technology</SecondaryButton>
+          <SecondaryButton
+            as="button"
+            variant="blue"
+            onClick={() => window.dispatchEvent(new Event('open-vip-guest-pass'))}
+          >
+            Get a Guest Pass
+          </SecondaryButton>
         </div>
       </div>
     </section>
