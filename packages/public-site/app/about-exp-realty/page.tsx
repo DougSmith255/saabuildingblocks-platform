@@ -624,7 +624,7 @@ const SUPPORT_BULLETS = [
 const TECH_BULLETS = [
   { icon: Contact, text: 'CRM included: BoldTrail, Lofty, or Cloze' },
   { icon: Globe, text: 'IDX-powered website options, eXp-branded or custom' },
-  { icon: Laptop, text: 'eXp World virtual campus for collaboration' },
+  { icon: Laptop, text: 'eXp World virtual campus — hub for support, training, and access to leadership', guestPass: true },
   { icon: ClipboardCheck, text: 'Transaction management and compliance tools' },
   { icon: BarChart3, text: 'Performance analytics and tracking dashboards' },
   { icon: Palette, text: 'Canva Pro tools plus automation for capping agents' },
@@ -1838,7 +1838,22 @@ function SupportTechnologySection() {
                       size={16}
                       style={{ color: '#00bfff', flexShrink: 0, opacity: 0.8 }}
                     />
-                    {bullet.text}
+                    <span>
+                      {bullet.text}
+                      {bullet.guestPass && (
+                        <>
+                          {' — '}
+                          <button
+                            type="button"
+                            onClick={() => window.dispatchEvent(new Event('open-vip-guest-pass'))}
+                            className="underline cursor-pointer"
+                            style={{ color: '#00bfff' }}
+                          >
+                            Get a Guest Pass
+                          </button>
+                        </>
+                      )}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -1850,13 +1865,6 @@ function SupportTechnologySection() {
         <div className="flex flex-wrap justify-center gap-4 mt-6">
           <SecondaryButton href="#" variant="blue">Explore eXp Support</SecondaryButton>
           <SecondaryButton href="#" variant="blue">Explore eXp Technology</SecondaryButton>
-          <SecondaryButton
-            as="button"
-            variant="blue"
-            onClick={() => window.dispatchEvent(new Event('open-vip-guest-pass'))}
-          >
-            Get a Guest Pass
-          </SecondaryButton>
         </div>
       </div>
     </section>
