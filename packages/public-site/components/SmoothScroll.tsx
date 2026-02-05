@@ -80,6 +80,21 @@ export default function SmoothScroll() {
 
       lenisRef.current = lenis;
 
+      // Watch for scroll locks (mobile menu, slide panels set overflow: hidden)
+      // Stop Lenis while locked so mouse wheel doesn't scroll behind overlays
+      const scrollLockObserver = new MutationObserver(() => {
+        const htmlOverflow = document.documentElement.style.overflow;
+        const bodyOverflow = document.body.style.overflow;
+        const isLocked = htmlOverflow === 'hidden' || bodyOverflow === 'hidden';
+        if (isLocked) {
+          lenis.stop();
+        } else {
+          lenis.start();
+        }
+      });
+      scrollLockObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
+      scrollLockObserver.observe(document.body, { attributes: true, attributeFilter: ['style'] });
+
       // Stop current scroll animation on any click - allows immediate interaction
       // This fixes the issue where clicks don't register while Lenis is animating
       // We use stop() then start() to cancel momentum but keep Lenis active
@@ -103,9 +118,10 @@ export default function SmoothScroll() {
       rafIdRef.current = requestAnimationFrame(raf);
       console.log('[SmoothScroll] Lenis initialized and running');
 
-      // Store cleanup function
-      (lenis as any).__clickCleanup = () => {
+      // Store cleanup functions
+      (lenis as any).__cleanup = () => {
         window.removeEventListener('pointerdown', handleClick, { capture: true });
+        scrollLockObserver.disconnect();
       };
     };
 
@@ -126,8 +142,7 @@ export default function SmoothScroll() {
         cancelAnimationFrame(rafIdRef.current);
       }
       if (lenisRef.current) {
-        // Clean up click listener
-        (lenisRef.current as any).__clickCleanup?.();
+        (lenisRef.current as any).__cleanup?.();
         lenisRef.current.destroy();
       }
     };

@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { CTAButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa';
 
 interface NavItem {
   label: string;
@@ -54,6 +56,8 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false); // Track if menu has ever been opened
   const savedScrollY = useRef<number>(0);
+  const pathname = usePathname();
+  const isAboutExpPage = pathname?.replace(/\/$/, '') === '/about-exp-realty';
 
   // Track when menu has been opened at least once (for keeping it in DOM)
   useEffect(() => {
@@ -202,7 +206,9 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
                         fontWeight: 'var(--font-weight-menuMainItem)',
                         letterSpacing: 'var(--letter-spacing-menuMainItem)',
                         lineHeight: 'var(--line-height-menuMainItem)',
-                        color: openDropdown === index ? '#ffd700' : '#ffffff',
+                        color: openDropdown === index
+                          ? (isAboutExpPage ? '#00bfff' : '#ffd700')
+                          : '#ffffff',
                       }}
                     >
                       {item.label}
@@ -215,8 +221,12 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
                           borderTop: '5px solid transparent',
                           borderBottom: '5px solid transparent',
                           transform: openDropdown === index ? 'rotate(90deg) translateZ(0)' : 'rotate(0deg) translateZ(0)',
-                          borderLeftColor: openDropdown === index ? '#ffe000' : '#ffffff',
-                          filter: openDropdown === index ? 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.8))' : 'none',
+                          borderLeftColor: openDropdown === index
+                            ? (isAboutExpPage ? '#00bfff' : '#ffe000')
+                            : '#ffffff',
+                          filter: openDropdown === index
+                            ? (isAboutExpPage ? 'drop-shadow(0 0 6px rgba(0, 191, 255, 0.8))' : 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.8))')
+                            : 'none',
                         }}
                       />
                     </button>
@@ -293,9 +303,15 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
 
             {/* Mobile CTA Button */}
             <div className="pt-8 pb-4 text-center">
-              <CTAButton href="/join-exp-sponsor-team/" onClick={() => setIsMobileMenuOpen(false)}>
-                GET STARTED
-              </CTAButton>
+              {isAboutExpPage ? (
+                <SecondaryButton href="/join-exp-sponsor-team/" variant="blue" onClick={() => setIsMobileMenuOpen(false)}>
+                  GET STARTED
+                </SecondaryButton>
+              ) : (
+                <CTAButton href="/join-exp-sponsor-team/" onClick={() => setIsMobileMenuOpen(false)}>
+                  GET STARTED
+                </CTAButton>
+              )}
             </div>
           </nav>
         </div>
