@@ -130,7 +130,7 @@ export function ValuePillarsTab() {
             <div className="flex flex-col gap-3 text-left">
               <div className="flex items-center gap-3">
                 <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>01</span>
-                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents. <a href="/about-exp-realty" style={{ color: '#bca24a', textDecoration: 'underline', textUnderlineOffset: '3px' }}>Learn how sponsorship works at eXp</a></span>
+                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents.</span>
               </div>
               <div className="flex items-center gap-3">
                 <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>02</span>
@@ -141,6 +141,13 @@ export function ValuePillarsTab() {
                 <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
               </div>
             </div>
+            <a
+              href="/about-exp-realty"
+              className="text-sm mt-2"
+              style={{ color: '#bca24a', textDecoration: 'underline', textUnderlineOffset: '3px', opacity: 0.8 }}
+            >
+              Learn how sponsorship works at eXp
+            </a>
           </div>
         </div>
       </section>
