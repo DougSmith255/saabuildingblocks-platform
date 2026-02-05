@@ -87,11 +87,11 @@ export function ValuePillarsTab() {
           borderRadius: '50%',
         }}
       />
-      {/* Extra background layer for less transparency - this instance only */}
+      {/* Dark tint layer — semi-transparent so star backdrop-filter blur shows through */}
       <div
         className="absolute inset-0 rounded-3xl"
         style={{
-          background: 'linear-gradient(180deg, rgba(22, 22, 22, 0.94) 0%, rgba(15, 15, 15, 0.97) 100%)', // Darker grayscale, more opaque
+          background: 'linear-gradient(180deg, rgba(22, 22, 22, 0.7) 0%, rgba(15, 15, 15, 0.75) 100%)',
           pointerEvents: 'none',
         }}
       />

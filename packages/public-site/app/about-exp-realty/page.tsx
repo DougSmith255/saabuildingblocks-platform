@@ -1720,13 +1720,14 @@ function SupportTechnologySection() {
         <div ref={cardsReveal.ref} className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Support Card */}
           <div
+            className="h-full"
             style={{
               opacity: cardsReveal.isVisible ? 1 : 0,
               transform: cardsReveal.isVisible ? 'translateY(0)' : 'translateY(8px)',
               transition: 'opacity 600ms ease-out, transform 600ms ease-out',
             }}
           >
-            <CyberCard padding="md" centered={false}>
+            <CyberCard padding="md" centered={false} className="h-full">
               <h3
                 className="uppercase tracking-wider mb-2"
                 style={{
@@ -1749,7 +1750,7 @@ function SupportTechnologySection() {
                 {SUPPORT_BULLETS.map((bullet) => (
                   <li
                     key={bullet}
-                    className="text-sm leading-relaxed flex items-start gap-2"
+                    className="text-body text-sm leading-relaxed flex items-start gap-2"
                     style={{ color: 'var(--color-body-text)' }}
                   >
                     <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>&#x2022;</span>
@@ -1762,13 +1763,14 @@ function SupportTechnologySection() {
 
           {/* Technology Card */}
           <div
+            className="h-full"
             style={{
               opacity: cardsReveal.isVisible ? 1 : 0,
               transform: cardsReveal.isVisible ? 'translateY(0)' : 'translateY(8px)',
               transition: 'opacity 600ms ease-out 200ms, transform 600ms ease-out 200ms',
             }}
           >
-            <CyberCard padding="md" centered={false}>
+            <CyberCard padding="md" centered={false} className="h-full">
               <h3
                 className="uppercase tracking-wider mb-2"
                 style={{
@@ -1791,7 +1793,7 @@ function SupportTechnologySection() {
                 {TECH_BULLETS.map((bullet) => (
                   <li
                     key={bullet}
-                    className="text-sm leading-relaxed flex items-start gap-2"
+                    className="text-body text-sm leading-relaxed flex items-start gap-2"
                     style={{ color: 'var(--color-body-text)' }}
                   >
                     <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>&#x2022;</span>
