@@ -624,7 +624,7 @@ const SUPPORT_BULLETS = [
 const TECH_BULLETS = [
   { icon: Contact, text: 'CRM included: BoldTrail, Lofty, or Cloze' },
   { icon: Globe, text: 'IDX-powered website options, eXp-branded or custom' },
-  { icon: Laptop, text: 'eXp World virtual campus — hub for support, training, and access to leadership', guestPass: true },
+  { icon: Laptop, text: 'eXp World — support, training, and leadership access', guestPass: true },
   { icon: ClipboardCheck, text: 'Transaction management and compliance tools' },
   { icon: BarChart3, text: 'Performance analytics and tracking dashboards' },
   { icon: Palette, text: 'Canva Pro tools plus automation for capping agents' },
@@ -1846,10 +1846,10 @@ function SupportTechnologySection() {
                           <button
                             type="button"
                             onClick={() => window.dispatchEvent(new Event('open-vip-guest-pass'))}
-                            className="underline cursor-pointer"
+                            className="cursor-pointer font-bold"
                             style={{ color: '#00bfff' }}
                           >
-                            Get a Guest Pass
+                            get a guest pass
                           </button>
                         </>
                       )}
