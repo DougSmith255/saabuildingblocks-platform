@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { H2, Icon3D } from '@saa/shared/components/saa';
-import { TrendingUp, Cloud, Users } from 'lucide-react';
+import { TrendingUp, Cloud, Users, Percent, Award } from 'lucide-react';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
@@ -158,6 +158,41 @@ export function MediaLogos() {
               </div>
               <h3 className="font-bold mb-2" style={{ color: '#e5e4dd', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Choose Your Sponsor</h3>
               <p className="text-body opacity-90 text-sm">Access real systems and support through the sponsor you choose.</p>
+            </div>
+          </div>
+
+          {/* Bottom Row - 2 cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Card 4: Commission - Green */}
+            <div
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
+              style={{
+                background: 'rgba(10,10,10,0.6)',
+                border: '2px solid rgba(0,204,102,0.5)',
+                transitionDelay: '0.65s',
+              }}
+            >
+              <div className="mb-4">
+                <Icon3D size={80} color="#00cc66"><Percent className="w-12 h-12" /></Icon3D>
+              </div>
+              <h3 className="font-bold mb-2" style={{ color: '#00cc66', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Industry-Leading Splits</h3>
+              <p className="text-body opacity-90 text-sm">80/20 split until cap → 100% commission. Flat monthly fee.</p>
+            </div>
+
+            {/* Card 5: RevShare - Purple */}
+            <div
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
+              style={{
+                background: 'rgba(10,10,10,0.6)',
+                border: '2px solid rgba(153,51,255,0.5)',
+                transitionDelay: '0.8s',
+              }}
+            >
+              <div className="mb-4">
+                <Icon3D size={80} color="#9933ff"><Award className="w-12 h-12" /></Icon3D>
+              </div>
+              <h3 className="font-bold mb-2" style={{ color: '#9933ff', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Passive Income Potential</h3>
+              <p className="text-body opacity-90 text-sm">Optional revenue share income + stock opportunities.</p>
             </div>
           </div>
         </div>
