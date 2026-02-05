@@ -87,7 +87,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     justifyContent: 'center',
     alignItems: 'center',
     // Responsive height matching CTAButton - scales with viewport
-    height: 'clamp(45px, calc(43.182px + 0.7273vw), 65px)',
+    height: 'clamp(35px, calc(33.182px + 0.7273vw), 55px)',
     paddingLeft: '1.25rem',
     paddingRight: '1.25rem',
     paddingTop: '0.5rem',

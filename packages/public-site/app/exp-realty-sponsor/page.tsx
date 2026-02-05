@@ -1016,7 +1016,7 @@ export default function ExpRealtySponsor() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <CTAButton href="/join-exp-sponsor-team/">Join The Alliance</CTAButton>
-                  <SecondaryButton href="/join-exp-sponsor-team/">Book a Call</SecondaryButton>
+                  <CTAButton href="/join-exp-sponsor-team/">Book a Call</CTAButton>
                   <SecondaryButton href="/about-exp-realty/">Learn about eXp</SecondaryButton>
                 </div>
               </CyberCardGold>
