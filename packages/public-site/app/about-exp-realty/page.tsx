@@ -1338,7 +1338,7 @@ function IncomeOwnershipSection() {
                         fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
                         fontFeatureSettings: '"ss01" 1',
                         fontWeight: 400,
-                        fontSize: 'var(--font-size-h4)',
+                        fontSize: 'var(--font-size-h6)',
                       }}
                     >
                       {stream.title}
