@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { H2, CTAButton } from '@saa/shared/components/saa';
+import { H2, SecondaryButton } from '@saa/shared/components/saa';
 import { ProfileCyberFrame } from '@saa/shared/components/saa/media/ProfileCyberFrame';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 
@@ -153,7 +153,7 @@ export function MeetTheFounders() {
               }}
             >
               <p className="text-body text-sm mb-4 opacity-70">Want to meet the rest of our leadership team?</p>
-              <CTAButton href="/our-exp-team">Meet the Full Team</CTAButton>
+              <SecondaryButton href="/our-exp-team">Meet the Full Team</SecondaryButton>
             </div>
           </div>
         </div>

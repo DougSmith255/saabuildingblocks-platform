@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { H2 } from '@saa/shared/components/saa';
-import { CTAButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa';
 
 /**
  * "Why This Only Works at eXp Realty" Section
@@ -326,7 +326,7 @@ export function WhyOnlyAtExp() {
                   <p className="text-body text-lg leading-relaxed mb-4" itemProp="description">{KEY_POINT}</p>
                   <p className="text-body text-xl italic mb-6" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
                   <div className="flex justify-center md:justify-start">
-                    <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+                    <SecondaryButton href="/exp-realty-sponsor">{CTA_TEXT}</SecondaryButton>
                   </div>
                 </figcaption>
 

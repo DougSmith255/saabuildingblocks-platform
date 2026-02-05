@@ -1,6 +1,6 @@
 'use client';
 
-import { Icon3D } from '@saa/shared/components/saa';
+import { Icon3D, SecondaryButton } from '@saa/shared/components/saa';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 import { Globe, Users, TrendingUp } from 'lucide-react';
 
@@ -141,13 +141,11 @@ export function ValuePillarsTab() {
                 <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
               </div>
             </div>
-            <a
-              href="/about-exp-realty"
-              className="text-sm mt-2"
-              style={{ color: '#bca24a', textDecoration: 'underline', textUnderlineOffset: '3px', opacity: 0.8 }}
-            >
-              Learn how sponsorship works at eXp
-            </a>
+            <div className="mt-3">
+              <SecondaryButton href="/about-exp-realty">
+                Learn How Sponsorship Works at eXp
+              </SecondaryButton>
+            </div>
           </div>
         </div>
       </section>

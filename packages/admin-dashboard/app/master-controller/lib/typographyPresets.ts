@@ -121,6 +121,15 @@ const modernPreset: TypographySettings = {
     color: 'headingText',
     textTransform: 'uppercase',
   },
+  secondaryButton: {
+    size: { min: 14, max: 25, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0.05,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
+  },
   tagline: {
     size: DEFAULT_TYPOGRAPHY_CLAMPS['tagline'] as ClampConfig,
     lineHeight: 1.5,
@@ -232,6 +241,15 @@ const compactPreset: TypographySettings = {
   },
   button: {
     size: { min: 13, max: 19, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.3,
+    letterSpacing: 0.04,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
+  },
+  secondaryButton: {
+    size: { min: 11, max: 16, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.3,
     letterSpacing: 0.04,
     fontWeight: 600,
@@ -357,6 +375,15 @@ const editorialPreset: TypographySettings = {
     color: 'headingText',
     textTransform: 'uppercase',
   },
+  secondaryButton: {
+    size: { min: 15, max: 22, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.5,
+    letterSpacing: 0.05,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
+  },
   tagline: {
     size: scaleClamp(DEFAULT_TYPOGRAPHY_CLAMPS['tagline'] as ClampConfig, 1.1),
     lineHeight: scaleLineHeight(1.5, 1.1),
@@ -468,6 +495,15 @@ const saaDefaultPreset: TypographySettings = {
   },
   button: {
     size: { min: 16, max: 24, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0.05,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
+  },
+  secondaryButton: {
+    size: { min: 14, max: 25, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.4,
     letterSpacing: 0.05,
     fontWeight: 600,

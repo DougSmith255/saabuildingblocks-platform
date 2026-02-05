@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { H2 } from '@saa/shared/components/saa';
-import { CTAButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa';
 import { Check } from 'lucide-react';
 
 // Shared content
@@ -135,7 +135,7 @@ export function WhySAA() {
                 style={{ backgroundColor: 'rgba(255, 215, 0, 0.1)', borderColor: 'rgba(255, 215, 0, 0.3)' }}
               >
                 <p className="text-body text-lg mb-5">Grow independently. Succeed together.</p>
-                <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+                <SecondaryButton href="/exp-realty-sponsor">{CTA_TEXT}</SecondaryButton>
               </div>
             </div>
           </div>

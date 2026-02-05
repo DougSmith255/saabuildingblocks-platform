@@ -74,12 +74,12 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
   // CRITICAL: Use inline styles to prevent FOUC on static pages like 404
   const buttonStyles: React.CSSProperties = {
     // Typography - use system font stack that closely matches Taskor metrics
-    color: 'var(--text-color-button, var(--color-headingText))',
-    fontSize: 'var(--font-size-button, 20px)',
-    fontFamily: 'var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif)',
+    color: 'var(--text-color-secondaryButton, var(--text-color-button, var(--color-headingText)))',
+    fontSize: 'var(--font-size-secondaryButton, var(--font-size-button, 20px))',
+    fontFamily: 'var(--font-family-secondaryButton, var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif))',
     fontWeight: 600,
     textTransform: 'uppercase',
-    letterSpacing: 'var(--letter-spacing-button, 0.05em)',
+    letterSpacing: 'var(--letter-spacing-secondaryButton, var(--letter-spacing-button, 0.05em))',
     lineHeight: '1',
     // Layout - critical for preventing FOUC
     position: 'relative',

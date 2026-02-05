@@ -9,7 +9,7 @@ import { calculateContrast, getContrastRating } from '../../lib/colorUtils';
 import { VIEWPORT_RANGE } from '../../lib/constants';
 import type { TextType } from '../../types';
 
-const TEXT_TYPES: TextType[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'button', 'tagline', 'caption', 'menuMainItem', 'menuSubItem'];
+const TEXT_TYPES: TextType[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'button', 'secondaryButton', 'tagline', 'caption', 'menuMainItem', 'menuSubItem'];
 
 export const TypographyTab: React.FC = () => {
   const { settings, resetToDefaults } = useTypographyStore();

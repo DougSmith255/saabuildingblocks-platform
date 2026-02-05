@@ -43,6 +43,7 @@ export interface TypographySettings {
   quote: TextTypeSettings;
   link: TextTypeSettings;
   button: TextTypeSettings;
+  secondaryButton: TextTypeSettings;
   tagline: TextTypeSettings;
   caption: TextTypeSettings;
   menuMainItem: TextTypeSettings;
@@ -74,6 +75,7 @@ export type TextType =
   | 'quote'
   | 'link'
   | 'button'
+  | 'secondaryButton'
   | 'tagline'
   | 'caption'
   | 'menuMainItem'

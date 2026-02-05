@@ -97,6 +97,15 @@ const defaultSettings: TypographySettings = {
     color: 'headingText',
     textTransform: 'uppercase',
   },
+  secondaryButton: {
+    size: { min: 14, max: 25, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0.05,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
+  },
   tagline: {
     size: { min: 16, max: 21, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.5,
@@ -184,7 +193,7 @@ export const useTypographyStore = create<TypographyStore>()(
     }),
     {
       name: 'master-controller-typography',
-      version: 3, // Increment version to trigger migration
+      version: 4, // Increment version to trigger migration
       migrate: (persistedState: any, version: number) => {
         // Migration from v2 to v3: Re-add button text type with proper defaults
         if (version < 3) {
@@ -192,6 +201,21 @@ export const useTypographyStore = create<TypographyStore>()(
           if (persistedState?.settings && !('button' in persistedState.settings)) {
             persistedState.settings.button = {
               size: { min: 17, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+              lineHeight: 1.4,
+              letterSpacing: 0.05,
+              fontWeight: 600,
+              fontFamily: 'var(--font-taskor)',
+              color: 'headingText',
+              textTransform: 'uppercase',
+            };
+          }
+        }
+        // Migration from v3 to v4: Add secondaryButton text type
+        if (version < 4) {
+          console.log('[Typography Store] Migrating to v4: Adding secondaryButton text type');
+          if (persistedState?.settings && !('secondaryButton' in persistedState.settings)) {
+            persistedState.settings.secondaryButton = {
+              size: { min: 14, max: 25, viewportMin: 250, viewportMax: 3000, unit: 'px' },
               lineHeight: 1.4,
               letterSpacing: 0.05,
               fontWeight: 600,

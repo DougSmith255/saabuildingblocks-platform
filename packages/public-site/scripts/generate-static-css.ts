@@ -288,6 +288,15 @@ const defaultTypography: TypographySettings = {
     color: 'headingText',
     textTransform: 'uppercase',
   },
+  secondaryButton: {
+    size: { min: 14, max: 25, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0.05,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
+  },
 };
 
 // Spacing (from spacingStore.ts) - MUST match admin-dashboard defaults exactly
@@ -391,7 +400,14 @@ async function generateAndWriteCSS() {
   const dbSettings = await fetchSettingsFromDatabase();
 
   // Database is required - these should always exist or function will have thrown
-  const typography = dbSettings.typography_settings;
+  // Merge defaults for any new text types not yet in the database
+  const typography = { ...dbSettings.typography_settings };
+  for (const [key, value] of Object.entries(defaultTypography)) {
+    if (!(key in typography)) {
+      console.log(`   ℹ️  Adding default for missing text type: ${key}`);
+      (typography as any)[key] = value;
+    }
+  }
   const colors = dbSettings.brand_colors_settings;
   // Spacing might not be in database yet - use defaults as fallback ONLY for spacing
   const spacing = dbSettings.spacing_settings || defaultSpacing;

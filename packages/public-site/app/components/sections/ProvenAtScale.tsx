@@ -1,7 +1,7 @@
 'use client';
 
 import { H2, Icon3D } from '@saa/shared/components/saa';
-import { CTAButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa';
 import { CyberCardGold } from '@saa/shared/components/saa/cards';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 import { Globe, TrendingUp, Check } from 'lucide-react';
@@ -104,7 +104,7 @@ export function ProvenAtScale() {
 
             <RevealFromLeft delay={0.5}>
               <div className="text-center md:text-left">
-                <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+                <SecondaryButton href="/exp-realty-sponsor">{CTA_TEXT}</SecondaryButton>
               </div>
             </RevealFromLeft>
           </div>

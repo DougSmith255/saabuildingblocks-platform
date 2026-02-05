@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { H2 } from '@saa/shared/components/saa';
-import { CTAButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa';
 import { Users, DollarSign, Bot, GraduationCap, Globe } from 'lucide-react';
 
 /**
@@ -146,7 +146,7 @@ export function WhatYouGet() {
 
         {/* CTA - always visible */}
         <div className="text-center mt-12">
-          <CTAButton href="/exp-realty-sponsor">See the Full Value Stack</CTAButton>
+          <SecondaryButton href="/exp-realty-sponsor">See the Full Value Stack</SecondaryButton>
         </div>
       </div>
     </section>
