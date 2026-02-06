@@ -4319,6 +4319,7 @@ function AgentPortal() {
                 initialTab="attraction"
                 mode="agent-page"
                 preloadedPageData={preloadedAgentPageData}
+                onPageDataUpdate={setPreloadedAgentPageData}
                 triggerConfetti={triggerConfetti}
                 onPageSaved={() => setStatsStale(true)}
                 setShowLinkPageIntroModal={setShowLinkPageIntroModal}
@@ -4361,6 +4362,7 @@ function AgentPortal() {
                 initialTab="links"
                 mode="linktree"
                 preloadedPageData={preloadedAgentPageData}
+                onPageDataUpdate={setPreloadedAgentPageData}
                 triggerConfetti={triggerConfetti}
                 onPageSaved={() => setStatsStale(true)}
                 setShowLinkPageIntroModal={setShowLinkPageIntroModal}
@@ -10061,6 +10063,7 @@ interface AgentPagesSectionProps {
   initialTab?: AgentPagesTabId;
   mode?: AgentPagesSectionMode;
   preloadedPageData?: any; // Preloaded agent page data from loading screen
+  onPageDataUpdate?: (data: any) => void; // Notify parent when fresh data is fetched (updates My Profile)
   triggerConfetti: () => void; // Confetti effect for save success
   onPageSaved?: () => void; // Notify parent that page was saved (stats may be stale)
   // Link page intro/help modal props
@@ -10108,6 +10111,7 @@ function AgentPagesSection({
   initialTab = 'profile',
   mode = 'linktree',
   preloadedPageData,
+  onPageDataUpdate,
   triggerConfetti,
   onPageSaved,
   setShowLinkPageIntroModal,
@@ -10611,6 +10615,8 @@ function AgentPagesSection({
             setPageData(data.page);
             // Cache for PreloadService so subsequent loads are instant
             try { localStorage.setItem('agent_portal_page_data', JSON.stringify(data)); } catch {}
+            // Notify parent so My Profile section gets updated profile images
+            onPageDataUpdate?.(data);
             setFormData({
               display_first_name: data.page.display_first_name || '',
               display_last_name: data.page.display_last_name || '',

@@ -584,7 +584,7 @@ function AgentPortalLoginContent() {
         icon={<Key size={20} style={{ color: '#ffd700' }} />}
         theme="gold"
       >
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '100%' }}>
+        <div style={{ flex: '1 1 0%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           {resetStep === 'email' ? (
             <form onSubmit={handleResetRequest} style={{ maxWidth: '400px', margin: '0 auto', width: '100%' }}>
               {/* Error Message */}
@@ -664,7 +664,7 @@ function AgentPortalLoginContent() {
         icon={<User size={20} style={{ color: '#ffd700' }} />}
         theme="gold"
       >
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '100%' }}>
+        <div style={{ flex: '1 1 0%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           {usernameStep === 'email' ? (
             <form onSubmit={handleUsernameRequest} style={{ maxWidth: '400px', margin: '0 auto', width: '100%' }}>
               {/* Error Message */}
@@ -744,7 +744,7 @@ function AgentPortalLoginContent() {
         icon={<Key size={20} style={{ color: '#ffd700' }} />}
         theme="gold"
       >
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '100%' }}>
+        <div style={{ flex: '1 1 0%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           {newPasswordStep === 'form' ? (
             <form onSubmit={handleNewPasswordSubmit} style={{ maxWidth: '400px', margin: '0 auto', width: '100%' }}>
               {/* Error Message */}

@@ -375,7 +375,7 @@ export function SlidePanel({
           {/* Panel */}
           <div
             ref={panelRef}
-            className={`slide-panel relative overflow-y-auto overscroll-contain ${sizeClasses[size]} ${
+            className={`slide-panel relative overflow-y-auto overscroll-contain flex flex-col ${sizeClasses[size]} ${
               (isClosing || isClosingTransition) ? 'slide-panel-closing' : ''
             } ${className}`}
             style={{
@@ -432,8 +432,8 @@ export function SlidePanel({
               </button>
             </div>
 
-            {/* Content */}
-            <div className="p-5">
+            {/* Content - flex container for vertical centering support */}
+            <div className="p-5 flex-1 flex flex-col min-h-0">
               {children}
             </div>
 

@@ -250,8 +250,26 @@ export default async function RootLayout({
             __html: `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                  // Cache-bust the service worker to ensure updates are detected
+                  navigator.serviceWorker.register('/sw.js?v=3').then(function(registration) {
                     console.log('SAA PWA: Service Worker registered with scope:', registration.scope);
+
+                    // Force check for updates immediately
+                    registration.update();
+
+                    // Listen for new service worker installing
+                    registration.addEventListener('updatefound', function() {
+                      var newWorker = registration.installing;
+                      console.log('SAA PWA: New service worker installing...');
+
+                      newWorker.addEventListener('statechange', function() {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                          console.log('SAA PWA: New version available! Refreshing...');
+                          // Reload to get the new version
+                          window.location.reload();
+                        }
+                      });
+                    });
                   }).catch(function(error) {
                     console.log('SAA PWA: Service Worker registration failed:', error);
                   });
