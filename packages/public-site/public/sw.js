@@ -1,6 +1,6 @@
 // Smart Agent Alliance Service Worker
-// v2: Updated to ensure correct start_url behavior for PWA
-const CACHE_NAME = 'saa-cache-v2';
+// v3: Profile image fallback fix + cache refresh
+const CACHE_NAME = 'saa-cache-v3';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache on install
