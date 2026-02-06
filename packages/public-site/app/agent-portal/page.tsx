@@ -1558,14 +1558,6 @@ function AgentPortal() {
     };
   }, []);
 
-  // Reset profile image error when preloadedAgentPageData changes (fresh data may have valid images)
-  useEffect(() => {
-    if (preloadedAgentPageData?.page?.profile_image_url || preloadedAgentPageData?.page?.profile_image_color_url) {
-      setProfileImageError(false);
-      profileImageRetried.current = false;
-    }
-  }, [preloadedAgentPageData]);
-
   // Fetch onboarding progress when user is loaded
   useEffect(() => {
     if (user?.id && !isOnboardingLoaded) {
@@ -3687,9 +3679,8 @@ function AgentPortal() {
                       </div>
                     )}
                     {(() => {
-                      // Use dashboard profile picture, or fall back to agent page image
-                      const sidebarProfileUrl = user?.profilePictureUrl
-                        || preloadedAgentPageData?.page?.profile_image_color_url
+                      // Use agent page images (same as Link Page) - these are the canonical profile images
+                      const sidebarProfileUrl = preloadedAgentPageData?.page?.profile_image_color_url
                         || preloadedAgentPageData?.page?.profile_image_url;
                       return sidebarProfileUrl && !profileImageError ? (
                       <>
@@ -4017,9 +4008,8 @@ function AgentPortal() {
                       </div>
                     )}
                     {(() => {
-                      // Use dashboard profile picture, or fall back to agent page image
-                      const editProfileUrl = user?.profilePictureUrl
-                        || preloadedAgentPageData?.page?.profile_image_color_url
+                      // Use agent page images (same as Link Page) - these are the canonical profile images
+                      const editProfileUrl = preloadedAgentPageData?.page?.profile_image_color_url
                         || preloadedAgentPageData?.page?.profile_image_url;
                       return editProfileUrl && !profileImageError ? (
                       <>
