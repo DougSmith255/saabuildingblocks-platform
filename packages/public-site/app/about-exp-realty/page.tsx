@@ -208,7 +208,7 @@ function AnimatedSplitDisplay({ left, right }: { left: number; right: number }) 
 
 /**
  * Flip Split Card - Rotates 180° every 4 seconds between two states
- * Front: 80/20 Commission | Back: 0/100 After Cap
+ * Front: 80/20 Commission | Back: 100% After Cap
  * Always rotates in same direction, with counter animations
  */
 const HERO_CARD_BASE: React.CSSProperties = {
@@ -251,7 +251,7 @@ function FlipSplitCard() {
           </div>
         </div>
 
-        {/* Back face - 0/100 After Cap (positioned absolutely to match front) */}
+        {/* Back face - 100% After Cap (positioned absolutely to match front) */}
         <div
           style={{
             backfaceVisibility: 'hidden',
@@ -265,7 +265,7 @@ function FlipSplitCard() {
         >
           <div className="rounded-xl text-center h-full flex flex-col justify-center" style={HERO_CARD_BASE}>
             <p className="text-tagline tabular-nums whitespace-nowrap" style={heroTaglineStyle}>
-              0/100
+              100%
             </p>
             <p className="text-body text-sm opacity-70 whitespace-nowrap">After Cap</p>
           </div>
