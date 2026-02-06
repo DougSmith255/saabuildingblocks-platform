@@ -17,9 +17,6 @@ const AUTH_API_URL = API_URL;
 // Password Reset Modal States
 type ResetStep = 'email' | 'success';
 
-// Username Recovery Modal States
-type UsernameStep = 'email' | 'success';
-
 // New Password Reset (with token) Modal States
 type NewPasswordStep = 'form' | 'success';
 
@@ -66,14 +63,6 @@ function AgentPortalLoginContent() {
   const [resetLoading, setResetLoading] = useState(false);
   const [resetError, setResetError] = useState<string | null>(null);
   const [resetMessage, setResetMessage] = useState<string | null>(null);
-
-  // Username recovery state
-  const [showUsernameModal, setShowUsernameModal] = useState(false);
-  const [usernameStep, setUsernameStep] = useState<UsernameStep>('email');
-  const [usernameEmail, setUsernameEmail] = useState('');
-  const [usernameLoading, setUsernameLoading] = useState(false);
-  const [usernameError, setUsernameError] = useState<string | null>(null);
-  const [usernameMessage, setUsernameMessage] = useState<string | null>(null);
 
   // New password (with token from email) state
   const [showNewPasswordModal, setShowNewPasswordModal] = useState(false);
@@ -232,68 +221,6 @@ function AgentPortalLoginContent() {
     setResetEmail('');
     setResetError(null);
     setResetMessage(null);
-  };
-
-  // Username recovery handler
-  const handleUsernameRequest = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setUsernameLoading(true);
-    setUsernameError(null);
-    setUsernameMessage(null);
-
-    try {
-      const response = await fetch(`${AUTH_API_URL}/api/auth/username-recovery/request`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: usernameEmail,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok && response.status !== 429) {
-        setUsernameError(data.message || 'Failed to send username reminder. Please try again.');
-        setUsernameLoading(false);
-        return;
-      }
-
-      if (response.status === 429) {
-        setUsernameError('Too many requests. Please wait before trying again.');
-        setUsernameLoading(false);
-        return;
-      }
-
-      // Success - show confirmation
-      setUsernameMessage(data.message || 'If an account exists with this email, your username has been sent.');
-      setUsernameStep('success');
-      setUsernameLoading(false);
-    } catch (err) {
-      console.error('Username recovery error:', err);
-      setUsernameError('Network error. Please check your connection and try again.');
-      setUsernameLoading(false);
-    }
-  };
-
-  // Open username modal
-  const openUsernameModal = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setShowUsernameModal(true);
-    setUsernameStep('email');
-    setUsernameEmail('');
-    setUsernameError(null);
-    setUsernameMessage(null);
-  };
-
-  // Close username modal
-  const closeUsernameModal = () => {
-    setShowUsernameModal(false);
-    setUsernameStep('email');
-    setUsernameEmail('');
-    setUsernameError(null);
-    setUsernameMessage(null);
   };
 
   // New password submit handler (with token from email)
@@ -543,15 +470,8 @@ function AgentPortalLoginContent() {
               </FormButton>
             </div>
 
-            {/* Forgot Username/Password Links */}
+            {/* Forgot Password Link */}
             <div className="forgot-links-container">
-              <button
-                type="button"
-                onClick={openUsernameModal}
-                className="forgot-link"
-              >
-                Forgot username?
-              </button>
               <button
                 type="button"
                 onClick={openResetModal}
@@ -648,86 +568,6 @@ function AgentPortalLoginContent() {
                 The link will expire in 15 minutes.
               </p>
               <FormButton onClick={closeResetModal}>
-                Back to Login
-              </FormButton>
-            </div>
-          )}
-        </div>
-      </SlidePanel>
-
-      {/* Username Recovery SlidePanel */}
-      <SlidePanel
-        isOpen={showUsernameModal}
-        onClose={closeUsernameModal}
-        title="Forgot Username"
-        subtitle="Enter your email and we'll send you your username"
-        icon={<User size={20} style={{ color: '#ffd700' }} />}
-        theme="gold"
-      >
-        <div style={{ flex: '1 1 0%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          {usernameStep === 'email' ? (
-            <form onSubmit={handleUsernameRequest} style={{ maxWidth: '400px', margin: '0 auto', width: '100%' }}>
-              {/* Error Message */}
-              {usernameError && (
-                <FormMessage type="error">{usernameError}</FormMessage>
-              )}
-
-              {/* Email Field */}
-              <FormGroup label="Email Address" htmlFor="username-email" required>
-                <FormInput
-                  type="email"
-                  id="username-email"
-                  name="usernameEmail"
-                  value={usernameEmail}
-                  onChange={(e) => setUsernameEmail(e.target.value)}
-                  placeholder="agent@example.com"
-                  required
-                  autoFocus
-                />
-              </FormGroup>
-
-              {/* Submit Button */}
-              <div style={{ marginTop: '1.5rem' }}>
-                <FormButton isLoading={usernameLoading} loadingText="Sending...">
-                  Send Username
-                </FormButton>
-              </div>
-
-              {/* Get Help Link */}
-              <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-                <a
-                  href="mailto:team@smartagentalliance.com"
-                  style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', textDecoration: 'none' }}
-                >
-                  Need help? Contact support
-                </a>
-              </div>
-            </form>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '2rem 0', maxWidth: '400px', margin: '0 auto' }}>
-              <div style={{
-                width: '80px',
-                height: '80px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0.1) 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 1.5rem',
-                border: '1px solid rgba(255,215,0,0.3)',
-              }}>
-                <Mail size={36} style={{ color: '#ffd700' }} />
-              </div>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#ffd700', marginBottom: '0.75rem' }}>
-                Check Your Email
-              </h3>
-              <p style={{ fontSize: '0.95rem', color: 'rgba(229,228,221,0.7)', marginBottom: '0.5rem' }}>
-                {usernameMessage}
-              </p>
-              <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '2rem' }}>
-                Your username has been sent to your email.
-              </p>
-              <FormButton onClick={closeUsernameModal}>
                 Back to Login
               </FormButton>
             </div>
