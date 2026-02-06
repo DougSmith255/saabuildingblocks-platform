@@ -556,10 +556,10 @@ function RotatingStats() {
 
 // Awards Ribbon Component with Glass Panel (full-width)
 const EXP_PRIORITIES = [
-  { icon: Layers, label: 'Production efficiency via central systems' },
-  { icon: TrendingUp, label: 'Ownership in a publicly traded company' },
-  { icon: Users, label: 'Leverage from scale and shared infrastructure' },
-  { icon: Infinity, label: 'Income continuity beyond active sales' },
+  { icon: Layers, keyword: 'Production efficiency', rest: 'via central systems' },
+  { icon: TrendingUp, keyword: 'Ownership', rest: 'in a publicly traded company' },
+  { icon: Users, keyword: 'Leverage', rest: 'from scale and shared infrastructure' },
+  { icon: Infinity, keyword: 'Income continuity', rest: 'beyond active sales' },
 ];
 
 const INTRO_CARDS = [
@@ -828,9 +828,10 @@ function HowExpIsBuilt() {
                   <priority.icon size={22} style={{ color: '#00bfff' }} />
                 </div>
 
-                {/* Label - body font styling */}
+                {/* Label - keyword bold with heading color, rest body color */}
                 <p className="text-body opacity-80">
-                  {priority.label}
+                  <span className="font-bold" style={{ color: '#e5e4dd' }}>{priority.keyword}</span>{' '}
+                  {priority.rest}
                 </p>
               </div>
             ))}
@@ -1808,7 +1809,7 @@ function IncomeOwnershipSection() {
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-h4 mb-2">
+                    <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
                       {stream.title}
                     </h3>
 
@@ -1834,7 +1835,7 @@ function IncomeOwnershipSection() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-h4 mb-2">
+                  <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
                     {FEES_CARD.title}
                   </h3>
 
@@ -1928,7 +1929,7 @@ function IncomeOwnershipSection() {
               <div className="relative z-[1] grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-[200px]">
                 {/* Text side */}
                 <div className="flex flex-col justify-center">
-                  <h3 className="text-h4 mb-2">
+                  <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
                     Revenue Share
                   </h3>
 
