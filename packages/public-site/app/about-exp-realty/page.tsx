@@ -979,7 +979,7 @@ const INCOME_STREAMS: {
   {
     icon: TrendingUp,
     title: 'Stock Ownership',
-    description: 'Production-based awards and optional discounted purchase program',
+    description: 'Production awards plus discounted stock purchase option',
   },
 ];
 
@@ -1596,7 +1596,7 @@ function CommissionDonut() {
   const eightyPercent = circumference * 0.8;
 
   return (
-    <div ref={ref} className="flex items-center justify-center mb-4">
+    <div ref={ref} className="flex items-center justify-center h-20">
       <svg width={size} height={size} className="transform -rotate-90">
         {/* Background ring */}
         <circle
@@ -1654,7 +1654,7 @@ function CommissionDonut() {
  */
 function IconBadge() {
   return (
-    <div className="flex items-center justify-center mb-4">
+    <div className="flex items-center justify-center h-20">
       <div
         className="relative w-16 h-16 rounded-full flex items-center justify-center"
         style={{
@@ -1708,7 +1708,7 @@ function StockChart() {
   const areaD = pathD + ` L 100 50 L 0 50 Z`;
 
   return (
-    <div ref={ref} className="flex items-center justify-center mb-4">
+    <div ref={ref} className="flex items-center justify-center h-20">
       <svg width={100} height={50} viewBox="0 0 100 50" className="overflow-visible">
         {/* Gradient fill under the line */}
         <defs>
@@ -1759,14 +1759,14 @@ function StockChart() {
 }
 
 /**
- * FeesBadge - Clean $85 circular badge with crossed-out fees
+ * FeesBadge - Clean $85 circular badge
  */
 function FeesBadge() {
   return (
-    <div className="flex flex-col items-center mb-4">
+    <div className="flex flex-col items-center justify-center h-20">
       {/* $85 Badge */}
       <div
-        className="w-16 h-16 rounded-full flex items-center justify-center mb-3"
+        className="w-16 h-16 rounded-full flex items-center justify-center"
         style={{
           background: 'radial-gradient(circle, rgba(0,191,255,0.15) 0%, rgba(0,191,255,0.05) 70%, transparent 100%)',
           border: '2px solid rgba(0,191,255,0.4)',
@@ -1782,12 +1782,6 @@ function FeesBadge() {
         >
           $85
         </span>
-      </div>
-      {/* Crossed out fees */}
-      <div className="flex flex-wrap justify-center gap-2 text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
-        <span className="line-through">Desk fees</span>
-        <span className="line-through">Franchise</span>
-        <span className="line-through">Royalties</span>
       </div>
     </div>
   );
@@ -1823,7 +1817,7 @@ function IncomeOwnershipSection() {
                 <CyberCard padding="md" centered className="h-full">
                   <div className="flex flex-col items-center text-center h-full">
                     {/* Visual */}
-                    <div className="relative">
+                    <div className="relative mb-4">
                       {cardVisuals[stream.title]}
                     </div>
 
@@ -1843,7 +1837,7 @@ function IncomeOwnershipSection() {
 
                     {/* Description */}
                     <p
-                      className="text-sm leading-relaxed mt-auto"
+                      className="text-body leading-relaxed mt-auto"
                       style={{ color: 'var(--color-body-text)' }}
                     >
                       {stream.description}
@@ -1861,7 +1855,9 @@ function IncomeOwnershipSection() {
               <CyberCard padding="md" centered className="h-full">
                 <div className="flex flex-col items-center text-center h-full justify-center">
                   {/* Visual */}
-                  <FeesBadge />
+                  <div className="mb-4">
+                    <FeesBadge />
+                  </div>
 
                   {/* Title */}
                   <h3
@@ -1879,7 +1875,7 @@ function IncomeOwnershipSection() {
 
                   {/* Description */}
                   <p
-                    className="text-sm leading-relaxed"
+                    className="text-body leading-relaxed"
                     style={{ color: 'var(--color-body-text)' }}
                   >
                     {FEES_CARD.description}
@@ -1899,15 +1895,21 @@ function IncomeOwnershipSection() {
             >
               <RisingParticles />
 
-              {/* 7-tier rings as absolute background layer */}
+              {/* 7-tier rings as absolute background layer - right aligned with 10px padding */}
               <div
-                className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center"
-                style={{ overflow: 'visible' }}
+                className="absolute pointer-events-none z-0 flex items-center justify-end"
+                style={{
+                  top: '10px',
+                  bottom: '10px',
+                  right: '10px',
+                  left: '50%',
+                  overflow: 'visible'
+                }}
               >
                 <div
                   ref={tierBarsReveal.ref}
                   className="relative"
-                  style={{ width: '280px', height: '280px' }}
+                  style={{ width: '240px', height: '240px' }}
                 >
                   {/* Rings */}
                   {Array.from({ length: RING_COUNT }, (_, i) => {
@@ -1978,7 +1980,7 @@ function IncomeOwnershipSection() {
                   </h3>
 
                   <p
-                    className="text-sm leading-relaxed"
+                    className="text-body leading-relaxed"
                     style={{ color: 'var(--color-body-text)' }}
                   >
                     {REVENUE_SHARE.description}
@@ -1993,7 +1995,7 @@ function IncomeOwnershipSection() {
 
           {/* D. CTA */}
           <div className="text-center">
-            <CTAButton href="#">Explore eXp Income</CTAButton>
+            <SecondaryButton href="#" variant="blue">More About eXp Income</SecondaryButton>
           </div>
         </div>
       </section>
