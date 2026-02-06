@@ -3295,8 +3295,13 @@ function AgentPortal() {
                         background: isActive ? 'rgba(255, 215, 0, 0.08)' : 'transparent',
                       }}
                     >
-                      {/* Profile item shows actual profile picture */}
-                      {isProfileItem ? (
+                      {/* Profile item shows actual profile picture (with fallback to agent page image) */}
+                      {isProfileItem ? (() => {
+                        // Use dashboard profile picture, or fall back to agent page image (color preferred)
+                        const mobileMenuProfileUrl = user?.profilePictureUrl
+                          || preloadedAgentPageData?.page?.profile_image_color_url
+                          || preloadedAgentPageData?.page?.profile_image_url;
+                        return (
                         <div
                           className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0"
                           style={{
@@ -3304,9 +3309,9 @@ function AgentPortal() {
                             boxShadow: isActive ? `0 0 8px ${dashboardAccentColor}80` : 'none',
                           }}
                         >
-                          {user?.profilePictureUrl && !profileImageError ? (
+                          {mobileMenuProfileUrl && !profileImageError ? (
                             <img
-                              src={user.profilePictureUrl}
+                              src={mobileMenuProfileUrl}
                               alt=""
                               className="w-full h-full object-cover"
                             />
@@ -3321,7 +3326,8 @@ function AgentPortal() {
                             </div>
                           )}
                         </div>
-                      ) : (
+                        );
+                      })() : (
                         <item.Icon
                           className="w-5 h-5"
                           style={{
