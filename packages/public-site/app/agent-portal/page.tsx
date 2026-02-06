@@ -3679,9 +3679,8 @@ function AgentPortal() {
                       </div>
                     )}
                     {(() => {
-                      // Use agent page images (same as Link Page) - these are the canonical profile images
-                      const sidebarProfileUrl = preloadedAgentPageData?.page?.profile_image_color_url
-                        || preloadedAgentPageData?.page?.profile_image_url;
+                      // Use agent page B&W image for dashboard/profile sections
+                      const sidebarProfileUrl = preloadedAgentPageData?.page?.profile_image_url;
                       return sidebarProfileUrl && !profileImageError ? (
                       <>
                         {/* Loading spinner - shows while image is loading */}
@@ -4008,9 +4007,8 @@ function AgentPortal() {
                       </div>
                     )}
                     {(() => {
-                      // Use agent page images (same as Link Page) - these are the canonical profile images
-                      const editProfileUrl = preloadedAgentPageData?.page?.profile_image_color_url
-                        || preloadedAgentPageData?.page?.profile_image_url;
+                      // Use agent page B&W image for dashboard/profile sections
+                      const editProfileUrl = preloadedAgentPageData?.page?.profile_image_url;
                       return editProfileUrl && !profileImageError ? (
                       <>
                         {/* Loading spinner - shows while image is loading */}
@@ -10151,6 +10149,7 @@ function AgentPagesSection({
   const [error, setError] = useState<string | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const attractionFileInputRef = useRef<HTMLInputElement>(null);
+  const hasFetchedRef = useRef(false); // Prevent re-fetching when preloadedPageData updates from our own callback
 
   // Form state - initialize from preloaded data if available
   // Default example values shown for new users to understand the format
@@ -10596,7 +10595,11 @@ function AgentPagesSection({
   // Fetch agent page data - always fetch fresh data from API
   // Even with preloaded (cached) data, fetch to ensure activated status and photos are current
   useEffect(() => {
+    // Prevent re-fetching when preloadedPageData changes due to our own onPageDataUpdate callback
+    if (hasFetchedRef.current) return;
+
     const fetchPageData = async () => {
+      hasFetchedRef.current = true; // Mark as fetched to prevent loop
       try {
         const token = localStorage.getItem('agent_portal_token');
         const response = await fetch(`${API_URL}/api/agent-pages/${user.id}`, {
@@ -12039,76 +12042,38 @@ function AgentPagesSection({
           </div>
         </div>
 
-        {/* Font + Name Glow - Side by side on desktop, stacked on mobile */}
-        <div className="flex flex-wrap gap-3">
-          {/* Font */}
-          <div className="flex-1">
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Font</label>
-            <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '185px' }}>
-              {/* Animated sliding pill indicator - fixed width */}
-              <div
-                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
-                style={{
-                  width: '88px',
-                  left: linksSettings.font === 'taskor' ? 'calc(100% - 92px)' : '4px',
-                }}
-              />
-              <button
-                onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                style={{
-                  fontFamily: 'var(--font-synonym, sans-serif)',
-                  color: linksSettings.font === 'synonym' ? '#000000' : 'rgba(255,255,255,0.6)'
-                }}
-              >
-                Synonym
-              </button>
-              <button
-                onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                style={{
-                  fontFamily: 'var(--font-synonym, sans-serif)',
-                  color: linksSettings.font === 'taskor' ? '#000000' : 'rgba(255,255,255,0.6)'
-                }}
-              >
-                Taskor
-              </button>
-            </div>
-          </div>
-
-          {/* Name Glow */}
-          <div className="flex-1">
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Name Glow</label>
-            <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '156px' }}>
-              {/* Animated sliding pill indicator - fixed width */}
-              <div
-                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
-                style={{
-                  width: '72px',
-                  left: linksSettings.nameGlow === false ? 'calc(100% - 76px)' : '4px',
-                }}
-              />
-              <button
-                onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: true })); setHasUnsavedChanges(true); }}
-                className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                style={{
-                  fontFamily: 'var(--font-synonym, sans-serif)',
-                  color: linksSettings.nameGlow !== false ? '#000000' : 'rgba(255,255,255,0.6)'
-                }}
-              >
-                Yes
-              </button>
-              <button
-                onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: false })); setHasUnsavedChanges(true); }}
-                className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
-                style={{
-                  fontFamily: 'var(--font-synonym, sans-serif)',
-                  color: linksSettings.nameGlow === false ? '#000000' : 'rgba(255,255,255,0.6)'
-                }}
-              >
-                No
-              </button>
-            </div>
+        {/* Font */}
+        <div>
+          <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Font</label>
+          <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '185px' }}>
+            {/* Animated sliding pill indicator - fixed width */}
+            <div
+              className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
+              style={{
+                width: '88px',
+                left: linksSettings.font === 'taskor' ? 'calc(100% - 92px)' : '4px',
+              }}
+            />
+            <button
+              onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
+              className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+              style={{
+                fontFamily: 'var(--font-synonym, sans-serif)',
+                color: linksSettings.font === 'synonym' ? '#000000' : 'rgba(255,255,255,0.6)'
+              }}
+            >
+              Synonym
+            </button>
+            <button
+              onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
+              className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+              style={{
+                fontFamily: 'var(--font-synonym, sans-serif)',
+                color: linksSettings.font === 'taskor' ? '#000000' : 'rgba(255,255,255,0.6)'
+              }}
+            >
+              Taskor
+            </button>
           </div>
         </div>
       </div>
@@ -12662,7 +12627,7 @@ function AgentPagesSection({
                   )}
                 </div>
 
-                {/* Name with H1 Neon Effect - Auto-adapts based on accent color brightness, controllable via nameGlow setting */}
+                {/* Name with subtle depth effect - no glow */}
                 <span
                   className="text-lg text-center leading-tight font-bold mt-1.5 mb-2"
                   style={{
@@ -12670,15 +12635,8 @@ function AgentPagesSection({
                     fontFamily: 'var(--font-taskor, sans-serif)',
                     fontFeatureSettings: '"ss01" 1',
                     transform: 'perspective(800px) rotateX(12deg)',
-                    // Glow effect controllable via nameGlow setting
-                    textShadow: linksSettings.nameGlow !== false
-                      ? (isAccentDark
-                          ? `-0.5px -0.5px 0 ${linksSettings.accentColor}40, 0.5px -0.5px 0 ${linksSettings.accentColor}40, -0.5px 0.5px 0 ${linksSettings.accentColor}40, 0.5px 0.5px 0 ${linksSettings.accentColor}40, 0 0 0.1em ${linksSettings.accentColor}60, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`
-                          : `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.13em ${linksSettings.accentColor}8C, 0 0 0.18em ${linksSettings.accentColor}59, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`)
-                      : '0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f', // No glow - just subtle depth
-                    filter: linksSettings.nameGlow !== false
-                      ? `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em ${linksSettings.accentColor}40)`
-                      : 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7))', // No glow filter
+                    textShadow: '0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f',
+                    filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7))',
                   }}
                 >
                   {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}

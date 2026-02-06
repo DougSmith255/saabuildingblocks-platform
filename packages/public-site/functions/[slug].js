@@ -6728,7 +6728,6 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   const backgroundColor = settings.backgroundColor || '#ffd700'; // Background hue for star field
   const fontChoice = settings.font || 'synonym';
   const nameWeight = settings.nameWeight || 'bold'; // Default to bold
-  const nameGlow = settings.nameGlow !== false; // Name glow effect, default true
   const bio = settings.bio || '';
 
   // Auto-detect if accent color is dark (same logic as preview)
@@ -7163,21 +7162,10 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       font-feature-settings: "ss01" 1;
       /* 3D perspective for neon sign depth effect */
       transform: perspective(800px) rotateX(12deg);
-      /* Multi-layer text-shadow - adapts to accent brightness, controllable via nameGlow setting */
-      text-shadow: ${nameGlow
-        ? (isAccentDark
-            ? /* Dark accent: subtle outline with accent color */
-              `-0.5px -0.5px 0 rgba(${rgbString}, 0.25), 0.5px -0.5px 0 rgba(${rgbString}, 0.25), -0.5px 0.5px 0 rgba(${rgbString}, 0.25), 0.5px 0.5px 0 rgba(${rgbString}, 0.25), 0 0 0.1em rgba(${rgbString}, 0.38), 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`
-            : /* Light accent: full neon glow effect */
-              `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.13em rgba(${rgbString}, 0.55), 0 0 0.18em rgba(${rgbString}, 0.35), 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`)
-        : /* No glow - just subtle depth */
-          `0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f`
-      };
-      /* GPU-accelerated depth shadow - uses accent color if glow enabled */
-      filter: ${nameGlow
-        ? `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(${rgbString}, 0.25))`
-        : `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7))`
-      };
+      /* Subtle depth text-shadow - no glow */
+      text-shadow: 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f;
+      /* GPU-accelerated depth shadow */
+      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7));
       /* Animation disabled for cleaner appearance */
     }
 
