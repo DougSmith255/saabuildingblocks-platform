@@ -671,7 +671,7 @@ function IntroFlipCard() {
           border: '1px solid rgba(0,191,255,0.3)',
         }}
       >
-        <img src="/icons/exp-x.svg" alt="eXp" width={16} height={16} style={{ filter: 'brightness(0) saturate(100%) invert(65%) sepia(80%) saturate(1000%) hue-rotate(170deg) brightness(100%)' }} />
+        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public" alt="eXp" width={16} height={16} className="object-contain" />
       </span>
       <div className="flex items-center justify-center h-full min-h-[100px]">
         <p
@@ -782,7 +782,7 @@ function HowExpIsBuilt() {
                     border: '1px solid rgba(0,191,255,0.3)',
                   }}
                 >
-                  <img src="/icons/exp-x.svg" alt="eXp" width={16} height={16} style={{ filter: 'brightness(0) saturate(100%) invert(65%) sepia(80%) saturate(1000%) hue-rotate(170deg) brightness(100%)' }} />
+                  <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public" alt="eXp" width={16} height={16} className="object-contain" />
                 </span>
                 <div className="flex items-center justify-center h-full min-h-[100px]">
                   <p
