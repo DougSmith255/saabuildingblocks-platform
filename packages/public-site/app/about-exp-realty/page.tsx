@@ -2084,7 +2084,7 @@ function IncomeOwnershipSection() {
           </div>
 
           {/* D. CTA */}
-          <div className="text-center">
+          <div className="text-center" style={{ marginTop: '-20px' }}>
             <SecondaryButton href="#" variant="blue">More About eXp Income</SecondaryButton>
           </div>
         </div>
