@@ -7,7 +7,8 @@ import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHe
 import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, DollarSign, Receipt,
   Shield, Headphones, GraduationCap, Video, Handshake,
   Contact, Globe, Laptop, ClipboardCheck, BarChart3, Palette,
-  Ban,
+  Ban, Target, Settings, RefreshCw, Calendar, MessageSquare, Share2,
+  UserPlus, Link, Zap, Sparkles,
 } from 'lucide-react';
 import { HolographicGlobe } from '../../components/shared/HolographicGlobe';
 import type { LucideIcon } from 'lucide-react';
@@ -981,29 +982,86 @@ const FEES_CARD = {
    SECTION 3: SUPPORT & TECHNOLOGY — Constants
    ═══════════════════════════════════════════════════════════════ */
 
-const SUPPORT_TECH_STATS = [
-  { prefix: '', targetNumber: 2000, suffix: '+', label: 'Salaried Support Staff' },
-  { prefix: '', targetNumber: 24, suffix: '/7', label: 'Expert Help Desk' },
-  { prefix: '', targetNumber: 50, suffix: '+', label: 'Weekly Live Trainings' },
-  { prefix: '', targetNumber: 3, suffix: '', label: 'CRM Choices Included' },
+const SUPPORT_INFRASTRUCTURE_STATS = [
+  { prefix: '', targetNumber: 2000, suffix: '+', label: 'Staff' },
+  { prefix: '', targetNumber: 24, suffix: '/7', label: 'Help Desk' },
+  { prefix: '', targetNumber: 50, suffix: '+', label: 'Trainings' },
 ];
 
-const SUPPORT_BULLETS = [
-  { icon: Shield, text: 'Full-service support across brokers, tech, and transactions' },
-  { icon: Headphones, text: '24/7 Expert Care help desk plus AI assistant Mira' },
+const SUPPORT_INFRASTRUCTURE_BULLETS = [
+  { icon: Shield, text: '2,000+ salaried support staff across brokers, tech, and transactions' },
+  { icon: Headphones, text: '24/7 Expert Care help desk' },
+  { icon: Sparkles, text: 'AI-assisted support through Mira' },
   { icon: GraduationCap, text: 'Live onboarding that gets agents operational quickly' },
-  { icon: Handshake, text: 'Mentor program through first three transactions' },
-  { icon: Video, text: '50+ weekly live trainings plus full on-demand library' },
-  { icon: Building2, text: 'Physical workspaces via Regus offices worldwide' },
+  { icon: Video, text: '50+ weekly live trainings plus on-demand access' },
+  { icon: Handshake, text: 'Structured mentor program for newer agents through first transactions' },
+  { icon: Building2, text: 'Included access to Regus workspaces worldwide for professional meetings' },
 ];
 
-const TECH_BULLETS = [
-  { icon: Contact, text: 'CRM included: BoldTrail, Lofty, or Cloze' },
-  { icon: Globe, text: 'IDX-powered website options, eXp-branded or custom' },
-  { icon: Laptop, text: 'eXp World — support, training, and leadership access', guestPass: true },
-  { icon: ClipboardCheck, text: 'Transaction management and compliance tools' },
-  { icon: BarChart3, text: 'Performance analytics and tracking dashboards' },
-  { icon: Palette, text: 'Canva Pro tools plus automation for capping agents' },
+/* ═══════════════════════════════════════════════════════════════
+   "WHAT EXP PROVIDES" TAB CONTENT
+   ═══════════════════════════════════════════════════════════════ */
+
+const COMMUNITY_BULLETS = [
+  { icon: Users, text: 'Live interaction inside eXp World' },
+  { icon: Calendar, text: 'Cross-market masterminds and events' },
+  { icon: Globe, text: 'Global referral opportunities' },
+  { icon: MessageSquare, text: 'Direct access to leadership through Workplace' },
+  { icon: Share2, text: 'A culture of sharing strategies that are working now' },
+];
+
+const TECHNOLOGY_BULLETS = [
+  { icon: Contact, text: 'Choice of CRM: BoldTrail, Lofty, or Cloze' },
+  { icon: Globe, text: 'IDX website options, eXp-branded or custom' },
+  { icon: Laptop, text: 'eXp World virtual campus', guestPass: true },
+  { icon: ClipboardCheck, text: 'Transaction and compliance management' },
+  { icon: BarChart3, text: 'Performance tracking and analytics' },
+  { icon: Palette, text: 'Canva Pro marketing tools' },
+  { icon: Zap, text: 'Automation tools included for capped agents' },
+];
+
+const LEADS_BULLETS = [
+  { icon: UserPlus, text: 'Referral-based programs powered by company-run teams (Revenos)' },
+  { icon: DollarSign, text: 'Paid lead programs with ready-to-use ad infrastructure (Making It Rain)' },
+  { icon: Link, text: 'Organic lead tools built into the platform (myLink and myLead)' },
+];
+
+const TAB_CONTENT = [
+  { id: 'community', label: 'Community', icon: Users, bullets: COMMUNITY_BULLETS },
+  { id: 'technology', label: 'Technology', icon: Laptop, bullets: TECHNOLOGY_BULLETS },
+  { id: 'leads', label: 'Leads', icon: UserPlus, bullets: LEADS_BULLETS },
+] as const;
+
+/* ═══════════════════════════════════════════════════════════════
+   DIVISIONS & SOLUTIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+const DIVISIONS = [
+  'Residential',
+  'Commercial',
+  'Luxury',
+  'Land & Ranch',
+  'Sports & Entertainment',
+  'Referral-only',
+];
+
+const SOLUTIONS = [
+  'Healthcare options for agents and families',
+  'Transaction coordination',
+  'Lending, warranty, and renovation partners',
+  'Branded and discounted signage',
+  'Utility and closing services',
+  'Continuing education',
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   WHO EXP WORKS BEST FOR
+   ═══════════════════════════════════════════════════════════════ */
+
+const EXP_FIT_VALUES = [
+  { icon: Target, keyword: 'Independence', rest: 'over hierarchy' },
+  { icon: Settings, keyword: 'Systems', rest: 'over micromanagement' },
+  { icon: RefreshCw, keyword: 'Flexibility', rest: 'in how they build their business' },
 ];
 
 const REVENUE_SHARE = {
@@ -2100,20 +2158,20 @@ function IncomeOwnershipSection() {
 
 /**
  * RotatingSupportTechStats — mobile auto-rotating single stat display
- * Follows the existing RotatingStats pattern with SUPPORT_TECH_STATS data.
+ * Follows the existing RotatingStats pattern with SUPPORT_INFRASTRUCTURE_STATS data.
  */
 function RotatingSupportTechStats() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [displayValues, setDisplayValues] = useState<number[]>(SUPPORT_TECH_STATS.map(() => 0));
-  const [hasAnimated, setHasAnimated] = useState<boolean[]>(SUPPORT_TECH_STATS.map(() => false));
+  const [displayValues, setDisplayValues] = useState<number[]>(SUPPORT_INFRASTRUCTURE_STATS.map(() => 0));
+  const [hasAnimated, setHasAnimated] = useState<boolean[]>(SUPPORT_INFRASTRUCTURE_STATS.map(() => false));
   const animationRef = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const animateCurrentStat = useCallback((index: number) => {
     if (hasAnimated[index]) return;
 
-    const targetNumber = SUPPORT_TECH_STATS[index].targetNumber;
+    const targetNumber = SUPPORT_INFRASTRUCTURE_STATS[index].targetNumber;
     const duration = 1500;
     const startTime = performance.now();
 
@@ -2162,7 +2220,7 @@ function RotatingSupportTechStats() {
       setIsAnimating(true);
       setTimeout(() => {
         setCurrentIndex((prev) => {
-          const next = (prev + 1) % SUPPORT_TECH_STATS.length;
+          const next = (prev + 1) % SUPPORT_INFRASTRUCTURE_STATS.length;
           if (!hasAnimated[next]) {
             setTimeout(() => animateCurrentStat(next), 100);
           }
@@ -2197,7 +2255,7 @@ function RotatingSupportTechStats() {
     };
   }, [animateCurrentStat, hasAnimated]);
 
-  const currentStat = SUPPORT_TECH_STATS[currentIndex];
+  const currentStat = SUPPORT_INFRASTRUCTURE_STATS[currentIndex];
   const displayValue = hasAnimated[currentIndex]
     ? currentStat.targetNumber.toLocaleString()
     : displayValues[currentIndex].toLocaleString();
@@ -2232,7 +2290,7 @@ function RotatingSupportTechStats() {
         </p>
       </div>
       <div className="flex justify-center gap-2 mt-4">
-        {SUPPORT_TECH_STATS.map((_, idx) => (
+        {SUPPORT_INFRASTRUCTURE_STATS.map((_, idx) => (
           <div
             key={idx}
             className="w-2 h-2 rounded-full transition-all duration-300"
@@ -2256,9 +2314,14 @@ const transparentCardStyle: React.CSSProperties = {
   padding: '24px',
 };
 
-function SupportTechnologySection() {
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 2: SUPPORT INFRASTRUCTURE (simplified from Support & Tech)
+   ═══════════════════════════════════════════════════════════════ */
+
+function SupportInfrastructureSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [globeVisible, setGlobeVisible] = useState(false);
+  const bulletsReveal = useScrollReveal(0.2);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -2285,12 +2348,12 @@ function SupportTechnologySection() {
 
         {/* H2 Heading */}
         <div className="text-center mb-8">
-          <H2>SUPPORT & TECHNOLOGY</H2>
+          <H2>SUPPORT INFRASTRUCTURE</H2>
         </div>
 
         {/* Stat badges row — desktop */}
-        <div className="hidden md:grid grid-cols-4 gap-4 mb-10">
-          {SUPPORT_TECH_STATS.map((stat, i) => (
+        <div className="hidden md:grid grid-cols-3 gap-4 mb-10 max-w-[800px] mx-auto">
+          {SUPPORT_INFRASTRUCTURE_STATS.map((stat, i) => (
             <div key={i}>
               <AnimatedStat {...stat} />
             </div>
@@ -2302,91 +2365,268 @@ function SupportTechnologySection() {
           <RotatingSupportTechStats />
         </div>
 
-        {/* Two-column detail cards with CTAs */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Support Column */}
-          <div className="flex flex-col gap-4">
-            <div style={transparentCardStyle} className="flex-1">
-              <h3
-                className="uppercase tracking-wider mb-2"
-                style={{
-                  color: '#00bfff',
-                  fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
-                  fontFeatureSettings: '"ss01" 1',
-                  fontWeight: 400,
-                  fontSize: 'var(--font-size-h6)',
-                }}
-              >
-                Support
-              </h3>
-              <p
-                className="text-sm italic mb-4"
-                style={{ color: '#00bfff', opacity: 0.85 }}
-              >
-                Independent, but not unprotected.
-              </p>
-              <ul className="space-y-3">
-                {SUPPORT_BULLETS.map((bullet) => (
-                  <li
-                    key={bullet.text}
-                    className="text-body text-sm leading-relaxed flex items-center gap-3"
-                    style={{ color: 'var(--color-body-text)' }}
+        {/* Single column bullet list with stagger animation */}
+        <div className="max-w-[900px] mx-auto" ref={bulletsReveal.ref}>
+          <div
+            className="relative overflow-hidden"
+            style={{
+              ...transparentCardStyle,
+              boxShadow: '0 0 40px rgba(0,191,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)',
+            }}
+          >
+            {/* Subtle grid pattern overlay */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-[0.03]"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(0,191,255,0.5) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(0,191,255,0.5) 1px, transparent 1px)
+                `,
+                backgroundSize: '40px 40px',
+              }}
+            />
+            <ul className="space-y-4 relative">
+              {SUPPORT_INFRASTRUCTURE_BULLETS.map((bullet, i) => (
+                <li
+                  key={bullet.text}
+                  className="text-body text-sm leading-relaxed flex items-start gap-4 group"
+                  style={{
+                    color: 'var(--color-body-text)',
+                    opacity: bulletsReveal.isVisible ? 1 : 0,
+                    transform: bulletsReveal.isVisible ? 'translateX(0)' : 'translateX(-20px)',
+                    transition: `opacity 0.5s ease ${i * 80}ms, transform 0.5s ease ${i * 80}ms`,
+                  }}
+                >
+                  {/* Icon with glow container */}
+                  <span
+                    className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-[-2px]"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(0,191,255,0.15), rgba(0,120,200,0.08))',
+                      border: '1px solid rgba(0,191,255,0.2)',
+                      boxShadow: '0 0 12px rgba(0,191,255,0.15)',
+                    }}
                   >
                     <bullet.icon
                       size={16}
-                      style={{ color: '#00bfff', flexShrink: 0, opacity: 0.8 }}
+                      style={{ color: '#00bfff' }}
                     />
-                    {bullet.text}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex justify-center">
-              <SecondaryButton href="#" variant="blue">Explore eXp Support</SecondaryButton>
-            </div>
+                  </span>
+                  <span className="pt-1">{bullet.text}</span>
+                </li>
+              ))}
+            </ul>
           </div>
+          <div className="flex justify-center mt-8">
+            <SecondaryButton href="#" variant="blue">Explore more about eXp support</SecondaryButton>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-          {/* Technology Column */}
-          <div className="flex flex-col gap-4">
-            <div style={transparentCardStyle} className="flex-1">
-              <h3
-                className="uppercase tracking-wider mb-2"
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 3-5: WHAT EXP PROVIDES (Tabbed Block)
+   ═══════════════════════════════════════════════════════════════ */
+
+function WhatExpProvidesSection() {
+  const [activeTab, setActiveTab] = useState(0);
+  const [isStopped, setIsStopped] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const [contentPhase, setContentPhase] = useState<'in' | 'out'>('in');
+  const [displayedTab, setDisplayedTab] = useState(0);
+
+  // Auto-rotation — only runs after section is in view, stops on click
+  useEffect(() => {
+    if (!inView || isStopped) return;
+    const interval = setInterval(() => {
+      setActiveTab((prev) => (prev + 1) % TAB_CONTENT.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [inView, isStopped]);
+
+  // Content transition effect
+  useEffect(() => {
+    if (activeTab === displayedTab) return;
+    setContentPhase('out');
+    const timer = setTimeout(() => {
+      setDisplayedTab(activeTab);
+      setContentPhase('in');
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [activeTab, displayedTab]);
+
+  // Visibility observer
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleSelect = useCallback((index: number) => {
+    setActiveTab(index);
+    setIsStopped(true);
+  }, []);
+
+  const currentTab = TAB_CONTENT[displayedTab];
+  const CurrentIcon = currentTab.icon;
+
+  return (
+    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
+      <div ref={containerRef} className="max-w-[1400px] mx-auto">
+        {/* H2 Heading */}
+        <div className="text-center mb-10">
+          <H2>WHAT EXP PROVIDES</H2>
+        </div>
+
+        {/* Tab chips - larger with better spacing */}
+        <div className="flex justify-center gap-4 sm:gap-6 mb-10">
+          {TAB_CONTENT.map((tab, i) => (
+            <div
+              key={tab.id}
+              className="rounded-xl relative overflow-hidden"
+              style={{
+                border: activeTab === i ? '2px solid rgba(50,150,220,0.5)' : '2px solid rgba(255,255,255,0.08)',
+                boxShadow: activeTab === i
+                  ? '0 0 25px 6px rgba(0,160,255,0.35), 0 0 50px 12px rgba(0,120,200,0.18)'
+                  : '0 4px 20px rgba(0,0,0,0.2)',
+                transition: 'border 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease',
+                transform: activeTab === i ? 'scale(1.02)' : 'scale(1)',
+              }}
+            >
+              {/* Dark base background */}
+              <div className="absolute inset-0 rounded-xl overflow-hidden" style={{ background: DARK_CARD_BG }} />
+              {/* Misty blue overlay — active only */}
+              <div
+                className="absolute inset-0 rounded-xl overflow-hidden"
                 style={{
-                  color: '#00bfff',
-                  fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
-                  fontFeatureSettings: '"ss01" 1',
-                  fontWeight: 400,
-                  fontSize: 'var(--font-size-h6)',
+                  background: MISTY_BLUE_BG,
+                  opacity: activeTab === i ? 1 : 0,
+                  transition: activeTab === i ? 'opacity 0.7s ease-out' : 'opacity 0.2s ease-out',
                 }}
+              />
+
+              <button
+                type="button"
+                onClick={() => handleSelect(i)}
+                aria-pressed={activeTab === i}
+                className="relative z-10 flex flex-col items-center justify-center gap-2 cursor-pointer px-5 sm:px-8 py-4"
               >
-                Technology
-              </h3>
-              <p
-                className="text-sm italic mb-4"
-                style={{ color: '#00bfff', opacity: 0.85 }}
-              >
-                Included in the flat brokerage fee.
-              </p>
-              <ul className="space-y-3">
-                {TECH_BULLETS.map((bullet) => (
+                <span className="chip-icon-wrap">
+                  <Icon3D color="#00bfff" size={36} invert={activeTab === i}>
+                    <tab.icon size={20} />
+                  </Icon3D>
+                </span>
+                <h3
+                  className="text-h6"
+                  style={{
+                    color: activeTab === i ? '#0a1520' : '#e5e4dd',
+                    transition: 'color 0.4s ease',
+                  }}
+                >
+                  {tab.label}
+                </h3>
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Content panel with watermark icon */}
+        <div className="max-w-[900px] mx-auto">
+          <div
+            className="relative overflow-hidden"
+            style={{
+              ...transparentCardStyle,
+              boxShadow: '0 0 50px rgba(0,191,255,0.1), inset 0 1px 0 rgba(255,255,255,0.05)',
+              minHeight: '280px',
+            }}
+          >
+            {/* Watermark icon — large faded background */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                right: '-20px',
+                bottom: '-20px',
+                opacity: contentPhase === 'out' ? 0 : 0.04,
+                transform: contentPhase === 'out' ? 'scale(0.8) rotate(-10deg)' : 'scale(1) rotate(0deg)',
+                transition: contentPhase === 'out'
+                  ? 'opacity 200ms ease-out, transform 200ms ease-out'
+                  : 'opacity 500ms ease-out 150ms, transform 500ms ease-out 150ms',
+                color: '#00bfff',
+              }}
+            >
+              <CurrentIcon size={180} strokeWidth={1} />
+            </div>
+
+            {/* Subtle grid pattern */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-[0.02]"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(0,191,255,0.5) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(0,191,255,0.5) 1px, transparent 1px)
+                `,
+                backgroundSize: '50px 50px',
+              }}
+            />
+
+            {/* Animated content */}
+            <div
+              className="relative z-10"
+              style={{
+                opacity: contentPhase === 'out' ? 0 : 1,
+                transform: contentPhase === 'out' ? 'translateY(-12px)' : 'translateY(0)',
+                transition: contentPhase === 'out'
+                  ? 'opacity 200ms ease-out, transform 200ms ease-out'
+                  : 'opacity 350ms ease-out 100ms, transform 350ms ease-out 100ms',
+              }}
+            >
+              <ul className="space-y-4">
+                {currentTab.bullets.map((bullet, i) => (
                   <li
                     key={bullet.text}
-                    className="text-body text-sm leading-relaxed flex items-center gap-3"
-                    style={{ color: 'var(--color-body-text)' }}
+                    className="text-body text-sm leading-relaxed flex items-start gap-4 group"
+                    style={{
+                      color: 'var(--color-body-text)',
+                      opacity: contentPhase === 'in' ? 1 : 0,
+                      transform: contentPhase === 'in' ? 'translateX(0)' : 'translateX(-15px)',
+                      transition: `opacity 0.4s ease ${i * 60}ms, transform 0.4s ease ${i * 60}ms`,
+                    }}
                   >
-                    <bullet.icon
-                      size={16}
-                      style={{ color: '#00bfff', flexShrink: 0, opacity: 0.8 }}
-                    />
-                    <span>
+                    {/* Icon with glow container */}
+                    <span
+                      className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-[-2px] transition-all duration-300 group-hover:scale-110"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(0,191,255,0.15), rgba(0,120,200,0.08))',
+                        border: '1px solid rgba(0,191,255,0.2)',
+                        boxShadow: '0 0 12px rgba(0,191,255,0.15)',
+                      }}
+                    >
+                      <bullet.icon
+                        size={16}
+                        style={{ color: '#00bfff' }}
+                      />
+                    </span>
+                    <span className="pt-1">
                       {bullet.text}
-                      {bullet.guestPass && (
+                      {'guestPass' in bullet && bullet.guestPass && (
                         <>
                           {' — '}
                           <button
                             type="button"
                             onClick={() => window.dispatchEvent(new Event('open-vip-guest-pass'))}
-                            className="cursor-pointer font-bold"
+                            className="cursor-pointer font-bold hover:underline"
                             style={{ color: '#00bfff' }}
                           >
                             get a guest pass
@@ -2398,13 +2638,568 @@ function SupportTechnologySection() {
                 ))}
               </ul>
             </div>
-            <div className="flex justify-center">
-              <SecondaryButton href="#" variant="blue">Explore eXp Technology</SecondaryButton>
+          </div>
+
+          {/* Progress dots with connecting line */}
+          <div className="flex justify-center items-center gap-3 mt-8">
+            {TAB_CONTENT.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => handleSelect(i)}
+                aria-label={`Go to ${TAB_CONTENT[i].label}`}
+                className="w-2.5 h-2.5 rounded-full transition-all duration-300"
+                style={{
+                  background: i === activeTab ? '#00bfff' : 'rgba(255,255,255,0.2)',
+                  boxShadow: i === activeTab ? '0 0 12px rgba(0,191,255,0.7), 0 0 24px rgba(0,191,255,0.4)' : 'none',
+                  transform: i === activeTab ? 'scale(1.4)' : 'scale(1)',
+                }}
+              />
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="flex justify-center mt-8">
+            <SecondaryButton href="#" variant="blue">Explore more about eXp {TAB_CONTENT[activeTab].label.toLowerCase()}</SecondaryButton>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 6: ADDITIONAL AREAS DIVIDER
+   ═══════════════════════════════════════════════════════════════ */
+
+function AdditionalAreasDivider() {
+  const dividerReveal = useScrollReveal(0.5);
+
+  return (
+    <div className="py-16 md:py-20 px-4 sm:px-8 md:px-12 relative overflow-hidden" ref={dividerReveal.ref}>
+      {/* Subtle background glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(0,191,255,0.04) 0%, transparent 70%)',
+        }}
+      />
+
+      <div className="max-w-[900px] mx-auto text-center relative">
+        {/* Animated top line */}
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <div
+            className="h-[1px] flex-1 max-w-[120px]"
+            style={{
+              background: 'linear-gradient(90deg, transparent, rgba(0,191,255,0.5))',
+              opacity: dividerReveal.isVisible ? 1 : 0,
+              transform: dividerReveal.isVisible ? 'scaleX(1)' : 'scaleX(0)',
+              transformOrigin: 'right',
+              transition: 'opacity 0.6s ease, transform 0.6s ease',
+            }}
+          />
+          <div
+            className="w-3 h-3 rounded-full"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0,191,255,0.6), rgba(0,120,200,0.4))',
+              boxShadow: '0 0 15px rgba(0,191,255,0.5), 0 0 30px rgba(0,191,255,0.25)',
+              opacity: dividerReveal.isVisible ? 1 : 0,
+              transform: dividerReveal.isVisible ? 'scale(1)' : 'scale(0)',
+              transition: 'opacity 0.4s ease 0.3s, transform 0.4s ease 0.3s',
+            }}
+          />
+          <div
+            className="h-[1px] flex-1 max-w-[120px]"
+            style={{
+              background: 'linear-gradient(90deg, rgba(0,191,255,0.5), transparent)',
+              opacity: dividerReveal.isVisible ? 1 : 0,
+              transform: dividerReveal.isVisible ? 'scaleX(1)' : 'scaleX(0)',
+              transformOrigin: 'left',
+              transition: 'opacity 0.6s ease, transform 0.6s ease',
+            }}
+          />
+        </div>
+
+        {/* Heading with reveal */}
+        <h3
+          className="text-h4 mb-4"
+          style={{
+            color: '#e5e4dd',
+            opacity: dividerReveal.isVisible ? 1 : 0,
+            transform: dividerReveal.isVisible ? 'translateY(0)' : 'translateY(15px)',
+            transition: 'opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s',
+          }}
+        >
+          ADDITIONAL AREAS AGENTS EXPLORE OVER TIME
+        </h3>
+
+        {/* Subtext */}
+        <p
+          className="text-body max-w-[600px] mx-auto"
+          style={{
+            color: 'var(--color-body-text)',
+            opacity: dividerReveal.isVisible ? 0.7 : 0,
+            transform: dividerReveal.isVisible ? 'translateY(0)' : 'translateY(15px)',
+            transition: 'opacity 0.5s ease 0.5s, transform 0.5s ease 0.5s',
+          }}
+        >
+          As agents grow, specialize, or shift focus, these areas often become relevant later.
+        </p>
+
+        {/* Animated bottom line */}
+        <div className="flex items-center justify-center gap-4 mt-8">
+          <div
+            className="h-[1px] flex-1 max-w-[80px]"
+            style={{
+              background: 'linear-gradient(90deg, transparent, rgba(0,191,255,0.3))',
+              opacity: dividerReveal.isVisible ? 1 : 0,
+              transform: dividerReveal.isVisible ? 'scaleX(1)' : 'scaleX(0)',
+              transformOrigin: 'right',
+              transition: 'opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s',
+            }}
+          />
+          <div
+            className="w-1.5 h-1.5 rounded-full"
+            style={{
+              background: 'rgba(0,191,255,0.5)',
+              boxShadow: '0 0 8px rgba(0,191,255,0.4)',
+              opacity: dividerReveal.isVisible ? 1 : 0,
+              transition: 'opacity 0.4s ease 0.7s',
+            }}
+          />
+          <div
+            className="h-[1px] flex-1 max-w-[80px]"
+            style={{
+              background: 'linear-gradient(90deg, rgba(0,191,255,0.3), transparent)',
+              opacity: dividerReveal.isVisible ? 1 : 0,
+              transform: dividerReveal.isVisible ? 'scaleX(1)' : 'scaleX(0)',
+              transformOrigin: 'left',
+              transition: 'opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s',
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTIONS 7-8: DIVISIONS + SOLUTIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+function DivisionsSolutionsSection() {
+  const sectionReveal = useScrollReveal(0.2);
+
+  return (
+    <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12" ref={sectionReveal.ref}>
+      <div className="max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Divisions Card */}
+          <div
+            className="group relative rounded-2xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
+              border: '1px solid rgba(0,191,255,0.15)',
+              boxShadow: '0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
+              opacity: sectionReveal.isVisible ? 1 : 0,
+              transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(30px)',
+              transition: 'opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease, border-color 0.3s ease',
+            }}
+          >
+            {/* Hover glow effect */}
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+              style={{
+                background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,191,255,0.08) 0%, transparent 70%)',
+              }}
+            />
+
+            {/* Header with icon */}
+            <div
+              className="px-6 pt-6 pb-4 flex items-center gap-3"
+              style={{
+                borderBottom: '1px solid rgba(0,191,255,0.1)',
+              }}
+            >
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))',
+                  border: '1px solid rgba(0,191,255,0.25)',
+                  boxShadow: '0 0 15px rgba(0,191,255,0.15)',
+                }}
+              >
+                <Layers size={20} style={{ color: '#00bfff' }} />
+              </div>
+              <h3 className="text-h4" style={{ color: '#e5e4dd' }}>
+                DIVISIONS
+              </h3>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              <ul className="space-y-3">
+                {DIVISIONS.map((division, i) => (
+                  <li
+                    key={division}
+                    className="text-body text-sm flex items-center gap-3 group/item"
+                    style={{
+                      color: 'var(--color-body-text)',
+                      opacity: sectionReveal.isVisible ? 1 : 0,
+                      transform: sectionReveal.isVisible ? 'translateX(0)' : 'translateX(-15px)',
+                      transition: `opacity 0.4s ease ${0.2 + i * 0.08}s, transform 0.4s ease ${0.2 + i * 0.08}s`,
+                    }}
+                  >
+                    <span
+                      className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover/item:scale-110"
+                      style={{
+                        background: 'rgba(0,191,255,0.1)',
+                        border: '1px solid rgba(0,191,255,0.2)',
+                      }}
+                    >
+                      <span style={{ color: '#00bfff', fontSize: '8px' }}>◆</span>
+                    </span>
+                    {division}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8">
+                <SecondaryButton href="#" variant="blue">Explore divisions</SecondaryButton>
+              </div>
+            </div>
+          </div>
+
+          {/* Solutions Card */}
+          <div
+            className="group relative rounded-2xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
+              border: '1px solid rgba(0,191,255,0.15)',
+              boxShadow: '0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
+              opacity: sectionReveal.isVisible ? 1 : 0,
+              transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(30px)',
+              transition: 'opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s, box-shadow 0.3s ease, border-color 0.3s ease',
+            }}
+          >
+            {/* Hover glow effect */}
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+              style={{
+                background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,191,255,0.08) 0%, transparent 70%)',
+              }}
+            />
+
+            {/* Header with icon */}
+            <div
+              className="px-6 pt-6 pb-4 flex items-center gap-3"
+              style={{
+                borderBottom: '1px solid rgba(0,191,255,0.1)',
+              }}
+            >
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))',
+                  border: '1px solid rgba(0,191,255,0.25)',
+                  boxShadow: '0 0 15px rgba(0,191,255,0.15)',
+                }}
+              >
+                <Sparkles size={20} style={{ color: '#00bfff' }} />
+              </div>
+              <h3 className="text-h4" style={{ color: '#e5e4dd' }}>
+                SOLUTIONS
+              </h3>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              <ul className="space-y-3">
+                {SOLUTIONS.map((solution, i) => (
+                  <li
+                    key={solution}
+                    className="text-body text-sm flex items-center gap-3 group/item"
+                    style={{
+                      color: 'var(--color-body-text)',
+                      opacity: sectionReveal.isVisible ? 1 : 0,
+                      transform: sectionReveal.isVisible ? 'translateX(0)' : 'translateX(-15px)',
+                      transition: `opacity 0.4s ease ${0.35 + i * 0.08}s, transform 0.4s ease ${0.35 + i * 0.08}s`,
+                    }}
+                  >
+                    <span
+                      className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover/item:scale-110"
+                      style={{
+                        background: 'rgba(0,191,255,0.1)',
+                        border: '1px solid rgba(0,191,255,0.2)',
+                      }}
+                    >
+                      <span style={{ color: '#00bfff', fontSize: '8px' }}>◆</span>
+                    </span>
+                    {solution}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8">
+                <SecondaryButton href="#" variant="blue">Explore solutions</SecondaryButton>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 9: WHO EXP WORKS BEST FOR
+   ═══════════════════════════════════════════════════════════════ */
+
+function WhoExpWorksBestForSection() {
+  const sectionReveal = useScrollReveal(0.2);
+
+  return (
+    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden" ref={sectionReveal.ref}>
+      {/* Background accent */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 100% 60% at 50% 100%, rgba(0,191,255,0.05) 0%, transparent 60%)',
+        }}
+      />
+
+      <div className="max-w-[1200px] mx-auto relative">
+        {/* H2 Heading */}
+        <div className="text-center mb-12">
+          <H2>WHO EXP WORKS BEST FOR</H2>
+        </div>
+
+        {/* Three value cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mb-10">
+          {EXP_FIT_VALUES.map((value, i) => (
+            <div
+              key={value.keyword}
+              className="group relative rounded-2xl p-6 md:p-8 text-center overflow-hidden"
+              style={{
+                background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
+                border: '1px solid rgba(0,191,255,0.15)',
+                boxShadow: '0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
+                opacity: sectionReveal.isVisible ? 1 : 0,
+                transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(40px)',
+                transition: `opacity 0.6s ease ${i * 0.15}s, transform 0.6s ease ${i * 0.15}s`,
+              }}
+            >
+              {/* Hover glow */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                style={{
+                  background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,191,255,0.12) 0%, transparent 70%)',
+                }}
+              />
+
+              {/* Icon container with animated glow ring */}
+              <div className="relative mx-auto mb-5 w-20 h-20">
+                {/* Outer glow ring */}
+                <div
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))',
+                    boxShadow: '0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1)',
+                    animation: sectionReveal.isVisible ? 'iconGlowPulse 3s ease-in-out infinite' : 'none',
+                    animationDelay: `${i * 0.5}s`,
+                  }}
+                />
+                {/* Inner icon circle */}
+                <div
+                  className="absolute inset-2 rounded-full flex items-center justify-center"
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(15,20,30,0.95), rgba(5,10,20,0.98))',
+                    border: '1px solid rgba(0,191,255,0.3)',
+                  }}
+                >
+                  <value.icon size={28} style={{ color: '#00bfff', filter: 'drop-shadow(0 0 8px rgba(0,191,255,0.5))' }} />
+                </div>
+              </div>
+
+              {/* Text */}
+              <p className="text-body relative z-10">
+                <span
+                  className="block text-h5 mb-1"
+                  style={{
+                    color: '#00bfff',
+                    textShadow: '0 0 20px rgba(0,191,255,0.3)',
+                  }}
+                >
+                  {value.keyword}
+                </span>
+                <span style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>{value.rest}</span>
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Note with subtle styling */}
+        <div
+          className="text-center max-w-[700px] mx-auto px-6 py-4 rounded-xl"
+          style={{
+            background: 'rgba(0,191,255,0.03)',
+            border: '1px solid rgba(0,191,255,0.08)',
+            opacity: sectionReveal.isVisible ? 1 : 0,
+            transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 0.6s ease 0.5s, transform 0.6s ease 0.5s',
+          }}
+        >
+          <p className="text-body text-sm" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
+            Agents who prefer structured oversight can choose to join an eXp production team after joining and selecting a sponsor.
+          </p>
+        </div>
+
+        {/* CTA */}
+        <div
+          className="flex justify-center mt-10"
+          style={{
+            opacity: sectionReveal.isVisible ? 1 : 0,
+            transition: 'opacity 0.6s ease 0.6s',
+          }}
+        >
+          <SecondaryButton href="#" variant="blue">Explore more about eXp fit</SecondaryButton>
+        </div>
+      </div>
+
+      {/* Animation keyframes */}
+      <style>{`
+        @keyframes iconGlowPulse {
+          0%, 100% { box-shadow: 0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1); }
+          50% { box-shadow: 0 0 40px rgba(0,191,255,0.35), inset 0 0 25px rgba(0,191,255,0.15); }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 10: WHERE SMART AGENT ALLIANCE FITS
+   ═══════════════════════════════════════════════════════════════ */
+
+function WhereSAAFitsSection() {
+  const sectionReveal = useScrollReveal(0.2);
+
+  return (
+    <GlassPanel variant="champagne">
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden" ref={sectionReveal.ref}>
+        {/* Decorative gold accent lines */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-[2px]"
+          style={{
+            background: 'linear-gradient(90deg, transparent, rgba(255,215,0,0.4), transparent)',
+            opacity: sectionReveal.isVisible ? 1 : 0,
+            transition: 'opacity 0.8s ease',
+          }}
+        />
+
+        <div className="max-w-[900px] mx-auto relative">
+          {/* SAA Logo/Badge */}
+          <div
+            className="flex justify-center mb-6"
+            style={{
+              opacity: sectionReveal.isVisible ? 1 : 0,
+              transform: sectionReveal.isVisible ? 'scale(1)' : 'scale(0.8)',
+              transition: 'opacity 0.5s ease, transform 0.5s ease',
+            }}
+          >
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,215,0,0.15), rgba(200,160,0,0.08))',
+                border: '2px solid rgba(255,215,0,0.3)',
+                boxShadow: '0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1)',
+              }}
+            >
+              <Handshake size={28} style={{ color: '#ffd700', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.5))' }} />
+            </div>
+          </div>
+
+          {/* H2 Heading */}
+          <div
+            className="text-center mb-10"
+            style={{
+              opacity: sectionReveal.isVisible ? 1 : 0,
+              transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s',
+            }}
+          >
+            <H2>WHERE SMART AGENT ALLIANCE FITS</H2>
+          </div>
+
+          {/* Prose content with staggered reveal */}
+          <div
+            className="relative rounded-2xl p-6 md:p-8 mb-10"
+            style={{
+              background: 'linear-gradient(180deg, rgba(40,35,25,0.4), rgba(30,25,15,0.5))',
+              border: '1px solid rgba(255,215,0,0.12)',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 30px rgba(0,0,0,0.2)',
+            }}
+          >
+            {/* Subtle pattern */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-[0.015] rounded-2xl overflow-hidden"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(255,215,0,0.5) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,215,0,0.5) 1px, transparent 1px)
+                `,
+                backgroundSize: '60px 60px',
+              }}
+            />
+
+            <div className="space-y-5 text-body leading-relaxed relative" style={{ color: 'var(--color-body-text)' }}>
+              {[
+                'eXp provides the brokerage, compensation model, technology, and global infrastructure.',
+                'Sponsorship is separate from the brokerage. Sponsor compensation comes from closed transactions within their sponsored organization, not from recruiting.',
+                'eXp does not require sponsors to provide any ongoing support to agents. Sponsors who choose to provide additional support decide what they offer and whether they charge for those services.',
+                'Smart Agent Alliance chooses to provide ongoing support, including systems, training, and community. These resources are funded through sponsor compensation paid by eXp, not by agents.',
+              ].map((text, i) => (
+                <p
+                  key={i}
+                  className={i === 3 ? 'font-medium' : ''}
+                  style={{
+                    color: i === 3 ? '#ffd700' : 'var(--color-body-text)',
+                    opacity: sectionReveal.isVisible ? 1 : 0,
+                    transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(15px)',
+                    transition: `opacity 0.5s ease ${0.2 + i * 0.1}s, transform 0.5s ease ${0.2 + i * 0.1}s`,
+                    textShadow: i === 3 ? '0 0 20px rgba(255,215,0,0.2)' : 'none',
+                  }}
+                >
+                  {text}
+                </p>
+              ))}
+            </div>
+          </div>
+
+          {/* CTAs with staggered reveal */}
+          <div
+            className="flex flex-col sm:flex-row justify-center items-center gap-4"
+            style={{
+              opacity: sectionReveal.isVisible ? 1 : 0,
+              transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 0.5s ease 0.6s, transform 0.5s ease 0.6s',
+            }}
+          >
+            <SecondaryButton href="/about-smart-agent-alliance">Learn About SAA</SecondaryButton>
+            <SecondaryButton href="#">See the full value (webinar)</SecondaryButton>
+            <CTAButton href="/join-us">Join eXp with Smart Agent Alliance</CTAButton>
+          </div>
+        </div>
+
+        {/* Bottom decorative line */}
+        <div
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-[2px]"
+          style={{
+            background: 'linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent)',
+            opacity: sectionReveal.isVisible ? 1 : 0,
+            transition: 'opacity 0.8s ease 0.7s',
+          }}
+        />
+      </section>
+    </GlassPanel>
   );
 }
 
@@ -2548,8 +3343,23 @@ export default function AboutExpRealty() {
       {/* ════ Section 2: Income & Ownership ════ */}
       <IncomeOwnershipSection />
 
-      {/* ════ Section 3: Support & Technology ════ */}
-      <SupportTechnologySection />
+      {/* ════ Section 2: Support Infrastructure ════ */}
+      <SupportInfrastructureSection />
+
+      {/* ════ Sections 3-5: What eXp Provides (Tabbed Block) ════ */}
+      <WhatExpProvidesSection />
+
+      {/* ════ Section 6: Additional Areas Divider ════ */}
+      <AdditionalAreasDivider />
+
+      {/* ════ Sections 7-8: Divisions + Solutions ════ */}
+      <DivisionsSolutionsSection />
+
+      {/* ════ Section 9: Who eXp Works Best For ════ */}
+      <WhoExpWorksBestForSection />
+
+      {/* ════ Section 10: Where Smart Agent Alliance Fits ════ */}
+      <WhereSAAFitsSection />
 
       {/* Blue H1 glow — must render AFTER H1 component so this keyframe wins */}
       <style>{`
