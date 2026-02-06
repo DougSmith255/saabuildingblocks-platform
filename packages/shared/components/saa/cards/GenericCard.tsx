@@ -43,6 +43,8 @@ export interface GenericCardProps {
   centered?: boolean;
   /** Link URL - automatically enables interactive styling */
   href?: string;
+  /** Custom styles to merge with base styles (e.g., borderColor) */
+  style?: React.CSSProperties;
 }
 
 const paddingClasses = {
@@ -59,6 +61,7 @@ export function GenericCard({
   padding = 'md',
   centered = false,
   href,
+  style = {},
 }: GenericCardProps) {
   // If href is provided, automatically make it interactive
   const isInteractive = hover || !!href;
@@ -95,7 +98,7 @@ export function GenericCard({
   const cardContent = (
     <div
       className={`${baseClasses} ${paddingClass} ${hoverClasses} ${centerClasses} ${className}`.trim()}
-      style={premiumGlassStyle}
+      style={{ ...premiumGlassStyle, ...style }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

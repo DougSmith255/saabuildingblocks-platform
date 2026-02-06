@@ -1072,7 +1072,7 @@ function FeatureChip({
           </Icon3D>
         </span>
         <h3
-          className="text-h4"
+          className="text-h6"
           style={{
             color: isActive ? '#0a1520' : '#e5e4dd',
             transition: 'color 0.4s ease',
@@ -1779,11 +1779,11 @@ function IncomeOwnershipSection() {
   // Tier bars cascade animation — trigger once on scroll
   const tierBarsReveal = useScrollReveal(0.3);
 
-  // Card visual components mapped by title
-  const cardVisuals: Record<string, React.ReactNode> = {
-    'Commission': <CommissionDonut />,
-    'ICON Program': <IconBadge />,
-    'Stock Ownership': <StockChart />,
+  // Card visual components and border colors mapped by title
+  const cardVisuals: Record<string, { visual: React.ReactNode; borderColor: string }> = {
+    'Commission': { visual: <CommissionDonut />, borderColor: 'rgba(0,191,255,0.3)' },
+    'ICON Program': { visual: <IconBadge />, borderColor: 'rgba(255,215,0,0.3)' },
+    'Stock Ownership': { visual: <StockChart />, borderColor: 'rgba(0,255,136,0.3)' },
   };
 
   return (
@@ -1796,149 +1796,289 @@ function IncomeOwnershipSection() {
             <H2>INCOME & OWNERSHIP</H2>
           </div>
 
-          {/* B. Three Income Stream Cards (Commission, ICON Program, Stock Ownership) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            {INCOME_STREAMS.map((stream) => (
-              <div key={stream.title} className="h-full">
-                <CyberCard padding="md" centered className="h-full">
-                  <div className="flex flex-col items-center text-center h-full overflow-visible">
-                    {/* Visual */}
-                    <div className="relative mb-4 overflow-visible">
-                      {cardVisuals[stream.title]}
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
-                      {stream.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-body opacity-80 mt-auto">
-                      {stream.description}
-                    </p>
+          {/* B. Income Cards - Responsive Grid
+              < 1200px: 2-col grid (Commission+ICON, Stock+Fees, Revenue Share full)
+              >= 1200px: 6-col grid (3 cards top row, 2 cards bottom row)
+          */}
+          <div className="grid grid-cols-1 md:grid-cols-2 min-[1200px]:grid-cols-6 gap-6 mb-12">
+            {/* Commission - 1 col at md, 2 cols at 1200px+ */}
+            <div className="min-[1200px]:col-span-2 h-full">
+              <GenericCard
+                padding="md"
+                className="h-full"
+                style={{ borderColor: cardVisuals['Commission'].borderColor }}
+              >
+                <div className="flex flex-col items-center text-center h-full overflow-visible">
+                  <div className="relative mb-4 overflow-visible">
+                    {cardVisuals['Commission'].visual}
                   </div>
-                </CyberCard>
-              </div>
-            ))}
-          </div>
+                  <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
+                    Commission
+                  </h3>
+                  <p className="text-body opacity-80 mt-auto">
+                    {INCOME_STREAMS[0].description}
+                  </p>
+                </div>
+              </GenericCard>
+            </div>
 
-          {/* C. Bottom Row: Fees CyberCard + Revenue Share Blue Card */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            {/* Left: Fees CyberCard */}
-            <div className="h-full">
-              <CyberCard padding="md" centered className="h-full">
+            {/* ICON Program - 1 col at md, 2 cols at 1200px+ */}
+            <div className="min-[1200px]:col-span-2 h-full">
+              <GenericCard
+                padding="md"
+                className="h-full"
+                style={{ borderColor: cardVisuals['ICON Program'].borderColor }}
+              >
+                <div className="flex flex-col items-center text-center h-full overflow-visible">
+                  <div className="relative mb-4 overflow-visible">
+                    {cardVisuals['ICON Program'].visual}
+                  </div>
+                  <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
+                    ICON Program
+                  </h3>
+                  <p className="text-body opacity-80 mt-auto">
+                    {INCOME_STREAMS[1].description}
+                  </p>
+                </div>
+              </GenericCard>
+            </div>
+
+            {/* Stock Ownership - 1 col at md, 2 cols at 1200px+ */}
+            <div className="min-[1200px]:col-span-2 h-full">
+              <GenericCard
+                padding="md"
+                className="h-full"
+                style={{ borderColor: cardVisuals['Stock Ownership'].borderColor }}
+              >
+                <div className="flex flex-col items-center text-center h-full overflow-visible">
+                  <div className="relative mb-4 overflow-visible">
+                    {cardVisuals['Stock Ownership'].visual}
+                  </div>
+                  <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
+                    Stock Ownership
+                  </h3>
+                  <p className="text-body opacity-80 mt-auto">
+                    {INCOME_STREAMS[2].description}
+                  </p>
+                </div>
+              </GenericCard>
+            </div>
+
+            {/* eXp Fees - 1 col at md, 3 cols at 1200px+ */}
+            <div className="min-[1200px]:col-span-3 h-full">
+              <GenericCard
+                padding="md"
+                className="h-full"
+                style={{ borderColor: 'rgba(0,191,255,0.3)' }}
+              >
                 <div className="flex flex-col items-center text-center h-full justify-center">
-                  {/* Visual */}
                   <div className="mb-4">
                     <FeesBadge />
                   </div>
-
-                  {/* Title */}
                   <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
                     {FEES_CARD.title}
                   </h3>
-
-                  {/* Description */}
                   <p className="text-body opacity-80">
                     {FEES_CARD.description}
                   </p>
                 </div>
-              </CyberCard>
+              </GenericCard>
             </div>
 
-            {/* Right: Revenue Share Blue Card with 7-tier animation */}
-            <div
-              className="relative rounded-2xl p-6 sm:p-8 h-full"
-              style={{
-                background: 'rgba(0,40,80,0.3)',
-                border: '1px solid rgba(0,191,255,0.25)',
-                boxShadow: 'inset 0 0 40px rgba(0,120,255,0.08), 0 0 30px rgba(0,100,200,0.1)',
-              }}
-            >
-              <RisingParticles />
-
-              {/* 7-tier rings as absolute background layer - right aligned with 10px padding */}
+            {/* Revenue Share - spans 2 cols at md (full width), 3 cols at 1200px+
+                Responsive layouts:
+                - Under 765px: side-by-side (text left, visual right, text doesn't overlay)
+                - 765px-1020px: stacked (visual on top, text below, like other cards)
+                - Over 1020px: side-by-side with absolute positioned visual
+            */}
+            <div className="md:col-span-2 min-[1200px]:col-span-3 h-full">
               <div
-                className="absolute pointer-events-none z-0 flex items-center justify-end"
+                className="relative rounded-2xl p-6 sm:p-8 h-full overflow-hidden"
                 style={{
-                  top: '10px',
-                  bottom: '10px',
-                  right: '10px',
-                  left: '50%',
-                  overflow: 'visible'
+                  background: 'rgba(0,40,80,0.3)',
+                  border: '1px solid rgba(0,191,255,0.25)',
+                  boxShadow: 'inset 0 0 40px rgba(0,120,255,0.08), 0 0 30px rgba(0,100,200,0.1)',
                 }}
               >
-                <div
-                  ref={tierBarsReveal.ref}
-                  className="relative"
-                  style={{ width: '240px', height: '240px' }}
-                >
-                  {/* Rings */}
-                  {Array.from({ length: RING_COUNT }, (_, i) => {
-                    const pct = RING_BASE_PCT + i * RING_STEP_PCT;
-                    const opacity = 0.6 - i * 0.05;
-                    return (
-                      <div
-                        key={i}
-                        className="absolute rounded-full"
-                        style={{
-                          width: `${pct}%`,
-                          height: `${pct}%`,
-                          top: '50%',
-                          left: '50%',
-                          transform: tierBarsReveal.isVisible
-                            ? 'translate(-50%,-50%) scale(1)'
-                            : 'translate(-50%,-50%) scale(0)',
-                          opacity: tierBarsReveal.isVisible ? 1 : 0,
-                          border: `1px solid rgba(0,191,255,${opacity})`,
-                          boxShadow: `0 0 8px rgba(0,191,255,${opacity * 0.5})`,
-                          transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
-                          animation: tierBarsReveal.isVisible && i === RING_COUNT - 1
-                            ? 'ringPulse 3s ease-in-out 2.5s infinite'
-                            : undefined,
-                        }}
-                      />
-                    );
-                  })}
+                <RisingParticles />
 
-                  {/* Center: "7" counter + TIERS label */}
-                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-                    <p
-                      className="text-5xl sm:text-6xl font-bold tabular-nums leading-none"
-                      style={{
-                        color: '#00bfff',
-                        textShadow: BLUE_3D_SHADOW,
-                      }}
-                    >
-                      <span ref={tierCounter.elementRef}>
-                        {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
-                      </span>
-                    </p>
-                    <p
-                      className="text-sm uppercase tracking-widest mt-1"
-                      style={{ color: '#e5e4dd', opacity: 0.7 }}
-                    >
-                      TIERS
+                {/* ═══ MOBILE LAYOUT (<765px): Side-by-side, text doesn't overlay ═══ */}
+                <div className="min-[765px]:hidden relative z-[1] flex gap-4 items-center">
+                  {/* Text side - doesn't extend under visual */}
+                  <div className="flex-1">
+                    <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
+                      Revenue Share
+                    </h3>
+                    <p className="text-body opacity-80">
+                      {REVENUE_SHARE.description}
                     </p>
                   </div>
+                  {/* Visual side - fixed width */}
+                  <div className="flex-shrink-0" style={{ width: '140px', height: '140px' }}>
+                    <div
+                      ref={tierBarsReveal.ref}
+                      className="relative w-full h-full"
+                    >
+                      {Array.from({ length: RING_COUNT }, (_, i) => {
+                        const pct = RING_BASE_PCT + i * RING_STEP_PCT;
+                        const opacity = 0.6 - i * 0.05;
+                        return (
+                          <div
+                            key={i}
+                            className="absolute rounded-full"
+                            style={{
+                              width: `${pct}%`,
+                              height: `${pct}%`,
+                              top: '50%',
+                              left: '50%',
+                              transform: tierBarsReveal.isVisible
+                                ? 'translate(-50%,-50%) scale(1)'
+                                : 'translate(-50%,-50%) scale(0)',
+                              opacity: tierBarsReveal.isVisible ? 1 : 0,
+                              border: `1px solid rgba(0,191,255,${opacity})`,
+                              boxShadow: `0 0 8px rgba(0,191,255,${opacity * 0.5})`,
+                              transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
+                            }}
+                          />
+                        );
+                      })}
+                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+                        <p
+                          className="text-4xl font-bold tabular-nums leading-none"
+                          style={{ color: '#00bfff', textShadow: BLUE_3D_SHADOW }}
+                        >
+                          <span ref={tierCounter.elementRef}>
+                            {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
+                          </span>
+                        </p>
+                        <p className="text-xs uppercase tracking-widest mt-1" style={{ color: '#e5e4dd', opacity: 0.7 }}>
+                          TIERS
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Content layer - text on left, space for rings on right */}
-              <div className="relative z-[1] grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-[200px]">
-                {/* Text side */}
-                <div className="flex flex-col justify-center">
+                {/* ═══ TABLET LAYOUT (765px-1020px): Stacked like other cards ═══ */}
+                <div className="hidden min-[765px]:flex min-[1020px]:hidden relative z-[1] flex-col items-center text-center">
+                  {/* Visual on top */}
+                  <div className="mb-4" style={{ width: '180px', height: '180px' }}>
+                    <div className="relative w-full h-full">
+                      {Array.from({ length: RING_COUNT }, (_, i) => {
+                        const pct = RING_BASE_PCT + i * RING_STEP_PCT;
+                        const opacity = 0.6 - i * 0.05;
+                        return (
+                          <div
+                            key={i}
+                            className="absolute rounded-full"
+                            style={{
+                              width: `${pct}%`,
+                              height: `${pct}%`,
+                              top: '50%',
+                              left: '50%',
+                              transform: tierBarsReveal.isVisible
+                                ? 'translate(-50%,-50%) scale(1)'
+                                : 'translate(-50%,-50%) scale(0)',
+                              opacity: tierBarsReveal.isVisible ? 1 : 0,
+                              border: `1px solid rgba(0,191,255,${opacity})`,
+                              boxShadow: `0 0 8px rgba(0,191,255,${opacity * 0.5})`,
+                              transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
+                            }}
+                          />
+                        );
+                      })}
+                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+                        <p
+                          className="text-5xl font-bold tabular-nums leading-none"
+                          style={{ color: '#00bfff', textShadow: BLUE_3D_SHADOW }}
+                        >
+                          {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
+                        </p>
+                        <p className="text-sm uppercase tracking-widest mt-1" style={{ color: '#e5e4dd', opacity: 0.7 }}>
+                          TIERS
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Title and description below */}
                   <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
                     Revenue Share
                   </h3>
-
                   <p className="text-body opacity-80">
                     {REVENUE_SHARE.description}
                   </p>
                 </div>
 
-                {/* Right side - empty space for the background rings to show through */}
-                <div className="hidden lg:block" />
+                {/* ═══ DESKTOP LAYOUT (1020px+): Side-by-side with absolute visual ═══ */}
+                <div className="hidden min-[1020px]:block">
+                  {/* 7-tier rings as absolute background layer - right aligned */}
+                  <div
+                    className="absolute pointer-events-none z-0 flex items-center justify-end"
+                    style={{
+                      top: '10px',
+                      bottom: '10px',
+                      right: '10px',
+                      left: '50%',
+                      overflow: 'visible'
+                    }}
+                  >
+                    <div
+                      className="relative"
+                      style={{ width: '240px', height: '240px' }}
+                    >
+                      {Array.from({ length: RING_COUNT }, (_, i) => {
+                        const pct = RING_BASE_PCT + i * RING_STEP_PCT;
+                        const opacity = 0.6 - i * 0.05;
+                        return (
+                          <div
+                            key={i}
+                            className="absolute rounded-full"
+                            style={{
+                              width: `${pct}%`,
+                              height: `${pct}%`,
+                              top: '50%',
+                              left: '50%',
+                              transform: tierBarsReveal.isVisible
+                                ? 'translate(-50%,-50%) scale(1)'
+                                : 'translate(-50%,-50%) scale(0)',
+                              opacity: tierBarsReveal.isVisible ? 1 : 0,
+                              border: `1px solid rgba(0,191,255,${opacity})`,
+                              boxShadow: `0 0 8px rgba(0,191,255,${opacity * 0.5})`,
+                              transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
+                              animation: tierBarsReveal.isVisible && i === RING_COUNT - 1
+                                ? 'ringPulse 3s ease-in-out 2.5s infinite'
+                                : undefined,
+                            }}
+                          />
+                        );
+                      })}
+                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+                        <p
+                          className="text-5xl sm:text-6xl font-bold tabular-nums leading-none"
+                          style={{ color: '#00bfff', textShadow: BLUE_3D_SHADOW }}
+                        >
+                          {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
+                        </p>
+                        <p className="text-sm uppercase tracking-widest mt-1" style={{ color: '#e5e4dd', opacity: 0.7 }}>
+                          TIERS
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content layer - text on left */}
+                  <div className="relative z-[1] grid grid-cols-2 gap-6 min-h-[200px]">
+                    <div className="flex flex-col justify-center">
+                      <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
+                        Revenue Share
+                      </h3>
+                      <p className="text-body opacity-80">
+                        {REVENUE_SHARE.description}
+                      </p>
+                    </div>
+                    <div /> {/* Spacer for absolute visual */}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
