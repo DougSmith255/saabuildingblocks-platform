@@ -4,11 +4,9 @@ import { Icon3D, SecondaryButton } from '@saa/shared/components/saa';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 import { Globe, Users, TrendingUp } from 'lucide-react';
 
-const PILLAR_GLOW_COLOR = '#bca24a';
-
-// Number style with neon glow and metal backing (25% larger than text)
+// Number style - H2 3D styling (larger than text)
 const pillarNumberStyle: React.CSSProperties = {
-  color: PILLAR_GLOW_COLOR,
+  color: '#bfbdb0',
   fontWeight: 700,
   minWidth: '1.5em',
   fontSize: '1.75em', // 75% larger
@@ -17,18 +15,21 @@ const pillarNumberStyle: React.CSSProperties = {
     0 0 0.01em #fff,
     0 0 0.02em #fff,
     0 0 0.03em rgba(255,255,255,0.8),
-    /* GOLD GLOW */
-    0 0 0.05em ${PILLAR_GLOW_COLOR},
-    0 0 0.09em rgba(188, 162, 74, 0.8),
-    0 0 0.13em rgba(188, 162, 74, 0.55),
-    0 0 0.18em rgba(188, 162, 74, 0.35),
-    /* METAL BACKING (4 layers) */
-    0.03em 0.03em 0 #2a2a2a,
-    0.045em 0.045em 0 #1a1a1a,
-    0.06em 0.06em 0 #0f0f0f,
-    0.075em 0.075em 0 #080808
+    /* WARM WHITE GLOW - extended and dilute for sharp definition */
+    0 0 0.04em rgba(255,250,240,0.7),
+    0 0 0.08em rgba(255, 255, 255, 0.35),
+    0 0 0.14em rgba(255, 255, 255, 0.15),
+    0 0 0.22em rgba(200, 200, 200, 0.08),
+    /* METAL BACKING (3D depth - thicker) */
+    0.02em 0.02em 0 #2a2a2a,
+    0.04em 0.04em 0 #222222,
+    0.06em 0.06em 0 #1a1a1a,
+    0.08em 0.08em 0 #141414,
+    0.10em 0.10em 0 #0f0f0f,
+    0.12em 0.12em 0 #080808
   `,
-  filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25))`,
+  transform: 'perspective(800px) rotateX(8deg)',
+  filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
 };
 
 // Label style (Smart Agent Alliance, Inside eXp Realty, Stronger Together) - H2 3D styling without H2 sizing
@@ -40,11 +41,11 @@ const pillarLabelStyle: React.CSSProperties = {
     0 0 0.01em #fff,
     0 0 0.02em #fff,
     0 0 0.03em rgba(255,255,255,0.8),
-    /* WARM WHITE GLOW */
-    0 0 0.05em rgba(255,250,240,0.9),
-    0 0 0.09em rgba(255, 255, 255, 0.6),
-    0 0 0.13em rgba(255, 255, 255, 0.35),
-    0 0 0.18em rgba(200, 200, 200, 0.2),
+    /* WARM WHITE GLOW - extended and dilute for sharp definition */
+    0 0 0.04em rgba(255,250,240,0.7),
+    0 0 0.08em rgba(255, 255, 255, 0.35),
+    0 0 0.14em rgba(255, 255, 255, 0.15),
+    0 0 0.22em rgba(200, 200, 200, 0.08),
     /* METAL BACKING (3D depth - thicker) */
     0.02em 0.02em 0 #2a2a2a,
     0.04em 0.04em 0 #222222,
@@ -108,17 +109,6 @@ export function ValuePillarsTab() {
               inset -35px 0 45px -20px rgba(255, 255, 255, 0.22);
           }
         }
-        @keyframes pillarGlowBreathe {
-          0%, 100% {
-            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25));
-          }
-          50% {
-            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(188, 162, 74, 0.45));
-          }
-        }
-        .pillar-number {
-          animation: pillarGlowBreathe 4s ease-in-out infinite;
-        }
       `}</style>
       <div
         className="absolute inset-0 pointer-events-none z-[3] rounded-3xl"
@@ -132,16 +122,16 @@ export function ValuePillarsTab() {
           <div className="flex flex-col gap-3 items-center">
             <div className="flex flex-col gap-3 text-left">
               <div className="flex items-center gap-3">
-                <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>01</span>
-                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents.</span>
+                <span className="text-body text-sm md:text-base" style={pillarNumberStyle}>01</span>
+                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span style={pillarLabelStyle}>Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents.</span>
               </div>
               <div className="flex items-center gap-3">
-                <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>02</span>
-                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Inside eXp Realty</span>, the largest independent real estate brokerage in the world.</span>
+                <span className="text-body text-sm md:text-base" style={pillarNumberStyle}>02</span>
+                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span style={pillarLabelStyle}>Inside eXp Realty</span>, the largest independent real estate brokerage in the world.</span>
               </div>
               <div className="flex items-center gap-3">
-                <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>03</span>
-                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
+                <span className="text-body text-sm md:text-base" style={pillarNumberStyle}>03</span>
+                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span style={pillarLabelStyle}>Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
               </div>
             </div>
             <div className="mt-3">
