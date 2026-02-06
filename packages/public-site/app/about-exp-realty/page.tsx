@@ -2020,10 +2020,10 @@ export default function AboutExpRealty() {
               </p>
 
               {/* Stats Cards with counter animation */}
-              <div className="flex flex-wrap justify-center gap-4 mt-8 max-w-4xl mx-auto">
+              <div className="flex flex-wrap justify-center gap-4 mt-8 mx-auto" style={{ maxWidth: '1200px' }}>
                 <HeroStatCard prefix="0/" targetNumber={100} suffix=" Split" label="After Cap" />
-                <HeroStatCard targetNumber={28} suffix="+ Countries" label="Worldwide" />
-                <HeroStatCard prefix="S&P " targetNumber={600} label="SmallCap Index" />
+                <HeroStatCard targetNumber={28} suffix="+" label="Countries" />
+                <HeroStatCard prefix="S&P " targetNumber={600} label="Company" />
               </div>
             </div>
           </div>
