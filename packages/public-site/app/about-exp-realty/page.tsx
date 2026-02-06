@@ -1818,23 +1818,12 @@ function IncomeOwnershipSection() {
                     </div>
 
                     {/* Title */}
-                    <h3
-                      className="uppercase tracking-wider mb-3"
-                      style={{
-                        color: '#e5e4dd',
-                        fontFamily: 'var(--font-amulya), system-ui',
-                        fontWeight: 400,
-                        fontSize: 'var(--font-size-h6)',
-                      }}
-                    >
+                    <h3 className="text-h4 mb-2">
                       {stream.title}
                     </h3>
 
                     {/* Description */}
-                    <p
-                      className="text-body leading-relaxed mt-auto"
-                      style={{ color: 'var(--color-body-text)' }}
-                    >
+                    <p className="text-body opacity-80 mt-auto">
                       {stream.description}
                     </p>
                   </div>
@@ -1855,23 +1844,12 @@ function IncomeOwnershipSection() {
                   </div>
 
                   {/* Title */}
-                  <h3
-                    className="uppercase tracking-wider mb-3"
-                    style={{
-                      color: '#e5e4dd',
-                      fontFamily: 'var(--font-amulya), system-ui',
-                      fontWeight: 400,
-                      fontSize: 'var(--font-size-h6)',
-                    }}
-                  >
+                  <h3 className="text-h4 mb-2">
                     {FEES_CARD.title}
                   </h3>
 
                   {/* Description */}
-                  <p
-                    className="text-body leading-relaxed"
-                    style={{ color: 'var(--color-body-text)' }}
-                  >
+                  <p className="text-body opacity-80">
                     {FEES_CARD.description}
                   </p>
                 </div>
@@ -1960,22 +1938,11 @@ function IncomeOwnershipSection() {
               <div className="relative z-[1] grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-[200px]">
                 {/* Text side */}
                 <div className="flex flex-col justify-center">
-                  <h3
-                    className="uppercase tracking-wider mb-3"
-                    style={{
-                      color: '#e5e4dd',
-                      fontFamily: 'var(--font-amulya), system-ui',
-                      fontWeight: 400,
-                      fontSize: 'var(--font-size-h6)',
-                    }}
-                  >
+                  <h3 className="text-h4 mb-2">
                     Revenue Share
                   </h3>
 
-                  <p
-                    className="text-body leading-relaxed"
-                    style={{ color: 'var(--color-body-text)' }}
-                  >
+                  <p className="text-body opacity-80">
                     {REVENUE_SHARE.description}
                   </p>
                 </div>
