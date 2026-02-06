@@ -7,6 +7,7 @@ import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHe
 import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, DollarSign, Receipt,
   Shield, Headphones, GraduationCap, Video, Handshake,
   Contact, Globe, Laptop, ClipboardCheck, BarChart3, Palette,
+  Ban,
 } from 'lucide-react';
 import { HolographicGlobe } from '../../components/shared/HolographicGlobe';
 import type { LucideIcon } from 'lucide-react';
@@ -186,14 +187,14 @@ const heroTaglineStyle: React.CSSProperties = {
 };
 
 /**
- * Animated Split Display - Shows X/Y with counter animation
+ * Animated Split Display - Shows X/Y with counter animation (only on first mount)
  */
-function AnimatedSplitDisplay({ left, right, animKey }: { left: number; right: number; animKey: number }) {
+function AnimatedSplitDisplay({ left, right }: { left: number; right: number }) {
   const leftCounter = useScrambleCounter(left, 1500);
   const rightCounter = useScrambleCounter(right, 1500);
 
   return (
-    <p className="text-tagline tabular-nums" style={heroTaglineStyle} key={animKey}>
+    <>
       <span ref={leftCounter.elementRef}>
         {leftCounter.hasAnimated ? left : leftCounter.displayValue}
       </span>
@@ -201,7 +202,7 @@ function AnimatedSplitDisplay({ left, right, animKey }: { left: number; right: n
       <span ref={rightCounter.elementRef}>
         {rightCounter.hasAnimated ? right : rightCounter.displayValue}
       </span>
-    </p>
+    </>
   );
 }
 
@@ -210,45 +211,47 @@ function AnimatedSplitDisplay({ left, right, animKey }: { left: number; right: n
  * Front: 80/20 Commission | Back: 0/100 After Cap
  * Always rotates in same direction, with counter animations
  */
+const HERO_CARD_BASE: React.CSSProperties = {
+  background: 'linear-gradient(180deg, rgba(30,30,30,0.95), rgba(15,15,15,0.98))',
+  border: '1px solid rgba(255,255,255,0.06)',
+  padding: '16px 30px',
+};
+
 function FlipSplitCard() {
   const [rotation, setRotation] = useState(0);
-  const [flipCount, setFlipCount] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setRotation(prev => prev + 180);
-      setFlipCount(prev => prev + 1);
     }, 4000);
     return () => clearInterval(interval);
   }, []);
 
-  // Determine which face is showing (even rotations = front, odd = back)
-  const showingBack = (rotation / 180) % 2 === 1;
-
   return (
-    <div
-      className="flex-1 min-w-[160px] max-w-[220px]"
-      style={{ perspective: '1000px' }}
-    >
+    <div style={{ perspective: '1000px' }}>
       <div
         style={{
           position: 'relative',
-          width: '100%',
           transformStyle: 'preserve-3d',
           transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
           transform: `rotateY(${rotation}deg)`,
         }}
       >
-        {/* Front face - 80/20 Commission */}
+        {/* Front face - 80/20 Commission (defines the size) */}
         <div style={{ backfaceVisibility: 'hidden' }}>
-          <GenericCard padding="sm" centered className="w-full">
-            {!showingBack && <AnimatedSplitDisplay left={80} right={20} animKey={flipCount} />}
-            {showingBack && <p className="text-tagline tabular-nums" style={heroTaglineStyle}>80/20</p>}
-            <p className="text-body text-sm opacity-70">Commission</p>
-          </GenericCard>
+          <div className="rounded-xl text-center" style={HERO_CARD_BASE}>
+            {/* Invisible sizing element - always shows final value to set width */}
+            <p className="text-tagline tabular-nums whitespace-nowrap invisible h-0 overflow-hidden" style={heroTaglineStyle} aria-hidden="true">
+              80/20
+            </p>
+            <p className="text-tagline tabular-nums whitespace-nowrap" style={heroTaglineStyle}>
+              <AnimatedSplitDisplay left={80} right={20} />
+            </p>
+            <p className="text-body text-sm opacity-70 whitespace-nowrap">Commission</p>
+          </div>
         </div>
 
-        {/* Back face - 0/100 After Cap */}
+        {/* Back face - 0/100 After Cap (positioned absolutely to match front) */}
         <div
           style={{
             backfaceVisibility: 'hidden',
@@ -256,14 +259,16 @@ function FlipSplitCard() {
             top: 0,
             left: 0,
             width: '100%',
+            height: '100%',
             transform: 'rotateY(180deg)',
           }}
         >
-          <GenericCard padding="sm" centered className="w-full">
-            {showingBack && <AnimatedSplitDisplay left={0} right={100} animKey={flipCount} />}
-            {!showingBack && <p className="text-tagline tabular-nums" style={heroTaglineStyle}>0/100</p>}
-            <p className="text-body text-sm opacity-70">After Cap</p>
-          </GenericCard>
+          <div className="rounded-xl text-center h-full flex flex-col justify-center" style={HERO_CARD_BASE}>
+            <p className="text-tagline tabular-nums whitespace-nowrap" style={heroTaglineStyle}>
+              0/100
+            </p>
+            <p className="text-body text-sm opacity-70 whitespace-nowrap">After Cap</p>
+          </div>
         </div>
       </div>
     </div>
@@ -278,27 +283,29 @@ function HeroStatCard({
   targetNumber,
   suffix = '',
   label,
-  className = '',
 }: {
   prefix?: string;
   targetNumber: number;
   suffix?: string;
   label: string;
-  className?: string;
 }) {
   const { displayValue, elementRef, hasAnimated } = useScrambleCounter(targetNumber, 2000);
 
   return (
-    <GenericCard padding="sm" centered className={`flex-1 min-w-[160px] max-w-[220px] ${className}`}>
-      <p className="text-tagline tabular-nums" style={heroTaglineStyle}>
+    <div className="rounded-xl text-center" style={HERO_CARD_BASE}>
+      {/* Invisible sizing element - always shows final value to set width */}
+      <p className="text-tagline tabular-nums whitespace-nowrap invisible h-0 overflow-hidden" style={heroTaglineStyle} aria-hidden="true">
+        {prefix}{targetNumber.toLocaleString()}{suffix}
+      </p>
+      <p className="text-tagline tabular-nums whitespace-nowrap" style={heroTaglineStyle}>
         <span>{prefix}</span>
         <span ref={elementRef}>
           {hasAnimated ? targetNumber.toLocaleString() : displayValue.toLocaleString()}
         </span>
         <span>{suffix}</span>
       </p>
-      <p className="text-body text-sm opacity-70">{label}</p>
-    </GenericCard>
+      <p className="text-body text-sm opacity-70 whitespace-nowrap">{label}</p>
+    </div>
   );
 }
 
@@ -548,22 +555,298 @@ function RotatingStats() {
 }
 
 // Awards Ribbon Component with Glass Panel (full-width)
+const EXP_PRIORITIES = [
+  { icon: Layers, label: 'Production efficiency via central systems' },
+  { icon: TrendingUp, label: 'Ownership in a publicly traded company' },
+  { icon: Users, label: 'Leverage from scale and shared infrastructure' },
+  { icon: Infinity, label: 'Income continuity beyond active sales' },
+];
+
+const INTRO_CARDS = [
+  { num: '01', text: 'Most brokerages are built around transactions.' },
+  { num: '02', text: 'eXp is built around what comes after.' },
+];
+
+const INTRO_TEXT_SHADOW = `
+  0 0 0.01em #fff,
+  0 0 0.02em #fff,
+  0 0 0.03em rgba(255,255,255,0.8),
+  0 0 0.04em rgba(255,250,240,0.7),
+  0 0 0.08em rgba(255, 255, 255, 0.35),
+  0 0 0.14em rgba(255, 255, 255, 0.15),
+  0 0 0.22em rgba(200, 200, 200, 0.08),
+  0.02em 0.02em 0 #2a2a2a,
+  0.04em 0.04em 0 #222222,
+  0.06em 0.06em 0 #1a1a1a,
+  0.08em 0.08em 0 #141414,
+  0.10em 0.10em 0 #0f0f0f,
+  0.12em 0.12em 0 #080808
+`;
+
+// Red text shadow for card 01 (prohibition/do-not theme)
+const INTRO_TEXT_SHADOW_RED = `
+  0 0 0.01em #fff,
+  0 0 0.02em #fff,
+  0 0 0.03em rgba(255,255,255,0.8),
+  0 0 0.04em rgba(255,100,100,0.7),
+  0 0 0.08em rgba(255, 80, 80, 0.35),
+  0 0 0.14em rgba(255, 60, 60, 0.15),
+  0 0 0.22em rgba(200, 50, 50, 0.08),
+  0.02em 0.02em 0 #3a1a1a,
+  0.04em 0.04em 0 #351515,
+  0.06em 0.06em 0 #250f0f,
+  0.08em 0.08em 0 #200a0a,
+  0.10em 0.10em 0 #180808,
+  0.12em 0.12em 0 #100404
+`;
+
+// Blue text shadow for card 02 (eXp theme)
+const INTRO_TEXT_SHADOW_BLUE = `
+  0 0 0.01em #fff,
+  0 0 0.02em #fff,
+  0 0 0.03em rgba(255,255,255,0.8),
+  0 0 0.04em rgba(0, 191, 255, 0.7),
+  0 0 0.08em rgba(0, 191, 255, 0.35),
+  0 0 0.14em rgba(0, 191, 255, 0.15),
+  0 0 0.22em rgba(0, 150, 200, 0.08),
+  0.02em 0.02em 0 #1a2a3a,
+  0.04em 0.04em 0 #152535,
+  0.06em 0.06em 0 #0f1a25,
+  0.08em 0.08em 0 #0a1520,
+  0.10em 0.10em 0 #081018,
+  0.12em 0.12em 0 #040810
+`;
+
+const INTRO_TEXT_FILTER = 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))';
+
+function IntroFlipCard() {
+  const [rotation, setRotation] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRotation(prev => prev + 180);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Card 01 - Red theme with Ban icon
+  const card01 = (
+    <CyberCard padding="md" centered className="h-full">
+      {/* Ban Icon Badge */}
+      <span
+        className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
+        style={{
+          background: 'rgba(255,80,80,0.15)',
+          border: '1px solid rgba(255,80,80,0.3)',
+        }}
+      >
+        <Ban size={16} style={{ color: '#ff5050' }} />
+      </span>
+      <div className="flex items-center justify-center h-full min-h-[100px]">
+        <p
+          className="text-h5 leading-relaxed text-center"
+          style={{
+            color: '#e8a0a0',
+            fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
+            fontFeatureSettings: '"ss01" 1',
+            textShadow: INTRO_TEXT_SHADOW_RED,
+            transform: 'perspective(800px) rotateX(8deg)',
+            filter: INTRO_TEXT_FILTER,
+          }}
+        >
+          {INTRO_CARDS[0].text}
+        </p>
+      </div>
+    </CyberCard>
+  );
+
+  // Card 02 - Blue theme with eXp X logo
+  const card02 = (
+    <CyberCardGold padding="md" centered className="h-full">
+      {/* eXp X Logo Badge */}
+      <span
+        className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
+        style={{
+          background: 'rgba(0,191,255,0.15)',
+          border: '1px solid rgba(0,191,255,0.3)',
+        }}
+      >
+        <img src="/icons/exp-x.svg" alt="eXp" width={16} height={16} style={{ filter: 'brightness(0) saturate(100%) invert(65%) sepia(80%) saturate(1000%) hue-rotate(170deg) brightness(100%)' }} />
+      </span>
+      <div className="flex items-center justify-center h-full min-h-[100px]">
+        <p
+          className="text-h5 leading-relaxed text-center"
+          style={{
+            color: '#b0d4e8',
+            fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
+            fontFeatureSettings: '"ss01" 1',
+            textShadow: INTRO_TEXT_SHADOW_BLUE,
+            transform: 'perspective(800px) rotateX(8deg)',
+            filter: INTRO_TEXT_FILTER,
+          }}
+        >
+          {INTRO_CARDS[1].text}
+        </p>
+      </div>
+    </CyberCardGold>
+  );
+
+  return (
+    <div style={{ perspective: '1000px' }}>
+      <div
+        style={{
+          position: 'relative',
+          transformStyle: 'preserve-3d',
+          transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: `rotateY(${rotation}deg)`,
+        }}
+      >
+        {/* Front - 01 */}
+        <div style={{ backfaceVisibility: 'hidden' }}>
+          {card01}
+        </div>
+        {/* Back - 02 */}
+        <div
+          style={{
+            backfaceVisibility: 'hidden',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            transform: 'rotateY(180deg)',
+          }}
+        >
+          {card02}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HowExpIsBuilt() {
+
   return (
     <GlassPanel variant="champagne">
-      <section className="py-12 md:py-16">
-        <div className="max-w-[900px] mx-auto px-4 md:px-8 text-center">
-          <H2 theme="blue">How eXp is Built for Agents</H2>
-          <div className="space-y-4 text-body" style={{ textAlign: 'left' }}>
-            <p>Most brokerages are built around transactions.</p>
-            <p>eXp Realty supports both day-to-day production and income beyond active sales.</p>
-            <p>The model is built around four priorities:</p>
-            <ul className="list-disc list-inside space-y-2 ml-4">
-              <li>Production efficiency through centralized systems</li>
-              <li>Ownership in a publicly traded company</li>
-              <li>Leverage from scale and shared infrastructure</li>
-              <li>Income continuity beyond active sales</li>
-            </ul>
+      <section className="py-12 md:py-20">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+          <div className="text-center mb-10">
+            <H2>How eXp is Built for Agents</H2>
+          </div>
+
+          {/* Mobile: Flip card */}
+          <div className="sm:hidden max-w-[400px] mx-auto mb-10">
+            <IntroFlipCard />
+          </div>
+
+          {/* Desktop: Side by side cards */}
+          <div className="hidden sm:grid grid-cols-2 gap-5 max-w-[1400px] mx-auto mb-10">
+            {/* Card 01 - CyberCard with Ban icon and red text */}
+            <div className="relative">
+              <CyberCard padding="md" centered className="h-full">
+                {/* Ban Icon Badge */}
+                <span
+                  className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
+                  style={{
+                    background: 'rgba(255,80,80,0.15)',
+                    border: '1px solid rgba(255,80,80,0.3)',
+                  }}
+                >
+                  <Ban size={16} style={{ color: '#ff5050' }} />
+                </span>
+                <div className="flex items-center justify-center h-full min-h-[100px]">
+                  <p
+                    className="text-h5 leading-relaxed text-center"
+                    style={{
+                      color: '#e8a0a0',
+                      fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
+                      fontFeatureSettings: '"ss01" 1',
+                      textShadow: INTRO_TEXT_SHADOW_RED,
+                      transform: 'perspective(800px) rotateX(8deg)',
+                      filter: INTRO_TEXT_FILTER,
+                    }}
+                  >
+                    {INTRO_CARDS[0].text}
+                  </p>
+                </div>
+              </CyberCard>
+            </div>
+            {/* Card 02 - CyberCardGold with eXp X logo and blue text */}
+            <div className="relative">
+              <CyberCardGold padding="md" centered className="h-full">
+                {/* eXp X Logo Badge */}
+                <span
+                  className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
+                  style={{
+                    background: 'rgba(0,191,255,0.15)',
+                    border: '1px solid rgba(0,191,255,0.3)',
+                  }}
+                >
+                  <img src="/icons/exp-x.svg" alt="eXp" width={16} height={16} style={{ filter: 'brightness(0) saturate(100%) invert(65%) sepia(80%) saturate(1000%) hue-rotate(170deg) brightness(100%)' }} />
+                </span>
+                <div className="flex items-center justify-center h-full min-h-[100px]">
+                  <p
+                    className="text-h5 leading-relaxed text-center"
+                    style={{
+                      color: '#b0d4e8',
+                      fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
+                      fontFeatureSettings: '"ss01" 1',
+                      textShadow: INTRO_TEXT_SHADOW_BLUE,
+                      transform: 'perspective(800px) rotateX(8deg)',
+                      filter: INTRO_TEXT_FILTER,
+                    }}
+                  >
+                    {INTRO_CARDS[1].text}
+                  </p>
+                </div>
+              </CyberCardGold>
+            </div>
+          </div>
+
+          {/* Priorities label - Amulya font */}
+          <p
+            className="text-center text-h6 mb-5"
+            style={{
+              color: 'var(--color-body-text)',
+              fontFamily: 'var(--font-amulya)',
+            }}
+          >
+            The model is built around four priorities
+          </p>
+
+          {/* Priority cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-[1400px] mx-auto">
+            {EXP_PRIORITIES.map((priority, index) => (
+              <div
+                key={index}
+                className="rounded-xl p-5 text-center"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(0,30,60,0.4), rgba(0,20,40,0.5))',
+                  border: '1px solid rgba(0,191,255,0.15)',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.03)',
+                }}
+              >
+                {/* Icon */}
+                <div
+                  className="w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(0,191,255,0.15), rgba(0,120,200,0.1))',
+                    border: '1px solid rgba(0,191,255,0.25)',
+                    boxShadow: '0 0 15px rgba(0,191,255,0.1)',
+                  }}
+                >
+                  <priority.icon size={22} style={{ color: '#00bfff' }} />
+                </div>
+
+                {/* Label - body font styling */}
+                <p
+                  className="text-body text-sm leading-relaxed"
+                  style={{ color: 'var(--color-body-text)' }}
+                >
+                  {priority.label}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -681,43 +964,30 @@ const BLUE_3D_SHADOW = '-1px -1px 0 #80d4ff, 1px 1px 0 #3d8a9d, 2px 2px 0 #2d6a7
 const INCOME_STREAMS: {
   icon: LucideIcon;
   title: string;
-  keyMetric: string;
-  keyMetricSub?: string;
-  keyMetricFont?: string;
-  bullets: string[];
+  description: string;
 }[] = [
   {
     icon: DollarSign,
     title: 'Commission',
-    keyMetric: '80/20',
-    bullets: [
-      '80/20 split until $16K cap',
-      '100% after cap',
-      'ICON agents earn cap back',
-    ],
+    description: '80/20 split until a $16,000 annual cap, then 100% commission',
   },
   {
-    icon: Receipt,
-    title: 'Simple Fees',
-    keyMetric: '$85/mo',
-    bullets: [
-      '$85/month flat',
-      'No desk fees',
-      'No franchise/royalty fees',
-    ],
+    icon: Award,
+    title: 'ICON Program',
+    description: 'Cap returned in company stock for qualifying agents',
   },
   {
     icon: TrendingUp,
     title: 'Stock Ownership',
-    keyMetric: 'EXPI',
-    keyMetricFont: 'monospace',
-    bullets: [
-      'Production-based awards',
-      'Optional discounted purchase',
-      'Public company ownership',
-    ],
+    description: 'Production-based awards and optional discounted purchase program',
   },
 ];
+
+const FEES_CARD = {
+  icon: Receipt,
+  title: 'Fees',
+  description: '$85 monthly flat fee, no desk, franchise, or royalty fees',
+};
 
 /* ═══════════════════════════════════════════════════════════════
    SECTION 3: SUPPORT & TECHNOLOGY — Constants
@@ -750,8 +1020,7 @@ const TECH_BULLETS = [
 
 const REVENUE_SHARE = {
   tierCount: 7,
-  description: 'eXp pays agents a share of company revenue generated by agents they attract to the brokerage. It\u2019s structured across 7 tiers, continues after retirement, and can be passed to heirs \u2014 with no recruiting requirement.',
-  closing: 'Revenue share exists as an option, not an obligation.',
+  description: 'Seven-tier program paid from company revenue, optional and inheritable',
 };
 
 const RING_COUNT = 7;
@@ -815,10 +1084,11 @@ function FeatureChip({
           </Icon3D>
         </span>
         <h3
-          className="chip-label text-xs font-bold uppercase tracking-wider"
+          className="chip-label"
           style={{
             color: isActive ? '#0a1520' : '#e5e4dd',
-            fontFamily: 'var(--font-family-h3)',
+            fontFamily: 'var(--font-display), system-ui',
+            fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
             transition: 'color 0.4s ease',
           }}
         >
@@ -1076,7 +1346,7 @@ function SpotlightConsole() {
       <div className="max-w-[1400px] mx-auto">
         {/* H2 */}
         <div className="text-center mb-8">
-          <H2 theme="blue">Why Agents Look Closely at eXp</H2>
+          <H2>Why Agents Look Closely at eXp</H2>
         </div>
 
         {/* Chips visibility sentinel — gates auto-rotation on both desktop and mobile */}
@@ -1084,17 +1354,17 @@ function SpotlightConsole() {
 
         {/* Desktop: two-column grid with dots below */}
         <div className="hidden lg:block">
-          <div className="grid grid-cols-[45%_55%] gap-6" style={{ height: '284px', overflow: 'visible' }}>
+          <div className="grid grid-cols-[45%_55%] gap-6" style={{ height: '220px', overflow: 'visible' }}>
             {/* Left: chips grid */}
             <div
               style={{
-                height: '284px',
+                height: '220px',
                 overflow: 'visible',
               }}
             >
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3" style={{ height: 'calc(50% - 6px)' }}>
                 {FEATURES.slice(0, 2).map((f, i) => (
-                  <div key={f.keyword}>
+                  <div key={f.keyword} style={{ height: '100%' }}>
                     <FeatureChip
                       icon={f.icon}
                       keyword={f.keyword}
@@ -1104,9 +1374,9 @@ function SpotlightConsole() {
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-2 gap-3 mt-3">
+              <div className="grid grid-cols-2 gap-3 mt-3" style={{ height: 'calc(50% - 6px)' }}>
                 {FEATURES.slice(2, 4).map((f, i) => (
-                  <div key={f.keyword}>
+                  <div key={f.keyword} style={{ height: '100%' }}>
                     <FeatureChip
                       icon={f.icon}
                       keyword={f.keyword}
@@ -1119,7 +1389,7 @@ function SpotlightConsole() {
             </div>
 
             {/* Right: detail panel */}
-            <div style={{ height: '284px' }}>
+            <div style={{ height: '220px' }}>
               <DetailPanel feature={FEATURES[activeIndex]} transitionKey={activeIndex} />
             </div>
           </div>
@@ -1143,50 +1413,21 @@ function SpotlightConsole() {
           </div>
         </div>
 
-        {/* Mobile / Tablet: single column with horizontal chip rail */}
+        {/* Mobile / Tablet: stacked layout */}
         <div className="lg:hidden">
-          {/* Horizontal chip rail — breaks out of section padding to reach screen edges */}
-          <div className="relative mb-4 -mx-4 sm:-mx-8 md:-mx-12">
-            {/* Left fade mask — wide enough to cover the approach, shortened 15px from bottom */}
-            <div
-              className="absolute left-0 top-0 z-10 pointer-events-none w-10 sm:w-14 md:w-16"
-              style={{ bottom: '15px', background: 'linear-gradient(to right, rgb(10,10,10), transparent)' }}
-            />
-            {/* Right fade mask */}
-            <div
-              className="absolute right-0 top-0 z-10 pointer-events-none w-10 sm:w-14 md:w-16"
-              style={{ bottom: '15px', background: 'linear-gradient(to left, rgb(10,10,10), transparent)' }}
-            />
-
-            <div
-              ref={chipRailRef}
-              className="overflow-x-auto px-4 sm:px-8 md:px-12"
-              style={{
-                scrollSnapType: 'x mandatory',
-                WebkitOverflowScrolling: 'touch',
-                scrollbarWidth: 'none',
-                paddingTop: '28px',
-                paddingBottom: '28px',
-                marginTop: '-28px',
-                marginBottom: '-28px',
-              }}
-            >
-              <div className="flex gap-3 w-fit mx-auto">
-                {FEATURES.map((f, i) => (
-                  <div
-                    key={f.keyword}
-                    className="flex-shrink-0"
-                    style={{ scrollSnapAlign: 'center', width: '110px' }}
-                  >
-                    <FeatureChip
-                      icon={f.icon}
-                      keyword={f.keyword}
-                      isActive={activeIndex === i}
-                      onSelect={() => handleSelect(i)}
-                    />
-                  </div>
-                ))}
-              </div>
+          {/* 4 chips in a single row above description */}
+          <div className="mb-4">
+            <div className="grid grid-cols-4 gap-2" style={{ height: '100px' }}>
+              {FEATURES.map((f, i) => (
+                <div key={f.keyword} style={{ height: '100%' }}>
+                  <FeatureChip
+                    icon={f.icon}
+                    keyword={f.keyword}
+                    isActive={activeIndex === i}
+                    onSelect={() => handleSelect(i)}
+                  />
+                </div>
+              ))}
             </div>
           </div>
 
@@ -1227,20 +1468,14 @@ function SpotlightConsole() {
         </div>
         </div>{/* end chipsRef sentinel */}
 
-        {/* Validation ribbon — independent third-party proof */}
-        <div>
-          <p
-            className="text-center max-w-[900px] mx-auto text-sm md:text-base leading-relaxed mt-10 mb-[-14px]"
-            style={{ color: 'var(--color-body-text)', opacity: 0.65 }}
-          >
-            Independent validation from third-party organizations
-          </p>
+        {/* Validation ribbon */}
+        <div className="mt-10">
           <ValidationRibbon />
         </div>
 
         {/* CTA */}
         <div className="mt-8 text-center">
-          <CTAButton href="#">See the Advantages</CTAButton>
+          <SecondaryButton href="#">More on How eXp is Different</SecondaryButton>
         </div>
       </div>
     </section>
@@ -1337,13 +1572,239 @@ function RisingParticles() {
    SECTION 2: INCOME & OWNERSHIP
    ═══════════════════════════════════════════════════════════════ */
 
+/**
+ * CommissionDonut - Animated donut chart showing 80/20 split → 100%
+ */
+function CommissionDonut() {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
+      { threshold: 0.5 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const size = 80;
+  const strokeWidth = 8;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const eightyPercent = circumference * 0.8;
+
+  return (
+    <div ref={ref} className="flex items-center justify-center mb-4">
+      <svg width={size} height={size} className="transform -rotate-90">
+        {/* Background ring */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="rgba(0,191,255,0.15)"
+          strokeWidth={strokeWidth}
+        />
+        {/* 80% segment - cyan */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="#00bfff"
+          strokeWidth={strokeWidth}
+          strokeDasharray={`${eightyPercent} ${circumference}`}
+          strokeDashoffset={isVisible ? 0 : circumference}
+          strokeLinecap="round"
+          style={{
+            transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            filter: 'drop-shadow(0 0 4px rgba(0,191,255,0.5))',
+          }}
+        />
+        {/* 20% segment - gold */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="#ffd700"
+          strokeWidth={strokeWidth}
+          strokeDasharray={`${circumference * 0.2} ${circumference}`}
+          strokeDashoffset={isVisible ? -eightyPercent : circumference}
+          strokeLinecap="round"
+          style={{
+            transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
+            filter: 'drop-shadow(0 0 4px rgba(255,215,0,0.5))',
+          }}
+        />
+      </svg>
+      {/* Center text */}
+      <div className="absolute flex flex-col items-center justify-center">
+        <span className="text-lg font-bold" style={{ color: '#00bfff' }}>80</span>
+        <span className="text-[10px] opacity-60" style={{ color: '#ffd700' }}>/ 20</span>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * IconBadge - Trophy achievement badge with glow effect
+ */
+function IconBadge() {
+  return (
+    <div className="flex items-center justify-center mb-4">
+      <div
+        className="relative w-16 h-16 rounded-full flex items-center justify-center"
+        style={{
+          background: 'radial-gradient(circle, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0.05) 70%, transparent 100%)',
+          boxShadow: '0 0 20px rgba(255,215,0,0.3), inset 0 0 15px rgba(255,215,0,0.1)',
+          animation: 'iconGlow 3s ease-in-out infinite',
+        }}
+      >
+        <Award size={32} style={{ color: '#ffd700', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.6))' }} />
+      </div>
+      <style jsx>{`
+        @keyframes iconGlow {
+          0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.3), inset 0 0 15px rgba(255,215,0,0.1); }
+          50% { box-shadow: 0 0 30px rgba(255,215,0,0.5), inset 0 0 20px rgba(255,215,0,0.2); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/**
+ * StockChart - Mini upward trending stock chart
+ */
+function StockChart() {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
+      { threshold: 0.5 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Chart points for upward trend
+  const points = [
+    { x: 0, y: 45 },
+    { x: 15, y: 40 },
+    { x: 30, y: 42 },
+    { x: 45, y: 30 },
+    { x: 60, y: 25 },
+    { x: 75, y: 28 },
+    { x: 90, y: 15 },
+    { x: 100, y: 10 },
+  ];
+
+  const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+  const areaD = pathD + ` L 100 50 L 0 50 Z`;
+
+  return (
+    <div ref={ref} className="flex items-center justify-center mb-4">
+      <svg width={100} height={50} viewBox="0 0 100 50" className="overflow-visible">
+        {/* Gradient fill under the line */}
+        <defs>
+          <linearGradient id="stockGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="rgba(0,255,136,0.3)" />
+            <stop offset="100%" stopColor="rgba(0,255,136,0)" />
+          </linearGradient>
+        </defs>
+        {/* Area fill */}
+        <path
+          d={areaD}
+          fill="url(#stockGradient)"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transition: 'opacity 0.8s ease-out 0.5s',
+          }}
+        />
+        {/* Line */}
+        <path
+          d={pathD}
+          fill="none"
+          stroke="#00ff88"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{
+            strokeDasharray: 200,
+            strokeDashoffset: isVisible ? 0 : 200,
+            transition: 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)',
+            filter: 'drop-shadow(0 0 4px rgba(0,255,136,0.6))',
+          }}
+        />
+        {/* End dot */}
+        <circle
+          cx={100}
+          cy={10}
+          r={3}
+          fill="#00ff88"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transition: 'opacity 0.3s ease-out 1.5s',
+            filter: 'drop-shadow(0 0 4px rgba(0,255,136,0.8))',
+          }}
+        />
+      </svg>
+    </div>
+  );
+}
+
+/**
+ * FeesBadge - Clean $85 circular badge with crossed-out fees
+ */
+function FeesBadge() {
+  return (
+    <div className="flex flex-col items-center mb-4">
+      {/* $85 Badge */}
+      <div
+        className="w-16 h-16 rounded-full flex items-center justify-center mb-3"
+        style={{
+          background: 'radial-gradient(circle, rgba(0,191,255,0.15) 0%, rgba(0,191,255,0.05) 70%, transparent 100%)',
+          border: '2px solid rgba(0,191,255,0.4)',
+          boxShadow: '0 0 15px rgba(0,191,255,0.2), inset 0 0 10px rgba(0,191,255,0.1)',
+        }}
+      >
+        <span
+          className="text-lg font-bold"
+          style={{
+            color: '#00bfff',
+            textShadow: '0 0 8px rgba(0,191,255,0.5)',
+          }}
+        >
+          $85
+        </span>
+      </div>
+      {/* Crossed out fees */}
+      <div className="flex flex-wrap justify-center gap-2 text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+        <span className="line-through">Desk fees</span>
+        <span className="line-through">Franchise</span>
+        <span className="line-through">Royalties</span>
+      </div>
+    </div>
+  );
+}
+
 function IncomeOwnershipSection() {
-  // Scramble counters — trigger on scroll into view
-  const oneCounter = useScrambleCounter(1, 1200);
-  const threeCounter = useScrambleCounter(3, 1200);
+  // Scramble counter for 7 tiers
   const tierCounter = useScrambleCounter(7, 1500);
   // Tier bars cascade animation — trigger once on scroll
   const tierBarsReveal = useScrollReveal(0.3);
+
+  // Card visual components mapped by title
+  const cardVisuals: Record<string, React.ReactNode> = {
+    'Commission': <CommissionDonut />,
+    'ICON Program': <IconBadge />,
+    'Stock Ownership': <StockChart />,
+  };
 
   return (
     <GlassPanel variant="expBlueCrosshatch" noBlur>
@@ -1351,123 +1812,20 @@ function IncomeOwnershipSection() {
         <div className="max-w-[1400px] mx-auto">
 
           {/* A. H2 Heading */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-12">
             <H2>INCOME & OWNERSHIP</H2>
           </div>
 
-          {/* B. Intro Text */}
-          <div className="text-center max-w-[800px] mx-auto mb-12">
-            <p className="text-body leading-relaxed">
-              Most brokerages offer one income stream. eXp offers{' '}
-              <span style={{ color: '#00bfff', fontWeight: 700 }}>three</span>
-              {' '}— production first, with optional paths beyond transactions.
-            </p>
-          </div>
-
-          {/* C. "1 vs 3" Comparison */}
-          <div className="grid grid-cols-[1fr_auto_1fr] sm:grid-cols-[1fr_auto_1fr] gap-3 sm:gap-4 items-center max-w-[700px] mx-auto mb-14">
-            {/* Left — Most Brokerages (generic flat card) */}
-            <div>
-              <div
-                className="rounded-xl p-5 sm:p-6 text-center"
-                style={{
-                  background: 'linear-gradient(180deg, rgba(35,35,35,0.85), rgba(20,20,20,0.9))',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                }}
-              >
-                <p
-                  className="text-5xl sm:text-6xl lg:text-7xl font-bold tabular-nums"
-                  style={{
-                    color: 'rgba(255,255,255,0.3)',
-                    textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-                  }}
-                >
-                  <span ref={oneCounter.elementRef}>
-                    {oneCounter.hasAnimated ? '1' : oneCounter.displayValue}
-                  </span>
-                </p>
-                <p
-                  className="text-xs sm:text-sm uppercase tracking-wider mt-2"
-                  style={{ color: 'var(--color-body-text)', opacity: 0.4 }}
-                >
-                  INCOME STREAM
-                </p>
-                <p
-                  className="text-[10px] sm:text-xs uppercase tracking-widest mt-1"
-                  style={{ color: 'var(--color-body-text)', opacity: 0.3 }}
-                >
-                  Most Brokerages
-                </p>
-              </div>
-            </div>
-
-            {/* VS pill */}
-            <div>
-              <span
-                className="inline-block text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full"
-                style={{
-                  background: 'rgba(0,191,255,0.15)',
-                  color: '#00bfff',
-                  border: '1px solid rgba(0,191,255,0.3)',
-                  fontFamily: 'var(--font-family-h3)',
-                }}
-              >
-                VS
-              </span>
-            </div>
-
-            {/* Right — eXp Realty (CyberCardGold) */}
-            <div>
-              <CyberCardGold padding="md" centered>
-                <div>
-                  <p
-                    className="text-5xl sm:text-6xl lg:text-7xl font-bold tabular-nums"
-                    style={{
-                      color: '#00bfff',
-                      textShadow: BLUE_3D_SHADOW,
-                    }}
-                  >
-                    <span ref={threeCounter.elementRef}>
-                      {threeCounter.hasAnimated ? '3' : threeCounter.displayValue}
-                    </span>
-                  </p>
-                  <p
-                    className="text-xs sm:text-sm uppercase tracking-wider mt-2"
-                    style={{ color: '#e5e4dd', opacity: 0.8 }}
-                  >
-                    INCOME STREAMS
-                  </p>
-                  <p
-                    className="text-[10px] sm:text-xs uppercase tracking-widest mt-1"
-                    style={{ color: '#00bfff', opacity: 0.7 }}
-                  >
-                    eXp Realty
-                  </p>
-                </div>
-              </CyberCardGold>
-            </div>
-          </div>
-
-          {/* D. Three Income Stream Panels */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+          {/* B. Three Income Stream Cards (Commission, ICON Program, Stock Ownership) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             {INCOME_STREAMS.map((stream) => (
-              <div key={stream.title}>
-                <CyberCard padding="md" centered>
-                  <div className="flex flex-col items-center">
-                    {/* Key metric */}
-                    <p
-                      className="font-bold mb-1 tabular-nums flex items-baseline justify-center gap-2"
-                      style={{
-                        color: '#00bfff',
-                        textShadow: BLUE_3D_SHADOW,
-                        fontFamily: stream.keyMetricFont || 'inherit',
-                      }}
-                    >
-                      <span className="text-3xl sm:text-4xl">{stream.keyMetric}</span>
-                      {stream.keyMetricSub && (
-                        <span className="text-sm sm:text-base uppercase tracking-wider" style={{ opacity: 0.7 }}>{stream.keyMetricSub}</span>
-                      )}
-                    </p>
+              <div key={stream.title} className="h-full">
+                <CyberCard padding="md" centered className="h-full">
+                  <div className="flex flex-col items-center text-center h-full">
+                    {/* Visual */}
+                    <div className="relative">
+                      {cardVisuals[stream.title]}
+                    </div>
 
                     {/* Title */}
                     <h3
@@ -1483,29 +1841,56 @@ function IncomeOwnershipSection() {
                       {stream.title}
                     </h3>
 
-                    {/* Bullet list */}
-                    <ul className="space-y-1.5 text-left">
-                      {stream.bullets.map((bullet) => (
-                        <li
-                          key={bullet}
-                          className="text-sm leading-relaxed flex items-start gap-2"
-                          style={{ color: 'var(--color-body-text)' }}
-                        >
-                          <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>&#x2022;</span>
-                          {bullet}
-                        </li>
-                      ))}
-                    </ul>
+                    {/* Description */}
+                    <p
+                      className="text-sm leading-relaxed mt-auto"
+                      style={{ color: 'var(--color-body-text)' }}
+                    >
+                      {stream.description}
+                    </p>
                   </div>
                 </CyberCard>
               </div>
             ))}
           </div>
 
-          {/* E. Revenue Share Spotlight */}
-          <div className="mb-12">
+          {/* C. Bottom Row: Fees CyberCard + Revenue Share Blue Card */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+            {/* Left: Fees CyberCard */}
+            <div className="h-full">
+              <CyberCard padding="md" centered className="h-full">
+                <div className="flex flex-col items-center text-center h-full justify-center">
+                  {/* Visual */}
+                  <FeesBadge />
+
+                  {/* Title */}
+                  <h3
+                    className="uppercase tracking-wider mb-3"
+                    style={{
+                      color: '#e5e4dd',
+                      fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
+                      fontFeatureSettings: '"ss01" 1',
+                      fontWeight: 400,
+                      fontSize: 'var(--font-size-h6)',
+                    }}
+                  >
+                    {FEES_CARD.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{ color: 'var(--color-body-text)' }}
+                  >
+                    {FEES_CARD.description}
+                  </p>
+                </div>
+              </CyberCard>
+            </div>
+
+            {/* Right: Revenue Share Blue Card with 7-tier animation */}
             <div
-              className="relative overflow-hidden rounded-2xl p-6 sm:p-8 md:p-10"
+              className="relative rounded-2xl p-6 sm:p-8 h-full"
               style={{
                 background: 'rgba(0,40,80,0.3)',
                 border: '1px solid rgba(0,191,255,0.25)',
@@ -1513,123 +1898,100 @@ function IncomeOwnershipSection() {
               }}
             >
               <RisingParticles />
-              <div className="relative z-[1] grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-8 lg:gap-0">
-                {/* Text side */}
-                <div className="order-2 lg:order-1 flex flex-col justify-center">
-                  {/* Badge */}
-                  <span
-                    className="inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4 w-fit"
-                    style={{
-                      background: 'rgba(0,191,255,0.12)',
-                      color: '#00bfff',
-                      border: '1px solid rgba(0,191,255,0.25)',
-                    }}
-                  >
-                    UNIQUE DIFFERENTIATOR
-                  </span>
 
+              {/* 7-tier rings as absolute background layer */}
+              <div
+                className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center"
+                style={{ overflow: 'visible' }}
+              >
+                <div
+                  ref={tierBarsReveal.ref}
+                  className="relative"
+                  style={{ width: '280px', height: '280px' }}
+                >
+                  {/* Rings */}
+                  {Array.from({ length: RING_COUNT }, (_, i) => {
+                    const pct = RING_BASE_PCT + i * RING_STEP_PCT;
+                    const opacity = 0.6 - i * 0.05;
+                    return (
+                      <div
+                        key={i}
+                        className="absolute rounded-full"
+                        style={{
+                          width: `${pct}%`,
+                          height: `${pct}%`,
+                          top: '50%',
+                          left: '50%',
+                          transform: tierBarsReveal.isVisible
+                            ? 'translate(-50%,-50%) scale(1)'
+                            : 'translate(-50%,-50%) scale(0)',
+                          opacity: tierBarsReveal.isVisible ? 1 : 0,
+                          border: `1px solid rgba(0,191,255,${opacity})`,
+                          boxShadow: `0 0 8px rgba(0,191,255,${opacity * 0.5})`,
+                          transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
+                          animation: tierBarsReveal.isVisible && i === RING_COUNT - 1
+                            ? 'ringPulse 3s ease-in-out 2.5s infinite'
+                            : undefined,
+                        }}
+                      />
+                    );
+                  })}
+
+                  {/* Center: "7" counter + TIERS label */}
+                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+                    <p
+                      className="text-5xl sm:text-6xl font-bold tabular-nums leading-none"
+                      style={{
+                        color: '#00bfff',
+                        textShadow: BLUE_3D_SHADOW,
+                      }}
+                    >
+                      <span ref={tierCounter.elementRef}>
+                        {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
+                      </span>
+                    </p>
+                    <p
+                      className="text-sm uppercase tracking-widest mt-1"
+                      style={{ color: '#e5e4dd', opacity: 0.7 }}
+                    >
+                      TIERS
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content layer - text on left, space for rings on right */}
+              <div className="relative z-[1] grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-[200px]">
+                {/* Text side */}
+                <div className="flex flex-col justify-center">
                   <h3
-                    className="text-2xl sm:text-3xl font-bold uppercase tracking-wider mb-4"
+                    className="uppercase tracking-wider mb-3"
                     style={{
                       color: '#e5e4dd',
-                      fontFamily: 'var(--font-family-h3)',
+                      fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
+                      fontFeatureSettings: '"ss01" 1',
+                      fontWeight: 400,
+                      fontSize: 'var(--font-size-h6)',
                     }}
                   >
                     Revenue Share
                   </h3>
 
                   <p
-                    className="text-sm sm:text-base leading-relaxed mb-4"
+                    className="text-sm leading-relaxed"
                     style={{ color: 'var(--color-body-text)' }}
                   >
                     {REVENUE_SHARE.description}
                   </p>
-
-                  <p
-                    className="text-sm sm:text-base italic mb-4"
-                    style={{ color: '#00bfff', opacity: 0.85 }}
-                  >
-                    {REVENUE_SHARE.closing}
-                  </p>
-
-                  <SecondaryButton href="/exp-realty-revenue-share-calculator" variant="blue">Revshare Visualizer</SecondaryButton>
                 </div>
 
-                {/* Concentric rings — bleeds to card edges on desktop */}
-                <div className="order-1 lg:order-2 flex items-center justify-center lg:block overflow-hidden relative max-h-[clamp(200px,40vw,340px)] lg:max-h-none">
-                  <div
-                    ref={tierBarsReveal.ref}
-                    className="relative w-full flex-shrink-0 lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2"
-                    style={{ aspectRatio: '1' }}
-                  >
-                    {/* Rings */}
-                    {Array.from({ length: RING_COUNT }, (_, i) => {
-                      const pct = RING_BASE_PCT + i * RING_STEP_PCT;
-                      const opacity = 0.6 - i * 0.05;
-                      return (
-                        <div
-                          key={i}
-                          className="absolute rounded-full"
-                          style={{
-                            width: `${pct}%`,
-                            height: `${pct}%`,
-                            top: '50%',
-                            left: '50%',
-                            transform: tierBarsReveal.isVisible
-                              ? 'translate(-50%,-50%) scale(1)'
-                              : 'translate(-50%,-50%) scale(0)',
-                            opacity: tierBarsReveal.isVisible ? 1 : 0,
-                            border: `1px solid rgba(0,191,255,${opacity})`,
-                            boxShadow: `0 0 8px rgba(0,191,255,${opacity * 0.5})`,
-                            transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
-                            animation: tierBarsReveal.isVisible && i === RING_COUNT - 1
-                              ? 'ringPulse 3s ease-in-out 2.5s infinite'
-                              : undefined,
-                          }}
-                        >
-                          {/* Tier number label on ring edge — lg only */}
-                          <span
-                            className="absolute hidden lg:block text-[11px] tabular-nums"
-                            style={{
-                              top: '50%',
-                              right: '-3px',
-                              transform: 'translate(100%, -50%)',
-                              color: `rgba(255,255,255,${0.3 + (RING_COUNT - 1 - i) * 0.05})`,
-                            }}
-                          >
-                            {i + 1}
-                          </span>
-                        </div>
-                      );
-                    })}
-
-                    {/* Center: "7" counter + TIERS label */}
-                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-                      <p
-                        className="text-7xl sm:text-8xl font-bold tabular-nums leading-none"
-                        style={{
-                          color: '#00bfff',
-                          textShadow: BLUE_3D_SHADOW,
-                        }}
-                      >
-                        <span ref={tierCounter.elementRef}>
-                          {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
-                        </span>
-                      </p>
-                      <p
-                        className="text-base uppercase tracking-widest mt-1"
-                        style={{ color: '#e5e4dd', opacity: 0.7 }}
-                      >
-                        TIERS
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                {/* Right side - empty space for the background rings to show through */}
+                <div className="hidden lg:block" />
               </div>
             </div>
           </div>
 
-          {/* F. CTA */}
+          {/* D. CTA */}
           <div className="text-center">
             <CTAButton href="#">Explore eXp Income</CTAButton>
           </div>
@@ -2069,26 +2431,19 @@ export default function AboutExpRealty() {
                   filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(0, 191, 255, 0.25))',
                 }}
               >ABOUT EXP REALTY</H1>
-              <p className="text-body mt-4" style={{ opacity: 0.9 }}>
-                A brokerage built for efficient production and income beyond active sales.
-              </p>
+              <div className="mt-4 mx-auto" style={{ maxWidth: '1100px' }}>
+                <Tagline style={{ fontSize: 'clamp(17px, 4vw, 37px)' }}>A brokerage built for efficient production and income beyond sales.</Tagline>
+              </div>
 
               {/* Stats Cards with counter animation */}
-              <div className="flex flex-wrap justify-center gap-4 mt-8 mx-auto" style={{ maxWidth: '1200px' }}>
+              <div className="flex flex-wrap justify-center mt-8 mx-auto" style={{ maxWidth: '1200px', gap: '20px' }}>
                 <FlipSplitCard />
                 <HeroStatCard targetNumber={28} suffix="+" label="Countries" />
-                <HeroStatCard prefix="S&P " targetNumber={600} label="Company" className="!max-w-[260px]" />
+                <HeroStatCard prefix="S&P " targetNumber={600} label="Company" />
               </div>
             </div>
           </div>
 
-          {/* Caption at bottom of hero - positioned absolutely */}
-          <p
-            className="text-caption text-center opacity-70 absolute left-0 right-0 z-10 px-4"
-            style={{ bottom: '15px' }}
-          >
-            This page explains how eXp Realty works, what&apos;s included, and how sponsorship fits into the model.
-          </p>
         </section>
       </StickyHeroWrapper>
 
