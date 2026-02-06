@@ -162,6 +162,86 @@ function AnimatedStat({
   );
 }
 
+// Shared tagline 3D styling for hero stat cards
+const heroTaglineStyle: React.CSSProperties = {
+  marginBottom: '0.25rem',
+  color: '#bfbdb0',
+  textShadow: `
+    0 0 0.01em #fff,
+    0 0 0.02em #fff,
+    0 0 0.03em rgba(255,255,255,0.8),
+    0 0 0.04em rgba(255,250,240,0.7),
+    0 0 0.08em rgba(255, 255, 255, 0.35),
+    0 0 0.14em rgba(255, 255, 255, 0.15),
+    0 0 0.22em rgba(200, 200, 200, 0.08),
+    0.02em 0.02em 0 #2a2a2a,
+    0.04em 0.04em 0 #222222,
+    0.06em 0.06em 0 #1a1a1a,
+    0.08em 0.08em 0 #141414,
+    0.10em 0.10em 0 #0f0f0f,
+    0.12em 0.12em 0 #080808
+  `,
+  transform: 'perspective(800px) rotateX(8deg)',
+  filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
+};
+
+/**
+ * Flip Split Card - Rotates 180° every 4 seconds between two states
+ * Front: 80/20 Commission | Back: 0/100 After Cap
+ */
+function FlipSplitCard() {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsFlipped(prev => !prev);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div
+      className="flex-1 min-w-[160px] max-w-[220px]"
+      style={{ perspective: '1000px' }}
+    >
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          transformStyle: 'preserve-3d',
+          transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+        }}
+      >
+        {/* Front face - 80/20 Commission */}
+        <div style={{ backfaceVisibility: 'hidden' }}>
+          <GenericCard padding="sm" centered className="w-full">
+            <p className="text-tagline tabular-nums" style={heroTaglineStyle}>80/20</p>
+            <p className="text-body text-sm opacity-70">Commission</p>
+          </GenericCard>
+        </div>
+
+        {/* Back face - 0/100 After Cap */}
+        <div
+          style={{
+            backfaceVisibility: 'hidden',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            transform: 'rotateY(180deg)',
+          }}
+        >
+          <GenericCard padding="sm" centered className="w-full">
+            <p className="text-tagline tabular-nums" style={heroTaglineStyle}>0/100</p>
+            <p className="text-body text-sm opacity-70">After Cap</p>
+          </GenericCard>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Hero Stat Card - GenericCard with counter animation and tagline 3D styling
  */
@@ -178,31 +258,9 @@ function HeroStatCard({
 }) {
   const { displayValue, elementRef, hasAnimated } = useScrambleCounter(targetNumber, 2000);
 
-  const taglineStyle: React.CSSProperties = {
-    marginBottom: '0.25rem',
-    color: '#bfbdb0',
-    textShadow: `
-      0 0 0.01em #fff,
-      0 0 0.02em #fff,
-      0 0 0.03em rgba(255,255,255,0.8),
-      0 0 0.04em rgba(255,250,240,0.7),
-      0 0 0.08em rgba(255, 255, 255, 0.35),
-      0 0 0.14em rgba(255, 255, 255, 0.15),
-      0 0 0.22em rgba(200, 200, 200, 0.08),
-      0.02em 0.02em 0 #2a2a2a,
-      0.04em 0.04em 0 #222222,
-      0.06em 0.06em 0 #1a1a1a,
-      0.08em 0.08em 0 #141414,
-      0.10em 0.10em 0 #0f0f0f,
-      0.12em 0.12em 0 #080808
-    `,
-    transform: 'perspective(800px) rotateX(8deg)',
-    filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
-  };
-
   return (
     <GenericCard padding="sm" centered className="flex-1 min-w-[160px] max-w-[220px]">
-      <p className="text-tagline tabular-nums" style={taglineStyle}>
+      <p className="text-tagline tabular-nums" style={heroTaglineStyle}>
         <span>{prefix}</span>
         <span ref={elementRef}>
           {hasAnimated ? targetNumber.toLocaleString() : displayValue.toLocaleString()}
@@ -2021,7 +2079,7 @@ export default function AboutExpRealty() {
 
               {/* Stats Cards with counter animation */}
               <div className="flex flex-wrap justify-center gap-4 mt-8 mx-auto" style={{ maxWidth: '1200px' }}>
-                <HeroStatCard prefix="0/" targetNumber={100} suffix=" Split" label="After Cap" />
+                <FlipSplitCard />
                 <HeroStatCard targetNumber={28} suffix="+" label="Countries" />
                 <HeroStatCard prefix="S&P " targetNumber={600} label="Company" />
               </div>
