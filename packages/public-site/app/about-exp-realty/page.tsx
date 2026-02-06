@@ -799,16 +799,10 @@ function HowExpIsBuilt() {
             </div>
           </div>
 
-          {/* Priorities label - Amulya font */}
-          <p
-            className="text-center text-h6 mb-5"
-            style={{
-              color: 'var(--color-body-text)',
-              fontFamily: 'var(--font-amulya)',
-            }}
-          >
-            The model is built around four priorities
-          </p>
+          {/* Priorities label */}
+          <h3 className="text-h4 text-center mb-5">
+            The Model Is Built Around Four Priorities
+          </h3>
 
           {/* Priority cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-[1400px] mx-auto">
