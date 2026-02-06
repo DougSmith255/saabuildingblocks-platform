@@ -349,6 +349,7 @@ function AgentPortalLoginContent() {
         body: JSON.stringify({
           token: newPasswordToken,
           password: newPassword,
+          confirmPassword: confirmPassword,
         }),
       });
 
@@ -580,8 +581,8 @@ function AgentPortalLoginContent() {
         onClose={closeResetModal}
         title="Reset Password"
         subtitle="Enter your email and we'll send you a reset link"
-        icon={<Key size={20} className="text-blue-400" />}
-        theme="blue"
+        icon={<Key size={20} style={{ color: '#ffd700' }} />}
+        theme="gold"
       >
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '100%' }}>
           {resetStep === 'email' ? (
@@ -628,16 +629,16 @@ function AgentPortalLoginContent() {
                 width: '80px',
                 height: '80px',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, rgba(0,191,255,0.2) 0%, rgba(0,191,255,0.1) 100%)',
+                background: 'linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0.1) 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: '0 auto 1.5rem',
-                border: '1px solid rgba(0,191,255,0.3)',
+                border: '1px solid rgba(255,215,0,0.3)',
               }}>
-                <Mail size={36} className="text-blue-400" />
+                <Mail size={36} style={{ color: '#ffd700' }} />
               </div>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#00bfff', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#ffd700', marginBottom: '0.75rem' }}>
                 Check Your Email
               </h3>
               <p style={{ fontSize: '0.95rem', color: 'rgba(229,228,221,0.7)', marginBottom: '0.5rem' }}>
@@ -660,8 +661,8 @@ function AgentPortalLoginContent() {
         onClose={closeUsernameModal}
         title="Forgot Username"
         subtitle="Enter your email and we'll send you your username"
-        icon={<User size={20} className="text-blue-400" />}
-        theme="blue"
+        icon={<User size={20} style={{ color: '#ffd700' }} />}
+        theme="gold"
       >
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '100%' }}>
           {usernameStep === 'email' ? (
@@ -708,16 +709,16 @@ function AgentPortalLoginContent() {
                 width: '80px',
                 height: '80px',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, rgba(0,191,255,0.2) 0%, rgba(0,191,255,0.1) 100%)',
+                background: 'linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0.1) 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: '0 auto 1.5rem',
-                border: '1px solid rgba(0,191,255,0.3)',
+                border: '1px solid rgba(255,215,0,0.3)',
               }}>
-                <Mail size={36} className="text-blue-400" />
+                <Mail size={36} style={{ color: '#ffd700' }} />
               </div>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#00bfff', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#ffd700', marginBottom: '0.75rem' }}>
                 Check Your Email
               </h3>
               <p style={{ fontSize: '0.95rem', color: 'rgba(229,228,221,0.7)', marginBottom: '0.5rem' }}>
@@ -740,8 +741,8 @@ function AgentPortalLoginContent() {
         onClose={closeNewPasswordModal}
         title="Reset Password"
         subtitle="Create a new password for your account"
-        icon={<Key size={20} className="text-blue-400" />}
-        theme="blue"
+        icon={<Key size={20} style={{ color: '#ffd700' }} />}
+        theme="gold"
       >
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '100%' }}>
           {newPasswordStep === 'form' ? (
@@ -792,9 +793,24 @@ function AgentPortalLoginContent() {
                     )}
                   </button>
                 </div>
-                <p style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.4)', marginTop: '0.5rem' }}>
-                  8+ chars with uppercase, lowercase, number, and special character
-                </p>
+                {/* Password requirements - auto checkoffs */}
+                <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '0.5rem' }}>
+                  <p style={{ color: newPassword.length >= 8 ? '#4ade80' : undefined }}>
+                    {newPassword.length >= 8 ? '✓' : '○'} At least 8 characters
+                  </p>
+                  <p style={{ color: /[A-Z]/.test(newPassword) ? '#4ade80' : undefined }}>
+                    {/[A-Z]/.test(newPassword) ? '✓' : '○'} One uppercase letter
+                  </p>
+                  <p style={{ color: /[a-z]/.test(newPassword) ? '#4ade80' : undefined }}>
+                    {/[a-z]/.test(newPassword) ? '✓' : '○'} One lowercase letter
+                  </p>
+                  <p style={{ color: /[0-9]/.test(newPassword) ? '#4ade80' : undefined }}>
+                    {/[0-9]/.test(newPassword) ? '✓' : '○'} One number
+                  </p>
+                  <p style={{ color: /[^A-Za-z0-9]/.test(newPassword) ? '#4ade80' : undefined }}>
+                    {/[^A-Za-z0-9]/.test(newPassword) ? '✓' : '○'} One special character
+                  </p>
+                </div>
               </FormGroup>
 
               {/* Confirm Password Field */}
@@ -837,6 +853,12 @@ function AgentPortalLoginContent() {
                     )}
                   </button>
                 </div>
+                {/* Password match indicator */}
+                {confirmPassword && (
+                  <p style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: newPassword === confirmPassword ? '#4ade80' : '#f87171' }}>
+                    {newPassword === confirmPassword ? '✓ Passwords match' : '✗ Passwords do not match'}
+                  </p>
+                )}
               </FormGroup>
 
               {/* Submit Button */}

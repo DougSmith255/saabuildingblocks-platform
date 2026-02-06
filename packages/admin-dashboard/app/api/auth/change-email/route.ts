@@ -104,10 +104,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Update email_verification_pending flag in users table
+    // Update email in users table to match Supabase Auth
+    // This is critical - login queries the users table by email!
     const { error: dbError } = await adminSupabase
       .from('users')
       .update({
+        email: newEmail,
         email_verification_pending: true,
         updated_at: new Date().toISOString(),
       })
@@ -115,6 +117,12 @@ export async function POST(request: NextRequest) {
 
     if (dbError) {
       console.error('Database update error:', dbError);
+      // If users table update fails, this is critical - revert the Auth change
+      await adminSupabase.auth.admin.updateUserById(user.id, { email: user.email! });
+      return NextResponse.json(
+        { message: 'Failed to update email in database' },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
