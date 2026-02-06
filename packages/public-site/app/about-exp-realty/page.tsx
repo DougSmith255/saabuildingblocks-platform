@@ -1858,9 +1858,9 @@ function IncomeOwnershipSection() {
               < 1200px: 2-col grid (Commission+ICON, Stock+Fees, Revenue Share full)
               >= 1200px: 6-col grid (3 cards top row, 2 cards bottom row)
           */}
-          <div className="grid grid-cols-1 md:grid-cols-2 min-[1200px]:grid-cols-6 gap-6 mb-12">
+          <div className="income-cards-grid gap-6 mb-12">
             {/* Commission - 1 col at md, 2 cols at 1200px+ */}
-            <div className="min-[1200px]:col-span-2 h-full">
+            <div className="income-card-2 h-full">
               <GenericCard
                 padding="md"
                 className="h-full"
@@ -1881,7 +1881,7 @@ function IncomeOwnershipSection() {
             </div>
 
             {/* ICON Program - 1 col at md, 2 cols at 1200px+ */}
-            <div className="min-[1200px]:col-span-2 h-full">
+            <div className="income-card-2 h-full">
               <GenericCard
                 padding="md"
                 className="h-full"
@@ -1902,7 +1902,7 @@ function IncomeOwnershipSection() {
             </div>
 
             {/* Stock Ownership - 1 col at md, 2 cols at 1200px+ */}
-            <div className="min-[1200px]:col-span-2 h-full">
+            <div className="income-card-2 h-full">
               <GenericCard
                 padding="md"
                 className="h-full"
@@ -1923,7 +1923,7 @@ function IncomeOwnershipSection() {
             </div>
 
             {/* eXp Fees - 1 col at md, 3 cols at 1200px+ */}
-            <div className="min-[1200px]:col-span-3 h-full">
+            <div className="income-card-3 h-full">
               <GenericCard
                 padding="md"
                 className="h-full"
@@ -1949,7 +1949,7 @@ function IncomeOwnershipSection() {
                 - 765px-1020px: stacked (visual on top, text below, like other cards)
                 - Over 1020px: side-by-side with absolute positioned visual
             */}
-            <div className="md:col-span-2 min-[1200px]:col-span-3 h-full">
+            <div className="income-card-3 income-card-md-full h-full">
               <div
                 className="relative rounded-2xl p-6 sm:p-8 h-full overflow-hidden"
                 style={{
@@ -3221,6 +3221,25 @@ export default function AboutExpRealty() {
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes ringPulse { 0%,100% { box-shadow: 0 0 8px rgba(0,191,255,0.08); } 50% { box-shadow: 0 0 14px rgba(0,191,255,0.25), 0 0 28px rgba(0,191,255,0.1); } }
+
+        /* Income & Ownership Grid Layout - custom breakpoint at 1200px */
+        .income-cards-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+        @media (min-width: 768px) {
+          .income-cards-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .income-cards-grid .income-card-md-full { grid-column: span 2; }
+        }
+        @media (min-width: 1200px) {
+          .income-cards-grid {
+            grid-template-columns: repeat(6, 1fr);
+          }
+          .income-cards-grid .income-card-2 { grid-column: span 2; }
+          .income-cards-grid .income-card-3 { grid-column: span 3; }
+        }
 
         /* Blue CTA light bars + glow — scoped to main content + header (not slide panels) */
         .about-exp-blue-theme #main-content .cta-light-bar,
