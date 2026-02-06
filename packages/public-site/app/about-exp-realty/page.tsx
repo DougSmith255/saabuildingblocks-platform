@@ -162,6 +162,58 @@ function AnimatedStat({
   );
 }
 
+/**
+ * Hero Stat Card - GenericCard with counter animation and tagline 3D styling
+ */
+function HeroStatCard({
+  prefix = '',
+  targetNumber,
+  suffix = '',
+  label,
+}: {
+  prefix?: string;
+  targetNumber: number;
+  suffix?: string;
+  label: string;
+}) {
+  const { displayValue, elementRef, hasAnimated } = useScrambleCounter(targetNumber, 2000);
+
+  const taglineStyle: React.CSSProperties = {
+    marginBottom: '0.25rem',
+    color: '#bfbdb0',
+    textShadow: `
+      0 0 0.01em #fff,
+      0 0 0.02em #fff,
+      0 0 0.03em rgba(255,255,255,0.8),
+      0 0 0.04em rgba(255,250,240,0.7),
+      0 0 0.08em rgba(255, 255, 255, 0.35),
+      0 0 0.14em rgba(255, 255, 255, 0.15),
+      0 0 0.22em rgba(200, 200, 200, 0.08),
+      0.02em 0.02em 0 #2a2a2a,
+      0.04em 0.04em 0 #222222,
+      0.06em 0.06em 0 #1a1a1a,
+      0.08em 0.08em 0 #141414,
+      0.10em 0.10em 0 #0f0f0f,
+      0.12em 0.12em 0 #080808
+    `,
+    transform: 'perspective(800px) rotateX(8deg)',
+    filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
+  };
+
+  return (
+    <GenericCard padding="sm" centered className="flex-1 min-w-[160px] max-w-[220px]">
+      <p className="text-tagline tabular-nums" style={taglineStyle}>
+        <span>{prefix}</span>
+        <span ref={elementRef}>
+          {hasAnimated ? targetNumber.toLocaleString() : displayValue.toLocaleString()}
+        </span>
+        <span>{suffix}</span>
+      </p>
+      <p className="text-body text-sm opacity-70">{label}</p>
+    </GenericCard>
+  );
+}
+
 // Award text items for scrolling
 const AWARDS = [
   "Forbes America's Best Employers",
@@ -1967,28 +2019,19 @@ export default function AboutExpRealty() {
                 A brokerage built for efficient production and income beyond active sales.
               </p>
 
-              {/* Stats Cards */}
-              <div className="flex flex-wrap justify-center gap-4 mt-8 max-w-3xl mx-auto">
-                <GenericCard padding="sm" centered className="flex-1 min-w-[140px] max-w-[200px]">
-                  <p className="text-tagline" style={{ marginBottom: '0.25rem' }}>0/100 Split</p>
-                  <p className="text-body text-sm opacity-70">After Cap</p>
-                </GenericCard>
-                <GenericCard padding="sm" centered className="flex-1 min-w-[140px] max-w-[200px]">
-                  <p className="text-tagline" style={{ marginBottom: '0.25rem' }}>28+</p>
-                  <p className="text-body text-sm opacity-70">Countries</p>
-                </GenericCard>
-                <GenericCard padding="sm" centered className="flex-1 min-w-[140px] max-w-[200px]">
-                  <p className="text-tagline" style={{ marginBottom: '0.25rem' }}>S&P 600</p>
-                  <p className="text-body text-sm opacity-70">SmallCap Index</p>
-                </GenericCard>
+              {/* Stats Cards with counter animation */}
+              <div className="flex flex-wrap justify-center gap-4 mt-8 max-w-4xl mx-auto">
+                <HeroStatCard prefix="0/" targetNumber={100} suffix=" Split" label="After Cap" />
+                <HeroStatCard targetNumber={28} suffix="+ Countries" label="Worldwide" />
+                <HeroStatCard prefix="S&P " targetNumber={600} label="SmallCap Index" />
               </div>
             </div>
           </div>
 
-          {/* Caption at bottom of hero */}
+          {/* Caption at bottom of hero - positioned absolutely */}
           <p
-            className="text-caption text-center opacity-70 relative z-10"
-            style={{ marginBottom: '15px' }}
+            className="text-caption text-center opacity-70 absolute left-0 right-0 z-10 px-4"
+            style={{ bottom: '15px' }}
           >
             This page explains how eXp Realty works, what&apos;s included, and how sponsorship fits into the model.
           </p>
