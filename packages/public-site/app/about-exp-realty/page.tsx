@@ -647,8 +647,7 @@ function IntroFlipCard() {
           className="text-h5 leading-relaxed text-center"
           style={{
             color: '#e8a0a0',
-            fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
-            fontFeatureSettings: '"ss01" 1',
+            fontFamily: 'var(--font-amulya), system-ui',
             textShadow: INTRO_TEXT_SHADOW_RED,
             transform: 'perspective(800px) rotateX(8deg)',
             filter: INTRO_TEXT_FILTER,
@@ -678,8 +677,7 @@ function IntroFlipCard() {
           className="text-h5 leading-relaxed text-center"
           style={{
             color: '#b0d4e8',
-            fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
-            fontFeatureSettings: '"ss01" 1',
+            fontFamily: 'var(--font-amulya), system-ui',
             textShadow: INTRO_TEXT_SHADOW_BLUE,
             transform: 'perspective(800px) rotateX(8deg)',
             filter: INTRO_TEXT_FILTER,
@@ -759,8 +757,7 @@ function HowExpIsBuilt() {
                     className="text-h5 leading-relaxed text-center"
                     style={{
                       color: '#e8a0a0',
-                      fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
-                      fontFeatureSettings: '"ss01" 1',
+                      fontFamily: 'var(--font-amulya), system-ui',
                       textShadow: INTRO_TEXT_SHADOW_RED,
                       transform: 'perspective(800px) rotateX(8deg)',
                       filter: INTRO_TEXT_FILTER,
@@ -789,8 +786,7 @@ function HowExpIsBuilt() {
                     className="text-h5 leading-relaxed text-center"
                     style={{
                       color: '#b0d4e8',
-                      fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
-                      fontFeatureSettings: '"ss01" 1',
+                      fontFamily: 'var(--font-amulya), system-ui',
                       textShadow: INTRO_TEXT_SHADOW_BLUE,
                       transform: 'perspective(800px) rotateX(8deg)',
                       filter: INTRO_TEXT_FILTER,
@@ -1826,8 +1822,7 @@ function IncomeOwnershipSection() {
                       className="uppercase tracking-wider mb-3"
                       style={{
                         color: '#e5e4dd',
-                        fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
-                        fontFeatureSettings: '"ss01" 1',
+                        fontFamily: 'var(--font-amulya), system-ui',
                         fontWeight: 400,
                         fontSize: 'var(--font-size-h6)',
                       }}
@@ -1864,8 +1859,7 @@ function IncomeOwnershipSection() {
                     className="uppercase tracking-wider mb-3"
                     style={{
                       color: '#e5e4dd',
-                      fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
-                      fontFeatureSettings: '"ss01" 1',
+                      fontFamily: 'var(--font-amulya), system-ui',
                       fontWeight: 400,
                       fontSize: 'var(--font-size-h6)',
                     }}
@@ -1970,8 +1964,7 @@ function IncomeOwnershipSection() {
                     className="uppercase tracking-wider mb-3"
                     style={{
                       color: '#e5e4dd',
-                      fontFamily: 'var(--font-taskor), var(--font-display), system-ui',
-                      fontFeatureSettings: '"ss01" 1',
+                      fontFamily: 'var(--font-amulya), system-ui',
                       fontWeight: 400,
                       fontSize: 'var(--font-size-h6)',
                     }}
