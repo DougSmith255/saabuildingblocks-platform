@@ -304,11 +304,11 @@ function HeroStatCard({
 
 // Award text items for scrolling
 const AWARDS = [
-  "Forbes America's Best Employers",
-  "Glassdoor Best Places to Work (8 years straight)",
-  "#1 U.S. Brokerage by Transactions, RealTrends",
-  "Top 3 Brokerage by Sales Volume, RealTrends",
-  "RealTrends 500 Top-Ranked Brokerage",
+  "Forbes – America's Best Employers",
+  "Glassdoor – Best Places to Work (8 consecutive years)",
+  "RealTrends – #1 in U.S. transaction sides",
+  "RealTrends – Top 3 Brokerage by Sales Volume",
+  "RealTrends – 500 Top-Ranked Brokerage",
 ];
 
 
