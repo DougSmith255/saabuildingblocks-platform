@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import { H1, Modal, FormCard, FormButton, FormInput, FormGroup, ModalTitle, FormMessage } from '@saa/shared/components/saa';
+import { H1, SlidePanel, FormCard, FormButton, FormInput, FormGroup, ModalTitle, FormMessage } from '@saa/shared/components/saa';
+import { Mail, Key, User } from 'lucide-react';
 import { API_URL } from '@/lib/api-config';
 
 // Initial progress values for the data stream effect
@@ -354,7 +355,28 @@ function AgentPortalLoginContent() {
       const data = await response.json();
 
       if (!response.ok) {
-        setNewPasswordError(data.message || 'Failed to reset password. Please try again.');
+        // Provide user-friendly error messages for specific error codes
+        let errorMessage = data.message || 'Failed to reset password. Please try again.';
+
+        switch (data.error) {
+          case 'PASSWORD_REUSE':
+            errorMessage = 'Your new password cannot be the same as your current password. Please choose a different password.';
+            break;
+          case 'INVALID_TOKEN':
+            errorMessage = 'This reset link has expired or is invalid. Please request a new password reset.';
+            break;
+          case 'TOKEN_INVALIDATED':
+            errorMessage = 'This reset link is no longer valid because your password was already changed. Please request a new reset if needed.';
+            break;
+          case 'ACCOUNT_INACTIVE':
+            errorMessage = 'Your account is not active. Please contact support for assistance.';
+            break;
+          case 'USER_NOT_FOUND':
+            errorMessage = 'Account not found. Please contact support if you believe this is an error.';
+            break;
+        }
+
+        setNewPasswordError(errorMessage);
         setNewPasswordLoading(false);
         return;
       }
@@ -552,15 +574,18 @@ function AgentPortalLoginContent() {
         </div>
       </div>
 
-      {/* Password Reset Modal - uses base Modal with base form components */}
-      <Modal isOpen={showResetModal} onClose={closeResetModal} size="md">
-        {resetStep === 'email' ? (
-          <>
-            <ModalTitle subtitle="Enter your email and we'll send you a reset link." centered>
-              Reset Password
-            </ModalTitle>
-
-            <form onSubmit={handleResetRequest}>
+      {/* Password Reset SlidePanel */}
+      <SlidePanel
+        isOpen={showResetModal}
+        onClose={closeResetModal}
+        title="Reset Password"
+        subtitle="Enter your email and we'll send you a reset link"
+        icon={<Key size={20} className="text-blue-400" />}
+        theme="blue"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '100%' }}>
+          {resetStep === 'email' ? (
+            <form onSubmit={handleResetRequest} style={{ maxWidth: '400px', margin: '0 auto', width: '100%' }}>
               {/* Error Message */}
               {resetError && (
                 <FormMessage type="error">{resetError}</FormMessage>
@@ -587,59 +612,60 @@ function AgentPortalLoginContent() {
                 </FormButton>
               </div>
 
-              {/* Cancel Link */}
-              <div className="text-center" style={{ marginTop: '1rem' }}>
-                <button
-                  type="button"
-                  onClick={closeResetModal}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    fontSize: '0.85rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Back to login
-                </button>
-              </div>
-
               {/* Get Help Link */}
-              <div style={{ marginTop: '1.5rem', textAlign: 'left' }}>
+              <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
                 <a
                   href="mailto:team@smartagentalliance.com"
-                  className="get-help-link"
+                  style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', textDecoration: 'none' }}
                 >
-                  Get Help
+                  Need help? Contact support
                 </a>
               </div>
             </form>
-          </>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📧</div>
-            <ModalTitle subtitle={resetMessage || ''} centered>
-              Check Your Email
-            </ModalTitle>
-            <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '1.5rem' }}>
-              The link will expire in 15 minutes.
-            </p>
-            <FormButton onClick={closeResetModal}>
-              Back to Login
-            </FormButton>
-          </div>
-        )}
-      </Modal>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '2rem 0', maxWidth: '400px', margin: '0 auto' }}>
+              <div style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, rgba(0,191,255,0.2) 0%, rgba(0,191,255,0.1) 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.5rem',
+                border: '1px solid rgba(0,191,255,0.3)',
+              }}>
+                <Mail size={36} className="text-blue-400" />
+              </div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#00bfff', marginBottom: '0.75rem' }}>
+                Check Your Email
+              </h3>
+              <p style={{ fontSize: '0.95rem', color: 'rgba(229,228,221,0.7)', marginBottom: '0.5rem' }}>
+                {resetMessage}
+              </p>
+              <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '2rem' }}>
+                The link will expire in 15 minutes.
+              </p>
+              <FormButton onClick={closeResetModal}>
+                Back to Login
+              </FormButton>
+            </div>
+          )}
+        </div>
+      </SlidePanel>
 
-      {/* Username Recovery Modal */}
-      <Modal isOpen={showUsernameModal} onClose={closeUsernameModal} size="md">
-        {usernameStep === 'email' ? (
-          <>
-            <ModalTitle subtitle="Enter your email and we'll send you your username." centered>
-              Forgot Username
-            </ModalTitle>
-
-            <form onSubmit={handleUsernameRequest}>
+      {/* Username Recovery SlidePanel */}
+      <SlidePanel
+        isOpen={showUsernameModal}
+        onClose={closeUsernameModal}
+        title="Forgot Username"
+        subtitle="Enter your email and we'll send you your username"
+        icon={<User size={20} className="text-blue-400" />}
+        theme="blue"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '100%' }}>
+          {usernameStep === 'email' ? (
+            <form onSubmit={handleUsernameRequest} style={{ maxWidth: '400px', margin: '0 auto', width: '100%' }}>
               {/* Error Message */}
               {usernameError && (
                 <FormMessage type="error">{usernameError}</FormMessage>
@@ -666,59 +692,60 @@ function AgentPortalLoginContent() {
                 </FormButton>
               </div>
 
-              {/* Cancel Link */}
-              <div className="text-center" style={{ marginTop: '1rem' }}>
-                <button
-                  type="button"
-                  onClick={closeUsernameModal}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    fontSize: '0.85rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Back to login
-                </button>
-              </div>
-
               {/* Get Help Link */}
-              <div style={{ marginTop: '1.5rem', textAlign: 'left' }}>
+              <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
                 <a
                   href="mailto:team@smartagentalliance.com"
-                  className="get-help-link"
+                  style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', textDecoration: 'none' }}
                 >
-                  Get Help
+                  Need help? Contact support
                 </a>
               </div>
             </form>
-          </>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📧</div>
-            <ModalTitle subtitle={usernameMessage || ''} centered>
-              Check Your Email
-            </ModalTitle>
-            <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '1.5rem' }}>
-              Your username has been sent to your email.
-            </p>
-            <FormButton onClick={closeUsernameModal}>
-              Back to Login
-            </FormButton>
-          </div>
-        )}
-      </Modal>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '2rem 0', maxWidth: '400px', margin: '0 auto' }}>
+              <div style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, rgba(0,191,255,0.2) 0%, rgba(0,191,255,0.1) 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.5rem',
+                border: '1px solid rgba(0,191,255,0.3)',
+              }}>
+                <Mail size={36} className="text-blue-400" />
+              </div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#00bfff', marginBottom: '0.75rem' }}>
+                Check Your Email
+              </h3>
+              <p style={{ fontSize: '0.95rem', color: 'rgba(229,228,221,0.7)', marginBottom: '0.5rem' }}>
+                {usernameMessage}
+              </p>
+              <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '2rem' }}>
+                Your username has been sent to your email.
+              </p>
+              <FormButton onClick={closeUsernameModal}>
+                Back to Login
+              </FormButton>
+            </div>
+          )}
+        </div>
+      </SlidePanel>
 
-      {/* New Password Modal (from reset token in URL) */}
-      <Modal isOpen={showNewPasswordModal} onClose={closeNewPasswordModal} size="md">
-        {newPasswordStep === 'form' ? (
-          <>
-            <ModalTitle subtitle="Create a new password for your account." centered>
-              Reset Password
-            </ModalTitle>
-
-            <form onSubmit={handleNewPasswordSubmit}>
+      {/* New Password SlidePanel (from reset token in URL) */}
+      <SlidePanel
+        isOpen={showNewPasswordModal}
+        onClose={closeNewPasswordModal}
+        title="Reset Password"
+        subtitle="Create a new password for your account"
+        icon={<Key size={20} className="text-blue-400" />}
+        theme="blue"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '100%' }}>
+          {newPasswordStep === 'form' ? (
+            <form onSubmit={handleNewPasswordSubmit} style={{ maxWidth: '400px', margin: '0 auto', width: '100%' }}>
               {/* Error Message */}
               {newPasswordError && (
                 <FormMessage type="error">{newPasswordError}</FormMessage>
@@ -819,49 +846,49 @@ function AgentPortalLoginContent() {
                 </FormButton>
               </div>
 
-              {/* Cancel Link */}
-              <div className="text-center" style={{ marginTop: '1rem' }}>
-                <button
-                  type="button"
-                  onClick={closeNewPasswordModal}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    fontSize: '0.85rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Back to login
-                </button>
-              </div>
-
               {/* Get Help Link */}
-              <div style={{ marginTop: '1.5rem', textAlign: 'left' }}>
+              <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
                 <a
                   href="mailto:team@smartagentalliance.com"
-                  className="get-help-link"
+                  style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', textDecoration: 'none' }}
                 >
-                  Get Help
+                  Need help? Contact support
                 </a>
               </div>
             </form>
-          </>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
-            <ModalTitle subtitle="Your password has been successfully reset." centered>
-              Password Updated
-            </ModalTitle>
-            <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '1.5rem' }}>
-              You can now log in with your new password.
-            </p>
-            <FormButton onClick={closeNewPasswordModal}>
-              Log In Now
-            </FormButton>
-          </div>
-        )}
-      </Modal>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '2rem 0', maxWidth: '400px', margin: '0 auto' }}>
+              <div style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, rgba(34,197,94,0.2) 0%, rgba(34,197,94,0.1) 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.5rem',
+                border: '1px solid rgba(34,197,94,0.3)',
+              }}>
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+              </div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#22c55e', marginBottom: '0.75rem' }}>
+                Password Updated
+              </h3>
+              <p style={{ fontSize: '0.95rem', color: 'rgba(229,228,221,0.7)', marginBottom: '0.5rem' }}>
+                Your password has been successfully reset.
+              </p>
+              <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '2rem' }}>
+                You can now log in with your new password.
+              </p>
+              <FormButton onClick={closeNewPasswordModal}>
+                Log In Now
+              </FormButton>
+            </div>
+          )}
+        </div>
+      </SlidePanel>
     </main>
   );
 }

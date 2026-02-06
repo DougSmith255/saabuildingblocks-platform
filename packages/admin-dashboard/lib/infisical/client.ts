@@ -3,16 +3,20 @@
  *
  * This module provides a centralized way to fetch secrets from Infisical.
  * It caches secrets in memory to avoid excessive API calls.
+ *
+ * NOTE: If INFISICAL_ENABLED is not set to 'true', this module will skip
+ * Infisical and fall back to environment variables immediately.
  */
 
 import { InfisicalSDK } from '@infisical/sdk';
 
 // Configuration from environment (these are the only secrets we need in .env)
-const INFISICAL_CLIENT_ID = process.env.INFISICAL_CLIENT_ID || '137e53a3-d42f-4bdc-bada-bb9eb3493d56';
-const INFISICAL_CLIENT_SECRET = process.env.INFISICAL_CLIENT_SECRET || '5b74b781cab12c399cc0360ec40cb65cebeb2b59bed0274892d2dabd5826949f';
-const INFISICAL_PROJECT_ID = process.env.INFISICAL_PROJECT_ID || '2bd4f8b7-7448-4518-b884-e2d28d71c58f';
+const INFISICAL_ENABLED = process.env.INFISICAL_ENABLED === 'true';
+const INFISICAL_CLIENT_ID = process.env.INFISICAL_CLIENT_ID || '';
+const INFISICAL_CLIENT_SECRET = process.env.INFISICAL_CLIENT_SECRET || '';
+const INFISICAL_PROJECT_ID = process.env.INFISICAL_PROJECT_ID || '';
 const INFISICAL_ENVIRONMENT = process.env.INFISICAL_ENVIRONMENT || 'prod';
-const INFISICAL_SITE_URL = process.env.INFISICAL_SITE_URL || 'http://127.0.0.1:8200';
+const INFISICAL_SITE_URL = process.env.INFISICAL_SITE_URL || '';
 
 // Secret cache with TTL
 interface CachedSecret {
@@ -24,20 +28,53 @@ const secretCache = new Map<string, CachedSecret>();
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 let infisicalClient: InfisicalSDK | null = null;
+let infisicalFailed = false; // Flag to prevent repeated connection attempts
+
+/**
+ * Check if Infisical is properly configured
+ */
+function isInfisicalConfigured(): boolean {
+  return INFISICAL_ENABLED &&
+         !!INFISICAL_CLIENT_ID &&
+         !!INFISICAL_CLIENT_SECRET &&
+         !!INFISICAL_PROJECT_ID &&
+         !!INFISICAL_SITE_URL;
+}
 
 /**
  * Get or create the Infisical client instance
+ * Returns null if Infisical is not configured or has previously failed
  */
-async function getClient(): Promise<InfisicalSDK> {
-  if (!infisicalClient) {
-    infisicalClient = new InfisicalSDK({
-      siteUrl: INFISICAL_SITE_URL,
-    });
+async function getClient(): Promise<InfisicalSDK | null> {
+  // Skip if not configured or previously failed
+  if (!isInfisicalConfigured() || infisicalFailed) {
+    return null;
+  }
 
-    await infisicalClient.auth().universalAuth.login({
-      clientId: INFISICAL_CLIENT_ID,
-      clientSecret: INFISICAL_CLIENT_SECRET,
-    });
+  if (!infisicalClient) {
+    try {
+      infisicalClient = new InfisicalSDK({
+        siteUrl: INFISICAL_SITE_URL,
+      });
+
+      // Add timeout using Promise.race
+      const loginPromise = infisicalClient.auth().universalAuth.login({
+        clientId: INFISICAL_CLIENT_ID,
+        clientSecret: INFISICAL_CLIENT_SECRET,
+      });
+
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Infisical connection timeout')), 2000);
+      });
+
+      await Promise.race([loginPromise, timeoutPromise]);
+    } catch (error) {
+      console.warn('[Infisical] Connection failed, falling back to environment variables:',
+        error instanceof Error ? error.message : 'Unknown error');
+      infisicalClient = null;
+      infisicalFailed = true; // Don't try again this process
+      return null;
+    }
   }
   return infisicalClient;
 }
@@ -59,6 +96,12 @@ export async function getSecret(secretName: string, secretPath: string = '/'): P
 
   try {
     const client = await getClient();
+
+    // If client is null (not configured or failed), return null
+    if (!client) {
+      return null;
+    }
+
     const secret = await client.secrets().getSecret({
       secretName,
       projectId: INFISICAL_PROJECT_ID,
@@ -89,6 +132,12 @@ export async function getSecret(secretName: string, secretPath: string = '/'): P
 export async function getSecrets(secretPath: string = '/'): Promise<Record<string, string>> {
   try {
     const client = await getClient();
+
+    // If client is null (not configured or failed), return empty
+    if (!client) {
+      return {};
+    }
+
     const response = await client.secrets().listSecrets({
       projectId: INFISICAL_PROJECT_ID,
       environment: INFISICAL_ENVIRONMENT,
