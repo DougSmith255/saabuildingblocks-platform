@@ -186,18 +186,44 @@ const heroTaglineStyle: React.CSSProperties = {
 };
 
 /**
+ * Animated Split Display - Shows X/Y with counter animation
+ */
+function AnimatedSplitDisplay({ left, right, animKey }: { left: number; right: number; animKey: number }) {
+  const leftCounter = useScrambleCounter(left, 1500);
+  const rightCounter = useScrambleCounter(right, 1500);
+
+  return (
+    <p className="text-tagline tabular-nums" style={heroTaglineStyle} key={animKey}>
+      <span ref={leftCounter.elementRef}>
+        {leftCounter.hasAnimated ? left : leftCounter.displayValue}
+      </span>
+      <span>/</span>
+      <span ref={rightCounter.elementRef}>
+        {rightCounter.hasAnimated ? right : rightCounter.displayValue}
+      </span>
+    </p>
+  );
+}
+
+/**
  * Flip Split Card - Rotates 180° every 4 seconds between two states
  * Front: 80/20 Commission | Back: 0/100 After Cap
+ * Always rotates in same direction, with counter animations
  */
 function FlipSplitCard() {
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [rotation, setRotation] = useState(0);
+  const [flipCount, setFlipCount] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsFlipped(prev => !prev);
+      setRotation(prev => prev + 180);
+      setFlipCount(prev => prev + 1);
     }, 4000);
     return () => clearInterval(interval);
   }, []);
+
+  // Determine which face is showing (even rotations = front, odd = back)
+  const showingBack = (rotation / 180) % 2 === 1;
 
   return (
     <div
@@ -210,13 +236,14 @@ function FlipSplitCard() {
           width: '100%',
           transformStyle: 'preserve-3d',
           transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-          transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+          transform: `rotateY(${rotation}deg)`,
         }}
       >
         {/* Front face - 80/20 Commission */}
         <div style={{ backfaceVisibility: 'hidden' }}>
           <GenericCard padding="sm" centered className="w-full">
-            <p className="text-tagline tabular-nums" style={heroTaglineStyle}>80/20</p>
+            {!showingBack && <AnimatedSplitDisplay left={80} right={20} animKey={flipCount} />}
+            {showingBack && <p className="text-tagline tabular-nums" style={heroTaglineStyle}>80/20</p>}
             <p className="text-body text-sm opacity-70">Commission</p>
           </GenericCard>
         </div>
@@ -233,7 +260,8 @@ function FlipSplitCard() {
           }}
         >
           <GenericCard padding="sm" centered className="w-full">
-            <p className="text-tagline tabular-nums" style={heroTaglineStyle}>0/100</p>
+            {showingBack && <AnimatedSplitDisplay left={0} right={100} animKey={flipCount} />}
+            {!showingBack && <p className="text-tagline tabular-nums" style={heroTaglineStyle}>0/100</p>}
             <p className="text-body text-sm opacity-70">After Cap</p>
           </GenericCard>
         </div>
@@ -250,16 +278,18 @@ function HeroStatCard({
   targetNumber,
   suffix = '',
   label,
+  className = '',
 }: {
   prefix?: string;
   targetNumber: number;
   suffix?: string;
   label: string;
+  className?: string;
 }) {
   const { displayValue, elementRef, hasAnimated } = useScrambleCounter(targetNumber, 2000);
 
   return (
-    <GenericCard padding="sm" centered className="flex-1 min-w-[160px] max-w-[220px]">
+    <GenericCard padding="sm" centered className={`flex-1 min-w-[160px] max-w-[220px] ${className}`}>
       <p className="text-tagline tabular-nums" style={heroTaglineStyle}>
         <span>{prefix}</span>
         <span ref={elementRef}>
@@ -518,27 +548,23 @@ function RotatingStats() {
 }
 
 // Awards Ribbon Component with Glass Panel (full-width)
-function StatsBar() {
+function HowExpIsBuilt() {
   return (
     <GlassPanel variant="champagne">
-      <section className="py-4 md:py-6">
-        <div className="max-w-[1900px] mx-auto px-4 md:px-8">
-          <div className="md:hidden">
-            <RotatingStats />
+      <section className="py-12 md:py-16">
+        <div className="max-w-[900px] mx-auto px-4 md:px-8 text-center">
+          <H2 theme="blue">How eXp is Built for Agents</H2>
+          <div className="space-y-4 text-body" style={{ textAlign: 'left' }}>
+            <p>Most brokerages are built around transactions.</p>
+            <p>eXp Realty supports both day-to-day production and income beyond active sales.</p>
+            <p>The model is built around four priorities:</p>
+            <ul className="list-disc list-inside space-y-2 ml-4">
+              <li>Production efficiency through centralized systems</li>
+              <li>Ownership in a publicly traded company</li>
+              <li>Leverage from scale and shared infrastructure</li>
+              <li>Income continuity beyond active sales</li>
+            </ul>
           </div>
-          <div className="hidden md:grid grid-cols-3 gap-8">
-            {STATS.map((stat, index) => (
-              <AnimatedStat
-                key={index}
-                prefix={stat.prefix}
-                targetNumber={stat.targetNumber}
-                suffix={stat.suffix}
-                label={stat.label}
-              />
-            ))}
-          </div>
-
-          <TypewriterLines />
         </div>
       </section>
     </GlassPanel>
@@ -621,46 +647,28 @@ function ValidationRibbon() {
 
 const FEATURES: { icon: LucideIcon; keyword: string; type: 'pillar' | 'advantage'; detail: string }[] = [
   {
-    icon: Building2,
-    keyword: 'Ownership',
-    type: 'pillar',
-    detail: 'eXp is publicly traded (EXPI). Agents earn stock through production and milestones — real ownership in the company they help build.',
-  },
-  {
-    icon: Layers,
-    keyword: 'Leverage',
-    type: 'pillar',
-    detail: '84,000+ agents across 29 countries. Cloud-based tools, global referrals, and systems built for scale — without office overhead.',
-  },
-  {
-    icon: Infinity,
-    keyword: 'Longevity',
-    type: 'pillar',
-    detail: 'Revenue share is a structural income stream. When agents you attract produce, you earn — even after you slow down or step back.',
-  },
-  {
-    icon: TrendingUp,
-    keyword: 'Profitability',
-    type: 'advantage',
-    detail: 'The only cumulatively profitable publicly traded real estate brokerage in recent years.',
-  },
-  {
     icon: Award,
     keyword: 'Agent Rankings',
     type: 'advantage',
-    detail: 'Consistently ranked the highest-ranked brokerage by Glassdoor\u2019s anonymous agent reviews.',
+    detail: 'Consistently ranked among the highest-rated brokerages by agents on Glassdoor, suggesting the day-to-day experience and support scale beyond individual offices.',
   },
   {
     icon: Cloud,
     keyword: 'Innovation',
     type: 'advantage',
-    detail: 'A cloud-based model that reinvests in systems, support, and agent programs instead of physical offices and franchise layers.',
+    detail: 'Operates without physical office overhead, allowing more resources to be directed toward technology, training, and agent programs instead of locations.',
+  },
+  {
+    icon: TrendingUp,
+    keyword: 'Profitability',
+    type: 'advantage',
+    detail: 'Cumulatively profitable as a publicly traded brokerage in recent years, which supports long-term viability and continued investment in systems and support.',
   },
   {
     icon: Users,
     keyword: 'Sponsor Support',
     type: 'advantage',
-    detail: 'The only brokerage that allows sponsors to independently build and deliver additional support.',
+    detail: 'Allows sponsors to independently build and deliver systems and training, which is not permitted at most brokerages and directly affects the level of support agents receive.',
   },
 ];
 
@@ -1068,7 +1076,7 @@ function SpotlightConsole() {
       <div className="max-w-[1400px] mx-auto">
         {/* H2 */}
         <div className="text-center mb-8">
-          <H2>WHY EXP EXISTS</H2>
+          <H2 theme="blue">Why Agents Look Closely at eXp</H2>
         </div>
 
         {/* Chips visibility sentinel — gates auto-rotation on both desktop and mobile */}
@@ -1084,8 +1092,8 @@ function SpotlightConsole() {
                 overflow: 'visible',
               }}
             >
-              <div className="grid grid-cols-3 gap-3">
-                {FEATURES.slice(0, 3).map((f, i) => (
+              <div className="grid grid-cols-2 gap-3">
+                {FEATURES.slice(0, 2).map((f, i) => (
                   <div key={f.keyword}>
                     <FeatureChip
                       icon={f.icon}
@@ -1097,25 +1105,13 @@ function SpotlightConsole() {
                 ))}
               </div>
               <div className="grid grid-cols-2 gap-3 mt-3">
-                {FEATURES.slice(3, 5).map((f, i) => (
+                {FEATURES.slice(2, 4).map((f, i) => (
                   <div key={f.keyword}>
                     <FeatureChip
                       icon={f.icon}
                       keyword={f.keyword}
-                      isActive={activeIndex === i + 3}
-                      onSelect={() => handleSelect(i + 3)}
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 gap-3 mt-3">
-                {FEATURES.slice(5, 7).map((f, i) => (
-                  <div key={f.keyword}>
-                    <FeatureChip
-                      icon={f.icon}
-                      keyword={f.keyword}
-                      isActive={activeIndex === i + 5}
-                      onSelect={() => handleSelect(i + 5)}
+                      isActive={activeIndex === i + 2}
+                      onSelect={() => handleSelect(i + 2)}
                     />
                   </div>
                 ))}
@@ -2081,7 +2077,7 @@ export default function AboutExpRealty() {
               <div className="flex flex-wrap justify-center gap-4 mt-8 mx-auto" style={{ maxWidth: '1200px' }}>
                 <FlipSplitCard />
                 <HeroStatCard targetNumber={28} suffix="+" label="Countries" />
-                <HeroStatCard prefix="S&P " targetNumber={600} label="Company" />
+                <HeroStatCard prefix="S&P " targetNumber={600} label="Company" className="!max-w-[260px]" />
               </div>
             </div>
           </div>
@@ -2096,10 +2092,10 @@ export default function AboutExpRealty() {
         </section>
       </StickyHeroWrapper>
 
-      {/* ════ Stats Bar ════ */}
-      <StatsBar />
+      {/* ════ How eXp is Built ════ */}
+      <HowExpIsBuilt />
 
-      {/* ════ Section 1: Why eXp Exists ════ */}
+      {/* ════ Section 1: Why Agents Look Closely at eXp ════ */}
       <SpotlightConsole />
 
       {/* ════ Section 2: Income & Ownership ════ */}
