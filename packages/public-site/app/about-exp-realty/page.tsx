@@ -1823,7 +1823,7 @@ function IncomeOwnershipSection() {
           </div>
 
           {/* C. Bottom Row: Fees CyberCard + Revenue Share Blue Card */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             {/* Left: Fees CyberCard */}
             <div className="h-full">
               <CyberCard padding="md" centered className="h-full">
