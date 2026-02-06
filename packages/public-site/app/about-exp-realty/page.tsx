@@ -835,10 +835,7 @@ function HowExpIsBuilt() {
                 </div>
 
                 {/* Label - body font styling */}
-                <p
-                  className="text-body text-sm leading-relaxed"
-                  style={{ color: 'var(--color-body-text)' }}
-                >
+                <p className="text-body opacity-80">
                   {priority.label}
                 </p>
               </div>
