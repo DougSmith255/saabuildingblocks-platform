@@ -1071,10 +1071,9 @@ function FeatureChip({
           </Icon3D>
         </span>
         <h3
-          className="chip-label"
+          className="text-h4"
           style={{
             color: isActive ? '#0a1520' : '#e5e4dd',
-            fontFamily: 'var(--font-display), system-ui',
             fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
             transition: 'color 0.4s ease',
           }}
