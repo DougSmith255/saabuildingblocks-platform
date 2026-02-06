@@ -3265,6 +3265,7 @@ function AgentPortal() {
                   { id: 'profile' as SectionId, label: 'My Profile', Icon: User },
                 ].map((item) => {
                   const isActive = activeSection === item.id;
+                  const isProfileItem = item.id === 'profile';
                   return (
                     <button
                       key={item.id}
@@ -3294,12 +3295,40 @@ function AgentPortal() {
                         background: isActive ? 'rgba(255, 215, 0, 0.08)' : 'transparent',
                       }}
                     >
-                      <item.Icon
-                        className="w-5 h-5"
-                        style={{
-                          filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
-                        }}
-                      />
+                      {/* Profile item shows actual profile picture */}
+                      {isProfileItem ? (
+                        <div
+                          className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0"
+                          style={{
+                            border: `2px solid ${isActive ? dashboardAccentColor : 'rgba(255,215,0,0.4)'}`,
+                            boxShadow: isActive ? `0 0 8px ${dashboardAccentColor}80` : 'none',
+                          }}
+                        >
+                          {user?.profilePictureUrl && !profileImageError ? (
+                            <img
+                              src={user.profilePictureUrl}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div
+                              className="w-full h-full flex items-center justify-center"
+                              style={{ backgroundColor: 'rgba(255,215,0,0.15)' }}
+                            >
+                              <span className="text-[10px] font-semibold" style={{ color: dashboardAccentColor }}>
+                                {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <item.Icon
+                          className="w-5 h-5"
+                          style={{
+                            filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
+                          }}
+                        />
+                      )}
                       <span
                         className="text-sm font-medium"
                         style={{
@@ -4018,41 +4047,71 @@ function AgentPortal() {
 
                 {/* Edit Form */}
                 <form onSubmit={handleEditProfileSubmit} className="space-y-5">
-                  {/* Display Name */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
-                      Display Name
-                    </label>
-                    <p className="text-xs text-[#e5e4dd]/50 mb-3">This name will appear on your Agent Attraction Page</p>
+                  {/* Display Name - Highlighted with warning */}
+                  <div
+                    className="relative rounded-xl p-4 -mx-1"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(168,85,247,0.08) 0%, rgba(168,85,247,0.03) 100%)',
+                      border: '1px solid rgba(168,85,247,0.2)',
+                    }}
+                  >
+                    <div className="flex items-start gap-2 mb-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-purple-500/20 flex items-center justify-center mt-0.5">
+                        <svg className="w-3 h-3 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-[#e5e4dd]/90">
+                          Display Name
+                        </label>
+                        <p className="text-xs text-purple-300/70 mt-0.5">Shown on your Agent Attraction Page</p>
+                      </div>
+                    </div>
                     <div className="grid grid-cols-2 gap-3">
                       <input
                         type="text"
                         value={editFormData.displayFirstName}
                         onChange={(e) => setEditFormData({ ...editFormData, displayFirstName: e.target.value })}
-                        className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                        className="w-full px-4 py-3 rounded-lg bg-black/40 border border-purple-500/20 text-[#e5e4dd] focus:border-purple-400/50 focus:outline-none focus:ring-1 focus:ring-purple-400/30 transition-colors"
                         placeholder="First Name"
                       />
                       <input
                         type="text"
                         value={editFormData.displayLastName}
                         onChange={(e) => setEditFormData({ ...editFormData, displayLastName: e.target.value })}
-                        className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                        className="w-full px-4 py-3 rounded-lg bg-black/40 border border-purple-500/20 text-[#e5e4dd] focus:border-purple-400/50 focus:outline-none focus:ring-1 focus:ring-purple-400/30 transition-colors"
                         placeholder="Last Name"
                       />
                     </div>
                   </div>
 
-                  {/* Email */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
-                      Email Address
-                    </label>
-                    <p className="text-xs text-[#e5e4dd]/50 mb-3">Used for login and communications</p>
+                  {/* Email - Highlighted with warning (more prominent - affects login) */}
+                  <div
+                    className="relative rounded-xl p-4 -mx-1"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(251,191,36,0.1) 0%, rgba(251,191,36,0.03) 100%)',
+                      border: '1px solid rgba(251,191,36,0.25)',
+                    }}
+                  >
+                    <div className="flex items-start gap-2 mb-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center mt-0.5">
+                        <svg className="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-[#e5e4dd]/90">
+                          Email Address
+                        </label>
+                        <p className="text-xs text-amber-300/80 mt-0.5">Used for login and all communications</p>
+                      </div>
+                    </div>
                     <input
                       type="email"
                       value={editFormData.email}
                       onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                      className="w-full px-4 py-3 rounded-lg bg-black/40 border border-amber-500/20 text-[#e5e4dd] focus:border-amber-400/50 focus:outline-none focus:ring-1 focus:ring-amber-400/30 transition-colors"
                       placeholder="your@email.com"
                     />
                   </div>
