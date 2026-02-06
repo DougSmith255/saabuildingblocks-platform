@@ -36,7 +36,7 @@ export async function sendPasswordResetEmail(
       }),
       tags: [
         { name: 'category', value: 'password-reset' },
-        { name: 'username', value: username },
+        { name: 'username', value: sanitizeTagValue(username) },
       ],
     });
 
@@ -47,6 +47,14 @@ export async function sendPasswordResetEmail(
       error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
+}
+
+/**
+ * Sanitize a string for use as a Resend tag value
+ * Resend tags only allow ASCII letters, numbers, underscores, and dashes
+ */
+function sanitizeTagValue(value: string): string {
+  return value.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
 }
 
 /**
@@ -66,7 +74,7 @@ export async function sendUsernameReminderEmail(
       }),
       tags: [
         { name: 'category', value: 'username-reminder' },
-        { name: 'username', value: username },
+        { name: 'username', value: sanitizeTagValue(username) },
       ],
     });
 
@@ -139,7 +147,7 @@ export async function sendAccountLockedEmail(
       }),
       tags: [
         { name: 'category', value: 'account-locked' },
-        { name: 'username', value: username },
+        { name: 'username', value: sanitizeTagValue(username) },
       ],
     });
 
@@ -175,7 +183,7 @@ export async function sendEmailVerificationEmail(
       }),
       tags: [
         { name: 'category', value: 'email-verification' },
-        { name: 'username', value: username },
+        { name: 'username', value: sanitizeTagValue(username) },
       ],
     });
 
@@ -213,8 +221,8 @@ export async function sendEmailChangeVerification(
       }),
       tags: [
         { name: 'category', value: 'email-change-verification' },
-        { name: 'username', value: username },
-        { name: 'old_email', value: oldEmail },
+        { name: 'username', value: sanitizeTagValue(username) },
+        { name: 'old_email', value: sanitizeTagValue(oldEmail) },
       ],
     });
 
@@ -251,8 +259,8 @@ export async function sendEmailChangeConfirmation(
       }),
       tags: [
         { name: 'category', value: 'email-change-confirmation' },
-        { name: 'username', value: username },
-        { name: 'new_email', value: newEmail },
+        { name: 'username', value: sanitizeTagValue(username) },
+        { name: 'new_email', value: sanitizeTagValue(newEmail) },
       ],
     });
 
