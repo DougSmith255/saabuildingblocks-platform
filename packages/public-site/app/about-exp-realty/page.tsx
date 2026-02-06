@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCard, CyberCardGold, CTAButton, SecondaryButton } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCard, CyberCardGold, CTAButton, SecondaryButton, GenericCard } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHeroEffects';
 import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, DollarSign, Receipt,
@@ -1941,9 +1941,9 @@ export default function AboutExpRealty() {
 
       {/* ════ Hero Section ════ */}
       <StickyHeroWrapper>
-        <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+        <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <LazyAuroraNetworkEffect />
-          <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
+          <div className="max-w-[1900px] mx-auto w-full text-center relative z-10 flex-1 flex flex-col justify-center">
             <div className="relative z-10">
               <H1
                 style={{
@@ -1963,14 +1963,35 @@ export default function AboutExpRealty() {
                   filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(0, 191, 255, 0.25))',
                 }}
               >ABOUT EXP REALTY</H1>
-              <Tagline className="mt-4 text-lg md:text-xl">
-                World&apos;s #1 independent brokerage
-              </Tagline>
               <p className="text-body mt-4" style={{ opacity: 0.9 }}>
-                Built for efficient production and life beyond your last deal.
+                A brokerage built for efficient production and income beyond active sales.
               </p>
+
+              {/* Stats Cards */}
+              <div className="flex flex-wrap justify-center gap-4 mt-8 max-w-3xl mx-auto">
+                <GenericCard padding="sm" centered className="flex-1 min-w-[140px] max-w-[200px]">
+                  <p className="text-tagline" style={{ marginBottom: '0.25rem' }}>0/100 Split</p>
+                  <p className="text-body text-sm opacity-70">After Cap</p>
+                </GenericCard>
+                <GenericCard padding="sm" centered className="flex-1 min-w-[140px] max-w-[200px]">
+                  <p className="text-tagline" style={{ marginBottom: '0.25rem' }}>28+</p>
+                  <p className="text-body text-sm opacity-70">Countries</p>
+                </GenericCard>
+                <GenericCard padding="sm" centered className="flex-1 min-w-[140px] max-w-[200px]">
+                  <p className="text-tagline" style={{ marginBottom: '0.25rem' }}>S&P 600</p>
+                  <p className="text-body text-sm opacity-70">SmallCap Index</p>
+                </GenericCard>
+              </div>
             </div>
           </div>
+
+          {/* Caption at bottom of hero */}
+          <p
+            className="text-caption text-center opacity-70 relative z-10"
+            style={{ marginBottom: '15px' }}
+          >
+            This page explains how eXp Realty works, what&apos;s included, and how sponsorship fits into the model.
+          </p>
         </section>
       </StickyHeroWrapper>
 
