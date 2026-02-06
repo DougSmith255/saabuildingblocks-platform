@@ -1310,6 +1310,7 @@ function AgentPortal() {
           setPreloadedAgentPageData(result.agentPageData);
         }
         // Preload dashboard stats (needs token + user ID)
+        // Also fetch fresh agent page data to ensure profile images are up-to-date
         const token = typeof localStorage !== 'undefined' ? localStorage.getItem('agent_portal_token') : null;
         const uid = result.userData?.id;
         if (token && uid) {
@@ -1320,6 +1321,12 @@ function AgentPortal() {
             if (isAuthError(pageRes)) return;
             if (pageRes.ok) {
               const pageJson = await pageRes.json();
+              // Update preloadedAgentPageData with fresh data (including profile images)
+              if (pageJson?.page) {
+                setPreloadedAgentPageData(pageJson);
+                // Cache for future loads
+                try { localStorage.setItem('agent_portal_page_data', JSON.stringify(pageJson)); } catch {}
+              }
               const pageId = pageJson?.page?.id;
               if (pageId) {
                 const statsRes = await fetch(`${API_URL}/api/tracking/stats?agent_page_id=${pageId}`, {
@@ -1352,7 +1359,7 @@ function AgentPortal() {
         if (result.agentPageData) {
           setPreloadedAgentPageData(result.agentPageData);
         }
-        // Also preload stats in background
+        // Also preload stats in background and fetch fresh agent page data
         const token = typeof localStorage !== 'undefined' ? localStorage.getItem('agent_portal_token') : null;
         const uid = result.userData?.id;
         if (token && uid) {
@@ -1363,6 +1370,12 @@ function AgentPortal() {
             if (isAuthError(pageRes)) return;
             if (pageRes.ok) {
               const pageJson = await pageRes.json();
+              // Update preloadedAgentPageData with fresh data (including profile images)
+              if (pageJson?.page) {
+                setPreloadedAgentPageData(pageJson);
+                // Cache for future loads
+                try { localStorage.setItem('agent_portal_page_data', JSON.stringify(pageJson)); } catch {}
+              }
               const pageId = pageJson?.page?.id;
               if (pageId) {
                 const statsRes = await fetch(`${API_URL}/api/tracking/stats?agent_page_id=${pageId}`, {
@@ -1508,6 +1521,42 @@ function AgentPortal() {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [user]);
+
+  // Sync preloadedAgentPageData when agent page images are updated from child components
+  // This ensures the mobile menu profile image stays in sync with uploads
+  // Also update localStorage cache so refreshes show the latest images
+  useEffect(() => {
+    const handleAgentPageImageUpdated = (event: CustomEvent<{ url: string }>) => {
+      setPreloadedAgentPageData((prev: any) => {
+        if (!prev?.page) return prev;
+        const updated = {
+          ...prev,
+          page: { ...prev.page, profile_image_url: event.detail.url }
+        };
+        // Also update localStorage cache
+        try { localStorage.setItem('agent_portal_page_data', JSON.stringify(updated)); } catch {}
+        return updated;
+      });
+    };
+    const handleAgentPageColorImageUpdated = (event: CustomEvent<{ url: string }>) => {
+      setPreloadedAgentPageData((prev: any) => {
+        if (!prev?.page) return prev;
+        const updated = {
+          ...prev,
+          page: { ...prev.page, profile_image_color_url: event.detail.url }
+        };
+        // Also update localStorage cache
+        try { localStorage.setItem('agent_portal_page_data', JSON.stringify(updated)); } catch {}
+        return updated;
+      });
+    };
+    window.addEventListener('agent-page-image-updated', handleAgentPageImageUpdated as EventListener);
+    window.addEventListener('agent-page-color-image-updated', handleAgentPageColorImageUpdated as EventListener);
+    return () => {
+      window.removeEventListener('agent-page-image-updated', handleAgentPageImageUpdated as EventListener);
+      window.removeEventListener('agent-page-color-image-updated', handleAgentPageColorImageUpdated as EventListener);
+    };
+  }, []);
 
   // Fetch onboarding progress when user is loaded
   useEffect(() => {
