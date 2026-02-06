@@ -3314,7 +3314,6 @@ function AgentPortal() {
                   { id: 'profile' as SectionId, label: 'My Profile', Icon: User },
                 ].map((item) => {
                   const isActive = activeSection === item.id;
-                  const isProfileItem = item.id === 'profile';
                   return (
                     <button
                       key={item.id}
@@ -3344,46 +3343,13 @@ function AgentPortal() {
                         background: isActive ? 'rgba(255, 215, 0, 0.08)' : 'transparent',
                       }}
                     >
-                      {/* Profile item shows actual profile picture (with fallback to agent page image) */}
-                      {isProfileItem ? (() => {
-                        // Use dashboard profile picture, or fall back to agent page image (color preferred)
-                        const mobileMenuProfileUrl = user?.profilePictureUrl
-                          || preloadedAgentPageData?.page?.profile_image_color_url
-                          || preloadedAgentPageData?.page?.profile_image_url;
-                        return (
-                        <div
-                          className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0"
-                          style={{
-                            border: `2px solid ${isActive ? dashboardAccentColor : 'rgba(255,215,0,0.4)'}`,
-                            boxShadow: isActive ? `0 0 8px ${dashboardAccentColor}80` : 'none',
-                          }}
-                        >
-                          {mobileMenuProfileUrl && !profileImageError ? (
-                            <img
-                              src={mobileMenuProfileUrl}
-                              alt=""
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div
-                              className="w-full h-full flex items-center justify-center"
-                              style={{ backgroundColor: 'rgba(255,215,0,0.15)' }}
-                            >
-                              <span className="text-[10px] font-semibold" style={{ color: dashboardAccentColor }}>
-                                {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                        );
-                      })() : (
-                        <item.Icon
-                          className="w-5 h-5"
-                          style={{
-                            filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
-                          }}
-                        />
-                      )}
+                      {/* All menu items use their Icon - profile no longer shows picture */}
+                      <item.Icon
+                        className="w-5 h-5"
+                        style={{
+                          filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
+                        }}
+                      />
                       <span
                         className="text-sm font-medium"
                         style={{
@@ -3712,7 +3678,12 @@ function AgentPortal() {
                         />
                       </div>
                     )}
-                    {user?.profilePictureUrl && !profileImageError ? (
+                    {(() => {
+                      // Use dashboard profile picture, or fall back to agent page image
+                      const sidebarProfileUrl = user?.profilePictureUrl
+                        || preloadedAgentPageData?.page?.profile_image_color_url
+                        || preloadedAgentPageData?.page?.profile_image_url;
+                      return sidebarProfileUrl && !profileImageError ? (
                       <>
                         {/* Loading spinner - shows while image is loading */}
                         {profileImageLoading && (
@@ -3724,7 +3695,7 @@ function AgentPortal() {
                           </div>
                         )}
                         <img
-                          src={user?.profilePictureUrl}
+                          src={sidebarProfileUrl}
                           alt=""
                           className="w-full h-full object-cover"
                           loading="eager"
@@ -3733,9 +3704,9 @@ function AgentPortal() {
                           onLoad={() => setProfileImageLoading(false)}
                           onError={() => {
                             // If CDN URL fails, retry with original assets URL before giving up
-                            if (!profileImageRetried.current && user?.profilePictureUrl?.includes('cdn.saabuildingblocks.com')) {
+                            if (!profileImageRetried.current && sidebarProfileUrl?.includes('cdn.saabuildingblocks.com')) {
                               profileImageRetried.current = true;
-                              const fallbackUrl = user.profilePictureUrl.replace('cdn.saabuildingblocks.com', 'assets.saabuildingblocks.com');
+                              const fallbackUrl = sidebarProfileUrl.replace('cdn.saabuildingblocks.com', 'assets.saabuildingblocks.com');
                               setUser(prev => prev ? { ...prev, profilePictureUrl: fallbackUrl } : prev);
                             } else {
                               setProfileImageError(true);
@@ -3753,7 +3724,8 @@ function AgentPortal() {
                           {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
                         </span>
                       </div>
-                    )}
+                    );
+                    })()}
                     {/* Hover overlay */}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -4036,7 +4008,12 @@ function AgentPortal() {
                         />
                       </div>
                     )}
-                    {user?.profilePictureUrl && !profileImageError ? (
+                    {(() => {
+                      // Use dashboard profile picture, or fall back to agent page image
+                      const editProfileUrl = user?.profilePictureUrl
+                        || preloadedAgentPageData?.page?.profile_image_color_url
+                        || preloadedAgentPageData?.page?.profile_image_url;
+                      return editProfileUrl && !profileImageError ? (
                       <>
                         {/* Loading spinner - shows while image is loading */}
                         {profileImageLoading && (
@@ -4048,7 +4025,7 @@ function AgentPortal() {
                           </div>
                         )}
                         <img
-                          src={user?.profilePictureUrl}
+                          src={editProfileUrl}
                           alt=""
                           className="w-full h-full object-cover"
                           loading="eager"
@@ -4057,9 +4034,9 @@ function AgentPortal() {
                           onLoad={() => setProfileImageLoading(false)}
                           onError={() => {
                             // If CDN URL fails, retry with original assets URL before giving up
-                            if (!profileImageRetried.current && user?.profilePictureUrl?.includes('cdn.saabuildingblocks.com')) {
+                            if (!profileImageRetried.current && editProfileUrl?.includes('cdn.saabuildingblocks.com')) {
                               profileImageRetried.current = true;
-                              const fallbackUrl = user.profilePictureUrl.replace('cdn.saabuildingblocks.com', 'assets.saabuildingblocks.com');
+                              const fallbackUrl = editProfileUrl.replace('cdn.saabuildingblocks.com', 'assets.saabuildingblocks.com');
                               setUser(prev => prev ? { ...prev, profilePictureUrl: fallbackUrl } : prev);
                             } else {
                               setProfileImageError(true);
@@ -4077,7 +4054,8 @@ function AgentPortal() {
                           {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
                         </span>
                       </div>
-                    )}
+                    );
+                    })()}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />

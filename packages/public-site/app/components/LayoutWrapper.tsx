@@ -124,6 +124,16 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     '/download',                // Download page
   ], []);
 
+  // Routes where VIP Guest Pass popup should NOT appear
+  // (timer paused, scroll trigger disabled)
+  const noVipPopupPrefixes = useMemo(() => [
+    '/agent-portal',            // All agent portal pages - users are already members
+    '/master-controller',       // Admin interface
+    '/login',                   // Auth pages
+    '/activate',                // Account activation
+    '/download',                // Download page
+  ], []);
+
   // Check for embed mode via URL search params
   const [isEmbedMode, setIsEmbedMode] = useState(false);
   // State for controlling VIP Guest Pass popup (triggered by debug button or custom event)
@@ -230,6 +240,15 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     );
   }, [pathname, noFloatingButtonPrefixes]);
 
+  // Check if VIP Guest Pass popup should be hidden (agent portal, admin pages)
+  const shouldHideVipPopup = useMemo(() => {
+    if (!pathname) return false;
+    const normalizedPath = pathname.replace(/\/$/, '');
+    return noVipPopupPrefixes.some(prefix =>
+      normalizedPath === prefix || normalizedPath.startsWith(prefix)
+    );
+  }, [pathname, noVipPopupPrefixes]);
+
   // Embed mode: minimal wrapper, just the content
   if (isEmbedMode) {
     return <>{children}</>;
@@ -245,7 +264,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       <ViewportHeightLock />
       {!shouldHideHeaderFooter && <Header />}
       {!shouldHideHeaderFooter && !shouldHideFloatingButton && <FloatingVideoButton />}
-      {!shouldHideHeaderFooter && <VIPGuestPassPopup forceOpen={forceVipOpen} onForceClose={() => setForceVipOpen(false)} />}
+      {!shouldHideHeaderFooter && !shouldHideVipPopup && <VIPGuestPassPopup forceOpen={forceVipOpen} onForceClose={() => setForceVipOpen(false)} />}
       {/*
         Using div instead of main to avoid nested <main> elements.
         Pages already have their own <main id="main-content"> for accessibility.
