@@ -973,7 +973,7 @@ const INCOME_STREAMS: {
 
 const FEES_CARD = {
   icon: Receipt,
-  title: 'Fees',
+  title: 'eXp Fees',
   description: '$85 monthly flat fee, no desk, franchise, or royalty fees',
 };
 
@@ -1583,8 +1583,8 @@ function CommissionDonut() {
   const eightyPercent = circumference * 0.8;
 
   return (
-    <div ref={ref} className="flex items-center justify-center h-20">
-      <svg width={size} height={size} className="transform -rotate-90">
+    <div ref={ref} className="flex items-center justify-center h-20 overflow-visible">
+      <svg width={size} height={size} className="transform -rotate-90 overflow-visible">
         {/* Background ring */}
         <circle
           cx={size / 2}
@@ -1802,9 +1802,9 @@ function IncomeOwnershipSection() {
             {INCOME_STREAMS.map((stream) => (
               <div key={stream.title} className="h-full">
                 <CyberCard padding="md" centered className="h-full">
-                  <div className="flex flex-col items-center text-center h-full">
+                  <div className="flex flex-col items-center text-center h-full overflow-visible">
                     {/* Visual */}
-                    <div className="relative mb-4">
+                    <div className="relative mb-4 overflow-visible">
                       {cardVisuals[stream.title]}
                     </div>
 
