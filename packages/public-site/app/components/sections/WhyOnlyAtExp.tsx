@@ -171,7 +171,7 @@ export function WhyOnlyAtExp() {
                   onClick={handleCardClick}
                   style={{
                     perspective: '1200px',
-                    height: '315px',
+                    height: '349px',
                   }}
                 >
                   {STEPS.map((step, index) => {

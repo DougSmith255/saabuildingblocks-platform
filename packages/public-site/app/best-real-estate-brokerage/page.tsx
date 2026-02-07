@@ -1,6 +1,7 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { AsteroidBeltEffect } from '@/components/shared/hero-effects/AsteroidBeltEffect';
@@ -125,23 +126,23 @@ export default function BestRealEstateBrokerage() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 text-center items-stretch">
-              <CyberCard padding="lg" className="h-full">
+              <GenericCyberCardGold padding="lg" className="h-full">
                 <p className="text-h3 mb-2 stat-3d-text">100%</p>
                 <p className="text-body">Commission After Cap</p>
                 <p className="text-caption mt-1">Cap at just $16,000</p>
-              </CyberCard>
+              </GenericCyberCardGold>
 
-              <CyberCard padding="lg" className="h-full">
+              <GenericCyberCardGold padding="lg" className="h-full">
                 <p className="text-h3 mb-2 stat-3d-text">$85</p>
                 <p className="text-body">Monthly Fee</p>
                 <p className="text-caption mt-1">No desk or franchise fees</p>
-              </CyberCard>
+              </GenericCyberCardGold>
 
-              <CyberCard padding="lg" className="h-full">
+              <GenericCyberCardGold padding="lg" className="h-full">
                 <p className="text-h3 mb-2 stat-3d-text">4</p>
                 <p className="text-body">Income Streams</p>
                 <p className="text-caption mt-1">Commission, stock, rev share, referrals</p>
-              </CyberCard>
+              </GenericCyberCardGold>
             </div>
           </div>
         </section>

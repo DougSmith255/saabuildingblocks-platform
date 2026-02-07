@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCard, CyberCardGold, CTAButton, SecondaryButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCardGold, CTAButton, SecondaryButton, GenericCard } from '@saa/shared/components/saa';
+import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHeroEffects';
 import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, DollarSign, Receipt,
@@ -151,7 +152,7 @@ function AnimatedStat({
   const { displayValue, elementRef, hasAnimated } = useScrambleCounter(targetNumber, 2000);
 
   return (
-    <CyberCard padding="md" centered>
+    <GenericCyberCardGold padding="md" centered>
       <div className="flex items-center justify-center gap-3 mb-2">
         <p
           className="text-4xl lg:text-5xl font-bold tabular-nums"
@@ -171,7 +172,7 @@ function AnimatedStat({
       <p className="text-sm uppercase tracking-wider" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
         {label}
       </p>
-    </CyberCard>
+    </GenericCyberCardGold>
   );
 }
 
@@ -643,7 +644,7 @@ function IntroFlipCard() {
 
   // Card 01 - Red theme with Ban icon
   const card01 = (
-    <CyberCard padding="md" centered className="h-full">
+    <GenericCyberCardGold padding="md" centered className="h-full">
       {/* Ban Icon Badge */}
       <span
         className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
@@ -668,7 +669,7 @@ function IntroFlipCard() {
           {INTRO_CARDS[0].text}
         </p>
       </div>
-    </CyberCard>
+    </GenericCyberCardGold>
   );
 
   // Card 02 - Blue theme with eXp X logo
@@ -754,7 +755,7 @@ function HowExpIsBuilt() {
           <div className="hidden sm:grid grid-cols-2 gap-5 max-w-[1400px] mx-auto mb-10">
             {/* Card 01 - CyberCard with Ban icon and red text */}
             <div className="relative">
-              <CyberCard padding="md" centered className="h-full">
+              <GenericCyberCardGold padding="md" centered className="h-full">
                 {/* Ban Icon Badge */}
                 <span
                   className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
@@ -779,7 +780,7 @@ function HowExpIsBuilt() {
                     {INTRO_CARDS[0].text}
                   </p>
                 </div>
-              </CyberCard>
+              </GenericCyberCardGold>
             </div>
             {/* Card 02 - CyberCardGold with eXp X logo and blue text */}
             <div className="relative">
@@ -1204,7 +1205,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
   }, [feature, transitionKey, displayedKey]);
 
   return (
-    <CyberCard padding="md" centered={false} className="h-full">
+    <GenericCyberCardGold padding="md" centered={false} className="h-full">
       <div className="relative h-full flex flex-col justify-center overflow-visible">
         {/* Watermark icon — large faded background icon */}
         <div
@@ -1250,7 +1251,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
           </span>
         </div>
       </div>
-    </CyberCard>
+    </GenericCyberCardGold>
   );
 }
 

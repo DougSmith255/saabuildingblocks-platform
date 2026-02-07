@@ -1,6 +1,7 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { AuroraNetworkEffect } from '@/components/shared/hero-effects/AuroraNetworkEffect';
@@ -77,10 +78,10 @@ export default function Locations() {
         <div className="max-w-[1900px] mx-auto">
           <div className="grid md:grid-cols-3 gap-6 text-center items-stretch">
             {stats.map((stat, index) => (
-              <CyberCard key={index} padding="lg" className="h-full">
+              <GenericCyberCardGold key={index} padding="lg" className="h-full">
                 <p className="text-h2 mb-2 stat-3d-text">{stat.value}</p>
                 <p className="text-body">{stat.label}</p>
-              </CyberCard>
+              </GenericCyberCardGold>
             ))}
           </div>
         </div>

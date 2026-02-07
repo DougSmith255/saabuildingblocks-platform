@@ -1,6 +1,7 @@
 'use client';
 
-import { H2, CyberCard } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa';
+import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
 import { TrendingUp, Users, Award } from 'lucide-react';
 
 const proofItems = [
@@ -33,7 +34,7 @@ export function SocialProof() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {proofItems.map((item, index) => (
-            <CyberCard
+            <GenericCyberCardGold
               key={index}
               padding="md"
               centered
@@ -55,7 +56,7 @@ export function SocialProof() {
                   {item.label}
                 </p>
               </div>
-            </CyberCard>
+            </GenericCyberCardGold>
           ))}
         </div>
       </div>
