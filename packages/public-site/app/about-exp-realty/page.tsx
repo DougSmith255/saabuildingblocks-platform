@@ -1508,16 +1508,28 @@ function SpotlightConsole() {
 
         {/* Mobile / Tablet: stacked layout */}
         <div className="lg:hidden">
-          {/* 4 chips in a single row above description */}
+          {/* 4 chips in 2x2 grid above description */}
           <div className="mb-4">
-            <div className="grid grid-cols-4 gap-2" style={{ height: '100px' }}>
-              {FEATURES.map((f, i) => (
+            <div className="grid grid-cols-2 gap-3" style={{ height: '100px' }}>
+              {FEATURES.slice(0, 2).map((f, i) => (
                 <div key={f.keyword} style={{ height: '100%' }}>
                   <FeatureChip
                     icon={f.icon}
                     keyword={f.keyword}
                     isActive={activeIndex === i}
                     onSelect={() => handleSelect(i)}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-3 mt-3" style={{ height: '100px' }}>
+              {FEATURES.slice(2, 4).map((f, i) => (
+                <div key={f.keyword} style={{ height: '100%' }}>
+                  <FeatureChip
+                    icon={f.icon}
+                    keyword={f.keyword}
+                    isActive={activeIndex === i + 2}
+                    onSelect={() => handleSelect(i + 2)}
                   />
                 </div>
               ))}
