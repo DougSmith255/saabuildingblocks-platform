@@ -3386,7 +3386,7 @@ export default function AboutExpRealty() {
               </div>
 
               {/* Stats Cards with counter animation */}
-              <div className="flex flex-wrap justify-center mt-8 mx-auto" style={{ maxWidth: '1200px', gap: '20px' }}>
+              <div className="flex flex-wrap justify-center gap-3 sm:gap-5 mt-8 mx-auto" style={{ maxWidth: '1200px' }}>
                 <FlipSplitCard />
                 <HeroStatCard targetNumber={28} suffix="+" label="Countries" />
                 <HeroStatCard prefix="S&P " targetNumber={600} label="Company" />
