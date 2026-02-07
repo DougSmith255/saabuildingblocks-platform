@@ -1598,7 +1598,7 @@ function SpotlightConsole() {
 
         {/* CTA */}
         <div className="mt-8 text-center">
-          <SecondaryButton href="#">More on How eXp is Different</SecondaryButton>
+          <SecondaryButton href="#">What Makes eXp Different</SecondaryButton>
         </div>
       </div>
     </section>
@@ -2495,7 +2495,7 @@ function SupportInfrastructureSection() {
             </ul>
           </div>
           <div className="flex justify-center mt-8">
-            <SecondaryButton href="#" variant="blue">Explore more about eXp support</SecondaryButton>
+            <SecondaryButton href="#" variant="blue">Explore Support</SecondaryButton>
           </div>
         </div>
       </div>
@@ -2738,7 +2738,7 @@ function WhatExpProvidesSection() {
 
           {/* CTA */}
           <div className="flex justify-center mt-8">
-            <SecondaryButton href="#" variant="blue">Explore more about eXp {TAB_CONTENT[activeTab].label.toLowerCase()}</SecondaryButton>
+            <SecondaryButton href="#" variant="blue">Explore {TAB_CONTENT[activeTab].label}</SecondaryButton>
           </div>
         </div>
       </div>
@@ -3138,7 +3138,7 @@ function WhoExpWorksBestForSection() {
             transition: 'opacity 0.6s ease 0.6s',
           }}
         >
-          <SecondaryButton href="#" variant="blue">Explore more about eXp fit</SecondaryButton>
+          <SecondaryButton href="#" variant="blue">Is eXp Right for You?</SecondaryButton>
         </div>
       </div>
 
@@ -3262,8 +3262,8 @@ function WhereSAAFitsSection() {
             }}
           >
             <SecondaryButton href="/about-smart-agent-alliance">Learn About SAA</SecondaryButton>
-            <SecondaryButton href="#">See the full value (webinar)</SecondaryButton>
-            <CTAButton href="/join-us">Join eXp with Smart Agent Alliance</CTAButton>
+            <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
+            <CTAButton href="/join-us">Join with SAA</CTAButton>
           </div>
         </div>
 

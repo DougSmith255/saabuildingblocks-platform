@@ -136,7 +136,7 @@ export function ValuePillarsTab() {
             </div>
             <div className="mt-3">
               <SecondaryButton href="/about-exp-realty">
-                Learn How Sponsorship Works at eXp
+                How Sponsorship Works
               </SecondaryButton>
             </div>
           </div>

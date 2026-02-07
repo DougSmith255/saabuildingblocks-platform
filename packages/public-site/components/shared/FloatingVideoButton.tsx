@@ -47,6 +47,13 @@ export function FloatingVideoButton() {
     setIsPanelOpen(false);
   }, []);
 
+  // Listen for custom event to open panel from other components
+  useEffect(() => {
+    const openFromExternal = () => setIsPanelOpen(true);
+    window.addEventListener('openInsideLookPanel', openFromExternal);
+    return () => window.removeEventListener('openInsideLookPanel', openFromExternal);
+  }, []);
+
   const shouldShow = isVisible && !isPanelOpen && !isNearFooter;
 
   return (
