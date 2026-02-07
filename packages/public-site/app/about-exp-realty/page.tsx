@@ -3213,9 +3213,9 @@ function WhereSAAFitsSection() {
 function WhatExpProvidesVersionB() {
   const [expandedIndex, setExpandedIndex] = useState(0);
   const panels = [
-    { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS },
-    { id: 'technology', label: 'TECHNOLOGY', icon: Laptop, bullets: TECHNOLOGY_BULLETS },
-    { id: 'leads', label: 'LEADS', icon: UserPlus, bullets: LEADS_BULLETS },
+    { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS, buttonText: 'Explore Community' },
+    { id: 'technology', label: 'TECHNOLOGY', icon: Laptop, bullets: TECHNOLOGY_BULLETS, buttonText: 'Explore Technology' },
+    { id: 'leads', label: 'LEADS', icon: UserPlus, bullets: LEADS_BULLETS, buttonText: 'Explore Leads' },
   ];
 
   // Blue theme color
@@ -3311,6 +3311,15 @@ function WhatExpProvidesVersionB() {
                           </li>
                         ))}
                       </ul>
+                      <div
+                        className="pt-4"
+                        style={{
+                          opacity: isExpanded ? 1 : 0,
+                          transition: 'opacity 0.3s ease 0.2s',
+                        }}
+                      >
+                        <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
+                      </div>
                     </div>
                   </CardComponent>
                 </div>
@@ -3402,6 +3411,17 @@ function WhatExpProvidesVersionB() {
                         </li>
                       ))}
                     </ul>
+
+                    {/* Button - only visible when expanded */}
+                    <div
+                      className="mt-4"
+                      style={{
+                        opacity: isExpanded ? 1 : 0,
+                        transition: 'opacity 0.4s ease 0.3s',
+                      }}
+                    >
+                      <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
+                    </div>
                   </div>
                 </div>
               );
@@ -3418,17 +3438,12 @@ function WhatExpProvidesVersionB() {
    3 versions for comparison
    ═══════════════════════════════════════════════════════════════ */
 
-function AdditionalAreasVersionA() {
+function AdditionalAreasSection() {
   return (
     <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
       <div className="max-w-[1200px] mx-auto">
-        {/* H2 Heading with decorative lines */}
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <div className="h-[2px] w-16 md:w-24" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,191,255,0.5))' }} />
-            <div className="w-3 h-3 rounded-full" style={{ background: '#00bfff', boxShadow: '0 0 15px rgba(0,191,255,0.6)' }} />
-            <div className="h-[2px] w-16 md:w-24" style={{ background: 'linear-gradient(90deg, rgba(0,191,255,0.5), transparent)' }} />
-          </div>
+        {/* H2 Heading */}
+        <div className="text-center mb-10">
           <H2>ADDITIONAL AREAS AGENTS EXPLORE OVER TIME</H2>
           <p className="text-body mt-4 max-w-[600px] mx-auto" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
             As agents grow, specialize, or shift focus, these areas often become relevant later.
@@ -3508,223 +3523,6 @@ function AdditionalAreasVersionA() {
   );
 }
 
-function AdditionalAreasVersionB() {
-  const [activePanel, setActivePanel] = useState<'divisions' | 'solutions'>('divisions');
-
-  return (
-    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12" style={{ background: '#070707' }}>
-      <div className="max-w-[1200px] mx-auto">
-        {/* H2 Heading */}
-        <div className="text-center mb-10">
-          <H2>ADDITIONAL AREAS AGENTS EXPLORE OVER TIME</H2>
-          <p className="text-body mt-4 max-w-[600px] mx-auto" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
-            As agents grow, specialize, or shift focus, these areas often become relevant later.
-          </p>
-        </div>
-
-        {/* Tabbed panels with gold styling */}
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* Divisions Panel */}
-          <div
-            className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500"
-            style={{
-              flex: activePanel === 'divisions' ? '2' : '1',
-              border: '2px solid rgba(255,215,0,0.4)',
-              boxShadow: activePanel === 'divisions' ? '0 0 40px rgba(255,215,0,0.2)' : 'none',
-              background: 'linear-gradient(180deg, rgba(40,35,20,0.95), rgba(25,22,12,0.98))',
-            }}
-            onClick={() => setActivePanel('divisions')}
-          >
-            <div className="absolute right-0 bottom-0 pointer-events-none" style={{ opacity: activePanel === 'divisions' ? 0.06 : 0.03, color: '#ffd700' }}>
-              <Layers size={160} strokeWidth={1} />
-            </div>
-            <div className="relative z-10 p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <Icon3D color="#ffd700" size={48}>
-                  <Layers size={24} />
-                </Icon3D>
-                <h3 className="text-h3" style={{ color: '#ffd700' }}>DIVISIONS</h3>
-              </div>
-              <ul
-                className="space-y-3 overflow-hidden transition-all duration-500"
-                style={{
-                  maxHeight: activePanel === 'divisions' ? '400px' : '0',
-                  opacity: activePanel === 'divisions' ? 1 : 0,
-                }}
-              >
-                {DIVISIONS.map((division, i) => (
-                  <li
-                    key={division}
-                    className="text-body flex items-center gap-3"
-                    style={{
-                      color: 'var(--color-body-text)',
-                      transform: activePanel === 'divisions' ? 'translateX(0)' : 'translateX(-20px)',
-                      transition: `transform 0.4s ease ${i * 50}ms, opacity 0.4s ease ${i * 50}ms`,
-                    }}
-                  >
-                    <span className="w-6 h-6 rounded flex items-center justify-center" style={{ background: 'rgba(255,215,0,0.15)', border: '1px solid rgba(255,215,0,0.3)' }}>
-                      <span style={{ color: '#ffd700', fontSize: '8px' }}>◆</span>
-                    </span>
-                    {division}
-                  </li>
-                ))}
-              </ul>
-              {activePanel === 'divisions' && (
-                <div className="mt-6">
-                  <SecondaryButton href="#">Explore Divisions</SecondaryButton>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Solutions Panel */}
-          <div
-            className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500"
-            style={{
-              flex: activePanel === 'solutions' ? '2' : '1',
-              border: '2px solid rgba(255,215,0,0.4)',
-              boxShadow: activePanel === 'solutions' ? '0 0 40px rgba(255,215,0,0.2)' : 'none',
-              background: 'linear-gradient(180deg, rgba(40,35,20,0.95), rgba(25,22,12,0.98))',
-            }}
-            onClick={() => setActivePanel('solutions')}
-          >
-            <div className="absolute right-0 bottom-0 pointer-events-none" style={{ opacity: activePanel === 'solutions' ? 0.06 : 0.03, color: '#ffd700' }}>
-              <Sparkles size={160} strokeWidth={1} />
-            </div>
-            <div className="relative z-10 p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <Icon3D color="#ffd700" size={48}>
-                  <Sparkles size={24} />
-                </Icon3D>
-                <h3 className="text-h3" style={{ color: '#ffd700' }}>SOLUTIONS</h3>
-              </div>
-              <ul
-                className="space-y-3 overflow-hidden transition-all duration-500"
-                style={{
-                  maxHeight: activePanel === 'solutions' ? '400px' : '0',
-                  opacity: activePanel === 'solutions' ? 1 : 0,
-                }}
-              >
-                {SOLUTIONS.map((solution, i) => (
-                  <li
-                    key={solution}
-                    className="text-body flex items-center gap-3"
-                    style={{
-                      color: 'var(--color-body-text)',
-                      transform: activePanel === 'solutions' ? 'translateX(0)' : 'translateX(-20px)',
-                      transition: `transform 0.4s ease ${i * 50}ms, opacity 0.4s ease ${i * 50}ms`,
-                    }}
-                  >
-                    <span className="w-6 h-6 rounded flex items-center justify-center" style={{ background: 'rgba(255,215,0,0.15)', border: '1px solid rgba(255,215,0,0.3)' }}>
-                      <span style={{ color: '#ffd700', fontSize: '8px' }}>◆</span>
-                    </span>
-                    {solution}
-                  </li>
-                ))}
-              </ul>
-              {activePanel === 'solutions' && (
-                <div className="mt-6">
-                  <SecondaryButton href="#">Explore Solutions</SecondaryButton>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function AdditionalAreasVersionC() {
-  return (
-    <GlassPanel variant="tealCrosshatch" noBlur>
-      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          {/* H2 Heading */}
-          <div className="text-center mb-10">
-            <H2>ADDITIONAL AREAS AGENTS EXPLORE OVER TIME</H2>
-            <p className="text-body mt-4 max-w-[600px] mx-auto" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
-              As agents grow, specialize, or shift focus, these areas often become relevant later.
-            </p>
-          </div>
-
-          {/* Single stacked layout with icon cards */}
-          <div className="space-y-8">
-            {/* Divisions Section */}
-            <div className="relative">
-              <div className="flex items-center gap-4 mb-6">
-                <div
-                  className="w-14 h-14 rounded-xl flex items-center justify-center"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))',
-                    border: '2px solid rgba(0,191,255,0.4)',
-                    boxShadow: '0 0 20px rgba(0,191,255,0.2)',
-                  }}
-                >
-                  <Layers size={28} style={{ color: '#00bfff' }} />
-                </div>
-                <h3 className="text-h3" style={{ color: '#00bfff' }}>DIVISIONS</h3>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                {DIVISIONS.map((division) => (
-                  <div
-                    key={division}
-                    className="group relative rounded-xl p-4 text-center transition-all duration-300 hover:scale-[1.03]"
-                    style={{
-                      background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
-                      border: '1px solid rgba(0,191,255,0.2)',
-                    }}
-                  >
-                    <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity" style={{ boxShadow: '0 0 20px rgba(0,191,255,0.3)' }} />
-                    <p className="text-body text-sm" style={{ color: 'var(--color-body-text)' }}>{division}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4">
-                <SecondaryButton href="#" variant="blue">Explore Divisions</SecondaryButton>
-              </div>
-            </div>
-
-            {/* Solutions Section */}
-            <div className="relative">
-              <div className="flex items-center gap-4 mb-6">
-                <div
-                  className="w-14 h-14 rounded-xl flex items-center justify-center"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(160,80,255,0.2), rgba(120,60,200,0.1))',
-                    border: '2px solid rgba(160,80,255,0.4)',
-                    boxShadow: '0 0 20px rgba(160,80,255,0.2)',
-                  }}
-                >
-                  <Sparkles size={28} style={{ color: '#a050ff' }} />
-                </div>
-                <h3 className="text-h3" style={{ color: '#a050ff' }}>SOLUTIONS</h3>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {SOLUTIONS.map((solution) => (
-                  <div
-                    key={solution}
-                    className="group relative rounded-xl p-4 transition-all duration-300 hover:scale-[1.02]"
-                    style={{
-                      background: 'linear-gradient(180deg, rgba(25,20,35,0.95), rgba(15,12,25,0.98))',
-                      border: '1px solid rgba(160,80,255,0.2)',
-                    }}
-                  >
-                    <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity" style={{ boxShadow: '0 0 20px rgba(160,80,255,0.3)' }} />
-                    <p className="text-body text-sm" style={{ color: 'var(--color-body-text)' }}>{solution}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4">
-                <SecondaryButton href="#" variant="blue">Explore Solutions</SecondaryButton>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </GlassPanel>
-  );
-}
 
 /* ═══════════════════════════════════════════════════════════════
    SECTION REDESIGN: WHERE SAA FITS - CHOSEN VERSION (A)
@@ -4091,26 +3889,8 @@ export default function AboutExpRealty() {
       {/* ════ Sections 3-5: What eXp Provides (Chosen: Horizontal Accordion) ════ */}
       <WhatExpProvidesVersionB />
 
-      {/* ════════════════════════════════════════════════════════════════
-          ADDITIONAL AREAS SECTION - 3 VERSIONS FOR COMPARISON
-          (Now includes Divisions & Solutions content)
-          ════════════════════════════════════════════════════════════════ */}
-      <div className="py-8 text-center">
-        <h2 className="text-3xl font-bold text-yellow-400">ADDITIONAL AREAS AGENTS EXPLORE - SECTION REDESIGNS</h2>
-        <p className="text-gray-400 mt-2">Compare the 3 versions below (now includes Divisions & Solutions)</p>
-      </div>
-
-      <VersionWrapper label="VERSION A: Two-Column Cards Layout">
-        <AdditionalAreasVersionA />
-      </VersionWrapper>
-
-      <VersionWrapper label="VERSION B: Gold Accordion Panels">
-        <AdditionalAreasVersionB />
-      </VersionWrapper>
-
-      <VersionWrapper label="VERSION C: Stacked Icon Grid">
-        <AdditionalAreasVersionC />
-      </VersionWrapper>
+      {/* ════ Additional Areas Section (Divisions & Solutions) ════ */}
+      <AdditionalAreasSection />
 
       {/* ════ Section 9: Who eXp Works Best For ════ */}
       <WhoExpWorksBestForSection />
