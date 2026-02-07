@@ -78,8 +78,8 @@ export function GenericCyberCardGold({
         }
       `}</style>
 
-      <div className={`generic-cyber-card-gold ${className}`}>
-        <div className={`${paddingClass} ${centerClass}`}>
+      <div className={`generic-cyber-card-gold h-full ${className}`}>
+        <div className={`${paddingClass} ${centerClass} h-full`}>
           {children}
         </div>
       </div>

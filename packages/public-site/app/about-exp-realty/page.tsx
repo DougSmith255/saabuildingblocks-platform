@@ -1467,11 +1467,11 @@ function SpotlightConsole() {
 
         {/* Desktop: two-column grid with dots below */}
         <div className="hidden lg:block">
-          <div className="grid grid-cols-[45%_55%] gap-6" style={{ height: '220px', overflow: 'visible' }}>
+          <div className="grid grid-cols-[45%_55%] gap-6" style={{ height: '218px', overflow: 'visible' }}>
             {/* Left: chips grid */}
             <div
               style={{
-                height: '220px',
+                height: '218px',
                 overflow: 'visible',
               }}
             >
@@ -1502,7 +1502,7 @@ function SpotlightConsole() {
             </div>
 
             {/* Right: detail panel */}
-            <div style={{ height: '220px' }}>
+            <div style={{ height: '218px' }}>
               <DetailPanel feature={FEATURES[activeIndex]} transitionKey={activeIndex} />
             </div>
           </div>
@@ -3380,16 +3380,21 @@ function WhatExpProvidesVersionB() {
                   <div className="relative z-10 h-full p-6 flex flex-col">
                     {/* Header */}
                     <div className={`flex items-center gap-3 ${isExpanded ? 'mb-6' : 'mb-0 flex-1 justify-center'}`}>
-                      <Icon3D color={accentColor} size={isExpanded ? 52 : 40}>
+                      <Icon3D
+                        color={accentColor}
+                        size={isExpanded ? 52 : 40}
+                        style={{ transition: 'all 0.4s ease' }}
+                      >
                         <panel.icon size={isExpanded ? 26 : 20} />
                       </Icon3D>
                       <H2
                         style={{
                           color: accentColor,
-                          writingMode: isExpanded ? 'horizontal-tb' : 'vertical-rl',
-                          textOrientation: 'mixed',
-                          transform: isExpanded ? 'rotate(0deg)' : 'rotate(0deg)',
+                          transform: isExpanded ? 'rotate(0deg)' : 'rotate(90deg)',
                           transition: 'transform 0.4s ease',
+                          display: 'inline-block',
+                          transformOrigin: 'center center',
+                          whiteSpace: 'nowrap',
                         }}
                       >
                         {panel.label}
