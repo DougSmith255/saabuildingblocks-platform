@@ -4091,7 +4091,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <!-- Top Row - 3 cards -->
           <div class="why-exp-grid-top">
             <!-- Card 1: Profitable -->
-            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98)); border: 1px solid rgba(255,215,0,0.15); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0s;">
+            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,215,0,0.15); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0s;">
               <div class="why-exp-card-hover-glow why-exp-card-hover-glow-yellow"></div>
               <div class="icon-cyber-ring icon-cyber-ring-yellow">
                 <div class="icon-cyber-ring-outer"></div>
@@ -4104,7 +4104,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             </div>
 
             <!-- Card 2: Cloud-Based -->
-            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98)); border: 1px solid rgba(255,215,0,0.15); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.1s;">
+            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,215,0,0.15); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.1s;">
               <div class="why-exp-card-hover-glow why-exp-card-hover-glow-yellow"></div>
               <div class="icon-cyber-ring icon-cyber-ring-yellow">
                 <div class="icon-cyber-ring-outer"></div>
@@ -4117,7 +4117,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             </div>
 
             <!-- Card 3: Sponsor Choice -->
-            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98)); border: 1px solid rgba(255,215,0,0.15); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.2s;">
+            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,215,0,0.15); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.2s;">
               <div class="why-exp-card-hover-glow why-exp-card-hover-glow-yellow"></div>
               <div class="icon-cyber-ring icon-cyber-ring-yellow">
                 <div class="icon-cyber-ring-outer"></div>
@@ -4133,7 +4133,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <!-- Bottom Row - 2 cards with colored borders and buttons -->
           <div class="why-exp-grid-bottom">
             <!-- Card 4: Commission - Green -->
-            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98)); border: 2px solid rgba(0,204,102,0.5); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.1s;">
+            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 2px solid rgba(0,204,102,0.5); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.1s;">
               <div class="why-exp-card-hover-glow why-exp-card-hover-glow-green"></div>
               <div class="icon-cyber-ring icon-cyber-ring-green">
                 <div class="icon-cyber-ring-outer"></div>
@@ -4156,7 +4156,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             </div>
 
             <!-- Card 5: RevShare - Purple -->
-            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98)); border: 2px solid rgba(153,51,255,0.5); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.2s;">
+            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 2px solid rgba(153,51,255,0.5); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.2s;">
               <div class="why-exp-card-hover-glow why-exp-card-hover-glow-purple"></div>
               <div class="icon-cyber-ring icon-cyber-ring-purple">
                 <div class="icon-cyber-ring-outer"></div>

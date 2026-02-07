@@ -116,9 +116,9 @@ export function IconCyberCard({
       <div
         className={`${hoverClass} relative rounded-2xl p-6 md:p-8 ${centerClass} overflow-hidden ${className}`}
         style={{
-          background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
+          background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
           border: `1px solid ${colors.border}`,
-          boxShadow: '0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
+          boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
         }}
       >
         {/* Hover glow */}
