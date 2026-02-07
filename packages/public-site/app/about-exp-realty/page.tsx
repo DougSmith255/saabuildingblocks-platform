@@ -3734,15 +3734,15 @@ function AdditionalAreasVersionC() {
 function WhereSAAFitsVersionA() {
   const nodes = [
     { icon: Building2, title: 'eXp', text: 'eXp provides the brokerage, compensation model, technology, and global infrastructure.', color: '#00bfff' },
-    { icon: Link, title: 'Sponsorship', text: 'Sponsorship is separate from the brokerage. Sponsor compensation comes from closed transactions within their sponsored organization, not from recruiting.', color: '#a050ff' },
-    { icon: Settings, title: 'Freedom', text: 'eXp does not require sponsors to provide any ongoing support to agents. Sponsors who choose to provide additional support decide what they offer and whether they charge for those services.', color: '#00ff88' },
-    { icon: Handshake, title: 'SAA', text: 'Smart Agent Alliance chooses to provide ongoing support, including systems, training, and community. These resources are funded through sponsor compensation paid by eXp, not by agents.', color: '#ffd700', highlight: true },
+    { icon: Link, title: 'Sponsorship', text: 'Sponsorship is separate from the brokerage. Compensation comes from transactions, not recruiting.', color: '#a050ff' },
+    { icon: Settings, title: 'Freedom', text: 'Sponsors aren\'t required to provide support. Those who do decide what to offer and whether to charge.', color: '#00ff88' },
+    { icon: Handshake, title: 'SAA', text: 'SAA provides systems, training, and community at no cost to agents — funded by sponsor compensation from eXp.', color: '#ffd700', highlight: true },
   ];
 
   return (
     <GlassPanel variant="champagne">
       <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden">
-        <div className="max-w-[1200px] mx-auto">
+        <div className="max-w-[1500px] mx-auto">
           {/* H2 Heading */}
           <div className="text-center mb-12">
             <H2>WHERE SMART AGENT ALLIANCE FITS</H2>
@@ -3750,14 +3750,33 @@ function WhereSAAFitsVersionA() {
 
           {/* Timeline - Desktop horizontal */}
           <div className="hidden lg:block relative mb-12">
-            {/* Connecting line */}
-            <div
-              className="absolute top-16 left-[12%] right-[12%] h-[3px]"
-              style={{
-                background: 'linear-gradient(90deg, #00bfff, #a050ff, #00ff88, #ffd700)',
-                boxShadow: '0 0 10px rgba(0,191,255,0.5)',
-              }}
-            />
+            {/* Connecting line with pointed ends */}
+            <svg
+              className="absolute top-[60px] left-[10%] right-[10%] w-[80%] h-[8px]"
+              preserveAspectRatio="none"
+              viewBox="0 0 100 8"
+            >
+              <defs>
+                <linearGradient id="timeline-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#00bfff" />
+                  <stop offset="33%" stopColor="#a050ff" />
+                  <stop offset="66%" stopColor="#00ff88" />
+                  <stop offset="100%" stopColor="#ffd700" />
+                </linearGradient>
+                <filter id="timeline-glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="1" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <polygon
+                points="0,4 3,1 97,1 100,4 97,7 3,7"
+                fill="url(#timeline-gradient)"
+                filter="url(#timeline-glow)"
+              />
+            </svg>
 
             {/* Nodes */}
             <div className="grid grid-cols-4 gap-6">
@@ -3809,13 +3828,26 @@ function WhereSAAFitsVersionA() {
 
           {/* Timeline - Mobile vertical */}
           <div className="lg:hidden relative mb-12">
-            {/* Vertical line */}
-            <div
-              className="absolute left-6 top-6 bottom-6 w-[3px]"
-              style={{
-                background: 'linear-gradient(180deg, #00bfff, #a050ff, #00ff88, #ffd700)',
-              }}
-            />
+            {/* Vertical line with pointed ends */}
+            <svg
+              className="absolute left-[22px] top-4 bottom-4 w-[8px]"
+              style={{ height: 'calc(100% - 32px)' }}
+              preserveAspectRatio="none"
+              viewBox="0 0 8 100"
+            >
+              <defs>
+                <linearGradient id="timeline-gradient-mobile" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#00bfff" />
+                  <stop offset="33%" stopColor="#a050ff" />
+                  <stop offset="66%" stopColor="#00ff88" />
+                  <stop offset="100%" stopColor="#ffd700" />
+                </linearGradient>
+              </defs>
+              <polygon
+                points="4,0 7,3 7,97 4,100 1,97 1,3"
+                fill="url(#timeline-gradient-mobile)"
+              />
+            </svg>
 
             <div className="space-y-6">
               {nodes.map((node) => (
