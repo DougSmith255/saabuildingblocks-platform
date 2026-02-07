@@ -3218,175 +3218,194 @@ function WhatExpProvidesVersionB() {
     { id: 'leads', label: 'LEADS', icon: UserPlus, bullets: LEADS_BULLETS },
   ];
 
+  // Blue theme color
+  const accentColor = '#00bfff';
+
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12" style={{ background: '#070707' }}>
-      <div className="max-w-[1400px] mx-auto">
-        {/* Mobile: stacked panels */}
-        <div className="lg:hidden space-y-4">
-          {panels.map((panel, i) => {
-            const isExpanded = expandedIndex === i;
-            return (
-              <div
-                key={panel.id}
-                className="relative overflow-hidden rounded-2xl"
-                style={{
-                  border: '2px solid rgba(255,215,0,0.4)',
-                  boxShadow: isExpanded ? '0 0 30px rgba(255,215,0,0.2)' : 'none',
-                  transition: 'box-shadow 0.4s ease',
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setExpandedIndex(i)}
-                  className="w-full p-6 flex items-center justify-between cursor-pointer"
-                  style={{
-                    background: 'linear-gradient(180deg, rgba(40,35,20,0.95), rgba(25,22,12,0.98))',
-                  }}
-                >
-                  <div className="flex items-center gap-4">
-                    <Icon3D color="#ffd700" size={40}>
-                      <panel.icon size={20} />
-                    </Icon3D>
-                    <h2 className="text-h4" style={{ color: '#ffd700' }}>{panel.label}</h2>
-                  </div>
-                  <ChevronDown
-                    size={24}
-                    style={{
-                      color: '#ffd700',
-                      transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)',
-                      transition: 'transform 0.3s ease',
-                    }}
-                  />
-                </button>
-
-                <div
-                  style={{
-                    maxHeight: isExpanded ? '500px' : '0',
-                    overflow: 'hidden',
-                    transition: 'max-height 0.5s ease',
-                    background: 'linear-gradient(180deg, rgba(30,28,18,0.95), rgba(20,18,10,0.98))',
-                  }}
-                >
-                  <ul className="p-6 space-y-3">
-                    {panel.bullets.map((bullet, j) => (
-                      <li
-                        key={bullet.text}
-                        className="text-body text-sm flex items-start gap-3"
-                        style={{
-                          color: 'var(--color-body-text)',
-                          opacity: isExpanded ? 1 : 0,
-                          transform: isExpanded ? 'translateX(0)' : 'translateX(-10px)',
-                          transition: `opacity 0.3s ease ${j * 50}ms, transform 0.3s ease ${j * 50}ms`,
-                        }}
-                      >
-                        <span
-                          className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
-                          style={{
-                            background: 'rgba(255,215,0,0.15)',
-                            border: '1px solid rgba(255,215,0,0.3)',
-                          }}
-                        >
-                          <bullet.icon size={14} style={{ color: '#ffd700' }} />
-                        </span>
-                        <span>{bullet.text}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Desktop: horizontal accordion */}
-        <div className="hidden lg:flex gap-4 h-[400px]">
-          {panels.map((panel, i) => {
-            const isExpanded = expandedIndex === i;
-            return (
-              <div
-                key={panel.id}
-                className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 ease-out"
-                style={{
-                  flex: isExpanded ? '3' : '1',
-                  border: '2px solid rgba(255,215,0,0.4)',
-                  boxShadow: isExpanded ? '0 0 40px rgba(255,215,0,0.25)' : 'none',
-                  background: 'linear-gradient(180deg, rgba(40,35,20,0.95), rgba(25,22,12,0.98))',
-                }}
-                onClick={() => setExpandedIndex(i)}
-              >
-                {/* Watermark icon */}
-                <div
-                  className="absolute pointer-events-none"
-                  style={{
-                    right: '-30px',
-                    bottom: '-30px',
-                    opacity: isExpanded ? 0.06 : 0.03,
-                    transition: 'opacity 0.5s ease',
-                    color: '#ffd700',
-                  }}
-                >
-                  <panel.icon size={200} strokeWidth={1} />
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 h-full p-6 flex flex-col">
-                  {/* Header */}
-                  <div className={`flex items-center gap-4 ${isExpanded ? 'mb-6' : 'mb-0 flex-1 justify-center'}`}>
-                    <Icon3D color="#ffd700" size={isExpanded ? 48 : 56}>
-                      <panel.icon size={isExpanded ? 24 : 28} />
-                    </Icon3D>
-                    <h2
-                      className="text-h3 transition-all duration-300"
-                      style={{
-                        color: '#ffd700',
-                        writingMode: isExpanded ? 'horizontal-tb' : 'vertical-rl',
-                        textOrientation: isExpanded ? 'mixed' : 'mixed',
-                        transform: isExpanded ? 'none' : 'rotate(180deg)',
-                      }}
-                    >
-                      {panel.label}
-                    </h2>
-                  </div>
-
-                  {/* Bullets - only visible when expanded */}
-                  <ul
-                    className="flex-1 space-y-3 overflow-hidden"
-                    style={{
-                      opacity: isExpanded ? 1 : 0,
-                      transition: 'opacity 0.4s ease 0.1s',
+    <GlassPanel variant="tealCrosshatch" noBlur>
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
+        <div className="max-w-[1400px] mx-auto">
+          {/* Mobile: stacked panels */}
+          <div className="lg:hidden space-y-4">
+            {panels.map((panel, i) => {
+              const isExpanded = expandedIndex === i;
+              const CardComponent = isExpanded ? GenericCyberCardGold : GenericCard;
+              return (
+                <div key={panel.id} className="relative">
+                  <CardComponent
+                    className="overflow-hidden"
+                    padding="sm"
+                    centered={false}
+                    style={isExpanded ? {
+                      border: `2px solid rgba(0,191,255,0.5)`,
+                      boxShadow: '0 0 30px rgba(0,191,255,0.2)',
+                    } : {
+                      border: '1px solid rgba(0,191,255,0.2)',
                     }}
                   >
-                    {panel.bullets.map((bullet, j) => (
-                      <li
-                        key={bullet.text}
-                        className="text-body text-sm flex items-start gap-3"
-                        style={{
-                          color: 'var(--color-body-text)',
-                          transform: isExpanded ? 'translateX(0)' : 'translateX(-20px)',
-                          opacity: isExpanded ? 1 : 0,
-                          transition: `transform 0.4s ease ${j * 60}ms, opacity 0.4s ease ${j * 60}ms`,
-                        }}
-                      >
-                        <span
-                          className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
+                    <button
+                      type="button"
+                      onClick={() => setExpandedIndex(i)}
+                      className="w-full flex items-center justify-between cursor-pointer"
+                    >
+                      <div className="flex items-center gap-4">
+                        <Icon3D color={accentColor} size={40}>
+                          <panel.icon size={20} />
+                        </Icon3D>
+                        <H2
                           style={{
-                            background: 'rgba(255,215,0,0.15)',
-                            border: '1px solid rgba(255,215,0,0.3)',
+                            fontSize: 'clamp(1rem, 3vw, 1.25rem)',
+                            color: accentColor,
+                            transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                            transition: 'transform 0.4s ease',
+                            display: 'inline-block',
                           }}
                         >
-                          <bullet.icon size={14} style={{ color: '#ffd700' }} />
-                        </span>
-                        <span>{bullet.text}</span>
-                      </li>
-                    ))}
-                  </ul>
+                          {panel.label}
+                        </H2>
+                      </div>
+                      <ChevronDown
+                        size={24}
+                        style={{
+                          color: accentColor,
+                          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)',
+                          transition: 'transform 0.3s ease',
+                        }}
+                      />
+                    </button>
+
+                    <div
+                      style={{
+                        maxHeight: isExpanded ? '500px' : '0',
+                        overflow: 'hidden',
+                        transition: 'max-height 0.5s ease',
+                      }}
+                    >
+                      <ul className="pt-4 space-y-3">
+                        {panel.bullets.map((bullet, j) => (
+                          <li
+                            key={bullet.text}
+                            className="text-body text-sm flex items-start gap-3"
+                            style={{
+                              color: 'var(--color-body-text)',
+                              opacity: isExpanded ? 1 : 0,
+                              transform: isExpanded ? 'translateX(0)' : 'translateX(-10px)',
+                              transition: `opacity 0.3s ease ${j * 50}ms, transform 0.3s ease ${j * 50}ms`,
+                            }}
+                          >
+                            <span
+                              className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
+                              style={{
+                                background: 'rgba(0,191,255,0.15)',
+                                border: '1px solid rgba(0,191,255,0.3)',
+                              }}
+                            >
+                              <bullet.icon size={14} style={{ color: accentColor }} />
+                            </span>
+                            <span>{bullet.text}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </CardComponent>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+
+          {/* Desktop: horizontal accordion */}
+          <div className="hidden lg:flex gap-4 h-[400px]">
+            {panels.map((panel, i) => {
+              const isExpanded = expandedIndex === i;
+              return (
+                <div
+                  key={panel.id}
+                  className="relative overflow-hidden rounded-xl cursor-pointer transition-all duration-500 ease-out"
+                  style={{
+                    flex: isExpanded ? '3' : '1',
+                    border: isExpanded ? '2px solid rgba(0,191,255,0.5)' : '1px solid rgba(255,255,255,0.06)',
+                    boxShadow: isExpanded
+                      ? '0 0 40px rgba(0,191,255,0.25), 0 8px 32px rgba(0,0,0,0.4)'
+                      : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+                    background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                  }}
+                  onClick={() => setExpandedIndex(i)}
+                >
+                  {/* Watermark icon */}
+                  <div
+                    className="absolute pointer-events-none"
+                    style={{
+                      right: '-30px',
+                      bottom: '-30px',
+                      opacity: isExpanded ? 0.08 : 0.03,
+                      transition: 'opacity 0.5s ease',
+                      color: accentColor,
+                    }}
+                  >
+                    <panel.icon size={200} strokeWidth={1} />
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative z-10 h-full p-6 flex flex-col">
+                    {/* Header */}
+                    <div className={`flex items-center gap-4 ${isExpanded ? 'mb-6' : 'mb-0 flex-1 justify-center'}`}>
+                      <Icon3D color={accentColor} size={isExpanded ? 48 : 56}>
+                        <panel.icon size={isExpanded ? 24 : 28} />
+                      </Icon3D>
+                      <H2
+                        style={{
+                          fontSize: isExpanded ? 'clamp(1.25rem, 3vw, 1.5rem)' : 'clamp(1rem, 2.5vw, 1.25rem)',
+                          color: accentColor,
+                          writingMode: isExpanded ? 'horizontal-tb' : 'vertical-rl',
+                          textOrientation: 'mixed',
+                          transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                          transition: 'transform 0.4s ease, font-size 0.3s ease',
+                        }}
+                      >
+                        {panel.label}
+                      </H2>
+                    </div>
+
+                    {/* Bullets - only visible when expanded */}
+                    <ul
+                      className="flex-1 space-y-3 overflow-hidden"
+                      style={{
+                        opacity: isExpanded ? 1 : 0,
+                        transition: 'opacity 0.4s ease 0.1s',
+                      }}
+                    >
+                      {panel.bullets.map((bullet, j) => (
+                        <li
+                          key={bullet.text}
+                          className="text-body text-sm flex items-start gap-3"
+                          style={{
+                            color: 'var(--color-body-text)',
+                            transform: isExpanded ? 'translateX(0)' : 'translateX(-20px)',
+                            opacity: isExpanded ? 1 : 0,
+                            transition: `transform 0.4s ease ${j * 60}ms, opacity 0.4s ease ${j * 60}ms`,
+                          }}
+                        >
+                          <span
+                            className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
+                            style={{
+                              background: 'rgba(0,191,255,0.15)',
+                              border: '1px solid rgba(0,191,255,0.3)',
+                            }}
+                          >
+                            <bullet.icon size={14} style={{ color: accentColor }} />
+                          </span>
+                          <span>{bullet.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </GlassPanel>
   );
 }
 
