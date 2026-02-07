@@ -1224,21 +1224,21 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
   return (
     <GenericCyberCardGold padding="md" centered={false} className="h-full">
       <div className="relative h-full flex flex-col justify-center overflow-visible">
-        {/* Watermark icon — large faded background icon */}
+        {/* Watermark icon — large faded background icon (matches WHAT EXP PROVIDES styling) */}
         <div
           className="absolute pointer-events-none"
           style={{
-            right: '-8px',
-            bottom: '-8px',
+            right: '-20px',
+            bottom: '-20px',
             opacity: phase === 'out' ? 0 : 0.04,
-            transform: phase === 'out' ? 'scale(0.8)' : 'scale(1)',
+            transform: phase === 'out' ? 'scale(0.8) rotate(-10deg)' : 'scale(1) rotate(0deg)',
             transition: phase === 'out'
               ? 'opacity 200ms ease-out, transform 200ms ease-out'
-              : 'opacity 500ms ease-out 300ms, transform 500ms ease-out 300ms',
+              : 'opacity 500ms ease-out 150ms, transform 500ms ease-out 150ms',
             color: '#00bfff',
           }}
         >
-          <displayed.icon size={140} strokeWidth={1} />
+          <displayed.icon size={180} strokeWidth={1} />
         </div>
 
         <div
