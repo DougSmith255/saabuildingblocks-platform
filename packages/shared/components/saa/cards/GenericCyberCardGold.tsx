@@ -79,7 +79,7 @@ export function GenericCyberCardGold({
       `}</style>
 
       <div className={`generic-cyber-card-gold h-full ${className}`}>
-        <div className={`${paddingClass} ${centerClass} h-full`}>
+        <div className={`${paddingClass} ${centerClass} h-full flex flex-col`}>
           {children}
         </div>
       </div>
