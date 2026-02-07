@@ -1925,6 +1925,7 @@ function IncomeOwnershipSection() {
   };
 
   return (
+    <div style={{ marginBottom: '-3px', position: 'relative', zIndex: 2 }}>
     <GlassPanel variant="expBlueCrosshatch" noBlur>
       <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1400px] mx-auto">
@@ -2226,6 +2227,7 @@ function IncomeOwnershipSection() {
         </div>
       </section>
     </GlassPanel>
+    </div>
   );
 }
 
@@ -2411,20 +2413,22 @@ function SupportInfrastructureSection() {
 
   return (
     <section ref={sectionRef} className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12 overflow-hidden">
-      {/* Top gradient edge */}
+      {/* Top gradient edge - extends 5px up over previous section */}
       <div
-        className="absolute top-0 left-0 right-0 pointer-events-none"
+        className="absolute left-0 right-0 pointer-events-none"
         style={{
-          height: '20px',
+          top: '-5px',
+          height: '25px',
           background: 'linear-gradient(to bottom, #070707 0%, transparent 100%)',
           zIndex: 2,
         }}
       />
-      {/* Bottom gradient edge */}
+      {/* Bottom gradient edge - extends 5px down over next section */}
       <div
-        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        className="absolute left-0 right-0 pointer-events-none"
         style={{
-          height: '20px',
+          bottom: '-5px',
+          height: '25px',
           background: 'linear-gradient(to top, #070707 0%, transparent 100%)',
           zIndex: 2,
         }}
@@ -2578,6 +2582,7 @@ function WhatExpProvidesSection() {
   const CurrentIcon = currentTab.icon;
 
   return (
+    <div style={{ marginTop: '-3px', position: 'relative', zIndex: 1 }}>
     <GlassPanel variant="tealCrosshatch" noBlur>
     <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
       <div ref={containerRef} className="max-w-[1400px] mx-auto">
@@ -2762,6 +2767,7 @@ function WhatExpProvidesSection() {
       </div>
     </section>
     </GlassPanel>
+    </div>
   );
 }
 
