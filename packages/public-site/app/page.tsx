@@ -159,10 +159,7 @@ export default function Home() {
               <div className="relative z-10">
                 <H1
                   id="hero-heading"
-                  style={{
-                    fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
-                    marginBottom: '3px',
-                  }}
+                  style={{ marginBottom: '3px' }}
                 >
                   SMART AGENT ALLIANCE
                 </H1>

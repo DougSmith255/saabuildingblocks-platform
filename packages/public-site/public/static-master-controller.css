@@ -33,7 +33,7 @@
       --color-mediumGray: #404040;
 
   /* Typography */
-  --font-size-h1: clamp(30px, calc(20.00px + 4.00vw), 140px);
+  --font-size-h1: clamp(50px, calc(30px + 4vw + 0.3vh), 150px);
       --line-height-h1: 1.1;
       --letter-spacing-h1: 0em;
       --font-weight-h1: 400;
