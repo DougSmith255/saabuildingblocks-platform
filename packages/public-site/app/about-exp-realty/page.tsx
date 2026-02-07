@@ -3378,14 +3378,19 @@ function WhatExpProvidesVersionB() {
 
                   {/* Content */}
                   <div className="relative z-10 h-full p-6 flex flex-col">
-                    {/* Header */}
-                    <div className={`flex items-center gap-3 ${isExpanded ? 'mb-6' : 'mb-0 flex-1 justify-center'}`}>
+                    {/* Header - fixed position icon, title rotates when collapsed */}
+                    <div
+                      className="flex items-center gap-3"
+                      style={{
+                        marginBottom: isExpanded ? '24px' : '0',
+                        marginTop: isExpanded ? '0' : '-18px',
+                      }}
+                    >
                       <Icon3D
                         color={accentColor}
-                        size={isExpanded ? 52 : 40}
-                        style={{ transition: 'all 0.4s ease' }}
+                        size={44}
                       >
-                        <panel.icon size={isExpanded ? 26 : 20} />
+                        <panel.icon size={22} />
                       </Icon3D>
                       <H2
                         style={{
@@ -3393,7 +3398,7 @@ function WhatExpProvidesVersionB() {
                           transform: isExpanded ? 'rotate(0deg)' : 'rotate(90deg)',
                           transition: 'transform 0.4s ease',
                           display: 'inline-block',
-                          transformOrigin: 'center center',
+                          transformOrigin: 'left center',
                           whiteSpace: 'nowrap',
                         }}
                       >
