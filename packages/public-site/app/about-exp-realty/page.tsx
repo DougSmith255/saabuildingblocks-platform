@@ -3221,6 +3221,12 @@ function WhatExpProvidesVersionB() {
   // Blue theme color
   const accentColor = '#00bfff';
 
+  // Grainy texture background for active cards (from GenericCyberCardGold)
+  const grainyBackground = `
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+    linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)
+  `;
+
   return (
     <GlassPanel variant="tealCrosshatch" noBlur>
       <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
@@ -3254,11 +3260,11 @@ function WhatExpProvidesVersionB() {
                         </Icon3D>
                         <H2
                           style={{
-                            fontSize: 'clamp(1rem, 3vw, 1.25rem)',
                             color: accentColor,
-                            transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                            transform: isExpanded ? 'rotate(0deg)' : 'rotate(90deg)',
                             transition: 'transform 0.4s ease',
                             display: 'inline-block',
+                            transformOrigin: 'center center',
                           }}
                         >
                           {panel.label}
@@ -3327,7 +3333,8 @@ function WhatExpProvidesVersionB() {
                     boxShadow: isExpanded
                       ? '0 0 40px rgba(0,191,255,0.25), 0 8px 32px rgba(0,0,0,0.4)'
                       : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-                    background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                    background: isExpanded ? grainyBackground : 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                    backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
                   }}
                   onClick={() => setExpandedIndex(i)}
                 >
@@ -3354,12 +3361,11 @@ function WhatExpProvidesVersionB() {
                       </Icon3D>
                       <H2
                         style={{
-                          fontSize: isExpanded ? 'clamp(1.25rem, 3vw, 1.5rem)' : 'clamp(1rem, 2.5vw, 1.25rem)',
                           color: accentColor,
                           writingMode: isExpanded ? 'horizontal-tb' : 'vertical-rl',
                           textOrientation: 'mixed',
-                          transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
-                          transition: 'transform 0.4s ease, font-size 0.3s ease',
+                          transform: isExpanded ? 'rotate(0deg)' : 'rotate(180deg)',
+                          transition: 'transform 0.4s ease',
                         }}
                       >
                         {panel.label}
