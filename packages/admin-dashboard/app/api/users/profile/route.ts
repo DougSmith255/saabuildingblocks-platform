@@ -13,9 +13,24 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { createClient } from '@supabase/supabase-js';
 import { createGHLClient } from '@/lib/gohighlevel-client';
 import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
 import bcrypt from 'bcryptjs';
+
+/**
+ * Get Supabase Admin client for managing auth users
+ */
+function getSupabaseAdminClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) return null;
+
+  return createClient(url, serviceKey, {
+    auth: { autoRefreshToken: false, persistSession: false }
+  });
+}
 
 // CORS headers for cross-origin requests
 const CORS_HEADERS = {
@@ -205,6 +220,36 @@ export async function PATCH(request: NextRequest) {
         },
         500
       );
+    }
+
+    // Sync email and/or password changes to Supabase Auth (login uses Supabase Auth)
+    const passwordChanged = !!newPassword;
+    if (emailChanged || passwordChanged) {
+      const adminClient = getSupabaseAdminClient();
+      if (adminClient) {
+        // Find the Supabase Auth user by their current email
+        const { data: authUsers } = await adminClient.auth.admin.listUsers();
+        const authUser = authUsers?.users?.find(u => u.email?.toLowerCase() === user.email.toLowerCase());
+
+        if (authUser) {
+          const authUpdates: { email?: string; password?: string } = {};
+          if (emailChanged) authUpdates.email = email;
+          if (passwordChanged) authUpdates.password = newPassword;
+
+          const { error: authError } = await adminClient.auth.admin.updateUserById(
+            authUser.id,
+            authUpdates
+          );
+
+          if (authError) {
+            console.error(`[Profile Update] Failed to sync to Supabase Auth:`, authError.message);
+          } else {
+            console.log(`[Profile Update] Supabase Auth synced:`, Object.keys(authUpdates).join(', '));
+          }
+        } else {
+          console.warn(`[Profile Update] No Supabase Auth user found for email ${user.email}`);
+        }
+      }
     }
 
     // If display name changed, also update the agent_pages table

@@ -957,13 +957,14 @@ export function UserManagementTab() {
                   New Password
                 </label>
                 <input
-                  type="password"
+                  type="text"
                   value={editUserForm.password}
                   onChange={(e) => setEditUserForm({ ...editUserForm, password: e.target.value })}
                   className="w-full px-4 py-2 bg-[#404040]/30 border border-[#404040] rounded-lg text-[#dcdbd5] focus:border-[#ffd700] focus:outline-none"
                   placeholder="Leave blank to keep current password"
                   disabled={editUserLoading}
                   minLength={8}
+                  autoComplete="off"
                 />
                 <p className="text-xs text-[#dcdbd5]/50 mt-1">Minimum 8 characters. Only fill if you want to change the password.</p>
               </div>

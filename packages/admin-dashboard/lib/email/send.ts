@@ -35,8 +35,7 @@ export async function sendPasswordResetEmail(
         expiresInMinutes,
       }),
       tags: [
-        { name: 'category', value: 'password-reset' },
-        { name: 'username', value: sanitizeTagValue(username) },
+        { name: 'category', value: 'password_reset' },
       ],
     });
 
@@ -53,8 +52,14 @@ export async function sendPasswordResetEmail(
  * Sanitize a string for use as a Resend tag value
  * Resend tags only allow ASCII letters, numbers, underscores, and dashes
  */
-function sanitizeTagValue(value: string): string {
-  return value.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+function sanitizeTagValue(value: string | null | undefined): string {
+  if (!value || typeof value !== 'string') {
+    return 'unknown';
+  }
+  // Replace any non-allowed characters with underscore, limit to 100 chars
+  const sanitized = value.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+  // Ensure we don't return empty string (Resend might reject it)
+  return sanitized || 'unknown';
 }
 
 /**
@@ -73,8 +78,7 @@ export async function sendUsernameReminderEmail(
         email,
       }),
       tags: [
-        { name: 'category', value: 'username-reminder' },
-        { name: 'username', value: sanitizeTagValue(username) },
+        { name: 'category', value: 'username_reminder' },
       ],
     });
 
@@ -110,7 +114,7 @@ export async function sendWelcomeEmail(
         expiresInHours,
       }),
       tags: [
-        { name: 'category', value: 'welcome-activation' },
+        { name: 'category', value: 'welcome_activation' },
       ],
     });
 
@@ -146,8 +150,7 @@ export async function sendAccountLockedEmail(
         supportUrl,
       }),
       tags: [
-        { name: 'category', value: 'account-locked' },
-        { name: 'username', value: sanitizeTagValue(username) },
+        { name: 'category', value: 'account_locked' },
       ],
     });
 
@@ -182,8 +185,7 @@ export async function sendEmailVerificationEmail(
         expiresInMinutes: 24 * 60, // 24 hours
       }),
       tags: [
-        { name: 'category', value: 'email-verification' },
-        { name: 'username', value: sanitizeTagValue(username) },
+        { name: 'category', value: 'email_verification' },
       ],
     });
 
@@ -220,9 +222,7 @@ export async function sendEmailChangeVerification(
         expiresInMinutes: expiresInHours * 60,
       }),
       tags: [
-        { name: 'category', value: 'email-change-verification' },
-        { name: 'username', value: sanitizeTagValue(username) },
-        { name: 'old_email', value: sanitizeTagValue(oldEmail) },
+        { name: 'category', value: 'email_change_verification' },
       ],
     });
 
@@ -258,9 +258,7 @@ export async function sendEmailChangeConfirmation(
         supportUrl,
       }),
       tags: [
-        { name: 'category', value: 'email-change-confirmation' },
-        { name: 'username', value: sanitizeTagValue(username) },
-        { name: 'new_email', value: sanitizeTagValue(newEmail) },
+        { name: 'category', value: 'email_change_confirmation' },
       ],
     });
 
@@ -376,7 +374,7 @@ export async function sendApplyInstructionsEmail({
         agentEmail,
       }),
       tags: [
-        { name: 'category', value: 'apply-instructions' },
+        { name: 'category', value: 'apply_instructions' },
       ],
     });
 

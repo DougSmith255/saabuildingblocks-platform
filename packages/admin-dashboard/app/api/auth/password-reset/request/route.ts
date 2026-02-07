@@ -151,12 +151,12 @@ export async function POST(request: NextRequest) {
 
     // ALWAYS return success to prevent email enumeration
     // But only actually send email if user exists
-    const maskedEmail = maskEmail(email);
+    const maskedEmail = maskEmail(email); // For logging only
     const genericResponse = {
       success: true,
-      message: `If an account exists with ${maskedEmail}, a password reset link has been sent.`,
+      message: `If an account exists with ${email}, a password reset link has been sent.`,
       data: {
-        email: maskedEmail,
+        email: email, // Show full email in response
         expiresIn: TOKEN_EXPIRY_MINUTES * 60, // seconds
       },
     };

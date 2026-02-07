@@ -148,10 +148,11 @@ export async function POST(request: NextRequest) {
 
     // Get user data from users table (using service client to bypass RLS)
     // Query by email since users table ID may differ from Supabase Auth ID
+    // Use ilike for case-insensitive matching (Supabase Auth may lowercase emails)
     const { data: user, error: userError } = await serviceClient
       .from('users')
       .select('*')
-      .eq('email', authData.user.email)
+      .ilike('email', authData.user.email || '')
       .single();
 
     if (userError || !user) {

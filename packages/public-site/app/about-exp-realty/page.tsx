@@ -26,7 +26,8 @@ const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 function useScrambleCounter(
   targetNumber: number,
   duration: number = 2000,
-  triggerOnView: boolean = true
+  triggerOnView: boolean = true,
+  externalTrigger?: boolean // Optional external trigger (e.g., from another scroll reveal)
 ) {
   const [displayValue, setDisplayValue] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -66,7 +67,17 @@ function useScrambleCounter(
     animationRef.current = requestAnimationFrame(runAnimation);
   }, [targetNumber, duration, hasAnimated]);
 
+  // Handle external trigger
   useEffect(() => {
+    if (externalTrigger !== undefined && externalTrigger && !hasAnimated) {
+      animate();
+    }
+  }, [externalTrigger, animate, hasAnimated]);
+
+  useEffect(() => {
+    // Skip IntersectionObserver if using external trigger
+    if (externalTrigger !== undefined) return;
+
     if (!triggerOnView) {
       animate();
       return;
@@ -92,7 +103,7 @@ function useScrambleCounter(
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [animate, triggerOnView, hasAnimated]);
+  }, [animate, triggerOnView, hasAnimated, externalTrigger]);
 
   return { displayValue, elementRef, hasAnimated };
 }
@@ -724,10 +735,11 @@ function IntroFlipCard() {
 }
 
 function HowExpIsBuilt() {
+  const prioritiesReveal = useScrollReveal(0.2);
 
   return (
     <GlassPanel variant="champagne">
-      <section className="py-12 md:py-20">
+      <section className="py-12 md:py-20" ref={prioritiesReveal.ref}>
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="text-center mb-10">
             <H2>How eXp is Built for Agents</H2>
@@ -806,37 +818,76 @@ function HowExpIsBuilt() {
           </h3>
 
           {/* Priority cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 max-w-[1400px] mx-auto">
             {EXP_PRIORITIES.map((priority, index) => (
               <div
                 key={index}
-                className="rounded-xl p-5 text-center"
+                className="group relative rounded-2xl p-6 md:p-8 text-center overflow-hidden"
                 style={{
-                  background: 'linear-gradient(180deg, rgba(0,30,60,0.4), rgba(0,20,40,0.5))',
+                  background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
                   border: '1px solid rgba(0,191,255,0.15)',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.03)',
+                  boxShadow: '0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
+                  opacity: prioritiesReveal.isVisible ? 1 : 0,
+                  transform: prioritiesReveal.isVisible ? 'translateY(0)' : 'translateY(40px)',
+                  transition: `opacity 0.6s ease ${index * 0.12}s, transform 0.6s ease ${index * 0.12}s`,
                 }}
               >
-                {/* Icon */}
+                {/* Hover glow */}
                 <div
-                  className="w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(0,191,255,0.15), rgba(0,120,200,0.1))',
-                    border: '1px solid rgba(0,191,255,0.25)',
-                    boxShadow: '0 0 15px rgba(0,191,255,0.1)',
+                    background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,191,255,0.12) 0%, transparent 70%)',
                   }}
-                >
-                  <priority.icon size={22} style={{ color: '#00bfff' }} />
+                />
+
+                {/* Icon container with animated glow ring */}
+                <div className="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
+                  {/* Outer glow ring */}
+                  <div
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))',
+                      boxShadow: '0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1)',
+                      animation: prioritiesReveal.isVisible ? 'priorityIconPulse 3s ease-in-out infinite' : 'none',
+                      animationDelay: `${index * 0.4}s`,
+                    }}
+                  />
+                  {/* Inner icon circle */}
+                  <div
+                    className="absolute inset-2 rounded-full flex items-center justify-center"
+                    style={{
+                      background: 'linear-gradient(180deg, rgba(15,20,30,0.95), rgba(5,10,20,0.98))',
+                      border: '1px solid rgba(0,191,255,0.3)',
+                    }}
+                  >
+                    <priority.icon size={24} className="md:w-7 md:h-7" style={{ color: '#00bfff', filter: 'drop-shadow(0 0 8px rgba(0,191,255,0.5))' }} />
+                  </div>
                 </div>
 
-                {/* Label - keyword bold with heading color, rest body color */}
-                <p className="text-body opacity-80">
-                  <span className="font-bold" style={{ color: '#e5e4dd' }}>{priority.keyword}</span>{' '}
-                  {priority.rest}
+                {/* Label - keyword bold with blue color, rest body color */}
+                <p className="text-body relative z-10">
+                  <span
+                    className="block text-h5 mb-1"
+                    style={{
+                      color: '#00bfff',
+                      textShadow: '0 0 20px rgba(0,191,255,0.3)',
+                    }}
+                  >
+                    {priority.keyword}
+                  </span>
+                  <span style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>{priority.rest}</span>
                 </p>
               </div>
             ))}
           </div>
+
+          {/* Animation keyframes */}
+          <style>{`
+            @keyframes priorityIconPulse {
+              0%, 100% { box-shadow: 0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1); }
+              50% { box-shadow: 0 0 40px rgba(0,191,255,0.35), inset 0 0 25px rgba(0,191,255,0.15); }
+            }
+          `}</style>
         </div>
       </section>
     </GlassPanel>
@@ -949,6 +1000,7 @@ const FEATURES: { icon: LucideIcon; keyword: string; type: 'pillar' | 'advantage
    ═══════════════════════════════════════════════════════════════ */
 
 const BLUE_3D_SHADOW = '-1px -1px 0 #80d4ff, 1px 1px 0 #3d8a9d, 2px 2px 0 #2d6a7d, 3px 3px 0 #1d4a5d, 4px 4px 0 #1d2a3d, 5px 5px 4px rgba(0,0,0,0.5)';
+const PURPLE_3D_SHADOW = '-1px -1px 0 #c9a0ff, 1px 1px 0 #8a5db8, 2px 2px 0 #6a4d98, 3px 3px 0 #4a3d78, 4px 4px 0 #2d2a4d, 5px 5px 4px rgba(0,0,0,0.5)';
 
 const INCOME_STREAMS: {
   icon: LucideIcon;
@@ -1585,7 +1637,7 @@ function RisingParticles() {
         if (p.x > canvas.width + p.r) p.x = -p.r;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,191,255,${p.opacity})`;
+        ctx.fillStyle = `rgba(160,80,255,${p.opacity})`;
         ctx.fill();
       }
       rafId = requestAnimationFrame(draw);
@@ -1803,25 +1855,25 @@ function StockChart() {
 }
 
 /**
- * FeesBadge - Clean $85 circular badge
+ * FeesBadge - Clean $85 circular badge (red theme)
  */
 function FeesBadge() {
   return (
-    <div className="flex flex-col items-center justify-center h-20">
-      {/* $85 Badge */}
+    <div className="flex flex-col items-center justify-center h-20 overflow-visible">
+      {/* $85 Badge - larger size */}
       <div
-        className="w-16 h-16 rounded-full flex items-center justify-center"
+        className="w-24 h-24 rounded-full flex items-center justify-center"
         style={{
-          background: 'radial-gradient(circle, rgba(0,191,255,0.15) 0%, rgba(0,191,255,0.05) 70%, transparent 100%)',
-          border: '2px solid rgba(0,191,255,0.4)',
-          boxShadow: '0 0 15px rgba(0,191,255,0.2), inset 0 0 10px rgba(0,191,255,0.1)',
+          background: 'radial-gradient(circle, rgba(255,80,80,0.2) 0%, rgba(255,80,80,0.08) 60%, transparent 100%)',
+          border: '2px solid rgba(255,80,80,0.5)',
+          boxShadow: '0 0 25px rgba(255,80,80,0.3), inset 0 0 15px rgba(255,80,80,0.15)',
         }}
       >
         <span
-          className="text-lg font-bold"
+          className="text-2xl font-bold"
           style={{
-            color: '#00bfff',
-            textShadow: '0 0 8px rgba(0,191,255,0.5)',
+            color: '#ff5050',
+            textShadow: '0 0 12px rgba(255,80,80,0.6)',
           }}
         >
           $85
@@ -1832,16 +1884,17 @@ function FeesBadge() {
 }
 
 function IncomeOwnershipSection() {
-  // Scramble counter for 7 tiers
-  const tierCounter = useScrambleCounter(7, 1500);
-  // Tier bars cascade animation — trigger once on scroll
+  // Tier bars cascade animation — trigger once on scroll (define first so we can use isVisible)
   const tierBarsReveal = useScrollReveal(0.3);
+  // Scramble counter for 7 tiers - triggered by tierBarsReveal visibility
+  const tierCounter = useScrambleCounter(7, 1500, true, tierBarsReveal.isVisible);
 
   // Card visual components and border colors mapped by title
   const cardVisuals: Record<string, { visual: React.ReactNode; borderColor: string }> = {
     'Commission': { visual: <CommissionDonut />, borderColor: 'rgba(0,191,255,0.3)' },
     'ICON Program': { visual: <IconBadge />, borderColor: 'rgba(255,215,0,0.3)' },
     'Stock Ownership': { visual: <StockChart />, borderColor: 'rgba(0,255,136,0.3)' },
+    'eXp Fees': { visual: <FeesBadge />, borderColor: 'rgba(255,80,80,0.3)' },
   };
 
   return (
@@ -1870,7 +1923,7 @@ function IncomeOwnershipSection() {
                   <div className="relative mb-4 overflow-visible">
                     {cardVisuals['Commission'].visual}
                   </div>
-                  <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
+                  <h3 className="text-h4 mb-2" style={{ color: '#00bfff' }}>
                     Commission
                   </h3>
                   <p className="text-body opacity-80 mt-auto">
@@ -1891,7 +1944,7 @@ function IncomeOwnershipSection() {
                   <div className="relative mb-4 overflow-visible">
                     {cardVisuals['ICON Program'].visual}
                   </div>
-                  <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
+                  <h3 className="text-h4 mb-2" style={{ color: '#ffd700' }}>
                     ICON Program
                   </h3>
                   <p className="text-body opacity-80 mt-auto">
@@ -1912,7 +1965,7 @@ function IncomeOwnershipSection() {
                   <div className="relative mb-4 overflow-visible">
                     {cardVisuals['Stock Ownership'].visual}
                   </div>
-                  <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
+                  <h3 className="text-h4 mb-2" style={{ color: '#00ff88' }}>
                     Stock Ownership
                   </h3>
                   <p className="text-body opacity-80 mt-auto">
@@ -1927,13 +1980,13 @@ function IncomeOwnershipSection() {
               <GenericCard
                 padding="md"
                 className="h-full"
-                style={{ borderColor: 'rgba(0,191,255,0.3)' }}
+                style={{ borderColor: cardVisuals['eXp Fees'].borderColor }}
               >
                 <div className="flex flex-col items-center text-center h-full justify-center">
                   <div className="mb-4">
                     <FeesBadge />
                   </div>
-                  <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
+                  <h3 className="text-h4 mb-2" style={{ color: '#ff5050' }}>
                     {FEES_CARD.title}
                   </h3>
                   <p className="text-body opacity-80">
@@ -1951,11 +2004,12 @@ function IncomeOwnershipSection() {
             */}
             <div className="income-card-3 income-card-md-full h-full">
               <div
+                ref={tierBarsReveal.ref}
                 className="relative rounded-2xl p-6 sm:p-8 h-full overflow-hidden"
                 style={{
-                  background: 'rgba(0,40,80,0.3)',
-                  border: '1px solid rgba(0,191,255,0.25)',
-                  boxShadow: 'inset 0 0 40px rgba(0,120,255,0.08), 0 0 30px rgba(0,100,200,0.1)',
+                  background: 'rgba(60,20,80,0.3)',
+                  border: '1px solid rgba(160,80,255,0.25)',
+                  boxShadow: 'inset 0 0 40px rgba(120,60,180,0.08), 0 0 30px rgba(100,50,150,0.1)',
                 }}
               >
                 <RisingParticles />
@@ -1964,7 +2018,7 @@ function IncomeOwnershipSection() {
                 <div className="min-[765px]:hidden relative z-[1] flex gap-4 items-center">
                   {/* Text side - doesn't extend under visual */}
                   <div className="flex-1">
-                    <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>
+                    <h3 className="text-h4 mb-2" style={{ color: '#a050ff' }}>
                       Revenue Share
                     </h3>
                     <p className="text-body opacity-80">
@@ -1973,10 +2027,7 @@ function IncomeOwnershipSection() {
                   </div>
                   {/* Visual side - fixed width */}
                   <div className="flex-shrink-0" style={{ width: '140px', height: '140px' }}>
-                    <div
-                      ref={tierBarsReveal.ref}
-                      className="relative w-full h-full"
-                    >
+                    <div className="relative w-full h-full">
                       {Array.from({ length: RING_COUNT }, (_, i) => {
                         const pct = RING_BASE_PCT + i * RING_STEP_PCT;
                         const opacity = 0.6 - i * 0.05;
@@ -1993,8 +2044,8 @@ function IncomeOwnershipSection() {
                                 ? 'translate(-50%,-50%) scale(1)'
                                 : 'translate(-50%,-50%) scale(0)',
                               opacity: tierBarsReveal.isVisible ? 1 : 0,
-                              border: `1px solid rgba(0,191,255,${opacity})`,
-                              boxShadow: `0 0 8px rgba(0,191,255,${opacity * 0.5})`,
+                              border: `1px solid rgba(160,80,255,${opacity})`,
+                              boxShadow: `0 0 8px rgba(160,80,255,${opacity * 0.5})`,
                               transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
                             }}
                           />
@@ -2003,7 +2054,7 @@ function IncomeOwnershipSection() {
                       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
                         <p
                           className="text-4xl font-bold tabular-nums leading-none"
-                          style={{ color: '#00bfff', textShadow: BLUE_3D_SHADOW }}
+                          style={{ color: '#a050ff', textShadow: PURPLE_3D_SHADOW }}
                         >
                           <span ref={tierCounter.elementRef}>
                             {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
@@ -2038,8 +2089,8 @@ function IncomeOwnershipSection() {
                                 ? 'translate(-50%,-50%) scale(1)'
                                 : 'translate(-50%,-50%) scale(0)',
                               opacity: tierBarsReveal.isVisible ? 1 : 0,
-                              border: `1px solid rgba(0,191,255,${opacity})`,
-                              boxShadow: `0 0 8px rgba(0,191,255,${opacity * 0.5})`,
+                              border: `1px solid rgba(160,80,255,${opacity})`,
+                              boxShadow: `0 0 8px rgba(160,80,255,${opacity * 0.5})`,
                               transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
                             }}
                           />
@@ -2048,7 +2099,7 @@ function IncomeOwnershipSection() {
                       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
                         <p
                           className="text-5xl font-bold tabular-nums leading-none"
-                          style={{ color: '#00bfff', textShadow: BLUE_3D_SHADOW }}
+                          style={{ color: '#a050ff', textShadow: PURPLE_3D_SHADOW }}
                         >
                           {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
                         </p>
@@ -2100,8 +2151,8 @@ function IncomeOwnershipSection() {
                                 ? 'translate(-50%,-50%) scale(1)'
                                 : 'translate(-50%,-50%) scale(0)',
                               opacity: tierBarsReveal.isVisible ? 1 : 0,
-                              border: `1px solid rgba(0,191,255,${opacity})`,
-                              boxShadow: `0 0 8px rgba(0,191,255,${opacity * 0.5})`,
+                              border: `1px solid rgba(160,80,255,${opacity})`,
+                              boxShadow: `0 0 8px rgba(160,80,255,${opacity * 0.5})`,
                               transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
                               animation: tierBarsReveal.isVisible && i === RING_COUNT - 1
                                 ? 'ringPulse 3s ease-in-out 2.5s infinite'
@@ -2113,7 +2164,7 @@ function IncomeOwnershipSection() {
                       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
                         <p
                           className="text-5xl sm:text-6xl font-bold tabular-nums leading-none"
-                          style={{ color: '#00bfff', textShadow: BLUE_3D_SHADOW }}
+                          style={{ color: '#a050ff', textShadow: PURPLE_3D_SHADOW }}
                         >
                           {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
                         </p>

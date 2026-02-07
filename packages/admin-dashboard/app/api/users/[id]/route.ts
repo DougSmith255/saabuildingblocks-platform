@@ -8,9 +8,24 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { createClient } from '@supabase/supabase-js';
 import bcryptjs from 'bcryptjs';
 import { deleteProfilePicture } from '@/lib/cloudflare-r2';
 import { deleteAgentPageFromKV, syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
+
+/**
+ * Get Supabase Admin client for managing auth users
+ */
+function getSupabaseAdminClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) return null;
+
+  return createClient(url, serviceKey, {
+    auth: { autoRefreshToken: false, persistSession: false }
+  });
+}
 
 export const dynamic = 'force-dynamic';
 
@@ -143,6 +158,7 @@ export async function PUT(
     if (state !== undefined) updates.state = state;
 
     // Hash new password if provided
+    let passwordChanged = false;
     if (password) {
       if (password.length < 8) {
         return NextResponse.json(
@@ -152,8 +168,17 @@ export async function PUT(
       }
       const hashedPassword = await bcryptjs.hash(password, BCRYPT_ROUNDS);
       updates.password_hash = hashedPassword;
+      passwordChanged = true;
       console.log(`🔐 Password update for user ${id}: hash generated (${hashedPassword.substring(0, 20)}...)`);
     }
+
+    // Get current user email before update (for finding Supabase Auth user)
+    const { data: currentUser } = await supabase
+      .from('users')
+      .select('email')
+      .eq('id', id)
+      .single();
+    const currentEmail = currentUser?.email;
 
     // Update user
     const { data: updatedUser, error: updateError } = await supabase
@@ -175,6 +200,36 @@ export async function PUT(
     console.log(`✅ User ${id} updated successfully. Fields updated:`, Object.keys(updates).join(', '));
     if (updates.password_hash) {
       console.log(`🔐 Password was updated for user ${id}`);
+    }
+
+    // Sync email and/or password to Supabase Auth if changed
+    const emailChanged = email !== undefined && email !== currentEmail;
+    if (emailChanged || passwordChanged) {
+      const adminClient = getSupabaseAdminClient();
+      if (adminClient && currentEmail) {
+        // Find the Supabase Auth user by their current email
+        const { data: authUsers } = await adminClient.auth.admin.listUsers();
+        const authUser = authUsers?.users?.find(u => u.email?.toLowerCase() === currentEmail.toLowerCase());
+
+        if (authUser) {
+          const authUpdates: { email?: string; password?: string } = {};
+          if (emailChanged) authUpdates.email = email;
+          if (passwordChanged) authUpdates.password = password;
+
+          const { error: authError } = await adminClient.auth.admin.updateUserById(
+            authUser.id,
+            authUpdates
+          );
+
+          if (authError) {
+            console.error(`❌ Failed to sync to Supabase Auth for user ${id}:`, authError.message);
+          } else {
+            console.log(`✅ Supabase Auth synced for user ${id}:`, Object.keys(authUpdates).join(', '));
+          }
+        } else {
+          console.warn(`⚠️ No Supabase Auth user found for email ${currentEmail}`);
+        }
+      }
     }
 
     // Remove password_hash from response
