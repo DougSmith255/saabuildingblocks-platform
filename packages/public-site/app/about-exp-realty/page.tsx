@@ -1222,8 +1222,14 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
   }, [feature, transitionKey, displayedKey]);
 
   return (
-    <GenericCyberCardGold padding="md" centered={false} className="h-full">
-      <div className="relative h-full flex flex-col justify-center overflow-visible">
+    <>
+      {/* Style override to make GenericCyberCardGold's inner wrapper full-height flex */}
+      <style>{`
+        .detail-panel-card.generic-cyber-card-gold { display: flex; flex-direction: column; }
+        .detail-panel-card.generic-cyber-card-gold > div { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+      `}</style>
+      <GenericCyberCardGold padding="md" centered={false} className="h-full detail-panel-card">
+        <div className="relative overflow-visible">
         {/* Watermark icon — large faded background icon (matches WHAT EXP PROVIDES styling) */}
         <div
           className="absolute pointer-events-none"
@@ -1269,6 +1275,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
         </div>
       </div>
     </GenericCyberCardGold>
+    </>
   );
 }
 
