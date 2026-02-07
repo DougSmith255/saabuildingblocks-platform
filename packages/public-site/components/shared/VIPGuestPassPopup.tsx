@@ -10,8 +10,7 @@ import { ConsentCheckbox } from '@saa/shared/components/saa/forms/ConsentCheckbo
 import { HolographicGlobe } from './HolographicGlobe';
 
 const STORAGE_KEY = 'saa_vip_pass_shown';
-const TRIGGER_DELAY_MS = 30000;
-const SCROLL_THRESHOLD = 0.5;
+const SCROLL_THRESHOLD = 0.70; // 70% scroll fallback
 
 const EXP_X_LOGO = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public';
 
@@ -62,34 +61,64 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
       return;
     }
 
-    // Interval-based timer that pauses while any panel is open.
-    // Ticks every 500ms; only accumulates elapsed time when no panel is open.
-    let elapsed = 0;
-    const TICK = 500;
-    const intervalId = setInterval(() => {
+    // Exit-intent detection (primary trigger)
+    // Desktop: mouse moves toward top of viewport (likely leaving)
+    // Mobile: handled via scroll-up detection below
+    let lastMouseY = 0;
+    const handleMouseMove = (e: MouseEvent) => {
       if (hasTriggeredRef.current) return;
-      if (!isPanelOpen()) {
-        elapsed += TICK;
-        if (elapsed >= TRIGGER_DELAY_MS) {
-          showPopup();
-          clearInterval(intervalId);
-        }
+      if (isPanelOpen()) return;
+
+      // Detect mouse moving upward toward browser UI (exit intent)
+      // Trigger when mouse is in top 10px and moving upward
+      if (e.clientY < 10 && e.clientY < lastMouseY) {
+        showPopup();
       }
-    }, TICK);
+      lastMouseY = e.clientY;
+    };
+
+    // Mobile exit-intent: detect quick scroll up (user pulling to go back)
+    let lastScrollY = window.scrollY;
+    let scrollUpVelocity = 0;
+    let lastScrollTime = Date.now();
 
     const handleScroll = () => {
       if (hasTriggeredRef.current) return;
-      // Don't trigger while another panel is open
       if (isPanelOpen()) return;
-      const scrollTop = window.scrollY;
+
+      const currentScrollY = window.scrollY;
+      const currentTime = Date.now();
+      const timeDelta = currentTime - lastScrollTime;
+
+      // Calculate scroll velocity (negative = scrolling up)
+      if (timeDelta > 0) {
+        scrollUpVelocity = (lastScrollY - currentScrollY) / timeDelta;
+      }
+
+      // Mobile exit-intent: rapid scroll up near top of page
+      // Velocity > 2 means scrolling up fast (user likely trying to leave)
+      if (currentScrollY < 200 && scrollUpVelocity > 2) {
+        showPopup();
+        return;
+      }
+
+      // Fallback: 70% scroll depth for highly engaged users
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight > 0 && scrollTop / docHeight >= SCROLL_THRESHOLD) showPopup();
+      if (docHeight > 0 && currentScrollY / docHeight >= SCROLL_THRESHOLD) {
+        showPopup();
+      }
+
+      lastScrollY = currentScrollY;
+      lastScrollTime = currentTime;
     };
 
+    // Desktop: track mouse for exit-intent
+    document.addEventListener('mousemove', handleMouseMove, { passive: true });
+    // Both: track scroll for mobile exit-intent + scroll fallback
     window.addEventListener('scroll', handleScroll, { passive: true });
+
     return () => {
-      clearInterval(intervalId);
-      if (timerRef.current) clearTimeout(timerRef.current);
+      document.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('scroll', handleScroll);
     };
   }, [showPopup, isPanelOpen]);
@@ -100,8 +129,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
 
   // Pre-warm Three.js modules during browser idle time so the globe
   // is ready instantly when the panel opens (no flash-in).
-  // Uses requestIdleCallback to avoid impacting initial page load (LCP/FCP),
-  // but loads much earlier than before since the popup WILL fire at 30s.
+  // Uses requestIdleCallback to avoid impacting initial page load (LCP/FCP).
   useEffect(() => {
     if (hasTriggered) return;
     let warmed = false;
