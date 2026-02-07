@@ -825,9 +825,13 @@ function HowExpIsBuilt() {
                 key={index}
                 className="group relative rounded-2xl p-6 md:p-8 text-center overflow-hidden"
                 style={{
-                  background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
-                  border: '1px solid rgba(0,191,255,0.15)',
-                  boxShadow: '0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
+                  background: `
+                    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+                    linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)
+                  `,
+                  backgroundBlendMode: 'overlay, normal',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                   opacity: prioritiesReveal.isVisible ? 1 : 0,
                   transform: prioritiesReveal.isVisible ? 'translateY(0)' : 'translateY(40px)',
                   transition: `opacity 0.6s ease ${index * 0.12}s, transform 0.6s ease ${index * 0.12}s`,
@@ -837,7 +841,7 @@ function HowExpIsBuilt() {
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
                   style={{
-                    background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,191,255,0.12) 0%, transparent 70%)',
+                    background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(229,228,221,0.08) 0%, transparent 70%)',
                   }}
                 />
 
@@ -847,8 +851,8 @@ function HowExpIsBuilt() {
                   <div
                     className="absolute inset-0 rounded-full"
                     style={{
-                      background: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))',
-                      boxShadow: '0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1)',
+                      background: 'linear-gradient(135deg, rgba(229,228,221,0.15), rgba(191,189,176,0.08))',
+                      boxShadow: '0 0 30px rgba(229,228,221,0.15), inset 0 0 20px rgba(229,228,221,0.08)',
                       animation: prioritiesReveal.isVisible ? 'priorityIconPulse 3s ease-in-out infinite' : 'none',
                       animationDelay: `${index * 0.4}s`,
                     }}
@@ -857,11 +861,11 @@ function HowExpIsBuilt() {
                   <div
                     className="absolute inset-2 rounded-full flex items-center justify-center"
                     style={{
-                      background: 'linear-gradient(180deg, rgba(15,20,30,0.95), rgba(5,10,20,0.98))',
-                      border: '1px solid rgba(0,191,255,0.3)',
+                      background: 'linear-gradient(180deg, rgba(20,20,20,0.95), rgba(12,12,12,0.98))',
+                      border: '1px solid rgba(255,255,255,0.06)',
                     }}
                   >
-                    <priority.icon size={24} className="md:w-7 md:h-7" style={{ color: '#00bfff', filter: 'drop-shadow(0 0 8px rgba(0,191,255,0.5))' }} />
+                    <priority.icon size={24} className="md:w-7 md:h-7" style={{ color: '#e5e4dd', filter: 'drop-shadow(0 0 8px rgba(229,228,221,0.4))' }} />
                   </div>
                 </div>
 
@@ -877,8 +881,8 @@ function HowExpIsBuilt() {
           {/* Animation keyframes */}
           <style>{`
             @keyframes priorityIconPulse {
-              0%, 100% { box-shadow: 0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1); }
-              50% { box-shadow: 0 0 40px rgba(0,191,255,0.35), inset 0 0 25px rgba(0,191,255,0.15); }
+              0%, 100% { box-shadow: 0 0 30px rgba(229,228,221,0.15), inset 0 0 20px rgba(229,228,221,0.08); }
+              50% { box-shadow: 0 0 40px rgba(229,228,221,0.25), inset 0 0 25px rgba(229,228,221,0.12); }
             }
           `}</style>
         </div>
