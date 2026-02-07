@@ -1718,17 +1718,17 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     .why-only-card-stack {
       position: relative;
-      height: 310px;
+      height: 253px;
       width: 100%;
       perspective: 1200px;
       cursor: pointer;
     }
     @media (min-width: 768px) {
       .why-only-card-stack {
-        height: 370px;
+        height: 313px;
       }
       .why-only-right-card {
-        height: 370px;
+        height: 313px;
       }
     }
     .why-only-card {
@@ -3079,6 +3079,67 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       text-align: center;
     }
 
+    /* Generic Cyber Card Gold - dark background variant */
+    .generic-cyber-card-gold {
+      perspective: 1000px;
+      display: block;
+    }
+    .generic-cyber-card-gold-frame {
+      position: relative;
+      border: 10px solid #ffd700;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%);
+      box-shadow: 0 0 4px 1px rgba(255, 215, 0, 0.5), 0 0 8px 2px rgba(255, 215, 0, 0.35),
+        0 0 16px 4px rgba(255, 215, 0, 0.2), 0 0 24px 6px rgba(255, 215, 0, 0.1), 0 4px 12px rgba(0,0,0,0.3);
+      overflow: visible;
+      isolation: isolate;
+    }
+    @keyframes genericCyberCardGoldOrganicPulse {
+      0% { opacity: 0.55; }
+      13% { opacity: 0.95; }
+      28% { opacity: 0.6; }
+      41% { opacity: 0.85; }
+      54% { opacity: 0.5; }
+      67% { opacity: 1; }
+      83% { opacity: 0.7; }
+      100% { opacity: 0.55; }
+    }
+    .generic-cyber-card-gold-frame::after {
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: -12px;
+      right: -12px;
+      bottom: -12px;
+      border-radius: 18px;
+      border: 2px solid rgba(255,255,255,0.4);
+      box-shadow: 0 0 6px 2px rgba(255, 215, 0, 0.6), 0 0 12px 4px rgba(255, 215, 0, 0.4),
+        0 0 20px 6px rgba(255, 215, 0, 0.25), 0 0 32px 10px rgba(255, 215, 0, 0.12), 0 6px 16px rgba(0,0,0,0.35);
+      pointer-events: none;
+      z-index: -1;
+      animation: genericCyberCardGoldOrganicPulse 2.4s linear infinite;
+      will-change: opacity;
+    }
+    .generic-cyber-card-gold-frame::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .generic-cyber-card-gold-content {
+      position: relative;
+      z-index: 10;
+      padding: 32px;
+      text-align: center;
+    }
+
     /* Founder Card Styles */
     .founder-card {
       text-align: center;
@@ -3553,6 +3614,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       .proven-scale-grid {
         grid-template-columns: 1fr !important;
       }
+      /* Center the button when stacked on mobile */
+      .proven-scale-grid > div:first-child {
+        text-align: center;
+      }
+      .proven-scale-grid .text-left {
+        text-align: center !important;
+      }
     }
 
     /* FAQ Styles */
@@ -3897,11 +3965,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
               <!-- Right - Counter Card -->
               <div class="scroll-reveal" style="transition-delay: 0.2s;">
-                <div class="cyber-card-gold">
-                  <div class="cyber-card-gold-frame">
-                    <div class="cyber-card-gold-glass"></div>
-                    <div class="cyber-card-gold-content">
-                      <span class="icon-3d" style="margin: 0 auto 0.5rem; display: block; width: fit-content;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
+                <div class="generic-cyber-card-gold">
+                  <div class="generic-cyber-card-gold-frame">
+                    <div class="generic-cyber-card-gold-content">
+                      <span class="icon-3d" style="margin: 0 auto 0.5rem; display: block; width: fit-content;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.4 0 0 1 4-10z"></path></svg></span>
                       <p style="font-family: 'Amulya', var(--font-amulya), sans-serif; font-size: clamp(1.875rem, 4vw, 2.5rem); font-weight: 700; color: #bfbdb0; text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; text-align: center; margin: 0;">3700+</p>
                       <p class="text-body" style="text-align: center; margin-top: 0.25rem;">Agents in Sponsor Network</p>
                     </div>
@@ -4070,8 +4137,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   <p style="text-align: center; font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.6); margin-top: 0.75rem;">Click to control manually</p>
                 </div>
 
-                <!-- Right Column: Key message card - height matches card stack (310px mobile, 370px desktop) -->
-                <figure style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; position: relative; overflow: hidden; height: 310px; z-index: 1;" class="why-only-right-card">
+                <!-- Right Column: Key message card - height matches card stack (253px mobile, 313px desktop) -->
+                <figure style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; position: relative; overflow: hidden; height: 253px; z-index: 1;" class="why-only-right-card">
                   <div style="position: absolute; inset: 0;">
                     <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-entrepreneurial-sponsor-v2/desktop" alt="eXp Realty sponsor delivering entrepreneurial systems to real estate agents" title="eXp Realty Entrepreneurial Sponsor Systems" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                     <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.1) 100%);"></div>
@@ -4338,7 +4405,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div class="leadership-grid">
               <!-- Column 1 - Agent (Your Sponsor) -->
               <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.2s;">
-                <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,215,0,0.3); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
+                <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 12px; background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03); text-align: center; height: 100%; display: flex; flex-direction: column; transition: all 0.3s ease;">
                   <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">

@@ -171,7 +171,7 @@ export function WhyOnlyAtExp() {
                   onClick={handleCardClick}
                   style={{
                     perspective: '1200px',
-                    height: '340px',
+                    height: '315px',
                   }}
                 >
                   {STEPS.map((step, index) => {
@@ -299,7 +299,7 @@ export function WhyOnlyAtExp() {
               {/* Right Column: Key message card */}
               <figure
                 className="relative rounded-2xl overflow-hidden border border-white/10"
-                style={{ minHeight: '340px', zIndex: 1 }}
+                style={{ minHeight: '315px', zIndex: 1 }}
                 itemScope
                 itemType="https://schema.org/ImageObject"
               >
