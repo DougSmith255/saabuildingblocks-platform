@@ -118,7 +118,7 @@ export function MediaLogos() {
               hover
               centered
             >
-              <h3 className="font-bold mb-2" style={{ color: '#e5e4dd', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Proven Profitability</h3>
+              <h3 className="font-bold mb-2" style={{ color: '#ffd700', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Proven Profitability</h3>
               <p className="text-body opacity-90 text-sm">The only cumulatively profitable public real estate company.</p>
             </IconCyberCard>
 
@@ -129,7 +129,7 @@ export function MediaLogos() {
               hover
               centered
             >
-              <h3 className="font-bold mb-2" style={{ color: '#e5e4dd', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Cloud-First Pioneer</h3>
+              <h3 className="font-bold mb-2" style={{ color: '#ffd700', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Cloud-First Pioneer</h3>
               <p className="text-body opacity-90 text-sm">S&P 600 SmallCap. First cloud-based brokerage.</p>
             </IconCyberCard>
 
@@ -140,7 +140,7 @@ export function MediaLogos() {
               hover
               centered
             >
-              <h3 className="font-bold mb-2" style={{ color: '#e5e4dd', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Choose Your Sponsor</h3>
+              <h3 className="font-bold mb-2" style={{ color: '#ffd700', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Choose Your Sponsor</h3>
               <p className="text-body opacity-90 text-sm">Access real systems and support through the sponsor you choose.</p>
             </IconCyberCard>
           </div>

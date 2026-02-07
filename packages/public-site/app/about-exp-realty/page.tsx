@@ -1473,7 +1473,7 @@ function SpotlightConsole() {
                 overflow: 'visible',
               }}
             >
-              <div className="grid grid-cols-2 gap-3" style={{ height: 'calc(50% - 6px)' }}>
+              <div className="grid grid-cols-2 gap-[10px]" style={{ height: 'calc(50% - 5px)' }}>
                 {FEATURES.slice(0, 2).map((f, i) => (
                   <div key={f.keyword} style={{ height: '100%' }}>
                     <FeatureChip
@@ -1485,7 +1485,7 @@ function SpotlightConsole() {
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-2 gap-3 mt-3" style={{ height: 'calc(50% - 6px)' }}>
+              <div className="grid grid-cols-2 gap-[10px] mt-[10px]" style={{ height: 'calc(50% - 5px)' }}>
                 {FEATURES.slice(2, 4).map((f, i) => (
                   <div key={f.keyword} style={{ height: '100%' }}>
                     <FeatureChip
@@ -1528,7 +1528,7 @@ function SpotlightConsole() {
         <div className="lg:hidden">
           {/* 4 chips in 2x2 grid above description */}
           <div className="mb-4">
-            <div className="grid grid-cols-2 gap-3" style={{ height: '100px' }}>
+            <div className="grid grid-cols-2 gap-[10px]" style={{ height: '100px' }}>
               {FEATURES.slice(0, 2).map((f, i) => (
                 <div key={f.keyword} style={{ height: '100%' }}>
                   <FeatureChip
@@ -1540,7 +1540,7 @@ function SpotlightConsole() {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-2 gap-3 mt-3" style={{ height: '100px' }}>
+            <div className="grid grid-cols-2 gap-[10px] mt-[10px]" style={{ height: '100px' }}>
               {FEATURES.slice(2, 4).map((f, i) => (
                 <div key={f.keyword} style={{ height: '100%' }}>
                   <FeatureChip
@@ -2411,6 +2411,25 @@ function SupportInfrastructureSection() {
 
   return (
     <section ref={sectionRef} className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12 overflow-hidden">
+      {/* Top gradient edge */}
+      <div
+        className="absolute top-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '15px',
+          background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)',
+          zIndex: 2,
+        }}
+      />
+      {/* Bottom gradient edge */}
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '15px',
+          background: 'linear-gradient(to top, #080808 0%, transparent 100%)',
+          zIndex: 2,
+        }}
+      />
+
       {/* HolographicGlobe background */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -2559,6 +2578,7 @@ function WhatExpProvidesSection() {
   const CurrentIcon = currentTab.icon;
 
   return (
+    <GlassPanel variant="tealCrosshatch" noBlur>
     <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
       <div ref={containerRef} className="max-w-[1400px] mx-auto">
         {/* H2 Heading */}
@@ -2566,13 +2586,14 @@ function WhatExpProvidesSection() {
           <H2>WHAT EXP PROVIDES</H2>
         </div>
 
-        {/* Tab chips - larger with better spacing */}
-        <div className="flex justify-center gap-4 sm:gap-6 mb-10">
+        {/* Tab chips - equal width with better spacing */}
+        <div className="flex justify-center gap-[10px] mb-10">
           {TAB_CONTENT.map((tab, i) => (
             <div
               key={tab.id}
-              className="rounded-xl relative overflow-hidden"
+              className="rounded-xl relative overflow-hidden flex-1"
               style={{
+                maxWidth: '200px',
                 border: activeTab === i ? '2px solid rgba(50,150,220,0.5)' : '2px solid rgba(255,255,255,0.08)',
                 boxShadow: activeTab === i
                   ? '0 0 25px 6px rgba(0,160,255,0.35), 0 0 50px 12px rgba(0,120,200,0.18)'
@@ -2741,6 +2762,7 @@ function WhatExpProvidesSection() {
         </div>
       </div>
     </section>
+    </GlassPanel>
   );
 }
 
@@ -3418,7 +3440,7 @@ export default function AboutExpRealty() {
               </div>
 
               {/* Stats Cards with counter animation */}
-              <div className="flex flex-wrap justify-center gap-3 sm:gap-5 mt-8 mx-auto" style={{ maxWidth: '1200px' }}>
+              <div className="flex flex-wrap justify-center gap-[10px] mt-8 mx-auto" style={{ maxWidth: '1200px' }}>
                 <FlipSplitCard />
                 <HeroStatCard targetNumber={28} suffix="+" label="Countries" />
                 <HeroStatCard prefix="S&P " targetNumber={600} label="Company" />

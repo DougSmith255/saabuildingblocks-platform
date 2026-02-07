@@ -210,7 +210,12 @@ export function WhyOnlyAtExp() {
                       radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
                       linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
                     `;
-                    const darkBackground = 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)';
+                    // Grainy dark background matching GenericCyberCardGold
+                    const darkBackground = `
+                      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+                      linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)
+                    `;
+                    const darkBackgroundBlendMode = 'overlay, normal';
 
                     return (
                       <div
@@ -218,6 +223,7 @@ export function WhyOnlyAtExp() {
                         className="absolute inset-0 rounded-2xl p-4 md:p-8 flex flex-col items-center justify-center text-center"
                         style={{
                           background: step.highlight ? mistyBackground : darkBackground,
+                          backgroundBlendMode: step.highlight ? undefined : darkBackgroundBlendMode,
                           border: step.highlight
                             ? '2px solid rgba(180,150,50,0.5)'
                             : '1px solid rgba(255,255,255,0.06)',

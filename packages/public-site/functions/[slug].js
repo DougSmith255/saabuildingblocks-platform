@@ -4151,7 +4151,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
                 </div>
               </div>
-              <h3 class="why-exp-card-heading" style="color: #e5e4dd;">Proven Profitability</h3>
+              <h3 class="why-exp-card-heading" style="color: #ffd700;">Proven Profitability</h3>
               <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9;">The only cumulatively profitable public real estate company.</p>
             </div>
 
@@ -4164,7 +4164,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
                 </div>
               </div>
-              <h3 class="why-exp-card-heading" style="color: #e5e4dd;">Cloud-First Pioneer</h3>
+              <h3 class="why-exp-card-heading" style="color: #ffd700;">Cloud-First Pioneer</h3>
               <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9;">S&amp;P 600 SmallCap. First cloud-based brokerage.</p>
             </div>
 
@@ -4177,7 +4177,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 </div>
               </div>
-              <h3 class="why-exp-card-heading" style="color: #e5e4dd;">Choose Your Sponsor</h3>
+              <h3 class="why-exp-card-heading" style="color: #ffd700;">Choose Your Sponsor</h3>
               <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9;">Choose your sponsor. Access real support.</p>
             </div>
           </div>
@@ -4607,8 +4607,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div class="slide-panel-content" style="justify-content: center;">
-        <form id="join-form">
+      <div class="slide-panel-content" style="justify-content: center; align-items: center;">
+        <form id="join-form" style="width: 100%; max-width: 400px;">
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="firstName">First Name *</label>
@@ -4666,8 +4666,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div class="slide-panel-content instructions-modal">
-        <div class="instructions-list">
+      <div class="slide-panel-content instructions-modal" style="align-items: center;">
+        <div class="instructions-list" style="width: 100%; max-width: 450px;">
           <div class="instruction-item">
             <div class="instruction-number">1</div>
             <div class="instruction-content">

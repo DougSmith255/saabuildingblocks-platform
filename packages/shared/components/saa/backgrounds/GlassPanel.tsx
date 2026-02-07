@@ -10,7 +10,7 @@ import React from 'react';
  * - emerald: Emerald (#10b981) + horizontal lines texture
  * - expBlue: eXp Blue (#0066aa) + horizontal lines texture
  */
-export type GlassPanelVariant = 'champagne' | 'marigoldCrosshatch' | 'marigoldNoise' | 'emerald' | 'expBlue' | 'expBlueCrosshatch';
+export type GlassPanelVariant = 'champagne' | 'marigoldCrosshatch' | 'marigoldNoise' | 'emerald' | 'expBlue' | 'expBlueCrosshatch' | 'tealCrosshatch';
 
 export interface GlassPanelProps {
   /** The glass style variant */
@@ -82,6 +82,14 @@ const VARIANTS = {
     color: { r: 0, g: 102, b: 170 },  // #0066aa
     colorOpacity: 0.06,
     borderOpacity: 0.14,
+    texture: 'crosshatch',
+    textureOpacity: 0.03,
+    noiseFrequency: 0.8,
+  },
+  tealCrosshatch: {
+    color: { r: 90, g: 184, b: 176 },  // #5ab8b0 - soft seafoam teal
+    colorOpacity: 0.05,
+    borderOpacity: 0.12,
     texture: 'crosshatch',
     textureOpacity: 0.03,
     noiseFrequency: 0.8,
