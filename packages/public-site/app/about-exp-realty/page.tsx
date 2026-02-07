@@ -736,11 +736,9 @@ function IntroFlipCard() {
 }
 
 function HowExpIsBuilt() {
-  const prioritiesReveal = useScrollReveal(0.2);
-
   return (
     <GlassPanel variant="champagne">
-      <section className="py-12 md:py-20" ref={prioritiesReveal.ref}>
+      <section className="py-12 md:py-20">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="text-center mb-10">
             <H2>How eXp is Built for Agents</H2>
@@ -754,8 +752,8 @@ function HowExpIsBuilt() {
           {/* Desktop: Side by side cards */}
           <div className="hidden sm:grid grid-cols-2 gap-5 max-w-[1400px] mx-auto mb-10">
             {/* Card 01 - CyberCard with Ban icon and red text */}
-            <div className="relative">
-              <GenericCyberCardGold padding="md" centered className="h-full intro-card-red">
+            <div className="relative h-full">
+              <GenericCyberCardGold padding="md" centered className="h-full flex flex-col intro-card-red">
                 {/* Ban Icon Badge */}
                 <span
                   className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
@@ -766,7 +764,7 @@ function HowExpIsBuilt() {
                 >
                   <Ban size={16} style={{ color: '#ff5050' }} />
                 </span>
-                <div className="flex items-center justify-center h-full min-h-[100px]">
+                <div className="flex items-center justify-center flex-1 min-h-[100px]">
                   <p
                     className="text-h5 leading-relaxed text-center"
                     style={{
@@ -783,8 +781,8 @@ function HowExpIsBuilt() {
               </GenericCyberCardGold>
             </div>
             {/* Card 02 - CyberCardGold with eXp X logo and blue text */}
-            <div className="relative">
-              <CyberCardGold padding="md" centered className="h-full">
+            <div className="relative h-full">
+              <CyberCardGold padding="md" centered className="h-full flex flex-col">
                 {/* eXp X Logo Badge */}
                 <span
                   className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
@@ -795,7 +793,7 @@ function HowExpIsBuilt() {
                 >
                   <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public" alt="eXp" width={16} height={16} className="object-contain" />
                 </span>
-                <div className="flex items-center justify-center h-full min-h-[100px]">
+                <div className="flex items-center justify-center flex-1 min-h-[100px]">
                   <p
                     className="text-h5 leading-relaxed text-center"
                     style={{
@@ -827,9 +825,6 @@ function HowExpIsBuilt() {
                 style={{
                   border: '1px solid rgba(255,255,255,0.06)',
                   boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-                  opacity: prioritiesReveal.isVisible ? 1 : 0,
-                  transform: prioritiesReveal.isVisible ? 'translateY(0)' : 'translateY(40px)',
-                  transition: `opacity 0.6s ease ${index * 0.12}s, transform 0.6s ease ${index * 0.12}s`,
                 }}
               >
                 {/* Hover glow */}
@@ -848,7 +843,7 @@ function HowExpIsBuilt() {
                     style={{
                       background: 'linear-gradient(135deg, rgba(229,228,221,0.15), rgba(191,189,176,0.08))',
                       boxShadow: '0 0 30px rgba(229,228,221,0.15), inset 0 0 20px rgba(229,228,221,0.08)',
-                      animation: prioritiesReveal.isVisible ? 'priorityIconPulse 3s ease-in-out infinite' : 'none',
+                      animation: 'priorityIconPulse 3s ease-in-out infinite',
                       animationDelay: `${index * 0.4}s`,
                     }}
                   />
@@ -1911,10 +1906,8 @@ function FeesBadge() {
 }
 
 function IncomeOwnershipSection() {
-  // Tier bars cascade animation — trigger once on scroll (define first so we can use isVisible)
-  const tierBarsReveal = useScrollReveal(0.3);
-  // Scramble counter for 7 tiers - triggered by tierBarsReveal visibility
-  const tierCounter = useScrambleCounter(7, 1500, true, tierBarsReveal.isVisible);
+  // Scramble counter for 7 tiers - triggers on mount
+  const tierCounter = useScrambleCounter(7, 1500, false);
 
   // Card visual components and border colors mapped by title
   const cardVisuals: Record<string, { visual: React.ReactNode; borderColor: string }> = {
@@ -2032,7 +2025,6 @@ function IncomeOwnershipSection() {
             */}
             <div className="income-card-3 income-card-md-full h-full">
               <div
-                ref={tierBarsReveal.ref}
                 className="relative rounded-2xl p-6 sm:p-8 h-full overflow-hidden"
                 style={{
                   background: 'rgba(60,20,80,0.3)',
@@ -2068,10 +2060,8 @@ function IncomeOwnershipSection() {
                               height: `${pct}%`,
                               top: '50%',
                               left: '50%',
-                              transform: tierBarsReveal.isVisible
-                                ? 'translate(-50%,-50%) scale(1)'
-                                : 'translate(-50%,-50%) scale(0)',
-                              opacity: tierBarsReveal.isVisible ? 1 : 0,
+                              transform: 'translate(-50%,-50%) scale(1)',
+                              opacity: 1,
                               border: `1px solid rgba(160,80,255,${opacity})`,
                               boxShadow: `0 0 8px rgba(160,80,255,${opacity * 0.5})`,
                               transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
@@ -2113,10 +2103,8 @@ function IncomeOwnershipSection() {
                               height: `${pct}%`,
                               top: '50%',
                               left: '50%',
-                              transform: tierBarsReveal.isVisible
-                                ? 'translate(-50%,-50%) scale(1)'
-                                : 'translate(-50%,-50%) scale(0)',
-                              opacity: tierBarsReveal.isVisible ? 1 : 0,
+                              transform: 'translate(-50%,-50%) scale(1)',
+                              opacity: 1,
                               border: `1px solid rgba(160,80,255,${opacity})`,
                               boxShadow: `0 0 8px rgba(160,80,255,${opacity * 0.5})`,
                               transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
@@ -2175,14 +2163,12 @@ function IncomeOwnershipSection() {
                               height: `${pct}%`,
                               top: '50%',
                               left: '50%',
-                              transform: tierBarsReveal.isVisible
-                                ? 'translate(-50%,-50%) scale(1)'
-                                : 'translate(-50%,-50%) scale(0)',
-                              opacity: tierBarsReveal.isVisible ? 1 : 0,
+                              transform: 'translate(-50%,-50%) scale(1)',
+                              opacity: 1,
                               border: `1px solid rgba(160,80,255,${opacity})`,
                               boxShadow: `0 0 8px rgba(160,80,255,${opacity * 0.5})`,
                               transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
-                              animation: tierBarsReveal.isVisible && i === RING_COUNT - 1
+                              animation: i === RING_COUNT - 1
                                 ? 'ringPulse 3s ease-in-out 2.5s infinite'
                                 : undefined,
                             }}
@@ -2399,7 +2385,6 @@ const transparentCardStyle: React.CSSProperties = {
 function SupportInfrastructureSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [globeVisible, setGlobeVisible] = useState(false);
-  const bulletsReveal = useScrollReveal(0.2);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -2464,8 +2449,8 @@ function SupportInfrastructureSection() {
           <RotatingSupportTechStats />
         </div>
 
-        {/* Single column bullet list with stagger animation */}
-        <div className="max-w-[900px] mx-auto" ref={bulletsReveal.ref}>
+        {/* Single column bullet list */}
+        <div className="max-w-[900px] mx-auto">
           <div
             className="relative overflow-hidden"
             style={{
@@ -2485,15 +2470,12 @@ function SupportInfrastructureSection() {
               }}
             />
             <ul className="space-y-4 relative">
-              {SUPPORT_INFRASTRUCTURE_BULLETS.map((bullet, i) => (
+              {SUPPORT_INFRASTRUCTURE_BULLETS.map((bullet) => (
                 <li
                   key={bullet.text}
                   className="text-body text-sm leading-relaxed flex items-start gap-4 group"
                   style={{
                     color: 'var(--color-body-text)',
-                    opacity: bulletsReveal.isVisible ? 1 : 0,
-                    transform: bulletsReveal.isVisible ? 'translateX(0)' : 'translateX(-20px)',
-                    transition: `opacity 0.5s ease ${i * 80}ms, transform 0.5s ease ${i * 80}ms`,
                   }}
                 >
                   {/* Icon with glow container */}
@@ -2776,10 +2758,8 @@ function WhatExpProvidesSection() {
    ═══════════════════════════════════════════════════════════════ */
 
 function AdditionalAreasDivider() {
-  const dividerReveal = useScrollReveal(0.5);
-
   return (
-    <div className="py-16 md:py-20 px-4 sm:px-8 md:px-12 relative overflow-hidden" ref={dividerReveal.ref}>
+    <div className="py-16 md:py-20 px-4 sm:px-8 md:px-12 relative overflow-hidden">
       {/* Subtle background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -2789,16 +2769,12 @@ function AdditionalAreasDivider() {
       />
 
       <div className="max-w-[900px] mx-auto text-center relative">
-        {/* Animated top line */}
+        {/* Top line */}
         <div className="flex items-center justify-center gap-4 mb-8">
           <div
             className="h-[1px] flex-1 max-w-[120px]"
             style={{
               background: 'linear-gradient(90deg, transparent, rgba(0,191,255,0.5))',
-              opacity: dividerReveal.isVisible ? 1 : 0,
-              transform: dividerReveal.isVisible ? 'scaleX(1)' : 'scaleX(0)',
-              transformOrigin: 'right',
-              transition: 'opacity 0.6s ease, transform 0.6s ease',
             }}
           />
           <div
@@ -2806,31 +2782,21 @@ function AdditionalAreasDivider() {
             style={{
               background: 'linear-gradient(135deg, rgba(0,191,255,0.6), rgba(0,120,200,0.4))',
               boxShadow: '0 0 15px rgba(0,191,255,0.5), 0 0 30px rgba(0,191,255,0.25)',
-              opacity: dividerReveal.isVisible ? 1 : 0,
-              transform: dividerReveal.isVisible ? 'scale(1)' : 'scale(0)',
-              transition: 'opacity 0.4s ease 0.3s, transform 0.4s ease 0.3s',
             }}
           />
           <div
             className="h-[1px] flex-1 max-w-[120px]"
             style={{
               background: 'linear-gradient(90deg, rgba(0,191,255,0.5), transparent)',
-              opacity: dividerReveal.isVisible ? 1 : 0,
-              transform: dividerReveal.isVisible ? 'scaleX(1)' : 'scaleX(0)',
-              transformOrigin: 'left',
-              transition: 'opacity 0.6s ease, transform 0.6s ease',
             }}
           />
         </div>
 
-        {/* Heading with reveal */}
+        {/* Heading */}
         <h3
           className="text-h4 mb-4"
           style={{
             color: '#e5e4dd',
-            opacity: dividerReveal.isVisible ? 1 : 0,
-            transform: dividerReveal.isVisible ? 'translateY(0)' : 'translateY(15px)',
-            transition: 'opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s',
           }}
         >
           ADDITIONAL AREAS AGENTS EXPLORE OVER TIME
@@ -2841,24 +2807,18 @@ function AdditionalAreasDivider() {
           className="text-body max-w-[600px] mx-auto"
           style={{
             color: 'var(--color-body-text)',
-            opacity: dividerReveal.isVisible ? 0.7 : 0,
-            transform: dividerReveal.isVisible ? 'translateY(0)' : 'translateY(15px)',
-            transition: 'opacity 0.5s ease 0.5s, transform 0.5s ease 0.5s',
+            opacity: 0.7,
           }}
         >
           As agents grow, specialize, or shift focus, these areas often become relevant later.
         </p>
 
-        {/* Animated bottom line */}
+        {/* Bottom line */}
         <div className="flex items-center justify-center gap-4 mt-8">
           <div
             className="h-[1px] flex-1 max-w-[80px]"
             style={{
               background: 'linear-gradient(90deg, transparent, rgba(0,191,255,0.3))',
-              opacity: dividerReveal.isVisible ? 1 : 0,
-              transform: dividerReveal.isVisible ? 'scaleX(1)' : 'scaleX(0)',
-              transformOrigin: 'right',
-              transition: 'opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s',
             }}
           />
           <div
@@ -2866,18 +2826,12 @@ function AdditionalAreasDivider() {
             style={{
               background: 'rgba(0,191,255,0.5)',
               boxShadow: '0 0 8px rgba(0,191,255,0.4)',
-              opacity: dividerReveal.isVisible ? 1 : 0,
-              transition: 'opacity 0.4s ease 0.7s',
             }}
           />
           <div
             className="h-[1px] flex-1 max-w-[80px]"
             style={{
               background: 'linear-gradient(90deg, rgba(0,191,255,0.3), transparent)',
-              opacity: dividerReveal.isVisible ? 1 : 0,
-              transform: dividerReveal.isVisible ? 'scaleX(1)' : 'scaleX(0)',
-              transformOrigin: 'left',
-              transition: 'opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s',
             }}
           />
         </div>
@@ -2891,10 +2845,8 @@ function AdditionalAreasDivider() {
    ═══════════════════════════════════════════════════════════════ */
 
 function DivisionsSolutionsSection() {
-  const sectionReveal = useScrollReveal(0.2);
-
   return (
-    <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12" ref={sectionReveal.ref}>
+    <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
       <div className="max-w-[1200px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Divisions Card */}
@@ -2904,9 +2856,7 @@ function DivisionsSolutionsSection() {
               background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
               border: '1px solid rgba(0,191,255,0.15)',
               boxShadow: '0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
-              opacity: sectionReveal.isVisible ? 1 : 0,
-              transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(30px)',
-              transition: 'opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease, border-color 0.3s ease',
+              transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
             }}
           >
             {/* Hover glow effect */}
@@ -2942,15 +2892,12 @@ function DivisionsSolutionsSection() {
             {/* Content */}
             <div className="p-6">
               <ul className="space-y-3">
-                {DIVISIONS.map((division, i) => (
+                {DIVISIONS.map((division) => (
                   <li
                     key={division}
                     className="text-body text-sm flex items-center gap-3 group/item"
                     style={{
                       color: 'var(--color-body-text)',
-                      opacity: sectionReveal.isVisible ? 1 : 0,
-                      transform: sectionReveal.isVisible ? 'translateX(0)' : 'translateX(-15px)',
-                      transition: `opacity 0.4s ease ${0.2 + i * 0.08}s, transform 0.4s ease ${0.2 + i * 0.08}s`,
                     }}
                   >
                     <span
@@ -2979,9 +2926,7 @@ function DivisionsSolutionsSection() {
               background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
               border: '1px solid rgba(0,191,255,0.15)',
               boxShadow: '0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
-              opacity: sectionReveal.isVisible ? 1 : 0,
-              transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(30px)',
-              transition: 'opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s, box-shadow 0.3s ease, border-color 0.3s ease',
+              transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
             }}
           >
             {/* Hover glow effect */}
@@ -3017,15 +2962,12 @@ function DivisionsSolutionsSection() {
             {/* Content */}
             <div className="p-6">
               <ul className="space-y-3">
-                {SOLUTIONS.map((solution, i) => (
+                {SOLUTIONS.map((solution) => (
                   <li
                     key={solution}
                     className="text-body text-sm flex items-center gap-3 group/item"
                     style={{
                       color: 'var(--color-body-text)',
-                      opacity: sectionReveal.isVisible ? 1 : 0,
-                      transform: sectionReveal.isVisible ? 'translateX(0)' : 'translateX(-15px)',
-                      transition: `opacity 0.4s ease ${0.35 + i * 0.08}s, transform 0.4s ease ${0.35 + i * 0.08}s`,
                     }}
                   >
                     <span
@@ -3057,10 +2999,8 @@ function DivisionsSolutionsSection() {
    ═══════════════════════════════════════════════════════════════ */
 
 function WhoExpWorksBestForSection() {
-  const sectionReveal = useScrollReveal(0.2);
-
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden" ref={sectionReveal.ref}>
+    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden">
       {/* Background accent */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -3085,9 +3025,6 @@ function WhoExpWorksBestForSection() {
                 background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
                 border: '1px solid rgba(0,191,255,0.15)',
                 boxShadow: '0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
-                opacity: sectionReveal.isVisible ? 1 : 0,
-                transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(40px)',
-                transition: `opacity 0.6s ease ${i * 0.15}s, transform 0.6s ease ${i * 0.15}s`,
               }}
             >
               {/* Hover glow */}
@@ -3100,13 +3037,13 @@ function WhoExpWorksBestForSection() {
 
               {/* Icon container with animated glow ring */}
               <div className="relative mx-auto mb-5 w-20 h-20">
-                {/* Outer glow ring */}
+                {/* Outer glow ring - always animating */}
                 <div
                   className="absolute inset-0 rounded-full"
                   style={{
                     background: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))',
                     boxShadow: '0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1)',
-                    animation: sectionReveal.isVisible ? 'iconGlowPulse 3s ease-in-out infinite' : 'none',
+                    animation: 'iconGlowPulse 3s ease-in-out infinite',
                     animationDelay: `${i * 0.5}s`,
                   }}
                 />
@@ -3145,9 +3082,6 @@ function WhoExpWorksBestForSection() {
           style={{
             background: 'rgba(0,191,255,0.03)',
             border: '1px solid rgba(0,191,255,0.08)',
-            opacity: sectionReveal.isVisible ? 1 : 0,
-            transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 0.6s ease 0.5s, transform 0.6s ease 0.5s',
           }}
         >
           <p className="text-body text-sm" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
@@ -3156,13 +3090,7 @@ function WhoExpWorksBestForSection() {
         </div>
 
         {/* CTA */}
-        <div
-          className="flex justify-center mt-10"
-          style={{
-            opacity: sectionReveal.isVisible ? 1 : 0,
-            transition: 'opacity 0.6s ease 0.6s',
-          }}
-        >
+        <div className="flex justify-center mt-10">
           <SecondaryButton href="#" variant="blue">Is eXp Right for You?</SecondaryButton>
         </div>
       </div>
@@ -3183,31 +3111,20 @@ function WhoExpWorksBestForSection() {
    ═══════════════════════════════════════════════════════════════ */
 
 function WhereSAAFitsSection() {
-  const sectionReveal = useScrollReveal(0.2);
-
   return (
     <GlassPanel variant="champagne">
-      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden" ref={sectionReveal.ref}>
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden">
         {/* Decorative gold accent lines */}
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-[2px]"
           style={{
             background: 'linear-gradient(90deg, transparent, rgba(255,215,0,0.4), transparent)',
-            opacity: sectionReveal.isVisible ? 1 : 0,
-            transition: 'opacity 0.8s ease',
           }}
         />
 
         <div className="max-w-[900px] mx-auto relative">
           {/* SAA Logo/Badge */}
-          <div
-            className="flex justify-center mb-6"
-            style={{
-              opacity: sectionReveal.isVisible ? 1 : 0,
-              transform: sectionReveal.isVisible ? 'scale(1)' : 'scale(0.8)',
-              transition: 'opacity 0.5s ease, transform 0.5s ease',
-            }}
-          >
+          <div className="flex justify-center mb-6">
             <div
               className="w-16 h-16 rounded-full flex items-center justify-center"
               style={{
@@ -3221,18 +3138,11 @@ function WhereSAAFitsSection() {
           </div>
 
           {/* H2 Heading */}
-          <div
-            className="text-center mb-10"
-            style={{
-              opacity: sectionReveal.isVisible ? 1 : 0,
-              transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s',
-            }}
-          >
+          <div className="text-center mb-10">
             <H2>WHERE SMART AGENT ALLIANCE FITS</H2>
           </div>
 
-          {/* Prose content with staggered reveal */}
+          {/* Prose content */}
           <div
             className="relative rounded-2xl p-6 md:p-8 mb-10"
             style={{
@@ -3265,9 +3175,6 @@ function WhereSAAFitsSection() {
                   className={i === 3 ? 'font-medium' : ''}
                   style={{
                     color: i === 3 ? '#ffd700' : 'var(--color-body-text)',
-                    opacity: sectionReveal.isVisible ? 1 : 0,
-                    transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(15px)',
-                    transition: `opacity 0.5s ease ${0.2 + i * 0.1}s, transform 0.5s ease ${0.2 + i * 0.1}s`,
                     textShadow: i === 3 ? '0 0 20px rgba(255,215,0,0.2)' : 'none',
                   }}
                 >
@@ -3277,15 +3184,8 @@ function WhereSAAFitsSection() {
             </div>
           </div>
 
-          {/* CTAs with staggered reveal */}
-          <div
-            className="flex flex-col sm:flex-row justify-center items-center gap-4"
-            style={{
-              opacity: sectionReveal.isVisible ? 1 : 0,
-              transform: sectionReveal.isVisible ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'opacity 0.5s ease 0.6s, transform 0.5s ease 0.6s',
-            }}
-          >
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <SecondaryButton href="/about-smart-agent-alliance">Learn About SAA</SecondaryButton>
             <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
             <CTAButton href="/join-us">Join with SAA</CTAButton>
@@ -3297,8 +3197,6 @@ function WhereSAAFitsSection() {
           className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-[2px]"
           style={{
             background: 'linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent)',
-            opacity: sectionReveal.isVisible ? 1 : 0,
-            transition: 'opacity 0.8s ease 0.7s',
           }}
         />
       </section>
