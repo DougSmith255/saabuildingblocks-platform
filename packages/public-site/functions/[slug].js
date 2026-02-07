@@ -3024,7 +3024,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       border-radius: 6px;
       z-index: 0;
       background:
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
         linear-gradient(180deg, rgba(15, 15, 20, 0.85) 0%, rgba(10, 10, 15, 0.92) 100%);
       background-blend-mode: overlay, normal;
       backdrop-filter: blur(16px) saturate(120%);
@@ -3079,67 +3079,19 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       text-align: center;
     }
 
-    /* Generic Cyber Card Gold - dark background variant */
+    /* Generic Cyber Card Gold - grainy background with subtle grey border */
     .generic-cyber-card-gold {
-      perspective: 1000px;
-      display: block;
-    }
-    .generic-cyber-card-gold-frame {
-      position: relative;
-      border: 10px solid #ffd700;
-      border-radius: 16px;
+      border-radius: 12px;
+      overflow: hidden;
       background:
         url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
         linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%);
       background-blend-mode: overlay, normal;
-      box-shadow: 0 0 4px 1px rgba(255, 215, 0, 0.5), 0 0 8px 2px rgba(255, 215, 0, 0.35),
-        0 0 16px 4px rgba(255, 215, 0, 0.2), 0 0 24px 6px rgba(255, 215, 0, 0.1), 0 4px 12px rgba(0,0,0,0.3);
-      overflow: visible;
-      isolation: isolate;
-    }
-    @keyframes genericCyberCardGoldOrganicPulse {
-      0% { opacity: 0.55; }
-      13% { opacity: 0.95; }
-      28% { opacity: 0.6; }
-      41% { opacity: 0.85; }
-      54% { opacity: 0.5; }
-      67% { opacity: 1; }
-      83% { opacity: 0.7; }
-      100% { opacity: 0.55; }
-    }
-    .generic-cyber-card-gold-frame::after {
-      content: "";
-      position: absolute;
-      top: -12px;
-      left: -12px;
-      right: -12px;
-      bottom: -12px;
-      border-radius: 18px;
-      border: 2px solid rgba(255,255,255,0.4);
-      box-shadow: 0 0 6px 2px rgba(255, 215, 0, 0.6), 0 0 12px 4px rgba(255, 215, 0, 0.4),
-        0 0 20px 6px rgba(255, 215, 0, 0.25), 0 0 32px 10px rgba(255, 215, 0, 0.12), 0 6px 16px rgba(0,0,0,0.35);
-      pointer-events: none;
-      z-index: -1;
-      animation: genericCyberCardGoldOrganicPulse 2.4s linear infinite;
-      will-change: opacity;
-    }
-    .generic-cyber-card-gold-frame::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 6px;
       border: 1px solid rgba(255,255,255,0.06);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
-      pointer-events: none;
-      z-index: 2;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
     }
     .generic-cyber-card-gold-content {
-      position: relative;
-      z-index: 10;
-      padding: 32px;
+      padding: 24px;
       text-align: center;
     }
 
