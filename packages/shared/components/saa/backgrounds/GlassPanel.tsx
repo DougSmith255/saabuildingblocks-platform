@@ -87,9 +87,9 @@ const VARIANTS = {
     noiseFrequency: 0.8,
   },
   tealCrosshatch: {
-    color: { r: 90, g: 184, b: 176 },  // #5ab8b0 - soft seafoam teal
-    colorOpacity: 0.05,
-    borderOpacity: 0.12,
+    color: { r: 40, g: 140, b: 160 },  // #288ca0 - blue-teal (more blue than green)
+    colorOpacity: 0.04,
+    borderOpacity: 0.11,
     texture: 'crosshatch',
     textureOpacity: 0.03,
     noiseFrequency: 0.8,

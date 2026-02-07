@@ -1473,7 +1473,7 @@ function SpotlightConsole() {
                 overflow: 'visible',
               }}
             >
-              <div className="grid grid-cols-2 gap-[10px]" style={{ height: 'calc(50% - 5px)' }}>
+              <div className="grid grid-cols-2 gap-2" style={{ height: 'calc(50% - 5px)' }}>
                 {FEATURES.slice(0, 2).map((f, i) => (
                   <div key={f.keyword} style={{ height: '100%' }}>
                     <FeatureChip
@@ -1485,7 +1485,7 @@ function SpotlightConsole() {
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-2 gap-[10px] mt-[10px]" style={{ height: 'calc(50% - 5px)' }}>
+              <div className="grid grid-cols-2 gap-2 mt-2" style={{ height: 'calc(50% - 5px)' }}>
                 {FEATURES.slice(2, 4).map((f, i) => (
                   <div key={f.keyword} style={{ height: '100%' }}>
                     <FeatureChip
@@ -1528,7 +1528,7 @@ function SpotlightConsole() {
         <div className="lg:hidden">
           {/* 4 chips in 2x2 grid above description */}
           <div className="mb-4">
-            <div className="grid grid-cols-2 gap-[10px]" style={{ height: '100px' }}>
+            <div className="grid grid-cols-2 gap-2" style={{ height: '100px' }}>
               {FEATURES.slice(0, 2).map((f, i) => (
                 <div key={f.keyword} style={{ height: '100%' }}>
                   <FeatureChip
@@ -1540,7 +1540,7 @@ function SpotlightConsole() {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-2 gap-[10px] mt-[10px]" style={{ height: '100px' }}>
+            <div className="grid grid-cols-2 gap-2 mt-2" style={{ height: '100px' }}>
               {FEATURES.slice(2, 4).map((f, i) => (
                 <div key={f.keyword} style={{ height: '100%' }}>
                   <FeatureChip
@@ -2415,8 +2415,8 @@ function SupportInfrastructureSection() {
       <div
         className="absolute top-0 left-0 right-0 pointer-events-none"
         style={{
-          height: '15px',
-          background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)',
+          height: '20px',
+          background: 'linear-gradient(to bottom, #070707 0%, transparent 100%)',
           zIndex: 2,
         }}
       />
@@ -2424,8 +2424,8 @@ function SupportInfrastructureSection() {
       <div
         className="absolute bottom-0 left-0 right-0 pointer-events-none"
         style={{
-          height: '15px',
-          background: 'linear-gradient(to top, #080808 0%, transparent 100%)',
+          height: '20px',
+          background: 'linear-gradient(to top, #070707 0%, transparent 100%)',
           zIndex: 2,
         }}
       />
@@ -2587,13 +2587,12 @@ function WhatExpProvidesSection() {
         </div>
 
         {/* Tab chips - equal width with better spacing */}
-        <div className="flex justify-center gap-[10px] mb-10">
+        <div className="grid grid-cols-3 gap-2 mb-10 mx-auto" style={{ maxWidth: '540px' }}>
           {TAB_CONTENT.map((tab, i) => (
             <div
               key={tab.id}
-              className="rounded-xl relative overflow-hidden flex-1"
+              className="rounded-xl relative overflow-hidden"
               style={{
-                maxWidth: '200px',
                 border: activeTab === i ? '2px solid rgba(50,150,220,0.5)' : '2px solid rgba(255,255,255,0.08)',
                 boxShadow: activeTab === i
                   ? '0 0 25px 6px rgba(0,160,255,0.35), 0 0 50px 12px rgba(0,120,200,0.18)'
@@ -2646,7 +2645,7 @@ function WhatExpProvidesSection() {
             style={{
               ...transparentCardStyle,
               boxShadow: '0 0 50px rgba(0,191,255,0.1), inset 0 1px 0 rgba(255,255,255,0.05)',
-              minHeight: '280px',
+              height: '320px',
             }}
           >
             {/* Watermark icon — large faded background */}
@@ -3440,7 +3439,7 @@ export default function AboutExpRealty() {
               </div>
 
               {/* Stats Cards with counter animation */}
-              <div className="flex flex-wrap justify-center gap-[10px] mt-8 mx-auto" style={{ maxWidth: '1200px' }}>
+              <div className="flex flex-wrap justify-center gap-2 mt-8 mx-auto" style={{ maxWidth: '1200px' }}>
                 <FlipSplitCard />
                 <HeroStatCard targetNumber={28} suffix="+" label="Countries" />
                 <HeroStatCard prefix="S&P " targetNumber={600} label="Company" />
