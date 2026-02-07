@@ -29,6 +29,7 @@ const paddingClasses = {
  * - Dark gradient background with noise/grain texture
  * - GenericCard-style subtle grey border (1px)
  * - Clean, minimal appearance without gold glow
+ * - Responsive grain: coarser on mobile for visibility on high-DPI screens
  *
  * @example
  * ```tsx
@@ -48,22 +49,38 @@ export function GenericCyberCardGold({
   const centerClass = centered ? 'text-center' : '';
 
   return (
-    <div
-      className={`rounded-xl overflow-hidden ${className}`}
-      style={{
-        background: `
-          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-          linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)
-        `,
-        backgroundBlendMode: 'overlay, normal',
-        border: '1px solid rgba(255,255,255,0.06)',
-        boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-      }}
-    >
-      <div className={`${paddingClass} ${centerClass}`}>
-        {children}
+    <>
+      <style jsx global>{`
+        .generic-cyber-card-gold {
+          border-radius: 12px;
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.06);
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
+
+          /* Mobile/tablet: coarser grain (baseFrequency 0.5) for visibility on high-DPI */
+          background:
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+            linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%);
+          background-blend-mode: overlay, normal;
+        }
+
+        /* Desktop: finer grain looks better on lower-DPI screens */
+        @media (min-width: 1024px) {
+          .generic-cyber-card-gold {
+            background:
+              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+              linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%);
+            background-blend-mode: overlay, normal;
+          }
+        }
+      `}</style>
+
+      <div className={`generic-cyber-card-gold ${className}`}>
+        <div className={`${paddingClass} ${centerClass}`}>
+          {children}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

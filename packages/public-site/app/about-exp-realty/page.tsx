@@ -823,13 +823,8 @@ function HowExpIsBuilt() {
             {EXP_PRIORITIES.map((priority, index) => (
               <div
                 key={index}
-                className="group relative rounded-2xl p-6 md:p-8 text-center overflow-hidden"
+                className="group relative rounded-2xl p-6 md:p-8 text-center overflow-hidden priority-card-grainy"
                 style={{
-                  background: `
-                    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-                    linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)
-                  `,
-                  backgroundBlendMode: 'overlay, normal',
                   border: '1px solid rgba(255,255,255,0.06)',
                   boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                   opacity: prioritiesReveal.isVisible ? 1 : 0,
@@ -878,11 +873,29 @@ function HowExpIsBuilt() {
             ))}
           </div>
 
-          {/* Animation keyframes */}
+          {/* Animation keyframes + responsive grainy background */}
           <style>{`
             @keyframes priorityIconPulse {
               0%, 100% { box-shadow: 0 0 30px rgba(229,228,221,0.15), inset 0 0 20px rgba(229,228,221,0.08); }
               50% { box-shadow: 0 0 40px rgba(229,228,221,0.25), inset 0 0 25px rgba(229,228,221,0.12); }
+            }
+
+            /* Mobile/tablet: coarser grain for visibility on high-DPI screens */
+            .priority-card-grainy {
+              background:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+                linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%);
+              background-blend-mode: overlay, normal;
+            }
+
+            /* Desktop: finer grain */
+            @media (min-width: 1024px) {
+              .priority-card-grainy {
+                background:
+                  url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+                  linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%);
+                background-blend-mode: overlay, normal;
+              }
             }
           `}</style>
         </div>

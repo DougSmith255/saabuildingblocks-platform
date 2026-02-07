@@ -90,10 +90,10 @@ export function CyberCardGold({
           border-radius: 6px;
           z-index: 0;
 
-          /* Dark frosted glass interior with texture - grainier */
+          /* Dark frosted glass interior with texture - coarser grain for mobile */
           background:
-            /* Noise texture overlay */
-            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+            /* Noise texture overlay - baseFrequency 0.5 for visible grain on high-DPI mobile */
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
             /* Dark gradient base */
             linear-gradient(
               180deg,
@@ -103,6 +103,19 @@ export function CyberCardGold({
           background-blend-mode: overlay, normal;
           backdrop-filter: blur(16px) saturate(120%);
           -webkit-backdrop-filter: blur(16px) saturate(120%);
+        }
+
+        /* Desktop: finer grain looks better on lower-DPI screens */
+        @media (min-width: 1024px) {
+          .cyber-card-gold-glass {
+            background:
+              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+              linear-gradient(
+                180deg,
+                rgba(15, 15, 20, 0.85) 0%,
+                rgba(10, 10, 15, 0.92) 100%
+              );
+          }
         }
 
         /* Organic pulsing glow - matches CTA button light bars */
