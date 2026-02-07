@@ -3263,7 +3263,7 @@ export default function AboutExpRealty() {
       {/* Page-level blue theme overrides */}
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes ringPulse { 0%,100% { box-shadow: 0 0 8px rgba(0,191,255,0.08); } 50% { box-shadow: 0 0 14px rgba(0,191,255,0.25), 0 0 28px rgba(0,191,255,0.1); } }
+        @keyframes ringPulse { 0%,100% { box-shadow: 0 0 8px rgba(160,80,255,0.15); } 50% { box-shadow: 0 0 14px rgba(160,80,255,0.4), 0 0 28px rgba(160,80,255,0.2); } }
 
         /* Income & Ownership Grid Layout - custom breakpoint at 1200px */
         .income-cards-grid {
