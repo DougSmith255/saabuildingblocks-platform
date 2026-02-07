@@ -2617,7 +2617,7 @@ function WhatExpProvidesSection() {
                 type="button"
                 onClick={() => handleSelect(i)}
                 aria-pressed={activeTab === i}
-                className="relative z-10 flex flex-col items-center justify-center gap-2 cursor-pointer px-5 sm:px-8 py-4"
+                className="relative z-10 w-full flex flex-col items-center justify-center gap-2 cursor-pointer px-5 sm:px-8 py-4 text-center"
               >
                 <span className="chip-icon-wrap">
                   <Icon3D color="#00bfff" size={36} invert={activeTab === i}>
