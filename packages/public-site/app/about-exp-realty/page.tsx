@@ -2384,11 +2384,9 @@ function RotatingSupportTechStats() {
 }
 
 const transparentCardStyle: React.CSSProperties = {
-  background: 'rgba(0, 15, 40, 0.35)',
+  background: 'rgba(8, 20, 40, 0.85)',
   border: '1px solid rgba(0, 191, 255, 0.15)',
   borderRadius: '16px',
-  backdropFilter: 'blur(8px)',
-  WebkitBackdropFilter: 'blur(8px)',
   padding: '24px',
 };
 
