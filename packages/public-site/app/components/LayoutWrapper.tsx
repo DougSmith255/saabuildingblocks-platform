@@ -240,10 +240,17 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     );
   }, [pathname, noFloatingButtonPrefixes]);
 
-  // Check if VIP Guest Pass popup should be hidden (agent portal, admin pages)
+  // Check if VIP Guest Pass popup should be hidden (agent portal, admin pages, most blog categories)
   const shouldHideVipPopup = useMemo(() => {
     if (!pathname) return false;
     const normalizedPath = pathname.replace(/\/$/, '');
+
+    // Special handling for blog paths: only show popup on "about-exp-realty" category
+    if (normalizedPath.startsWith('/blog/')) {
+      // Allow popup only on /blog/about-exp-realty/* paths
+      return !normalizedPath.startsWith('/blog/about-exp-realty');
+    }
+
     return noVipPopupPrefixes.some(prefix =>
       normalizedPath === prefix || normalizedPath.startsWith(prefix)
     );
