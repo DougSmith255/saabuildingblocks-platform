@@ -59,25 +59,56 @@ The profile section checks these sources in order:
 
 ---
 
-### Attempt 3 (2026-02-06) - ROOT CAUSE FOUND
-**Root Cause:** PWA service worker cache was serving old JavaScript without the fallback logic
-**Solution:** Bumped service worker cache version from `saa-cache-v2` to `saa-cache-v3`
-
-**What this does:**
-1. When PWA loads, service worker detects new cache version
-2. Old cache is deleted (`saa-cache-v2`)
-3. New assets are cached (`saa-cache-v3`)
-4. App now runs the new code with profile image fallback
-
-**Files changed:**
-- `public/sw.js` - Updated CACHE_NAME to 'saa-cache-v3'
-
-**User action required:**
-1. Open the PWA app
-2. The service worker should auto-update (may take a few seconds)
-3. If still not working, close and reopen the app
-4. Last resort: delete app and reinstall
+### Attempt 3 (2026-02-06) - PARTIAL FIX
+**Initial Theory:** PWA service worker cache was serving old JavaScript
+**Action:** Bumped service worker cache version from `saa-cache-v2` to `saa-cache-v3`
+**Result:** Still not working - user confirmed Link Page works but My Profile doesn't
 
 ---
 
-## Status: FIXED (pending user verification)
+### Attempt 4 (2026-02-06) - ACTUAL ROOT CAUSE FOUND
+
+**Root Cause:** Data flow issue between components
+
+The `AgentPagesSection` component (which renders both Link Page and Agent Page sections):
+1. Takes `preloadedPageData` as a prop from parent
+2. Creates its own internal `pageData` state
+3. Fetches FRESH data from API: `fetch(\`${API_URL}/api/agent-pages/${user.id}\`)`
+4. Updates its internal state: `setPageData(data.page)`
+5. Saves to localStorage
+6. **BUT** never updates the parent's `preloadedAgentPageData` state
+
+The "My Profile" section reads from `preloadedAgentPageData` (parent state), which:
+- Starts as null
+- Only gets populated from localStorage cache during initial load
+- Never gets updated when AgentPagesSection fetches fresh data
+
+This explains why:
+- Link Page works: It uses its own internal `pageData` state (fresh data)
+- My Profile doesn't work: It uses parent's `preloadedAgentPageData` (stale/null)
+
+**Solution:** Added callback to propagate fresh data from child to parent
+
+```tsx
+// In AgentPagesSectionProps interface:
+onPageDataUpdate?: (data: any) => void;
+
+// When fresh data is fetched:
+onPageDataUpdate?.(data);
+
+// Parent passes setter:
+<AgentPagesSection
+  ...
+  onPageDataUpdate={setPreloadedAgentPageData}
+/>
+```
+
+**Files changed:**
+- `app/agent-portal/page.tsx` - Added callback prop and wired it up
+
+---
+
+## Status: FIXED
+
+**Deployed:** 2026-02-06 21:53 UTC
+**Commit:** 74966af3

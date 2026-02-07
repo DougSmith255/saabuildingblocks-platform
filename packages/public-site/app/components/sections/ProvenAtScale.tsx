@@ -2,7 +2,7 @@
 
 import { H2, Icon3D } from '@saa/shared/components/saa';
 import { SecondaryButton } from '@saa/shared/components/saa';
-import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
+import { CyberCardGold } from '@saa/shared/components/saa/cards';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 import { Globe, TrendingUp, Check } from 'lucide-react';
 
@@ -112,13 +112,13 @@ export function ProvenAtScale() {
           {/* Right - Featured Cyber Card (4 columns) */}
           <div className="md:col-span-4">
             <RevealFromRight delay={0.2}>
-              <GenericCyberCardGold padding="lg">
+              <CyberCardGold padding="lg">
                 <Icon3D><Globe className="w-14 h-14 mx-auto mb-3" /></Icon3D>
                 <p className="font-heading text-3xl md:text-4xl font-bold text-heading">
                   <StaticCounterNeon value="3700" suffix="+" />
                 </p>
                 <p className="text-body text-base mt-2">Agents in Sponsor Network</p>
-              </GenericCyberCardGold>
+              </CyberCardGold>
             </RevealFromRight>
           </div>
         </div>
