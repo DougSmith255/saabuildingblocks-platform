@@ -210,7 +210,7 @@ export function WhyOnlyAtExp() {
                       radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
                       linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
                     `;
-                    const darkBackground = 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))';
+                    const darkBackground = 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)';
 
                     return (
                       <div
@@ -220,10 +220,10 @@ export function WhyOnlyAtExp() {
                           background: step.highlight ? mistyBackground : darkBackground,
                           border: step.highlight
                             ? '2px solid rgba(180,150,50,0.5)'
-                            : `1px solid ${BRAND_YELLOW}44`,
+                            : '1px solid rgba(255,255,255,0.06)',
                           boxShadow: step.highlight
                             ? `0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25)`
-                            : `0 0 40px ${BRAND_YELLOW}15, 0 30px 60px -30px rgba(0,0,0,0.8)`,
+                            : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                           transform: `perspective(1200px) rotateX(${rotateX}deg) translate3d(0, ${translateY}px, ${translateZ}px) scale(${scale})`,
                           transformOrigin: 'center bottom',
                           opacity,

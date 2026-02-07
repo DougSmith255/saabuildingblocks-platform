@@ -80,10 +80,11 @@ export function WhySAA() {
           {/* Main content card - 7 columns */}
           <div className="md:col-span-7">
             <div
-              className="rounded-2xl overflow-hidden h-full"
+              className="rounded-xl overflow-hidden h-full"
               style={{
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                background: 'linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(0,0,0,0.4))',
+                background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                border: '1px solid rgba(255,255,255,0.06)',
+                boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
               }}
             >
               <div className="p-8 md:p-10">

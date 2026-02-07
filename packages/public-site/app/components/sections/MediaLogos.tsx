@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { H2, Icon3D } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa';
+import { IconCyberCard } from '@saa/shared/components/saa/cards';
 import { TrendingUp, Cloud, Users, Percent, Award } from 'lucide-react';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
@@ -75,8 +76,6 @@ export function MediaLogos() {
     };
   }, []);
 
-  // Removed hover pause - carousel now scrolls continuously
-
   return (
     <section
       ref={sectionRef}
@@ -113,87 +112,62 @@ export function MediaLogos() {
           {/* Top Row - 3 cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             {/* Card 1: Profitable */}
-            <div
-              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
-              style={{
-                background: 'rgba(10,10,10,0.6)',
-                border: '1px solid rgba(255,215,0,0.15)',
-                transitionDelay: '0.2s',
-              }}
+            <IconCyberCard
+              icon={<TrendingUp className="w-6 h-6 md:w-7 md:h-7" />}
+              theme="yellow"
+              hover
+              centered
             >
-              <div className="mb-4">
-                <Icon3D size={80}><TrendingUp className="w-12 h-12" /></Icon3D>
-              </div>
               <h3 className="font-bold mb-2" style={{ color: '#e5e4dd', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Proven Profitability</h3>
               <p className="text-body opacity-90 text-sm">The only cumulatively profitable public real estate company.</p>
-            </div>
+            </IconCyberCard>
 
             {/* Card 2: Cloud-Based */}
-            <div
-              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
-              style={{
-                background: 'rgba(10,10,10,0.6)',
-                border: '1px solid rgba(255,215,0,0.15)',
-                transitionDelay: '0.35s',
-              }}
+            <IconCyberCard
+              icon={<Cloud className="w-6 h-6 md:w-7 md:h-7" />}
+              theme="yellow"
+              hover
+              centered
             >
-              <div className="mb-4">
-                <Icon3D size={80}><Cloud className="w-12 h-12" /></Icon3D>
-              </div>
               <h3 className="font-bold mb-2" style={{ color: '#e5e4dd', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Cloud-First Pioneer</h3>
               <p className="text-body opacity-90 text-sm">S&P 600 SmallCap. First cloud-based brokerage.</p>
-            </div>
+            </IconCyberCard>
 
             {/* Card 3: Sponsor Choice */}
-            <div
-              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
-              style={{
-                background: 'rgba(10,10,10,0.6)',
-                border: '1px solid rgba(255,215,0,0.15)',
-                transitionDelay: '0.5s',
-              }}
+            <IconCyberCard
+              icon={<Users className="w-6 h-6 md:w-7 md:h-7" />}
+              theme="yellow"
+              hover
+              centered
             >
-              <div className="mb-4">
-                <Icon3D size={80}><Users className="w-12 h-12" /></Icon3D>
-              </div>
               <h3 className="font-bold mb-2" style={{ color: '#e5e4dd', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Choose Your Sponsor</h3>
               <p className="text-body opacity-90 text-sm">Access real systems and support through the sponsor you choose.</p>
-            </div>
+            </IconCyberCard>
           </div>
 
           {/* Bottom Row - 2 cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Card 4: Commission - Green */}
-            <div
-              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
-              style={{
-                background: 'rgba(10,10,10,0.6)',
-                border: '2px solid rgba(0,204,102,0.5)',
-                transitionDelay: '0.65s',
-              }}
+            <IconCyberCard
+              icon={<Percent className="w-6 h-6 md:w-7 md:h-7" />}
+              theme="green"
+              hover
+              centered
             >
-              <div className="mb-4">
-                <Icon3D size={80} color="#00cc66"><Percent className="w-12 h-12" /></Icon3D>
-              </div>
               <h3 className="font-bold mb-2" style={{ color: '#00cc66', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Industry-Leading Splits</h3>
               <p className="text-body opacity-90 text-sm">80/20 split until cap → 100% commission. Flat monthly fee.</p>
-            </div>
+            </IconCyberCard>
 
             {/* Card 5: RevShare - Purple */}
-            <div
-              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
-              style={{
-                background: 'rgba(10,10,10,0.6)',
-                border: '2px solid rgba(153,51,255,0.5)',
-                transitionDelay: '0.8s',
-              }}
+            <IconCyberCard
+              icon={<Award className="w-6 h-6 md:w-7 md:h-7" />}
+              theme="purple"
+              hover
+              centered
             >
-              <div className="mb-4">
-                <Icon3D size={80} color="#9933ff"><Award className="w-12 h-12" /></Icon3D>
-              </div>
               <h3 className="font-bold mb-2" style={{ color: '#9933ff', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Passive Income Potential</h3>
               <p className="text-body opacity-90 text-sm">Optional revenue share income + stock opportunities.</p>
-            </div>
+            </IconCyberCard>
           </div>
         </div>
       </div>

@@ -50,10 +50,11 @@ export function MeetTheFounders() {
           {/* Left column - Doug */}
           <div>
             <div
-              className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300 h-full flex flex-col"
+              className="p-6 md:p-8 rounded-xl text-center transition-all duration-300 h-full flex flex-col"
               style={{
-                backgroundColor: 'rgba(20,20,20,0.75)',
-                borderColor: 'rgba(255,255,255,0.1)',
+                background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                border: '1px solid rgba(255,255,255,0.06)',
+                boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
               }}
             >
               <ProfileCyberFrame size="lg" index={0}>
@@ -99,10 +100,11 @@ export function MeetTheFounders() {
           {/* Right column - Karrie + CTA */}
           <div className="flex flex-col gap-6">
             <div
-              className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300 flex-1 flex flex-col"
+              className="p-6 md:p-8 rounded-xl text-center transition-all duration-300 flex-1 flex flex-col"
               style={{
-                backgroundColor: 'rgba(20,20,20,0.75)',
-                borderColor: 'rgba(255,255,255,0.1)',
+                background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                border: '1px solid rgba(255,255,255,0.06)',
+                boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
               }}
             >
               <ProfileCyberFrame size="lg" index={1}>

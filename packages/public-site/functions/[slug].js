@@ -1282,6 +1282,108 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       font-size: clamp(24px, calc(22.55px + 0.58vw), 40px);
     }
 
+    /* Icon Cyber Card - Animated Icon Ring */
+    .icon-cyber-ring {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1.25rem;
+    }
+    @media (min-width: 768px) {
+      .icon-cyber-ring {
+        width: 80px;
+        height: 80px;
+      }
+    }
+    .icon-cyber-ring-outer {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+    }
+    .icon-cyber-ring-inner {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Yellow theme */
+    .icon-cyber-ring-yellow .icon-cyber-ring-outer {
+      background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1));
+      box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1);
+      animation: iconCyberPulseYellow 3s ease-in-out infinite;
+    }
+    .icon-cyber-ring-yellow .icon-cyber-ring-inner {
+      background: linear-gradient(180deg, rgba(15,15,10,0.95), rgba(10,10,5,0.98));
+      border: 1px solid rgba(255,215,0,0.3);
+    }
+    .icon-cyber-ring-yellow .icon-cyber-ring-inner svg {
+      color: #ffd700;
+      filter: drop-shadow(0 0 8px rgba(255,215,0,0.5));
+    }
+    @keyframes iconCyberPulseYellow {
+      0%, 100% { box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1); }
+      50% { box-shadow: 0 0 40px rgba(255,215,0,0.35), inset 0 0 25px rgba(255,215,0,0.15); }
+    }
+    /* Green theme */
+    .icon-cyber-ring-green .icon-cyber-ring-outer {
+      background: linear-gradient(135deg, rgba(0,204,102,0.2), rgba(0,150,75,0.1));
+      box-shadow: 0 0 30px rgba(0,204,102,0.2), inset 0 0 20px rgba(0,204,102,0.1);
+      animation: iconCyberPulseGreen 3s ease-in-out infinite;
+    }
+    .icon-cyber-ring-green .icon-cyber-ring-inner {
+      background: linear-gradient(180deg, rgba(10,20,15,0.95), rgba(5,15,10,0.98));
+      border: 1px solid rgba(0,204,102,0.3);
+    }
+    .icon-cyber-ring-green .icon-cyber-ring-inner svg {
+      color: #00cc66;
+      filter: drop-shadow(0 0 8px rgba(0,204,102,0.5));
+    }
+    @keyframes iconCyberPulseGreen {
+      0%, 100% { box-shadow: 0 0 30px rgba(0,204,102,0.2), inset 0 0 20px rgba(0,204,102,0.1); }
+      50% { box-shadow: 0 0 40px rgba(0,204,102,0.35), inset 0 0 25px rgba(0,204,102,0.15); }
+    }
+    /* Purple theme */
+    .icon-cyber-ring-purple .icon-cyber-ring-outer {
+      background: linear-gradient(135deg, rgba(160,80,255,0.2), rgba(120,60,200,0.1));
+      box-shadow: 0 0 30px rgba(160,80,255,0.2), inset 0 0 20px rgba(160,80,255,0.1);
+      animation: iconCyberPulsePurple 3s ease-in-out infinite;
+    }
+    .icon-cyber-ring-purple .icon-cyber-ring-inner {
+      background: linear-gradient(180deg, rgba(20,15,30,0.95), rgba(10,5,20,0.98));
+      border: 1px solid rgba(160,80,255,0.3);
+    }
+    .icon-cyber-ring-purple .icon-cyber-ring-inner svg {
+      color: #a050ff;
+      filter: drop-shadow(0 0 8px rgba(160,80,255,0.5));
+    }
+    @keyframes iconCyberPulsePurple {
+      0%, 100% { box-shadow: 0 0 30px rgba(160,80,255,0.2), inset 0 0 20px rgba(160,80,255,0.1); }
+      50% { box-shadow: 0 0 40px rgba(160,80,255,0.35), inset 0 0 25px rgba(160,80,255,0.15); }
+    }
+    /* Hover glow overlay */
+    .why-exp-card-hover-glow {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      border-radius: 1rem;
+    }
+    .why-exp-card:hover .why-exp-card-hover-glow {
+      opacity: 1;
+    }
+    .why-exp-card-hover-glow-yellow {
+      background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255,215,0,0.12) 0%, transparent 70%);
+    }
+    .why-exp-card-hover-glow-green {
+      background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,204,102,0.12) 0%, transparent 70%);
+    }
+    .why-exp-card-hover-glow-purple {
+      background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(160,80,255,0.12) 0%, transparent 70%);
+    }
+
     /* Secondary Button Styles */
     .secondary-button-wrapper {
       position: relative;
@@ -1644,9 +1746,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       transition: background 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out;
     }
     .why-only-card-dark {
-      background: linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99));
-      border: 1px solid rgba(255,215,0,0.27);
-      box-shadow: 0 0 40px rgba(255,215,0,0.08), 0 30px 60px -30px rgba(0,0,0,0.8);
+      background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
     }
     .why-only-card-highlight {
       background:
@@ -2908,7 +3010,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       transform: translateZ(0);
       border: 10px solid #ffd700;
       border-radius: 16px;
-      background: rgba(255, 255, 255, 0.05);
+      /* Dark frosted glass interior with texture */
+      background:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, rgba(15, 15, 20, 0.85) 0%, rgba(10, 10, 15, 0.92) 100%);
+      background-blend-mode: overlay, normal;
+      backdrop-filter: blur(16px) saturate(120%);
+      -webkit-backdrop-filter: blur(16px) saturate(120%);
       box-shadow: 0 0 4px 1px rgba(255, 215, 0, 0.5), 0 0 8px 2px rgba(255, 215, 0, 0.35),
         0 0 16px 4px rgba(255, 215, 0, 0.2), 0 0 24px 6px rgba(255, 215, 0, 0.1), 0 4px 12px rgba(0,0,0,0.3);
       overflow: visible;
@@ -2957,7 +3065,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     .cyber-card-gold-content {
       position: relative;
-      z-index: 2;
+      z-index: 10;
       transform-style: preserve-3d;
       transform: translateZ(0);
       padding: 24px;
@@ -3687,7 +3795,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <div class="why-saa-grid">
           <!-- Left Card - visible immediately -->
           <div class="expand-reveal-element" data-expand-id="saa-left" data-expand-dir="left" style="height: 100%;">
-            <div id="saa-left-frame" class="rounded-2xl overflow-hidden" style="border: 1px solid rgba(255,255,255,0.1); background: linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(0,0,0,0.4)); clip-path: inset(-1px -1px -1px -1px round 17px); height: 100%;">
+            <div id="saa-left-frame" class="rounded-xl overflow-hidden" style="background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03); clip-path: inset(-1px -1px -1px -1px round 12px); height: 100%;">
               <div id="saa-left-content" style="padding: 2rem 2.5rem; opacity: 0;">
                 <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.875rem;">Elite systems. Proven training. Real community.</p>
                 <p class="text-body mt-3 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
@@ -3983,33 +4091,39 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <!-- Top Row - 3 cards -->
           <div class="why-exp-grid-top">
             <!-- Card 1: Profitable -->
-            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0s;">
-              <div class="mb-4">
-                <span class="icon-3d" style="width: 80px; height: 80px;">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                </span>
+            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98)); border: 1px solid rgba(255,215,0,0.15); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0s;">
+              <div class="why-exp-card-hover-glow why-exp-card-hover-glow-yellow"></div>
+              <div class="icon-cyber-ring icon-cyber-ring-yellow">
+                <div class="icon-cyber-ring-outer"></div>
+                <div class="icon-cyber-ring-inner">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                </div>
               </div>
               <h3 class="why-exp-card-heading" style="color: #e5e4dd;">Proven Profitability</h3>
               <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9;">The only cumulatively profitable public real estate company.</p>
             </div>
 
             <!-- Card 2: Cloud-Based -->
-            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0.1s;">
-              <div class="mb-4">
-                <span class="icon-3d" style="width: 80px; height: 80px;">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
-                </span>
+            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98)); border: 1px solid rgba(255,215,0,0.15); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.1s;">
+              <div class="why-exp-card-hover-glow why-exp-card-hover-glow-yellow"></div>
+              <div class="icon-cyber-ring icon-cyber-ring-yellow">
+                <div class="icon-cyber-ring-outer"></div>
+                <div class="icon-cyber-ring-inner">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                </div>
               </div>
               <h3 class="why-exp-card-heading" style="color: #e5e4dd;">Cloud-First Pioneer</h3>
               <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9;">S&amp;P 600 SmallCap. First cloud-based brokerage.</p>
             </div>
 
             <!-- Card 3: Sponsor Choice -->
-            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0.2s;">
-              <div class="mb-4">
-                <span class="icon-3d" style="width: 80px; height: 80px;">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                </span>
+            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98)); border: 1px solid rgba(255,215,0,0.15); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.2s;">
+              <div class="why-exp-card-hover-glow why-exp-card-hover-glow-yellow"></div>
+              <div class="icon-cyber-ring icon-cyber-ring-yellow">
+                <div class="icon-cyber-ring-outer"></div>
+                <div class="icon-cyber-ring-inner">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                </div>
               </div>
               <h3 class="why-exp-card-heading" style="color: #e5e4dd;">Choose Your Sponsor</h3>
               <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9;">Choose your sponsor. Access real support.</p>
@@ -4019,11 +4133,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <!-- Bottom Row - 2 cards with colored borders and buttons -->
           <div class="why-exp-grid-bottom">
             <!-- Card 4: Commission - Green -->
-            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 2px solid rgba(0,204,102,0.5); transition-delay: 0.1s;">
-              <div class="mb-4">
-                <span class="icon-3d icon-3d-green" style="width: 80px; height: 80px;">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
-                </span>
+            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98)); border: 2px solid rgba(0,204,102,0.5); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.1s;">
+              <div class="why-exp-card-hover-glow why-exp-card-hover-glow-green"></div>
+              <div class="icon-cyber-ring icon-cyber-ring-green">
+                <div class="icon-cyber-ring-outer"></div>
+                <div class="icon-cyber-ring-inner">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+                </div>
               </div>
               <h3 class="why-exp-card-heading" style="color: #00cc66;">Industry-Leading Splits</h3>
               <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9; margin-bottom: 1rem;">80/20 split until cap → 100% commission. Flat monthly fee.</p>
@@ -4040,11 +4156,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             </div>
 
             <!-- Card 5: RevShare - Purple -->
-            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 2px solid rgba(153,51,255,0.5); transition-delay: 0.2s;">
-              <div class="mb-4">
-                <span class="icon-3d icon-3d-purple" style="width: 80px; height: 80px;">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                </span>
+            <div class="why-exp-card scroll-reveal" style="background: linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98)); border: 2px solid rgba(153,51,255,0.5); box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03); transition-delay: 0.2s;">
+              <div class="why-exp-card-hover-glow why-exp-card-hover-glow-purple"></div>
+              <div class="icon-cyber-ring icon-cyber-ring-purple">
+                <div class="icon-cyber-ring-outer"></div>
+                <div class="icon-cyber-ring-inner">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                </div>
               </div>
               <h3 class="why-exp-card-heading" style="color: #9933ff;">Passive Income Potential</h3>
               <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9; margin-bottom: 1rem;">Optional revenue share income + stock opportunities.</p>
@@ -4229,7 +4347,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
               <!-- Column 2 - Doug -->
               <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.35s;">
-                <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
+                <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 12px; background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03); text-align: center; height: 100%; display: flex; flex-direction: column; transition: all 0.3s ease;">
                   <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
@@ -4253,7 +4371,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
               <!-- Column 3 - Karrie -->
               <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.5s;">
-                <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
+                <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 12px; background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03); text-align: center; height: 100%; display: flex; flex-direction: column; transition: all 0.3s ease;">
                   <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">

@@ -5,8 +5,10 @@
  * - GenericCard: Simple, clean card for general content
  * - CyberCard: Premium metal-frame card for featured content/stats
  * - CyberCardGold: Gold bar card with shimmer hover effect
+ * - IconCyberCard: Cyberpunk card with animated icon ring
  */
 
 export { GenericCard, type GenericCardProps } from './GenericCard';
 export { CyberCard, type CyberCardProps } from './CyberCard';
 export { CyberCardGold, type CyberCardGoldProps } from './CyberCardGold';
+export { IconCyberCard, type IconCyberCardProps } from './IconCyberCard';

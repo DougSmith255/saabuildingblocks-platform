@@ -145,10 +145,10 @@ export function CyberCardGold({
 
         /* Note: Outer white outline is now included in ::after above (with pulsing glow) */
 
-        /* Content container */
+        /* Content container - z-index 10 ensures icons appear above glass background */
         .cyber-card-gold-content {
           position: relative;
-          z-index: 2;
+          z-index: 10;
           /* Ensure content has 3D context */
           transform-style: preserve-3d;
           transform: translateZ(0);
