@@ -644,7 +644,7 @@ function IntroFlipCard() {
 
   // Card 01 - Red theme with Ban icon
   const card01 = (
-    <GenericCyberCardGold padding="md" centered className="h-full">
+    <GenericCyberCardGold padding="md" centered className="h-full intro-card-red">
       {/* Ban Icon Badge */}
       <span
         className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
@@ -755,7 +755,7 @@ function HowExpIsBuilt() {
           <div className="hidden sm:grid grid-cols-2 gap-5 max-w-[1400px] mx-auto mb-10">
             {/* Card 01 - CyberCard with Ban icon and red text */}
             <div className="relative">
-              <GenericCyberCardGold padding="md" centered className="h-full">
+              <GenericCyberCardGold padding="md" centered className="h-full intro-card-red">
                 {/* Ban Icon Badge */}
                 <span
                   className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
@@ -878,6 +878,11 @@ function HowExpIsBuilt() {
             @keyframes priorityIconPulse {
               0%, 100% { box-shadow: 0 0 30px rgba(229,228,221,0.15), inset 0 0 20px rgba(229,228,221,0.08); }
               50% { box-shadow: 0 0 40px rgba(229,228,221,0.25), inset 0 0 25px rgba(229,228,221,0.12); }
+            }
+
+            /* Red border for intro card */
+            .intro-card-red.generic-cyber-card-gold {
+              border: 1px solid rgba(255,80,80,0.3) !important;
             }
 
             /* Mobile/tablet: coarser grain for visibility on high-DPI screens */
