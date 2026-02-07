@@ -76,14 +76,24 @@ export function AuthorSection({ authorName, index = 0 }: AuthorSectionProps) {
     return null;
   }
 
-  // Tagline text styling - matches H2 glow approach (text-shadow only, no filter)
-  const taglineTextShadow = `
-    0 0 1px #fff,
-    0 0 2px #fff,
-    0 0 8px rgba(255,255,255,0.4),
-    0 0 16px rgba(255,255,255,0.2),
-    0 0 28px rgba(255,255,255,0.1),
-    0 0 40px rgba(255,255,255,0.05)
+  // H2-style 3D text-shadow effect (matches H2 component exactly)
+  const h2TextShadow = `
+    /* WHITE CORE */
+    0 0 0.01em #fff,
+    0 0 0.02em #fff,
+    0 0 0.03em rgba(255,255,255,0.8),
+    /* WARM WHITE GLOW - extended and dilute for sharp definition */
+    0 0 0.04em rgba(255,250,240,0.7),
+    0 0 0.08em rgba(255, 255, 255, 0.35),
+    0 0 0.14em rgba(255, 255, 255, 0.15),
+    0 0 0.22em rgba(200, 200, 200, 0.08),
+    /* METAL BACKING (3D depth - thicker) */
+    0.02em 0.02em 0 #2a2a2a,
+    0.04em 0.04em 0 #222222,
+    0.06em 0.06em 0 #1a1a1a,
+    0.08em 0.08em 0 #141414,
+    0.10em 0.10em 0 #0f0f0f,
+    0.12em 0.12em 0 #080808
   `;
 
   // Social icon color - gold to match theme
@@ -161,20 +171,21 @@ export function AuthorSection({ authorName, index = 0 }: AuthorSectionProps) {
 
         {/* Content */}
         <div className="flex-1 text-center sm:text-left">
-          {/* Name with Tagline styling and H2-style glow - color forced for light/dark mode consistency */}
+          {/* Name with H2-style 3D glow effect - matches H2 component exactly */}
           <h3
             style={{
               fontFamily: 'var(--font-taskor, sans-serif)',
-              fontSize: 'clamp(21px, calc(17.45px + 1.42vw), 60px)',
-              lineHeight: 1.4,
-              fontWeight: 400,
+              fontSize: 'var(--font-size-h2, clamp(28px, calc(24.36px + 1.45vw), 68px))',
+              lineHeight: 'var(--line-height-h2, 1.1)',
+              fontWeight: 'var(--font-weight-h2, 700)',
               fontFeatureSettings: '"ss01" 1',
-              color: '#bfbdb0',
-              textShadow: taglineTextShadow,
+              color: 'var(--text-color-h2, #e5e4dd)',
+              textShadow: h2TextShadow,
               textTransform: 'uppercase',
-              marginBottom: '0.25rem',
+              marginBottom: '0.5rem',
+              transform: 'perspective(800px) rotateX(8deg)',
+              filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
             }}
-            className="!text-[#bfbdb0]"
           >
             {author.name}
           </h3>

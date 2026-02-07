@@ -141,16 +141,10 @@ export function BlogPostHero({
           <CategoryBadge category={category} />
         </div>
 
-        {/* Title - H1 with Master Controller effects, blog-specific sizing */}
+        {/* Title - H1 with Master Controller typography */}
         {/* minHeight prevents CLS when Taskor font loads with alt glyphs */}
         <div className="mb-8" style={{ minHeight: 'clamp(50px, 6vw + 20px, 120px)' }}>
-          <H1
-            style={{
-              fontSize: 'clamp(32px, 4vw + 16px, 82px)',
-            }}
-          >
-            {title}
-          </H1>
+          <H1>{title}</H1>
         </div>
 
         {/* Meta info row - centered, wraps on mobile to stay within screen */}
