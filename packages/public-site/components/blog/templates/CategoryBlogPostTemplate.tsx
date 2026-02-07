@@ -39,26 +39,11 @@ function extractYouTubeVideoId(url: string): string | null {
 }
 
 /**
- * Process HTML content to wrap H2 words in spans for per-word metal plate styling
- */
-function processH2WordWrapping(html: string): string {
-  return html.replace(/<h2([^>]*)>(.*?)<\/h2>/gi, (match, attrs, content) => {
-    const plainText = content.replace(/<[^>]*>/g, '');
-    const wrappedWords = plainText.split(/\s+/).map((word: string) =>
-      `<span class="h2-word">${word}</span>`
-    ).join(' ');
-    return `<h2${attrs}>${wrappedWords}</h2>`;
-  });
-}
-
-
-/**
- * BlogContentRenderer - Renders blog content with H2 word wrapping
+ * BlogContentRenderer - Renders blog content
  * School CTA buttons are styled via CSS to look like SecondaryButton
  * Also handles RankMath FAQ accordion toggle functionality
  */
 function BlogContentRenderer({ html }: { html: string }) {
-  const processedHtml = processH2WordWrapping(html);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   // Add FAQ accordion toggle functionality
@@ -96,7 +81,7 @@ function BlogContentRenderer({ html }: { html: string }) {
     };
   }, [html]);
 
-  return <div ref={containerRef} dangerouslySetInnerHTML={{ __html: processedHtml }} />;
+  return <div ref={containerRef} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 export interface CategoryBlogPostTemplateProps {

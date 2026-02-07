@@ -1953,9 +1953,8 @@ body:has(main[data-is-404="true"]) .scroll-progress-bar {
   margin: 0;
 }
 
-/* H2 - Blog-specific typography (smaller than global H2 for long section titles) */
-/* Matches H2.tsx from @saa/shared/components/saa/headings */
-/* H2 - Master Controller Typography */
+/* H2 - Blog content typography - matches H2.tsx component exactly */
+/* Uses Master Controller CSS variables for font settings */
 .blog-content h2,
 .blog-content.prose h2,
 .blog-content.prose-invert h2 {
@@ -1967,93 +1966,30 @@ body:has(main[data-is-404="true"]) .scroll-progress-bar {
   color: var(--text-color-h2, #e5e4dd);
   margin-top: 3rem;
   margin-bottom: 1.5rem;
-  /* Flex layout for word spacing - matches H2.tsx */
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em;
-  /* 3D transforms for depth effect - exact match to H2.tsx */
-  transform-style: preserve-3d;
-  transform: rotateX(15deg);
-  position: relative;
-  /* Padding to compensate for metal plate negative inset (-0.3em horizontal) */
-  /* Ensures plates don't extend beyond container edges */
-  padding-left: 0.35em;
-  padding-right: 0.35em;
-}
-
-/* Per-word metal backing plate - exact match to H2.tsx .h2-word */
-.blog-content h2 .h2-word {
-  display: inline-flex;
-  position: relative;
-  /* Neon glow text-shadow - uses Master Controller H2 color */
-  color: var(--text-color-h2, #e5e4dd);
+  /* Font feature for alt glyphs */
+  font-feature-settings: "ss01" 1;
+  /* 3D transform - matches H2.tsx */
+  transform: perspective(800px) rotateX(8deg);
+  /* H2 component text-shadow: white core + warm white glow + metal backing */
   text-shadow:
-    -1px -1px 0 rgba(255,255,255, 0.4),
-    1px -1px 0 rgba(255,255,255, 0.4),
-    -1px 1px 0 rgba(255,255,255, 0.4),
-    1px 1px 0 rgba(255,255,255, 0.4),
-    0 -3px 8px var(--text-color-h2, #e5e4dd),
-    0 0 2px var(--text-color-h2, #e5e4dd),
-    0 0 5px var(--text-color-h2, #e5e4dd),
-    0 0 15px var(--text-color-h2, #e5e4dd),
-    0 0 3px var(--text-color-h2, #e5e4dd),
-    0 3px 3px #000;
-}
-
-/* Metal backing plate - 3D brushed gunmetal effect with glossy highlights */
-.blog-content h2 .h2-word::before {
-  content: "";
-  position: absolute;
-  /* Negative inset extends plate beyond the word - equal top/bottom */
-  top: -0.25em;
-  left: -0.3em;
-  right: -0.3em;
-  bottom: -0.25em;
-  /* Brushed gunmetal gradient - lighter for metallic look */
-  background: linear-gradient(
-    180deg,
-    #3d3d3d 0%,
-    #2f2f2f 40%,
-    #252525 100%
-  );
-  /* Rounded corners on all sides */
-  border-radius: 0.15em;
-  z-index: -1;
-  /* Beveled edge effect - lighter top/left for raised look */
-  border-top: 2px solid rgba(180,180,180,0.45);
-  border-left: 1px solid rgba(130,130,130,0.35);
-  border-right: 1px solid rgba(60,60,60,0.6);
-  border-bottom: 2px solid rgba(0,0,0,0.7);
-  /* Multi-layer shadow for depth and floating effect */
-  box-shadow:
-    /* Inner highlight at top for glossy reflection */
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    /* Inner shadow at bottom for depth */
-    inset 0 -1px 2px rgba(0,0,0,0.25),
-    /* Main drop shadow */
-    0 4px 8px rgba(0,0,0,0.5),
-    /* Soft ambient shadow */
-    0 2px 4px rgba(0,0,0,0.3);
-}
-
-/* Glossy highlight overlay on metal plate */
-.blog-content h2 .h2-word::after {
-  content: "";
-  position: absolute;
-  top: -0.25em;
-  left: -0.3em;
-  right: -0.3em;
-  height: 50%;
-  /* Glossy reflection gradient */
-  background: linear-gradient(
-    180deg,
-    rgba(255,255,255,0.06) 0%,
-    rgba(255,255,255,0.02) 50%,
-    transparent 100%
-  );
-  border-radius: 0.15em 0.15em 0 0;
-  z-index: -1;
-  pointer-events: none;
+    /* WHITE CORE */
+    0 0 0.01em #fff,
+    0 0 0.02em #fff,
+    0 0 0.03em rgba(255,255,255,0.8),
+    /* WARM WHITE GLOW - extended and dilute for sharp definition */
+    0 0 0.04em rgba(255,250,240,0.7),
+    0 0 0.08em rgba(255, 255, 255, 0.35),
+    0 0 0.14em rgba(255, 255, 255, 0.15),
+    0 0 0.22em rgba(200, 200, 200, 0.08),
+    /* METAL BACKING (3D depth) */
+    0.02em 0.02em 0 #2a2a2a,
+    0.04em 0.04em 0 #222222,
+    0.06em 0.06em 0 #1a1a1a,
+    0.08em 0.08em 0 #141414,
+    0.10em 0.10em 0 #0f0f0f,
+    0.12em 0.12em 0 #080808;
+  /* Drop shadow for depth - matches H2.tsx */
+  filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
 }
 
 /* H3 - Master Controller Typography */
