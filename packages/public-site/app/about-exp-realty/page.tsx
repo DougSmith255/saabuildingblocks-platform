@@ -3344,7 +3344,7 @@ function WhatExpProvidesVersionB() {
           </div>
 
           {/* Desktop: horizontal accordion */}
-          <div className="hidden lg:flex gap-4 h-[420px]">
+          <div className="hidden lg:flex gap-4 h-[500px]">
             {panels.map((panel, i) => {
               const isExpanded = expandedIndex === i;
               return (
@@ -3352,7 +3352,7 @@ function WhatExpProvidesVersionB() {
                   key={panel.id}
                   className="relative overflow-hidden rounded-xl cursor-pointer transition-all duration-500 ease-out"
                   style={{
-                    flex: isExpanded ? '3' : '0.4',
+                    flex: isExpanded ? '3' : '0.7',
                     border: isExpanded ? '2px solid rgba(0,191,255,0.5)' : '1px solid rgba(255,255,255,0.06)',
                     boxShadow: isExpanded
                       ? '0 0 40px rgba(0,191,255,0.25), 0 8px 32px rgba(0,0,0,0.4)'
@@ -3378,7 +3378,7 @@ function WhatExpProvidesVersionB() {
 
                   {/* Content */}
                   <div className="relative z-10 h-full p-6 flex flex-col">
-                    {/* Header - icon stays fixed, title rotates when collapsed */}
+                    {/* Header - icon stays fixed position, title rotates when collapsed */}
                     <div
                       className="flex items-center gap-3"
                       style={{ marginBottom: isExpanded ? '24px' : '0' }}
@@ -3392,11 +3392,12 @@ function WhatExpProvidesVersionB() {
                       <H2
                         style={{
                           color: accentColor,
-                          transform: isExpanded ? 'rotate(0deg) translateX(0)' : 'rotate(90deg) translateX(70px)',
+                          transform: isExpanded ? 'rotate(0deg) translateX(0)' : 'rotate(90deg) translateX(110px)',
                           transition: 'transform 0.4s ease',
                           display: 'inline-block',
                           transformOrigin: 'left center',
                           whiteSpace: 'nowrap',
+                          textAlign: 'left',
                         }}
                       >
                         {panel.label}
