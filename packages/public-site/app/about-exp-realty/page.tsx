@@ -3344,13 +3344,13 @@ function WhatExpProvidesVersionB() {
           </div>
 
           {/* Desktop: horizontal accordion */}
-          <div className="hidden lg:flex gap-4 h-[400px]">
+          <div className="hidden lg:flex gap-4 items-stretch">
             {panels.map((panel, i) => {
               const isExpanded = expandedIndex === i;
               return (
                 <div
                   key={panel.id}
-                  className="relative overflow-hidden rounded-xl cursor-pointer transition-all duration-500 ease-out"
+                  className="relative overflow-visible rounded-xl cursor-pointer transition-all duration-500 ease-out"
                   style={{
                     flex: isExpanded ? '3' : '1',
                     border: isExpanded ? '2px solid rgba(0,191,255,0.5)' : '1px solid rgba(255,255,255,0.06)',
@@ -3359,6 +3359,7 @@ function WhatExpProvidesVersionB() {
                       : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                     background: isExpanded ? grainyBackground : 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
                     backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
+                    minHeight: '420px',
                   }}
                   onClick={() => setExpandedIndex(i)}
                 >
@@ -3377,14 +3378,11 @@ function WhatExpProvidesVersionB() {
                   </div>
 
                   {/* Content */}
-                  <div className="relative z-10 h-full p-6 flex flex-col">
-                    {/* Header - fixed position icon, title rotates when collapsed */}
+                  <div className="relative z-10 h-full p-6 flex flex-col overflow-visible">
+                    {/* Header - icon stays fixed, title rotates when collapsed */}
                     <div
                       className="flex items-center gap-3"
-                      style={{
-                        marginBottom: isExpanded ? '24px' : '0',
-                        marginTop: isExpanded ? '0' : '-18px',
-                      }}
+                      style={{ marginBottom: isExpanded ? '24px' : '0' }}
                     >
                       <Icon3D
                         color={accentColor}
@@ -3395,7 +3393,7 @@ function WhatExpProvidesVersionB() {
                       <H2
                         style={{
                           color: accentColor,
-                          transform: isExpanded ? 'rotate(0deg)' : 'rotate(90deg)',
+                          transform: isExpanded ? 'rotate(0deg) translateX(0)' : 'rotate(90deg) translateX(30px)',
                           transition: 'transform 0.4s ease',
                           display: 'inline-block',
                           transformOrigin: 'left center',
