@@ -3277,10 +3277,6 @@ function WhatExpProvidesVersionB() {
                         <H2
                           style={{
                             color: accentColor,
-                            transform: isExpanded ? 'rotate(0deg)' : 'rotate(-90deg)',
-                            transition: 'transform 0.4s ease',
-                            display: 'inline-block',
-                            transformOrigin: 'center center',
                           }}
                         >
                           {panel.label}
