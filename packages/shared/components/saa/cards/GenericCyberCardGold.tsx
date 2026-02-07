@@ -58,10 +58,13 @@ export function GenericCyberCardGold({
           box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
 
           /* Mobile/tablet: coarser grain (baseFrequency 0.5) for visibility on high-DPI */
+          /* Using same transparency as CyberCardGold (0.85-0.92) for visible grain */
           background:
             url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-            linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%);
+            linear-gradient(180deg, rgba(15, 15, 20, 0.85) 0%, rgba(10, 10, 15, 0.92) 100%);
           background-blend-mode: overlay, normal;
+          backdrop-filter: blur(16px) saturate(120%);
+          -webkit-backdrop-filter: blur(16px) saturate(120%);
         }
 
         /* Desktop: finer grain looks better on lower-DPI screens */
@@ -69,7 +72,7 @@ export function GenericCyberCardGold({
           .generic-cyber-card-gold {
             background:
               url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-              linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%);
+              linear-gradient(180deg, rgba(15, 15, 20, 0.85) 0%, rgba(10, 10, 15, 0.92) 100%);
             background-blend-mode: overlay, normal;
           }
         }
