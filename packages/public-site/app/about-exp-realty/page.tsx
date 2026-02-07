@@ -3261,14 +3261,14 @@ function WhatExpProvidesVersionB() {
                       onClick={() => setExpandedIndex(i)}
                       className="w-full flex items-center justify-between cursor-pointer"
                     >
-                      <div className="flex items-center gap-4">
-                        <Icon3D color={accentColor} size={40}>
-                          <panel.icon size={20} />
+                      <div className="flex items-center gap-3">
+                        <Icon3D color={accentColor} size={isExpanded ? 44 : 36}>
+                          <panel.icon size={isExpanded ? 22 : 18} />
                         </Icon3D>
                         <H2
                           style={{
                             color: accentColor,
-                            transform: isExpanded ? 'rotate(0deg)' : 'rotate(90deg)',
+                            transform: isExpanded ? 'rotate(0deg)' : 'rotate(-90deg)',
                             transition: 'transform 0.4s ease',
                             display: 'inline-block',
                             transformOrigin: 'center center',
@@ -3370,16 +3370,16 @@ function WhatExpProvidesVersionB() {
                   {/* Content */}
                   <div className="relative z-10 h-full p-6 flex flex-col">
                     {/* Header */}
-                    <div className={`flex items-center gap-4 ${isExpanded ? 'mb-6' : 'mb-0 flex-1 justify-center'}`}>
-                      <Icon3D color={accentColor} size={isExpanded ? 48 : 56}>
-                        <panel.icon size={isExpanded ? 24 : 28} />
+                    <div className={`flex items-center gap-3 ${isExpanded ? 'mb-6' : 'mb-0 flex-1 justify-center'}`}>
+                      <Icon3D color={accentColor} size={isExpanded ? 52 : 40}>
+                        <panel.icon size={isExpanded ? 26 : 20} />
                       </Icon3D>
                       <H2
                         style={{
                           color: accentColor,
                           writingMode: isExpanded ? 'horizontal-tb' : 'vertical-rl',
                           textOrientation: 'mixed',
-                          transform: isExpanded ? 'rotate(0deg)' : 'rotate(180deg)',
+                          transform: isExpanded ? 'rotate(0deg)' : 'rotate(0deg)',
                           transition: 'transform 0.4s ease',
                         }}
                       >
