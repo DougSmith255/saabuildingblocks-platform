@@ -864,18 +864,10 @@ function HowExpIsBuilt() {
                   </div>
                 </div>
 
-                {/* Label - keyword bold with blue color, rest body color */}
-                <p className="text-body relative z-10">
-                  <span
-                    className="block text-h5 mb-1"
-                    style={{
-                      color: '#00bfff',
-                      textShadow: '0 0 20px rgba(0,191,255,0.3)',
-                    }}
-                  >
-                    {priority.keyword}
-                  </span>
-                  <span style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>{priority.rest}</span>
+                {/* Label - keyword bold with heading color, rest body color */}
+                <p className="text-body relative z-10" style={{ color: 'var(--color-bodyText, #bfbdb0)' }}>
+                  <span style={{ fontWeight: 700, color: 'var(--color-headingText, #e5e4dd)' }}>{priority.keyword}</span>{' '}
+                  {priority.rest}
                 </p>
               </div>
             ))}
