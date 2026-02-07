@@ -9,7 +9,7 @@ import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, DollarSig
   Shield, Headphones, GraduationCap, Video, Handshake,
   Contact, Globe, Laptop, ClipboardCheck, BarChart3, Palette,
   Ban, Target, Settings, RefreshCw, Calendar, MessageSquare, Share2,
-  UserPlus, Link, Zap, Sparkles,
+  UserPlus, Link, Zap, Sparkles, Compass, ChevronLeft, ChevronRight, ChevronDown,
 } from 'lucide-react';
 import { HolographicGlobe } from '../../components/shared/HolographicGlobe';
 import type { LucideIcon } from 'lucide-react';
@@ -3206,6 +3206,1186 @@ function WhereSAAFitsSection() {
 
 
 /* ═══════════════════════════════════════════════════════════════
+   SECTION REDESIGN: WHAT EXP PROVIDES - VERSION A
+   Stacked Cards Grid - Individual cards for each bullet with colored borders
+   ═══════════════════════════════════════════════════════════════ */
+
+function WhatExpProvidesVersionA() {
+  const sections = [
+    { id: 'community', label: 'COMMUNITY', bullets: COMMUNITY_BULLETS, borderColor: 'rgba(0,191,255,0.3)', glowColor: '0,191,255' },
+    { id: 'technology', label: 'TECHNOLOGY', bullets: TECHNOLOGY_BULLETS, borderColor: 'rgba(160,80,255,0.3)', glowColor: '160,80,255' },
+    { id: 'leads', label: 'LEADS', bullets: LEADS_BULLETS, borderColor: 'rgba(0,255,136,0.3)', glowColor: '0,255,136' },
+  ];
+
+  return (
+    <GlassPanel variant="tealCrosshatch" noBlur>
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
+        <div className="max-w-[1400px] mx-auto">
+          {sections.map((section, sectionIdx) => (
+            <div key={section.id} className={sectionIdx > 0 ? 'mt-16' : ''}>
+              {/* Section H2 */}
+              <div className="text-center mb-8">
+                <H2>{section.label}</H2>
+              </div>
+
+              {/* Grid of individual cards */}
+              <div className={`grid gap-4 ${
+                section.id === 'leads'
+                  ? 'grid-cols-1 sm:grid-cols-3'
+                  : section.id === 'community'
+                  ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'
+                  : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'
+              }`}>
+                {section.bullets.map((bullet, i) => (
+                  <div
+                    key={bullet.text}
+                    className="group relative rounded-xl p-4 text-center transition-all duration-300 hover:scale-[1.02]"
+                    style={{
+                      background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
+                      border: `1px solid ${section.borderColor}`,
+                      boxShadow: `0 4px 20px rgba(0,0,0,0.3)`,
+                    }}
+                  >
+                    {/* Hover glow */}
+                    <div
+                      className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                      style={{
+                        boxShadow: `0 0 20px rgba(${section.glowColor},0.3), inset 0 0 15px rgba(${section.glowColor},0.1)`,
+                      }}
+                    />
+
+                    {/* Icon */}
+                    <div className="mb-3">
+                      <Icon3D color={`rgb(${section.glowColor})`} size={40}>
+                        <bullet.icon size={20} />
+                      </Icon3D>
+                    </div>
+
+                    {/* Text */}
+                    <p className="text-body text-xs leading-relaxed" style={{ color: 'var(--color-body-text)' }}>
+                      {bullet.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          {/* CTA */}
+          <div className="flex justify-center mt-12">
+            <SecondaryButton href="#" variant="blue">Explore All Features</SecondaryButton>
+          </div>
+        </div>
+      </section>
+    </GlassPanel>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION REDESIGN: WHAT EXP PROVIDES - VERSION B
+   Horizontal Accordion Panels - Expandable panels with gold styling
+   ═══════════════════════════════════════════════════════════════ */
+
+function WhatExpProvidesVersionB() {
+  const [expandedIndex, setExpandedIndex] = useState(0);
+  const panels = [
+    { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS },
+    { id: 'technology', label: 'TECHNOLOGY', icon: Laptop, bullets: TECHNOLOGY_BULLETS },
+    { id: 'leads', label: 'LEADS', icon: UserPlus, bullets: LEADS_BULLETS },
+  ];
+
+  return (
+    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12" style={{ background: '#070707' }}>
+      <div className="max-w-[1400px] mx-auto">
+        {/* Mobile: stacked panels */}
+        <div className="lg:hidden space-y-4">
+          {panels.map((panel, i) => {
+            const isExpanded = expandedIndex === i;
+            return (
+              <div
+                key={panel.id}
+                className="relative overflow-hidden rounded-2xl"
+                style={{
+                  border: '2px solid rgba(255,215,0,0.4)',
+                  boxShadow: isExpanded ? '0 0 30px rgba(255,215,0,0.2)' : 'none',
+                  transition: 'box-shadow 0.4s ease',
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setExpandedIndex(i)}
+                  className="w-full p-6 flex items-center justify-between cursor-pointer"
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(40,35,20,0.95), rgba(25,22,12,0.98))',
+                  }}
+                >
+                  <div className="flex items-center gap-4">
+                    <Icon3D color="#ffd700" size={40}>
+                      <panel.icon size={20} />
+                    </Icon3D>
+                    <h2 className="text-h4" style={{ color: '#ffd700' }}>{panel.label}</h2>
+                  </div>
+                  <ChevronDown
+                    size={24}
+                    style={{
+                      color: '#ffd700',
+                      transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)',
+                      transition: 'transform 0.3s ease',
+                    }}
+                  />
+                </button>
+
+                <div
+                  style={{
+                    maxHeight: isExpanded ? '500px' : '0',
+                    overflow: 'hidden',
+                    transition: 'max-height 0.5s ease',
+                    background: 'linear-gradient(180deg, rgba(30,28,18,0.95), rgba(20,18,10,0.98))',
+                  }}
+                >
+                  <ul className="p-6 space-y-3">
+                    {panel.bullets.map((bullet, j) => (
+                      <li
+                        key={bullet.text}
+                        className="text-body text-sm flex items-start gap-3"
+                        style={{
+                          color: 'var(--color-body-text)',
+                          opacity: isExpanded ? 1 : 0,
+                          transform: isExpanded ? 'translateX(0)' : 'translateX(-10px)',
+                          transition: `opacity 0.3s ease ${j * 50}ms, transform 0.3s ease ${j * 50}ms`,
+                        }}
+                      >
+                        <span
+                          className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
+                          style={{
+                            background: 'rgba(255,215,0,0.15)',
+                            border: '1px solid rgba(255,215,0,0.3)',
+                          }}
+                        >
+                          <bullet.icon size={14} style={{ color: '#ffd700' }} />
+                        </span>
+                        <span>{bullet.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Desktop: horizontal accordion */}
+        <div className="hidden lg:flex gap-4 h-[400px]">
+          {panels.map((panel, i) => {
+            const isExpanded = expandedIndex === i;
+            return (
+              <div
+                key={panel.id}
+                className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 ease-out"
+                style={{
+                  flex: isExpanded ? '3' : '1',
+                  border: '2px solid rgba(255,215,0,0.4)',
+                  boxShadow: isExpanded ? '0 0 40px rgba(255,215,0,0.25)' : 'none',
+                  background: 'linear-gradient(180deg, rgba(40,35,20,0.95), rgba(25,22,12,0.98))',
+                }}
+                onClick={() => setExpandedIndex(i)}
+              >
+                {/* Watermark icon */}
+                <div
+                  className="absolute pointer-events-none"
+                  style={{
+                    right: '-30px',
+                    bottom: '-30px',
+                    opacity: isExpanded ? 0.06 : 0.03,
+                    transition: 'opacity 0.5s ease',
+                    color: '#ffd700',
+                  }}
+                >
+                  <panel.icon size={200} strokeWidth={1} />
+                </div>
+
+                {/* Content */}
+                <div className="relative z-10 h-full p-6 flex flex-col">
+                  {/* Header */}
+                  <div className={`flex items-center gap-4 ${isExpanded ? 'mb-6' : 'mb-0 flex-1 justify-center'}`}>
+                    <Icon3D color="#ffd700" size={isExpanded ? 48 : 56}>
+                      <panel.icon size={isExpanded ? 24 : 28} />
+                    </Icon3D>
+                    <h2
+                      className="text-h3 transition-all duration-300"
+                      style={{
+                        color: '#ffd700',
+                        writingMode: isExpanded ? 'horizontal-tb' : 'vertical-rl',
+                        textOrientation: isExpanded ? 'mixed' : 'mixed',
+                        transform: isExpanded ? 'none' : 'rotate(180deg)',
+                      }}
+                    >
+                      {panel.label}
+                    </h2>
+                  </div>
+
+                  {/* Bullets - only visible when expanded */}
+                  <ul
+                    className="flex-1 space-y-3 overflow-hidden"
+                    style={{
+                      opacity: isExpanded ? 1 : 0,
+                      transition: 'opacity 0.4s ease 0.1s',
+                    }}
+                  >
+                    {panel.bullets.map((bullet, j) => (
+                      <li
+                        key={bullet.text}
+                        className="text-body text-sm flex items-start gap-3"
+                        style={{
+                          color: 'var(--color-body-text)',
+                          transform: isExpanded ? 'translateX(0)' : 'translateX(-20px)',
+                          opacity: isExpanded ? 1 : 0,
+                          transition: `transform 0.4s ease ${j * 60}ms, opacity 0.4s ease ${j * 60}ms`,
+                        }}
+                      >
+                        <span
+                          className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
+                          style={{
+                            background: 'rgba(255,215,0,0.15)',
+                            border: '1px solid rgba(255,215,0,0.3)',
+                          }}
+                        >
+                          <bullet.icon size={14} style={{ color: '#ffd700' }} />
+                        </span>
+                        <span>{bullet.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION REDESIGN: WHAT EXP PROVIDES - VERSION C
+   Tabbed Carousel with Feature Cards - Scrollable card carousel
+   ═══════════════════════════════════════════════════════════════ */
+
+function WhatExpProvidesVersionC() {
+  const [activeTab, setActiveTab] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const tabs = [
+    { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS, color: '#00bfff' },
+    { id: 'technology', label: 'TECHNOLOGY', icon: Laptop, bullets: TECHNOLOGY_BULLETS, color: '#a050ff' },
+    { id: 'leads', label: 'LEADS', icon: UserPlus, bullets: LEADS_BULLETS, color: '#00ff88' },
+  ];
+
+  const currentTab = tabs[activeTab];
+
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -280, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 280, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <GlassPanel variant="expBlueCrosshatch" noBlur>
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
+        <div className="max-w-[1400px] mx-auto">
+          {/* Tab H2 buttons */}
+          <div className="flex justify-center gap-4 mb-10">
+            {tabs.map((tab, i) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(i)}
+                className="relative rounded-xl px-6 py-4 transition-all duration-300 cursor-pointer"
+                style={{
+                  background: activeTab === i
+                    ? 'linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))'
+                    : 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
+                  border: activeTab === i ? `2px solid ${tab.color}` : '2px solid rgba(255,255,255,0.1)',
+                  boxShadow: activeTab === i ? `0 0 25px ${tab.color}40` : 'none',
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <tab.icon size={20} style={{ color: activeTab === i ? tab.color : '#e5e4dd' }} />
+                  <h2 className="text-h5" style={{ color: activeTab === i ? tab.color : '#e5e4dd' }}>
+                    {tab.label}
+                  </h2>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Carousel container */}
+          <div className="relative">
+            {/* Navigation arrows */}
+            <button
+              type="button"
+              onClick={scrollLeft}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110"
+              style={{
+                background: 'rgba(0,0,0,0.7)',
+                border: `1px solid ${currentTab.color}40`,
+                boxShadow: `0 0 15px ${currentTab.color}30`,
+              }}
+            >
+              <ChevronLeft size={24} style={{ color: currentTab.color }} />
+            </button>
+            <button
+              type="button"
+              onClick={scrollRight}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110"
+              style={{
+                background: 'rgba(0,0,0,0.7)',
+                border: `1px solid ${currentTab.color}40`,
+                boxShadow: `0 0 15px ${currentTab.color}30`,
+              }}
+            >
+              <ChevronRight size={24} style={{ color: currentTab.color }} />
+            </button>
+
+            {/* Scrollable cards */}
+            <div
+              ref={scrollRef}
+              className="flex gap-4 overflow-x-auto pb-4 px-12 scrollbar-hide"
+              style={{
+                scrollSnapType: 'x mandatory',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
+            >
+              {currentTab.bullets.map((bullet, i) => (
+                <div
+                  key={bullet.text}
+                  className="flex-shrink-0 w-[260px] group"
+                  style={{ scrollSnapAlign: 'start' }}
+                >
+                  <GenericCyberCardGold padding="md" centered className="h-full">
+                    <div className="flex flex-col items-center text-center h-full py-4">
+                      {/* Icon */}
+                      <div
+                        className="w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
+                        style={{
+                          background: `linear-gradient(135deg, ${currentTab.color}30, ${currentTab.color}10)`,
+                          border: `2px solid ${currentTab.color}50`,
+                          boxShadow: `0 0 20px ${currentTab.color}30`,
+                        }}
+                      >
+                        <bullet.icon size={28} style={{ color: currentTab.color }} />
+                      </div>
+
+                      {/* Text */}
+                      <p className="text-body text-sm leading-relaxed" style={{ color: 'var(--color-body-text)' }}>
+                        {bullet.text}
+                      </p>
+                    </div>
+                  </GenericCyberCardGold>
+                </div>
+              ))}
+            </div>
+
+            {/* Progress dots */}
+            <div className="flex justify-center gap-2 mt-6">
+              {currentTab.bullets.map((_, i) => (
+                <div
+                  key={i}
+                  className="w-2 h-2 rounded-full transition-all duration-300"
+                  style={{
+                    background: `${currentTab.color}60`,
+                    boxShadow: `0 0 6px ${currentTab.color}40`,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="flex justify-center mt-8">
+            <SecondaryButton href="#" variant="blue">Explore {currentTab.label}</SecondaryButton>
+          </div>
+        </div>
+      </section>
+    </GlassPanel>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION REDESIGN: ADDITIONAL AREAS - VERSION A
+   Floating Badge Header with particles
+   ═══════════════════════════════════════════════════════════════ */
+
+function AdditionalAreasVersionA() {
+  return (
+    <div className="py-20 md:py-28 px-4 sm:px-8 md:px-12 relative overflow-hidden">
+      {/* Blue Rising Particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        <RisingParticlesBlue />
+      </div>
+
+      <div className="max-w-[900px] mx-auto text-center relative z-10">
+        {/* Floating icon badge */}
+        <div
+          className="mx-auto mb-8 w-20 h-20 rounded-full flex items-center justify-center"
+          style={{
+            background: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))',
+            border: '2px solid rgba(0,191,255,0.4)',
+            boxShadow: '0 0 40px rgba(0,191,255,0.3), inset 0 0 20px rgba(0,191,255,0.1)',
+            animation: 'floatBadge 4s ease-in-out infinite',
+          }}
+        >
+          <Compass size={36} style={{ color: '#00bfff', filter: 'drop-shadow(0 0 8px rgba(0,191,255,0.6))' }} />
+        </div>
+
+        {/* Gradient line above */}
+        <div className="flex items-center justify-center gap-4 mb-6">
+          <div
+            className="h-[2px] w-24"
+            style={{ background: 'linear-gradient(90deg, transparent, rgba(0,191,255,0.6))' }}
+          />
+          <div
+            className="w-3 h-3 rounded-full"
+            style={{
+              background: '#00bfff',
+              boxShadow: '0 0 15px rgba(0,191,255,0.7)',
+            }}
+          />
+          <div
+            className="h-[2px] w-24"
+            style={{ background: 'linear-gradient(90deg, rgba(0,191,255,0.6), transparent)' }}
+          />
+        </div>
+
+        {/* H2 Heading */}
+        <H2>ADDITIONAL AREAS AGENTS EXPLORE OVER TIME</H2>
+
+        {/* Gradient line below */}
+        <div className="flex items-center justify-center gap-4 mt-6 mb-6">
+          <div
+            className="h-[2px] w-16"
+            style={{ background: 'linear-gradient(90deg, transparent, rgba(0,191,255,0.4))' }}
+          />
+          <div
+            className="w-2 h-2 rounded-full"
+            style={{
+              background: 'rgba(0,191,255,0.6)',
+              boxShadow: '0 0 10px rgba(0,191,255,0.5)',
+            }}
+          />
+          <div
+            className="h-[2px] w-16"
+            style={{ background: 'linear-gradient(90deg, rgba(0,191,255,0.4), transparent)' }}
+          />
+        </div>
+
+        {/* Subtext */}
+        <p className="text-body max-w-[600px] mx-auto mb-8" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
+          As agents grow, specialize, or shift focus, these areas often become relevant later.
+        </p>
+
+        {/* Scroll indicator */}
+        <div
+          className="mx-auto w-6 h-10 rounded-full border-2 flex items-start justify-center pt-2"
+          style={{
+            borderColor: 'rgba(0,191,255,0.4)',
+          }}
+        >
+          <div
+            className="w-1.5 h-3 rounded-full"
+            style={{
+              background: '#00bfff',
+              animation: 'scrollBounce 2s ease-in-out infinite',
+            }}
+          />
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes floatBadge {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        @keyframes scrollBounce {
+          0%, 100% { transform: translateY(0); opacity: 1; }
+          50% { transform: translateY(8px); opacity: 0.5; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// Blue particles for Additional Areas Version A
+function RisingParticlesBlue() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const COUNT = 30;
+    interface Particle { x: number; y: number; r: number; speed: number; drift: number; opacity: number; }
+    let particles: Particle[] = [];
+    let rafId: number;
+
+    const init = () => {
+      particles = Array.from({ length: COUNT }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 1 + Math.random() * 2,
+        speed: 0.2 + Math.random() * 0.4,
+        drift: (Math.random() - 0.5) * 0.3,
+        opacity: 0.1 + Math.random() * 0.3,
+      }));
+    };
+
+    const resize = () => {
+      const rect = canvas.parentElement?.getBoundingClientRect();
+      if (!rect) return;
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      if (particles.length === 0) init();
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of particles) {
+        p.y -= p.speed;
+        p.x += p.drift;
+        if (p.y < -p.r) { p.y = canvas.height + p.r; p.x = Math.random() * canvas.width; }
+        if (p.x < -p.r) p.x = canvas.width + p.r;
+        if (p.x > canvas.width + p.r) p.x = -p.r;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0,191,255,${p.opacity})`;
+        ctx.fill();
+      }
+      rafId = requestAnimationFrame(draw);
+    };
+
+    resize();
+    rafId = requestAnimationFrame(draw);
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas.parentElement!);
+    return () => { cancelAnimationFrame(rafId); ro.disconnect(); };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 z-0" aria-hidden="true" />;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION REDESIGN: ADDITIONAL AREAS - VERSION B
+   Split Gradient Hero with diagonal background
+   ═══════════════════════════════════════════════════════════════ */
+
+function AdditionalAreasVersionB() {
+  return (
+    <div className="relative py-24 md:py-32 px-4 sm:px-8 md:px-12 overflow-hidden">
+      {/* Diagonal gradient background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `
+            linear-gradient(135deg,
+              rgba(10,25,50,0.95) 0%,
+              rgba(10,25,50,0.95) 45%,
+              rgba(0,60,80,0.9) 55%,
+              rgba(0,80,100,0.85) 100%
+            )
+          `,
+        }}
+      />
+
+      {/* Diagonal clip overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          clipPath: 'polygon(0 0, 100% 0, 100% 45%, 0 55%)',
+          background: 'rgba(0,20,40,0.6)',
+        }}
+      />
+
+      {/* Grid pattern overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0,191,255,0.5) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,191,255,0.5) 1px, transparent 1px)
+          `,
+          backgroundSize: '60px 60px',
+        }}
+      />
+
+      <div className="max-w-[1000px] mx-auto relative z-10 text-center">
+        {/* Large typography */}
+        <h2
+          className="text-h2 mb-6"
+          style={{
+            color: '#e5e4dd',
+            fontSize: 'clamp(28px, 5vw, 56px)',
+            lineHeight: 1.1,
+          }}
+        >
+          <span style={{ display: 'block', marginBottom: '0.2em' }}>ADDITIONAL AREAS</span>
+          <span style={{ display: 'block', color: '#00bfff' }}>AGENTS EXPLORE</span>
+          <span style={{ display: 'block', marginTop: '0.2em' }}>OVER TIME</span>
+        </h2>
+
+        {/* Subtext */}
+        <p
+          className="text-body text-lg max-w-[600px] mx-auto"
+          style={{ color: 'var(--color-body-text)', opacity: 0.7 }}
+        >
+          As agents grow, specialize, or shift focus, these areas often become relevant later.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION REDESIGN: ADDITIONAL AREAS - VERSION C
+   Icon Grid Teaser - Preview cards as navigation
+   ═══════════════════════════════════════════════════════════════ */
+
+function AdditionalAreasVersionC() {
+  const previews = [
+    { icon: Layers, label: 'Divisions', count: '6 areas', href: '#divisions' },
+    { icon: Sparkles, label: 'Solutions', count: '6 items', href: '#solutions' },
+    { icon: Target, label: 'Fit', count: '3 values', href: '#fit' },
+    { icon: Handshake, label: 'SAA', count: 'Join us', href: '#saa' },
+  ];
+
+  return (
+    <div className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden">
+      {/* Background glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,191,255,0.05) 0%, transparent 70%)',
+        }}
+      />
+
+      <div className="max-w-[1100px] mx-auto relative">
+        {/* H2 Heading */}
+        <div className="text-center mb-6">
+          <H2>ADDITIONAL AREAS AGENTS EXPLORE OVER TIME</H2>
+        </div>
+
+        {/* Subtext */}
+        <p
+          className="text-body text-center max-w-[600px] mx-auto mb-10"
+          style={{ color: 'var(--color-body-text)', opacity: 0.8 }}
+        >
+          As agents grow, specialize, or shift focus, these areas often become relevant later.
+        </p>
+
+        {/* Preview cards grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {previews.map((preview) => (
+            <a
+              key={preview.label}
+              href={preview.href}
+              className="group relative rounded-xl p-6 text-center transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1"
+              style={{
+                background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
+                border: '1px solid rgba(0,191,255,0.2)',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+              }}
+            >
+              {/* Hover glow */}
+              <div
+                className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                style={{
+                  boxShadow: '0 0 30px rgba(0,191,255,0.25), inset 0 0 20px rgba(0,191,255,0.08)',
+                }}
+              />
+
+              {/* Icon */}
+              <div
+                className="mx-auto mb-4 w-14 h-14 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0,191,255,0.15), rgba(0,120,200,0.08))',
+                  border: '1px solid rgba(0,191,255,0.25)',
+                }}
+              >
+                <preview.icon size={28} style={{ color: '#00bfff' }} />
+              </div>
+
+              {/* Label */}
+              <h3 className="text-h5 mb-1" style={{ color: '#e5e4dd' }}>
+                {preview.label}
+              </h3>
+
+              {/* Count badge */}
+              <span
+                className="inline-block text-xs px-3 py-1 rounded-full"
+                style={{
+                  background: 'rgba(0,191,255,0.1)',
+                  color: '#00bfff',
+                  border: '1px solid rgba(0,191,255,0.2)',
+                }}
+              >
+                {preview.count}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION REDESIGN: WHERE SAA FITS - VERSION A
+   Timeline Journey with SVG connecting lines
+   ═══════════════════════════════════════════════════════════════ */
+
+function WhereSAAFitsVersionA() {
+  const nodes = [
+    { icon: Building2, title: 'eXp', text: 'eXp provides the brokerage, compensation model, technology, and global infrastructure.', color: '#00bfff' },
+    { icon: Link, title: 'Sponsorship', text: 'Sponsorship is separate from the brokerage. Sponsor compensation comes from closed transactions within their sponsored organization, not from recruiting.', color: '#a050ff' },
+    { icon: Settings, title: 'Freedom', text: 'eXp does not require sponsors to provide any ongoing support to agents. Sponsors who choose to provide additional support decide what they offer and whether they charge for those services.', color: '#00ff88' },
+    { icon: Handshake, title: 'SAA', text: 'Smart Agent Alliance chooses to provide ongoing support, including systems, training, and community. These resources are funded through sponsor compensation paid by eXp, not by agents.', color: '#ffd700', highlight: true },
+  ];
+
+  return (
+    <GlassPanel variant="champagne">
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden">
+        <div className="max-w-[1200px] mx-auto">
+          {/* H2 Heading */}
+          <div className="text-center mb-12">
+            <H2>WHERE SMART AGENT ALLIANCE FITS</H2>
+          </div>
+
+          {/* Timeline - Desktop horizontal */}
+          <div className="hidden lg:block relative mb-12">
+            {/* Connecting line */}
+            <div
+              className="absolute top-16 left-[12%] right-[12%] h-[3px]"
+              style={{
+                background: 'linear-gradient(90deg, #00bfff, #a050ff, #00ff88, #ffd700)',
+                boxShadow: '0 0 10px rgba(0,191,255,0.5)',
+              }}
+            />
+
+            {/* Nodes */}
+            <div className="grid grid-cols-4 gap-6">
+              {nodes.map((node, i) => (
+                <div key={node.title} className="flex flex-col items-center text-center">
+                  {/* Node circle */}
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center mb-6 relative z-10"
+                    style={{
+                      background: node.highlight
+                        ? 'linear-gradient(135deg, rgba(255,215,0,0.3), rgba(200,160,0,0.15))'
+                        : 'linear-gradient(180deg, rgba(30,30,30,0.95), rgba(15,15,15,0.98))',
+                      border: `3px solid ${node.color}`,
+                      boxShadow: `0 0 20px ${node.color}60`,
+                    }}
+                  >
+                    <node.icon size={20} style={{ color: node.color }} />
+                  </div>
+
+                  {/* Card */}
+                  <GenericCard
+                    padding="md"
+                    className="h-full"
+                    style={{
+                      borderColor: node.highlight ? 'rgba(255,215,0,0.4)' : 'rgba(255,255,255,0.08)',
+                      boxShadow: node.highlight ? '0 0 30px rgba(255,215,0,0.15)' : undefined,
+                    }}
+                  >
+                    <h3
+                      className="text-h5 mb-3"
+                      style={{ color: node.color }}
+                    >
+                      {node.title}
+                    </h3>
+                    <p
+                      className="text-body text-sm leading-relaxed"
+                      style={{
+                        color: node.highlight ? '#ffd700' : 'var(--color-body-text)',
+                        fontWeight: node.highlight ? 500 : 400,
+                      }}
+                    >
+                      {node.text}
+                    </p>
+                  </GenericCard>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Timeline - Mobile vertical */}
+          <div className="lg:hidden relative mb-12">
+            {/* Vertical line */}
+            <div
+              className="absolute left-6 top-6 bottom-6 w-[3px]"
+              style={{
+                background: 'linear-gradient(180deg, #00bfff, #a050ff, #00ff88, #ffd700)',
+              }}
+            />
+
+            <div className="space-y-6">
+              {nodes.map((node) => (
+                <div key={node.title} className="flex gap-6">
+                  {/* Node circle */}
+                  <div
+                    className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center relative z-10"
+                    style={{
+                      background: 'linear-gradient(180deg, rgba(30,30,30,0.95), rgba(15,15,15,0.98))',
+                      border: `3px solid ${node.color}`,
+                      boxShadow: `0 0 15px ${node.color}50`,
+                    }}
+                  >
+                    <node.icon size={20} style={{ color: node.color }} />
+                  </div>
+
+                  {/* Card */}
+                  <div className="flex-1">
+                    <GenericCard
+                      padding="md"
+                      style={{
+                        borderColor: node.highlight ? 'rgba(255,215,0,0.4)' : 'rgba(255,255,255,0.08)',
+                        boxShadow: node.highlight ? '0 0 25px rgba(255,215,0,0.15)' : undefined,
+                      }}
+                    >
+                      <h3 className="text-h5 mb-2" style={{ color: node.color }}>
+                        {node.title}
+                      </h3>
+                      <p
+                        className="text-body text-sm leading-relaxed"
+                        style={{
+                          color: node.highlight ? '#ffd700' : 'var(--color-body-text)',
+                          fontWeight: node.highlight ? 500 : 400,
+                        }}
+                      >
+                        {node.text}
+                      </p>
+                    </GenericCard>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <SecondaryButton href="/about-smart-agent-alliance">Learn About SAA</SecondaryButton>
+            <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
+            <CTAButton href="/join-us">Join with SAA</CTAButton>
+          </div>
+        </div>
+      </section>
+    </GlassPanel>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION REDESIGN: WHERE SAA FITS - VERSION B
+   Split Comparison - Two-column contrast
+   ═══════════════════════════════════════════════════════════════ */
+
+function WhereSAAFitsVersionB() {
+  const expProvides = [
+    'Brokerage infrastructure',
+    'Compensation model',
+    'Technology platform',
+    'Global network',
+  ];
+
+  const saaAdds = [
+    'Systems for daily operations',
+    'Training and education',
+    'Community support',
+    'Funded by sponsor compensation, not agents',
+  ];
+
+  return (
+    <GlassPanel variant="champagne">
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden">
+        <div className="max-w-[1100px] mx-auto">
+          {/* H2 Heading */}
+          <div className="text-center mb-12">
+            <H2>WHERE SMART AGENT ALLIANCE FITS</H2>
+          </div>
+
+          {/* Two-column comparison */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            {/* eXp Column - Blue */}
+            <div
+              className="relative rounded-2xl p-6 md:p-8 overflow-hidden"
+              style={{
+                background: 'linear-gradient(180deg, rgba(10,25,50,0.9), rgba(5,15,35,0.95))',
+                border: '1px solid rgba(0,191,255,0.25)',
+                boxShadow: '0 0 30px rgba(0,191,255,0.1)',
+              }}
+            >
+              {/* Watermark */}
+              <div
+                className="absolute right-0 bottom-0 pointer-events-none opacity-[0.05]"
+                style={{ color: '#00bfff' }}
+              >
+                <Building2 size={150} strokeWidth={1} />
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-6">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))',
+                      border: '1px solid rgba(0,191,255,0.3)',
+                    }}
+                  >
+                    <Building2 size={24} style={{ color: '#00bfff' }} />
+                  </div>
+                  <h3 className="text-h4" style={{ color: '#00bfff' }}>eXp PROVIDES:</h3>
+                </div>
+
+                <ul className="space-y-3 mb-6">
+                  {expProvides.map((item) => (
+                    <li key={item} className="flex items-center gap-3 text-body" style={{ color: 'var(--color-body-text)' }}>
+                      <span className="w-2 h-2 rounded-full" style={{ background: '#00bfff' }} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+
+                <p className="text-body text-sm opacity-70" style={{ color: 'var(--color-body-text)' }}>
+                  Sponsors are optional and eXp doesn't require them to provide support.
+                </p>
+              </div>
+            </div>
+
+            {/* SAA Column - Gold */}
+            <div
+              className="relative rounded-2xl p-6 md:p-8 overflow-hidden"
+              style={{
+                background: 'linear-gradient(180deg, rgba(50,40,20,0.9), rgba(35,28,12,0.95))',
+                border: '2px solid rgba(255,215,0,0.35)',
+                boxShadow: '0 0 40px rgba(255,215,0,0.15)',
+              }}
+            >
+              {/* Watermark */}
+              <div
+                className="absolute right-0 bottom-0 pointer-events-none opacity-[0.08]"
+                style={{ color: '#ffd700' }}
+              >
+                <Handshake size={150} strokeWidth={1} />
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-6">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(255,215,0,0.25), rgba(200,160,0,0.12))',
+                      border: '1px solid rgba(255,215,0,0.4)',
+                      boxShadow: '0 0 15px rgba(255,215,0,0.2)',
+                    }}
+                  >
+                    <Handshake size={24} style={{ color: '#ffd700' }} />
+                  </div>
+                  <h3 className="text-h4" style={{ color: '#ffd700' }}>SAA ADDS:</h3>
+                </div>
+
+                <ul className="space-y-3 mb-6">
+                  {saaAdds.map((item, i) => (
+                    <li
+                      key={item}
+                      className="flex items-center gap-3 text-body"
+                      style={{
+                        color: i === saaAdds.length - 1 ? '#ffd700' : 'var(--color-body-text)',
+                        fontWeight: i === saaAdds.length - 1 ? 600 : 400,
+                      }}
+                    >
+                      <span className="w-2 h-2 rounded-full" style={{ background: '#ffd700' }} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Vertical divider line between columns on desktop */}
+          <div
+            className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[2px] h-32"
+            style={{
+              background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.2), transparent)',
+            }}
+          />
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
+            <SecondaryButton href="/about-smart-agent-alliance">Learn About SAA</SecondaryButton>
+            <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
+            <CTAButton href="/join-us">Join with SAA</CTAButton>
+          </div>
+        </div>
+      </section>
+    </GlassPanel>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION REDESIGN: WHERE SAA FITS - VERSION C
+   Stacked Info Cards with Hero Badge
+   ═══════════════════════════════════════════════════════════════ */
+
+function WhereSAAFitsVersionC() {
+  const cards = [
+    { icon: Building2, text: 'eXp provides the brokerage, compensation model, technology, and global infrastructure.', highlight: false },
+    { icon: Link, text: 'Sponsorship is separate from the brokerage. Sponsor compensation comes from closed transactions within their sponsored organization, not from recruiting.', highlight: false },
+    { icon: Settings, text: 'eXp does not require sponsors to provide any ongoing support to agents. Sponsors who choose to provide additional support decide what they offer and whether they charge for those services.', highlight: false },
+    { icon: Sparkles, text: 'Smart Agent Alliance chooses to provide ongoing support, including systems, training, and community. These resources are funded through sponsor compensation paid by eXp, not by agents.', highlight: true },
+  ];
+
+  return (
+    <GlassPanel variant="champagne">
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden">
+        {/* Gold accent line top */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-[2px]"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,215,0,0.5), transparent)' }}
+        />
+
+        <div className="max-w-[900px] mx-auto">
+          {/* Large SAA Badge */}
+          <div className="flex justify-center mb-8">
+            <div
+              className="w-24 h-24 rounded-full flex items-center justify-center"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1))',
+                border: '3px solid rgba(255,215,0,0.4)',
+                boxShadow: '0 0 50px rgba(255,215,0,0.25), inset 0 0 30px rgba(255,215,0,0.1)',
+                animation: 'badgeGlow 3s ease-in-out infinite',
+              }}
+            >
+              <Handshake size={44} style={{ color: '#ffd700', filter: 'drop-shadow(0 0 10px rgba(255,215,0,0.6))' }} />
+            </div>
+          </div>
+
+          {/* H2 Heading */}
+          <div className="text-center mb-10">
+            <H2>WHERE SMART AGENT ALLIANCE FITS</H2>
+          </div>
+
+          {/* Stacked cards */}
+          <div className="space-y-4 mb-10">
+            {cards.map((card, i) => (
+              <div
+                key={i}
+                className="relative rounded-xl p-5 transition-all duration-300 hover:scale-[1.01]"
+                style={{
+                  background: card.highlight
+                    ? 'linear-gradient(180deg, rgba(50,40,20,0.5), rgba(35,28,12,0.6))'
+                    : 'linear-gradient(180deg, rgba(25,25,30,0.5), rgba(15,15,20,0.6))',
+                  border: card.highlight
+                    ? '2px solid rgba(255,215,0,0.4)'
+                    : '1px solid rgba(255,255,255,0.08)',
+                  boxShadow: card.highlight
+                    ? '0 0 30px rgba(255,215,0,0.15), inset 0 0 20px rgba(255,215,0,0.05)'
+                    : '0 4px 20px rgba(0,0,0,0.2)',
+                }}
+              >
+                <div className="flex items-start gap-4">
+                  {/* Icon */}
+                  <div
+                    className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
+                    style={{
+                      background: card.highlight
+                        ? 'linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1))'
+                        : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
+                      border: card.highlight
+                        ? '1px solid rgba(255,215,0,0.3)'
+                        : '1px solid rgba(255,255,255,0.1)',
+                    }}
+                  >
+                    <card.icon
+                      size={20}
+                      style={{
+                        color: card.highlight ? '#ffd700' : '#e5e4dd',
+                      }}
+                    />
+                  </div>
+
+                  {/* Text */}
+                  <p
+                    className="text-body leading-relaxed pt-2"
+                    style={{
+                      color: card.highlight ? '#ffd700' : 'var(--color-body-text)',
+                      fontWeight: card.highlight ? 500 : 400,
+                      textShadow: card.highlight ? '0 0 20px rgba(255,215,0,0.15)' : 'none',
+                    }}
+                  >
+                    {card.text}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <SecondaryButton href="/about-smart-agent-alliance">Learn About SAA</SecondaryButton>
+            <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
+            <CTAButton href="/join-us">Join with SAA</CTAButton>
+          </div>
+        </div>
+
+        {/* Gold accent line bottom */}
+        <div
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-[2px]"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,215,0,0.4), transparent)' }}
+        />
+
+        <style>{`
+          @keyframes badgeGlow {
+            0%, 100% { box-shadow: 0 0 50px rgba(255,215,0,0.25), inset 0 0 30px rgba(255,215,0,0.1); }
+            50% { box-shadow: 0 0 70px rgba(255,215,0,0.4), inset 0 0 40px rgba(255,215,0,0.15); }
+          }
+        `}</style>
+      </section>
+    </GlassPanel>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   VERSION WRAPPER - Displays version label for comparison
+   ═══════════════════════════════════════════════════════════════ */
+
+function VersionWrapper({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="relative border-4 border-dashed border-yellow-500/60 my-8">
+      {/* Label */}
+      <span
+        className="absolute -top-4 left-4 px-3 py-1 text-sm font-bold z-20"
+        style={{
+          background: '#eab308',
+          color: '#000',
+          borderRadius: '4px',
+        }}
+      >
+        {label}
+      </span>
+      {children}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
    MAIN PAGE COMPONENT
    ═══════════════════════════════════════════════════════════════ */
 
@@ -3366,20 +4546,69 @@ export default function AboutExpRealty() {
       {/* ════ Section 2: Support Infrastructure ════ */}
       <SupportInfrastructureSection />
 
-      {/* ════ Sections 3-5: What eXp Provides (Tabbed Block) ════ */}
-      <WhatExpProvidesSection />
+      {/* ════════════════════════════════════════════════════════════════
+          SECTION REDESIGNS - 3 VERSIONS EACH FOR COMPARISON
+          ════════════════════════════════════════════════════════════════ */}
 
-      {/* ════ Section 6: Additional Areas Divider ════ */}
-      <AdditionalAreasDivider />
+      {/* ════ WHAT EXP PROVIDES - 3 VERSIONS ════ */}
+      <div className="py-8 text-center">
+        <h2 className="text-3xl font-bold text-yellow-400">WHAT EXP PROVIDES - SECTION REDESIGNS</h2>
+        <p className="text-gray-400 mt-2">Compare the 3 versions below and choose your favorite</p>
+      </div>
 
-      {/* ════ Sections 7-8: Divisions + Solutions ════ */}
+      <VersionWrapper label="VERSION A: Stacked Cards Grid">
+        <WhatExpProvidesVersionA />
+      </VersionWrapper>
+
+      <VersionWrapper label="VERSION B: Horizontal Accordion Panels">
+        <WhatExpProvidesVersionB />
+      </VersionWrapper>
+
+      <VersionWrapper label="VERSION C: Tabbed Carousel with Feature Cards">
+        <WhatExpProvidesVersionC />
+      </VersionWrapper>
+
+      {/* ════ ADDITIONAL AREAS - 3 VERSIONS ════ */}
+      <div className="py-8 text-center">
+        <h2 className="text-3xl font-bold text-yellow-400">ADDITIONAL AREAS AGENTS EXPLORE - SECTION REDESIGNS</h2>
+        <p className="text-gray-400 mt-2">Compare the 3 versions below and choose your favorite</p>
+      </div>
+
+      <VersionWrapper label="VERSION A: Floating Badge Header">
+        <AdditionalAreasVersionA />
+      </VersionWrapper>
+
+      <VersionWrapper label="VERSION B: Split Gradient Hero">
+        <AdditionalAreasVersionB />
+      </VersionWrapper>
+
+      <VersionWrapper label="VERSION C: Icon Grid Teaser">
+        <AdditionalAreasVersionC />
+      </VersionWrapper>
+
+      {/* ════ Sections 7-8: Divisions + Solutions (unchanged) ════ */}
       <DivisionsSolutionsSection />
 
-      {/* ════ Section 9: Who eXp Works Best For ════ */}
+      {/* ════ Section 9: Who eXp Works Best For (unchanged) ════ */}
       <WhoExpWorksBestForSection />
 
-      {/* ════ Section 10: Where Smart Agent Alliance Fits ════ */}
-      <WhereSAAFitsSection />
+      {/* ════ WHERE SMART AGENT ALLIANCE FITS - 3 VERSIONS ════ */}
+      <div className="py-8 text-center">
+        <h2 className="text-3xl font-bold text-yellow-400">WHERE SAA FITS - SECTION REDESIGNS</h2>
+        <p className="text-gray-400 mt-2">Compare the 3 versions below and choose your favorite</p>
+      </div>
+
+      <VersionWrapper label="VERSION A: Timeline Journey">
+        <WhereSAAFitsVersionA />
+      </VersionWrapper>
+
+      <VersionWrapper label="VERSION B: Split Comparison">
+        <WhereSAAFitsVersionB />
+      </VersionWrapper>
+
+      <VersionWrapper label="VERSION C: Stacked Info Cards with Hero Badge">
+        <WhereSAAFitsVersionC />
+      </VersionWrapper>
 
       {/* Blue H1 glow — must render AFTER H1 component so this keyframe wins */}
       <style>{`
