@@ -70,8 +70,14 @@ export function CyberCardGold({
           /* Rounded corners */
           border-radius: 16px;
 
-          /* GenericCard-style interior */
-          background: rgba(255, 255, 255, 0.05);
+          /* Frosted glass interior */
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.03) 100%
+          );
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
 
   /* Base glow - always visible */
           box-shadow:
