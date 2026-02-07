@@ -2408,14 +2408,14 @@ function SupportInfrastructureSection() {
           zIndex: 2,
         }}
       />
-      {/* Bottom gradient edge - extends 5px down over next section */}
+      {/* Bottom gradient edge - extends 5px down behind next section's glass */}
       <div
         className="absolute left-0 right-0 pointer-events-none"
         style={{
           bottom: '-5px',
           height: '25px',
           background: 'linear-gradient(to top, #070707 0%, transparent 100%)',
-          zIndex: 2,
+          zIndex: 0,
         }}
       />
 
