@@ -1083,9 +1083,9 @@ const TECHNOLOGY_BULLETS = [
 ];
 
 const LEADS_BULLETS = [
-  { icon: UserPlus, text: 'Referral-based programs powered by company-run teams (Revenos)' },
-  { icon: DollarSign, text: 'Paid lead programs with ready-to-use ad infrastructure (Making It Rain)' },
-  { icon: Link, text: 'Organic lead tools built into the platform (myLink and myLead)' },
+  { icon: UserPlus, text: 'Revenos — referral-based programs powered by company-run teams' },
+  { icon: DollarSign, text: 'Making It Rain — paid lead programs with ready-to-use ad infrastructure' },
+  { icon: Link, text: 'myLink and myLead — organic lead tools built into the platform' },
 ];
 
 const TAB_CONTENT = [
@@ -3295,8 +3295,7 @@ function WhatExpProvidesVersionB() {
                             style={{
                               color: 'var(--color-body-text)',
                               opacity: isExpanded ? 1 : 0,
-                              transform: isExpanded ? 'translateX(0)' : 'translateX(-10px)',
-                              transition: `opacity 0.3s ease ${j * 50}ms, transform 0.3s ease ${j * 50}ms`,
+                              transition: `opacity 0.3s ease ${j * 50}ms`,
                             }}
                           >
                             <span
@@ -3386,9 +3385,8 @@ function WhatExpProvidesVersionB() {
                           className="text-body text-sm flex items-start gap-3"
                           style={{
                             color: 'var(--color-body-text)',
-                            transform: isExpanded ? 'translateX(0)' : 'translateX(-20px)',
                             opacity: isExpanded ? 1 : 0,
-                            transition: `transform 0.4s ease ${j * 60}ms, opacity 0.4s ease ${j * 60}ms`,
+                            transition: `opacity 0.4s ease ${j * 60}ms`,
                           }}
                         >
                           <span
