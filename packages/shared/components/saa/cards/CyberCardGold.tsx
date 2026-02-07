@@ -60,15 +60,35 @@ export function CyberCardGold({
 
         .cyber-card-gold-frame {
           position: relative;
-          /* 3D effect without angle */
-          transform-style: preserve-3d;
-          transform: translateZ(0);
 
           /* Thick neon gold border */
           border: 10px solid #ffd700;
 
           /* Rounded corners */
           border-radius: 16px;
+
+          /* Base glow - always visible */
+          box-shadow:
+            0 0 4px 1px rgba(255, 215, 0, 0.5),
+            0 0 8px 2px rgba(255, 215, 0, 0.35),
+            0 0 16px 4px rgba(255, 215, 0, 0.2),
+            0 0 24px 6px rgba(255, 215, 0, 0.1),
+            0 4px 12px rgba(0,0,0,0.3);
+
+          overflow: visible;
+          /* Isolate stacking context so z-index works properly */
+          isolation: isolate;
+        }
+
+        /* Glass background as separate layer - z-index 0 */
+        .cyber-card-gold-glass {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-radius: 6px;
+          z-index: 0;
 
           /* Dark frosted glass interior with texture */
           background:
@@ -83,16 +103,6 @@ export function CyberCardGold({
           background-blend-mode: overlay, normal;
           backdrop-filter: blur(16px) saturate(120%);
           -webkit-backdrop-filter: blur(16px) saturate(120%);
-
-  /* Base glow - always visible */
-          box-shadow:
-            0 0 4px 1px rgba(255, 215, 0, 0.5),
-            0 0 8px 2px rgba(255, 215, 0, 0.35),
-            0 0 16px 4px rgba(255, 215, 0, 0.2),
-            0 0 24px 6px rgba(255, 215, 0, 0.1),
-            0 4px 12px rgba(0,0,0,0.3);
-
-          overflow: visible;
         }
 
         /* Organic pulsing glow - matches CTA button light bars */
@@ -140,7 +150,7 @@ export function CyberCardGold({
           border-radius: 6px;
           border: 2px solid rgba(255,255,255,0.5);
           pointer-events: none;
-          z-index: 1;
+          z-index: 2;
         }
 
         /* Note: Outer white outline is now included in ::after above (with pulsing glow) */
@@ -149,14 +159,14 @@ export function CyberCardGold({
         .cyber-card-gold-content {
           position: relative;
           z-index: 10;
-          /* Ensure content has 3D context */
-          transform-style: preserve-3d;
-          transform: translateZ(0);
         }
       `}</style>
 
       <div className={`cyber-card-gold-3d ${className}`}>
         <div className="cyber-card-gold-frame">
+          {/* Glass background layer - z-index 0 */}
+          <div className="cyber-card-gold-glass" />
+          {/* Content layer - z-index 10 */}
           <div className={`cyber-card-gold-content ${paddingClass} ${centerClass}`}>
             {children}
           </div>

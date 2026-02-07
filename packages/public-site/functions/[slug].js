@@ -3006,20 +3006,29 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     .cyber-card-gold-frame {
       position: relative;
-      transform-style: preserve-3d;
-      transform: translateZ(0);
       border: 10px solid #ffd700;
       border-radius: 16px;
-      /* Dark frosted glass interior with texture */
+      box-shadow: 0 0 4px 1px rgba(255, 215, 0, 0.5), 0 0 8px 2px rgba(255, 215, 0, 0.35),
+        0 0 16px 4px rgba(255, 215, 0, 0.2), 0 0 24px 6px rgba(255, 215, 0, 0.1), 0 4px 12px rgba(0,0,0,0.3);
+      overflow: visible;
+      isolation: isolate;
+    }
+
+    /* Glass background as separate layer - z-index 0 */
+    .cyber-card-gold-glass {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 6px;
+      z-index: 0;
       background:
         url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
         linear-gradient(180deg, rgba(15, 15, 20, 0.85) 0%, rgba(10, 10, 15, 0.92) 100%);
       background-blend-mode: overlay, normal;
       backdrop-filter: blur(16px) saturate(120%);
       -webkit-backdrop-filter: blur(16px) saturate(120%);
-      box-shadow: 0 0 4px 1px rgba(255, 215, 0, 0.5), 0 0 8px 2px rgba(255, 215, 0, 0.35),
-        0 0 16px 4px rgba(255, 215, 0, 0.2), 0 0 24px 6px rgba(255, 215, 0, 0.1), 0 4px 12px rgba(0,0,0,0.3);
-      overflow: visible;
     }
 
     @keyframes cyberCardGoldOrganicPulse {
@@ -3060,14 +3069,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       border-radius: 6px;
       border: 2px solid rgba(255,255,255,0.5);
       pointer-events: none;
-      z-index: 1;
+      z-index: 2;
     }
 
     .cyber-card-gold-content {
       position: relative;
       z-index: 10;
-      transform-style: preserve-3d;
-      transform: translateZ(0);
       padding: 24px;
       text-align: center;
     }
@@ -3892,6 +3899,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="scroll-reveal" style="transition-delay: 0.2s;">
                 <div class="cyber-card-gold">
                   <div class="cyber-card-gold-frame">
+                    <div class="cyber-card-gold-glass"></div>
                     <div class="cyber-card-gold-content">
                       <span class="icon-3d" style="margin: 0 auto 0.5rem; display: block; width: fit-content;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
                       <p style="font-family: 'Amulya', var(--font-amulya), sans-serif; font-size: clamp(1.875rem, 4vw, 2.5rem); font-weight: 700; color: #bfbdb0; text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; text-align: center; margin: 0;">3700+</p>
