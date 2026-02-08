@@ -3374,24 +3374,25 @@ function WhatExpProvidesVersionB() {
 
                   {/* Content */}
                   <div className="relative z-10 h-full p-6 flex flex-col">
-                    {/* Header - icon stays fixed position, title rotates when collapsed */}
-                    <div
-                      className="flex items-center gap-3"
-                      style={{ marginBottom: isExpanded ? '24px' : '0' }}
-                    >
+                    {/* Header - icon fixed, title hinges on collapse */}
+                    <div style={{ position: 'relative', minHeight: '44px', marginBottom: isExpanded ? '24px' : '0' }}>
                       <Icon3D
                         color={accentColor}
                         size={44}
                       >
                         <panel.icon size={22} />
                       </Icon3D>
+                      {/* Title - absolutely positioned so icon never moves, hinges at top-left */}
                       <H2
                         style={{
                           color: accentColor,
-                          transform: isExpanded ? 'rotate(0deg) translateX(0)' : 'rotate(90deg) translateX(110px)',
+                          position: 'absolute',
+                          left: '56px',
+                          top: '8px',
+                          marginBottom: 0,
+                          transform: isExpanded ? 'rotate(0deg)' : 'rotate(90deg)',
+                          transformOrigin: '0 0',
                           transition: 'transform 0.4s ease',
-                          display: 'inline-block',
-                          transformOrigin: 'left center',
                           whiteSpace: 'nowrap',
                           textAlign: 'left',
                         }}
