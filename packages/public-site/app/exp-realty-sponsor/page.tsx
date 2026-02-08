@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { H1, H2, Tagline, GlassPanel, GenericCard } from '@saa/shared/components/saa';
 import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
-import { Ban } from 'lucide-react';
+import { Ban, ChevronDown } from 'lucide-react';
 
 // ============================================================================
 // SECTION 1 CONTENT — word for word
@@ -33,78 +33,141 @@ const SPONSORSHIP_BULLETS = [
 ];
 
 // ============================================================================
-// VERSION A — "Horizontal Rail Cards"
-// Two stacked full-width GenericCard bands with thick left-border accents.
-// Desktop: H2 left, body right (flex-row). Mobile: stacked.
+// SHARED: Panel content renderers (used by all 3 interactive versions)
+// ============================================================================
+
+function SAAContent() {
+  return (
+    <div className="space-y-4">
+      {SAA_PARAGRAPHS.map((p, i) => (
+        <p key={i} className="text-body" style={{ color: '#dcdbd5' }}>{p}</p>
+      ))}
+      <div className="flex flex-wrap gap-3 pt-2">
+        {SAA_NOT_STATEMENTS.map((s, i) => (
+          <span
+            key={i}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-body"
+            style={{
+              fontSize: 'clamp(13px, 1.6vw, 15px)',
+              background: 'rgba(255,80,80,0.08)',
+              border: '1px solid rgba(255,80,80,0.2)',
+              color: '#e8a0a0',
+            }}
+          >
+            <Ban size={13} style={{ color: '#ff5050', flexShrink: 0 }} />
+            {s}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SponsorshipContent() {
+  return (
+    <div className="space-y-4">
+      <p className="text-body" style={{ color: '#dcdbd5' }}>{SPONSORSHIP_INTRO}</p>
+      <p className="text-body" style={{ color: '#b0d4e8' }}>{SPONSORSHIP_LEAD}</p>
+      <ul className="space-y-2 pl-1">
+        {SPONSORSHIP_BULLETS.map((b, i) => (
+          <li key={i} className="flex items-start gap-2.5 text-body" style={{ color: '#dcdbd5' }}>
+            <span
+              className="mt-[7px] flex-shrink-0 w-2 h-2 rounded-full"
+              style={{
+                background: 'rgba(0,191,255,0.5)',
+                boxShadow: '0 0 6px rgba(0,191,255,0.3)',
+              }}
+            />
+            {b}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+const PANELS = [
+  { id: 'saa', label: 'What Smart Agent Alliance Is', shortLabel: 'What SAA Is', color: '#ffd700', theme: 'default' as const },
+  { id: 'sponsorship', label: 'How Sponsorship Works at eXp', shortLabel: 'Sponsorship', color: '#00bfff', theme: 'blue' as const },
+];
+
+
+// ============================================================================
+// VERSION A — "Segment Toggle"
+// Two pill-style toggle buttons at top, single content panel below.
+// Only one panel visible at a time. Saves ~50% vertical space.
 // ============================================================================
 
 function SectionVersionA() {
+  const [active, setActive] = useState(0);
+
   return (
     <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
-      <div className="max-w-[1400px] mx-auto space-y-5">
+      <div className="max-w-[1000px] mx-auto">
 
-        {/* ── What SAA Is ── */}
-        <GenericCard padding="lg" style={{ borderLeft: '4px solid rgba(255,215,0,0.5)' }}>
-          <div className="flex flex-col md:flex-row md:gap-10">
-            {/* Left: H2 */}
-            <div className="md:w-[320px] flex-shrink-0 mb-4 md:mb-0">
-              <H2 style={{ textAlign: 'left', marginBottom: 0 }}>What Smart Agent Alliance Is</H2>
-            </div>
-            {/* Right: Body */}
-            <div className="flex-1 space-y-4">
-              {SAA_PARAGRAPHS.map((p, i) => (
-                <p key={i} className="text-body" style={{ color: '#dcdbd5' }}>{p}</p>
-              ))}
-              <div className="flex flex-wrap gap-3 pt-2">
-                {SAA_NOT_STATEMENTS.map((s, i) => (
-                  <span
-                    key={i}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-body"
-                    style={{
-                      fontSize: 'clamp(13px, 1.6vw, 15px)',
-                      background: 'rgba(255,80,80,0.08)',
-                      border: '1px solid rgba(255,80,80,0.2)',
-                      color: '#e8a0a0',
-                    }}
-                  >
-                    <Ban size={13} style={{ color: '#ff5050', flexShrink: 0 }} />
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </div>
+        {/* ── Toggle bar ── */}
+        <div
+          className="flex rounded-xl p-1 mb-8 mx-auto"
+          style={{
+            maxWidth: '600px',
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 4px 16px rgba(0,0,0,0.3)',
+          }}
+        >
+          {PANELS.map((panel, i) => (
+            <button
+              key={panel.id}
+              type="button"
+              onClick={() => setActive(i)}
+              className="flex-1 py-2.5 px-3 rounded-lg text-center cursor-pointer"
+              style={{
+                fontFamily: 'var(--font-taskor), sans-serif',
+                fontSize: 'clamp(12px, 2.5vw, 15px)',
+                fontWeight: 600,
+                letterSpacing: '0.04em',
+                color: active === i ? '#fff' : 'rgba(255,255,255,0.45)',
+                background: active === i
+                  ? `linear-gradient(135deg, ${panel.color}22, ${panel.color}11)`
+                  : 'transparent',
+                border: active === i
+                  ? `1px solid ${panel.color}55`
+                  : '1px solid transparent',
+                boxShadow: active === i
+                  ? `0 0 12px ${panel.color}20, inset 0 1px 0 rgba(255,255,255,0.05)`
+                  : 'none',
+                transition: 'all 0.3s ease',
+              }}
+            >
+              {panel.shortLabel}
+            </button>
+          ))}
+        </div>
+
+        {/* ── Content panel ── */}
+        <GenericCard padding="lg">
+          <H2
+            theme={PANELS[active].theme}
+            style={{ textAlign: 'left', marginBottom: '1.25rem' }}
+          >
+            {PANELS[active].label}
+          </H2>
+          <div
+            key={active}
+            style={{
+              animation: 'segmentFadeIn 0.3s ease',
+            }}
+          >
+            {active === 0 ? <SAAContent /> : <SponsorshipContent />}
           </div>
         </GenericCard>
 
-        {/* ── How Sponsorship Works ── */}
-        <GenericCard padding="lg" style={{ borderLeft: '4px solid rgba(0,191,255,0.4)' }}>
-          <div className="flex flex-col md:flex-row md:gap-10">
-            {/* Left: H2 */}
-            <div className="md:w-[320px] flex-shrink-0 mb-4 md:mb-0">
-              <H2 theme="blue" style={{ textAlign: 'left', marginBottom: 0 }}>How Sponsorship Works at eXp</H2>
-            </div>
-            {/* Right: Body */}
-            <div className="flex-1 space-y-4">
-              <p className="text-body" style={{ color: '#dcdbd5' }}>{SPONSORSHIP_INTRO}</p>
-              <p className="text-body" style={{ color: '#b0d4e8' }}>{SPONSORSHIP_LEAD}</p>
-              <ul className="space-y-2 pl-1">
-                {SPONSORSHIP_BULLETS.map((b, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-body" style={{ color: '#dcdbd5' }}>
-                    <span
-                      className="mt-[7px] flex-shrink-0 w-2 h-2 rounded-full"
-                      style={{
-                        background: 'rgba(0,191,255,0.5)',
-                        boxShadow: '0 0 6px rgba(0,191,255,0.3)',
-                      }}
-                    />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </GenericCard>
-
+        <style>{`
+          @keyframes segmentFadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+        `}</style>
       </div>
     </section>
   );
@@ -112,87 +175,90 @@ function SectionVersionA() {
 
 
 // ============================================================================
-// VERSION B — "GlassPanel Dual Columns"
-// Single GlassPanel (champagne) wrapping two clean columns with a
-// thin vertical gold divider (desktop). Mobile: stacked with horizontal rule.
+// VERSION B — "Accordion Dual"
+// Two accordion rows, only one open at a time. Click header to toggle.
+// Uses grid-template-rows for smooth expand/collapse animation.
+// Wrapped in a single GlassPanel (champagne).
 // ============================================================================
 
 function SectionVersionB() {
+  const [expanded, setExpanded] = useState(0);
+
+  // Grain matching GenericCyberCardGold (mobile: 0.5, but this is inside a GlassPanel so keep clean)
+  const inactiveBg = 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)';
+  const activeBg = `
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%)
+  `;
+
   return (
     <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
-      <div className="max-w-[1400px] mx-auto">
+      <div className="max-w-[1000px] mx-auto">
         <GlassPanel variant="champagne">
-          <div className="px-6 py-10 md:px-10 md:py-14">
-            <div className="flex flex-col md:flex-row md:gap-0">
+          <div className="p-4 sm:p-6 md:p-8 space-y-3">
+            {PANELS.map((panel, i) => {
+              const isOpen = expanded === i;
+              return (
+                <div
+                  key={panel.id}
+                  className="rounded-xl overflow-hidden"
+                  style={{
+                    background: isOpen ? activeBg : inactiveBg,
+                    backgroundBlendMode: isOpen ? 'overlay, normal' : 'normal',
+                    border: isOpen ? `2px solid ${panel.color}55` : '1px solid rgba(255,255,255,0.06)',
+                    boxShadow: isOpen
+                      ? `0 0 20px ${panel.color}20, 0 4px 16px rgba(0,0,0,0.3)`
+                      : '0 0 0 1px rgba(255,255,255,0.02), 0 4px 16px rgba(0,0,0,0.3)',
+                    transition: 'border 0.35s ease, box-shadow 0.35s ease',
+                  }}
+                >
+                  {/* Header row — always visible */}
+                  <button
+                    type="button"
+                    onClick={() => setExpanded(i)}
+                    className="w-full flex items-center justify-between p-4 sm:p-5 cursor-pointer"
+                  >
+                    <H2
+                      theme={panel.theme}
+                      style={{ marginBottom: 0, textAlign: 'left' }}
+                    >
+                      {panel.shortLabel}
+                    </H2>
+                    <ChevronDown
+                      size={22}
+                      style={{
+                        color: panel.color,
+                        transform: isOpen ? 'rotate(180deg)' : 'rotate(0)',
+                        transition: 'transform 0.3s ease',
+                        flexShrink: 0,
+                      }}
+                    />
+                  </button>
 
-              {/* ── Left Column: What SAA Is ── */}
-              <div className="flex-1 md:pr-10">
-                <H2 style={{ textAlign: 'left', marginBottom: '1.25rem' }}>What Smart Agent Alliance Is</H2>
-                <div className="space-y-4">
-                  {SAA_PARAGRAPHS.map((p, i) => (
-                    <p key={i} className="text-body" style={{ color: '#dcdbd5' }}>{p}</p>
-                  ))}
-                  <div className="flex flex-col gap-2 pt-1">
-                    {SAA_NOT_STATEMENTS.map((s, i) => (
-                      <span
-                        key={i}
-                        className="inline-flex items-center gap-2 text-body"
-                        style={{ color: '#e8a0a0', fontSize: 'clamp(13px, 1.6vw, 15px)' }}
-                      >
-                        <Ban size={14} style={{ color: '#ff5050', flexShrink: 0 }} />
-                        {s}
-                      </span>
-                    ))}
+                  {/* Collapsible body — grid-template-rows for smooth animation */}
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateRows: isOpen ? '1fr' : '0fr',
+                      transition: 'grid-template-rows 0.4s ease',
+                    }}
+                  >
+                    <div style={{ overflow: 'hidden' }}>
+                      <div className="px-4 sm:px-5 pb-5">
+                        <div
+                          style={{
+                            opacity: isOpen ? 1 : 0,
+                            transition: isOpen ? 'opacity 0.3s ease 0.15s' : 'opacity 0.15s ease 0s',
+                          }}
+                        >
+                          {i === 0 ? <SAAContent /> : <SponsorshipContent />}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              {/* ── Divider ── */}
-              {/* Desktop: vertical gold line */}
-              <div className="hidden md:flex flex-col items-center mx-0">
-                <div
-                  className="w-px flex-1"
-                  style={{
-                    background: 'linear-gradient(180deg, transparent 0%, rgba(255,215,0,0.35) 20%, rgba(255,215,0,0.35) 80%, transparent 100%)',
-                    boxShadow: '0 0 8px rgba(255,215,0,0.15)',
-                  }}
-                />
-              </div>
-              {/* Mobile: horizontal rule */}
-              <div className="md:hidden my-8">
-                <div
-                  className="h-px w-full"
-                  style={{
-                    background: 'linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.35) 20%, rgba(255,215,0,0.35) 80%, transparent 100%)',
-                    boxShadow: '0 0 8px rgba(255,215,0,0.15)',
-                  }}
-                />
-              </div>
-
-              {/* ── Right Column: How Sponsorship Works ── */}
-              <div className="flex-1 md:pl-10">
-                <H2 theme="blue" style={{ textAlign: 'left', marginBottom: '1.25rem' }}>How Sponsorship Works at eXp</H2>
-                <div className="space-y-4">
-                  <p className="text-body" style={{ color: '#dcdbd5' }}>{SPONSORSHIP_INTRO}</p>
-                  <p className="text-body" style={{ color: '#b0d4e8' }}>{SPONSORSHIP_LEAD}</p>
-                  <ul className="space-y-2 pl-1">
-                    {SPONSORSHIP_BULLETS.map((b, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-body" style={{ color: '#dcdbd5' }}>
-                        <span
-                          className="mt-[7px] flex-shrink-0 w-2 h-2 rounded-full"
-                          style={{
-                            background: 'rgba(0,191,255,0.5)',
-                            boxShadow: '0 0 6px rgba(0,191,255,0.3)',
-                          }}
-                        />
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-            </div>
+              );
+            })}
           </div>
         </GlassPanel>
       </div>
@@ -202,87 +268,85 @@ function SectionVersionB() {
 
 
 // ============================================================================
-// VERSION C — "Offset Grainy Cards"
-// Two GenericCyberCardGold cards side by side on desktop. The right card
-// is offset down slightly to create visual interest. Thin top accent bars
-// (gold / blue) distinguish each card. Mobile: stacked full-width.
+// VERSION C — "Slide Panel"
+// Single GenericCyberCardGold card with two small tab buttons inside.
+// Content crossfades with a horizontal slide between the two panels.
 // ============================================================================
 
 function SectionVersionC() {
+  const [active, setActive] = useState(0);
+
   return (
     <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
-      <div className="max-w-[1400px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:items-start">
+      <div className="max-w-[1000px] mx-auto">
+        <GenericCyberCardGold padding="lg" centered={false}>
 
-          {/* ── Left Card: What SAA Is ── */}
-          <div>
-            <GenericCyberCardGold padding="lg" centered={false}>
-              {/* Gold top accent bar */}
-              <div
-                className="h-[3px] rounded-full mb-6"
+          {/* ── Inline tab buttons ── */}
+          <div className="flex gap-2 mb-6">
+            {PANELS.map((panel, i) => (
+              <button
+                key={panel.id}
+                type="button"
+                onClick={() => setActive(i)}
+                className="px-4 py-2 rounded-lg cursor-pointer"
                 style={{
-                  background: 'linear-gradient(90deg, rgba(255,215,0,0.6) 0%, rgba(255,215,0,0.15) 100%)',
-                  boxShadow: '0 0 10px rgba(255,215,0,0.2)',
+                  fontFamily: 'var(--font-taskor), sans-serif',
+                  fontSize: 'clamp(11px, 2.2vw, 14px)',
+                  fontWeight: 600,
+                  letterSpacing: '0.05em',
+                  color: active === i ? '#fff' : 'rgba(255,255,255,0.4)',
+                  background: active === i
+                    ? `linear-gradient(135deg, ${panel.color}18, ${panel.color}0a)`
+                    : 'rgba(255,255,255,0.03)',
+                  border: active === i
+                    ? `1px solid ${panel.color}44`
+                    : '1px solid rgba(255,255,255,0.06)',
+                  transition: 'all 0.25s ease',
                 }}
-              />
-              <H2 style={{ textAlign: 'left', marginBottom: '1.25rem' }}>What Smart Agent Alliance Is</H2>
-              <div className="space-y-4">
-                {SAA_PARAGRAPHS.map((p, i) => (
-                  <p key={i} className="text-body" style={{ color: '#dcdbd5' }}>{p}</p>
-                ))}
-                <div
-                  className="mt-4 pt-4 flex flex-col gap-2.5"
-                  style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
-                >
-                  {SAA_NOT_STATEMENTS.map((s, i) => (
-                    <span
-                      key={i}
-                      className="inline-flex items-center gap-2 text-body"
-                      style={{ color: '#e8a0a0', fontSize: 'clamp(13px, 1.6vw, 15px)' }}
-                    >
-                      <Ban size={14} style={{ color: '#ff5050', flexShrink: 0 }} />
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </GenericCyberCardGold>
+              >
+                {panel.shortLabel}
+              </button>
+            ))}
           </div>
 
-          {/* ── Right Card: How Sponsorship Works (offset down on desktop) ── */}
-          <div className="md:mt-8">
-            <GenericCyberCardGold padding="lg" centered={false}>
-              {/* Blue top accent bar */}
-              <div
-                className="h-[3px] rounded-full mb-6"
-                style={{
-                  background: 'linear-gradient(90deg, rgba(0,191,255,0.6) 0%, rgba(0,191,255,0.15) 100%)',
-                  boxShadow: '0 0 10px rgba(0,191,255,0.2)',
-                }}
-              />
-              <H2 theme="blue" style={{ textAlign: 'left', marginBottom: '1.25rem' }}>How Sponsorship Works at eXp</H2>
-              <div className="space-y-4">
-                <p className="text-body" style={{ color: '#dcdbd5' }}>{SPONSORSHIP_INTRO}</p>
-                <p className="text-body" style={{ color: '#b0d4e8' }}>{SPONSORSHIP_LEAD}</p>
-                <ul className="space-y-2 pl-1">
-                  {SPONSORSHIP_BULLETS.map((b, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-body" style={{ color: '#dcdbd5' }}>
-                      <span
-                        className="mt-[7px] flex-shrink-0 w-2 h-2 rounded-full"
-                        style={{
-                          background: 'rgba(0,191,255,0.5)',
-                          boxShadow: '0 0 6px rgba(0,191,255,0.3)',
-                        }}
-                      />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
+          {/* ── Accent bar ── */}
+          <div
+            className="h-[2px] rounded-full mb-6"
+            style={{
+              background: `linear-gradient(90deg, ${PANELS[active].color}66 0%, ${PANELS[active].color}15 100%)`,
+              boxShadow: `0 0 8px ${PANELS[active].color}20`,
+              transition: 'all 0.3s ease',
+            }}
+          />
+
+          {/* ── H2 title ── */}
+          <H2
+            theme={PANELS[active].theme}
+            style={{ textAlign: 'left', marginBottom: '1.25rem' }}
+          >
+            {PANELS[active].label}
+          </H2>
+
+          {/* ── Sliding content ── */}
+          <div className="relative overflow-hidden">
+            <div
+              style={{
+                display: 'flex',
+                width: '200%',
+                transform: `translateX(${active === 0 ? '0' : '-50%'})`,
+                transition: 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
+              }}
+            >
+              <div style={{ width: '50%', flexShrink: 0 }}>
+                <SAAContent />
               </div>
-            </GenericCyberCardGold>
+              <div style={{ width: '50%', flexShrink: 0 }}>
+                <SponsorshipContent />
+              </div>
+            </div>
           </div>
 
-        </div>
+        </GenericCyberCardGold>
       </div>
     </section>
   );
@@ -355,23 +419,23 @@ export default function ExpRealtySponsor() {
       </StickyHeroWrapper>
 
       {/* ================================================================== */}
-      {/* SECTION 1 — VERSION A: Horizontal Rail Cards                       */}
-      {/* Two stacked GenericCard bands. H2 pinned left, body flows right.   */}
-      {/* Gold left-border for SAA, blue left-border for Sponsorship.        */}
+      {/* SECTION 1 — VERSION A: Segment Toggle                              */}
+      {/* Two pill buttons at top, single content panel below.               */}
+      {/* Only one panel visible at a time. Content fades in on switch.      */}
       {/* ================================================================== */}
       <SectionVersionA />
 
       {/* ================================================================== */}
-      {/* SECTION 1 — VERSION B: GlassPanel Dual Columns                    */}
-      {/* Single champagne GlassPanel wrapping two columns.                  */}
-      {/* Thin vertical gold divider on desktop, horizontal on mobile.       */}
+      {/* SECTION 1 — VERSION B: Accordion Dual                             */}
+      {/* Two accordion rows inside a champagne GlassPanel.                  */}
+      {/* One open at a time. Smooth grid-template-rows animation.           */}
       {/* ================================================================== */}
       <SectionVersionB />
 
       {/* ================================================================== */}
-      {/* SECTION 1 — VERSION C: Offset Grainy Cards                        */}
-      {/* Two GenericCyberCardGold side-by-side with color-coded top accents */}
-      {/* and a slight vertical offset on the right card.                    */}
+      {/* SECTION 1 — VERSION C: Slide Panel                                */}
+      {/* Single GenericCyberCardGold card with inline tab buttons.          */}
+      {/* Content slides horizontally between panels.                        */}
       {/* ================================================================== */}
       <SectionVersionC />
 

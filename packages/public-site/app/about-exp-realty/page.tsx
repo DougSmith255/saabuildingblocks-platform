@@ -3013,6 +3013,7 @@ function WhoExpWorksBestForSection() {
           {/* H2 Heading */}
           <div className="text-center mb-12">
             <H2>WHO EXP WORKS BEST FOR</H2>
+            <p className="text-body mt-4" style={{ color: 'var(--color-body-text)' }}>eXp tends to work best for agents who value:</p>
           </div>
 
           {/* Three value cards */}
@@ -3237,32 +3238,39 @@ function WhatExpProvidesVersionB() {
   // Blue theme color
   const accentColor = '#00bfff';
 
-  // Grainy texture background for active cards (from GenericCyberCardGold)
-  const grainyBackground = `
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-    linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)
+  // Grainy texture backgrounds matching GenericCyberCardGold
+  // Mobile (<1024px): coarser grain (0.5) for visibility on high-DPI
+  const mobileGrainBg = `
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, rgba(18, 18, 18, 0.85) 0%, rgba(12, 12, 12, 0.92) 100%)
   `;
+  // Desktop (>=1024px): finer grain (1.2) for lower-DPI screens
+  const desktopGrainBg = `
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, rgba(18, 18, 18, 0.85) 0%, rgba(12, 12, 12, 0.92) 100%)
+  `;
+  const inactiveBg = 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)';
 
   return (
     <GlassPanel variant="tealCrosshatch" noBlur>
       <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1400px] mx-auto">
-          {/* Mobile: stacked panels */}
+          {/* Mobile: stacked panels — single div per card for smooth transitions */}
           <div className="lg:hidden space-y-4">
             {panels.map((panel, i) => {
               const isExpanded = expandedIndex === i;
-              const CardComponent = isExpanded ? GenericCyberCardGold : GenericCard;
               return (
                 <div key={panel.id} className="relative">
-                  <CardComponent
-                    className="overflow-hidden"
-                    padding="sm"
-                    centered={false}
-                    style={isExpanded ? {
-                      border: `2px solid rgba(0,191,255,0.5)`,
-                      boxShadow: '0 0 30px rgba(0,191,255,0.2)',
-                    } : {
-                      border: '1px solid rgba(0,191,255,0.2)',
+                  <div
+                    className="rounded-xl overflow-hidden p-4"
+                    style={{
+                      background: isExpanded ? mobileGrainBg : inactiveBg,
+                      backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
+                      border: isExpanded ? '2px solid rgba(0,191,255,0.5)' : '1px solid rgba(0,191,255,0.2)',
+                      boxShadow: isExpanded
+                        ? '0 0 30px rgba(0,191,255,0.2), 0 8px 32px rgba(0,0,0,0.4)'
+                        : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+                      transition: 'border 0.35s ease, box-shadow 0.35s ease',
                     }}
                   >
                     <button
@@ -3297,48 +3305,51 @@ function WhatExpProvidesVersionB() {
                       />
                     </button>
 
+                    {/* Grid-based expand/collapse for smooth height animation */}
                     <div
                       style={{
-                        maxHeight: isExpanded ? '500px' : '0',
-                        overflow: 'hidden',
-                        transition: 'max-height 0.5s ease',
+                        display: 'grid',
+                        gridTemplateRows: isExpanded ? '1fr' : '0fr',
+                        transition: 'grid-template-rows 0.4s ease',
                       }}
                     >
-                      <ul className="pt-4 space-y-3">
-                        {panel.bullets.map((bullet, j) => (
-                          <li
-                            key={bullet.text}
-                            className="text-body text-sm flex items-start gap-3"
-                            style={{
-                              color: 'var(--color-body-text)',
-                              opacity: isExpanded ? 1 : 0,
-                              transition: `opacity 0.3s ease ${j * 100}ms`,
-                            }}
-                          >
-                            <span
-                              className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
+                      <div style={{ overflow: 'hidden' }}>
+                        <ul className="pt-4 space-y-3">
+                          {panel.bullets.map((bullet, j) => (
+                            <li
+                              key={bullet.text}
+                              className="text-body text-sm flex items-start gap-3"
                               style={{
-                                background: 'rgba(0,191,255,0.15)',
-                                border: '1px solid rgba(0,191,255,0.3)',
+                                color: 'var(--color-body-text)',
+                                opacity: isExpanded ? 1 : 0,
+                                transition: `opacity 0.3s ease ${j * 100}ms`,
                               }}
                             >
-                              <bullet.icon size={14} style={{ color: accentColor }} />
-                            </span>
-                            <span>{bullet.text}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <div
-                        className="pt-4"
-                        style={{
-                          opacity: isExpanded ? 1 : 0,
-                          transition: 'opacity 0.3s ease 0.2s',
-                        }}
-                      >
-                        <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
+                              <span
+                                className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
+                                style={{
+                                  background: 'rgba(0,191,255,0.15)',
+                                  border: '1px solid rgba(0,191,255,0.3)',
+                                }}
+                              >
+                                <bullet.icon size={14} style={{ color: accentColor }} />
+                              </span>
+                              <span>{bullet.text}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <div
+                          className="pt-4"
+                          style={{
+                            opacity: isExpanded ? 1 : 0,
+                            transition: isExpanded ? 'opacity 0.3s ease 0.2s' : 'opacity 0.1s ease 0s',
+                          }}
+                        >
+                          <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
+                        </div>
                       </div>
                     </div>
-                  </CardComponent>
+                  </div>
                 </div>
               );
             })}
@@ -3358,7 +3369,7 @@ function WhatExpProvidesVersionB() {
                     boxShadow: isExpanded
                       ? '0 0 40px rgba(0,191,255,0.25), 0 8px 32px rgba(0,0,0,0.4)'
                       : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-                    background: isExpanded ? grainyBackground : 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                    background: isExpanded ? desktopGrainBg : inactiveBg,
                     backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
                   }}
                   onClick={() => setExpandedIndex(i)}
@@ -3380,7 +3391,7 @@ function WhatExpProvidesVersionB() {
                   {/* Content */}
                   <div className="relative z-10 h-full p-6 flex flex-col">
                     {/* Header - icon fixed, title hinges on collapse */}
-                    <div style={{ position: 'relative', minHeight: '44px', marginBottom: isExpanded ? '24px' : '0' }}>
+                    <div style={{ position: 'relative', minHeight: '44px', marginBottom: isExpanded ? '34px' : '0' }}>
                       <div style={{
                         opacity: isExpanded ? 1 : 0,
                         transition: 'opacity 0.4s ease',
@@ -3447,7 +3458,7 @@ function WhatExpProvidesVersionB() {
                       className="mt-4"
                       style={{
                         opacity: isExpanded ? 1 : 0,
-                        transition: 'opacity 0.4s ease 0.3s',
+                        transition: isExpanded ? 'opacity 0.4s ease 0.3s' : 'opacity 0.15s ease 0s',
                       }}
                     >
                       <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
