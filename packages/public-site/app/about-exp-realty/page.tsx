@@ -3408,9 +3408,10 @@ function WhatExpProvidesVersionB() {
               return (
                 <div
                   key={panel.id}
-                  className="relative overflow-hidden rounded-xl cursor-pointer transition-all duration-700 ease-out"
+                  className="relative overflow-hidden rounded-xl cursor-pointer transition-all ease-out"
                   style={{
                     flex: isExpanded ? '3' : '0.7',
+                    transitionDuration: '900ms',
                     border: isExpanded ? '2px solid rgba(0,191,255,0.5)' : '1px solid rgba(255,255,255,0.06)',
                     boxShadow: isExpanded
                       ? '0 0 40px rgba(0,191,255,0.25), 0 8px 32px rgba(0,0,0,0.4)'
@@ -3429,7 +3430,7 @@ function WhatExpProvidesVersionB() {
                       right: '-30px',
                       bottom: '-30px',
                       opacity: isExpanded ? 0.08 : 0.03,
-                      transition: 'opacity 0.5s ease',
+                      transition: 'opacity 0.7s ease',
                       color: accentColor,
                     }}
                   >
@@ -3442,7 +3443,7 @@ function WhatExpProvidesVersionB() {
                     <div style={{ position: 'relative', minHeight: '44px', marginBottom: isExpanded ? '34px' : '0' }}>
                       <div style={{
                         opacity: isExpanded ? 1 : 0,
-                        transition: 'opacity 0.55s ease',
+                        transition: 'opacity 0.7s ease',
                       }}>
                         <Icon3D
                           color={accentColor}
@@ -3460,7 +3461,7 @@ function WhatExpProvidesVersionB() {
                           marginBottom: 0,
                           transform: isExpanded ? 'rotate(0deg)' : 'rotate(90deg)',
                           transformOrigin: '0 0',
-                          transition: 'transform 0.55s ease',
+                          transition: 'transform 0.7s ease',
                           whiteSpace: 'nowrap',
                           textAlign: 'left',
                         }}
@@ -3474,7 +3475,7 @@ function WhatExpProvidesVersionB() {
                       className="flex-1 space-y-3 overflow-hidden"
                       style={{
                         opacity: isExpanded ? 1 : 0,
-                        transition: 'opacity 0.55s ease 0.15s',
+                        transition: 'opacity 0.7s ease 0.2s',
                       }}
                     >
                       {panel.bullets.map((bullet, j) => (
@@ -3484,7 +3485,7 @@ function WhatExpProvidesVersionB() {
                           style={{
                             color: 'var(--color-body-text)',
                             opacity: isExpanded ? 1 : 0,
-                            transition: `opacity 0.55s ease ${j * 120}ms`,
+                            transition: `opacity 0.7s ease ${j * 150}ms`,
                           }}
                         >
                           <span
@@ -3506,7 +3507,7 @@ function WhatExpProvidesVersionB() {
                       className="mt-4"
                       style={{
                         opacity: isExpanded ? 1 : 0,
-                        transition: isExpanded ? 'opacity 0.55s ease 0.4s' : 'opacity 0.2s ease 0s',
+                        transition: isExpanded ? 'opacity 0.7s ease 0.5s' : 'opacity 0.25s ease 0s',
                       }}
                     >
                       <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
