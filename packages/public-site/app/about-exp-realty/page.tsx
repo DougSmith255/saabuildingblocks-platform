@@ -3266,6 +3266,8 @@ function WhatExpProvidesVersionB() {
                     style={{
                       background: isExpanded ? mobileGrainBg : inactiveBg,
                       backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
+                      backdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
+                      WebkitBackdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
                       border: isExpanded ? '2px solid rgba(0,191,255,0.5)' : '1px solid rgba(0,191,255,0.2)',
                       boxShadow: isExpanded
                         ? '0 0 30px rgba(0,191,255,0.2), 0 8px 32px rgba(0,0,0,0.4)'
@@ -3280,7 +3282,7 @@ function WhatExpProvidesVersionB() {
                     >
                       <div className="flex items-center gap-3">
                         <div style={{
-                          opacity: isExpanded ? 1 : 0,
+                          opacity: isExpanded ? 1 : 0.4,
                           transition: 'opacity 0.4s ease',
                         }}>
                           <Icon3D color={accentColor} size={isExpanded ? 44 : 36}>
@@ -3371,6 +3373,8 @@ function WhatExpProvidesVersionB() {
                       : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                     background: isExpanded ? desktopGrainBg : inactiveBg,
                     backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
+                    backdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
+                    WebkitBackdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
                   }}
                   onClick={() => setExpandedIndex(i)}
                 >
@@ -3393,7 +3397,7 @@ function WhatExpProvidesVersionB() {
                     {/* Header - icon fixed, title hinges on collapse */}
                     <div style={{ position: 'relative', minHeight: '44px', marginBottom: isExpanded ? '34px' : '0' }}>
                       <div style={{
-                        opacity: isExpanded ? 1 : 0,
+                        opacity: isExpanded ? 1 : 0.4,
                         transition: 'opacity 0.4s ease',
                       }}>
                         <Icon3D
