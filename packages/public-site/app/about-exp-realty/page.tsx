@@ -3203,8 +3203,8 @@ function WhereSAAFitsSection() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <SecondaryButton href="/about-smart-agent-alliance">Learn About SAA</SecondaryButton>
-            <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
             <CTAButton href="/join-us">Join with SAA</CTAButton>
+            <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
           </div>
         </div>
 
@@ -3713,8 +3713,8 @@ function WhereSAAFitsVersionA() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <SecondaryButton href="/about-smart-agent-alliance">Learn About SAA</SecondaryButton>
-          <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
           <CTAButton href="/join-us">Join with SAA</CTAButton>
+          <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
         </div>
       </div>
     </section>
