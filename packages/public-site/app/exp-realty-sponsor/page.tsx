@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState } from 'react';
 import { H1, H2, Tagline, GlassPanel, GenericCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
-import { Ban, ChevronDown, ShieldCheck, Wrench, GraduationCap, Users, Building } from 'lucide-react';
+import { Ban, Wrench, GraduationCap, Users, Building } from 'lucide-react';
 
 // ============================================================================
 // SECTION 1 CONTENT — word for word
@@ -89,16 +89,20 @@ const PANELS = [
 
 
 // ============================================================================
-// VERSION A — "Focus Cards"
+// SECTION 1 — Focus Cards with dynamic GlassPanel
 // Both panels always visible. Active card gets a glowing colored border
-// with organic pulse animation + full content. Inactive card is a slim
-// vertical-text panel. CSS Grid fr-unit transition for smooth width change.
-// Desktop: side-by-side. Mobile: stacked with slim switcher bar.
+// with organic pulse animation + full content. Inactive card shows H2
+// in vertical writing mode. Wrapped in a crosshatch glass panel whose
+// gold↔blue gradient shifts based on which card is active.
 // ============================================================================
 
-function SectionVersionA() {
+function Section1() {
   const [active, setActive] = useState(0);
   const other = active === 0 ? 1 : 0;
+
+  // Dynamic gradients — gold expands when SAA active, blue expands when Sponsorship active
+  const goldGradient = 'linear-gradient(90deg, rgba(255,215,0,0.07) 0%, rgba(255,215,0,0.04) 55%, rgba(0,191,255,0.01) 100%)';
+  const blueGradient = 'linear-gradient(90deg, rgba(255,215,0,0.01) 0%, rgba(0,191,255,0.04) 45%, rgba(0,191,255,0.07) 100%)';
 
   return (
     <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
@@ -122,6 +126,8 @@ function SectionVersionA() {
             url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
             linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
           background-blend-mode: overlay, normal;
+          backdrop-filter: blur(16px) saturate(120%);
+          -webkit-backdrop-filter: blur(16px) saturate(120%);
         }
         @media (min-width: 1024px) {
           .focus-card {
@@ -134,413 +140,194 @@ function SectionVersionA() {
       `}</style>
 
       <div className="max-w-[1100px] mx-auto">
-        {/* Desktop: side-by-side grid with fr transition */}
+        {/* GlassPanel-style wrapper with dynamic gold↔blue crosshatch */}
         <div
-          className="hidden md:grid gap-4"
+          className="relative overflow-hidden rounded-3xl"
           style={{
-            gridTemplateColumns: active === 0 ? '5fr 1fr' : '1fr 5fr',
-            transition: 'grid-template-columns 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
+            boxShadow: `
+              0 8px 32px rgba(0,0,0,0.4),
+              0 4px 12px rgba(0,0,0,0.25),
+              inset 0 1px 0 0 rgba(255,255,255,0.35),
+              inset 0 2px 4px 0 rgba(255,255,255,0.2),
+              inset 0 20px 40px -20px rgba(255,255,255,0.15),
+              inset 0 -1px 0 0 rgba(0,0,0,0.7),
+              inset 0 -2px 6px 0 rgba(0,0,0,0.5),
+              inset 0 -10px 25px -8px rgba(0,0,0,0.6),
+              inset 0 -25px 50px -20px rgba(0,0,0,0.45)
+            `,
           }}
         >
-          {PANELS.map((panel, i) => {
-            const isActive = active === i;
-            return (
-              <div
-                key={panel.id}
-                className={`focus-card rounded-2xl relative overflow-hidden ${!isActive ? 'cursor-pointer' : ''}`}
-                onClick={() => !isActive && setActive(i)}
-                style={{
-                  border: isActive ? `3px solid ${panel.color}` : '1px solid rgba(255,255,255,0.06)',
-                  boxShadow: isActive
-                    ? `0 0 6px 2px ${panel.color}44, 0 0 20px 4px ${panel.color}22, 0 8px 32px rgba(0,0,0,0.4)`
-                    : '0 4px 16px rgba(0,0,0,0.3)',
-                  transition: 'border-color 0.35s ease, box-shadow 0.4s ease',
-                  minHeight: '260px',
-                }}
-              >
-                {/* Pulsing glow layer */}
-                {isActive && (
-                  <div
-                    className="absolute -inset-[3px] rounded-2xl pointer-events-none z-0"
-                    style={{
-                      border: `2px solid ${panel.color}50`,
-                      boxShadow: `0 0 12px 4px ${panel.color}44, 0 0 28px 8px ${panel.color}22`,
-                      animation: 'focusPulse 2.4s linear infinite',
-                    }}
-                  />
-                )}
-
-                {isActive ? (
-                  <div className="relative z-10 p-6 lg:p-8">
-                    <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
-                      {panel.label}
-                    </H2>
-                    <div key={`desk-${i}`} style={{ animation: 'focusFadeIn 0.4s ease' }}>
-                      {i === 0 ? <SAAContent /> : <SponsorshipContent />}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative z-10 h-full flex items-center justify-center">
-                    <p
-                      style={{
-                        fontFamily: 'var(--font-taskor), sans-serif',
-                        fontSize: '14px',
-                        color: panel.color,
-                        opacity: 0.5,
-                        letterSpacing: '0.12em',
-                        textTransform: 'uppercase',
-                        writingMode: 'vertical-rl',
-                        textOrientation: 'mixed',
-                      }}
-                    >
-                      {panel.shortLabel}
-                    </p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Mobile: active card + switcher bar */}
-        <div className="md:hidden">
+          {/* Gold-dominant gradient layer */}
           <div
-            className="focus-card rounded-2xl relative overflow-hidden"
+            className="absolute inset-0"
             style={{
-              border: `3px solid ${PANELS[active].color}`,
-              boxShadow: `0 0 6px 2px ${PANELS[active].color}44, 0 0 20px 4px ${PANELS[active].color}22`,
+              background: goldGradient,
+              opacity: active === 0 ? 1 : 0,
+              transition: 'opacity 0.6s ease',
             }}
-          >
-            <div
-              className="absolute -inset-[3px] rounded-2xl pointer-events-none z-0"
-              style={{
-                border: `2px solid ${PANELS[active].color}50`,
-                boxShadow: `0 0 12px 4px ${PANELS[active].color}44, 0 0 28px 8px ${PANELS[active].color}22`,
-                animation: 'focusPulse 2.4s linear infinite',
-              }}
-            />
-            <div className="relative z-10 p-5">
-              <H2 theme={PANELS[active].theme} style={{ textAlign: 'left', marginBottom: '1rem' }}>
-                {PANELS[active].label}
-              </H2>
-              <div key={`mob-${active}`} style={{ animation: 'focusFadeIn 0.35s ease' }}>
-                {active === 0 ? <SAAContent /> : <SponsorshipContent />}
-              </div>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setActive(other)}
-            className="w-full mt-3 focus-card rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer"
-            style={{ border: `1px solid ${PANELS[other].color}33` }}
-          >
-            <span style={{
-              fontFamily: 'var(--font-taskor), sans-serif',
-              fontSize: '13px',
-              color: PANELS[other].color,
-              opacity: 0.6,
-              letterSpacing: '0.06em',
-            }}>
-              {PANELS[other].shortLabel}
-            </span>
-            <span style={{
-              fontFamily: 'var(--font-taskor), sans-serif',
-              color: PANELS[other].color,
-              opacity: 0.4,
-              fontSize: '11px',
-              letterSpacing: '0.08em',
-            }}>
-              TAP TO VIEW &rarr;
-            </span>
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-
-// ============================================================================
-// VERSION B — "3D Flip Card"
-// Single card that physically rotates 180° in 3D space between two faces.
-// Front = gold-themed SAA content. Back = blue-themed Sponsorship content.
-// Auto-rotates on interval (gated by IntersectionObserver). Click face
-// indicator to flip manually (stops auto-rotation).
-// Uses rotateY + preserve-3d + backfaceVisibility: hidden.
-// ============================================================================
-
-function SectionVersionB() {
-  const [flipped, setFlipped] = useState(false);
-  const [autoRotate, setAutoRotate] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-
-  // IntersectionObserver — only auto-flip when visible
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setInView(true); obs.disconnect(); } },
-      { threshold: 0.4 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  // Auto-flip every 6s
-  useEffect(() => {
-    if (!inView || !autoRotate) return;
-    const timer = setInterval(() => setFlipped(prev => !prev), 6000);
-    return () => clearInterval(timer);
-  }, [inView, autoRotate]);
-
-  const handleManualFlip = useCallback((side: boolean) => {
-    setFlipped(side);
-    setAutoRotate(false);
-  }, []);
-
-  return (
-    <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12" ref={containerRef}>
-      <style>{`
-        .flip-card-face {
-          background:
-            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-            linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
-          background-blend-mode: overlay, normal;
-        }
-        @media (min-width: 1024px) {
-          .flip-card-face {
-            background:
-              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-              linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
-            background-blend-mode: overlay, normal;
-          }
-        }
-      `}</style>
-
-      <div className="max-w-[1000px] mx-auto">
-        {/* 3D flip container */}
-        <div style={{ perspective: '1200px' }}>
+          />
+          {/* Blue-dominant gradient layer */}
           <div
+            className="absolute inset-0"
             style={{
-              position: 'relative',
-              transformStyle: 'preserve-3d',
-              transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+              background: blueGradient,
+              opacity: active === 1 ? 1 : 0,
+              transition: 'opacity 0.6s ease',
             }}
-          >
-            {/* Front face — SAA (gold) */}
-            <div style={{ backfaceVisibility: 'hidden' }}>
-              <div
-                className="flip-card-face rounded-2xl"
-                style={{
-                  border: '3px solid #ffd700',
-                  boxShadow: '0 0 6px 2px rgba(255,215,0,0.3), 0 0 20px 4px rgba(255,215,0,0.15), 0 8px 32px rgba(0,0,0,0.4)',
-                }}
-              >
-                <div className="p-6 md:p-8">
-                  <H2 style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
-                    {PANELS[0].label}
-                  </H2>
-                  <SAAContent />
-                </div>
-              </div>
-            </div>
+          />
+          {/* Crosshatch texture overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none z-[1]"
+            style={{
+              backgroundImage: `
+                repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px),
+                repeating-linear-gradient(-45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px)
+              `,
+              backgroundSize: '16px 16px',
+            }}
+          />
 
-            {/* Back face — Sponsorship (blue) */}
+          {/* Content */}
+          <div className="relative z-10 p-4 sm:p-6 md:p-8 lg:p-10">
+            {/* Desktop: side-by-side grid with fr transition */}
             <div
+              className="hidden md:grid gap-4"
               style={{
-                backfaceVisibility: 'hidden',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                transform: 'rotateY(180deg)',
+                gridTemplateColumns: active === 0 ? '5fr 1fr' : '1fr 5fr',
+                transition: 'grid-template-columns 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
               }}
             >
+              {PANELS.map((panel, i) => {
+                const isActive = active === i;
+                return (
+                  <div
+                    key={panel.id}
+                    className={`focus-card rounded-2xl relative overflow-hidden ${!isActive ? 'cursor-pointer' : ''}`}
+                    onClick={() => !isActive && setActive(i)}
+                    style={{
+                      border: isActive ? `3px solid ${panel.color}` : '1px solid rgba(255,255,255,0.06)',
+                      boxShadow: isActive
+                        ? `0 0 6px 2px ${panel.color}44, 0 0 20px 4px ${panel.color}22, 0 8px 32px rgba(0,0,0,0.4)`
+                        : '0 4px 16px rgba(0,0,0,0.3)',
+                      transition: 'border-color 0.35s ease, box-shadow 0.4s ease',
+                    }}
+                  >
+                    {/* Pulsing glow layer */}
+                    {isActive && (
+                      <div
+                        className="absolute -inset-[3px] rounded-2xl pointer-events-none z-0"
+                        style={{
+                          border: `2px solid ${panel.color}50`,
+                          boxShadow: `0 0 12px 4px ${panel.color}44, 0 0 28px 8px ${panel.color}22`,
+                          animation: 'focusPulse 2.4s linear infinite',
+                        }}
+                      />
+                    )}
+
+                    {/* Active state: full content with height equalizer */}
+                    <div
+                      className="relative z-10 p-6 lg:p-8"
+                      style={{
+                        opacity: isActive ? 1 : 0,
+                        pointerEvents: isActive ? 'auto' : 'none',
+                        transition: isActive ? 'opacity 0.35s ease 0.15s' : 'opacity 0.15s ease',
+                      }}
+                    >
+                      <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
+                        {panel.label}
+                      </H2>
+                      {/* Both contents rendered — taller one sets stable height */}
+                      <div style={{ display: 'grid' }}>
+                        <div style={{ gridArea: '1 / 1' }}>
+                          {i === 0 ? <SAAContent /> : <SponsorshipContent />}
+                        </div>
+                        <div style={{ gridArea: '1 / 1', visibility: 'hidden', pointerEvents: 'none' }} aria-hidden="true">
+                          {i === 0 ? <SponsorshipContent /> : <SAAContent />}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Inactive state: vertical H2 label */}
+                    <div
+                      className="absolute inset-0 z-10 flex items-center justify-center"
+                      style={{
+                        opacity: isActive ? 0 : 1,
+                        pointerEvents: isActive ? 'none' : 'auto',
+                        transition: isActive ? 'opacity 0.15s ease' : 'opacity 0.35s ease 0.15s',
+                      }}
+                    >
+                      <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
+                        <H2 theme={panel.theme} style={{ marginBottom: 0 }}>
+                          {panel.shortLabel}
+                        </H2>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Mobile: active card + switcher bar */}
+            <div className="md:hidden">
               <div
-                className="flip-card-face rounded-2xl h-full"
+                className="focus-card rounded-2xl relative overflow-hidden"
                 style={{
-                  border: '3px solid #00bfff',
-                  boxShadow: '0 0 6px 2px rgba(0,191,255,0.3), 0 0 20px 4px rgba(0,191,255,0.15), 0 8px 32px rgba(0,0,0,0.4)',
+                  border: `3px solid ${PANELS[active].color}`,
+                  boxShadow: `0 0 6px 2px ${PANELS[active].color}44, 0 0 20px 4px ${PANELS[active].color}22`,
                 }}
               >
-                <div className="p-6 md:p-8">
-                  <H2 theme="blue" style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
-                    {PANELS[1].label}
+                <div
+                  className="absolute -inset-[3px] rounded-2xl pointer-events-none z-0"
+                  style={{
+                    border: `2px solid ${PANELS[active].color}50`,
+                    boxShadow: `0 0 12px 4px ${PANELS[active].color}44, 0 0 28px 8px ${PANELS[active].color}22`,
+                    animation: 'focusPulse 2.4s linear infinite',
+                  }}
+                />
+                <div className="relative z-10 p-5">
+                  <H2 theme={PANELS[active].theme} style={{ textAlign: 'left', marginBottom: '1rem' }}>
+                    {PANELS[active].label}
                   </H2>
-                  <SponsorshipContent />
+                  <div key={`mob-${active}`} style={{ animation: 'focusFadeIn 0.35s ease' }}>
+                    {active === 0 ? <SAAContent /> : <SponsorshipContent />}
+                  </div>
                 </div>
               </div>
+
+              <button
+                type="button"
+                onClick={() => setActive(other)}
+                className="w-full mt-3 focus-card rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer"
+                style={{ border: `1px solid ${PANELS[other].color}33` }}
+              >
+                <span style={{
+                  fontFamily: 'var(--font-taskor), sans-serif',
+                  fontSize: '13px',
+                  color: PANELS[other].color,
+                  opacity: 0.6,
+                  letterSpacing: '0.06em',
+                }}>
+                  {PANELS[other].shortLabel}
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-taskor), sans-serif',
+                  color: PANELS[other].color,
+                  opacity: 0.4,
+                  fontSize: '11px',
+                  letterSpacing: '0.08em',
+                }}>
+                  TAP TO VIEW &rarr;
+                </span>
+              </button>
             </div>
           </div>
         </div>
-
-        {/* Face indicators */}
-        <div className="flex items-center justify-center gap-3 mt-5">
-          {PANELS.map((panel, i) => {
-            const isShowing = (i === 0 && !flipped) || (i === 1 && flipped);
-            return (
-              <button
-                key={panel.id}
-                type="button"
-                onClick={() => handleManualFlip(i === 1)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer"
-                style={{
-                  background: isShowing ? `${panel.color}12` : 'transparent',
-                  border: isShowing ? `1px solid ${panel.color}44` : '1px solid rgba(255,255,255,0.06)',
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{
-                    background: isShowing ? panel.color : 'rgba(255,255,255,0.2)',
-                    boxShadow: isShowing ? `0 0 6px ${panel.color}66` : 'none',
-                    transition: 'all 0.3s ease',
-                  }}
-                />
-                <span style={{
-                  fontFamily: 'var(--font-taskor), sans-serif',
-                  fontSize: '12px',
-                  color: isShowing ? panel.color : 'rgba(255,255,255,0.35)',
-                  letterSpacing: '0.06em',
-                  transition: 'color 0.3s ease',
-                }}>
-                  {panel.shortLabel}
-                </span>
-              </button>
-            );
-          })}
-        </div>
       </div>
     </section>
   );
 }
 
 
-// ============================================================================
-// VERSION C — "Depth Stack"
-// Two overlapping cards with CSS 3D perspective. Active card sits in front
-// at normal scale. Inactive card peeks out behind, offset and slightly
-// scaled down with reduced opacity. Click the background card to bring it
-// forward. Creates a physical "card stack" depth effect.
-// ============================================================================
-
-function SectionVersionC() {
-  const [active, setActive] = useState(0);
-
-  return (
-    <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
-      <style>{`
-        .depth-card {
-          background:
-            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-            linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
-          background-blend-mode: overlay, normal;
-        }
-        @media (min-width: 1024px) {
-          .depth-card {
-            background:
-              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-              linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
-            background-blend-mode: overlay, normal;
-          }
-        }
-        @keyframes depthFadeIn {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-
-      <div className="max-w-[1000px] mx-auto">
-        <div style={{ perspective: '800px' }}>
-          {/* CSS Grid overlay — both cards in same cell, taller one sets height */}
-          <div style={{ display: 'grid' }}>
-            {PANELS.map((panel, i) => {
-              const isActive = active === i;
-              const isFirst = i === 0;
-              return (
-                <div
-                  key={panel.id}
-                  className={`depth-card rounded-2xl ${!isActive ? 'cursor-pointer' : ''}`}
-                  onClick={() => !isActive && setActive(i)}
-                  style={{
-                    gridArea: '1 / 1',
-                    zIndex: isActive ? 2 : 1,
-                    transform: isActive
-                      ? 'translateZ(0) translateX(0) translateY(0) scale(1) rotateX(0deg)'
-                      : `translateZ(-60px) translateX(${isFirst ? '-10px' : '10px'}) translateY(14px) scale(0.97) rotateX(1deg)`,
-                    opacity: isActive ? 1 : 0.3,
-                    border: isActive
-                      ? `3px solid ${panel.color}`
-                      : `1px solid ${panel.color}33`,
-                    boxShadow: isActive
-                      ? `0 0 6px 2px ${panel.color}33, 0 0 16px 4px ${panel.color}18, 0 12px 32px rgba(0,0,0,0.4)`
-                      : '0 4px 16px rgba(0,0,0,0.5)',
-                    transition: 'all 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
-                    transformStyle: 'preserve-3d',
-                  }}
-                >
-                  <div className="p-6 md:p-8">
-                    <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
-                      {panel.label}
-                    </H2>
-                    <div
-                      style={{
-                        opacity: isActive ? 1 : 0,
-                        transition: isActive ? 'opacity 0.35s ease 0.2s' : 'opacity 0.15s ease',
-                      }}
-                    >
-                      {i === 0 ? <SAAContent /> : <SponsorshipContent />}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Stack position indicators */}
-          <div className="flex items-center justify-center gap-3 mt-5">
-            {PANELS.map((panel, i) => (
-              <button
-                key={panel.id}
-                type="button"
-                onClick={() => setActive(i)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer"
-                style={{
-                  background: active === i ? `${panel.color}12` : 'transparent',
-                  border: active === i ? `1px solid ${panel.color}44` : '1px solid rgba(255,255,255,0.06)',
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{
-                    background: active === i ? panel.color : 'rgba(255,255,255,0.2)',
-                    boxShadow: active === i ? `0 0 6px ${panel.color}66` : 'none',
-                    transition: 'all 0.3s ease',
-                  }}
-                />
-                <span style={{
-                  fontFamily: 'var(--font-taskor), sans-serif',
-                  fontSize: '12px',
-                  color: active === i ? panel.color : 'rgba(255,255,255,0.35)',
-                  letterSpacing: '0.06em',
-                  transition: 'color 0.3s ease',
-                }}>
-                  {panel.shortLabel}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 
 // ============================================================================
@@ -1027,25 +814,11 @@ export default function ExpRealtySponsor() {
       </StickyHeroWrapper>
 
       {/* ================================================================== */}
-      {/* SECTION 1 — VERSION A: Focus Cards                                 */}
-      {/* Both panels visible. Active gets glowing border + pulse.           */}
-      {/* Inactive is slim vertical-text panel. Grid fr transition.          */}
+      {/* SECTION 1 — Focus Cards                                            */}
+      {/* Dynamic gold↔blue GlassPanel. Glowing border + pulse on active.   */}
+      {/* Vertical H2 on inactive. Height-equalized desktop grid.            */}
       {/* ================================================================== */}
-      <SectionVersionA />
-
-      {/* ================================================================== */}
-      {/* SECTION 1 — VERSION B: 3D Flip Card                               */}
-      {/* Single card rotates 180° in 3D between SAA and Sponsorship.        */}
-      {/* Auto-rotates, IntersectionObserver gated, manual control.          */}
-      {/* ================================================================== */}
-      <SectionVersionB />
-
-      {/* ================================================================== */}
-      {/* SECTION 1 — VERSION C: Depth Stack                                */}
-      {/* Two overlapping cards with CSS 3D perspective.                      */}
-      {/* Active in front, inactive peeks behind. Click to swap.             */}
-      {/* ================================================================== */}
-      <SectionVersionC />
+      <Section1 />
 
       {/* ================================================================== */}
       {/* SECTION 2 — VERSION A: Statement Stack                             */}
