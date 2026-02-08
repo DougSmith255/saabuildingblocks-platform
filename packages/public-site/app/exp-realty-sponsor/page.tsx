@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { H1, H2, Tagline, GlassPanel, GenericCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
-import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
+import { H1, H2, Tagline } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
-import { Ban, Wrench, GraduationCap, Users, Building } from 'lucide-react';
+import { Ban } from 'lucide-react';
 
 // ============================================================================
 // SECTION 1 CONTENT — word for word
@@ -31,7 +30,7 @@ const SPONSORSHIP_BULLETS = [
 ];
 
 // ============================================================================
-// SHARED: Panel content renderers (used by all 3 interactive versions)
+// SHARED: Panel content renderers
 // ============================================================================
 
 function SAAContent() {
@@ -89,23 +88,22 @@ const PANELS = [
 
 
 // ============================================================================
-// SECTION 1 — Focus Cards with dynamic GlassPanel
-// Both panels always visible. Active card gets a glowing colored border
-// with organic pulse animation + full content. Inactive card shows H2
-// in vertical writing mode. Wrapped in a crosshatch glass panel whose
-// gold↔blue gradient shifts based on which card is active.
+// SECTION 1 — Focus Cards with edge-to-edge GlassPanel
+// Sliding-door card reveal: content pre-rendered at fixed min-width,
+// card overflow:hidden clips it. Expanding the card reveals content.
+// Inactive card has grain overlay + vertical H2 label.
+// Gold↔blue crosshatch glass panel spans full viewport width.
 // ============================================================================
 
 function Section1() {
   const [active, setActive] = useState(0);
   const other = active === 0 ? 1 : 0;
 
-  // Dynamic gradients — gold expands when SAA active, blue expands when Sponsorship active
   const goldGradient = 'linear-gradient(90deg, rgba(255,215,0,0.07) 0%, rgba(255,215,0,0.04) 55%, rgba(0,191,255,0.01) 100%)';
   const blueGradient = 'linear-gradient(90deg, rgba(255,215,0,0.01) 0%, rgba(0,191,255,0.04) 45%, rgba(0,191,255,0.07) 100%)';
 
   return (
-    <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
+    <section className="py-12 md:py-20">
       <style>{`
         @keyframes focusPulse {
           0% { opacity: 0.55; }
@@ -139,72 +137,90 @@ function Section1() {
         }
       `}</style>
 
-      <div className="max-w-[1100px] mx-auto">
-        {/* GlassPanel-style wrapper with dynamic gold↔blue crosshatch */}
+      {/* Edge-to-edge glass panel — full viewport width, no rounded corners */}
+      <div
+        className="relative overflow-hidden"
+        style={{
+          boxShadow: `
+            0 8px 32px rgba(0,0,0,0.4),
+            0 4px 12px rgba(0,0,0,0.25),
+            inset 0 1px 0 0 rgba(255,255,255,0.35),
+            inset 0 2px 4px 0 rgba(255,255,255,0.2),
+            inset 0 20px 40px -20px rgba(255,255,255,0.15),
+            inset 0 -1px 0 0 rgba(0,0,0,0.7),
+            inset 0 -2px 6px 0 rgba(0,0,0,0.5),
+            inset 0 -10px 25px -8px rgba(0,0,0,0.6),
+            inset 0 -25px 50px -20px rgba(0,0,0,0.45)
+          `,
+        }}
+      >
+        {/* Gold-dominant gradient layer */}
         <div
-          className="relative overflow-hidden rounded-3xl"
+          className="absolute inset-0"
           style={{
-            boxShadow: `
-              0 8px 32px rgba(0,0,0,0.4),
-              0 4px 12px rgba(0,0,0,0.25),
-              inset 0 1px 0 0 rgba(255,255,255,0.35),
-              inset 0 2px 4px 0 rgba(255,255,255,0.2),
-              inset 0 20px 40px -20px rgba(255,255,255,0.15),
-              inset 0 -1px 0 0 rgba(0,0,0,0.7),
-              inset 0 -2px 6px 0 rgba(0,0,0,0.5),
-              inset 0 -10px 25px -8px rgba(0,0,0,0.6),
-              inset 0 -25px 50px -20px rgba(0,0,0,0.45)
-            `,
+            background: goldGradient,
+            opacity: active === 0 ? 1 : 0,
+            transition: 'opacity 0.6s ease',
           }}
-        >
-          {/* Gold-dominant gradient layer */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: goldGradient,
-              opacity: active === 0 ? 1 : 0,
-              transition: 'opacity 0.6s ease',
-            }}
-          />
-          {/* Blue-dominant gradient layer */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: blueGradient,
-              opacity: active === 1 ? 1 : 0,
-              transition: 'opacity 0.6s ease',
-            }}
-          />
-          {/* Crosshatch texture overlay */}
-          <div
-            className="absolute inset-0 pointer-events-none z-[1]"
-            style={{
-              backgroundImage: `
-                repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px),
-                repeating-linear-gradient(-45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px)
-              `,
-              backgroundSize: '16px 16px',
-            }}
-          />
+        />
+        {/* Blue-dominant gradient layer */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: blueGradient,
+            opacity: active === 1 ? 1 : 0,
+            transition: 'opacity 0.6s ease',
+          }}
+        />
+        {/* Crosshatch texture overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none z-[1]"
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px),
+              repeating-linear-gradient(-45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px)
+            `,
+            backgroundSize: '16px 16px',
+          }}
+        />
 
-          {/* Content */}
-          <div className="relative z-10 p-4 sm:p-6 md:p-8 lg:p-10">
-            {/* Desktop: side-by-side grid with fr transition */}
-            <div
-              className="hidden md:grid gap-4"
-              style={{
-                gridTemplateColumns: active === 0 ? '5fr 1fr' : '1fr 5fr',
-                transition: 'grid-template-columns 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
-              }}
-            >
-              {PANELS.map((panel, i) => {
-                const isActive = active === i;
-                return (
+        {/* Content — max-width centered inside the full-width glass */}
+        <div className="relative z-10 max-w-[1100px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-10">
+
+          {/* Desktop: flex layout with sliding-door reveal */}
+          <div className="hidden md:flex gap-4">
+            {PANELS.map((panel, i) => {
+              const isActive = active === i;
+              return (
+                <div
+                  key={panel.id}
+                  className="relative"
+                  style={{
+                    flexGrow: isActive ? 5 : 1,
+                    flexBasis: 0,
+                    minWidth: 0,
+                    transition: 'flex-grow 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
+                  }}
+                >
+                  {/* Pulsing glow ring — outside overflow:hidden card */}
+                  {isActive && (
+                    <div
+                      className="absolute -inset-[3px] rounded-2xl pointer-events-none"
+                      style={{
+                        border: `2px solid ${panel.color}50`,
+                        boxShadow: `0 0 12px 4px ${panel.color}44, 0 0 28px 8px ${panel.color}22`,
+                        animation: 'focusPulse 2.4s linear infinite',
+                        zIndex: 30,
+                      }}
+                    />
+                  )}
+
+                  {/* Card — overflow:hidden creates the sliding-door clip */}
                   <div
-                    key={panel.id}
-                    className={`focus-card rounded-2xl relative overflow-hidden ${!isActive ? 'cursor-pointer' : ''}`}
+                    className={`focus-card rounded-2xl h-full relative ${!isActive ? 'cursor-pointer' : ''}`}
                     onClick={() => !isActive && setActive(i)}
                     style={{
+                      overflow: 'hidden',
                       border: isActive ? `3px solid ${panel.color}` : '1px solid rgba(255,255,255,0.06)',
                       boxShadow: isActive
                         ? `0 0 6px 2px ${panel.color}44, 0 0 20px 4px ${panel.color}22, 0 8px 32px rgba(0,0,0,0.4)`
@@ -212,31 +228,12 @@ function Section1() {
                       transition: 'border-color 0.35s ease, box-shadow 0.4s ease',
                     }}
                   >
-                    {/* Pulsing glow layer */}
-                    {isActive && (
-                      <div
-                        className="absolute -inset-[3px] rounded-2xl pointer-events-none z-0"
-                        style={{
-                          border: `2px solid ${panel.color}50`,
-                          boxShadow: `0 0 12px 4px ${panel.color}44, 0 0 28px 8px ${panel.color}22`,
-                          animation: 'focusPulse 2.4s linear infinite',
-                        }}
-                      />
-                    )}
-
-                    {/* Active state: full content with height equalizer */}
-                    <div
-                      className="relative z-10 p-6 lg:p-8"
-                      style={{
-                        opacity: isActive ? 1 : 0,
-                        pointerEvents: isActive ? 'auto' : 'none',
-                        transition: isActive ? 'opacity 0.35s ease 0.15s' : 'opacity 0.15s ease',
-                      }}
-                    >
+                    {/* Content at fixed min-width — never reflows, clipped by overflow */}
+                    <div className="p-6 lg:p-8" style={{ minWidth: '550px' }}>
                       <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
                         {panel.label}
                       </H2>
-                      {/* Both contents rendered — taller one sets stable height */}
+                      {/* Grid overlay: both contents rendered, taller sets stable height */}
                       <div style={{ display: 'grid' }}>
                         <div style={{ gridArea: '1 / 1' }}>
                           {i === 0 ? <SAAContent /> : <SponsorshipContent />}
@@ -247,13 +244,13 @@ function Section1() {
                       </div>
                     </div>
 
-                    {/* Inactive state: vertical H2 label */}
+                    {/* Inactive overlay — grain covers content, vertical H2 label */}
                     <div
-                      className="absolute inset-0 z-10 flex items-center justify-center"
+                      className="absolute inset-0 z-20 flex items-center justify-center focus-card"
                       style={{
                         opacity: isActive ? 0 : 1,
                         pointerEvents: isActive ? 'none' : 'auto',
-                        transition: isActive ? 'opacity 0.15s ease' : 'opacity 0.35s ease 0.15s',
+                        transition: isActive ? 'opacity 0.25s ease 0.15s' : 'opacity 0.2s ease',
                       }}
                     >
                       <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
@@ -263,485 +260,65 @@ function Section1() {
                       </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-
-            {/* Mobile: active card + switcher bar */}
-            <div className="md:hidden">
-              <div
-                className="focus-card rounded-2xl relative overflow-hidden"
-                style={{
-                  border: `3px solid ${PANELS[active].color}`,
-                  boxShadow: `0 0 6px 2px ${PANELS[active].color}44, 0 0 20px 4px ${PANELS[active].color}22`,
-                }}
-              >
-                <div
-                  className="absolute -inset-[3px] rounded-2xl pointer-events-none z-0"
-                  style={{
-                    border: `2px solid ${PANELS[active].color}50`,
-                    boxShadow: `0 0 12px 4px ${PANELS[active].color}44, 0 0 28px 8px ${PANELS[active].color}22`,
-                    animation: 'focusPulse 2.4s linear infinite',
-                  }}
-                />
-                <div className="relative z-10 p-5">
-                  <H2 theme={PANELS[active].theme} style={{ textAlign: 'left', marginBottom: '1rem' }}>
-                    {PANELS[active].label}
-                  </H2>
-                  <div key={`mob-${active}`} style={{ animation: 'focusFadeIn 0.35s ease' }}>
-                    {active === 0 ? <SAAContent /> : <SponsorshipContent />}
-                  </div>
                 </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setActive(other)}
-                className="w-full mt-3 focus-card rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer"
-                style={{ border: `1px solid ${PANELS[other].color}33` }}
-              >
-                <span style={{
-                  fontFamily: 'var(--font-taskor), sans-serif',
-                  fontSize: '13px',
-                  color: PANELS[other].color,
-                  opacity: 0.6,
-                  letterSpacing: '0.06em',
-                }}>
-                  {PANELS[other].shortLabel}
-                </span>
-                <span style={{
-                  fontFamily: 'var(--font-taskor), sans-serif',
-                  color: PANELS[other].color,
-                  opacity: 0.4,
-                  fontSize: '11px',
-                  letterSpacing: '0.08em',
-                }}>
-                  TAP TO VIEW &rarr;
-                </span>
-              </button>
-            </div>
+              );
+            })}
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
-
-
-
-// ============================================================================
-// SECTION 2 CONTENT — "Why SAA Is Different" — word for word
-// ============================================================================
-
-const S2_OPENING =
-  'At eXp Realty, sponsors are not required to provide any ongoing support. As a result, most never do.';
-
-const S2_PIVOT = 'Smart Agent Alliance was built differently.';
-
-const S2_DIFF_BULLETS = [
-  'Built as a sponsor organization, not an individual sponsor',
-  'Delivers real systems, training, and income infrastructure',
-  'No commission splits or loss of control',
-];
-
-const S2_COMP_LINES = [
-  'Agents pay Smart Agent Alliance nothing.',
-  'We are compensated from eXp\u2019s company revenue only when agents close transactions.',
-  'When our agents succeed, we succeed.',
-];
-
-const S2_ORG_LEAD =
-  'Because Smart Agent Alliance is built as an organization, not a personality-driven sponsor:';
-
-const S2_ORG_BULLETS = [
-  { text: 'Systems are designed, maintained, and updated', icon: Wrench },
-  { text: 'Training is structured, repeatable, and current', icon: GraduationCap },
-  { text: 'Community is active and intentional', icon: Users },
-  { text: 'Infrastructure exists independently of any single leader', icon: Building },
-];
-
-
-// ============================================================================
-// SECTION 2 — VERSION A: "Statement Stack"
-// Pure vertical flow — no cards, no panels. Just raw typography on the dark
-// page background. The pivot line is oversized gold. Compensation model in a
-// CyberCardGold callout. Org bullets in a compact icon grid.
-// Punchy, editorial, high-contrast.
-// ============================================================================
-
-function Section2VersionA() {
-  return (
-    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
-      <div className="max-w-[900px] mx-auto">
-
-        {/* H2 */}
-        <H2 style={{ marginBottom: '1.5rem' }}>Why Smart Agent Alliance Is Different</H2>
-
-        {/* Opening */}
-        <p className="text-body text-center mb-6" style={{ color: '#dcdbd5', maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto' }}>
-          {S2_OPENING}
-        </p>
-
-        {/* Pivot — oversized gold callout */}
-        <p
-          className="text-center mb-10"
-          style={{
-            fontFamily: 'var(--font-taskor), sans-serif',
-            fontSize: 'clamp(22px, 4vw, 36px)',
-            fontWeight: 700,
-            color: '#ffd700',
-            textShadow: '0 0 0.04em rgba(255,215,0,0.6), 0 0 0.12em rgba(255,215,0,0.2), 0.02em 0.02em 0 #2a2a1d',
-            filter: 'drop-shadow(0.03em 0.03em 0.04em rgba(0,0,0,0.5))',
-          }}
-        >
-          {S2_PIVOT}
-        </p>
-
-        {/* Difference bullets — horizontal on desktop, stacked on mobile */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">
-          {S2_DIFF_BULLETS.map((b, i) => (
-            <GenericCard key={i} padding="sm" centered>
-              <p className="text-body text-sm" style={{ color: '#dcdbd5' }}>
-                <span
-                  className="inline-block w-5 h-5 rounded-full text-center mr-2 align-middle"
-                  style={{
-                    background: 'rgba(255,215,0,0.15)',
-                    border: '1px solid rgba(255,215,0,0.3)',
-                    fontSize: '11px',
-                    lineHeight: '20px',
-                    color: '#ffd700',
-                    fontWeight: 700,
-                  }}
-                >
-                  {i + 1}
-                </span>
-                {b}
-              </p>
-            </GenericCard>
-          ))}
-        </div>
-
-        {/* Compensation model — CyberCardGold callout */}
-        <CyberCardGold padding="md">
-          <div className="space-y-3">
-            <NeonGoldText as="p" className="text-h4">{S2_COMP_LINES[0]}</NeonGoldText>
-            <p className="text-body" style={{ color: '#dcdbd5' }}>{S2_COMP_LINES[1]}</p>
-            <p className="text-body" style={{ color: '#ffd700', fontWeight: 600 }}>{S2_COMP_LINES[2]}</p>
-          </div>
-        </CyberCardGold>
-
-        {/* Org structure — lead-in + icon bullets */}
-        <div className="mt-10">
-          <p className="text-body mb-5 text-center" style={{ color: '#b0d4e8' }}>{S2_ORG_LEAD}</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {S2_ORG_BULLETS.map((b) => (
-              <div
-                key={b.text}
-                className="flex items-start gap-3 rounded-xl p-4"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                }}
-              >
-                <span
-                  className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
-                  style={{
-                    background: 'rgba(0,191,255,0.1)',
-                    border: '1px solid rgba(0,191,255,0.25)',
-                  }}
-                >
-                  <b.icon size={16} style={{ color: '#00bfff' }} />
-                </span>
-                <p className="text-body text-sm" style={{ color: '#dcdbd5' }}>{b.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-
-// ============================================================================
-// SECTION 2 — VERSION B: "GlassPanel Impact"
-// Single marigoldCrosshatch GlassPanel. Opening + pivot as the top block.
-// Middle: 3 difference bullets as a horizontal row with gold numbering.
-// Bottom: CyberCardGold comp model + org bullets side by side on desktop.
-// Tighter, more contained feel than Version A.
-// ============================================================================
-
-function Section2VersionB() {
-  return (
-    <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
-      <div className="max-w-[1100px] mx-auto">
-        <GlassPanel variant="marigoldCrosshatch">
-          <div className="p-6 sm:p-8 md:p-12">
-
-            {/* H2 */}
-            <H2 style={{ marginBottom: '1.25rem' }}>Why Smart Agent Alliance Is Different</H2>
-
-            {/* Opening + Pivot */}
-            <div className="text-center mb-8 max-w-[750px] mx-auto">
-              <p className="text-body mb-4" style={{ color: '#dcdbd5' }}>{S2_OPENING}</p>
-              <p
-                style={{
-                  fontFamily: 'var(--font-taskor), sans-serif',
-                  fontSize: 'clamp(18px, 3.5vw, 28px)',
-                  fontWeight: 700,
-                  color: '#ffd700',
-                  textShadow: '0 0 0.04em rgba(255,215,0,0.5), 0.02em 0.02em 0 #2a2a1d',
-                }}
-              >
-                {S2_PIVOT}
-              </p>
-            </div>
-
-            {/* Difference bullets — gold-numbered row */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
-              {S2_DIFF_BULLETS.map((b, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-3 p-4 rounded-xl"
-                  style={{
-                    background: 'rgba(0,0,0,0.25)',
-                    border: '1px solid rgba(255,215,0,0.12)',
-                  }}
-                >
-                  <span
-                    className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center"
-                    style={{
-                      background: 'rgba(255,215,0,0.15)',
-                      border: '1px solid rgba(255,215,0,0.35)',
-                      color: '#ffd700',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      fontFamily: 'var(--font-taskor), sans-serif',
-                    }}
-                  >
-                    {i + 1}
-                  </span>
-                  <p className="text-body text-sm" style={{ color: '#dcdbd5' }}>{b}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Bottom: Comp model + Org bullets — side by side on desktop */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {/* Compensation model */}
-              <GenericCard padding="md">
-                <div className="space-y-3">
-                  <p className="text-body" style={{ color: '#ffd700', fontWeight: 700, fontSize: 'clamp(15px, 2vw, 18px)' }}>
-                    {S2_COMP_LINES[0]}
-                  </p>
-                  <p className="text-body text-sm" style={{ color: '#dcdbd5' }}>{S2_COMP_LINES[1]}</p>
-                  <p className="text-body text-sm" style={{ color: '#ffd700' }}>{S2_COMP_LINES[2]}</p>
-                </div>
-              </GenericCard>
-
-              {/* Org structure */}
-              <GenericCard padding="md">
-                <p className="text-body text-sm mb-3" style={{ color: '#b0d4e8' }}>{S2_ORG_LEAD}</p>
-                <ul className="space-y-2.5">
-                  {S2_ORG_BULLETS.map((b) => (
-                    <li key={b.text} className="flex items-start gap-2.5 text-body text-sm" style={{ color: '#dcdbd5' }}>
-                      <span
-                        className="flex-shrink-0 w-5 h-5 rounded flex items-center justify-center mt-0.5"
-                        style={{ background: 'rgba(0,191,255,0.1)', border: '1px solid rgba(0,191,255,0.25)' }}
-                      >
-                        <b.icon size={12} style={{ color: '#00bfff' }} />
-                      </span>
-                      <span>{b.text}</span>
-                    </li>
-                  ))}
-                </ul>
-              </GenericCard>
-            </div>
-
-          </div>
-        </GlassPanel>
-      </div>
-    </section>
-  );
-}
-
-
-// ============================================================================
-// SECTION 2 — VERSION C: "Three-Phase Stepper"
-// Interactive: content split into 3 phases with clickable step indicators.
-// Phase 1: "The Problem" (opening)
-// Phase 2: "The Difference" (pivot + bullets + comp model)
-// Phase 3: "The Structure" (org lead-in + org bullets)
-// Only one phase visible at a time — slides between them.
-// Maximum space savings.
-// ============================================================================
-
-const S2_PHASES = [
-  { id: 'problem', label: 'The Problem', color: '#ff5050' },
-  { id: 'difference', label: 'The Difference', color: '#ffd700' },
-  { id: 'structure', label: 'The Structure', color: '#00bfff' },
-];
-
-function Section2VersionC() {
-  const [phase, setPhase] = useState(0);
-
-  return (
-    <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
-      <div className="max-w-[900px] mx-auto">
-
-        {/* H2 */}
-        <H2 style={{ marginBottom: '1.5rem' }}>Why Smart Agent Alliance Is Different</H2>
-
-        {/* Step indicators */}
-        <div className="flex items-center justify-center gap-2 mb-8">
-          {S2_PHASES.map((p, i) => (
-            <React.Fragment key={p.id}>
-              {i > 0 && (
-                <div
-                  className="h-px flex-1 max-w-[40px]"
-                  style={{
-                    background: i <= phase
-                      ? `linear-gradient(90deg, ${S2_PHASES[i - 1].color}66, ${p.color}66)`
-                      : 'rgba(255,255,255,0.1)',
-                    transition: 'background 0.3s ease',
-                  }}
-                />
-              )}
-              <button
-                type="button"
-                onClick={() => setPhase(i)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer"
-                style={{
-                  background: phase === i ? `${p.color}15` : 'transparent',
-                  border: phase === i ? `1px solid ${p.color}44` : '1px solid rgba(255,255,255,0.06)',
-                  transition: 'all 0.25s ease',
-                }}
-              >
-                <span
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
-                  style={{
-                    background: i <= phase ? `${p.color}25` : 'rgba(255,255,255,0.05)',
-                    border: `1px solid ${i <= phase ? `${p.color}55` : 'rgba(255,255,255,0.1)'}`,
-                    color: i <= phase ? p.color : 'rgba(255,255,255,0.3)',
-                    fontFamily: 'var(--font-taskor), sans-serif',
-                    transition: 'all 0.25s ease',
-                  }}
-                >
-                  {i + 1}
-                </span>
-                <span
-                  className="hidden sm:inline text-xs font-semibold tracking-wide"
-                  style={{
-                    fontFamily: 'var(--font-taskor), sans-serif',
-                    color: phase === i ? p.color : 'rgba(255,255,255,0.35)',
-                    transition: 'color 0.25s ease',
-                  }}
-                >
-                  {p.label}
-                </span>
-              </button>
-            </React.Fragment>
-          ))}
-        </div>
-
-        {/* Content panel — slides between phases */}
-        <GenericCyberCardGold padding="lg" centered={false}>
-          <div className="relative overflow-hidden">
+          {/* Mobile: active card + switcher bar */}
+          <div className="md:hidden">
             <div
+              className="focus-card rounded-2xl relative overflow-hidden"
               style={{
-                display: 'flex',
-                width: '300%',
-                transform: `translateX(${-phase * (100 / 3)}%)`,
-                transition: 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
+                border: `3px solid ${PANELS[active].color}`,
+                boxShadow: `0 0 6px 2px ${PANELS[active].color}44, 0 0 20px 4px ${PANELS[active].color}22`,
               }}
             >
-              {/* Phase 1: The Problem */}
-              <div style={{ width: `${100 / 3}%`, flexShrink: 0 }}>
-                <div className="pr-4">
-                  <p className="text-body mb-6" style={{ color: '#dcdbd5', fontSize: 'clamp(15px, 2vw, 18px)' }}>
-                    {S2_OPENING}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: 'var(--font-taskor), sans-serif',
-                      fontSize: 'clamp(20px, 3.5vw, 30px)',
-                      fontWeight: 700,
-                      color: '#ffd700',
-                      textShadow: '0 0 0.04em rgba(255,215,0,0.5), 0.02em 0.02em 0 #2a2a1d',
-                    }}
-                  >
-                    {S2_PIVOT}
-                  </p>
-                </div>
-              </div>
-
-              {/* Phase 2: The Difference */}
-              <div style={{ width: `${100 / 3}%`, flexShrink: 0 }}>
-                <div className="pr-4 space-y-5">
-                  <ul className="space-y-3">
-                    {S2_DIFF_BULLETS.map((b, i) => (
-                      <li key={i} className="flex items-start gap-3 text-body" style={{ color: '#dcdbd5' }}>
-                        <span
-                          className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5"
-                          style={{
-                            background: 'rgba(255,215,0,0.15)',
-                            border: '1px solid rgba(255,215,0,0.3)',
-                            color: '#ffd700',
-                            fontSize: '11px',
-                            fontWeight: 700,
-                          }}
-                        >
-                          {i + 1}
-                        </span>
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
-                  <div
-                    className="rounded-xl p-4"
-                    style={{
-                      background: 'rgba(255,215,0,0.04)',
-                      border: '1px solid rgba(255,215,0,0.15)',
-                    }}
-                  >
-                    <p className="text-body font-semibold mb-1" style={{ color: '#ffd700' }}>{S2_COMP_LINES[0]}</p>
-                    <p className="text-body text-sm mb-1" style={{ color: '#dcdbd5' }}>{S2_COMP_LINES[1]}</p>
-                    <p className="text-body text-sm" style={{ color: '#ffd700' }}>{S2_COMP_LINES[2]}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Phase 3: The Structure */}
-              <div style={{ width: `${100 / 3}%`, flexShrink: 0 }}>
-                <div className="pr-4">
-                  <p className="text-body mb-5" style={{ color: '#b0d4e8' }}>{S2_ORG_LEAD}</p>
-                  <div className="space-y-3">
-                    {S2_ORG_BULLETS.map((b) => (
-                      <div
-                        key={b.text}
-                        className="flex items-start gap-3 rounded-xl p-3"
-                        style={{
-                          background: 'rgba(0,191,255,0.04)',
-                          border: '1px solid rgba(0,191,255,0.12)',
-                        }}
-                      >
-                        <span
-                          className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center mt-0.5"
-                          style={{ background: 'rgba(0,191,255,0.1)', border: '1px solid rgba(0,191,255,0.25)' }}
-                        >
-                          <b.icon size={14} style={{ color: '#00bfff' }} />
-                        </span>
-                        <p className="text-body text-sm" style={{ color: '#dcdbd5' }}>{b.text}</p>
-                      </div>
-                    ))}
-                  </div>
+              <div
+                className="absolute -inset-[3px] rounded-2xl pointer-events-none z-0"
+                style={{
+                  border: `2px solid ${PANELS[active].color}50`,
+                  boxShadow: `0 0 12px 4px ${PANELS[active].color}44, 0 0 28px 8px ${PANELS[active].color}22`,
+                  animation: 'focusPulse 2.4s linear infinite',
+                }}
+              />
+              <div className="relative z-10 p-5">
+                <H2 theme={PANELS[active].theme} style={{ textAlign: 'left', marginBottom: '1rem' }}>
+                  {PANELS[active].label}
+                </H2>
+                <div key={`mob-${active}`} style={{ animation: 'focusFadeIn 0.35s ease' }}>
+                  {active === 0 ? <SAAContent /> : <SponsorshipContent />}
                 </div>
               </div>
             </div>
-          </div>
-        </GenericCyberCardGold>
 
+            <button
+              type="button"
+              onClick={() => setActive(other)}
+              className="w-full mt-3 focus-card rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer"
+              style={{ border: `1px solid ${PANELS[other].color}33` }}
+            >
+              <span style={{
+                fontFamily: 'var(--font-taskor), sans-serif',
+                fontSize: '13px',
+                color: PANELS[other].color,
+                opacity: 0.6,
+                letterSpacing: '0.06em',
+              }}>
+                {PANELS[other].shortLabel}
+              </span>
+              <span style={{
+                fontFamily: 'var(--font-taskor), sans-serif',
+                color: PANELS[other].color,
+                opacity: 0.4,
+                fontSize: '11px',
+                letterSpacing: '0.08em',
+              }}>
+                TAP TO VIEW &rarr;
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -776,7 +353,7 @@ export default function ExpRealtySponsor() {
       </div>
 
       {/* ================================================================== */}
-      {/* HERO SECTION */}
+      {/* HERO SECTION                                                       */}
       {/* ================================================================== */}
       <StickyHeroWrapper>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
@@ -815,31 +392,10 @@ export default function ExpRealtySponsor() {
 
       {/* ================================================================== */}
       {/* SECTION 1 — Focus Cards                                            */}
-      {/* Dynamic gold↔blue GlassPanel. Glowing border + pulse on active.   */}
-      {/* Vertical H2 on inactive. Height-equalized desktop grid.            */}
+      {/* Edge-to-edge gold↔blue glass panel. Sliding-door card reveal.     */}
+      {/* Glowing border + pulse on active. Vertical H2 on inactive.         */}
       {/* ================================================================== */}
       <Section1 />
-
-      {/* ================================================================== */}
-      {/* SECTION 2 — VERSION A: Statement Stack                             */}
-      {/* Pure typography flow. Oversized gold pivot line. CyberCardGold      */}
-      {/* comp callout. Org bullets in icon grid. Editorial feel.             */}
-      {/* ================================================================== */}
-      <Section2VersionA />
-
-      {/* ================================================================== */}
-      {/* SECTION 2 — VERSION B: GlassPanel Impact                          */}
-      {/* Single marigoldCrosshatch GlassPanel. Numbered bullet row.          */}
-      {/* Comp model + org bullets side by side on desktop.                   */}
-      {/* ================================================================== */}
-      <Section2VersionB />
-
-      {/* ================================================================== */}
-      {/* SECTION 2 — VERSION C: Three-Phase Stepper                        */}
-      {/* Interactive 3-step progression. Only one phase visible at a time.   */}
-      {/* Slides between Problem → Difference → Structure.                   */}
-      {/* ================================================================== */}
-      <Section2VersionC />
 
     </main>
   );
