@@ -3397,7 +3397,7 @@ function WhatExpProvidesVersionB() {
                     {/* Header - icon fixed, title hinges on collapse */}
                     <div style={{ position: 'relative', minHeight: '44px', marginBottom: isExpanded ? '34px' : '0' }}>
                       <div style={{
-                        opacity: isExpanded ? 1 : 0.4,
+                        opacity: isExpanded ? 1 : 0,
                         transition: 'opacity 0.4s ease',
                       }}>
                         <Icon3D
