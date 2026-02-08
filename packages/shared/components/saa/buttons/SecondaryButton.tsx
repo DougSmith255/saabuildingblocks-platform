@@ -103,6 +103,9 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     whiteSpace: 'nowrap',
   };
 
+  // CSS class name for glow color — avoids inline CSS variable issues
+  const glowClass = `cta-glow-${variant}`;
+
   return (
     <div
       className={`
@@ -110,6 +113,14 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
         ${className}
       `}
     >
+      {/* Variant glow colors via CSS classes — inline --glow-color doesn't cascade to ::before/::after reliably */}
+      <style>{`
+        .cta-glow-gold { --glow-color: 255, 215, 0; }
+        .cta-glow-green { --glow-color: 0, 255, 136; }
+        .cta-glow-purple { --glow-color: 191, 95, 255; }
+        .cta-glow-blue { --glow-color: 0, 191, 255; }
+      `}</style>
+
       {/* Button wrapper - inline container with relative positioning for light bars */}
       {/* This ensures light bars are positioned relative to button, not parent container */}
       {/* group class is here so hover only triggers on button face, not padding */}
@@ -143,9 +154,9 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           </a>
         )}
 
-        {/* Left side glow bar - uses same pulsing animation as CTAButton */}
+        {/* Left side glow bar */}
         <div
-          className="cta-light-bar cta-light-bar-pulse cta-light-bar-side rounded-md transition-all duration-500"
+          className={`cta-light-bar cta-light-bar-pulse cta-light-bar-side ${glowClass} rounded-md transition-all duration-500`}
           style={{
             position: 'absolute',
             top: '50%',
@@ -157,14 +168,12 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
             borderRadius: '6px',
             animationDelay: lightPulseDelay,
             zIndex: 5,
-            // Override glow color via CSS variable (RGB values for rgba())
-            '--glow-color': glowRgb,
-          } as React.CSSProperties}
+          }}
         />
 
-        {/* Right side glow bar - uses same pulsing animation as CTAButton */}
+        {/* Right side glow bar */}
         <div
-          className="cta-light-bar cta-light-bar-pulse cta-light-bar-side rounded-md transition-all duration-500"
+          className={`cta-light-bar cta-light-bar-pulse cta-light-bar-side ${glowClass} rounded-md transition-all duration-500`}
           style={{
             position: 'absolute',
             top: '50%',
@@ -176,9 +185,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
             borderRadius: '6px',
             animationDelay: lightPulseDelay,
             zIndex: 5,
-            // Override glow color via CSS variable (RGB values for rgba())
-            '--glow-color': glowRgb,
-          } as React.CSSProperties}
+          }}
         />
       </div>
     </div>

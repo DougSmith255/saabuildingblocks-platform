@@ -3279,14 +3279,8 @@ function WhatExpProvidesVersionB() {
     ? { width: `${desktopContentW}px` }
     : { minWidth: '500px' };
 
-  // Grainy texture backgrounds matching GenericCyberCardGold
-  // Mobile (<1024px): coarser grain (0.5) for visibility on high-DPI
-  const mobileGrainBg = `
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-    linear-gradient(180deg, rgba(18, 18, 18, 0.85) 0%, rgba(12, 12, 12, 0.92) 100%)
-  `;
-  // Desktop (>=1024px): finer grain (1.2) for lower-DPI screens
-  const desktopGrainBg = `
+  // Grainy texture background — unified baseFrequency 1.2 for all screen sizes
+  const grainBg = `
     url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
     linear-gradient(180deg, rgba(18, 18, 18, 0.85) 0%, rgba(12, 12, 12, 0.92) 100%)
   `;
@@ -3343,9 +3337,9 @@ function WhatExpProvidesVersionB() {
               return (
                 <div key={panel.id} className="relative">
                   <div
-                    className="rounded-xl overflow-hidden p-4"
+                    className="rounded-xl p-4"
                     style={{
-                      background: isExpanded ? mobileGrainBg : inactiveBg,
+                      background: isExpanded ? grainBg : inactiveBg,
                       backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
                       backdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
                       WebkitBackdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
@@ -3397,7 +3391,7 @@ function WhatExpProvidesVersionB() {
                         transition: 'grid-template-rows 0.4s ease',
                       }}
                     >
-                      <div style={{ overflow: 'hidden' }}>
+                      <div style={{ overflowX: 'visible', overflowY: 'hidden' }}>
                         <ul className="pt-4 space-y-3">
                           {panel.bullets.map((bullet, j) => (
                             <li
@@ -3446,15 +3440,16 @@ function WhatExpProvidesVersionB() {
               return (
                 <div
                   key={panel.id}
-                  className="relative overflow-hidden rounded-xl cursor-pointer transition-all ease-out"
+                  className="relative overflow-hidden rounded-xl cursor-pointer transition-all"
                   style={{
                     flex: isExpanded ? '3' : '0.7',
                     transitionDuration: '900ms',
+                    transitionTimingFunction: 'cubic-bezier(0.3, 0.1, 0.3, 1)',
                     border: isExpanded ? `2px solid rgba(${panel.rgb},0.5)` : '1px solid rgba(255,255,255,0.06)',
                     boxShadow: isExpanded
                       ? `0 0 40px rgba(${panel.rgb},0.25), 0 8px 32px rgba(0,0,0,0.4)`
                       : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-                    background: isExpanded ? desktopGrainBg : inactiveBg,
+                    background: isExpanded ? grainBg : inactiveBg,
                     backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
                     backdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
                     WebkitBackdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
@@ -3890,6 +3885,7 @@ export default function AboutExpRealty() {
         }
 
         /* Blue CTA light bars + glow — scoped to main content + header (not slide panels) */
+        /* Variant-specific glow classes (.cta-glow-*) override the page-level blue below */
         .about-exp-blue-theme #main-content .cta-light-bar,
         .about-exp-blue-theme header .cta-light-bar {
           background: #00bfff !important;
@@ -3898,6 +3894,11 @@ export default function AboutExpRealty() {
         .about-exp-blue-theme header .cta-light-bar-pulse {
           --glow-color: 0, 191, 255 !important;
         }
+        /* Per-variant overrides — only purple + green escape the page-level blue */
+        .about-exp-blue-theme #main-content .cta-light-bar-pulse.cta-glow-purple { --glow-color: 191, 95, 255 !important; }
+        .about-exp-blue-theme #main-content .cta-light-bar-pulse.cta-glow-green { --glow-color: 0, 255, 136 !important; }
+        .about-exp-blue-theme #main-content .cta-light-bar.cta-glow-purple { background: #9933ff !important; }
+        .about-exp-blue-theme #main-content .cta-light-bar.cta-glow-green { background: #00cc66 !important; }
 
         /* Blue header + footer logo gradients */
         .about-exp-blue-theme #headerLogoGradient stop:nth-child(1),

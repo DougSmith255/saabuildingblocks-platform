@@ -103,6 +103,10 @@ function Section1() {
   const sectionRef = useRef<HTMLElement>(null);
   const hasAutoSwitched = useRef(false);
   const [contentW, setContentW] = useState(0);
+  // Mobile: measure card content heights for smooth height transitions
+  const mobRef0 = useRef<HTMLDivElement>(null);
+  const mobRef1 = useRef<HTMLDivElement>(null);
+  const [mobH, setMobH] = useState([300, 300]);
 
   // Measure the active card's width so content can be rendered at a fixed size
   const measure = useCallback(() => {
@@ -119,6 +123,20 @@ function Section1() {
     if (flexRef.current) ro.observe(flexRef.current);
     return () => ro.disconnect();
   }, [measure]);
+
+  // Mobile: measure content heights for smooth expand/collapse
+  useEffect(() => {
+    const measureMob = () => {
+      const h0 = mobRef0.current?.scrollHeight || 0;
+      const h1 = mobRef1.current?.scrollHeight || 0;
+      if (h0 > 0 || h1 > 0) setMobH([h0 || 300, h1 || 300]);
+    };
+    measureMob();
+    const ro = new ResizeObserver(measureMob);
+    if (mobRef0.current) ro.observe(mobRef0.current);
+    if (mobRef1.current) ro.observe(mobRef1.current);
+    return () => ro.disconnect();
+  }, []);
 
   // Auto-switch to card 1 (SAA) when user scrolls ~70% into the section
   useEffect(() => {
@@ -221,7 +239,7 @@ function Section1() {
         />
 
         {/* Content — max-width centered inside the glass */}
-        <div className="relative z-10 max-w-[1100px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-10">
+        <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-10">
 
           {/* Desktop: flex layout — fixed-width content, height equalized */}
           <div ref={flexRef} className="hidden md:flex gap-4">
@@ -235,7 +253,7 @@ function Section1() {
                     flexGrow: isActive ? 5 : 1,
                     flexBasis: 0,
                     minWidth: 0,
-                    transition: 'flex-grow 0.9s cubic-bezier(0.22, 1, 0.36, 1)',
+                    transition: 'flex-grow 1.15s cubic-bezier(0.3, 0.1, 0.3, 1)',
                   }}
                 >
                   {/* Pulsing glow ring — outside overflow:hidden card */}
@@ -264,7 +282,7 @@ function Section1() {
                       boxShadow: isActive
                         ? `0 0 6px 2px ${panel.color}44, 0 0 20px 4px ${panel.color}22, 0 8px 32px rgba(0,0,0,0.4)`
                         : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-                      transition: 'border-color 0.7s ease, box-shadow 0.7s ease',
+                      transition: 'border-color 0.9s ease, box-shadow 0.9s ease',
                     }}
                   >
                     {/* Content at FIXED pixel width — never reflows during transitions */}
@@ -274,8 +292,8 @@ function Section1() {
                         transform: isActive ? 'translateY(0)' : 'translateY(-16px)',
                         opacity: isActive ? 1 : 0,
                         transition: isActive
-                          ? 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, opacity 0.7s ease 0.15s'
-                          : 'transform 0.35s ease, opacity 0.25s ease',
+                          ? 'transform 0.85s cubic-bezier(0.3, 0.1, 0.3, 1) 0.2s, opacity 0.85s ease 0.2s'
+                          : 'transform 0.4s ease, opacity 0.3s ease',
                       }}>
                         <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
                           {panel.label}
@@ -285,8 +303,8 @@ function Section1() {
                       <div style={{
                         opacity: isActive ? 1 : 0,
                         transition: isActive
-                          ? 'opacity 0.7s ease 0.2s'
-                          : 'opacity 0.25s ease',
+                          ? 'opacity 0.85s ease 0.25s'
+                          : 'opacity 0.3s ease',
                       }}>
                         {/* Grid overlay: both contents at same width → stable equal height */}
                         <div style={{ display: 'grid' }}>
@@ -310,8 +328,8 @@ function Section1() {
                           : 'translateX(0)',
                         opacity: isActive ? 0 : 1,
                         transition: isActive
-                          ? 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease 0.15s'
-                          : 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s, opacity 0.45s ease 0.15s',
+                          ? 'transform 0.85s cubic-bezier(0.3, 0.1, 0.3, 1), opacity 0.5s ease 0.2s'
+                          : 'transform 0.85s cubic-bezier(0.3, 0.1, 0.3, 1) 0.25s, opacity 0.55s ease 0.2s',
                       }}
                     >
                       <div style={{
@@ -332,62 +350,94 @@ function Section1() {
             })}
           </div>
 
-          {/* Mobile: active card + switcher bar — independent height, no equalization */}
-          <div className="md:hidden">
-            <div
-              className="focus-card rounded-2xl relative overflow-hidden"
-              style={{
-                border: `3px solid ${PANELS[active].color}`,
-                boxShadow: `0 0 6px 2px ${PANELS[active].color}44, 0 0 20px 4px ${PANELS[active].color}22`,
-              }}
-            >
-              <div
-                className="absolute -inset-[3px] rounded-2xl pointer-events-none z-0"
-                style={{
-                  border: `2px solid ${PANELS[active].color}50`,
-                  boxShadow: `0 0 12px 4px ${PANELS[active].color}44, 0 0 28px 8px ${PANELS[active].color}22`,
-                  animation: 'focusPulse 2.4s linear infinite',
-                }}
-              />
-              <div className="relative z-10 p-5">
-                <H2 theme={PANELS[active].theme} style={{ textAlign: 'left', marginBottom: '1rem' }}>
-                  {PANELS[active].label}
-                </H2>
-                <div key={`mob-${active}`} style={{ animation: 'focusFadeIn 0.35s ease' }}>
-                  {active === 0 ? <SAAContent /> : <SponsorshipContent />}
-                </div>
-              </div>
-            </div>
+          {/* Mobile: stacked cards — same animations as desktop, height transitions */}
+          <div className="md:hidden flex flex-col gap-3">
+            {PANELS.map((panel, i) => {
+              const isActive = active === i;
+              const COLLAPSED = 65;
+              const mobRefs = [mobRef0, mobRef1];
+              return (
+                <div key={panel.id} className="relative">
+                  {/* Pulsing glow ring — always rendered, opacity transitions */}
+                  <div
+                    className="absolute -inset-[3px] rounded-2xl pointer-events-none"
+                    style={{
+                      border: `2px solid ${panel.color}50`,
+                      boxShadow: `0 0 12px 4px ${panel.color}44, 0 0 28px 8px ${panel.color}22`,
+                      animation: 'focusPulse 2.4s linear infinite',
+                      zIndex: 30,
+                      opacity: isActive ? 1 : 0,
+                      transition: 'opacity 0.9s ease',
+                    }}
+                  />
 
-            <button
-              type="button"
-              onClick={() => setActive(other)}
-              className="w-full mt-3 rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer"
-              style={{
-                background: 'linear-gradient(180deg, rgba(18,18,18,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-                border: `1px solid ${PANELS[other].color}33`,
-                boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
-              }}
-            >
-              <span style={{
-                fontFamily: 'var(--font-taskor), sans-serif',
-                fontSize: '13px',
-                color: PANELS[other].color,
-                opacity: 0.6,
-                letterSpacing: '0.06em',
-              }}>
-                {PANELS[other].shortLabel}
-              </span>
-              <span style={{
-                fontFamily: 'var(--font-taskor), sans-serif',
-                color: PANELS[other].color,
-                opacity: 0.4,
-                fontSize: '11px',
-                letterSpacing: '0.08em',
-              }}>
-                TAP TO VIEW &rarr;
-              </span>
-            </button>
+                  {/* Card — active: grain bg, colored border; inactive: solid bg, subtle border */}
+                  <div
+                    className={`${isActive ? 'focus-card' : ''} rounded-2xl relative ${!isActive ? 'cursor-pointer' : ''}`}
+                    onClick={() => !isActive && setActive(i)}
+                    style={{
+                      overflow: 'hidden',
+                      height: isActive ? `${mobH[i] + 8}px` : `${COLLAPSED}px`,
+                      ...(!isActive ? {
+                        background: 'linear-gradient(180deg, rgba(18,18,18,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                      } : {}),
+                      border: isActive ? `3px solid ${panel.color}` : '1px solid rgba(255,255,255,0.06)',
+                      boxShadow: isActive
+                        ? `0 0 6px 2px ${panel.color}44, 0 0 20px 4px ${panel.color}22, 0 8px 32px rgba(0,0,0,0.4)`
+                        : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+                      transition: 'height 1.15s cubic-bezier(0.3, 0.1, 0.3, 1), border-color 0.9s ease, box-shadow 0.9s ease',
+                    }}
+                  >
+                    {/* Inner content — ref for height measurement */}
+                    <div ref={mobRefs[i]} className="p-5">
+                      {/* H2 title — slides down into place when active */}
+                      <div style={{
+                        transform: isActive ? 'translateY(0)' : 'translateY(-16px)',
+                        opacity: isActive ? 1 : 0,
+                        transition: isActive
+                          ? 'transform 0.85s cubic-bezier(0.3, 0.1, 0.3, 1) 0.2s, opacity 0.85s ease 0.2s'
+                          : 'transform 0.4s ease, opacity 0.3s ease',
+                      }}>
+                        <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1rem' }}>
+                          {panel.label}
+                        </H2>
+                      </div>
+                      {/* Content body — fades in when active */}
+                      <div style={{
+                        opacity: isActive ? 1 : 0,
+                        transition: isActive
+                          ? 'opacity 0.85s ease 0.25s'
+                          : 'opacity 0.3s ease',
+                      }}>
+                        {i === 0 ? <SAAContent /> : <SponsorshipContent />}
+                      </div>
+                    </div>
+
+                    {/* Short label — horizontal text, slides off vertically on activation */}
+                    <div
+                      className="absolute inset-0 z-20 flex items-center justify-center"
+                      style={{
+                        pointerEvents: isActive ? 'none' : 'auto',
+                        transform: isActive
+                          ? `translateY(${i === 0 ? '-100%' : '100%'})`
+                          : 'translateY(0)',
+                        opacity: isActive ? 0 : 1,
+                        transition: isActive
+                          ? 'transform 0.85s cubic-bezier(0.3, 0.1, 0.3, 1), opacity 0.5s ease 0.2s'
+                          : 'transform 0.85s cubic-bezier(0.3, 0.1, 0.3, 1) 0.25s, opacity 0.55s ease 0.2s',
+                      }}
+                    >
+                      <H2 theme={panel.theme} style={{
+                        marginBottom: 0,
+                        fontSize: 'clamp(20px, 5vw, 28px)',
+                      }}>
+                        {panel.shortLabel}
+                      </H2>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
