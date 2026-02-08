@@ -3271,12 +3271,17 @@ function WhatExpProvidesVersionB() {
                       className="w-full flex items-center justify-between cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <Icon3D color={accentColor} size={isExpanded ? 44 : 36}>
-                          <panel.icon size={isExpanded ? 22 : 18} />
-                        </Icon3D>
+                        <div style={{
+                          opacity: isExpanded ? 1 : 0,
+                          transition: 'opacity 0.4s ease',
+                        }}>
+                          <Icon3D color={accentColor} size={isExpanded ? 44 : 36}>
+                            <panel.icon size={isExpanded ? 22 : 18} />
+                          </Icon3D>
+                        </div>
                         <H2
                           style={{
-                            color: accentColor,
+                            marginBottom: 0,
                           }}
                         >
                           {panel.label}
@@ -3307,7 +3312,7 @@ function WhatExpProvidesVersionB() {
                             style={{
                               color: 'var(--color-body-text)',
                               opacity: isExpanded ? 1 : 0,
-                              transition: `opacity 0.3s ease ${j * 50}ms`,
+                              transition: `opacity 0.3s ease ${j * 100}ms`,
                             }}
                           >
                             <span
@@ -3376,16 +3381,20 @@ function WhatExpProvidesVersionB() {
                   <div className="relative z-10 h-full p-6 flex flex-col">
                     {/* Header - icon fixed, title hinges on collapse */}
                     <div style={{ position: 'relative', minHeight: '44px', marginBottom: isExpanded ? '24px' : '0' }}>
-                      <Icon3D
-                        color={accentColor}
-                        size={44}
-                      >
-                        <panel.icon size={22} />
-                      </Icon3D>
+                      <div style={{
+                        opacity: isExpanded ? 1 : 0,
+                        transition: 'opacity 0.4s ease',
+                      }}>
+                        <Icon3D
+                          color={accentColor}
+                          size={44}
+                        >
+                          <panel.icon size={22} />
+                        </Icon3D>
+                      </div>
                       {/* Title - absolutely positioned so icon never moves, hinges at top-left */}
                       <H2
                         style={{
-                          color: accentColor,
                           position: 'absolute',
                           left: '56px',
                           top: '8px',
@@ -3416,7 +3425,7 @@ function WhatExpProvidesVersionB() {
                           style={{
                             color: 'var(--color-body-text)',
                             opacity: isExpanded ? 1 : 0,
-                            transition: `opacity 0.4s ease ${j * 60}ms`,
+                            transition: `opacity 0.4s ease ${j * 100}ms`,
                           }}
                         >
                           <span
