@@ -3269,13 +3269,10 @@ function WhatExpProvidesVersionB() {
   }, []);
 
   const panels = [
-    { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS, buttonText: 'Explore Community' },
-    { id: 'technology', label: 'TECHNOLOGY', icon: Laptop, bullets: TECHNOLOGY_BULLETS, buttonText: 'Explore Technology' },
-    { id: 'leads', label: 'LEADS', icon: UserPlus, bullets: LEADS_BULLETS, buttonText: 'Explore Leads' },
+    { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS, buttonText: 'Explore Community', color: '#a855f7', rgb: '168,85,247', h2Theme: 'purple' as const, btnVariant: 'purple' as const },
+    { id: 'technology', label: 'TECHNOLOGY', icon: Laptop, bullets: TECHNOLOGY_BULLETS, buttonText: 'Explore Technology', color: '#00bfff', rgb: '0,191,255', h2Theme: 'blue' as const, btnVariant: 'blue' as const },
+    { id: 'leads', label: 'LEADS', icon: UserPlus, bullets: LEADS_BULLETS, buttonText: 'Explore Leads', color: '#10b981', rgb: '16,185,129', h2Theme: 'emerald' as const, btnVariant: 'green' as const },
   ];
-
-  // Blue theme color
-  const accentColor = '#00bfff';
 
   // Fixed-width style for desktop content — SSR fallback uses min-width
   const desktopContentStyle = desktopContentW > 0
@@ -3296,8 +3293,48 @@ function WhatExpProvidesVersionB() {
   const inactiveBg = 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)';
 
   return (
-    <GlassPanel variant="tealCrosshatch" noBlur>
-      <section ref={providesSectionRef} className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
+    <div
+      className="relative overflow-hidden rounded-3xl"
+      style={{
+        boxShadow: `
+          0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25),
+          inset 0 1px 0 0 rgba(255,255,255,0.35), inset 0 2px 4px 0 rgba(255,255,255,0.2),
+          inset 0 20px 40px -20px rgba(255,255,255,0.15),
+          inset 0 -1px 0 0 rgba(0,0,0,0.7), inset 0 -2px 6px 0 rgba(0,0,0,0.5),
+          inset 0 -10px 25px -8px rgba(0,0,0,0.6), inset 0 -25px 50px -20px rgba(0,0,0,0.45)
+        `,
+      }}
+    >
+      {/* 3-part gradient — purple / blue / green segments shift with active card */}
+      {panels.map((p, idx) => (
+        <div
+          key={p.id}
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(${idx === 0 ? '90deg' : idx === 1 ? '90deg' : '90deg'}, ${
+              idx === 0
+                ? `rgba(${p.rgb},0.07) 0%, rgba(${p.rgb},0.03) 40%, transparent 70%`
+                : idx === 1
+                ? `transparent 20%, rgba(${p.rgb},0.06) 40%, rgba(${p.rgb},0.06) 60%, transparent 80%`
+                : `transparent 30%, rgba(${p.rgb},0.03) 60%, rgba(${p.rgb},0.07) 100%`
+            })`,
+            opacity: expandedIndex === idx ? 1 : 0.15,
+            transition: 'opacity 0.8s ease',
+          }}
+        />
+      ))}
+      {/* Crosshatch texture overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none z-[1]"
+        style={{
+          backgroundImage: `
+            repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px),
+            repeating-linear-gradient(-45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px)
+          `,
+          backgroundSize: '16px 16px',
+        }}
+      />
+      <section ref={providesSectionRef} className="relative z-10 py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1400px] mx-auto">
           {/* Mobile: stacked panels — single div per card for smooth transitions */}
           <div className="lg:hidden space-y-4">
@@ -3312,9 +3349,9 @@ function WhatExpProvidesVersionB() {
                       backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
                       backdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
                       WebkitBackdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
-                      border: isExpanded ? '2px solid rgba(0,191,255,0.5)' : '1px solid rgba(0,191,255,0.2)',
+                      border: isExpanded ? `2px solid rgba(${panel.rgb},0.5)` : `1px solid rgba(${panel.rgb},0.2)`,
                       boxShadow: isExpanded
-                        ? '0 0 30px rgba(0,191,255,0.2), 0 8px 32px rgba(0,0,0,0.4)'
+                        ? `0 0 30px rgba(${panel.rgb},0.2), 0 8px 32px rgba(0,0,0,0.4)`
                         : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                       transition: 'border 0.35s ease, box-shadow 0.35s ease',
                     }}
@@ -3329,11 +3366,12 @@ function WhatExpProvidesVersionB() {
                           opacity: isExpanded ? 1 : 0.4,
                           transition: 'opacity 0.4s ease',
                         }}>
-                          <Icon3D color={accentColor} size={isExpanded ? 44 : 36}>
+                          <Icon3D color={panel.color} size={isExpanded ? 44 : 36}>
                             <panel.icon size={isExpanded ? 22 : 18} />
                           </Icon3D>
                         </div>
                         <H2
+                          theme={panel.h2Theme}
                           style={{
                             marginBottom: 0,
                           }}
@@ -3344,7 +3382,7 @@ function WhatExpProvidesVersionB() {
                       <ChevronDown
                         size={24}
                         style={{
-                          color: accentColor,
+                          color: panel.color,
                           transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)',
                           transition: 'transform 0.3s ease',
                         }}
@@ -3374,11 +3412,11 @@ function WhatExpProvidesVersionB() {
                               <span
                                 className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
                                 style={{
-                                  background: 'rgba(0,191,255,0.15)',
-                                  border: '1px solid rgba(0,191,255,0.3)',
+                                  background: `rgba(${panel.rgb},0.15)`,
+                                  border: `1px solid rgba(${panel.rgb},0.3)`,
                                 }}
                               >
-                                <bullet.icon size={14} style={{ color: accentColor }} />
+                                <bullet.icon size={14} style={{ color: panel.color }} />
                               </span>
                               <span>{bullet.text}</span>
                             </li>
@@ -3391,7 +3429,7 @@ function WhatExpProvidesVersionB() {
                             transition: isExpanded ? 'opacity 0.3s ease 0.2s' : 'opacity 0.1s ease 0s',
                           }}
                         >
-                          <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
+                          <SecondaryButton href="#" variant={panel.btnVariant}>{panel.buttonText}</SecondaryButton>
                         </div>
                       </div>
                     </div>
@@ -3412,9 +3450,9 @@ function WhatExpProvidesVersionB() {
                   style={{
                     flex: isExpanded ? '3' : '0.7',
                     transitionDuration: '900ms',
-                    border: isExpanded ? '2px solid rgba(0,191,255,0.5)' : '1px solid rgba(255,255,255,0.06)',
+                    border: isExpanded ? `2px solid rgba(${panel.rgb},0.5)` : '1px solid rgba(255,255,255,0.06)',
                     boxShadow: isExpanded
-                      ? '0 0 40px rgba(0,191,255,0.25), 0 8px 32px rgba(0,0,0,0.4)'
+                      ? `0 0 40px rgba(${panel.rgb},0.25), 0 8px 32px rgba(0,0,0,0.4)`
                       : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                     background: isExpanded ? desktopGrainBg : inactiveBg,
                     backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
@@ -3431,7 +3469,7 @@ function WhatExpProvidesVersionB() {
                       bottom: '-30px',
                       opacity: isExpanded ? 0.08 : 0.03,
                       transition: 'opacity 0.7s ease',
-                      color: accentColor,
+                      color: panel.color,
                     }}
                   >
                     <panel.icon size={200} strokeWidth={1} />
@@ -3446,7 +3484,7 @@ function WhatExpProvidesVersionB() {
                         transition: 'opacity 0.7s ease',
                       }}>
                         <Icon3D
-                          color={accentColor}
+                          color={panel.color}
                           size={44}
                         >
                           <panel.icon size={22} />
@@ -3454,6 +3492,7 @@ function WhatExpProvidesVersionB() {
                       </div>
                       {/* Title - absolutely positioned so icon never moves, hinges at top-left */}
                       <H2
+                        theme={panel.h2Theme}
                         style={{
                           position: 'absolute',
                           left: '56px',
@@ -3491,11 +3530,11 @@ function WhatExpProvidesVersionB() {
                           <span
                             className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
                             style={{
-                              background: 'rgba(0,191,255,0.15)',
-                              border: '1px solid rgba(0,191,255,0.3)',
+                              background: `rgba(${panel.rgb},0.15)`,
+                              border: `1px solid rgba(${panel.rgb},0.3)`,
                             }}
                           >
-                            <bullet.icon size={14} style={{ color: accentColor }} />
+                            <bullet.icon size={14} style={{ color: panel.color }} />
                           </span>
                           <span>{bullet.text}</span>
                         </li>
@@ -3510,7 +3549,7 @@ function WhatExpProvidesVersionB() {
                         transition: isExpanded ? 'opacity 0.7s ease 0.5s' : 'opacity 0.25s ease 0s',
                       }}
                     >
-                      <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
+                      <SecondaryButton href="#" variant={panel.btnVariant}>{panel.buttonText}</SecondaryButton>
                     </div>
                   </div>
                 </div>
@@ -3519,7 +3558,7 @@ function WhatExpProvidesVersionB() {
           </div>
         </div>
       </section>
-    </GlassPanel>
+    </div>
   );
 }
 
