@@ -82,7 +82,7 @@ function SponsorshipContent() {
 }
 
 const PANELS = [
-  { id: 'saa', label: 'What Smart Agent Alliance Is', shortLabel: 'What SAA Is', color: '#ffd700', theme: 'default' as const },
+  { id: 'saa', label: 'What Smart Agent Alliance Is', shortLabel: 'What SAA Is', color: '#ffd700', theme: 'gold' as const },
   { id: 'sponsorship', label: 'How Sponsorship Works at eXp', shortLabel: 'Sponsorship', color: '#00bfff', theme: 'blue' as const },
 ];
 
@@ -235,7 +235,7 @@ function Section1() {
                     flexGrow: isActive ? 5 : 1,
                     flexBasis: 0,
                     minWidth: 0,
-                    transition: 'flex-grow 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
+                    transition: 'flex-grow 0.7s cubic-bezier(0.22, 1, 0.36, 1)',
                   }}
                 >
                   {/* Pulsing glow ring — outside overflow:hidden card */}
@@ -264,7 +264,7 @@ function Section1() {
                       boxShadow: isActive
                         ? `0 0 6px 2px ${panel.color}44, 0 0 20px 4px ${panel.color}22, 0 8px 32px rgba(0,0,0,0.4)`
                         : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-                      transition: 'border-color 0.35s ease, box-shadow 0.4s ease',
+                      transition: 'border-color 0.5s ease, box-shadow 0.55s ease',
                     }}
                   >
                     {/* Content at FIXED pixel width — never reflows during transitions */}
@@ -273,8 +273,8 @@ function Section1() {
                       <div style={{
                         clipPath: isActive ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)',
                         transition: isActive
-                          ? 'clip-path 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.2s'
-                          : 'clip-path 0.25s ease',
+                          ? 'clip-path 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.25s'
+                          : 'clip-path 0.35s ease',
                       }}>
                         <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
                           {panel.label}
@@ -284,8 +284,8 @@ function Section1() {
                       <div style={{
                         opacity: isActive ? 1 : 0,
                         transition: isActive
-                          ? 'opacity 0.4s ease 0.3s'
-                          : 'opacity 0.2s ease',
+                          ? 'opacity 0.5s ease 0.4s'
+                          : 'opacity 0.25s ease',
                       }}>
                         {/* Grid overlay: both contents at same width → stable equal height */}
                         <div style={{ display: 'grid' }}>
@@ -299,28 +299,27 @@ function Section1() {
                       </div>
                     </div>
 
-                    {/* Short label — vertical text, hinges upward on activation */}
+                    {/* Short label — vertical text, slides off horizontally on activation */}
                     <div
                       className="absolute inset-0 z-20 flex items-center justify-center"
                       style={{
                         pointerEvents: isActive ? 'none' : 'auto',
+                        transform: isActive
+                          ? `translateX(${i === 0 ? '-100%' : '100%'})`
+                          : 'translateX(0)',
+                        opacity: isActive ? 0 : 1,
+                        transition: isActive
+                          ? 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease 0.1s'
+                          : 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, opacity 0.35s ease 0.1s',
                       }}
                     >
                       <div style={{
                         writingMode: 'vertical-rl',
                         textOrientation: 'mixed',
-                        transform: isActive
-                          ? 'perspective(600px) rotateX(-90deg)'
-                          : 'perspective(600px) rotateX(0deg)',
-                        opacity: isActive ? 0 : 1,
-                        transformOrigin: 'top center',
-                        transition: isActive
-                          ? 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.15s ease 0.2s'
-                          : 'opacity 0.3s ease 0.15s, transform 0.35s ease 0.2s',
                       }}>
                         <H2 theme={panel.theme} style={{
                           marginBottom: 0,
-                          fontSize: 'clamp(28px, calc(24.36px + 1.45vw), 50px)',
+                          fontSize: 'clamp(28px, calc(24.36px + 1.45vw), 40px)',
                         }}>
                           {panel.shortLabel}
                         </H2>

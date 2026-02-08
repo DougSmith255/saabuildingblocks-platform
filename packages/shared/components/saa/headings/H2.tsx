@@ -6,8 +6,8 @@ export interface HeadingProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  /** Color theme for the heading - 'blue' for eXp Realty pages */
-  theme?: 'default' | 'blue';
+  /** Color theme for the heading - 'blue' for eXp Realty pages, 'gold' for SAA-branded sections */
+  theme?: 'default' | 'blue' | 'gold';
 }
 
 /**
@@ -35,12 +35,11 @@ export default function H2({
   style = {},
   theme = 'default'
 }: HeadingProps) {
-  const isBlue = theme === 'blue';
-  const textColor = isBlue ? '#b0d4e8' : '#bfbdb0';
+  const textColor = theme === 'blue' ? '#b0d4e8' : theme === 'gold' ? '#e8d4a0' : '#bfbdb0';
 
   // 3D text-shadow effect (matches H1 style, thicker depth)
   // White core + colored glow (extended, dilute for sharp definition) + offset metal backing shadows
-  const textShadow = isBlue
+  const textShadow = theme === 'blue'
     ? `
       /* WHITE CORE */
       0 0 0.01em #fff,
@@ -58,6 +57,25 @@ export default function H2({
       0.08em 0.08em 0 #0a1520,
       0.10em 0.10em 0 #081018,
       0.12em 0.12em 0 #040810
+    `
+    : theme === 'gold'
+    ? `
+      /* WHITE CORE */
+      0 0 0.01em #fff,
+      0 0 0.02em #fff,
+      0 0 0.03em rgba(255,255,255,0.8),
+      /* GOLD GLOW - extended and dilute for sharp definition */
+      0 0 0.04em rgba(255, 215, 0, 0.7),
+      0 0 0.08em rgba(255, 215, 0, 0.35),
+      0 0 0.14em rgba(255, 215, 0, 0.15),
+      0 0 0.22em rgba(200, 170, 0, 0.08),
+      /* METAL BACKING (3D depth - thicker, warm tones) */
+      0.02em 0.02em 0 #3a2a1a,
+      0.04em 0.04em 0 #352515,
+      0.06em 0.06em 0 #251a0f,
+      0.08em 0.08em 0 #20150a,
+      0.10em 0.10em 0 #181008,
+      0.12em 0.12em 0 #100804
     `
     : `
       /* WHITE CORE */
