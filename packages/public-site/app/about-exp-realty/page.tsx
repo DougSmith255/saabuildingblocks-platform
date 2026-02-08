@@ -3250,7 +3250,7 @@ function WhatExpProvidesVersionB() {
     return () => ro.disconnect();
   }, [measureDesktop]);
 
-  // Auto-switch from Community → Technology when user scrolls ~40% into section
+  // Auto-switch from Community → Technology when user scrolls ~70% into section
   useEffect(() => {
     const el = providesSectionRef.current;
     if (!el) return;
@@ -3262,7 +3262,7 @@ function WhatExpProvidesVersionB() {
           io.disconnect();
         }
       },
-      { threshold: 0.4 },
+      { threshold: 0.7 },
     );
     io.observe(el);
     return () => io.disconnect();

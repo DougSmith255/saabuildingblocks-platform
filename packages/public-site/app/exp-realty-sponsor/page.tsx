@@ -120,7 +120,7 @@ function Section1() {
     return () => ro.disconnect();
   }, [measure]);
 
-  // Auto-switch to card 1 (SAA) when user scrolls ~40% into the section
+  // Auto-switch to card 1 (SAA) when user scrolls ~70% into the section
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -132,7 +132,7 @@ function Section1() {
           io.disconnect();
         }
       },
-      { threshold: 0.4 },
+      { threshold: 0.7 },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -264,7 +264,7 @@ function Section1() {
                       boxShadow: isActive
                         ? `0 0 6px 2px ${panel.color}44, 0 0 20px 4px ${panel.color}22, 0 8px 32px rgba(0,0,0,0.4)`
                         : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-                      transition: 'border-color 0.65s ease, box-shadow 0.7s ease',
+                      transition: 'border-color 0.7s ease, box-shadow 0.7s ease',
                     }}
                   >
                     {/* Content at FIXED pixel width — never reflows during transitions */}
@@ -274,7 +274,7 @@ function Section1() {
                         transform: isActive ? 'translateY(0)' : 'translateY(-16px)',
                         opacity: isActive ? 1 : 0,
                         transition: isActive
-                          ? 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, opacity 0.6s ease 0.15s'
+                          ? 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, opacity 0.7s ease 0.15s'
                           : 'transform 0.35s ease, opacity 0.25s ease',
                       }}>
                         <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
@@ -285,8 +285,8 @@ function Section1() {
                       <div style={{
                         opacity: isActive ? 1 : 0,
                         transition: isActive
-                          ? 'opacity 0.65s ease 0.5s'
-                          : 'opacity 0.3s ease',
+                          ? 'opacity 0.7s ease 0.2s'
+                          : 'opacity 0.25s ease',
                       }}>
                         {/* Grid overlay: both contents at same width → stable equal height */}
                         <div style={{ display: 'grid' }}>
@@ -310,8 +310,8 @@ function Section1() {
                           : 'translateX(0)',
                         opacity: isActive ? 0 : 1,
                         transition: isActive
-                          ? 'transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease 0.15s'
-                          : 'transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.2s, opacity 0.45s ease 0.15s',
+                          ? 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease 0.15s'
+                          : 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s, opacity 0.45s ease 0.15s',
                       }}
                     >
                       <div style={{
