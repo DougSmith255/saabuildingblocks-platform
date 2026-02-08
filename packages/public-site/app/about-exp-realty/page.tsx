@@ -3229,6 +3229,25 @@ function WhereSAAFitsSection() {
 
 function WhatExpProvidesVersionB() {
   const [expandedIndex, setExpandedIndex] = useState(0);
+  const desktopFlexRef = useRef<HTMLDivElement>(null);
+  const [desktopContentW, setDesktopContentW] = useState(0);
+
+  // Measure expanded card width so content can be fixed-width (no reflow)
+  const measureDesktop = useCallback(() => {
+    if (desktopFlexRef.current) {
+      const w = desktopFlexRef.current.offsetWidth;
+      // Expanded card = flex 3 out of (3 + 0.7 + 0.7) = 4.4, minus 2 gaps of 16px
+      setDesktopContentW(Math.floor((w - 32) * 3 / 4.4));
+    }
+  }, []);
+
+  useEffect(() => {
+    measureDesktop();
+    const ro = new ResizeObserver(measureDesktop);
+    if (desktopFlexRef.current) ro.observe(desktopFlexRef.current);
+    return () => ro.disconnect();
+  }, [measureDesktop]);
+
   const panels = [
     { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS, buttonText: 'Explore Community' },
     { id: 'technology', label: 'TECHNOLOGY', icon: Laptop, bullets: TECHNOLOGY_BULLETS, buttonText: 'Explore Technology' },
@@ -3237,6 +3256,11 @@ function WhatExpProvidesVersionB() {
 
   // Blue theme color
   const accentColor = '#00bfff';
+
+  // Fixed-width style for desktop content — SSR fallback uses min-width
+  const desktopContentStyle = desktopContentW > 0
+    ? { width: `${desktopContentW}px` }
+    : { minWidth: '500px' };
 
   // Grainy texture backgrounds matching GenericCyberCardGold
   // Mobile (<1024px): coarser grain (0.5) for visibility on high-DPI
@@ -3317,11 +3341,15 @@ function WhatExpProvidesVersionB() {
                     >
                       <div style={{ overflow: 'hidden' }}>
                         <ul className="pt-4 space-y-3">
-                          {panel.bullets.map((bullet) => (
+                          {panel.bullets.map((bullet, j) => (
                             <li
                               key={bullet.text}
                               className="text-body text-sm flex items-start gap-3"
-                              style={{ color: 'var(--color-body-text)' }}
+                              style={{
+                                color: 'var(--color-body-text)',
+                                opacity: isExpanded ? 1 : 0,
+                                transition: `opacity 0.3s ease ${j * 100}ms`,
+                              }}
                             >
                               <span
                                 className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
@@ -3336,7 +3364,13 @@ function WhatExpProvidesVersionB() {
                             </li>
                           ))}
                         </ul>
-                        <div className="pt-4">
+                        <div
+                          className="pt-4"
+                          style={{
+                            opacity: isExpanded ? 1 : 0,
+                            transition: isExpanded ? 'opacity 0.3s ease 0.2s' : 'opacity 0.1s ease 0s',
+                          }}
+                        >
                           <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
                         </div>
                       </div>
@@ -3347,8 +3381,8 @@ function WhatExpProvidesVersionB() {
             })}
           </div>
 
-          {/* Desktop: horizontal accordion */}
-          <div className="hidden lg:flex gap-4 h-[500px]">
+          {/* Desktop: horizontal accordion — fixed-width content for sliding-door reveal */}
+          <div ref={desktopFlexRef} className="hidden lg:flex gap-4 h-[500px]">
             {panels.map((panel, i) => {
               const isExpanded = expandedIndex === i;
               return (
@@ -3382,8 +3416,8 @@ function WhatExpProvidesVersionB() {
                     <panel.icon size={200} strokeWidth={1} />
                   </div>
 
-                  {/* Content */}
-                  <div className="relative z-10 h-full p-6 flex flex-col">
+                  {/* Content — fixed width so text never reflows during card transition */}
+                  <div className="relative z-10 h-full p-6 flex flex-col" style={desktopContentStyle}>
                     {/* Header - icon fixed, title hinges on collapse */}
                     <div style={{ position: 'relative', minHeight: '44px', marginBottom: isExpanded ? '34px' : '0' }}>
                       <div style={{
@@ -3415,13 +3449,23 @@ function WhatExpProvidesVersionB() {
                       </H2>
                     </div>
 
-                    {/* Bullets — always populated, revealed by card expansion */}
-                    <ul className="flex-1 space-y-3 overflow-hidden">
-                      {panel.bullets.map((bullet) => (
+                    {/* Bullets - staggered reveal */}
+                    <ul
+                      className="flex-1 space-y-3 overflow-hidden"
+                      style={{
+                        opacity: isExpanded ? 1 : 0,
+                        transition: 'opacity 0.4s ease 0.1s',
+                      }}
+                    >
+                      {panel.bullets.map((bullet, j) => (
                         <li
                           key={bullet.text}
                           className="text-body text-sm flex items-start gap-3"
-                          style={{ color: 'var(--color-body-text)' }}
+                          style={{
+                            color: 'var(--color-body-text)',
+                            opacity: isExpanded ? 1 : 0,
+                            transition: `opacity 0.4s ease ${j * 100}ms`,
+                          }}
                         >
                           <span
                             className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
@@ -3437,8 +3481,14 @@ function WhatExpProvidesVersionB() {
                       ))}
                     </ul>
 
-                    {/* Button — always populated */}
-                    <div className="mt-4">
+                    {/* Button - only visible when expanded */}
+                    <div
+                      className="mt-4"
+                      style={{
+                        opacity: isExpanded ? 1 : 0,
+                        transition: isExpanded ? 'opacity 0.4s ease 0.3s' : 'opacity 0.15s ease 0s',
+                      }}
+                    >
                       <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
                     </div>
                   </div>
