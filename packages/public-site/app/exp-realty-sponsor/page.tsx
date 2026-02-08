@@ -228,20 +228,21 @@ function Section1() {
                       transition: 'border-color 0.35s ease, box-shadow 0.4s ease',
                     }}
                   >
-                    {/* Content at fixed min-width — never reflows, clipped by overflow */}
-                    <div className="p-6 lg:p-8" style={{ minWidth: '550px' }}>
+                    {/* Content — in flow when active (sets height), absolute when inactive (clipped by overflow) */}
+                    <div
+                      className="p-6 lg:p-8"
+                      style={{
+                        minWidth: '550px',
+                        ...(isActive
+                          ? {}
+                          : { position: 'absolute' as const, top: 0, left: 0, width: '100%' }
+                        ),
+                      }}
+                    >
                       <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
                         {panel.label}
                       </H2>
-                      {/* Grid overlay: both contents rendered, taller sets stable height */}
-                      <div style={{ display: 'grid' }}>
-                        <div style={{ gridArea: '1 / 1' }}>
-                          {i === 0 ? <SAAContent /> : <SponsorshipContent />}
-                        </div>
-                        <div style={{ gridArea: '1 / 1', visibility: 'hidden', pointerEvents: 'none' }} aria-hidden="true">
-                          {i === 0 ? <SponsorshipContent /> : <SAAContent />}
-                        </div>
-                      </div>
+                      {i === 0 ? <SAAContent /> : <SponsorshipContent />}
                     </div>
 
                     {/* Inactive overlay — grain covers content, vertical H2 label */}
