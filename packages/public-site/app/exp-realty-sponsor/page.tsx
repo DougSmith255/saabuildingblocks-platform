@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { H1, H2, Tagline } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
@@ -89,18 +89,42 @@ const PANELS = [
 
 // ============================================================================
 // SECTION 1 — Focus Cards with edge-to-edge GlassPanel
-// Sliding-door card reveal: content pre-rendered at fixed min-width,
-// card overflow:hidden clips it. Expanding the card reveals content.
-// Inactive card has grain overlay + vertical H2 label.
-// Gold↔blue crosshatch glass panel spans full viewport width.
+// Content rendered at a JS-measured fixed pixel width so it NEVER reflows.
+// Card overflow:hidden clips it — expanding the card reveals content.
+// Both cards render both contents (grid overlay) at the same fixed width
+// so heights are equalized on desktop. Mobile renders independently.
+// Gold↔blue crosshatch glass panel with rounded-3xl (matching about-exp).
 // ============================================================================
 
 function Section1() {
   const [active, setActive] = useState(0);
   const other = active === 0 ? 1 : 0;
+  const flexRef = useRef<HTMLDivElement>(null);
+  const [contentW, setContentW] = useState(0);
+
+  // Measure the active card's width so content can be rendered at a fixed size
+  const measure = useCallback(() => {
+    if (flexRef.current) {
+      const w = flexRef.current.offsetWidth;
+      // Active card = 5/6 of (container - 16px gap)
+      setContentW(Math.floor((w - 16) * 5 / 6));
+    }
+  }, []);
+
+  useEffect(() => {
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (flexRef.current) ro.observe(flexRef.current);
+    return () => ro.disconnect();
+  }, [measure]);
 
   const goldGradient = 'linear-gradient(90deg, rgba(255,215,0,0.07) 0%, rgba(255,215,0,0.04) 55%, rgba(0,191,255,0.01) 100%)';
   const blueGradient = 'linear-gradient(90deg, rgba(255,215,0,0.01) 0%, rgba(0,191,255,0.04) 45%, rgba(0,191,255,0.07) 100%)';
+
+  // Fixed-width style for desktop content — SSR fallback uses min-width
+  const contentStyle = contentW > 0
+    ? { width: `${contentW}px` }
+    : { minWidth: '550px' };
 
   return (
     <section className="py-12 md:py-20">
@@ -137,9 +161,9 @@ function Section1() {
         }
       `}</style>
 
-      {/* Edge-to-edge glass panel — full viewport width, no rounded corners */}
+      {/* Glass panel — rounded-3xl matching about-exp GlassPanel pattern */}
       <div
-        className="relative overflow-hidden"
+        className="relative overflow-hidden rounded-3xl"
         style={{
           boxShadow: `
             0 8px 32px rgba(0,0,0,0.4),
@@ -184,11 +208,11 @@ function Section1() {
           }}
         />
 
-        {/* Content — max-width centered inside the full-width glass */}
+        {/* Content — max-width centered inside the glass */}
         <div className="relative z-10 max-w-[1100px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-10">
 
-          {/* Desktop: flex layout with sliding-door reveal */}
-          <div className="hidden md:flex gap-4">
+          {/* Desktop: flex layout — fixed-width content, height equalized */}
+          <div ref={flexRef} className="hidden md:flex gap-4">
             {PANELS.map((panel, i) => {
               const isActive = active === i;
               return (
@@ -215,7 +239,7 @@ function Section1() {
                     />
                   )}
 
-                  {/* Card — overflow:hidden creates the sliding-door clip */}
+                  {/* Card — overflow:hidden clips the fixed-width content */}
                   <div
                     className={`focus-card rounded-2xl h-full relative ${!isActive ? 'cursor-pointer' : ''}`}
                     onClick={() => !isActive && setActive(i)}
@@ -228,21 +252,20 @@ function Section1() {
                       transition: 'border-color 0.35s ease, box-shadow 0.4s ease',
                     }}
                   >
-                    {/* Content — in flow when active (sets height), absolute when inactive (clipped by overflow) */}
-                    <div
-                      className="p-6 lg:p-8"
-                      style={{
-                        minWidth: '550px',
-                        ...(isActive
-                          ? {}
-                          : { position: 'absolute' as const, top: 0, left: 0, width: '100%' }
-                        ),
-                      }}
-                    >
+                    {/* Content at FIXED pixel width — never reflows during transitions */}
+                    <div className="p-6 lg:p-8" style={contentStyle}>
                       <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
                         {panel.label}
                       </H2>
-                      {i === 0 ? <SAAContent /> : <SponsorshipContent />}
+                      {/* Grid overlay: both contents at same width → stable equal height */}
+                      <div style={{ display: 'grid' }}>
+                        <div style={{ gridArea: '1 / 1' }}>
+                          {i === 0 ? <SAAContent /> : <SponsorshipContent />}
+                        </div>
+                        <div style={{ gridArea: '1 / 1', visibility: 'hidden', pointerEvents: 'none' }} aria-hidden="true">
+                          {i === 0 ? <SponsorshipContent /> : <SAAContent />}
+                        </div>
+                      </div>
                     </div>
 
                     {/* Inactive overlay — grain covers content, vertical H2 label */}
@@ -266,7 +289,7 @@ function Section1() {
             })}
           </div>
 
-          {/* Mobile: active card + switcher bar */}
+          {/* Mobile: active card + switcher bar — independent height, no equalization */}
           <div className="md:hidden">
             <div
               className="focus-card rounded-2xl relative overflow-hidden"
