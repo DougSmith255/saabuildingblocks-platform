@@ -2806,7 +2806,7 @@ function AdditionalAreasDivider() {
             color: '#e5e4dd',
           }}
         >
-          ADDITIONAL AREAS AGENTS EXPLORE OVER TIME
+          ADDITIONAL AREAS AGENTS EXPLORE
         </h3>
 
         {/* Subtext */}
@@ -3485,7 +3485,7 @@ function AdditionalAreasSection() {
       <div className="max-w-[1200px] mx-auto">
         {/* H2 Heading */}
         <div className="text-center mb-10">
-          <H2>ADDITIONAL AREAS AGENTS EXPLORE OVER TIME</H2>
+          <H2>ADDITIONAL AREAS AGENTS EXPLORE</H2>
           <p className="text-body mt-4 max-w-[600px] mx-auto" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
             As agents grow, specialize, or shift focus, these areas often become relevant later.
           </p>

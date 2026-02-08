@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { H1, H2, Tagline, GlassPanel, GenericCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
@@ -11,10 +11,8 @@ import { Ban, ChevronDown, ShieldCheck, Wrench, GraduationCap, Users, Building }
 // SECTION 1 CONTENT — word for word
 // ============================================================================
 
-const SAA_PARAGRAPHS = [
-  'Smart Agent Alliance (SAA) is an organized eXp Realty sponsor organization built to deliver real systems, training, income infrastructure, and community to independent agents.',
-  'Smart Agent Alliance operates inside eXp Realty as sponsor-level infrastructure for agents who choose a SAA-aligned sponsor.',
-];
+const SAA_DESCRIPTION =
+  'Smart Agent Alliance (SAA) is a sponsor organization inside eXp Realty \u2014 built to deliver real systems, training, income infrastructure, and community to independent agents.';
 
 const SAA_NOT_STATEMENTS = [
   'This is not a brokerage.',
@@ -22,9 +20,9 @@ const SAA_NOT_STATEMENTS = [
 ];
 
 const SPONSORSHIP_INTRO =
-  'At eXp Realty, agents join the brokerage directly and name an individual sponsor on their application. That sponsor sits within a broader seven-level upline structure.';
+  'At eXp, agents join the brokerage directly and name a sponsor on their application. That sponsor sits within a broader seven-level upline structure.';
 
-const SPONSORSHIP_LEAD = 'At eXp sponsor support varies widely.';
+const SPONSORSHIP_LEAD = 'Sponsor support varies widely.';
 
 const SPONSORSHIP_BULLETS = [
   'Many sponsors provide little or no ongoing value.',
@@ -39,9 +37,7 @@ const SPONSORSHIP_BULLETS = [
 function SAAContent() {
   return (
     <div className="space-y-4">
-      {SAA_PARAGRAPHS.map((p, i) => (
-        <p key={i} className="text-body" style={{ color: '#dcdbd5' }}>{p}</p>
-      ))}
+      <p className="text-body" style={{ color: '#dcdbd5' }}>{SAA_DESCRIPTION}</p>
       <div className="flex flex-wrap gap-3 pt-2">
         {SAA_NOT_STATEMENTS.map((s, i) => (
           <span
@@ -93,81 +89,172 @@ const PANELS = [
 
 
 // ============================================================================
-// VERSION A — "Segment Toggle"
-// Two pill-style toggle buttons at top, single content panel below.
-// Only one panel visible at a time. Saves ~50% vertical space.
+// VERSION A — "Focus Cards"
+// Both panels always visible. Active card gets a glowing colored border
+// with organic pulse animation + full content. Inactive card is a slim
+// vertical-text panel. CSS Grid fr-unit transition for smooth width change.
+// Desktop: side-by-side. Mobile: stacked with slim switcher bar.
 // ============================================================================
 
 function SectionVersionA() {
   const [active, setActive] = useState(0);
+  const other = active === 0 ? 1 : 0;
 
   return (
     <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
-      <div className="max-w-[1000px] mx-auto">
+      <style>{`
+        @keyframes focusPulse {
+          0% { opacity: 0.55; }
+          13% { opacity: 0.95; }
+          28% { opacity: 0.6; }
+          41% { opacity: 0.85; }
+          54% { opacity: 0.5; }
+          67% { opacity: 1; }
+          83% { opacity: 0.7; }
+          100% { opacity: 0.55; }
+        }
+        @keyframes focusFadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .focus-card {
+          background:
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+            linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
+          background-blend-mode: overlay, normal;
+        }
+        @media (min-width: 1024px) {
+          .focus-card {
+            background:
+              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+              linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
+            background-blend-mode: overlay, normal;
+          }
+        }
+      `}</style>
 
-        {/* ── Toggle bar ── */}
+      <div className="max-w-[1100px] mx-auto">
+        {/* Desktop: side-by-side grid with fr transition */}
         <div
-          className="flex rounded-xl p-1 mb-8 mx-auto"
+          className="hidden md:grid gap-4"
           style={{
-            maxWidth: '600px',
-            background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 4px 16px rgba(0,0,0,0.3)',
+            gridTemplateColumns: active === 0 ? '5fr 1fr' : '1fr 5fr',
+            transition: 'grid-template-columns 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
           }}
         >
-          {PANELS.map((panel, i) => (
-            <button
-              key={panel.id}
-              type="button"
-              onClick={() => setActive(i)}
-              className="flex-1 py-2.5 px-3 rounded-lg text-center cursor-pointer"
-              style={{
-                fontFamily: 'var(--font-taskor), sans-serif',
-                fontSize: 'clamp(12px, 2.5vw, 15px)',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
-                color: active === i ? '#fff' : 'rgba(255,255,255,0.45)',
-                background: active === i
-                  ? `linear-gradient(135deg, ${panel.color}22, ${panel.color}11)`
-                  : 'transparent',
-                border: active === i
-                  ? `1px solid ${panel.color}55`
-                  : '1px solid transparent',
-                boxShadow: active === i
-                  ? `0 0 12px ${panel.color}20, inset 0 1px 0 rgba(255,255,255,0.05)`
-                  : 'none',
-                transition: 'all 0.3s ease',
-              }}
-            >
-              {panel.shortLabel}
-            </button>
-          ))}
+          {PANELS.map((panel, i) => {
+            const isActive = active === i;
+            return (
+              <div
+                key={panel.id}
+                className={`focus-card rounded-2xl relative overflow-hidden ${!isActive ? 'cursor-pointer' : ''}`}
+                onClick={() => !isActive && setActive(i)}
+                style={{
+                  border: isActive ? `3px solid ${panel.color}` : '1px solid rgba(255,255,255,0.06)',
+                  boxShadow: isActive
+                    ? `0 0 6px 2px ${panel.color}44, 0 0 20px 4px ${panel.color}22, 0 8px 32px rgba(0,0,0,0.4)`
+                    : '0 4px 16px rgba(0,0,0,0.3)',
+                  transition: 'border-color 0.35s ease, box-shadow 0.4s ease',
+                  minHeight: '260px',
+                }}
+              >
+                {/* Pulsing glow layer */}
+                {isActive && (
+                  <div
+                    className="absolute -inset-[3px] rounded-2xl pointer-events-none z-0"
+                    style={{
+                      border: `2px solid ${panel.color}50`,
+                      boxShadow: `0 0 12px 4px ${panel.color}44, 0 0 28px 8px ${panel.color}22`,
+                      animation: 'focusPulse 2.4s linear infinite',
+                    }}
+                  />
+                )}
+
+                {isActive ? (
+                  <div className="relative z-10 p-6 lg:p-8">
+                    <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
+                      {panel.label}
+                    </H2>
+                    <div key={`desk-${i}`} style={{ animation: 'focusFadeIn 0.4s ease' }}>
+                      {i === 0 ? <SAAContent /> : <SponsorshipContent />}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative z-10 h-full flex items-center justify-center">
+                    <p
+                      style={{
+                        fontFamily: 'var(--font-taskor), sans-serif',
+                        fontSize: '14px',
+                        color: panel.color,
+                        opacity: 0.5,
+                        letterSpacing: '0.12em',
+                        textTransform: 'uppercase',
+                        writingMode: 'vertical-rl',
+                        textOrientation: 'mixed',
+                      }}
+                    >
+                      {panel.shortLabel}
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        {/* ── Content panel ── */}
-        <GenericCard padding="lg">
-          <H2
-            theme={PANELS[active].theme}
-            style={{ textAlign: 'left', marginBottom: '1.25rem' }}
-          >
-            {PANELS[active].label}
-          </H2>
+        {/* Mobile: active card + switcher bar */}
+        <div className="md:hidden">
           <div
-            key={active}
+            className="focus-card rounded-2xl relative overflow-hidden"
             style={{
-              animation: 'segmentFadeIn 0.3s ease',
+              border: `3px solid ${PANELS[active].color}`,
+              boxShadow: `0 0 6px 2px ${PANELS[active].color}44, 0 0 20px 4px ${PANELS[active].color}22`,
             }}
           >
-            {active === 0 ? <SAAContent /> : <SponsorshipContent />}
+            <div
+              className="absolute -inset-[3px] rounded-2xl pointer-events-none z-0"
+              style={{
+                border: `2px solid ${PANELS[active].color}50`,
+                boxShadow: `0 0 12px 4px ${PANELS[active].color}44, 0 0 28px 8px ${PANELS[active].color}22`,
+                animation: 'focusPulse 2.4s linear infinite',
+              }}
+            />
+            <div className="relative z-10 p-5">
+              <H2 theme={PANELS[active].theme} style={{ textAlign: 'left', marginBottom: '1rem' }}>
+                {PANELS[active].label}
+              </H2>
+              <div key={`mob-${active}`} style={{ animation: 'focusFadeIn 0.35s ease' }}>
+                {active === 0 ? <SAAContent /> : <SponsorshipContent />}
+              </div>
+            </div>
           </div>
-        </GenericCard>
 
-        <style>{`
-          @keyframes segmentFadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-        `}</style>
+          <button
+            type="button"
+            onClick={() => setActive(other)}
+            className="w-full mt-3 focus-card rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer"
+            style={{ border: `1px solid ${PANELS[other].color}33` }}
+          >
+            <span style={{
+              fontFamily: 'var(--font-taskor), sans-serif',
+              fontSize: '13px',
+              color: PANELS[other].color,
+              opacity: 0.6,
+              letterSpacing: '0.06em',
+            }}>
+              {PANELS[other].shortLabel}
+            </span>
+            <span style={{
+              fontFamily: 'var(--font-taskor), sans-serif',
+              color: PANELS[other].color,
+              opacity: 0.4,
+              fontSize: '11px',
+              letterSpacing: '0.08em',
+            }}>
+              TAP TO VIEW &rarr;
+            </span>
+          </button>
+        </div>
       </div>
     </section>
   );
@@ -175,92 +262,159 @@ function SectionVersionA() {
 
 
 // ============================================================================
-// VERSION B — "Accordion Dual"
-// Two accordion rows, only one open at a time. Click header to toggle.
-// Uses grid-template-rows for smooth expand/collapse animation.
-// Wrapped in a single GlassPanel (champagne).
+// VERSION B — "3D Flip Card"
+// Single card that physically rotates 180° in 3D space between two faces.
+// Front = gold-themed SAA content. Back = blue-themed Sponsorship content.
+// Auto-rotates on interval (gated by IntersectionObserver). Click face
+// indicator to flip manually (stops auto-rotation).
+// Uses rotateY + preserve-3d + backfaceVisibility: hidden.
 // ============================================================================
 
 function SectionVersionB() {
-  const [expanded, setExpanded] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const [autoRotate, setAutoRotate] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
 
-  // Grain matching GenericCyberCardGold (mobile: 0.5, but this is inside a GlassPanel so keep clean)
-  const inactiveBg = 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)';
-  const activeBg = `
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-    linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%)
-  `;
+  // IntersectionObserver — only auto-flip when visible
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setInView(true); obs.disconnect(); } },
+      { threshold: 0.4 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  // Auto-flip every 6s
+  useEffect(() => {
+    if (!inView || !autoRotate) return;
+    const timer = setInterval(() => setFlipped(prev => !prev), 6000);
+    return () => clearInterval(timer);
+  }, [inView, autoRotate]);
+
+  const handleManualFlip = useCallback((side: boolean) => {
+    setFlipped(side);
+    setAutoRotate(false);
+  }, []);
 
   return (
-    <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
-      <div className="max-w-[1000px] mx-auto">
-        <GlassPanel variant="champagne">
-          <div className="p-4 sm:p-6 md:p-8 space-y-3">
-            {PANELS.map((panel, i) => {
-              const isOpen = expanded === i;
-              return (
-                <div
-                  key={panel.id}
-                  className="rounded-xl overflow-hidden"
-                  style={{
-                    background: isOpen ? activeBg : inactiveBg,
-                    backgroundBlendMode: isOpen ? 'overlay, normal' : 'normal',
-                    border: isOpen ? `2px solid ${panel.color}55` : '1px solid rgba(255,255,255,0.06)',
-                    boxShadow: isOpen
-                      ? `0 0 20px ${panel.color}20, 0 4px 16px rgba(0,0,0,0.3)`
-                      : '0 0 0 1px rgba(255,255,255,0.02), 0 4px 16px rgba(0,0,0,0.3)',
-                    transition: 'border 0.35s ease, box-shadow 0.35s ease',
-                  }}
-                >
-                  {/* Header row — always visible */}
-                  <button
-                    type="button"
-                    onClick={() => setExpanded(i)}
-                    className="w-full flex items-center justify-between p-4 sm:p-5 cursor-pointer"
-                  >
-                    <H2
-                      theme={panel.theme}
-                      style={{ marginBottom: 0, textAlign: 'left' }}
-                    >
-                      {panel.shortLabel}
-                    </H2>
-                    <ChevronDown
-                      size={22}
-                      style={{
-                        color: panel.color,
-                        transform: isOpen ? 'rotate(180deg)' : 'rotate(0)',
-                        transition: 'transform 0.3s ease',
-                        flexShrink: 0,
-                      }}
-                    />
-                  </button>
+    <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12" ref={containerRef}>
+      <style>{`
+        .flip-card-face {
+          background:
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+            linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
+          background-blend-mode: overlay, normal;
+        }
+        @media (min-width: 1024px) {
+          .flip-card-face {
+            background:
+              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+              linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
+            background-blend-mode: overlay, normal;
+          }
+        }
+      `}</style>
 
-                  {/* Collapsible body — grid-template-rows for smooth animation */}
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateRows: isOpen ? '1fr' : '0fr',
-                      transition: 'grid-template-rows 0.4s ease',
-                    }}
-                  >
-                    <div style={{ overflow: 'hidden' }}>
-                      <div className="px-4 sm:px-5 pb-5">
-                        <div
-                          style={{
-                            opacity: isOpen ? 1 : 0,
-                            transition: isOpen ? 'opacity 0.3s ease 0.15s' : 'opacity 0.15s ease 0s',
-                          }}
-                        >
-                          {i === 0 ? <SAAContent /> : <SponsorshipContent />}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+      <div className="max-w-[1000px] mx-auto">
+        {/* 3D flip container */}
+        <div style={{ perspective: '1200px' }}>
+          <div
+            style={{
+              position: 'relative',
+              transformStyle: 'preserve-3d',
+              transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+              transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            }}
+          >
+            {/* Front face — SAA (gold) */}
+            <div style={{ backfaceVisibility: 'hidden' }}>
+              <div
+                className="flip-card-face rounded-2xl"
+                style={{
+                  border: '3px solid #ffd700',
+                  boxShadow: '0 0 6px 2px rgba(255,215,0,0.3), 0 0 20px 4px rgba(255,215,0,0.15), 0 8px 32px rgba(0,0,0,0.4)',
+                }}
+              >
+                <div className="p-6 md:p-8">
+                  <H2 style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
+                    {PANELS[0].label}
+                  </H2>
+                  <SAAContent />
                 </div>
-              );
-            })}
+              </div>
+            </div>
+
+            {/* Back face — Sponsorship (blue) */}
+            <div
+              style={{
+                backfaceVisibility: 'hidden',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                transform: 'rotateY(180deg)',
+              }}
+            >
+              <div
+                className="flip-card-face rounded-2xl h-full"
+                style={{
+                  border: '3px solid #00bfff',
+                  boxShadow: '0 0 6px 2px rgba(0,191,255,0.3), 0 0 20px 4px rgba(0,191,255,0.15), 0 8px 32px rgba(0,0,0,0.4)',
+                }}
+              >
+                <div className="p-6 md:p-8">
+                  <H2 theme="blue" style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
+                    {PANELS[1].label}
+                  </H2>
+                  <SponsorshipContent />
+                </div>
+              </div>
+            </div>
           </div>
-        </GlassPanel>
+        </div>
+
+        {/* Face indicators */}
+        <div className="flex items-center justify-center gap-3 mt-5">
+          {PANELS.map((panel, i) => {
+            const isShowing = (i === 0 && !flipped) || (i === 1 && flipped);
+            return (
+              <button
+                key={panel.id}
+                type="button"
+                onClick={() => handleManualFlip(i === 1)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer"
+                style={{
+                  background: isShowing ? `${panel.color}12` : 'transparent',
+                  border: isShowing ? `1px solid ${panel.color}44` : '1px solid rgba(255,255,255,0.06)',
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{
+                    background: isShowing ? panel.color : 'rgba(255,255,255,0.2)',
+                    boxShadow: isShowing ? `0 0 6px ${panel.color}66` : 'none',
+                    transition: 'all 0.3s ease',
+                  }}
+                />
+                <span style={{
+                  fontFamily: 'var(--font-taskor), sans-serif',
+                  fontSize: '12px',
+                  color: isShowing ? panel.color : 'rgba(255,255,255,0.35)',
+                  letterSpacing: '0.06em',
+                  transition: 'color 0.3s ease',
+                }}>
+                  {panel.shortLabel}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -268,9 +422,11 @@ function SectionVersionB() {
 
 
 // ============================================================================
-// VERSION C — "Slide Panel"
-// Single GenericCyberCardGold card with two small tab buttons inside.
-// Content crossfades with a horizontal slide between the two panels.
+// VERSION C — "Depth Stack"
+// Two overlapping cards with CSS 3D perspective. Active card sits in front
+// at normal scale. Inactive card peeks out behind, offset and slightly
+// scaled down with reduced opacity. Click the background card to bring it
+// forward. Creates a physical "card stack" depth effect.
 // ============================================================================
 
 function SectionVersionC() {
@@ -278,75 +434,109 @@ function SectionVersionC() {
 
   return (
     <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
-      <div className="max-w-[1000px] mx-auto">
-        <GenericCyberCardGold padding="lg" centered={false}>
+      <style>{`
+        .depth-card {
+          background:
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+            linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
+          background-blend-mode: overlay, normal;
+        }
+        @media (min-width: 1024px) {
+          .depth-card {
+            background:
+              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+              linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
+            background-blend-mode: overlay, normal;
+          }
+        }
+        @keyframes depthFadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
 
-          {/* ── Inline tab buttons ── */}
-          <div className="flex gap-2 mb-6">
+      <div className="max-w-[1000px] mx-auto">
+        <div style={{ perspective: '800px' }}>
+          {/* CSS Grid overlay — both cards in same cell, taller one sets height */}
+          <div style={{ display: 'grid' }}>
+            {PANELS.map((panel, i) => {
+              const isActive = active === i;
+              const isFirst = i === 0;
+              return (
+                <div
+                  key={panel.id}
+                  className={`depth-card rounded-2xl ${!isActive ? 'cursor-pointer' : ''}`}
+                  onClick={() => !isActive && setActive(i)}
+                  style={{
+                    gridArea: '1 / 1',
+                    zIndex: isActive ? 2 : 1,
+                    transform: isActive
+                      ? 'translateZ(0) translateX(0) translateY(0) scale(1) rotateX(0deg)'
+                      : `translateZ(-60px) translateX(${isFirst ? '-10px' : '10px'}) translateY(14px) scale(0.97) rotateX(1deg)`,
+                    opacity: isActive ? 1 : 0.3,
+                    border: isActive
+                      ? `3px solid ${panel.color}`
+                      : `1px solid ${panel.color}33`,
+                    boxShadow: isActive
+                      ? `0 0 6px 2px ${panel.color}33, 0 0 16px 4px ${panel.color}18, 0 12px 32px rgba(0,0,0,0.4)`
+                      : '0 4px 16px rgba(0,0,0,0.5)',
+                    transition: 'all 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
+                    transformStyle: 'preserve-3d',
+                  }}
+                >
+                  <div className="p-6 md:p-8">
+                    <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
+                      {panel.label}
+                    </H2>
+                    <div
+                      style={{
+                        opacity: isActive ? 1 : 0,
+                        transition: isActive ? 'opacity 0.35s ease 0.2s' : 'opacity 0.15s ease',
+                      }}
+                    >
+                      {i === 0 ? <SAAContent /> : <SponsorshipContent />}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Stack position indicators */}
+          <div className="flex items-center justify-center gap-3 mt-5">
             {PANELS.map((panel, i) => (
               <button
                 key={panel.id}
                 type="button"
                 onClick={() => setActive(i)}
-                className="px-4 py-2 rounded-lg cursor-pointer"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer"
                 style={{
-                  fontFamily: 'var(--font-taskor), sans-serif',
-                  fontSize: 'clamp(11px, 2.2vw, 14px)',
-                  fontWeight: 600,
-                  letterSpacing: '0.05em',
-                  color: active === i ? '#fff' : 'rgba(255,255,255,0.4)',
-                  background: active === i
-                    ? `linear-gradient(135deg, ${panel.color}18, ${panel.color}0a)`
-                    : 'rgba(255,255,255,0.03)',
-                  border: active === i
-                    ? `1px solid ${panel.color}44`
-                    : '1px solid rgba(255,255,255,0.06)',
-                  transition: 'all 0.25s ease',
+                  background: active === i ? `${panel.color}12` : 'transparent',
+                  border: active === i ? `1px solid ${panel.color}44` : '1px solid rgba(255,255,255,0.06)',
+                  transition: 'all 0.3s ease',
                 }}
               >
-                {panel.shortLabel}
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{
+                    background: active === i ? panel.color : 'rgba(255,255,255,0.2)',
+                    boxShadow: active === i ? `0 0 6px ${panel.color}66` : 'none',
+                    transition: 'all 0.3s ease',
+                  }}
+                />
+                <span style={{
+                  fontFamily: 'var(--font-taskor), sans-serif',
+                  fontSize: '12px',
+                  color: active === i ? panel.color : 'rgba(255,255,255,0.35)',
+                  letterSpacing: '0.06em',
+                  transition: 'color 0.3s ease',
+                }}>
+                  {panel.shortLabel}
+                </span>
               </button>
             ))}
           </div>
-
-          {/* ── Accent bar ── */}
-          <div
-            className="h-[2px] rounded-full mb-6"
-            style={{
-              background: `linear-gradient(90deg, ${PANELS[active].color}66 0%, ${PANELS[active].color}15 100%)`,
-              boxShadow: `0 0 8px ${PANELS[active].color}20`,
-              transition: 'all 0.3s ease',
-            }}
-          />
-
-          {/* ── H2 title ── */}
-          <H2
-            theme={PANELS[active].theme}
-            style={{ textAlign: 'left', marginBottom: '1.25rem' }}
-          >
-            {PANELS[active].label}
-          </H2>
-
-          {/* ── Sliding content ── */}
-          <div className="relative overflow-hidden">
-            <div
-              style={{
-                display: 'flex',
-                width: '200%',
-                transform: `translateX(${active === 0 ? '0' : '-50%'})`,
-                transition: 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
-              }}
-            >
-              <div style={{ width: '50%', flexShrink: 0 }}>
-                <SAAContent />
-              </div>
-              <div style={{ width: '50%', flexShrink: 0 }}>
-                <SponsorshipContent />
-              </div>
-            </div>
-          </div>
-
-        </GenericCyberCardGold>
+        </div>
       </div>
     </section>
   );
@@ -837,23 +1027,23 @@ export default function ExpRealtySponsor() {
       </StickyHeroWrapper>
 
       {/* ================================================================== */}
-      {/* SECTION 1 — VERSION A: Segment Toggle                              */}
-      {/* Two pill buttons at top, single content panel below.               */}
-      {/* Only one panel visible at a time. Content fades in on switch.      */}
+      {/* SECTION 1 — VERSION A: Focus Cards                                 */}
+      {/* Both panels visible. Active gets glowing border + pulse.           */}
+      {/* Inactive is slim vertical-text panel. Grid fr transition.          */}
       {/* ================================================================== */}
       <SectionVersionA />
 
       {/* ================================================================== */}
-      {/* SECTION 1 — VERSION B: Accordion Dual                             */}
-      {/* Two accordion rows inside a champagne GlassPanel.                  */}
-      {/* One open at a time. Smooth grid-template-rows animation.           */}
+      {/* SECTION 1 — VERSION B: 3D Flip Card                               */}
+      {/* Single card rotates 180° in 3D between SAA and Sponsorship.        */}
+      {/* Auto-rotates, IntersectionObserver gated, manual control.          */}
       {/* ================================================================== */}
       <SectionVersionB />
 
       {/* ================================================================== */}
-      {/* SECTION 1 — VERSION C: Slide Panel                                */}
-      {/* Single GenericCyberCardGold card with inline tab buttons.          */}
-      {/* Content slides horizontally between panels.                        */}
+      {/* SECTION 1 — VERSION C: Depth Stack                                */}
+      {/* Two overlapping cards with CSS 3D perspective.                      */}
+      {/* Active in front, inactive peeks behind. Click to swap.             */}
       {/* ================================================================== */}
       <SectionVersionC />
 
