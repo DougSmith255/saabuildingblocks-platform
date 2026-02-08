@@ -239,46 +239,77 @@ function Section1() {
                     />
                   )}
 
-                  {/* Card — overflow:hidden clips the fixed-width content */}
+                  {/* Card — active: grain bg via focus-card class; inactive: GenericCard solid bg */}
                   <div
-                    className={`focus-card rounded-2xl h-full relative ${!isActive ? 'cursor-pointer' : ''}`}
+                    className={`${isActive ? 'focus-card' : ''} rounded-2xl h-full relative ${!isActive ? 'cursor-pointer' : ''}`}
                     onClick={() => !isActive && setActive(i)}
                     style={{
                       overflow: 'hidden',
+                      ...(!isActive ? {
+                        background: 'linear-gradient(180deg, rgba(18,18,18,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                      } : {}),
                       border: isActive ? `3px solid ${panel.color}` : '1px solid rgba(255,255,255,0.06)',
                       boxShadow: isActive
                         ? `0 0 6px 2px ${panel.color}44, 0 0 20px 4px ${panel.color}22, 0 8px 32px rgba(0,0,0,0.4)`
-                        : '0 4px 16px rgba(0,0,0,0.3)',
+                        : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                       transition: 'border-color 0.35s ease, box-shadow 0.4s ease',
                     }}
                   >
                     {/* Content at FIXED pixel width — never reflows during transitions */}
                     <div className="p-6 lg:p-8" style={contentStyle}>
-                      <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
-                        {panel.label}
-                      </H2>
-                      {/* Grid overlay: both contents at same width → stable equal height */}
-                      <div style={{ display: 'grid' }}>
-                        <div style={{ gridArea: '1 / 1' }}>
-                          {i === 0 ? <SAAContent /> : <SponsorshipContent />}
-                        </div>
-                        <div style={{ gridArea: '1 / 1', visibility: 'hidden', pointerEvents: 'none' }} aria-hidden="true">
-                          {i === 0 ? <SponsorshipContent /> : <SAAContent />}
+                      {/* Full H2 title — clip-path reveals left-to-right ("counter grow" effect) */}
+                      <div style={{
+                        clipPath: isActive ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)',
+                        transition: isActive
+                          ? 'clip-path 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.2s'
+                          : 'clip-path 0.25s ease',
+                      }}>
+                        <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
+                          {panel.label}
+                        </H2>
+                      </div>
+                      {/* Content body — fades in when active */}
+                      <div style={{
+                        opacity: isActive ? 1 : 0,
+                        transition: isActive
+                          ? 'opacity 0.4s ease 0.3s'
+                          : 'opacity 0.2s ease',
+                      }}>
+                        {/* Grid overlay: both contents at same width → stable equal height */}
+                        <div style={{ display: 'grid' }}>
+                          <div style={{ gridArea: '1 / 1' }}>
+                            {i === 0 ? <SAAContent /> : <SponsorshipContent />}
+                          </div>
+                          <div style={{ gridArea: '1 / 1', visibility: 'hidden', pointerEvents: 'none' }} aria-hidden="true">
+                            {i === 0 ? <SponsorshipContent /> : <SAAContent />}
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Inactive overlay — grain covers content, vertical H2 label */}
+                    {/* Short label — vertical text, hinges upward on activation */}
                     <div
-                      className="absolute inset-0 z-20 flex items-center justify-center focus-card"
+                      className="absolute inset-0 z-20 flex items-center justify-center"
                       style={{
-                        opacity: isActive ? 0 : 1,
                         pointerEvents: isActive ? 'none' : 'auto',
-                        transition: isActive ? 'opacity 0.25s ease 0.15s' : 'opacity 0.2s ease',
                       }}
                     >
-                      <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-                        <H2 theme={panel.theme} style={{ marginBottom: 0 }}>
+                      <div style={{
+                        writingMode: 'vertical-rl',
+                        textOrientation: 'mixed',
+                        transform: isActive
+                          ? 'perspective(600px) rotateX(-90deg)'
+                          : 'perspective(600px) rotateX(0deg)',
+                        opacity: isActive ? 0 : 1,
+                        transformOrigin: 'top center',
+                        transition: isActive
+                          ? 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.15s ease 0.2s'
+                          : 'opacity 0.3s ease 0.15s, transform 0.35s ease 0.2s',
+                      }}>
+                        <H2 theme={panel.theme} style={{
+                          marginBottom: 0,
+                          fontSize: 'clamp(28px, calc(24.36px + 1.45vw), 58px)',
+                        }}>
                           {panel.shortLabel}
                         </H2>
                       </div>
@@ -319,8 +350,12 @@ function Section1() {
             <button
               type="button"
               onClick={() => setActive(other)}
-              className="w-full mt-3 focus-card rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer"
-              style={{ border: `1px solid ${PANELS[other].color}33` }}
+              className="w-full mt-3 rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer"
+              style={{
+                background: 'linear-gradient(180deg, rgba(18,18,18,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                border: `1px solid ${PANELS[other].color}33`,
+                boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
+              }}
             >
               <span style={{
                 fontFamily: 'var(--font-taskor), sans-serif',
