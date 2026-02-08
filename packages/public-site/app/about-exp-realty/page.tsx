@@ -3317,15 +3317,11 @@ function WhatExpProvidesVersionB() {
                     >
                       <div style={{ overflow: 'hidden' }}>
                         <ul className="pt-4 space-y-3">
-                          {panel.bullets.map((bullet, j) => (
+                          {panel.bullets.map((bullet) => (
                             <li
                               key={bullet.text}
                               className="text-body text-sm flex items-start gap-3"
-                              style={{
-                                color: 'var(--color-body-text)',
-                                opacity: isExpanded ? 1 : 0,
-                                transition: `opacity 0.3s ease ${j * 100}ms`,
-                              }}
+                              style={{ color: 'var(--color-body-text)' }}
                             >
                               <span
                                 className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
@@ -3340,13 +3336,7 @@ function WhatExpProvidesVersionB() {
                             </li>
                           ))}
                         </ul>
-                        <div
-                          className="pt-4"
-                          style={{
-                            opacity: isExpanded ? 1 : 0,
-                            transition: isExpanded ? 'opacity 0.3s ease 0.2s' : 'opacity 0.1s ease 0s',
-                          }}
-                        >
+                        <div className="pt-4">
                           <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
                         </div>
                       </div>
@@ -3425,23 +3415,13 @@ function WhatExpProvidesVersionB() {
                       </H2>
                     </div>
 
-                    {/* Bullets - only visible when expanded */}
-                    <ul
-                      className="flex-1 space-y-3 overflow-hidden"
-                      style={{
-                        opacity: isExpanded ? 1 : 0,
-                        transition: 'opacity 0.4s ease 0.1s',
-                      }}
-                    >
-                      {panel.bullets.map((bullet, j) => (
+                    {/* Bullets — always populated, revealed by card expansion */}
+                    <ul className="flex-1 space-y-3 overflow-hidden">
+                      {panel.bullets.map((bullet) => (
                         <li
                           key={bullet.text}
                           className="text-body text-sm flex items-start gap-3"
-                          style={{
-                            color: 'var(--color-body-text)',
-                            opacity: isExpanded ? 1 : 0,
-                            transition: `opacity 0.4s ease ${j * 100}ms`,
-                          }}
+                          style={{ color: 'var(--color-body-text)' }}
                         >
                           <span
                             className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
@@ -3457,14 +3437,8 @@ function WhatExpProvidesVersionB() {
                       ))}
                     </ul>
 
-                    {/* Button - only visible when expanded */}
-                    <div
-                      className="mt-4"
-                      style={{
-                        opacity: isExpanded ? 1 : 0,
-                        transition: isExpanded ? 'opacity 0.4s ease 0.3s' : 'opacity 0.15s ease 0s',
-                      }}
-                    >
+                    {/* Button — always populated */}
+                    <div className="mt-4">
                       <SecondaryButton href="#" variant="blue">{panel.buttonText}</SecondaryButton>
                     </div>
                   </div>
