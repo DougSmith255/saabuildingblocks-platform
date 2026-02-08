@@ -3210,7 +3210,7 @@ function WhereSAAFitsSection() {
 
         {/* Bottom decorative line */}
         <div
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-[2px]"
+          className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-24 h-[2px]"
           style={{
             background: 'linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent)',
           }}
