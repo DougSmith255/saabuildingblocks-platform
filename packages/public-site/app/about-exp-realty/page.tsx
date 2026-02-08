@@ -3230,6 +3230,8 @@ function WhereSAAFitsSection() {
 function WhatExpProvidesVersionB() {
   const [expandedIndex, setExpandedIndex] = useState(0);
   const desktopFlexRef = useRef<HTMLDivElement>(null);
+  const providesSectionRef = useRef<HTMLElement>(null);
+  const hasAutoSwitched = useRef(false);
   const [desktopContentW, setDesktopContentW] = useState(0);
 
   // Measure expanded card width so content can be fixed-width (no reflow)
@@ -3247,6 +3249,24 @@ function WhatExpProvidesVersionB() {
     if (desktopFlexRef.current) ro.observe(desktopFlexRef.current);
     return () => ro.disconnect();
   }, [measureDesktop]);
+
+  // Auto-switch from Community → Technology when user scrolls ~40% into section
+  useEffect(() => {
+    const el = providesSectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAutoSwitched.current) {
+          hasAutoSwitched.current = true;
+          setExpandedIndex(1);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const panels = [
     { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS, buttonText: 'Explore Community' },
@@ -3277,7 +3297,7 @@ function WhatExpProvidesVersionB() {
 
   return (
     <GlassPanel variant="tealCrosshatch" noBlur>
-      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
+      <section ref={providesSectionRef} className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1400px] mx-auto">
           {/* Mobile: stacked panels — single div per card for smooth transitions */}
           <div className="lg:hidden space-y-4">

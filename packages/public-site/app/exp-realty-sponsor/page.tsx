@@ -97,9 +97,11 @@ const PANELS = [
 // ============================================================================
 
 function Section1() {
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(1); // Start on card 2 — auto-switches to card 1 on scroll
   const other = active === 0 ? 1 : 0;
   const flexRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const hasAutoSwitched = useRef(false);
   const [contentW, setContentW] = useState(0);
 
   // Measure the active card's width so content can be rendered at a fixed size
@@ -118,6 +120,24 @@ function Section1() {
     return () => ro.disconnect();
   }, [measure]);
 
+  // Auto-switch to card 1 (SAA) when user scrolls ~40% into the section
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAutoSwitched.current) {
+          hasAutoSwitched.current = true;
+          setActive(0);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const goldGradient = 'linear-gradient(90deg, rgba(255,215,0,0.07) 0%, rgba(255,215,0,0.04) 55%, rgba(0,191,255,0.01) 100%)';
   const blueGradient = 'linear-gradient(90deg, rgba(255,215,0,0.01) 0%, rgba(0,191,255,0.04) 45%, rgba(0,191,255,0.07) 100%)';
 
@@ -127,7 +147,7 @@ function Section1() {
     : { minWidth: '550px' };
 
   return (
-    <section className="py-12 md:py-20">
+    <section ref={sectionRef} className="py-12 md:py-20">
       <style>{`
         @keyframes focusPulse {
           0% { opacity: 0.55; }
