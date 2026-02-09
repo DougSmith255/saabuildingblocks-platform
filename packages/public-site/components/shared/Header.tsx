@@ -635,9 +635,9 @@ export default function Header() {
 
         /* Desktop header sizing when JS forces desktop nav */
         .header-container.nav-force-desktop {
-          height: 85px;
-          padding-top: 8px;
-          padding-bottom: 8px;
+          height: 75px;
+          padding-top: 3px;
+          padding-bottom: 3px;
           padding-left: 32px !important;
           padding-right: 32px !important;
         }
@@ -788,17 +788,17 @@ export default function Header() {
           stroke-dashoffset: -32.42;
         }
 
-        /* Base header height — all mobile (<1440px): 15px + 45px logo + 15px = 75px */
+        /* Base header height — all mobile (<1440px) */
         .header-container {
-          height: 75px;
+          height: 65px;
           padding-top: 0;
           padding-bottom: 0;
         }
 
-        /* <1300px: 0.9x logo & hamburger, 13px padding */
+        /* <1300px: 0.9x logo & hamburger */
         @media (max-width: 81.25rem) {
           .header-container {
-            height: 67px;
+            height: 57px;
           }
           .logo-container {
             width: 113px !important;
@@ -820,10 +820,10 @@ export default function Header() {
           }
         }
 
-        /* <1024px: 0.8x logo, 0.9x hamburger, 11px padding */
+        /* <1024px: 0.8x logo, 0.9x hamburger */
         @media (max-width: 64rem) {
           .header-container {
-            height: 55px;
+            height: 45px;
           }
           .logo-container {
             width: 90px !important;
@@ -845,12 +845,12 @@ export default function Header() {
           }
         }
 
-        /* Desktop header — restore full 85px height and padding at ≥1440px */
+        /* Desktop header — restore height and padding at ≥1440px */
         @media (min-width: 90rem) {
           .header-container {
-            height: 85px;
-            padding-top: 8px;
-            padding-bottom: 8px;
+            height: 75px;
+            padding-top: 3px;
+            padding-bottom: 3px;
             padding-left: 32px !important;
             padding-right: 32px !important;
           }
