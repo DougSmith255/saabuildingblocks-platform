@@ -139,7 +139,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
                 onClick={handlePortalClick}
                 className={`nav-link agent-portal flex items-center px-2 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white whitespace-nowrap ${isPortalClicked ? 'clicked' : ''}`}
                 style={{
-                  fontSize: 'var(--font-size-menuMainItem)',
+                  fontSize: 'clamp(18px, 1.6vw, 25px)',
                   fontFamily: 'var(--font-family-menuMainItem)',
                   fontWeight: '700',
                   letterSpacing: 'var(--letter-spacing-menuMainItem)',
@@ -157,7 +157,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
                 href={item.href!}
                 className="nav-link flex items-center px-2 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white whitespace-nowrap"
                 style={{
-                  fontSize: 'var(--font-size-menuMainItem)',
+                  fontSize: 'clamp(18px, 1.6vw, 25px)',
                   fontFamily: 'var(--font-family-menuMainItem)',
                   fontWeight: 'var(--font-weight-menuMainItem)',
                   letterSpacing: 'var(--letter-spacing-menuMainItem)',
