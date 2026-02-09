@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { H1, H2, Tagline } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, GlassPanel, IconCyberCard, CyberCardGold, GenericCard, Icon3D } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
-import { Ban } from 'lucide-react';
+import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers } from 'lucide-react';
 
 // ============================================================================
 // SECTION 1 CONTENT — word for word
@@ -86,6 +86,33 @@ const PANELS = [
   { id: 'sponsorship', label: 'How Sponsorship Works at eXp', shortLabel: 'Sponsorship', color: '#00bfff', theme: 'blue' as const },
 ];
 
+// ============================================================================
+// SECTION 2 CONTENT — word for word
+// ============================================================================
+
+const SECTION2_HEADING = 'Why Smart Agent Alliance Is Different';
+const SECTION2_INTRO = 'At eXp Realty, sponsors are not required to provide any ongoing support. As a result, most never do.';
+const SECTION2_SUBHEADING = 'Smart Agent Alliance was built differently.';
+
+const DIFFERENTIATORS = [
+  { icon: Building2, text: 'Built as a sponsor organization, not an individual sponsor' },
+  { icon: Wrench, text: 'Delivers real systems, training, and income infrastructure' },
+  { icon: Shield, text: 'No commission splits or loss of control' },
+];
+
+const FINANCIAL_LINES = [
+  'Agents pay Smart Agent Alliance nothing.',
+  'We are compensated from eXp\'s company revenue only when agents close transactions.',
+];
+const FINANCIAL_TAGLINE = 'When our agents succeed, we succeed.';
+
+const ORG_HEADING = 'Because Smart Agent Alliance is built as an organization, not a personality-driven sponsor:';
+const ORG_BENEFITS = [
+  { icon: Settings, text: 'Systems are designed, maintained, and updated' },
+  { icon: GraduationCap, text: 'Training is structured, repeatable, and current' },
+  { icon: Users, text: 'Community is active and intentional' },
+  { icon: Layers, text: 'Infrastructure exists independently of any single leader' },
+];
 
 // ============================================================================
 // SECTION 1 — Focus Cards with edge-to-edge GlassPanel
@@ -295,7 +322,7 @@ function Section1() {
                           ? 'transform 0.85s cubic-bezier(0.3, 0.1, 0.3, 1) 0.2s, opacity 0.85s ease 0.2s'
                           : 'transform 0.4s ease, opacity 0.3s ease',
                       }}>
-                        <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
+                        <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1.25rem', maxWidth: '2500px' }}>
                           {panel.label}
                         </H2>
                       </div>
@@ -358,16 +385,17 @@ function Section1() {
               const mobRefs = [mobRef0, mobRef1];
               return (
                 <div key={panel.id} className="relative">
-                  {/* Pulsing glow ring — always rendered, opacity transitions */}
+                  {/* Pulsing glow ring — hidden when inactive */}
                   <div
                     className="absolute -inset-[3px] rounded-2xl pointer-events-none"
                     style={{
                       border: `2px solid ${panel.color}50`,
-                      boxShadow: `0 0 12px 4px ${panel.color}44, 0 0 28px 8px ${panel.color}22`,
-                      animation: 'focusPulse 2.4s linear infinite',
+                      boxShadow: isActive ? `0 0 12px 4px ${panel.color}44, 0 0 28px 8px ${panel.color}22` : 'none',
+                      animation: isActive ? 'focusPulse 2.4s linear infinite' : 'none',
                       zIndex: 30,
                       opacity: isActive ? 1 : 0,
-                      transition: 'opacity 0.9s ease',
+                      visibility: isActive ? 'visible' : 'hidden',
+                      transition: 'opacity 0.9s ease, visibility 0.9s ease',
                     }}
                   />
 
@@ -398,7 +426,7 @@ function Section1() {
                           ? 'transform 0.85s cubic-bezier(0.3, 0.1, 0.3, 1) 0.2s, opacity 0.85s ease 0.2s'
                           : 'transform 0.4s ease, opacity 0.3s ease',
                       }}>
-                        <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1rem' }}>
+                        <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1rem', maxWidth: '2500px' }}>
                           {panel.label}
                         </H2>
                       </div>
@@ -453,26 +481,6 @@ function Section1() {
 export default function ExpRealtySponsor() {
   return (
     <main id="main-content">
-      <style jsx global>{`
-        @keyframes floatSlow {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(5deg); }
-        }
-        @keyframes floatMedium {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          50% { transform: translateY(-15px) rotate(-3deg); }
-        }
-        .float-slow { animation: floatSlow 8s ease-in-out infinite; }
-        .float-medium { animation: floatMedium 6s ease-in-out infinite; }
-      `}</style>
-
-      {/* Floating Background Orbs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="float-slow absolute top-[20%] left-[5%] w-48 h-48 rounded-full bg-[#ffd700]/5 blur-[80px]" />
-        <div className="float-medium absolute top-[50%] right-[10%] w-64 h-64 rounded-full bg-[#ffd700]/4 blur-[100px]" style={{ animationDelay: '2s' }} />
-        <div className="float-slow absolute top-[75%] left-[30%] w-40 h-40 rounded-full bg-[#ffd700]/5 blur-[70px]" style={{ animationDelay: '4s' }} />
-      </div>
-
       {/* ================================================================== */}
       {/* HERO SECTION                                                       */}
       {/* ================================================================== */}
@@ -505,7 +513,10 @@ export default function ExpRealtySponsor() {
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>Smart Agent Alliance</H1>
-              <Tagline className="mt-4">3,700+ agents. We succeed only when you do.</Tagline>
+              <Tagline className="mt-4" style={{ maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>For agents who want more, without giving up independence.</Tagline>
+              <p className="text-body mt-4" style={{ maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
+                Aligned incentives. We succeed only when you do.
+              </p>
             </div>
           </div>
         </section>
@@ -517,6 +528,8 @@ export default function ExpRealtySponsor() {
       {/* Glowing border + pulse on active. Vertical H2 on inactive.         */}
       {/* ================================================================== */}
       <Section1 />
+
+      {/* SECTION 2 — TBD: researching novel interactive patterns */}
 
     </main>
   );
