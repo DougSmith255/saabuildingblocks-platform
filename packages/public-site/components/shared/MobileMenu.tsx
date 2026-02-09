@@ -194,6 +194,19 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
           }}
         >
           <nav className="px-6 space-y-2" role="navigation" aria-label="Mobile navigation">
+            {/* Mobile CTA Button - top of menu */}
+            <div className="pb-4 pt-2 text-center">
+              {isAboutExpPage ? (
+                <SecondaryButton href="/join-exp-sponsor-team/" variant="blue" onClick={() => setIsMobileMenuOpen(false)}>
+                  GET STARTED
+                </SecondaryButton>
+              ) : (
+                <CTAButton href="/join-exp-sponsor-team/" onClick={() => setIsMobileMenuOpen(false)}>
+                  GET STARTED
+                </CTAButton>
+              )}
+            </div>
+
             {navItems.map((item, index) => (
               <div key={index}>
                 {item.dropdown ? (
@@ -302,18 +315,6 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
               </div>
             ))}
 
-            {/* Mobile CTA Button */}
-            <div className="pt-8 pb-4 text-center">
-              {isAboutExpPage ? (
-                <SecondaryButton href="/join-exp-sponsor-team/" variant="blue" onClick={() => setIsMobileMenuOpen(false)}>
-                  GET STARTED
-                </SecondaryButton>
-              ) : (
-                <CTAButton href="/join-exp-sponsor-team/" onClick={() => setIsMobileMenuOpen(false)}>
-                  GET STARTED
-                </CTAButton>
-              )}
-            </div>
           </nav>
         </div>
       </div>
