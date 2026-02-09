@@ -642,6 +642,13 @@ export default function Header() {
           padding-right: 32px !important;
         }
 
+        /* Mobile header button - smaller text and tighter padding */
+        .mobile-nav-element.header-btn a {
+          font-size: clamp(11px, calc(10px + 0.40vw), 22px) !important;
+          padding-left: 18px !important;
+          padding-right: 18px !important;
+        }
+
         /* Dropdown arrow - subtle downward indicator below text */
         .dropdown-arrow-down {
           transition: border-top-color 0.3s ease, filter 0.3s ease !important;
@@ -788,9 +795,9 @@ export default function Header() {
           stroke-dashoffset: -32.42;
         }
 
-        /* Base header height — all mobile (<1440px) */
+        /* Base header height — mobile gets +10px for button breathing room */
         .header-container {
-          height: 65px;
+          height: 75px;
           padding-top: 0;
           padding-bottom: 0;
         }
@@ -798,7 +805,7 @@ export default function Header() {
         /* <1300px: 0.9x logo & hamburger */
         @media (max-width: 81.25rem) {
           .header-container {
-            height: 57px;
+            height: 67px;
           }
           .logo-container {
             width: 113px !important;
@@ -823,7 +830,7 @@ export default function Header() {
         /* <1024px: 0.8x logo, 0.9x hamburger */
         @media (max-width: 64rem) {
           .header-container {
-            height: 45px;
+            height: 55px;
           }
           .logo-container {
             width: 90px !important;
