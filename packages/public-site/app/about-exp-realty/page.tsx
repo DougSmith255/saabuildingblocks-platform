@@ -1587,10 +1587,6 @@ function SpotlightConsole() {
           <ValidationRibbon />
         </div>
 
-        {/* CTA */}
-        <div className="mt-8 text-center">
-          <SecondaryButton href="#">What Makes eXp Different</SecondaryButton>
-        </div>
       </div>
     </section>
   );
@@ -2202,10 +2198,6 @@ function IncomeOwnershipSection() {
             </div>
           </div>
 
-          {/* D. CTA */}
-          <div className="text-center" style={{ marginTop: '-20px' }}>
-            <SecondaryButton href="#" variant="blue">More About eXp Income</SecondaryButton>
-          </div>
         </div>
       </section>
     </GlassPanel>
@@ -2493,9 +2485,6 @@ function SupportInfrastructureSection() {
               ))}
             </ul>
           </div>
-          <div className="flex justify-center mt-8">
-            <SecondaryButton href="#" variant="blue">Explore Support</SecondaryButton>
-          </div>
         </div>
       </div>
     </section>
@@ -2737,10 +2726,6 @@ function WhatExpProvidesSection() {
             ))}
           </div>
 
-          {/* CTA */}
-          <div className="flex justify-center mt-8">
-            <SecondaryButton href="#" variant="blue">Explore {TAB_CONTENT[activeTab].label}</SecondaryButton>
-          </div>
         </div>
       </div>
     </section>
@@ -2909,9 +2894,6 @@ function DivisionsSolutionsSection() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-8">
-                <SecondaryButton href="#" variant="blue">Explore divisions</SecondaryButton>
-              </div>
             </div>
           </div>
 
@@ -2979,9 +2961,6 @@ function DivisionsSolutionsSection() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-8">
-                <SecondaryButton href="#" variant="blue">Explore solutions</SecondaryButton>
-              </div>
             </div>
           </div>
         </div>
@@ -3078,10 +3057,6 @@ function WhoExpWorksBestForSection() {
             </p>
           </div>
 
-          {/* CTA */}
-          <div className="flex justify-center mt-10">
-            <SecondaryButton href="#">Is eXp Right for You?</SecondaryButton>
-          </div>
         </div>
 
         {/* Animation keyframes + grainy background */}
@@ -3249,9 +3224,9 @@ function WhatExpProvidesVersionB() {
   }, []);
 
   const panels = [
-    { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS, buttonText: 'Explore Community', color: '#a855f7', rgb: '168,85,247', h2Theme: 'purple' as const, btnVariant: 'purple' as const },
-    { id: 'technology', label: 'TECHNOLOGY', icon: Laptop, bullets: TECHNOLOGY_BULLETS, buttonText: 'Explore Technology', color: '#00bfff', rgb: '0,191,255', h2Theme: 'blue' as const, btnVariant: 'blue' as const },
-    { id: 'leads', label: 'LEADS', icon: UserPlus, bullets: LEADS_BULLETS, buttonText: 'Explore Leads', color: '#10b981', rgb: '16,185,129', h2Theme: 'emerald' as const, btnVariant: 'green' as const },
+    { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS, color: '#a855f7', rgb: '168,85,247', h2Theme: 'purple' as const },
+    { id: 'technology', label: 'TECHNOLOGY', icon: Laptop, bullets: TECHNOLOGY_BULLETS, color: '#00bfff', rgb: '0,191,255', h2Theme: 'blue' as const },
+    { id: 'leads', label: 'LEADS', icon: UserPlus, bullets: LEADS_BULLETS, color: '#10b981', rgb: '16,185,129', h2Theme: 'emerald' as const },
   ];
 
   // Fixed-width style for desktop content — SSR fallback uses min-width
@@ -3396,15 +3371,6 @@ function WhatExpProvidesVersionB() {
                             </li>
                           ))}
                         </ul>
-                        <div
-                          className="pt-4"
-                          style={{
-                            opacity: isExpanded ? 1 : 0,
-                            transition: isExpanded ? 'opacity 0.3s ease 0.2s' : 'opacity 0.1s ease 0s',
-                          }}
-                        >
-                          <SecondaryButton href="#" variant={panel.btnVariant}>{panel.buttonText}</SecondaryButton>
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -3517,15 +3483,6 @@ function WhatExpProvidesVersionB() {
                     </ul>
 
                     {/* Button - only visible when expanded */}
-                    <div
-                      className="mt-4"
-                      style={{
-                        opacity: isExpanded ? 1 : 0,
-                        transition: isExpanded ? 'opacity 0.7s ease 0.5s' : 'opacity 0.25s ease 0s',
-                      }}
-                    >
-                      <SecondaryButton href="#" variant={panel.btnVariant}>{panel.buttonText}</SecondaryButton>
-                    </div>
                   </div>
                 </div>
               );
@@ -3583,9 +3540,6 @@ function AdditionalAreasSection() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-8">
-                <SecondaryButton href="#" variant="blue">Explore Divisions</SecondaryButton>
-              </div>
             </div>
           </div>
 
@@ -3616,9 +3570,6 @@ function AdditionalAreasSection() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-8">
-                <SecondaryButton href="#" variant="blue">Explore Solutions</SecondaryButton>
-              </div>
             </div>
           </div>
         </div>
