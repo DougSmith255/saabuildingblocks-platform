@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import styles from './GlassShimmer.module.css';
 import { usePathname } from 'next/navigation';
-import { CTAButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa';
 import MobileMenu from './MobileMenu';
 import DesktopNav from './DesktopNav';
 
@@ -327,9 +327,9 @@ export default function Header() {
                 marginLeft: 'auto',
               }}
             >
-              <CTAButton href="/join-exp-sponsor-team/">
+              <SecondaryButton href="/join-exp-sponsor-team/">
                 JOIN THE ALLIANCE
-              </CTAButton>
+              </SecondaryButton>
             </div>
 
             {/* Hamburger Menu Button - Inside header container so it slides with header */}
@@ -767,13 +767,6 @@ export default function Header() {
             height: 53px !important;
             min-width: 53px !important;
             min-height: 53px !important;
-          }
-        }
-
-        @media (max-width: 550px) {
-          .header-container .header-btn,
-          .header-container .cta-button {
-            display: none !important;
           }
         }
 

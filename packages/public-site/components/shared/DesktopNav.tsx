@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CTAButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa';
 
 interface NavItem {
   label: string;
@@ -185,9 +185,9 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
 
       {/* CTA Button (Desktop) - Right-aligned */}
       <div className="header-btn hidden xlg:flex items-center">
-        <CTAButton href="/join-exp-sponsor-team/">
+        <SecondaryButton href="/join-exp-sponsor-team/">
           JOIN THE ALLIANCE
-        </CTAButton>
+        </SecondaryButton>
       </div>
     </>
   );
