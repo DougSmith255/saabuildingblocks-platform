@@ -140,8 +140,8 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
                 className={`nav-link agent-portal flex items-center px-2 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white whitespace-nowrap ${isPortalClicked ? 'clicked' : ''}`}
                 style={{
                   fontSize: 'clamp(18px, 1.6vw, 25px)',
-                  fontFamily: 'var(--font-family-menuMainItem)',
-                  fontWeight: '700',
+                  fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
+                  fontWeight: '400',
                   letterSpacing: 'var(--letter-spacing-menuMainItem)',
                   lineHeight: 'var(--line-height-menuMainItem)',
                   color: 'var(--text-color-menuMainItem)',
@@ -149,7 +149,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
                 }}
               >
                 <span className="agent-portal-styled">
-                  Agent Portal
+                  ag<span className="alt-glyph">e</span><span className="alt-glyph">n</span>t po<span className="alt-glyph">r</span>tal
                 </span>
               </Link>
             ) : (
