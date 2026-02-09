@@ -76,7 +76,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
             {item.dropdown ? (
               <>
                 <button
-                  className="nav-link flex items-center px-2 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white whitespace-nowrap"
+                  className="nav-link flex flex-col items-center px-2 py-2 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white whitespace-nowrap"
                   style={{
                     fontSize: 'var(--font-size-menuMainItem)',
                     fontFamily: 'var(--font-family-menuMainItem)',
@@ -91,17 +91,16 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
                 >
                   {item.label}
                   <span
-                    className="dropdown-arrow ml-2 inline-block transition-all duration-[400ms] ease-[ease] transform-gpu"
+                    className="dropdown-arrow-down transition-all duration-300"
                     style={{
                       width: 0,
                       height: 0,
-                      borderLeft: `6px solid ${hoveredDropdown === index && isAboutExpPage ? '#00bfff' : '#ffffff'}`,
-                      borderTop: '4px solid transparent',
-                      borderBottom: '4px solid transparent',
-                      transform: hoveredDropdown === index ? 'rotate(90deg) translateZ(0)' : 'rotate(0deg) translateZ(0)',
-                      transformOrigin: 'center',
-                      filter: hoveredDropdown === index && isAboutExpPage ? 'drop-shadow(0 0 6px rgba(0, 191, 255, 0.8))' : 'none',
-                      willChange: 'transform, border-left-color, filter',
+                      borderLeft: '4px solid transparent',
+                      borderRight: '4px solid transparent',
+                      borderTop: `5px solid ${hoveredDropdown === index && isAboutExpPage ? '#00bfff' : hoveredDropdown === index ? '#ffd700' : 'rgba(255,255,255,0.4)'}`,
+                      marginTop: '2px',
+                      filter: hoveredDropdown === index && isAboutExpPage ? 'drop-shadow(0 0 6px rgba(0, 191, 255, 0.8))' : hoveredDropdown === index ? 'drop-shadow(0 0 4px rgba(255, 215, 0, 0.6))' : 'none',
+                      willChange: 'border-top-color, filter',
                     }}
                   />
                 </button>

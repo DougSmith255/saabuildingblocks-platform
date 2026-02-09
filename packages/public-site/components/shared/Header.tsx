@@ -563,16 +563,9 @@ export default function Header() {
           font-variant-alternates: stylistic(alt);
         }
 
-        /* Dropdown arrow - ensure transition is defined on base element */
-        .dropdown-arrow {
-          transition: transform 0.4s ease, border-left-color 0.4s ease, filter 0.4s ease !important;
-        }
-
-        /* Dropdown arrow hover animation */
-        .nav-item:hover .dropdown-arrow {
-          transform: rotate(90deg) translateZ(0) !important;
-          border-left-color: #ffe000 !important;
-          filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8)) !important;
+        /* Dropdown arrow - subtle downward indicator below text */
+        .dropdown-arrow-down {
+          transition: border-top-color 0.3s ease, filter 0.3s ease !important;
         }
 
         /* Agent Portal - Default: White */
