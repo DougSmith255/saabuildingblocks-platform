@@ -141,8 +141,8 @@ export function PathSelector() {
 
             {/* CTA */}
             <div className="text-center">
-              <CTAButton href="/join">
-                Get Started as a {paths.find(p => p.id === selectedPath)?.label}
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join The Alliance
               </CTAButton>
             </div>
           </div>

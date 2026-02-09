@@ -317,6 +317,21 @@ export default function Header() {
               <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} />
             </div>
 
+            {/* Mobile "Join The Alliance" button - visible below xlg, hidden at ≥1600px and when menu is open */}
+            <div
+              className={`header-btn xlg:hidden flex items-center ${hasMounted ? 'transition-opacity duration-300' : ''}`}
+              style={{
+                opacity: isMobileMenuOpen ? 0 : 1,
+                pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
+                marginRight: 'auto',
+                marginLeft: 'auto',
+              }}
+            >
+              <CTAButton href="/join-exp-sponsor-team/" size="sm">
+                JOIN THE ALLIANCE
+              </CTAButton>
+            </div>
+
             {/* Hamburger Menu Button - Inside header container so it slides with header */}
             <button
               className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}

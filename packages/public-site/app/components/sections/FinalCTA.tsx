@@ -20,10 +20,10 @@ export function FinalCTA() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <CTAButton href="/join">
-              Get Started Now
+            <CTAButton href="/join-exp-sponsor-team/">
+              Join The Alliance
             </CTAButton>
-            <SecondaryButton href="/webinar">
+            <SecondaryButton href="/join-exp-sponsor-team/webinar-registration/">
               Watch Free Webinar
             </SecondaryButton>
           </div>

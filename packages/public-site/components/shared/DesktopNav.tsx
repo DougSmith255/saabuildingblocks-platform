@@ -186,7 +186,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
       {/* CTA Button (Desktop) - Right-aligned */}
       <div className="header-btn hidden xlg:flex items-center">
         <CTAButton href="/join-exp-sponsor-team/">
-          GET STARTED
+          JOIN THE ALLIANCE
         </CTAButton>
       </div>
     </>

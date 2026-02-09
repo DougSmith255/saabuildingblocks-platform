@@ -301,7 +301,7 @@ export default function OnlineBrokerageComparison() {
                 More About eXp
               </CTAButton>
               <CTAButton href="/join-exp-sponsor-team/">
-                Join Our Team
+                Join The Alliance
               </CTAButton>
             </div>
           </div>
@@ -355,7 +355,7 @@ export default function OnlineBrokerageComparison() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
-                Join Our Team
+                Join The Alliance
               </CTAButton>
               <CTAButton href="/exp-realty-sponsor/">
                 Learn About Our Value
