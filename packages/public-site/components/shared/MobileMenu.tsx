@@ -45,7 +45,7 @@ interface MobileMenuProps {
 }
 
 /**
- * Mobile Menu (<1600px)
+ * Mobile Menu (<1440px)
  * Fullscreen menu overlay with Lenis smooth scrolling (hamburger button in Header)
  */
 export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobileMenuOpen, setIsMobileMenuOpen }: MobileMenuProps) {

@@ -44,7 +44,7 @@ interface DesktopNavProps {
 }
 
 /**
- * Desktop Navigation (≥1600px)
+ * Desktop Navigation (≥1440px)
  * Horizontal nav with hover dropdowns + CTA button
  */
 export default function DesktopNav({ isPortalClicked, handlePortalClick }: DesktopNavProps) {
@@ -60,18 +60,11 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
 
   return (
     <>
-      {/* Desktop Navigation - Centered with absolute positioning */}
+      {/* Desktop Navigation - Flex-centered in available space between logo and CTA */}
       <nav
-        className="nav hidden xlg:flex items-center gap-0 flex-nowrap"
+        className="nav hidden xlg:flex items-center gap-0 flex-nowrap flex-1 justify-center"
         role="navigation"
         aria-label="Main navigation"
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 1,
-        }}
       >
         {navigationItems.map((item, index) => (
           <div
@@ -83,7 +76,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
             {item.dropdown ? (
               <>
                 <button
-                  className="nav-link flex items-center px-3 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white whitespace-nowrap"
+                  className="nav-link flex items-center px-2 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white whitespace-nowrap"
                   style={{
                     fontSize: 'var(--font-size-menuMainItem)',
                     fontFamily: 'var(--font-family-menuMainItem)',
@@ -145,7 +138,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
               <Link
                 href={item.href!}
                 onClick={handlePortalClick}
-                className={`nav-link agent-portal flex items-center px-3 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white whitespace-nowrap ${isPortalClicked ? 'clicked' : ''}`}
+                className={`nav-link agent-portal flex items-center px-2 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white whitespace-nowrap ${isPortalClicked ? 'clicked' : ''}`}
                 style={{
                   fontSize: 'var(--font-size-menuMainItem)',
                   fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
@@ -166,7 +159,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
             ) : (
               <Link
                 href={item.href!}
-                className="nav-link flex items-center px-3 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white whitespace-nowrap"
+                className="nav-link flex items-center px-2 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white whitespace-nowrap"
                 style={{
                   fontSize: 'var(--font-size-menuMainItem)',
                   fontFamily: 'var(--font-family-menuMainItem)',
@@ -184,7 +177,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
       </nav>
 
       {/* CTA Button (Desktop) - Right-aligned */}
-      <div className="header-btn hidden xlg:flex items-center">
+      <div className="header-btn hidden xlg:flex items-center flex-shrink-0">
         <SecondaryButton href="/join-exp-sponsor-team/">
           JOIN THE ALLIANCE
         </SecondaryButton>

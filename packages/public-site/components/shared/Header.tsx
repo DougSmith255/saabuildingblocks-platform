@@ -270,7 +270,7 @@ export default function Header() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              /* height set via CSS: 85px desktop (≥1600px), 60px mobile (<1600px) */
+              /* height set via CSS: 85px desktop (≥1440px), 60px mobile (<1440px) */
               transition: 'justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
@@ -312,12 +312,15 @@ export default function Header() {
               </svg>
             </Link>
 
-            {/* Desktop Navigation - Hidden on mobile via CSS, shown at ≥1600px (xlg breakpoint) */}
-            <div className="hidden xlg:block">
+            {/* Desktop Navigation - Hidden on mobile via CSS, shown at ≥1440px (xlg breakpoint) */}
+            <div
+              className="hidden xlg:flex items-center flex-1 min-w-0"
+              style={{ marginLeft: '40px', gap: '40px' }}
+            >
               <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} />
             </div>
 
-            {/* Mobile "Join The Alliance" button - visible below xlg, hidden at ≥1600px and when menu is open */}
+            {/* Mobile "Join The Alliance" button - visible below xlg, hidden at ≥1440px and when menu is open */}
             <div
               className={`header-btn xlg:hidden flex items-center ${hasMounted ? 'transition-opacity duration-300' : ''}`}
               style={{
@@ -713,7 +716,7 @@ export default function Header() {
           stroke-dashoffset: -32.42;
         }
 
-        /* Base header height — all mobile (<1600px): 15px + 45px logo + 15px = 75px */
+        /* Base header height — all mobile (<1440px): 15px + 45px logo + 15px = 75px */
         .header-container {
           height: 75px;
           padding-top: 0;
@@ -770,8 +773,8 @@ export default function Header() {
           }
         }
 
-        /* Desktop header — restore full 85px height and padding at ≥1600px */
-        @media (min-width: 100rem) {
+        /* Desktop header — restore full 85px height and padding at ≥1440px */
+        @media (min-width: 90rem) {
           .header-container {
             height: 85px;
             padding-top: 8px;

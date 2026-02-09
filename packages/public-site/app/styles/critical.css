@@ -258,8 +258,8 @@ p a {
 }
 
 /* Critical Responsive Breakpoints - Prevents FOUC on navigation */
-/* xlg breakpoint: 1600px (100rem) - Controls desktop nav vs mobile burger menu */
-@media (min-width: 100rem) {
+/* xlg breakpoint: 1440px (90rem) - Controls desktop nav vs mobile burger menu */
+@media (min-width: 90rem) {
   .xlg\:hidden {
     display: none !important;
   }
