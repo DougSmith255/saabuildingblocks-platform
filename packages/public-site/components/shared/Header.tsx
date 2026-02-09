@@ -644,9 +644,9 @@ export default function Header() {
 
         /* Mobile header button - smaller text and tighter padding */
         .mobile-nav-element.header-btn a {
-          font-size: clamp(11px, calc(10px + 0.40vw), 22px) !important;
-          padding-left: 18px !important;
-          padding-right: 18px !important;
+          font-size: clamp(12px, calc(10px + 0.40vw), 22px) !important;
+          padding-left: 15px !important;
+          padding-right: 15px !important;
         }
 
         /* Dropdown arrow - subtle downward indicator below text */
