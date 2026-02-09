@@ -15,7 +15,7 @@ const navItems: NavItem[] = [
   { label: 'Team Value', href: '/exp-realty-sponsor/' },
   { label: 'About eXp', href: '/about-exp-realty/' },
   {
-    label: 'Resources',
+    label: 'More',
     dropdown: [
       { label: 'Freebies', href: '/freebies/' },
       { label: 'Commission & Fees Calc', href: '/exp-commission-calculator/' },

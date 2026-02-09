@@ -16,7 +16,7 @@ const navItems: NavItem[] = [
   { label: 'Team Value', href: '/exp-realty-sponsor/' },
   { label: 'About eXp', href: '/about-exp-realty/' },
   {
-    label: 'Resources',
+    label: 'More',
     dropdown: [
       { label: 'Freebies', href: '/freebies/' },
       { label: 'Commission & Fees Calc', href: '/exp-commission-calculator/' },
@@ -140,8 +140,8 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
                 className={`nav-link agent-portal flex items-center px-2 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white whitespace-nowrap ${isPortalClicked ? 'clicked' : ''}`}
                 style={{
                   fontSize: 'var(--font-size-menuMainItem)',
-                  fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
-                  fontWeight: 'var(--font-weight-menuMainItem)',
+                  fontFamily: 'var(--font-family-menuMainItem)',
+                  fontWeight: '700',
                   letterSpacing: 'var(--letter-spacing-menuMainItem)',
                   lineHeight: 'var(--line-height-menuMainItem)',
                   color: 'var(--text-color-menuMainItem)',
@@ -149,10 +149,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
                 }}
               >
                 <span className="agent-portal-styled">
-                  ag<span className="alt-glyph">e</span>
-                  <span className="alt-glyph">n</span>
-                  <span>t</span> po<span className="alt-glyph">r</span>
-                  <span>t</span>al
+                  Agent Portal
                 </span>
               </Link>
             ) : (
