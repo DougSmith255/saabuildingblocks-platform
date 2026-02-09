@@ -1,32 +1,5 @@
-# Cloudflare Pages Redirects & Proxies
-#
-# Static pages are served from Cloudflare Pages
-# API routes, Master Controller, and Agent Portal are proxied to PM2 origin server
+# Cloudflare Pages redirects
+# https://developers.cloudflare.com/pages/configuration/redirects/
 
-# API Routes - Proxy to PM2 origin server (200 status maintains URL)
-/api/*                https://saabuildingblocks.com/api/:splat              200!
-
-# Master Controller - Proxy to PM2 origin (admin interface)
-/master-controller/*  https://saabuildingblocks.com/master-controller/:splat  200!
-
-# Agent Portal - Proxy to PM2 origin (protected portal)
-/agent-portal/*       https://saabuildingblocks.com/agent-portal/:splat       200!
-
-# Accept Invitation - Dynamic route with token
-/accept-invitation/*  https://saabuildingblocks.com/accept-invitation/:splat  200!
-
-# WordPress Revalidation Webhook - Proxy to PM2 origin
-/api/revalidate       https://saabuildingblocks.com/api/revalidate            200!
-
-# Static pages served from Cloudflare Pages (no redirects needed)
-# - / (homepage)
-# - /blog/* (all blog pages)
-# - /category/* (category pages)
-# - /login (login form)
-# - /sign-up (signup form)
-# - /reset-password (password reset)
-# - /contact-support (contact form)
-# - /404 (custom 404)
-
-# SPA fallback - serve index.html for client-side routing
-/*                    /index.html                                           200
+/should-you-join-exp /about-exp-realty/ 301
+/should-you-join-exp/ /about-exp-realty/ 301
