@@ -24,6 +24,9 @@ export default function Header() {
   });
   // Temporarily disable transition during route changes to prevent visible slide-down
   const [skipTransition, setSkipTransition] = useState(false);
+  // JS-driven responsive nav: null = CSS handles it, true = desktop fits, false = mobile
+  const [desktopNavFits, setDesktopNavFits] = useState<boolean | null>(null);
+  const headerContainerRef = useRef<HTMLDivElement>(null);
 
   // Track pathname for route change detection
   const pathname = usePathname();
@@ -79,6 +82,64 @@ export default function Header() {
   // Font loading handled by page-level settling mask
   useEffect(() => {
     setFontsLoaded(true);
+  }, []);
+
+  // Responsive nav: measure actual content width and toggle desktop/mobile based on fit
+  useEffect(() => {
+    let cancelled = false;
+    let resizeHandler: (() => void) | null = null;
+
+    // Wait for fonts so text measurements are accurate
+    document.fonts.ready.then(() => {
+      if (cancelled) return;
+      const container = headerContainerRef.current;
+      if (!container) return;
+
+      // Temporarily force desktop nav elements visible for measurement
+      const desktopWrapper = container.querySelector('.desktop-nav-wrapper') as HTMLElement;
+      const logo = container.querySelector('.logo-container') as HTMLElement;
+      if (!desktopWrapper || !logo) return;
+
+      // Save original styles, force visible
+      const saved = new Map<HTMLElement, string>();
+      const forceShow = (el: HTMLElement | null) => {
+        if (!el) return;
+        saved.set(el, el.getAttribute('style') || '');
+        el.style.setProperty('display', 'flex', 'important');
+        el.style.setProperty('visibility', 'hidden');
+      };
+      forceShow(desktopWrapper);
+      forceShow(desktopWrapper.querySelector('nav'));
+      forceShow(desktopWrapper.querySelector('.header-btn'));
+
+      // Measure natural widths
+      const navItems = desktopWrapper.querySelectorAll('.nav-item');
+      let navWidth = 0;
+      navItems.forEach(item => { navWidth += (item as HTMLElement).getBoundingClientRect().width; });
+      const logoWidth = logo.getBoundingClientRect().width;
+      const ctaEl = desktopWrapper.querySelector('.header-btn') as HTMLElement;
+      const ctaWidth = ctaEl?.getBoundingClientRect().width || 0;
+
+      // Restore original styles
+      saved.forEach((style, el) => {
+        if (style) el.setAttribute('style', style);
+        else el.removeAttribute('style');
+      });
+
+      // Min width: header padding (32+32) + logo + 40px gap + nav + 40px gap + CTA
+      const minWidth = 64 + logoWidth + 40 + navWidth + 40 + ctaWidth;
+
+      resizeHandler = () => {
+        if (!cancelled) setDesktopNavFits(window.innerWidth >= minWidth);
+      };
+      resizeHandler();
+      window.addEventListener('resize', resizeHandler);
+    });
+
+    return () => {
+      cancelled = true;
+      if (resizeHandler) window.removeEventListener('resize', resizeHandler);
+    };
   }, []);
 
   // Listen for login success event to slide header out
@@ -260,7 +321,8 @@ export default function Header() {
           </div>
 
           <div
-            className="header-container"
+            ref={headerContainerRef}
+            className={`header-container${desktopNavFits === true ? ' nav-force-desktop' : desktopNavFits === false ? ' nav-force-mobile' : ''}`}
             style={{
               width: '100%',
               maxWidth: '100%',
@@ -270,7 +332,7 @@ export default function Header() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              /* height set via CSS: 85px desktop (≥1440px), 60px mobile (<1440px) */
+              /* height set via CSS: 85px desktop, scales down for mobile */
               transition: 'justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
@@ -312,17 +374,17 @@ export default function Header() {
               </svg>
             </Link>
 
-            {/* Desktop Navigation - Hidden on mobile via CSS, shown at ≥1440px (xlg breakpoint) */}
+            {/* Desktop Navigation - CSS fallback at ≥1440px, JS measures actual fit */}
             <div
-              className="hidden xlg:flex items-center flex-1 min-w-0"
+              className="desktop-nav-wrapper hidden xlg:flex items-center flex-1 min-w-0"
               style={{ marginLeft: '40px', gap: '40px' }}
             >
               <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} />
             </div>
 
-            {/* Mobile "Join The Alliance" button - visible below xlg, hidden at ≥1440px and when menu is open */}
+            {/* Mobile "Join The Alliance" button - visible in mobile mode, hidden when desktop nav fits */}
             <div
-              className={`header-btn xlg:hidden flex items-center ${hasMounted ? 'transition-opacity duration-300' : ''}`}
+              className={`mobile-nav-element header-btn xlg:hidden flex items-center ${hasMounted ? 'transition-opacity duration-300' : ''}`}
               style={{
                 opacity: isMobileMenuOpen ? 0 : 1,
                 pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
@@ -331,13 +393,13 @@ export default function Header() {
               }}
             >
               <SecondaryButton href="/join-exp-sponsor-team/">
-                JOIN THE ALLIANCE
+                <span style={{ fontFeatureSettings: '"ss01" 1' }}>JOIN THE ALLIANCE</span>
               </SecondaryButton>
             </div>
 
             {/* Hamburger Menu Button - Inside header container so it slides with header */}
             <button
-              className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
+              className={`mobile-nav-element hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
               onClick={handleHamburgerClick}
               aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
               aria-expanded={isMobileMenuOpen}
@@ -561,6 +623,23 @@ export default function Header() {
         .alt-glyph {
           font-feature-settings: 'ss01' on;
           font-variant-alternates: stylistic(alt);
+        }
+
+        /* JS-driven responsive nav toggle - overrides CSS breakpoint after content measurement */
+        .nav-force-desktop .desktop-nav-wrapper { display: flex !important; }
+        .nav-force-desktop .desktop-nav-wrapper .nav { display: flex !important; }
+        .nav-force-desktop .desktop-nav-wrapper .header-btn { display: flex !important; }
+        .nav-force-desktop .mobile-nav-element { display: none !important; }
+        .nav-force-mobile .desktop-nav-wrapper { display: none !important; }
+        .nav-force-mobile .mobile-nav-element { display: flex !important; }
+
+        /* Desktop header sizing when JS forces desktop nav */
+        .header-container.nav-force-desktop {
+          height: 85px;
+          padding-top: 8px;
+          padding-bottom: 8px;
+          padding-left: 32px !important;
+          padding-right: 32px !important;
         }
 
         /* Dropdown arrow - subtle downward indicator below text */
