@@ -126,8 +126,8 @@ export default function Header() {
         else el.removeAttribute('style');
       });
 
-      // Min width: header padding (32+32) + logo + 40px gap + nav + 40px gap + CTA
-      const minWidth = 64 + logoWidth + 40 + navWidth + 40 + ctaWidth;
+      // Min width: header padding (32+32) + logo + 10px gap + nav + 10px gap + CTA
+      const minWidth = 64 + logoWidth + 10 + navWidth + 10 + ctaWidth;
 
       resizeHandler = () => {
         if (!cancelled) setDesktopNavFits(window.innerWidth >= minWidth);
@@ -377,7 +377,7 @@ export default function Header() {
             {/* Desktop Navigation - CSS fallback at ≥1440px, JS measures actual fit */}
             <div
               className="desktop-nav-wrapper hidden xlg:flex items-center flex-1 min-w-0"
-              style={{ marginLeft: '40px', gap: '40px' }}
+              style={{ marginLeft: '10px', gap: '10px' }}
             >
               <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} />
             </div>

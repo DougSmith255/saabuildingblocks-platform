@@ -78,7 +78,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
                 <button
                   className="nav-link relative flex items-center px-2 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white whitespace-nowrap"
                   style={{
-                    fontSize: 'var(--font-size-menuMainItem)',
+                    fontSize: 'clamp(18px, 1.6vw, 25px)',
                     fontFamily: 'var(--font-family-menuMainItem)',
                     fontWeight: 'var(--font-weight-menuMainItem)',
                     letterSpacing: 'var(--letter-spacing-menuMainItem)',
