@@ -327,7 +327,7 @@ export default function Header() {
                 marginLeft: 'auto',
               }}
             >
-              <CTAButton href="/join-exp-sponsor-team/" size="sm">
+              <CTAButton href="/join-exp-sponsor-team/">
                 JOIN THE ALLIANCE
               </CTAButton>
             </div>
