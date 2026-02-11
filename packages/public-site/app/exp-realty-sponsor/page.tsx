@@ -2,13 +2,13 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { H1, H2, Tagline, CTAButton } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GlassPanel, GenericCard, NeonCard } from '@saa/shared/components/saa';
 import { MeetTheFounders } from '@/app/components/sections/MeetTheFounders';
 import { GrainCard } from '@saa/shared/components/saa/cards';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
 import { AgentCounter, TaglineCounterSuffix } from '@/app/components/AgentCounter';
-import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers, Rocket, BarChart3, Link2, LifeBuoy, TrendingUp, UserCircle, Video, Megaphone, UserPlus, Download, type LucideIcon } from 'lucide-react';
+import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers, Rocket, BarChart3, Link2, LifeBuoy, TrendingUp, UserCircle, Video, Megaphone, UserPlus, Download, Handshake, Sparkles, CheckCircle2, ArrowRight, type LucideIcon } from 'lucide-react';
 
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
@@ -163,7 +163,7 @@ const SIDEBAR_ITEMS: PortalMenuItem[] = [
 ];
 
 const STREAM_BASE = 'https://customer-2twfsluc6inah5at.cloudflarestream.com';
-const WALKTHROUGH_AUDIO_URL = 'https://assets.saabuildingblocks.com/Team%20Value%20Audio.MP3';
+const WALKTHROUGH_AUDIO_URL = 'https://assets.saabuildingblocks.com/Team%20Value%20Audio%202.0.MP3';
 
 const FEATURE_GROUPS: FeatureGroup[] = [
   {
@@ -1213,13 +1213,77 @@ function Section3() {
           color: #e5e4dd !important;
           border-color: rgba(255,255,255,0.2) !important;
         }
+        @keyframes champagneBubble {
+          0% { transform: translateY(0) scale(1); opacity: 0.06; }
+          50% { opacity: 0.03; }
+          100% { transform: translateY(-60px) scale(0.5); opacity: 0; }
+        }
       `}</style>
 
       {/* Hidden audio element for walkthrough voiceover */}
       <audio ref={audioRef} src={WALKTHROUGH_AUDIO_URL} preload="auto" />
 
       {/* Section heading */}
-      <div className="text-center max-w-[800px] mx-auto mb-10 lg:mb-14 px-4">
+      <div className="relative text-center max-w-[800px] mx-auto mb-10 lg:mb-14 px-4">
+        {/* Champagne glass watermark */}
+        <svg
+          width="300"
+          height="280"
+          viewBox="0 0 300 280"
+          fill="none"
+          stroke="#ffd700"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="absolute pointer-events-none"
+          style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.04 }}
+        >
+          {/* Left glass — tilted right toward center */}
+          <g transform="rotate(-12 120 140)">
+            <path d="M100 40 Q100 100 108 130 L108 220" />
+            <path d="M140 40 Q140 100 132 130 L132 220" />
+            <ellipse cx="120" cy="40" rx="20" ry="7" />
+            <line x1="96" y1="235" x2="144" y2="235" />
+            <line x1="108" y1="220" x2="108" y2="235" />
+            <line x1="132" y1="220" x2="132" y2="235" />
+          </g>
+          {/* Right glass — tilted left toward center */}
+          <g transform="rotate(12 180 140)">
+            <path d="M160 40 Q160 100 168 130 L168 220" />
+            <path d="M200 40 Q200 100 192 130 L192 220" />
+            <ellipse cx="180" cy="40" rx="20" ry="7" />
+            <line x1="156" y1="235" x2="204" y2="235" />
+            <line x1="168" y1="220" x2="168" y2="235" />
+            <line x1="192" y1="220" x2="192" y2="235" />
+          </g>
+          {/* Clink sparkle */}
+          <circle cx="150" cy="45" r="3" fill="#ffd700" stroke="none" />
+          <line x1="150" y1="30" x2="150" y2="20" />
+          <line x1="140" y1="35" x2="133" y2="28" />
+          <line x1="160" y1="35" x2="167" y2="28" />
+        </svg>
+        {/* Rising bubbles */}
+        {[
+          { left: '38%', bottom: '20%', size: 6, delay: '0s', duration: '7s' },
+          { left: '44%', bottom: '15%', size: 4, delay: '1.5s', duration: '8s' },
+          { left: '55%', bottom: '25%', size: 5, delay: '3s', duration: '6s' },
+          { left: '60%', bottom: '10%', size: 8, delay: '4.5s', duration: '9s' },
+          { left: '48%', bottom: '18%', size: 4, delay: '6s', duration: '10s' },
+        ].map((b, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              left: b.left,
+              bottom: b.bottom,
+              width: b.size,
+              height: b.size,
+              background: '#ffd700',
+              opacity: 0.06,
+              animation: `champagneBubble ${b.duration} ${b.delay} ease-in-out infinite`,
+            }}
+          />
+        ))}
         <H2>
           What You Get Inside Smart Agent Alliance
         </H2>
@@ -1636,6 +1700,539 @@ function Section6() {
 }
 
 // ============================================================================
+// SHARED: Icon Ring helper for styled section cards
+// ============================================================================
+
+function IconRing({ icon: Icon, color }: { icon: LucideIcon; color: string }) {
+  return (
+    <div className="relative mx-auto mb-4 w-14 h-14">
+      <div
+        className="absolute inset-0 rounded-full"
+        style={{
+          background: `linear-gradient(135deg, ${color}33, ${color}1a)`,
+          boxShadow: `0 0 25px ${color}33, inset 0 0 15px ${color}1a`,
+        }}
+      />
+      <div
+        className="absolute inset-1.5 rounded-full flex items-center justify-center"
+        style={{
+          background: 'linear-gradient(180deg, rgba(15,15,10,0.95), rgba(10,10,5,0.98))',
+          border: `1px solid ${color}4d`,
+        }}
+      >
+        <Icon size={20} style={{ color, filter: `drop-shadow(0 0 8px ${color}80)` }} />
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// VERSION WRAPPER — dashed yellow border + label badge for review
+// ============================================================================
+
+function VersionWrapper({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="relative border-4 border-dashed border-yellow-500/60 my-8">
+      <span
+        className="absolute -top-4 left-4 px-3 py-1 text-sm font-bold z-20"
+        style={{
+          background: '#eab308',
+          color: '#000',
+          borderRadius: '4px',
+        }}
+      >
+        {label}
+      </span>
+      {children}
+    </div>
+  );
+}
+
+// ============================================================================
+// SECTION 4A — Two-Column Cards in Champagne GlassPanel
+// ============================================================================
+
+function Section4A() {
+  const saaBullets = [
+    DUAL_ADVANTAGE_BULLETS[0],
+    DUAL_ADVANTAGE_BULLETS[3],
+    DUAL_ADVANTAGE_BULLETS[4],
+  ];
+  const wolfBullets = [
+    DUAL_ADVANTAGE_BULLETS[1],
+    DUAL_ADVANTAGE_BULLETS[2],
+  ];
+
+  return (
+    <GlassPanel variant="champagne" noBlur>
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-8 md:px-12 py-16 md:py-24">
+        <div className="text-center mb-8 md:mb-10">
+          <H2 style={{ marginBottom: '0.75rem' }}>Your Dual Advantage</H2>
+          <p
+            className="text-body"
+            style={{
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              fontSize: 'clamp(15px, 1.8vw, 18px)',
+              fontWeight: 600,
+              color: '#ffd700',
+            }}
+          >
+            Smart Agent Alliance + Wolf Pack
+          </p>
+        </div>
+
+        <p className="text-body mb-8 text-center mx-auto" style={{ color: '#dcdbd5', maxWidth: '750px' }}>
+          SAA operates inside the Wolf Pack organization, led by Mike Sherrard and Connor Steinbrook. That means agents who join through SAA don&apos;t just get one layer of support — they get two. The Wolf Pack provides premium training courses, weekly masterminds, and an active Skool community. SAA adds structured onboarding, a custom-built portal, attraction tools, and direct leadership access.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <GenericCard padding="lg" style={{ border: '1px solid rgba(255,215,0,0.25)' }}>
+            <IconRing icon={Shield} color="#ffd700" />
+            <h3 className="text-h6 text-center mb-4" style={{ color: '#ffd700' }}>From SAA</h3>
+            <ul className="space-y-2.5" style={{ listStyle: 'none', padding: 0 }}>
+              {saaBullets.map((b, i) => (
+                <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
+                  <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+          </GenericCard>
+
+          <GenericCard padding="lg" style={{ border: '1px solid rgba(0,191,255,0.25)' }}>
+            <IconRing icon={Users} color="#00bfff" />
+            <h3 className="text-h6 text-center mb-4" style={{ color: '#00bfff' }}>From Wolf Pack</h3>
+            <ul className="space-y-2.5" style={{ listStyle: 'none', padding: 0 }}>
+              {wolfBullets.map((b, i) => (
+                <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
+                  <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+          </GenericCard>
+        </div>
+
+        {/* Closing prose block with gold grid pattern */}
+        <div
+          className="relative overflow-hidden rounded-xl p-6 text-center mx-auto"
+          style={{
+            maxWidth: '750px',
+            background: 'rgba(15,15,10,0.6)',
+            border: '1px solid rgba(255,215,0,0.1)',
+          }}
+        >
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,215,0,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,215,0,0.015) 1px, transparent 1px)
+              `,
+              backgroundSize: '20px 20px',
+            }}
+          />
+          <p className="text-body relative z-10" style={{ color: '#a8a7a0' }}>
+            Most sponsors offer one thing or nothing at all. With SAA inside the Wolf Pack, you get dual-layer support — systems and training that work together from day one.
+          </p>
+        </div>
+      </div>
+    </GlassPanel>
+  );
+}
+
+// ============================================================================
+// SECTION 4B — Gold↔Cyan Split Gradient
+// ============================================================================
+
+function Section4B() {
+  const leftBullets = [
+    DUAL_ADVANTAGE_BULLETS[0],
+    DUAL_ADVANTAGE_BULLETS[3],
+    DUAL_ADVANTAGE_BULLETS[4],
+  ];
+  const rightBullets = [
+    DUAL_ADVANTAGE_BULLETS[1],
+    DUAL_ADVANTAGE_BULLETS[2],
+  ];
+
+  return (
+    <section className="relative py-16 md:py-24 overflow-hidden">
+      {/* Dual gradient background */}
+      <div className="absolute inset-0" style={{
+        background: 'linear-gradient(135deg, rgba(255,215,0,0.04) 0%, rgba(15,15,15,0.95) 50%, rgba(0,191,255,0.04) 100%)',
+      }} />
+      {/* Crosshatch texture */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        backgroundImage: `
+          repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, transparent 1px, transparent 6px),
+          repeating-linear-gradient(-45deg, rgba(255,255,255,0.02) 0px, transparent 1px, transparent 6px)
+        `,
+        backgroundSize: '16px 16px',
+      }} />
+
+      <div className="relative z-10 max-w-[1100px] mx-auto px-4 sm:px-8 md:px-12">
+        <div
+          className="rounded-3xl overflow-hidden"
+          style={{
+            background: 'linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            boxShadow: `
+              0 8px 32px rgba(0,0,0,0.4),
+              0 4px 12px rgba(0,0,0,0.25),
+              inset 0 1px 0 0 rgba(255,255,255,0.15),
+              inset 0 -1px 0 0 rgba(0,0,0,0.5)
+            `,
+          }}
+        >
+          <div className="p-6 sm:p-8 md:p-10 lg:p-12">
+            <div className="text-center mb-8 md:mb-10">
+              <H2 style={{ marginBottom: '0.75rem' }}>Your Dual Advantage</H2>
+              <p
+                className="text-body"
+                style={{
+                  fontFamily: 'var(--font-taskor, sans-serif)',
+                  fontSize: 'clamp(15px, 1.8vw, 18px)',
+                  fontWeight: 600,
+                  color: '#ffd700',
+                }}
+              >
+                Smart Agent Alliance + Wolf Pack
+              </p>
+            </div>
+
+            <p className="text-body mb-8 text-center mx-auto" style={{ color: '#dcdbd5', maxWidth: '700px' }}>
+              SAA operates inside the Wolf Pack organization, led by Mike Sherrard and Connor Steinbrook. That means agents who join through SAA don&apos;t just get one layer of support — they get two. The Wolf Pack provides premium training courses, weekly masterminds, and an active Skool community. SAA adds structured onboarding, a custom-built portal, attraction tools, and direct leadership access.
+            </p>
+
+            <div className="flex flex-col md:flex-row gap-6 md:gap-0">
+              {/* Left — SAA */}
+              <div className="flex-1 md:pr-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield size={18} style={{ color: '#ffd700', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.4))' }} />
+                  <h3 className="text-h6" style={{ color: '#ffd700' }}>Smart Agent Alliance</h3>
+                </div>
+                <ul className="space-y-2.5" style={{ listStyle: 'none', padding: 0 }}>
+                  {leftBullets.map((b, i) => (
+                    <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
+                      <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Divider — vertical on desktop, horizontal on mobile */}
+              <div className="hidden md:block w-px self-stretch" style={{
+                background: 'linear-gradient(180deg, transparent, rgba(255,215,0,0.4), transparent)',
+                boxShadow: '0 0 8px rgba(255,215,0,0.2)',
+              }} />
+              <div className="md:hidden h-px" style={{
+                background: 'linear-gradient(90deg, transparent, rgba(255,215,0,0.4), transparent)',
+                boxShadow: '0 0 8px rgba(255,215,0,0.2)',
+              }} />
+
+              {/* Right — Wolf Pack */}
+              <div className="flex-1 md:pl-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Users size={18} style={{ color: '#00bfff', filter: 'drop-shadow(0 0 6px rgba(0,191,255,0.4))' }} />
+                  <h3 className="text-h6" style={{ color: '#00bfff' }}>Wolf Pack</h3>
+                </div>
+                <ul className="space-y-2.5" style={{ listStyle: 'none', padding: 0 }}>
+                  {rightBullets.map((b, i) => (
+                    <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
+                      <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <p className="text-body mt-8 text-center" style={{ color: '#a8a7a0' }}>
+              Most sponsors offer one thing or nothing at all. With SAA inside the Wolf Pack, you get dual-layer support — systems and training that work together from day one.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// SECTION 4C — Icon Card Grid
+// ============================================================================
+
+const SECTION4_CARD_DATA = [
+  { icon: Rocket, title: 'Onboarding & Strategy', description: DUAL_ADVANTAGE_BULLETS[0] },
+  { icon: GraduationCap, title: 'Premium Training', description: DUAL_ADVANTAGE_BULLETS[1] },
+  { icon: Handshake, title: 'Weekly Masterminds', description: DUAL_ADVANTAGE_BULLETS[2] },
+  { icon: Link2, title: 'Attraction & Analytics', description: DUAL_ADVANTAGE_BULLETS[3] },
+  { icon: TrendingUp, title: 'Revenue Share', description: DUAL_ADVANTAGE_BULLETS[4] },
+];
+
+function Section4C() {
+  return (
+    <section className="relative py-16 md:py-24">
+      {/* Noise texture background */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n4c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n4c)' opacity='0.03'/%3E%3C/svg%3E")`,
+      }} />
+
+      <div className="relative z-10 max-w-[1100px] mx-auto px-4 sm:px-8 md:px-12">
+        <GrainCard padding="lg" centered>
+          <H2 style={{ marginBottom: '0.75rem' }}>Your Dual Advantage</H2>
+          <p
+            className="text-body"
+            style={{
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              fontSize: 'clamp(15px, 1.8vw, 18px)',
+              fontWeight: 600,
+              color: '#ffd700',
+              marginBottom: '1rem',
+            }}
+          >
+            Smart Agent Alliance + Wolf Pack
+          </p>
+          <p className="text-body mx-auto" style={{ color: '#dcdbd5', maxWidth: '700px' }}>
+            SAA operates inside the Wolf Pack organization, led by Mike Sherrard and Connor Steinbrook. That means agents who join through SAA don&apos;t just get one layer of support — they get two. The Wolf Pack provides premium training courses, weekly masterminds, and an active Skool community. SAA adds structured onboarding, a custom-built portal, attraction tools, and direct leadership access.
+          </p>
+        </GrainCard>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+          {SECTION4_CARD_DATA.map((card, i) => {
+            const CardIcon = card.icon;
+            return (
+              <GenericCard
+                key={i}
+                padding="md"
+                hover
+              >
+                <IconRing icon={CardIcon} color="#ffd700" />
+                <h3 className="text-h6 text-center mb-2" style={{ color: '#e5e4dd' }}>{card.title}</h3>
+                <p className="text-body text-center" style={{ fontSize: '14px', color: '#a8a7a0', lineHeight: '1.5' }}>
+                  {card.description}
+                </p>
+              </GenericCard>
+            );
+          })}
+        </div>
+
+        <p className="text-body mt-8 text-center" style={{ color: '#ffd700' }}>
+          Most sponsors offer one thing or nothing at all. With SAA inside the Wolf Pack, you get dual-layer support — systems and training that work together from day one.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// SECTION 6A — Emerald GlassPanel CTA
+// ============================================================================
+
+function Section6A() {
+  return (
+    <GlassPanel variant="emerald" noBlur>
+      <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12 py-16 md:py-24">
+        <GenericCard padding="lg" centered style={{ border: '1px solid rgba(16,185,129,0.2)' }}>
+          <H2 style={{ marginBottom: '1.25rem' }}>The Bottom Line</H2>
+
+          <p className="text-body mb-6" style={{ color: '#dcdbd5' }}>
+            Choosing an eXp sponsor isn&apos;t about logos or promises. It&apos;s about what actually shows up after onboarding.
+          </p>
+
+          <ul className="space-y-2.5 mb-6 text-left max-w-[600px] mx-auto" style={{ listStyle: 'none', padding: 0, margin: '0 auto 1.5rem' }}>
+            {BOTTOM_LINE_BULLETS.map((bullet, i) => (
+              <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
+                <span
+                  className="mt-[6px] flex-shrink-0 w-2 h-2 rounded-full"
+                  style={{ background: '#10b981', boxShadow: '0 0 6px rgba(16,185,129,0.4)' }}
+                />
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-body" style={{ color: '#a8a7a0' }}>
+            If those things matter to you, structure is what makes support dependable over time.
+          </p>
+        </GenericCard>
+
+        <div className="text-center mt-8">
+          <CTAButton href="#" onClick={(e: React.MouseEvent) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
+            Join the Alliance
+          </CTAButton>
+        </div>
+
+        <div className="mt-10 mx-auto" style={{
+          height: '1px',
+          maxWidth: '300px',
+          background: 'linear-gradient(90deg, transparent, #ffd700, transparent)',
+        }} />
+      </div>
+    </GlassPanel>
+  );
+}
+
+// ============================================================================
+// SECTION 6B — NeonCard Closing Statement
+// ============================================================================
+
+function Section6B() {
+  return (
+    <section className="relative py-16 md:py-24">
+      {/* Noise texture */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n6b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n6b)' opacity='0.03'/%3E%3C/svg%3E")`,
+      }} />
+
+      <div className="relative z-10 max-w-[800px] mx-auto px-4 sm:px-8 md:px-12">
+        {/* Gold separator above */}
+        <div className="mb-8 mx-auto" style={{
+          height: '1px',
+          maxWidth: '200px',
+          background: 'linear-gradient(90deg, transparent, #ffd700, transparent)',
+        }} />
+
+        <NeonCard padding="lg" centered>
+          <H2 style={{ marginBottom: '1.25rem' }}>The Bottom Line</H2>
+
+          <p className="text-body mb-6" style={{ color: '#dcdbd5' }}>
+            Choosing an eXp sponsor isn&apos;t about logos or promises. It&apos;s about what actually shows up after onboarding.
+          </p>
+
+          <ul className="space-y-2.5 mb-6 text-left max-w-[600px] mx-auto" style={{ listStyle: 'none', padding: 0, margin: '0 auto 1.5rem' }}>
+            {BOTTOM_LINE_BULLETS.map((bullet, i) => (
+              <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
+                <CheckCircle2 size={16} style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }} />
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-body" style={{ color: '#a8a7a0' }}>
+            If those things matter to you, structure is what makes support dependable over time.
+          </p>
+        </NeonCard>
+
+        <div className="text-center mt-8">
+          <CTAButton href="#" onClick={(e: React.MouseEvent) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
+            Join the Alliance
+          </CTAButton>
+        </div>
+
+        {/* Gold separator below */}
+        <div className="mt-8 mx-auto" style={{
+          height: '1px',
+          maxWidth: '200px',
+          background: 'linear-gradient(90deg, transparent, #ffd700, transparent)',
+        }} />
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// SECTION 6C — Marigold GlassPanel + Gold Grid Prose
+// ============================================================================
+
+function Section6C() {
+  return (
+    <GlassPanel variant="marigoldCrosshatch" noBlur>
+      <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12 py-16 md:py-24">
+        <H2 style={{ marginBottom: '1.25rem', textAlign: 'center' }}>The Bottom Line</H2>
+
+        {/* Content panel with gold grid */}
+        <div
+          className="relative overflow-hidden rounded-xl p-6 sm:p-8 mb-8"
+          style={{
+            background: 'rgba(12,12,12,0.85)',
+            border: '1px solid rgba(255,215,0,0.1)',
+          }}
+        >
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,215,0,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,215,0,0.015) 1px, transparent 1px)
+              `,
+              backgroundSize: '20px 20px',
+            }}
+          />
+
+          <div className="relative z-10">
+            <p className="text-body mb-6 text-center" style={{ color: '#dcdbd5' }}>
+              Choosing an eXp sponsor isn&apos;t about logos or promises. It&apos;s about what actually shows up after onboarding.
+            </p>
+
+            <ul className="space-y-2.5 mb-6 text-left max-w-[600px] mx-auto" style={{ listStyle: 'none', padding: 0, margin: '0 auto 1.5rem' }}>
+              {BOTTOM_LINE_BULLETS.map((bullet, i) => (
+                <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
+                  <span
+                    className="mt-[6px] flex-shrink-0 w-2 h-2 rounded-full"
+                    style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.4)' }}
+                  />
+                  <span>{bullet}</span>
+                </li>
+              ))}
+            </ul>
+
+            <p
+              className="text-body text-center"
+              style={{
+                color: '#ffd700',
+                textShadow: '0 0 20px rgba(255,215,0,0.3), 0 0 40px rgba(255,215,0,0.15)',
+              }}
+            >
+              If those things matter to you, structure is what makes support dependable over time.
+            </p>
+          </div>
+        </div>
+
+        {/* CTA with rainbow border */}
+        <div className="flex justify-center">
+          <div className="relative" style={{ borderRadius: '14px' }}>
+            <div style={{
+              position: 'absolute',
+              left: '-2px',
+              top: '-2px',
+              borderRadius: '14px',
+              background: 'linear-gradient(45deg, #fb0094, #0000ff, #00ff00, #ffff00, #ff0000, #fb0094, #0000ff, #00ff00, #ffff00, #ff0000)',
+              backgroundSize: '400%',
+              width: 'calc(100% + 4px)',
+              height: 'calc(100% + 4px)',
+              zIndex: 0,
+              animation: 's3GradientFlow 20s linear infinite',
+            }} />
+            <div style={{
+              position: 'absolute',
+              left: '-2px',
+              top: '-2px',
+              borderRadius: '14px',
+              background: 'linear-gradient(45deg, #fb0094, #0000ff, #00ff00, #ffff00, #ff0000, #fb0094, #0000ff, #00ff00, #ffff00, #ff0000)',
+              backgroundSize: '400%',
+              width: 'calc(100% + 4px)',
+              height: 'calc(100% + 4px)',
+              filter: 'blur(10px)',
+              opacity: 0.35,
+              zIndex: -1,
+              animation: 's3GradientFlow 20s linear infinite',
+            }} />
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <CTAButton href="#" onClick={(e: React.MouseEvent) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
+                Join the Alliance
+              </CTAButton>
+            </div>
+          </div>
+        </div>
+      </div>
+    </GlassPanel>
+  );
+}
+
+// ============================================================================
 // MAIN PAGE COMPONENT
 // ============================================================================
 
@@ -1708,9 +2305,17 @@ export default function ExpRealtySponsor() {
       <Section3 />
 
       {/* ================================================================== */}
-      {/* SECTION 4 — "Your Dual Advantage"                                  */}
+      {/* SECTION 4 — "Your Dual Advantage" (3 versions for review)          */}
       {/* ================================================================== */}
-      <Section4 />
+      <VersionWrapper label="Section 4 — Version A">
+        <Section4A />
+      </VersionWrapper>
+      <VersionWrapper label="Section 4 — Version B">
+        <Section4B />
+      </VersionWrapper>
+      <VersionWrapper label="Section 4 — Version C">
+        <Section4C />
+      </VersionWrapper>
 
       {/* ================================================================== */}
       {/* SECTION 5 — Leadership (Meet the Founders)                         */}
@@ -1718,9 +2323,17 @@ export default function ExpRealtySponsor() {
       <MeetTheFounders />
 
       {/* ================================================================== */}
-      {/* SECTION 6 — "The Bottom Line" + CTA                               */}
+      {/* SECTION 6 — "The Bottom Line" (3 versions for review)              */}
       {/* ================================================================== */}
-      <Section6 />
+      <VersionWrapper label="Section 6 — Version A">
+        <Section6A />
+      </VersionWrapper>
+      <VersionWrapper label="Section 6 — Version B">
+        <Section6B />
+      </VersionWrapper>
+      <VersionWrapper label="Section 6 — Version C">
+        <Section6C />
+      </VersionWrapper>
 
     </main>
   );
