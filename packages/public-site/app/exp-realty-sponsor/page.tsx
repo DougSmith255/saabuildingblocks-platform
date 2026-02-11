@@ -950,33 +950,28 @@ function Section3() {
   const [isWalkthrough, setIsWalkthrough] = useState(false);
   const [walkthroughPlaying, setWalkthroughPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const activeGroupRef = useRef(0); // mirror for event listener
   const group = FEATURE_GROUPS[activeGroup];
 
-  // Compute cumulative start times for each section (for auto-advance)
+  // Compute cumulative start times for each section
   const sectionTimings = useRef(
-    FEATURE_GROUPS.reduce<{ start: number; switchAt: number }[]>((acc, g, i) => {
-      const start = i === 0 ? 0 : acc[i - 1].start + (FEATURE_GROUPS[i - 1].duration || 30);
-      const dur = g.duration || 30;
-      const isLast = i === FEATURE_GROUPS.length - 1;
-      acc.push({ start, switchAt: start + dur - (isLast ? 0 : 1) });
+    FEATURE_GROUPS.reduce<{ start: number; end: number }[]>((acc, g, i) => {
+      const start = i === 0 ? 0 : acc[i - 1].end;
+      const end = start + (g.duration || 30);
+      acc.push({ start, end });
       return acc;
     }, [])
   ).current;
 
+  // Keep ref in sync
+  useEffect(() => { activeGroupRef.current = activeGroup; }, [activeGroup]);
+
   // Handle manual tab click — stops walkthrough
   const handleTabClick = useCallback((index: number) => {
     if (isWalkthrough) {
-      // Stop walkthrough
       setIsWalkthrough(false);
       setWalkthroughPlaying(false);
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-      if (advanceTimerRef.current) {
-        clearTimeout(advanceTimerRef.current);
-        advanceTimerRef.current = null;
-      }
+      if (audioRef.current) audioRef.current.pause();
     }
     setActiveGroup(index);
   }, [isWalkthrough]);
@@ -997,10 +992,6 @@ function Section3() {
     if (walkthroughPlaying) {
       setWalkthroughPlaying(false);
       audioRef.current?.pause();
-      if (advanceTimerRef.current) {
-        clearTimeout(advanceTimerRef.current);
-        advanceTimerRef.current = null;
-      }
     } else {
       setWalkthroughPlaying(true);
       audioRef.current?.play().catch(() => {});
@@ -1015,23 +1006,13 @@ function Section3() {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
-    if (advanceTimerRef.current) {
-      clearTimeout(advanceTimerRef.current);
-      advanceTimerRef.current = null;
-    }
   }, []);
 
   // Jump to a specific chapter during walkthrough
   const jumpToChapter = useCallback((index: number) => {
-    if (advanceTimerRef.current) {
-      clearTimeout(advanceTimerRef.current);
-      advanceTimerRef.current = null;
-    }
     setActiveGroup(index);
-    // Seek audio to the chapter start time
     if (audioRef.current) {
-      const startTime = sectionTimings[index]?.start || 0;
-      audioRef.current.currentTime = startTime;
+      audioRef.current.currentTime = sectionTimings[index]?.start || 0;
       if (!walkthroughPlaying) {
         setWalkthroughPlaying(true);
         audioRef.current.play().catch(() => {});
@@ -1039,42 +1020,33 @@ function Section3() {
     }
   }, [sectionTimings, walkthroughPlaying]);
 
-  // Auto-advance logic: schedule next section switch
-  useEffect(() => {
-    if (!isWalkthrough || !walkthroughPlaying) return;
-
-    const timing = sectionTimings[activeGroup];
-    if (!timing) return;
-    const isLast = activeGroup === FEATURE_GROUPS.length - 1;
-    const dur = (FEATURE_GROUPS[activeGroup].duration || 30);
-    // Switch 1s before end, unless last
-    const delay = (dur - (isLast ? 0 : 1)) * 1000;
-
-    advanceTimerRef.current = setTimeout(() => {
-      if (isLast) {
-        // Walkthrough finished
-        stopWalkthrough();
-      } else {
-        setActiveGroup(prev => prev + 1);
-      }
-    }, delay);
-
-    return () => {
-      if (advanceTimerRef.current) {
-        clearTimeout(advanceTimerRef.current);
-        advanceTimerRef.current = null;
-      }
-    };
-  }, [activeGroup, isWalkthrough, walkthroughPlaying, sectionTimings, stopWalkthrough]);
-
-  // Audio ended handler
+  // Audio-driven section switching — uses timeupdate for perfect sync
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+
+    const onTimeUpdate = () => {
+      if (!isWalkthrough || !walkthroughPlaying) return;
+      const t = audio.currentTime;
+      const current = activeGroupRef.current;
+      // Find which section the audio is in
+      for (let i = 0; i < sectionTimings.length; i++) {
+        if (t >= sectionTimings[i].start && t < sectionTimings[i].end) {
+          if (i !== current) setActiveGroup(i);
+          return;
+        }
+      }
+    };
+
     const onEnded = () => stopWalkthrough();
+
+    audio.addEventListener('timeupdate', onTimeUpdate);
     audio.addEventListener('ended', onEnded);
-    return () => audio.removeEventListener('ended', onEnded);
-  }, [stopWalkthrough]);
+    return () => {
+      audio.removeEventListener('timeupdate', onTimeUpdate);
+      audio.removeEventListener('ended', onEnded);
+    };
+  }, [isWalkthrough, walkthroughPlaying, sectionTimings, stopWalkthrough]);
 
   // Total walkthrough duration & progress
   const totalDuration = FEATURE_GROUPS.reduce((sum, g) => sum + (g.duration || 30), 0);
@@ -1332,7 +1304,7 @@ function Section3() {
                   )}
                 </button>
 
-                {/* Chapter buttons */}
+                {/* Chapter buttons — compact numbered pills */}
                 {FEATURE_GROUPS.map((g, i) => {
                   const isActiveChapter = activeGroup === i;
                   return (
@@ -1342,22 +1314,24 @@ function Section3() {
                       onClick={() => jumpToChapter(i)}
                       className="s3-chapter-btn"
                       style={{
-                        padding: '5px 12px',
-                        borderRadius: '8px',
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
                         fontSize: '12px',
                         fontFamily: 'var(--font-taskor)',
-                        fontWeight: 500,
-                        letterSpacing: '0.03em',
+                        fontWeight: 600,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         color: isActiveChapter ? '#0a0a0a' : '#a8a7a0',
                         background: isActiveChapter ? 'linear-gradient(135deg, #ffd700, #e6c200)' : 'rgba(255,255,255,0.06)',
                         border: isActiveChapter ? '1px solid rgba(255,215,0,0.6)' : '1px solid rgba(255,255,255,0.08)',
                         boxShadow: isActiveChapter ? '0 0 10px rgba(255,215,0,0.25)' : 'none',
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
-                        whiteSpace: 'nowrap',
                       }}
                     >
-                      {g.heading.split(/[,\u2014\u2019]/, 1)[0].trim()}
+                      {i + 1}
                     </button>
                   );
                 })}
