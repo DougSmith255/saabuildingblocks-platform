@@ -2690,14 +2690,14 @@ function WhatExpProvidesSection() {
                       {bullet.text}
                       {'guestPass' in bullet && bullet.guestPass && (
                         <>
-                          {' — '}
+                          {' - '}
                           <button
                             type="button"
                             onClick={() => window.dispatchEvent(new Event('open-vip-guest-pass'))}
                             className="cursor-pointer font-bold hover:underline"
                             style={{ color: '#00bfff' }}
                           >
-                            get a guest pass
+                            Guest Pass
                           </button>
                         </>
                       )}
