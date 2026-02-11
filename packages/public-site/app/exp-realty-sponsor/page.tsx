@@ -1543,7 +1543,7 @@ function Section3() {
 // ============================================================================
 
 const DUAL_ADVANTAGE_BULLETS = [
-  'Everything provided by Smart Agent Alliance',
+  'Everything provided by SAA',
   'Everything provided by the Wolf Pack',
 ];
 
@@ -1714,36 +1714,40 @@ function Section4Final() {
           Agents aligned with SAA receive:
         </p>
 
-        {/* Two cards with + symbol between them */}
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 mb-8">
-          <GenericCard padding="lg" className="flex-1 w-full" style={{ border: '1px solid rgba(255,215,0,0.25)' }}>
-            <IconRing icon={Shield} color="#ffd700" />
-            <p className="text-body text-center">
-              {DUAL_ADVANTAGE_BULLETS[0]}
-            </p>
-          </GenericCard>
+        {/* Two cards with + symbol between them — equal height via items-stretch */}
+        <div className="flex flex-col md:flex-row md:items-stretch items-center gap-4 md:gap-6 mb-8">
+          <div className="flex-1 w-full" style={{ border: '1px solid rgba(255,215,0,0.25)', borderRadius: '12px' }}>
+            <GrainCard padding="lg" className="h-full">
+              <IconRing icon={Shield} color="#ffd700" />
+              <p className="text-body text-center">
+                {DUAL_ADVANTAGE_BULLETS[0]}
+              </p>
+            </GrainCard>
+          </div>
 
           {/* Plus symbol */}
           <span
+            className="flex-shrink-0 flex items-center justify-center"
             style={{
               fontFamily: 'var(--font-taskor, sans-serif)',
               fontSize: 'clamp(28px, 3vw, 40px)',
               fontWeight: 700,
               color: '#ffd700',
               lineHeight: 1,
-              flexShrink: 0,
               textShadow: '0 0 12px rgba(255,215,0,0.3)',
             }}
           >
             +
           </span>
 
-          <GenericCard padding="lg" className="flex-1 w-full" style={{ border: '1px solid rgba(0,191,255,0.25)' }}>
-            <IconRing icon={Users} color="#00bfff" />
-            <p className="text-body text-center">
-              {DUAL_ADVANTAGE_BULLETS[1]}
-            </p>
-          </GenericCard>
+          <div className="flex-1 w-full" style={{ border: '1px solid rgba(0,191,255,0.25)', borderRadius: '12px' }}>
+            <GrainCard padding="lg" className="h-full">
+              <IconRing icon={Users} color="#00bfff" />
+              <p className="text-body text-center">
+                {DUAL_ADVANTAGE_BULLETS[1]}
+              </p>
+            </GrainCard>
+          </div>
         </div>
 
         {/* Closing prose block with gold grid pattern */}
