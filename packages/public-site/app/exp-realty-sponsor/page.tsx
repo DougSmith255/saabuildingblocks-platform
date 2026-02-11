@@ -1054,7 +1054,7 @@ function Section3() {
   const currentDuration = FEATURE_GROUPS[activeGroup]?.duration || 30;
 
   return (
-    <section className="relative py-16 md:py-24">
+    <section className="relative py-16 md:py-24" style={{ overflowAnchor: 'none' }}>
       <style>{`
         @keyframes portalFadeIn {
           from { opacity: 0; transform: translateY(8px); }
@@ -1493,8 +1493,9 @@ function Section3() {
                   </div>
                 </div>
 
-                {/* Heading + bullet points — keyed for fade animation */}
-                <div key={activeGroup} className="portal-content-fade flex-1 flex flex-col justify-center text-center lg:text-left">
+                {/* Heading + bullet points — stable-height wrapper prevents mobile scroll jumps when content changes */}
+                <div className="flex-1 flex flex-col justify-center" style={{ minHeight: '280px' }}>
+                <div key={activeGroup} className="portal-content-fade flex flex-col justify-center text-center lg:text-left">
                   <h3
                     style={{
                       fontFamily: 'var(--font-taskor, sans-serif)',
@@ -1520,6 +1521,7 @@ function Section3() {
                       </li>
                     ))}
                   </ul>
+                </div>
                 </div>
               </div>
             </div>
