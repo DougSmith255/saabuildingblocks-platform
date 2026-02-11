@@ -1218,14 +1218,15 @@ function Section3() {
       {/* Hidden audio element for walkthrough voiceover */}
       <audio ref={audioRef} src={WALKTHROUGH_AUDIO_URL} preload="auto" />
 
-      {/* Section heading — champagne GlassPanel background */}
-      <GlassPanel variant="champagne" noBlur className="mb-10 lg:mb-14">
-        <div className="text-center max-w-[800px] mx-auto py-10 md:py-14 px-4">
-          <H2>
-            What You Get Inside Smart Agent Alliance
-          </H2>
-        </div>
-      </GlassPanel>
+      {/* Champagne GlassPanel wraps entire section — heading + portal showcase */}
+      <GlassPanel variant="champagne" noBlur>
+
+      {/* Section heading */}
+      <div className="text-center max-w-[800px] mx-auto py-10 md:py-14 px-4">
+        <H2>
+          What You Get Inside Smart Agent Alliance
+        </H2>
+      </div>
 
       {/* Portal showcase frame */}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12">
@@ -1531,6 +1532,8 @@ function Section3() {
           </div>
         </div>
       </div>
+
+      </GlassPanel>
     </section>
   );
 }
