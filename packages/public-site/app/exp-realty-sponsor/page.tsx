@@ -1602,11 +1602,8 @@ function Section3() {
 // ============================================================================
 
 const DUAL_ADVANTAGE_BULLETS = [
-  'Full onboarding system, portal access, and one-on-one strategy sessions from SAA',
-  'Five premium training courses and an active Skool community through the Wolf Pack',
-  'Weekly mastermind calls led by top producers like Mike Sherrard and Connor Steinbrook',
-  'Agent attraction tools, link pages, and analytics built into the SAA portal',
-  'Revenue share infrastructure that compounds across both organizations',
+  'Everything provided by Smart Agent Alliance',
+  'Everything provided by the Wolf Pack',
 ];
 
 function Section4() {
@@ -1628,11 +1625,15 @@ function Section4() {
           </p>
         </div>
 
-        <p className="text-body mb-6" style={{ color: '#dcdbd5' }}>
-          SAA operates inside the Wolf Pack organization, led by Mike Sherrard and Connor Steinbrook. That means agents who join through SAA don&apos;t just get one layer of support — they get two. The Wolf Pack provides premium training courses, weekly masterminds, and an active Skool community. SAA adds structured onboarding, a custom-built portal, attraction tools, and direct leadership access.
+        <p className="text-body mb-4" style={{ color: '#dcdbd5' }}>
+          Smart Agent Alliance is directly aligned with the Wolf Pack, one of eXp Realty&apos;s largest and most experienced leadership organizations.
         </p>
 
-        <ul className="space-y-2.5 mb-6" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+        <p className="text-body mb-4" style={{ color: '#dcdbd5', fontWeight: 600 }}>
+          Agents aligned with SAA receive:
+        </p>
+
+        <ul className="space-y-2.5 mb-6" style={{ listStyle: 'none', padding: 0, margin: '0 0 1.5rem' }}>
           {DUAL_ADVANTAGE_BULLETS.map((bullet, i) => (
             <li
               key={i}
@@ -1645,8 +1646,12 @@ function Section4() {
           ))}
         </ul>
 
+        <p className="text-body mb-3" style={{ color: '#dcdbd5' }}>
+          This includes scale, leadership depth, global collaboration, and long-term stability, without additional fees or obligations.
+        </p>
+
         <p className="text-body" style={{ color: '#a8a7a0' }}>
-          Most sponsors offer one thing or nothing at all. With SAA inside the Wolf Pack, you get dual-layer support — systems and training that work together from day one.
+          This dual-layer support exists because of how SAA is positioned within eXp Realty.
         </p>
       </div>
     </section>
@@ -1753,16 +1758,6 @@ function VersionWrapper({ label, children }: { label: string; children: React.Re
 // ============================================================================
 
 function Section4A() {
-  const saaBullets = [
-    DUAL_ADVANTAGE_BULLETS[0],
-    DUAL_ADVANTAGE_BULLETS[3],
-    DUAL_ADVANTAGE_BULLETS[4],
-  ];
-  const wolfBullets = [
-    DUAL_ADVANTAGE_BULLETS[1],
-    DUAL_ADVANTAGE_BULLETS[2],
-  ];
-
   return (
     <GlassPanel variant="champagne" noBlur>
       <div className="max-w-[1100px] mx-auto px-4 sm:px-8 md:px-12 py-16 md:py-24">
@@ -1781,35 +1776,27 @@ function Section4A() {
           </p>
         </div>
 
-        <p className="text-body mb-8 text-center mx-auto" style={{ color: '#dcdbd5', maxWidth: '750px' }}>
-          SAA operates inside the Wolf Pack organization, led by Mike Sherrard and Connor Steinbrook. That means agents who join through SAA don&apos;t just get one layer of support — they get two. The Wolf Pack provides premium training courses, weekly masterminds, and an active Skool community. SAA adds structured onboarding, a custom-built portal, attraction tools, and direct leadership access.
+        <p className="text-body mb-4 text-center mx-auto" style={{ color: '#dcdbd5', maxWidth: '750px' }}>
+          Smart Agent Alliance is directly aligned with the Wolf Pack, one of eXp Realty&apos;s largest and most experienced leadership organizations.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <p className="text-body mb-4 text-center mx-auto" style={{ color: '#dcdbd5', fontWeight: 600, maxWidth: '750px' }}>
+          Agents aligned with SAA receive:
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 max-w-[750px] mx-auto">
           <GenericCard padding="lg" style={{ border: '1px solid rgba(255,215,0,0.25)' }}>
             <IconRing icon={Shield} color="#ffd700" />
-            <h3 className="text-h6 text-center mb-4" style={{ color: '#ffd700' }}>From SAA</h3>
-            <ul className="space-y-2.5" style={{ listStyle: 'none', padding: 0 }}>
-              {saaBullets.map((b, i) => (
-                <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
-                  <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="text-body text-center" style={{ color: '#dcdbd5' }}>
+              {DUAL_ADVANTAGE_BULLETS[0]}
+            </p>
           </GenericCard>
 
           <GenericCard padding="lg" style={{ border: '1px solid rgba(0,191,255,0.25)' }}>
             <IconRing icon={Users} color="#00bfff" />
-            <h3 className="text-h6 text-center mb-4" style={{ color: '#00bfff' }}>From Wolf Pack</h3>
-            <ul className="space-y-2.5" style={{ listStyle: 'none', padding: 0 }}>
-              {wolfBullets.map((b, i) => (
-                <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
-                  <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="text-body text-center" style={{ color: '#dcdbd5' }}>
+              {DUAL_ADVANTAGE_BULLETS[1]}
+            </p>
           </GenericCard>
         </div>
 
@@ -1832,8 +1819,11 @@ function Section4A() {
               backgroundSize: '20px 20px',
             }}
           />
+          <p className="text-body relative z-10 mb-3" style={{ color: '#dcdbd5' }}>
+            This includes scale, leadership depth, global collaboration, and long-term stability, without additional fees or obligations.
+          </p>
           <p className="text-body relative z-10" style={{ color: '#a8a7a0' }}>
-            Most sponsors offer one thing or nothing at all. With SAA inside the Wolf Pack, you get dual-layer support — systems and training that work together from day one.
+            This dual-layer support exists because of how SAA is positioned within eXp Realty.
           </p>
         </div>
       </div>
@@ -1846,16 +1836,6 @@ function Section4A() {
 // ============================================================================
 
 function Section4B() {
-  const leftBullets = [
-    DUAL_ADVANTAGE_BULLETS[0],
-    DUAL_ADVANTAGE_BULLETS[3],
-    DUAL_ADVANTAGE_BULLETS[4],
-  ];
-  const rightBullets = [
-    DUAL_ADVANTAGE_BULLETS[1],
-    DUAL_ADVANTAGE_BULLETS[2],
-  ];
-
   return (
     <section className="relative py-16 md:py-24 overflow-hidden">
       {/* Dual gradient background */}
@@ -1887,7 +1867,7 @@ function Section4B() {
           }}
         >
           <div className="p-6 sm:p-8 md:p-10 lg:p-12">
-            <div className="text-center mb-8 md:mb-10">
+            <div className="text-center mb-6 md:mb-8">
               <H2 style={{ marginBottom: '0.75rem' }}>Your Dual Advantage</H2>
               <p
                 className="text-body"
@@ -1902,25 +1882,19 @@ function Section4B() {
               </p>
             </div>
 
-            <p className="text-body mb-8 text-center mx-auto" style={{ color: '#dcdbd5', maxWidth: '700px' }}>
-              SAA operates inside the Wolf Pack organization, led by Mike Sherrard and Connor Steinbrook. That means agents who join through SAA don&apos;t just get one layer of support — they get two. The Wolf Pack provides premium training courses, weekly masterminds, and an active Skool community. SAA adds structured onboarding, a custom-built portal, attraction tools, and direct leadership access.
+            <p className="text-body mb-4 text-center mx-auto" style={{ color: '#dcdbd5', maxWidth: '700px' }}>
+              Smart Agent Alliance is directly aligned with the Wolf Pack, one of eXp Realty&apos;s largest and most experienced leadership organizations.
+            </p>
+
+            <p className="text-body mb-6 text-center mx-auto" style={{ color: '#dcdbd5', fontWeight: 600, maxWidth: '700px' }}>
+              Agents aligned with SAA receive:
             </p>
 
             <div className="flex flex-col md:flex-row gap-6 md:gap-0">
               {/* Left — SAA */}
-              <div className="flex-1 md:pr-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Shield size={18} style={{ color: '#ffd700', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.4))' }} />
-                  <h3 className="text-h6" style={{ color: '#ffd700' }}>Smart Agent Alliance</h3>
-                </div>
-                <ul className="space-y-2.5" style={{ listStyle: 'none', padding: 0 }}>
-                  {leftBullets.map((b, i) => (
-                    <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
-                      <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="flex-1 md:pr-8 flex items-center gap-3">
+                <Shield size={18} style={{ color: '#ffd700', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.4))', flexShrink: 0 }} />
+                <p className="text-body" style={{ color: '#dcdbd5' }}>{DUAL_ADVANTAGE_BULLETS[0]}</p>
               </div>
 
               {/* Divider — vertical on desktop, horizontal on mobile */}
@@ -1934,24 +1908,17 @@ function Section4B() {
               }} />
 
               {/* Right — Wolf Pack */}
-              <div className="flex-1 md:pl-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Users size={18} style={{ color: '#00bfff', filter: 'drop-shadow(0 0 6px rgba(0,191,255,0.4))' }} />
-                  <h3 className="text-h6" style={{ color: '#00bfff' }}>Wolf Pack</h3>
-                </div>
-                <ul className="space-y-2.5" style={{ listStyle: 'none', padding: 0 }}>
-                  {rightBullets.map((b, i) => (
-                    <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
-                      <span style={{ color: '#00bfff', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="flex-1 md:pl-8 flex items-center gap-3">
+                <Users size={18} style={{ color: '#00bfff', filter: 'drop-shadow(0 0 6px rgba(0,191,255,0.4))', flexShrink: 0 }} />
+                <p className="text-body" style={{ color: '#dcdbd5' }}>{DUAL_ADVANTAGE_BULLETS[1]}</p>
               </div>
             </div>
 
-            <p className="text-body mt-8 text-center" style={{ color: '#a8a7a0' }}>
-              Most sponsors offer one thing or nothing at all. With SAA inside the Wolf Pack, you get dual-layer support — systems and training that work together from day one.
+            <p className="text-body mt-6 text-center" style={{ color: '#dcdbd5' }}>
+              This includes scale, leadership depth, global collaboration, and long-term stability, without additional fees or obligations.
+            </p>
+            <p className="text-body mt-3 text-center" style={{ color: '#a8a7a0' }}>
+              This dual-layer support exists because of how SAA is positioned within eXp Realty.
             </p>
           </div>
         </div>
@@ -1965,11 +1932,8 @@ function Section4B() {
 // ============================================================================
 
 const SECTION4_CARD_DATA = [
-  { icon: Rocket, title: 'Onboarding & Strategy', description: DUAL_ADVANTAGE_BULLETS[0] },
-  { icon: GraduationCap, title: 'Premium Training', description: DUAL_ADVANTAGE_BULLETS[1] },
-  { icon: Handshake, title: 'Weekly Masterminds', description: DUAL_ADVANTAGE_BULLETS[2] },
-  { icon: Link2, title: 'Attraction & Analytics', description: DUAL_ADVANTAGE_BULLETS[3] },
-  { icon: TrendingUp, title: 'Revenue Share', description: DUAL_ADVANTAGE_BULLETS[4] },
+  { icon: Shield, title: 'Smart Agent Alliance', description: DUAL_ADVANTAGE_BULLETS[0], color: '#ffd700' },
+  { icon: Users, title: 'Wolf Pack', description: DUAL_ADVANTAGE_BULLETS[1], color: '#00bfff' },
 ];
 
 function Section4C() {
@@ -1996,11 +1960,14 @@ function Section4C() {
             Smart Agent Alliance + Wolf Pack
           </p>
           <p className="text-body mx-auto" style={{ color: '#dcdbd5', maxWidth: '700px' }}>
-            SAA operates inside the Wolf Pack organization, led by Mike Sherrard and Connor Steinbrook. That means agents who join through SAA don&apos;t just get one layer of support — they get two. The Wolf Pack provides premium training courses, weekly masterminds, and an active Skool community. SAA adds structured onboarding, a custom-built portal, attraction tools, and direct leadership access.
+            Smart Agent Alliance is directly aligned with the Wolf Pack, one of eXp Realty&apos;s largest and most experienced leadership organizations.
+          </p>
+          <p className="text-body mx-auto mt-3" style={{ color: '#dcdbd5', fontWeight: 600, maxWidth: '700px' }}>
+            Agents aligned with SAA receive:
           </p>
         </GrainCard>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 max-w-[700px] mx-auto">
           {SECTION4_CARD_DATA.map((card, i) => {
             const CardIcon = card.icon;
             return (
@@ -2009,9 +1976,9 @@ function Section4C() {
                 padding="md"
                 hover
               >
-                <IconRing icon={CardIcon} color="#ffd700" />
-                <h3 className="text-h6 text-center mb-2" style={{ color: '#e5e4dd' }}>{card.title}</h3>
-                <p className="text-body text-center" style={{ fontSize: '14px', color: '#a8a7a0', lineHeight: '1.5' }}>
+                <IconRing icon={CardIcon} color={card.color} />
+                <h3 className="text-h6 text-center mb-2" style={{ color: card.color }}>{card.title}</h3>
+                <p className="text-body text-center" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
                   {card.description}
                 </p>
               </GenericCard>
@@ -2019,8 +1986,11 @@ function Section4C() {
           })}
         </div>
 
-        <p className="text-body mt-8 text-center" style={{ color: '#ffd700' }}>
-          Most sponsors offer one thing or nothing at all. With SAA inside the Wolf Pack, you get dual-layer support — systems and training that work together from day one.
+        <p className="text-body mt-8 text-center" style={{ color: '#dcdbd5' }}>
+          This includes scale, leadership depth, global collaboration, and long-term stability, without additional fees or obligations.
+        </p>
+        <p className="text-body mt-3 text-center" style={{ color: '#a8a7a0' }}>
+          This dual-layer support exists because of how SAA is positioned within eXp Realty.
         </p>
       </div>
     </section>
