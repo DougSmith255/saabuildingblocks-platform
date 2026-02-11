@@ -1213,81 +1213,19 @@ function Section3() {
           color: #e5e4dd !important;
           border-color: rgba(255,255,255,0.2) !important;
         }
-        @keyframes champagneBubble {
-          0% { transform: translateY(0) scale(1); opacity: 0.06; }
-          50% { opacity: 0.03; }
-          100% { transform: translateY(-60px) scale(0.5); opacity: 0; }
-        }
       `}</style>
 
       {/* Hidden audio element for walkthrough voiceover */}
       <audio ref={audioRef} src={WALKTHROUGH_AUDIO_URL} preload="auto" />
 
-      {/* Section heading */}
-      <div className="relative text-center max-w-[800px] mx-auto mb-10 lg:mb-14 px-4">
-        {/* Champagne glass watermark */}
-        <svg
-          width="300"
-          height="280"
-          viewBox="0 0 300 280"
-          fill="none"
-          stroke="#ffd700"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="absolute pointer-events-none"
-          style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.04 }}
-        >
-          {/* Left glass — tilted right toward center */}
-          <g transform="rotate(-12 120 140)">
-            <path d="M100 40 Q100 100 108 130 L108 220" />
-            <path d="M140 40 Q140 100 132 130 L132 220" />
-            <ellipse cx="120" cy="40" rx="20" ry="7" />
-            <line x1="96" y1="235" x2="144" y2="235" />
-            <line x1="108" y1="220" x2="108" y2="235" />
-            <line x1="132" y1="220" x2="132" y2="235" />
-          </g>
-          {/* Right glass — tilted left toward center */}
-          <g transform="rotate(12 180 140)">
-            <path d="M160 40 Q160 100 168 130 L168 220" />
-            <path d="M200 40 Q200 100 192 130 L192 220" />
-            <ellipse cx="180" cy="40" rx="20" ry="7" />
-            <line x1="156" y1="235" x2="204" y2="235" />
-            <line x1="168" y1="220" x2="168" y2="235" />
-            <line x1="192" y1="220" x2="192" y2="235" />
-          </g>
-          {/* Clink sparkle */}
-          <circle cx="150" cy="45" r="3" fill="#ffd700" stroke="none" />
-          <line x1="150" y1="30" x2="150" y2="20" />
-          <line x1="140" y1="35" x2="133" y2="28" />
-          <line x1="160" y1="35" x2="167" y2="28" />
-        </svg>
-        {/* Rising bubbles */}
-        {[
-          { left: '38%', bottom: '20%', size: 6, delay: '0s', duration: '7s' },
-          { left: '44%', bottom: '15%', size: 4, delay: '1.5s', duration: '8s' },
-          { left: '55%', bottom: '25%', size: 5, delay: '3s', duration: '6s' },
-          { left: '60%', bottom: '10%', size: 8, delay: '4.5s', duration: '9s' },
-          { left: '48%', bottom: '18%', size: 4, delay: '6s', duration: '10s' },
-        ].map((b, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full pointer-events-none"
-            style={{
-              left: b.left,
-              bottom: b.bottom,
-              width: b.size,
-              height: b.size,
-              background: '#ffd700',
-              opacity: 0.06,
-              animation: `champagneBubble ${b.duration} ${b.delay} ease-in-out infinite`,
-            }}
-          />
-        ))}
-        <H2>
-          What You Get Inside Smart Agent Alliance
-        </H2>
-      </div>
+      {/* Section heading — champagne GlassPanel background */}
+      <GlassPanel variant="champagne" noBlur className="mb-10 lg:mb-14">
+        <div className="text-center max-w-[800px] mx-auto py-10 md:py-14 px-4">
+          <H2>
+            What You Get Inside Smart Agent Alliance
+          </H2>
+        </div>
+      </GlassPanel>
 
       {/* Portal showcase frame */}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12">
