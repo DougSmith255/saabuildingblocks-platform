@@ -1692,47 +1692,52 @@ function VersionWrapper({ label, children }: { label: string; children: React.Re
 }
 
 // ============================================================================
-// SECTION 4A — Two-Column Cards in Champagne GlassPanel
+// SECTION 4 — "Your Dual Advantage" — Two-Column Cards with + divider
 // ============================================================================
 
-function Section4A() {
+function Section4Final() {
   return (
-    <GlassPanel variant="champagne" noBlur>
-      <div className="max-w-[1100px] mx-auto px-4 sm:px-8 md:px-12 py-16 md:py-24">
+    <section className="relative py-16 md:py-24">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12">
         <div className="text-center mb-8 md:mb-10">
-          <H2 style={{ marginBottom: '0.75rem' }}>Your Dual Advantage</H2>
-          <p
-            className="text-body"
-            style={{
-              fontFamily: 'var(--font-taskor, sans-serif)',
-              fontSize: 'clamp(15px, 1.8vw, 18px)',
-              fontWeight: 600,
-              color: '#ffd700',
-            }}
-          >
-            Smart Agent Alliance + Wolf Pack
-          </p>
+          <H2>Your Dual Advantage</H2>
         </div>
 
-        <p className="text-body mb-4 text-center mx-auto" style={{ color: '#dcdbd5', maxWidth: '750px' }}>
+        <p className="text-body mb-4 text-center mx-auto">
           Smart Agent Alliance is directly aligned with the Wolf Pack, one of eXp Realty&apos;s largest and most experienced leadership organizations.
         </p>
 
-        <p className="text-body mb-4 text-center mx-auto" style={{ color: '#dcdbd5', fontWeight: 600, maxWidth: '750px' }}>
+        <p className="text-body mb-6 text-center mx-auto" style={{ fontWeight: 600 }}>
           Agents aligned with SAA receive:
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 max-w-[750px] mx-auto">
-          <GenericCard padding="lg" style={{ border: '1px solid rgba(255,215,0,0.25)' }}>
+        {/* Two cards with + symbol between them */}
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 mb-8">
+          <GenericCard padding="lg" className="flex-1 w-full" style={{ border: '1px solid rgba(255,215,0,0.25)' }}>
             <IconRing icon={Shield} color="#ffd700" />
-            <p className="text-body text-center" style={{ color: '#dcdbd5' }}>
+            <p className="text-body text-center">
               {DUAL_ADVANTAGE_BULLETS[0]}
             </p>
           </GenericCard>
 
-          <GenericCard padding="lg" style={{ border: '1px solid rgba(0,191,255,0.25)' }}>
+          {/* Plus symbol */}
+          <span
+            style={{
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              fontSize: 'clamp(28px, 3vw, 40px)',
+              fontWeight: 700,
+              color: '#ffd700',
+              lineHeight: 1,
+              flexShrink: 0,
+              textShadow: '0 0 12px rgba(255,215,0,0.3)',
+            }}
+          >
+            +
+          </span>
+
+          <GenericCard padding="lg" className="flex-1 w-full" style={{ border: '1px solid rgba(0,191,255,0.25)' }}>
             <IconRing icon={Users} color="#00bfff" />
-            <p className="text-body text-center" style={{ color: '#dcdbd5' }}>
+            <p className="text-body text-center">
               {DUAL_ADVANTAGE_BULLETS[1]}
             </p>
           </GenericCard>
@@ -1742,7 +1747,7 @@ function Section4A() {
         <div
           className="relative overflow-hidden rounded-xl p-6 text-center mx-auto"
           style={{
-            maxWidth: '750px',
+            maxWidth: '800px',
             background: 'rgba(15,15,10,0.6)',
             border: '1px solid rgba(255,215,0,0.1)',
           }}
@@ -1757,179 +1762,10 @@ function Section4A() {
               backgroundSize: '20px 20px',
             }}
           />
-          <p className="text-body relative z-10 mb-3" style={{ color: '#dcdbd5' }}>
+          <p className="text-body relative z-10">
             This includes scale, leadership depth, global collaboration, and long-term stability, without additional fees or obligations.
           </p>
-          <p className="text-body relative z-10" style={{ color: '#a8a7a0' }}>
-            This dual-layer support exists because of how SAA is positioned within eXp Realty.
-          </p>
         </div>
-      </div>
-    </GlassPanel>
-  );
-}
-
-// ============================================================================
-// SECTION 4B — Gold↔Cyan Split Gradient
-// ============================================================================
-
-function Section4B() {
-  return (
-    <section className="relative py-16 md:py-24 overflow-hidden">
-      {/* Dual gradient background */}
-      <div className="absolute inset-0" style={{
-        background: 'linear-gradient(135deg, rgba(255,215,0,0.04) 0%, rgba(15,15,15,0.95) 50%, rgba(0,191,255,0.04) 100%)',
-      }} />
-      {/* Crosshatch texture */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        backgroundImage: `
-          repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, transparent 1px, transparent 6px),
-          repeating-linear-gradient(-45deg, rgba(255,255,255,0.02) 0px, transparent 1px, transparent 6px)
-        `,
-        backgroundSize: '16px 16px',
-      }} />
-
-      <div className="relative z-10 max-w-[1100px] mx-auto px-4 sm:px-8 md:px-12">
-        <div
-          className="rounded-3xl overflow-hidden"
-          style={{
-            background: 'linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            boxShadow: `
-              0 8px 32px rgba(0,0,0,0.4),
-              0 4px 12px rgba(0,0,0,0.25),
-              inset 0 1px 0 0 rgba(255,255,255,0.15),
-              inset 0 -1px 0 0 rgba(0,0,0,0.5)
-            `,
-          }}
-        >
-          <div className="p-6 sm:p-8 md:p-10 lg:p-12">
-            <div className="text-center mb-6 md:mb-8">
-              <H2 style={{ marginBottom: '0.75rem' }}>Your Dual Advantage</H2>
-              <p
-                className="text-body"
-                style={{
-                  fontFamily: 'var(--font-taskor, sans-serif)',
-                  fontSize: 'clamp(15px, 1.8vw, 18px)',
-                  fontWeight: 600,
-                  color: '#ffd700',
-                }}
-              >
-                Smart Agent Alliance + Wolf Pack
-              </p>
-            </div>
-
-            <p className="text-body mb-4 text-center mx-auto" style={{ color: '#dcdbd5', maxWidth: '700px' }}>
-              Smart Agent Alliance is directly aligned with the Wolf Pack, one of eXp Realty&apos;s largest and most experienced leadership organizations.
-            </p>
-
-            <p className="text-body mb-6 text-center mx-auto" style={{ color: '#dcdbd5', fontWeight: 600, maxWidth: '700px' }}>
-              Agents aligned with SAA receive:
-            </p>
-
-            <div className="flex flex-col md:flex-row gap-6 md:gap-0">
-              {/* Left — SAA */}
-              <div className="flex-1 md:pr-8 flex items-center gap-3">
-                <Shield size={18} style={{ color: '#ffd700', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.4))', flexShrink: 0 }} />
-                <p className="text-body" style={{ color: '#dcdbd5' }}>{DUAL_ADVANTAGE_BULLETS[0]}</p>
-              </div>
-
-              {/* Divider — vertical on desktop, horizontal on mobile */}
-              <div className="hidden md:block w-px self-stretch" style={{
-                background: 'linear-gradient(180deg, transparent, rgba(255,215,0,0.4), transparent)',
-                boxShadow: '0 0 8px rgba(255,215,0,0.2)',
-              }} />
-              <div className="md:hidden h-px" style={{
-                background: 'linear-gradient(90deg, transparent, rgba(255,215,0,0.4), transparent)',
-                boxShadow: '0 0 8px rgba(255,215,0,0.2)',
-              }} />
-
-              {/* Right — Wolf Pack */}
-              <div className="flex-1 md:pl-8 flex items-center gap-3">
-                <Users size={18} style={{ color: '#00bfff', filter: 'drop-shadow(0 0 6px rgba(0,191,255,0.4))', flexShrink: 0 }} />
-                <p className="text-body" style={{ color: '#dcdbd5' }}>{DUAL_ADVANTAGE_BULLETS[1]}</p>
-              </div>
-            </div>
-
-            <p className="text-body mt-6 text-center" style={{ color: '#dcdbd5' }}>
-              This includes scale, leadership depth, global collaboration, and long-term stability, without additional fees or obligations.
-            </p>
-            <p className="text-body mt-3 text-center" style={{ color: '#a8a7a0' }}>
-              This dual-layer support exists because of how SAA is positioned within eXp Realty.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// SECTION 4C — Icon Card Grid
-// ============================================================================
-
-const SECTION4_CARD_DATA = [
-  { icon: Shield, title: 'Smart Agent Alliance', description: DUAL_ADVANTAGE_BULLETS[0], color: '#ffd700' },
-  { icon: Users, title: 'Wolf Pack', description: DUAL_ADVANTAGE_BULLETS[1], color: '#00bfff' },
-];
-
-function Section4C() {
-  return (
-    <section className="relative py-16 md:py-24">
-      {/* Noise texture background */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n4c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n4c)' opacity='0.03'/%3E%3C/svg%3E")`,
-      }} />
-
-      <div className="relative z-10 max-w-[1100px] mx-auto px-4 sm:px-8 md:px-12">
-        <GrainCard padding="lg" centered>
-          <H2 style={{ marginBottom: '0.75rem' }}>Your Dual Advantage</H2>
-          <p
-            className="text-body"
-            style={{
-              fontFamily: 'var(--font-taskor, sans-serif)',
-              fontSize: 'clamp(15px, 1.8vw, 18px)',
-              fontWeight: 600,
-              color: '#ffd700',
-              marginBottom: '1rem',
-            }}
-          >
-            Smart Agent Alliance + Wolf Pack
-          </p>
-          <p className="text-body mx-auto" style={{ color: '#dcdbd5', maxWidth: '700px' }}>
-            Smart Agent Alliance is directly aligned with the Wolf Pack, one of eXp Realty&apos;s largest and most experienced leadership organizations.
-          </p>
-          <p className="text-body mx-auto mt-3" style={{ color: '#dcdbd5', fontWeight: 600, maxWidth: '700px' }}>
-            Agents aligned with SAA receive:
-          </p>
-        </GrainCard>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 max-w-[700px] mx-auto">
-          {SECTION4_CARD_DATA.map((card, i) => {
-            const CardIcon = card.icon;
-            return (
-              <GenericCard
-                key={i}
-                padding="md"
-                hover
-              >
-                <IconRing icon={CardIcon} color={card.color} />
-                <h3 className="text-h6 text-center mb-2" style={{ color: card.color }}>{card.title}</h3>
-                <p className="text-body text-center" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
-                  {card.description}
-                </p>
-              </GenericCard>
-            );
-          })}
-        </div>
-
-        <p className="text-body mt-8 text-center" style={{ color: '#dcdbd5' }}>
-          This includes scale, leadership depth, global collaboration, and long-term stability, without additional fees or obligations.
-        </p>
-        <p className="text-body mt-3 text-center" style={{ color: '#a8a7a0' }}>
-          This dual-layer support exists because of how SAA is positioned within eXp Realty.
-        </p>
       </div>
     </section>
   );
@@ -2213,17 +2049,9 @@ export default function ExpRealtySponsor() {
       <Section3 />
 
       {/* ================================================================== */}
-      {/* SECTION 4 — "Your Dual Advantage" (3 versions for review)          */}
+      {/* SECTION 4 — "Your Dual Advantage"                                  */}
       {/* ================================================================== */}
-      <VersionWrapper label="Section 4 — Version A">
-        <Section4A />
-      </VersionWrapper>
-      <VersionWrapper label="Section 4 — Version B">
-        <Section4B />
-      </VersionWrapper>
-      <VersionWrapper label="Section 4 — Version C">
-        <Section4C />
-      </VersionWrapper>
+      <Section4Final />
 
       {/* ================================================================== */}
       {/* SECTION 5 — Leadership (Meet the Founders)                         */}
