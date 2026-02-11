@@ -1094,8 +1094,10 @@ function Section3() {
         .s3-phone-video {
           display: block;
           position: absolute;
-          inset: 0;
-          width: 100%;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          width: calc(100% + 5px);
           height: 100%;
           object-fit: cover;
         }
