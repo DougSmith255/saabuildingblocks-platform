@@ -139,6 +139,7 @@ interface FeatureGroup {
   id: string;
   heading: string;
   description: string;
+  bullets: string[];
   videoSrc?: string;           // Local .webm path (legacy)
   streamId?: string;           // Cloudflare Stream video ID
   duration?: number;           // Video duration in seconds
@@ -167,42 +168,83 @@ const FEATURE_GROUPS: FeatureGroup[] = [
   {
     id: 'onboarding',
     heading: 'Day One, You\u2019re Guided',
-    description: 'From the moment you join, SAA walks you through everything \u2014 profile setup, link page, attraction page, team calls. Each step is tracked so you always know what\u2019s next.',
+    description: 'A full onboarding checklist that walks you through every step.',
+    bullets: [
+      'Activate your Okta account, attend an eXp World Tour, handle broker tasks',
+      'Choose your CRM, set up your link page and attraction page',
+      'Every step links directly to where you need to go \u2014 check it off and move on',
+      'Book a free one-on-one strategy session with Karrie right from the portal',
+      'Download the app straight to your home screen for quick access anytime',
+    ],
     streamId: '4ef314e003e5ed900f60292ffe9d372a',
     duration: 32.2,
   },
   {
     id: 'system',
     heading: 'Your Passive Income System',
-    description: 'Every agent gets a customizable link page and a branded attraction page. Visitors click through, learn about eXp, and request to join your team \u2014 with every click tracked in your analytics dashboard.',
+    description: 'Link page, agent attraction funnel, and analytics \u2014 all connected.',
+    bullets: [
+      'Your own link page \u2014 one link for your YouTube, socials, contact info, listings, and marketing',
+      'Fully customizable profile, colors, and buttons \u2014 put it in your bio, email signature, or business card',
+      'Built-in agent attraction funnel \u2014 a branded page that presents eXp and lets people request to join your team automatically',
+      'Passive agent attraction that works alongside your production links \u2014 no pitching required',
+      'Analytics dashboard tracking every button click, page view, and conversion in one place',
+    ],
     streamId: '4675bd85413a19bdce639680c4894da1',
     duration: 70.0,
   },
   {
     id: 'team-calls',
     heading: 'You\u2019re Never Alone',
-    description: 'Weekly team calls and an active community of agents building together. Show up, plug in, grow with the group.',
+    description: 'Weekly mastermind calls led by real leaders.',
+    bullets: [
+      'Monday \u2014 Connor Steinbrook\u2019s mindset mastermind for the mental game behind building a business',
+      'Tuesday \u2014 Mike Sherrard\u2019s production-focused mastermind with real strategies for generating business',
+      'Wednesday \u2014 Women\u2019s mastermind',
+      'Thursday \u2014 Leaders call',
+      'Zoom links right in the portal, plus archives of past sessions to catch up anytime',
+    ],
     streamId: 'a3ce2f36ee12578f6b9275e85eee2f8b',
     duration: 26.1,
   },
   {
     id: 'support',
     heading: 'Help Is One Click Away',
-    description: 'Direct access to support whenever you need it. No tickets, no waiting \u2014 real people who know the system inside and out.',
+    description: 'Every support channel organized in one spot.',
+    bullets: [
+      'eXp Expert Care \u2014 eXp World room link plus direct phone and email',
+      'Broker support \u2014 direct link to your state\u2019s broker room in eXp World for contracts, compliance, and transactions',
+      'SAA support \u2014 email the team, or text Doug or Karrie for urgent portal issues',
+      'Wolf Pack support \u2014 Mike and Connor\u2019s contact info for courses, Skool, and Wolf Pack questions',
+    ],
     streamId: '5e5756cde89be0345578a85e614ff0f8',
     duration: 44.1,
   },
   {
     id: 'templates',
     heading: 'Launch-Ready Resources',
-    description: 'Professional templates for social media, landing pages, and outreach \u2014 plus new agent playbooks to hit the ground running. Grab, customize, deploy.',
+    description: 'Professional templates, landing pages, and new agent resources.',
+    bullets: [
+      'Full library of professionally designed Canva templates \u2014 social posts, email graphics, flyers, thumbnails',
+      'Organized by category with light and dark theme options \u2014 click, customize in Canva, done',
+      'Landing pages section with video walkthrough for building lead capture pages in BoldTrail',
+      'Ready-made landing page examples you can copy, plus email campaign setup',
+      'New agents section with resource library \u2014 FSBO phone scripts, production guides, and more',
+    ],
     streamId: '41aca33121f42ad6f6e9e681cfb1ab81',
     duration: 41.7,
   },
   {
     id: 'training',
     heading: 'Training That Builds Businesses',
-    description: 'Premium courses from social media lead generation to AI-powered productivity. Structured modules, progress tracking, and live coaching calls \u2014 continuously updated.',
+    description: 'Five premium courses included at no extra cost.',
+    bullets: [
+      'Social Agent Academy PRO \u2014 generate inbound leads through content and visibility',
+      'Investor Army \u2014 house flipping, raising capital, and finding off-market deals',
+      'AI Agent Accelerator \u2014 automate your content, follow-ups, and admin tasks',
+      'Master Agent Attraction \u2014 build your downline through revenue share',
+      'Skool community where everything comes together \u2014 each course is a click away',
+    ],
     streamId: '680066ad9eb3c563f4152782876a2da0',
     duration: 31.7,
   },
@@ -828,21 +870,24 @@ function StreamVideo({ streamId, isActive }: { streamId: string; isActive: boole
   const videoRef = useRef<HTMLVideoElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const hlsRef = useRef<any>(null);
+  const readyRef = useRef(false);
 
+  // Load HLS source once on mount — never destroyed while component is mounted
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !streamId) return;
 
     const src = `${STREAM_BASE}/${streamId}/manifest/video.m3u8`;
 
-    // If native HLS support (Safari)
+    // Native HLS (Safari)
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = src;
-      if (isActive) video.play().catch(() => {});
+      video.load(); // Start buffering
+      readyRef.current = true;
       return;
     }
 
-    // Dynamic import HLS.js
+    // HLS.js
     let cancelled = false;
     import('hls.js').then(({ default: Hls }) => {
       if (cancelled) return;
@@ -852,11 +897,16 @@ function StreamVideo({ streamId, isActive }: { streamId: string; isActive: boole
         enableWorker: true,
         maxBufferLength: 10,
         maxMaxBufferLength: 20,
+        startLevel: -1,
+        capLevelToPlayerSize: false,
+        minAutoBitrate: 900000,
       });
       hlsRef.current = hls;
       hls.loadSource(src);
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        readyRef.current = true;
+        // If this video is already the active one, start playing
         if (isActive) video.play().catch(() => {});
       });
     });
@@ -868,8 +918,10 @@ function StreamVideo({ streamId, isActive }: { streamId: string; isActive: boole
         hlsRef.current = null;
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [streamId]);
 
+  // Play/pause based on active state
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -884,10 +936,10 @@ function StreamVideo({ streamId, isActive }: { streamId: string; isActive: boole
   return (
     <video
       ref={videoRef}
-      autoPlay
       loop
       muted
       playsInline
+      preload="auto"
       className="s3-phone-video"
     />
   );
@@ -900,9 +952,6 @@ function Section3() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const group = FEATURE_GROUPS[activeGroup];
-
-  // Determine group boundaries for dividers in sidebar
-  const prevGroupIndex = (i: number) => i > 0 ? SIDEBAR_ITEMS[i - 1].groupIndex : -1;
 
   // Compute cumulative start times for each section (for auto-advance)
   const sectionTimings = useRef(
@@ -972,6 +1021,24 @@ function Section3() {
     }
   }, []);
 
+  // Jump to a specific chapter during walkthrough
+  const jumpToChapter = useCallback((index: number) => {
+    if (advanceTimerRef.current) {
+      clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+    setActiveGroup(index);
+    // Seek audio to the chapter start time
+    if (audioRef.current) {
+      const startTime = sectionTimings[index]?.start || 0;
+      audioRef.current.currentTime = startTime;
+      if (!walkthroughPlaying) {
+        setWalkthroughPlaying(true);
+        audioRef.current.play().catch(() => {});
+      }
+    }
+  }, [sectionTimings, walkthroughPlaying]);
+
   // Auto-advance logic: schedule next section switch
   useEffect(() => {
     if (!isWalkthrough || !walkthroughPlaying) return;
@@ -1027,7 +1094,7 @@ function Section3() {
         .s3-phone-mockup {
           position: relative;
           background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
-          border-radius: 40px;
+          border-radius: 24px;
           padding: 12px;
           box-shadow:
             0 0 0 1px rgba(255,255,255,0.1),
@@ -1038,17 +1105,17 @@ function Section3() {
         .s3-phone-mockup::after {
           content: '';
           position: absolute;
-          bottom: 8px;
+          bottom: 6px;
           left: 50%;
           transform: translateX(-50%);
           width: 100px;
-          height: 4px;
+          height: 3px;
           background: rgba(255,255,255,0.2);
           border-radius: 2px;
         }
         .s3-phone-screen {
           background: linear-gradient(180deg, #0a0a0a 0%, #151515 100%);
-          border-radius: 28px;
+          border-radius: 16px;
           overflow: hidden;
           position: relative;
         }
@@ -1156,6 +1223,10 @@ function Section3() {
           -webkit-tap-highlight-color: transparent;
         }
         .s3-ctrl-btn:hover { color: #ffd700; }
+        .s3-chapter-btn:hover {
+          color: #e5e4dd !important;
+          border-color: rgba(255,255,255,0.2) !important;
+        }
       `}</style>
 
       {/* Hidden audio element for walkthrough voiceover */}
@@ -1163,12 +1234,9 @@ function Section3() {
 
       {/* Section heading */}
       <div className="text-center max-w-[800px] mx-auto mb-10 lg:mb-14 px-4">
-        <H2 style={{ marginBottom: '1rem' }}>
+        <H2>
           What You Get Inside Smart Agent Alliance
         </H2>
-        <Tagline style={{ maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto' }}>
-          Click any feature to see it in action.
-        </Tagline>
       </div>
 
       {/* Portal showcase frame */}
@@ -1206,14 +1274,26 @@ function Section3() {
             }}
           />
 
-          {/* ── Walkthrough Play Button / Controls ── */}
-          <div className="relative z-20 flex justify-center" style={{ padding: '12px 16px 0' }}>
-            {!isWalkthrough ? (
-              <div className="s3-tour-wrapper" onClick={startWalkthrough}>
+          {/* ── Walkthrough Play Button / Chapter Nav header ── */}
+          <div className="relative z-20" style={{ background: 'rgba(12,12,12,0.5)' }}>
+            <div className="flex justify-center" style={{ padding: '12px 16px' }}>
+              {/* Tour button — fades out when walkthrough starts */}
+              <div
+                className="s3-tour-wrapper"
+                onClick={!isWalkthrough ? startWalkthrough : undefined}
+                style={{
+                  opacity: isWalkthrough ? 0 : 1,
+                  filter: isWalkthrough ? 'blur(8px)' : 'none',
+                  transform: isWalkthrough ? 'scale(0.95)' : 'scale(1)',
+                  transition: 'opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease',
+                  position: isWalkthrough ? 'absolute' : 'relative',
+                  pointerEvents: isWalkthrough ? 'none' : 'auto',
+                  zIndex: isWalkthrough ? 0 : 1,
+                }}
+              >
                 <div className="s3-tour-border" />
                 <div className="s3-tour-glow" />
                 <div className="s3-tour-inner">
-                  {/* Play icon */}
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffd700" stroke="none">
                     <polygon points="5,3 19,12 5,21" />
                   </svg>
@@ -1229,10 +1309,22 @@ function Section3() {
                   </span>
                 </div>
               </div>
-            ) : (
-              <div className="s3-controls-bar" style={{ width: '100%', maxWidth: '500px' }}>
+
+              {/* Chapter nav — fades in when walkthrough starts */}
+              <div
+                className="flex items-center gap-2 sm:gap-3 flex-wrap justify-center"
+                style={{
+                  opacity: isWalkthrough ? 1 : 0,
+                  filter: isWalkthrough ? 'none' : 'blur(8px)',
+                  transform: isWalkthrough ? 'scale(1)' : 'scale(0.95)',
+                  transition: 'opacity 0.4s ease 0.15s, filter 0.4s ease 0.15s, transform 0.4s ease 0.15s',
+                  pointerEvents: isWalkthrough ? 'auto' : 'none',
+                  position: isWalkthrough ? 'relative' : 'absolute',
+                  zIndex: isWalkthrough ? 1 : 0,
+                }}
+              >
                 {/* Play/Pause */}
-                <button type="button" className="s3-ctrl-btn" onClick={toggleWalkthroughPlayback}>
+                <button type="button" className="s3-ctrl-btn" onClick={toggleWalkthroughPlayback} style={{ marginRight: '4px' }}>
                   {walkthroughPlaying ? (
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" /></svg>
                   ) : (
@@ -1240,27 +1332,44 @@ function Section3() {
                   )}
                 </button>
 
-                {/* Section indicator */}
-                <span style={{ fontSize: '12px', color: '#a8a7a0', whiteSpace: 'nowrap', fontFamily: 'var(--font-synonym)' }}>
-                  {activeGroup + 1} / {FEATURE_GROUPS.length}
-                </span>
-
-                {/* Progress bar */}
-                <div className="s3-progress-track">
-                  <div
-                    className="s3-progress-fill"
-                    style={{
-                      width: `${((elapsedUpToCurrent + currentDuration) / totalDuration) * 100}%`,
-                    }}
-                  />
-                </div>
+                {/* Chapter buttons */}
+                {FEATURE_GROUPS.map((g, i) => {
+                  const isActiveChapter = activeGroup === i;
+                  return (
+                    <button
+                      key={g.id}
+                      type="button"
+                      onClick={() => jumpToChapter(i)}
+                      className="s3-chapter-btn"
+                      style={{
+                        padding: '5px 12px',
+                        borderRadius: '8px',
+                        fontSize: '12px',
+                        fontFamily: 'var(--font-taskor)',
+                        fontWeight: 500,
+                        letterSpacing: '0.03em',
+                        color: isActiveChapter ? '#0a0a0a' : '#a8a7a0',
+                        background: isActiveChapter ? 'linear-gradient(135deg, #ffd700, #e6c200)' : 'rgba(255,255,255,0.06)',
+                        border: isActiveChapter ? '1px solid rgba(255,215,0,0.6)' : '1px solid rgba(255,255,255,0.08)',
+                        boxShadow: isActiveChapter ? '0 0 10px rgba(255,215,0,0.25)' : 'none',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {g.heading.split(/[,\u2014\u2019]/, 1)[0].trim()}
+                    </button>
+                  );
+                })}
 
                 {/* Stop */}
-                <button type="button" className="s3-ctrl-btn" onClick={stopWalkthrough}>
+                <button type="button" className="s3-ctrl-btn" onClick={stopWalkthrough} style={{ marginLeft: '4px' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2" /></svg>
                 </button>
               </div>
-            )}
+            </div>
+            {/* Bottom separator line */}
+            <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)' }} />
           </div>
 
           <div className="relative z-10 flex flex-col lg:flex-row">
@@ -1275,20 +1384,10 @@ function Section3() {
             >
               {SIDEBAR_ITEMS.map((item, i) => {
                 const isInActiveGroup = item.groupIndex === activeGroup;
-                const showDivider = i > 0 && item.groupIndex !== prevGroupIndex(i);
                 const Icon = item.icon;
 
                 return (
                   <React.Fragment key={i}>
-                    {showDivider && (
-                      <div
-                        className="mx-4 my-1"
-                        style={{
-                          height: '1px',
-                          background: 'rgba(255,215,0,0.08)',
-                        }}
-                      />
-                    )}
                     <button
                       type="button"
                       onClick={() => handleTabClick(item.groupIndex)}
@@ -1377,63 +1476,63 @@ function Section3() {
 
             {/* ── Content Area ── */}
             <div className="flex-1 p-4 sm:p-6 lg:p-8 flex flex-col">
-              <div key={activeGroup} className="portal-content-fade flex flex-col lg:flex-row gap-6 lg:gap-8 flex-1 items-center lg:items-start">
-                {/* Phone mockup with video */}
+              <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 flex-1 items-center lg:items-start">
+                {/* Phone mockup — all videos mounted, only active one visible */}
                 <div className="flex-shrink-0 flex justify-center">
-                  <div className="s3-phone-mockup" style={{ width: '250px', padding: '8px' }}>
-                    <div className="s3-phone-screen" style={{ height: '460px' }}>
-                      {group.streamId ? (
-                        <StreamVideo
-                          key={group.id}
-                          streamId={group.streamId}
-                          isActive={true}
-                        />
-                      ) : (
-                        <div
-                          className="w-full h-full flex flex-col items-center justify-center gap-3"
-                          style={{ background: 'linear-gradient(180deg, #0a0a0a 0%, #111 100%)' }}
-                        >
-                          {(() => {
-                            const firstItem = SIDEBAR_ITEMS.find(si => si.groupIndex === activeGroup);
-                            const PlaceholderIcon = firstItem?.icon || Rocket;
-                            return (
-                              <>
-                                <div
-                                  className="w-14 h-14 rounded-full flex items-center justify-center"
-                                  style={{
-                                    background: 'rgba(255,215,0,0.08)',
-                                    border: '1px solid rgba(255,215,0,0.2)',
-                                  }}
-                                >
-                                  <PlaceholderIcon size={24} style={{ color: '#ffd700', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.4))' }} />
-                                </div>
-                                <p style={{ color: '#a8a7a0', fontSize: '13px', textAlign: 'center', padding: '0 20px' }}>
-                                  Video coming soon
-                                </p>
-                              </>
-                            );
-                          })()}
-                        </div>
-                      )}
+                  <div className="s3-phone-mockup" style={{ width: '318px', padding: '6px' }}>
+                    <div className="s3-phone-screen" style={{ aspectRatio: '9/16' }}>
+                      {FEATURE_GROUPS.map((g, i) => (
+                        g.streamId ? (
+                          <div
+                            key={g.id}
+                            style={{
+                              position: i === 0 ? 'relative' : 'absolute',
+                              inset: 0,
+                              width: '100%',
+                              height: '100%',
+                              opacity: activeGroup === i ? 1 : 0,
+                              transition: 'opacity 0.3s ease',
+                              pointerEvents: activeGroup === i ? 'auto' : 'none',
+                            }}
+                          >
+                            <StreamVideo
+                              streamId={g.streamId}
+                              isActive={activeGroup === i}
+                            />
+                          </div>
+                        ) : null
+                      ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Heading + description */}
-                <div className="flex-1 flex flex-col justify-center text-center lg:text-left">
+                {/* Heading + bullet points — keyed for fade animation */}
+                <div key={activeGroup} className="portal-content-fade flex-1 flex flex-col justify-center text-center lg:text-left">
                   <h3
-                    className="text-h3"
                     style={{
                       fontFamily: 'var(--font-taskor, sans-serif)',
+                      fontSize: 'clamp(1rem, 1.1vw + 0.6rem, 1.25rem)',
                       color: '#e5e4dd',
-                      marginBottom: '0.5rem',
+                      marginBottom: '0.75rem',
                     }}
                   >
                     {group.heading}
                   </h3>
-                  <p className="text-body" style={{ color: '#dcdbd5', maxWidth: '500px' }}>
+                  <p className="text-body" style={{ color: '#a8a7a0', fontSize: '14px', marginBottom: '0.75rem' }}>
                     {group.description}
                   </p>
+                  <ul className="space-y-2 text-left" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {group.bullets.map((bullet, bIdx) => (
+                      <li
+                        key={bIdx}
+                        className="flex gap-2.5"
+                        style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}
+                      >
+                        <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
