@@ -1,16 +1,18 @@
 /**
  * eXp World Guest Pass — Automated Browser Submission
  *
- * Uses Playwright to log into eXp's invite-a-guest portal via Okta SSO
- * and submit a guest pass request on behalf of Sheldon Smart.
+ * Uses Playwright to log into my.exprealty.com via Okta SSO, navigate to the
+ * "eXp World Guest Passport Request" page via the profile dropdown, and submit
+ * a guest pass request on behalf of Sheldon Smart.
  *
  * Flow:
- *  1. Navigate to inviteaguest.exprealty.com
+ *  1. Navigate to https://my.exprealty.com/
  *  2. Handle cookie consent
- *  3. Sign in via Okta SSO (email → password → verify)
- *  4. Fill guest form (firstName, lastName, email)
- *  5. Accept sponsorship agreement
- *  6. Submit "Request Guest Account"
+ *  3. Sign in via Okta SSO if not already authenticated (email → password → verify)
+ *  4. Click profile dropdown → select "eXp World Guest Passport Request"
+ *  5. Fill guest form (firstName, lastName, email)
+ *  6. Check "I understand" checkbox
+ *  7. Submit "Request Guest Account"
  *
  * Sessions are persisted to disk so Okta login is skipped when still valid.
  */
@@ -23,8 +25,10 @@ const SESSION_DIR = '/tmp/exp-okta-session';
 const STORAGE_STATE_PATH = path.join(SESSION_DIR, 'state.json');
 const CREDENTIALS_PATH = path.join(SESSION_DIR, 'credentials.json');
 const SCREENSHOT_DIR = path.join(SESSION_DIR, 'screenshots');
-const TIMEOUT = 60_000; // 60s max per submission
+const TIMEOUT = 90_000; // 90s max per submission (longer due to navigation through portal)
 const NAV_TIMEOUT = 30_000;
+
+const MY_EXP_URL = 'https://my.exprealty.com/';
 
 interface GuestPassInput {
   firstName: string;
@@ -63,7 +67,6 @@ async function saveScreenshot(page: Page, label: string): Promise<string> {
 
 /**
  * Handle Okta SSO login flow.
- * Detects whether we're on the Okta login page and authenticates if so.
  * Uses pressSequentially instead of fill() to trigger Okta's JS event handlers.
  */
 async function handleOktaLogin(page: Page): Promise<void> {
@@ -126,8 +129,8 @@ async function handleOktaLogin(page: Page): Promise<void> {
   const verifyButton = page.locator('input[type="submit"][value="Verify"], button[type="submit"]:has-text("Verify"), input[type="submit"][value="Sign In"]');
   await verifyButton.click();
 
-  // Wait for redirect back to the invite portal (away from Okta domain)
-  await page.waitForURL(/inviteaguest\.exprealty\.com/, { timeout: NAV_TIMEOUT });
+  // Wait for redirect back to my.exprealty.com (away from Okta domain)
+  await page.waitForURL(/my\.exprealty\.com/, { timeout: NAV_TIMEOUT });
 }
 
 /**
@@ -135,20 +138,88 @@ async function handleOktaLogin(page: Page): Promise<void> {
  */
 function isOnOktaPage(page: Page): boolean {
   const url = page.url();
-  return url.includes('okta.com') || url.includes('/login');
+  return url.includes('okta.com') || url.includes('/login/login');
 }
 
 /**
- * Check if we're on the invite form page (logged in)
+ * Check if we're logged in to my.exprealty.com (can see dashboard / profile)
  */
-async function isOnInviteForm(page: Page): Promise<boolean> {
+async function isLoggedIn(page: Page): Promise<boolean> {
   try {
-    // Look for the form heading or "Welcome" text that appears when logged in
-    const formHeading = page.getByText('Guest Passport Request', { exact: false });
-    return await formHeading.isVisible({ timeout: 3000 });
+    // Look for profile photo/avatar dropdown or common dashboard elements
+    const profileIndicator = page.locator(
+      '[class*="profile"], [class*="avatar"], [class*="user-menu"], ' +
+      'img[alt*="profile" i], img[alt*="avatar" i], ' +
+      '[data-testid*="profile"], [data-testid*="avatar"], ' +
+      'button[aria-label*="profile" i], button[aria-label*="account" i]'
+    );
+    return await profileIndicator.first().isVisible({ timeout: 5000 });
   } catch {
     return false;
   }
+}
+
+/**
+ * Navigate to the Guest Passport Request form via the profile dropdown.
+ */
+async function navigateToGuestPassForm(page: Page): Promise<void> {
+  console.log('[exp-guest-pass] Navigating to Guest Passport Request via profile dropdown...');
+
+  // Click the dropdown arrow / profile area in the top-right
+  // Try multiple selectors for the profile dropdown trigger
+  const dropdownTrigger = page.locator(
+    // Common dropdown triggers near profile photo
+    'button:near(img[alt*="profile" i]):visible, ' +
+    'button:near(img[alt*="avatar" i]):visible, ' +
+    '[class*="dropdown"] button:visible, ' +
+    '[class*="profile"] button:visible, ' +
+    '[class*="user-menu"] button:visible, ' +
+    // Generic: clickable element with a caret/arrow near top-right
+    'header button:has(svg):visible, ' +
+    'nav button:has(svg):visible'
+  );
+
+  // Take a screenshot before attempting dropdown click (for debugging)
+  await saveScreenshot(page, 'before-dropdown');
+
+  // Try clicking the profile dropdown
+  try {
+    await dropdownTrigger.first().click({ timeout: 10_000 });
+  } catch {
+    // Fallback: try clicking any element that looks like a profile image
+    console.log('[exp-guest-pass] Primary dropdown selector failed, trying fallback...');
+    try {
+      // Try right side of the header area
+      const headerRight = page.locator('header >> nth=-1').locator('button, [role="button"], a').last();
+      await headerRight.click({ timeout: 5000 });
+    } catch {
+      // Last resort: click near top-right of page where profile dropdowns typically are
+      console.log('[exp-guest-pass] Fallback failed, trying coordinate click...');
+      const viewport = page.viewportSize();
+      if (viewport) {
+        await page.mouse.click(viewport.width - 60, 30);
+      }
+    }
+  }
+
+  await page.waitForTimeout(1500); // Wait for dropdown to animate open
+  await saveScreenshot(page, 'dropdown-open');
+
+  // Click "eXp World Guest Passport Request" from the dropdown menu
+  const guestPassLink = page.locator(
+    'a:has-text("Guest Passport Request"), ' +
+    'button:has-text("Guest Passport Request"), ' +
+    '[role="menuitem"]:has-text("Guest Passport"), ' +
+    'li:has-text("Guest Passport Request") a, ' +
+    'li:has-text("Guest Passport Request") button, ' +
+    ':text("eXp World Guest Passport Request")'
+  );
+
+  await guestPassLink.first().click({ timeout: 10_000 });
+
+  // Wait for navigation to the guest pass form page
+  await page.waitForLoadState('domcontentloaded', { timeout: NAV_TIMEOUT });
+  await page.waitForTimeout(2000); // Allow form to fully render
 }
 
 export async function submitExpGuestPass(input: GuestPassInput): Promise<GuestPassResult> {
@@ -179,8 +250,9 @@ export async function submitExpGuestPass(input: GuestPassInput): Promise<GuestPa
 
     const page = await context.newPage();
 
-    // Navigate to the invite portal
-    await page.goto('https://inviteaguest.exprealty.com/index.html', {
+    // Navigate to my.exprealty.com
+    console.log('[exp-guest-pass] Navigating to my.exprealty.com...');
+    await page.goto(MY_EXP_URL, {
       waitUntil: 'domcontentloaded',
       timeout: NAV_TIMEOUT,
     });
@@ -195,42 +267,51 @@ export async function submitExpGuestPass(input: GuestPassInput): Promise<GuestPa
     }
 
     // Check if we need to sign in
-    const onForm = await isOnInviteForm(page);
+    await page.waitForTimeout(2000); // Allow redirects to settle
+    const loggedIn = await isLoggedIn(page);
 
-    if (!onForm) {
-      // Click "Sign in to invite a Guest" button if present
-      try {
-        const signInButton = page.locator('button:has-text("Sign in"), a:has-text("Sign in"), button:has-text("Log in"), a:has-text("Log in")');
-        await signInButton.click({ timeout: 10_000 });
-      } catch {
-        // May have auto-redirected to Okta already
+    if (!loggedIn) {
+      console.log('[exp-guest-pass] Not logged in, handling Okta SSO...');
+
+      // my.exprealty.com may auto-redirect to Okta, or we may need to click sign-in
+      if (!isOnOktaPage(page)) {
+        try {
+          const signInButton = page.locator(
+            'button:has-text("Sign in"), a:has-text("Sign in"), ' +
+            'button:has-text("Log in"), a:has-text("Log in"), ' +
+            'button:has-text("Login"), a:has-text("Login")'
+          );
+          await signInButton.first().click({ timeout: 10_000 });
+        } catch {
+          // May have auto-redirected to Okta already
+        }
+        await page.waitForTimeout(2000);
       }
-
-      // Wait a moment for redirect
-      await page.waitForTimeout(2000);
 
       // If we're on Okta, handle login
       if (isOnOktaPage(page)) {
         await handleOktaLogin(page);
       }
 
-      // After login, wait for the form to appear
-      await page.waitForTimeout(2000);
-
+      // After login, wait for the dashboard to load
+      await page.waitForTimeout(3000);
     }
 
-    // Now fill the guest form
-    // Wait for form to be ready
-    await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
+    console.log('[exp-guest-pass] Logged in — navigating to guest pass form...');
 
-    // Wait for the eXp Guest Passport form to load
-    // The form uses label text like "*First Name", "*Last Name", "*Email Address"
-    await page.getByText('First Name').first().waitFor({ state: 'visible', timeout: 15_000 });
-
-    // Persist session AFTER form loads (confirmed logged in)
+    // Persist session AFTER confirming login
     await context.storageState({ path: STORAGE_STATE_PATH });
 
-    // Fill First Name — find the input adjacent to its label
+    // Navigate to the Guest Passport Request page via profile dropdown
+    await navigateToGuestPassForm(page);
+
+    // Wait for the guest pass form to be ready
+    // The form should have First Name, Last Name, Email fields
+    await page.getByText('First Name').first().waitFor({ state: 'visible', timeout: 15_000 });
+
+    console.log('[exp-guest-pass] Form loaded — filling in guest details...');
+
+    // Fill First Name
     const firstNameInput = page.getByLabel('First Name', { exact: false }).first();
     await firstNameInput.fill(input.firstName);
 
@@ -238,28 +319,49 @@ export async function submitExpGuestPass(input: GuestPassInput): Promise<GuestPa
     const lastNameInput = page.getByLabel('Last Name', { exact: false }).first();
     await lastNameInput.fill(input.lastName);
 
-    // Fill Email Address
-    const emailInput = page.getByLabel('Email Address', { exact: false }).first();
+    // Fill Email
+    const emailInput = page.getByLabel('Email', { exact: false }).first();
     await emailInput.fill(input.email);
 
-    // Check the sponsorship agreement checkbox if present
+    // Check the "I understand" checkbox
     try {
-      const checkbox = page.locator('input[type="checkbox"]').first();
+      // Try label-based match first
+      const iUnderstandCheckbox = page.locator(
+        'label:has-text("I understand") input[type="checkbox"], ' +
+        'input[type="checkbox"]:near(:text("I understand"))'
+      );
+      const checkbox = iUnderstandCheckbox.first();
       if (await checkbox.isVisible({ timeout: 3000 })) {
         if (!(await checkbox.isChecked())) {
           await checkbox.check();
         }
+      } else {
+        // Fallback: check any visible checkbox on the form
+        const anyCheckbox = page.locator('input[type="checkbox"]').first();
+        if (await anyCheckbox.isVisible({ timeout: 2000 })) {
+          if (!(await anyCheckbox.isChecked())) {
+            await anyCheckbox.check();
+          }
+        }
       }
     } catch {
-      // No checkbox on this form version
+      console.log('[exp-guest-pass] Could not find checkbox — continuing without it');
     }
 
     // Take a pre-submit screenshot for debugging
     await saveScreenshot(page, 'pre-submit');
 
-    // Click the submit button ("Request Guest Account" or similar)
-    const submitButton = page.locator('button:has-text("Request"), input[type="submit"][value*="Request"], button[type="submit"], input[type="submit"]').first();
+    // Click the "Request Guest Account" button
+    const submitButton = page.locator(
+      'button:has-text("Request Guest Account"), ' +
+      'button:has-text("Request"), ' +
+      'input[type="submit"][value*="Request"], ' +
+      'button[type="submit"], ' +
+      'input[type="submit"]'
+    ).first();
     await submitButton.click();
+
+    console.log('[exp-guest-pass] Form submitted — waiting for confirmation...');
 
     // Wait for confirmation (success message or page change)
     await page.waitForTimeout(3000);
@@ -269,11 +371,13 @@ export async function submitExpGuestPass(input: GuestPassInput): Promise<GuestPa
 
     // Check for success indicators
     const pageContent = await page.textContent('body');
-    const hasError = pageContent?.toLowerCase().includes('error') && !pageContent?.toLowerCase().includes('no error');
-    const hasSuccess = pageContent?.toLowerCase().includes('success') ||
-                       pageContent?.toLowerCase().includes('guest account') ||
-                       pageContent?.toLowerCase().includes('invitation') ||
-                       pageContent?.toLowerCase().includes('submitted');
+    const lowerContent = pageContent?.toLowerCase() || '';
+    const hasError = lowerContent.includes('error') && !lowerContent.includes('no error');
+    const hasSuccess = lowerContent.includes('success') ||
+                       lowerContent.includes('guest account') ||
+                       lowerContent.includes('invitation') ||
+                       lowerContent.includes('submitted') ||
+                       lowerContent.includes('request has been');
 
     // Save session after successful operation
     await context.storageState({ path: STORAGE_STATE_PATH });
@@ -286,6 +390,7 @@ export async function submitExpGuestPass(input: GuestPassInput): Promise<GuestPa
       };
     }
 
+    console.log('[exp-guest-pass] Guest pass submitted successfully');
     return { success: true, screenshotPath };
   } catch (err) {
     // Try to capture failure screenshot
