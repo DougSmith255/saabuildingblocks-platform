@@ -330,7 +330,7 @@ function Section1() {
     : { minWidth: '550px' };
 
   return (
-    <section ref={sectionRef} className="py-12 md:py-20">
+    <section ref={sectionRef} className="py-16 md:py-24">
       <style>{`
         @keyframes focusPulse {
           0% { opacity: 0.55; }
@@ -718,7 +718,7 @@ function Section2() {
   };
 
   return (
-    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12 pb-12 md:pb-20">
+    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12 py-16 md:py-24">
       <style>{`
         @keyframes section2FadeIn {
           from { opacity: 0; transform: translateY(8px); }
@@ -1222,14 +1222,14 @@ function Section3() {
       <GlassPanel variant="champagne" noBlur>
 
       {/* Section heading */}
-      <div className="text-center max-w-[800px] mx-auto py-10 md:py-14 px-4">
+      <div className="text-center max-w-[800px] mx-auto pt-4 md:pt-6 pb-6 md:pb-8 px-4">
         <H2>
           What You Get Inside Smart Agent Alliance
         </H2>
       </div>
 
       {/* Portal showcase frame */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 pb-6 md:pb-10">
         <div
           className="relative overflow-hidden rounded-2xl"
           style={{
