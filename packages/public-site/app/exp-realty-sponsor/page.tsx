@@ -2,7 +2,8 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { H1, H2, Tagline } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton } from '@saa/shared/components/saa';
+import { MeetTheFounders } from '@/app/components/sections/MeetTheFounders';
 import { GrainCard } from '@saa/shared/components/saa/cards';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
@@ -1533,6 +1534,108 @@ function Section3() {
 }
 
 // ============================================================================
+// SECTION 4 — "Your Dual Advantage"
+// ============================================================================
+
+const DUAL_ADVANTAGE_BULLETS = [
+  'Full onboarding system, portal access, and one-on-one strategy sessions from SAA',
+  'Five premium training courses and an active Skool community through the Wolf Pack',
+  'Weekly mastermind calls led by top producers like Mike Sherrard and Connor Steinbrook',
+  'Agent attraction tools, link pages, and analytics built into the SAA portal',
+  'Revenue share infrastructure that compounds across both organizations',
+];
+
+function Section4() {
+  return (
+    <section className="relative py-16 md:py-24">
+      <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12">
+        <div className="text-center mb-8 md:mb-10">
+          <H2 style={{ marginBottom: '0.75rem' }}>Your Dual Advantage</H2>
+          <p
+            className="text-body"
+            style={{
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              fontSize: 'clamp(15px, 1.8vw, 18px)',
+              fontWeight: 600,
+              color: '#ffd700',
+            }}
+          >
+            Smart Agent Alliance + Wolf Pack
+          </p>
+        </div>
+
+        <p className="text-body mb-6" style={{ color: '#dcdbd5' }}>
+          SAA operates inside the Wolf Pack organization, led by Mike Sherrard and Connor Steinbrook. That means agents who join through SAA don&apos;t just get one layer of support — they get two. The Wolf Pack provides premium training courses, weekly masterminds, and an active Skool community. SAA adds structured onboarding, a custom-built portal, attraction tools, and direct leadership access.
+        </p>
+
+        <ul className="space-y-2.5 mb-6" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+          {DUAL_ADVANTAGE_BULLETS.map((bullet, i) => (
+            <li
+              key={i}
+              className="flex gap-2.5 text-body"
+              style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}
+            >
+              <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
+              <span>{bullet}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p className="text-body" style={{ color: '#a8a7a0' }}>
+          Most sponsors offer one thing or nothing at all. With SAA inside the Wolf Pack, you get dual-layer support — systems and training that work together from day one.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// SECTION 6 — "The Bottom Line"
+// ============================================================================
+
+const BOTTOM_LINE_BULLETS = [
+  'Real systems that are built, maintained, and continuously improved',
+  'Ongoing training led by agents who are actively producing',
+  'Infrastructure that works whether you joined yesterday or two years ago',
+  'Accountable leadership that you can actually reach',
+];
+
+function Section6() {
+  return (
+    <section className="relative py-16 md:py-24">
+      <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12 text-center">
+        <H2 style={{ marginBottom: '1.25rem' }}>The Bottom Line</H2>
+
+        <p className="text-body mb-6" style={{ color: '#dcdbd5' }}>
+          Choosing an eXp sponsor isn&apos;t about logos or promises. It&apos;s about what actually shows up after onboarding.
+        </p>
+
+        <ul className="space-y-2.5 mb-6 text-left max-w-[600px] mx-auto" style={{ listStyle: 'none', padding: 0, margin: '0 auto 1.5rem' }}>
+          {BOTTOM_LINE_BULLETS.map((bullet, i) => (
+            <li
+              key={i}
+              className="flex gap-2.5 text-body"
+              style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}
+            >
+              <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
+              <span>{bullet}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p className="text-body mb-8" style={{ color: '#a8a7a0' }}>
+          If those things matter to you, structure is what makes support dependable over time.
+        </p>
+
+        <CTAButton href="#" onClick={(e: React.MouseEvent) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
+          Join the Alliance
+        </CTAButton>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
 // MAIN PAGE COMPONENT
 // ============================================================================
 
@@ -1603,6 +1706,21 @@ export default function ExpRealtySponsor() {
       {/* SECTION 3 — "What You Get Inside SAA" (Animated Portal Showcase)  */}
       {/* ================================================================== */}
       <Section3 />
+
+      {/* ================================================================== */}
+      {/* SECTION 4 — "Your Dual Advantage"                                  */}
+      {/* ================================================================== */}
+      <Section4 />
+
+      {/* ================================================================== */}
+      {/* SECTION 5 — Leadership (Meet the Founders)                         */}
+      {/* ================================================================== */}
+      <MeetTheFounders />
+
+      {/* ================================================================== */}
+      {/* SECTION 6 — "The Bottom Line" + CTA                               */}
+      {/* ================================================================== */}
+      <Section6 />
 
     </main>
   );
