@@ -169,7 +169,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
   {
     id: 'onboarding',
     heading: 'Day One, You\u2019re Guided',
-    description: 'A full onboarding checklist that walks you through every step.',
+    description: 'A step-by-step checklist so you\u2019re never guessing what to do next.',
     bullets: [
       'Activate your Okta account, attend an eXp World Tour, handle broker tasks',
       'Choose your CRM, set up your link page and attraction page',
@@ -182,8 +182,8 @@ const FEATURE_GROUPS: FeatureGroup[] = [
   },
   {
     id: 'system',
-    heading: 'Your Passive Income System',
-    description: 'Link page, agent attraction funnel, and analytics \u2014 all connected.',
+    heading: 'Your Digital Hub',
+    description: 'One link for your entire business \u2014 with built-in attraction and analytics.',
     bullets: [
       'Your own link page \u2014 one link for your YouTube, socials, contact info, listings, and marketing',
       'Fully customizable profile, colors, and buttons \u2014 put it in your bio, email signature, or business card',
@@ -197,7 +197,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
   {
     id: 'team-calls',
     heading: 'You\u2019re Never Alone',
-    description: 'Weekly mastermind calls led by real leaders.',
+    description: 'Weekly mastermind calls with strategies you can apply the same week.',
     bullets: [
       'Monday \u2014 Connor Steinbrook\u2019s mindset mastermind for the mental game behind building a business',
       'Tuesday \u2014 Mike Sherrard\u2019s production-focused mastermind with real strategies for generating business',
@@ -224,7 +224,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
   {
     id: 'templates',
     heading: 'Launch-Ready Resources',
-    description: 'Professional templates, landing pages, and new agent resources.',
+    description: 'Skip the design work \u2014 templates, landing pages, and scripts ready to customize and launch.',
     bullets: [
       'Full library of professionally designed Canva templates \u2014 social posts, email graphics, flyers, thumbnails',
       'Organized by category with light and dark theme options \u2014 click, customize in Canva, done',
@@ -238,7 +238,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
   {
     id: 'training',
     heading: 'Training That Builds Businesses',
-    description: 'Five premium courses included at no extra cost.',
+    description: 'Five premium courses covering production, content, investing, AI, and attraction \u2014 all included.',
     bullets: [
       'Social Agent Academy PRO \u2014 generate inbound leads through content and visibility',
       'Investor Army \u2014 house flipping, raising capital, and finding off-market deals',
