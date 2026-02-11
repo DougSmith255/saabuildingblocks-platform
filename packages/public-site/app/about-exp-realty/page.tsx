@@ -3367,7 +3367,22 @@ function WhatExpProvidesVersionB() {
                               >
                                 <bullet.icon size={14} style={{ color: panel.color }} />
                               </span>
-                              <span>{bullet.text}</span>
+                              <span>
+                                {bullet.text}
+                                {'guestPass' in bullet && bullet.guestPass && (
+                                  <>
+                                    {' - '}
+                                    <button
+                                      type="button"
+                                      onClick={() => window.dispatchEvent(new Event('open-vip-guest-pass'))}
+                                      className="cursor-pointer font-bold hover:underline"
+                                      style={{ color: '#00bfff' }}
+                                    >
+                                      Guest Pass
+                                    </button>
+                                  </>
+                                )}
+                              </span>
                             </li>
                           ))}
                         </ul>
@@ -3477,7 +3492,22 @@ function WhatExpProvidesVersionB() {
                           >
                             <bullet.icon size={14} style={{ color: panel.color }} />
                           </span>
-                          <span>{bullet.text}</span>
+                          <span>
+                            {bullet.text}
+                            {'guestPass' in bullet && bullet.guestPass && (
+                              <>
+                                {' - '}
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); window.dispatchEvent(new Event('open-vip-guest-pass')); }}
+                                  className="cursor-pointer font-bold hover:underline"
+                                  style={{ color: '#00bfff' }}
+                                >
+                                  Guest Pass
+                                </button>
+                              </>
+                            )}
+                          </span>
                         </li>
                       ))}
                     </ul>
