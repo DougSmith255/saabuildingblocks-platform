@@ -143,6 +143,7 @@ interface FeatureGroup {
   videoSrc?: string;           // Local .webm path (legacy)
   streamId?: string;           // Cloudflare Stream video ID
   duration?: number;           // Video duration in seconds
+  audioSrc?: string;           // Per-section voiceover audio
   posterUrl?: string;          // Video thumbnail
 }
 
@@ -162,7 +163,7 @@ const SIDEBAR_ITEMS: PortalMenuItem[] = [
 ];
 
 const STREAM_BASE = 'https://customer-2twfsluc6inah5at.cloudflarestream.com';
-const WALKTHROUGH_AUDIO_URL = 'https://assets.saabuildingblocks.com/Team%20Value%20Audio.MP3';
+const R2_AUDIO_BASE = 'https://assets.saabuildingblocks.com/audio';
 
 const FEATURE_GROUPS: FeatureGroup[] = [
   {
@@ -178,6 +179,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
     ],
     streamId: '4ef314e003e5ed900f60292ffe9d372a',
     duration: 32.2,
+    audioSrc: `${R2_AUDIO_BASE}/segment-1-onboarding.mp3`,
   },
   {
     id: 'system',
@@ -192,6 +194,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
     ],
     streamId: '4675bd85413a19bdce639680c4894da1',
     duration: 70.0,
+    audioSrc: `${R2_AUDIO_BASE}/segment-2-system.mp3`,
   },
   {
     id: 'team-calls',
@@ -206,6 +209,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
     ],
     streamId: 'a3ce2f36ee12578f6b9275e85eee2f8b',
     duration: 26.1,
+    audioSrc: `${R2_AUDIO_BASE}/segment-3-teamcalls.mp3`,
   },
   {
     id: 'support',
@@ -219,6 +223,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
     ],
     streamId: '5e5756cde89be0345578a85e614ff0f8',
     duration: 44.1,
+    audioSrc: `${R2_AUDIO_BASE}/segment-4-support.mp3`,
   },
   {
     id: 'templates',
@@ -233,6 +238,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
     ],
     streamId: '41aca33121f42ad6f6e9e681cfb1ab81',
     duration: 41.7,
+    audioSrc: `${R2_AUDIO_BASE}/segment-5-templates.mp3`,
   },
   {
     id: 'training',
@@ -247,6 +253,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
     ],
     streamId: '680066ad9eb3c563f4152782876a2da0',
     duration: 31.7,
+    audioSrc: `${R2_AUDIO_BASE}/segment-6-training.mp3`,
   },
 ];
 
@@ -949,11 +956,98 @@ function Section3() {
   const [activeGroup, setActiveGroup] = useState(0);
   const [isWalkthrough, setIsWalkthrough] = useState(false);
   const [walkthroughPlaying, setWalkthroughPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const activeGroupRef = useRef(0); // mirror for event listener
+  // Per-section audio refs
+  const audioRefs = useRef<(HTMLAudioElement | null)[]>(FEATURE_GROUPS.map(() => null));
   const group = FEATURE_GROUPS[activeGroup];
 
-  // Compute cumulative start times for each section
+  // Helper: stop all audio segments
+  const stopAllAudio = useCallback(() => {
+    audioRefs.current.forEach(a => {
+      if (a) { a.pause(); a.currentTime = 0; }
+    });
+  }, []);
+
+  // Helper: play audio for a specific section
+  const playAudioFor = useCallback((index: number) => {
+    stopAllAudio();
+    const audio = audioRefs.current[index];
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    }
+  }, [stopAllAudio]);
+
+  // Handle manual tab click — stops walkthrough
+  const handleTabClick = useCallback((index: number) => {
+    if (isWalkthrough) {
+      setIsWalkthrough(false);
+      setWalkthroughPlaying(false);
+      stopAllAudio();
+    }
+    setActiveGroup(index);
+  }, [isWalkthrough, stopAllAudio]);
+
+  // Start walkthrough
+  const startWalkthrough = useCallback(() => {
+    setActiveGroup(0);
+    setIsWalkthrough(true);
+    setWalkthroughPlaying(true);
+    playAudioFor(0);
+  }, [playAudioFor]);
+
+  // Toggle play/pause during walkthrough
+  const toggleWalkthroughPlayback = useCallback(() => {
+    const audio = audioRefs.current[activeGroup];
+    if (walkthroughPlaying) {
+      setWalkthroughPlaying(false);
+      if (audio) audio.pause();
+    } else {
+      setWalkthroughPlaying(true);
+      if (audio) audio.play().catch(() => {});
+    }
+  }, [walkthroughPlaying, activeGroup]);
+
+  // Stop walkthrough
+  const stopWalkthrough = useCallback(() => {
+    setIsWalkthrough(false);
+    setWalkthroughPlaying(false);
+    stopAllAudio();
+  }, [stopAllAudio]);
+
+  // Jump to a specific chapter during walkthrough
+  const jumpToChapter = useCallback((index: number) => {
+    setActiveGroup(index);
+    playAudioFor(index);
+    if (!walkthroughPlaying) {
+      setWalkthroughPlaying(true);
+    }
+  }, [playAudioFor, walkthroughPlaying]);
+
+  // Auto-advance: when current section's audio ends, move to next section
+  useEffect(() => {
+    if (!isWalkthrough) return;
+
+    const handlers: (() => void)[] = [];
+    FEATURE_GROUPS.forEach((_, i) => {
+      const audio = audioRefs.current[i];
+      if (!audio) return;
+      const onEnded = () => {
+        const isLast = i === FEATURE_GROUPS.length - 1;
+        if (isLast) {
+          stopWalkthrough();
+        } else {
+          setActiveGroup(i + 1);
+          playAudioFor(i + 1);
+        }
+      };
+      audio.addEventListener('ended', onEnded);
+      handlers.push(() => audio.removeEventListener('ended', onEnded));
+    });
+
+    return () => handlers.forEach(cleanup => cleanup());
+  }, [isWalkthrough, stopWalkthrough, playAudioFor]);
+
+  // Compute cumulative start times (for progress bar only)
   const sectionTimings = useRef(
     FEATURE_GROUPS.reduce<{ start: number; end: number }[]>((acc, g, i) => {
       const start = i === 0 ? 0 : acc[i - 1].end;
@@ -962,93 +1056,6 @@ function Section3() {
       return acc;
     }, [])
   ).current;
-
-  // Keep ref in sync
-  useEffect(() => { activeGroupRef.current = activeGroup; }, [activeGroup]);
-
-  // Handle manual tab click — stops walkthrough
-  const handleTabClick = useCallback((index: number) => {
-    if (isWalkthrough) {
-      setIsWalkthrough(false);
-      setWalkthroughPlaying(false);
-      if (audioRef.current) audioRef.current.pause();
-    }
-    setActiveGroup(index);
-  }, [isWalkthrough]);
-
-  // Start walkthrough
-  const startWalkthrough = useCallback(() => {
-    setActiveGroup(0);
-    setIsWalkthrough(true);
-    setWalkthroughPlaying(true);
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {});
-    }
-  }, []);
-
-  // Toggle play/pause during walkthrough
-  const toggleWalkthroughPlayback = useCallback(() => {
-    if (walkthroughPlaying) {
-      setWalkthroughPlaying(false);
-      audioRef.current?.pause();
-    } else {
-      setWalkthroughPlaying(true);
-      audioRef.current?.play().catch(() => {});
-    }
-  }, [walkthroughPlaying]);
-
-  // Stop walkthrough
-  const stopWalkthrough = useCallback(() => {
-    setIsWalkthrough(false);
-    setWalkthroughPlaying(false);
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-  }, []);
-
-  // Jump to a specific chapter during walkthrough
-  const jumpToChapter = useCallback((index: number) => {
-    setActiveGroup(index);
-    if (audioRef.current) {
-      audioRef.current.currentTime = sectionTimings[index]?.start || 0;
-      if (!walkthroughPlaying) {
-        setWalkthroughPlaying(true);
-        audioRef.current.play().catch(() => {});
-      }
-    }
-  }, [sectionTimings, walkthroughPlaying]);
-
-  // Audio-driven section switching — uses timeupdate for perfect sync
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const onTimeUpdate = () => {
-      if (!isWalkthrough || !walkthroughPlaying) return;
-      const t = audio.currentTime;
-      const current = activeGroupRef.current;
-      // Find which section the audio is in
-      for (let i = 0; i < sectionTimings.length; i++) {
-        if (t >= sectionTimings[i].start && t < sectionTimings[i].end) {
-          if (i !== current) setActiveGroup(i);
-          return;
-        }
-      }
-    };
-
-    const onEnded = () => stopWalkthrough();
-
-    audio.addEventListener('timeupdate', onTimeUpdate);
-    audio.addEventListener('ended', onEnded);
-    return () => {
-      audio.removeEventListener('timeupdate', onTimeUpdate);
-      audio.removeEventListener('ended', onEnded);
-    };
-  }, [isWalkthrough, walkthroughPlaying, sectionTimings, stopWalkthrough]);
-
-  // Total walkthrough duration & progress
   const totalDuration = FEATURE_GROUPS.reduce((sum, g) => sum + (g.duration || 30), 0);
   const elapsedUpToCurrent = sectionTimings[activeGroup]?.start || 0;
   const currentDuration = FEATURE_GROUPS[activeGroup]?.duration || 30;
@@ -1094,12 +1101,23 @@ function Section3() {
         .s3-phone-video {
           display: block;
           position: absolute;
-          top: 0;
-          left: 0;
-          bottom: 0;
-          width: calc(100% + 5px);
+          inset: 0;
+          width: 100%;
           height: 100%;
           object-fit: cover;
+        }
+        /* Cover the right-edge artifact line from the screen recordings */
+        .s3-phone-screen::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          width: 5px;
+          background: #0d0d0d;
+          z-index: 2;
+          pointer-events: none;
+          border-radius: 0 16px 16px 0;
         }
         .s3-pills::-webkit-scrollbar { display: none; }
 
@@ -1145,7 +1163,7 @@ function Section3() {
           z-index: 1;
           border-radius: 12px;
           background: linear-gradient(180deg, rgb(14,14,14) 0%, rgb(10,10,10) 100%);
-          padding: 10px 20px;
+          padding: 8px 20px;
           display: flex;
           align-items: center;
           gap: 10px;
@@ -1203,8 +1221,15 @@ function Section3() {
         }
       `}</style>
 
-      {/* Hidden audio element for walkthrough voiceover */}
-      <audio ref={audioRef} src={WALKTHROUGH_AUDIO_URL} preload="none" />
+      {/* Per-section audio elements for walkthrough voiceover */}
+      {FEATURE_GROUPS.map((g, i) => g.audioSrc ? (
+        <audio
+          key={g.id}
+          ref={el => { audioRefs.current[i] = el; }}
+          src={g.audioSrc}
+          preload="auto"
+        />
+      ) : null)}
 
       {/* Section heading */}
       <div className="text-center max-w-[800px] mx-auto mb-10 lg:mb-14 px-4">
