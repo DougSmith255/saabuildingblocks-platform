@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export interface CyberCardGoldProps {
+export interface NeonCardProps {
   /** Card content */
   children: React.ReactNode;
   /** Optional className for the container */
@@ -21,10 +21,10 @@ const paddingClasses = {
 };
 
 /**
- * CyberCardGold - Premium cyberpunk neon gold card
+ * NeonCard - Premium neon gold card
  *
  * MASTER CONTROLLER COMPONENT
- * Location: @saa/shared/components/saa/cards/CyberCardGold
+ * Location: @saa/shared/components/saa/cards/NeonCard
  *
  * Features:
  * - Thick neon gold glowing border (10px) with pulsing animation
@@ -34,18 +34,18 @@ const paddingClasses = {
  *
  * Use with NeonGoldText for premium headings:
  * ```tsx
- * <CyberCardGold>
+ * <NeonCard>
  *   <NeonGoldText as="h2" className="text-h2">Premium Title</NeonGoldText>
  *   <p className="text-body">Description</p>
- * </CyberCardGold>
+ * </NeonCard>
  * ```
  */
-export function CyberCardGold({
+export function NeonCard({
   children,
   className = '',
   padding = 'md',
   centered = true,
-}: CyberCardGoldProps) {
+}: NeonCardProps) {
   const paddingClass = paddingClasses[padding];
   const centerClass = centered ? 'text-center' : '';
 
@@ -189,4 +189,4 @@ export function CyberCardGold({
   );
 }
 
-export default CyberCardGold;
+export default NeonCard;

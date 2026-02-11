@@ -141,7 +141,7 @@ export function PathSelector() {
 
             {/* CTA */}
             <div className="text-center">
-              <CTAButton href="/join-exp-sponsor-team/">
+              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
                 Join The Alliance
               </CTAButton>
             </div>

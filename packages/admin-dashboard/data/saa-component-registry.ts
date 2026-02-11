@@ -109,7 +109,7 @@ export const saaComponentRegistry: SAAComponent[] = [
     name: 'Cyber Card Gold',
     category: 'cards',
     description: 'Premium gold bar card with shimmer hover effect. Features bright gold gradient background, 3D perspective tilt, beveled metallic gold edges, and shimmer/glare animation on hover.',
-    reactPath: '../shared/components/saa/cards/CyberCardGold.tsx',
+    reactPath: '../shared/components/saa/cards/NeonCard.tsx',
     converted: true,
     source: 'custom',
     tags: ['card', 'gold', 'premium', 'shimmer', '3d', 'featured', 'metallic', 'hover'],

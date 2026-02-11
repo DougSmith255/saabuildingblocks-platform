@@ -446,7 +446,7 @@ export default function Header() {
                 marginLeft: 'auto',
               }}
             >
-              <SecondaryButton href="/join-exp-sponsor-team/">
+              <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('open-join-modal'))}>
                 <span style={{ fontFeatureSettings: '"ss01" 1' }}>JOIN THE ALLIANCE</span>
               </SecondaryButton>
             </div>
@@ -708,73 +708,36 @@ export default function Header() {
           transition: border-top-color 0.3s ease, filter 0.3s ease !important;
         }
 
-        /* Agent Portal - Default: White */
-        .agent-portal-styled,
-        .agent-portal-styled span,
-        .agent-portal-styled .alt-glyph {
-          color: #ffffff;
-          transition: all 0.3s ease;
-          text-shadow: none;
+        /* Agent Portal - Default: slow fade-back (1s) when glow is removed */
+        .agent-portal,
+        .agent-portal-mobile {
+          transition: color 1s ease, text-shadow 1s ease, background-color 0.3s ease !important;
         }
 
-        /* Hover - Primary yellow/gold with glow */
-        .agent-portal:hover .agent-portal-styled,
-        .agent-portal:hover .agent-portal-styled span,
-        .agent-portal:hover .agent-portal-styled .alt-glyph {
-          color: #ffd700;
-          text-shadow:
-            0 0 15px rgba(255, 215, 0, 0.6),
-            0 0 30px rgba(255, 215, 0, 0.4),
-            0 0 45px rgba(255, 215, 0, 0.2);
-        }
-
-        /* Clicked - Secondary green with glow (persists for 3 seconds) */
-        .agent-portal.clicked .agent-portal-styled,
-        .agent-portal.clicked .agent-portal-styled span,
-        .agent-portal.clicked .agent-portal-styled .alt-glyph {
-          color: #00ff88 !important;
-          text-shadow:
-            0 0 15px rgba(0, 255, 136, 0.6),
-            0 0 30px rgba(0, 255, 136, 0.4),
-            0 0 45px rgba(0, 255, 136, 0.2) !important;
-        }
-
-        /* Gray background hover */
-        .agent-portal:hover {
-          background-color: rgba(42, 42, 42, 0.8) !important;
-        }
-
-        /* Mobile version - same styling */
-        .agent-portal-mobile .agent-portal-styled,
-        .agent-portal-mobile .agent-portal-styled span,
-        .agent-portal-mobile .agent-portal-styled .alt-glyph {
-          color: #ffffff;
-          transition: all 0.3s ease;
-          text-shadow: none;
-        }
-
-        .agent-portal-mobile:hover .agent-portal-styled,
-        .agent-portal-mobile:hover .agent-portal-styled span,
-        .agent-portal-mobile:hover .agent-portal-styled .alt-glyph {
-          color: #ffd700;
-          text-shadow:
-            0 0 15px rgba(255, 215, 0, 0.6),
-            0 0 30px rgba(255, 215, 0, 0.4),
-            0 0 45px rgba(255, 215, 0, 0.2);
-        }
-
-        .agent-portal-mobile.clicked .agent-portal-styled,
-        .agent-portal-mobile.clicked .agent-portal-styled span,
-        .agent-portal-mobile.clicked .agent-portal-styled .alt-glyph {
-          color: #00ff88 !important;
-          text-shadow:
-            0 0 15px rgba(0, 255, 136, 0.6),
-            0 0 30px rgba(0, 255, 136, 0.4),
-            0 0 45px rgba(0, 255, 136, 0.2) !important;
-        }
-
+        /* Hover - Yellow with glow (fast 0.3s in) */
+        .agent-portal:hover,
         .agent-portal-mobile:hover {
+          color: #ffd700 !important;
+          text-shadow:
+            0 0 15px rgba(255, 215, 0, 0.6),
+            0 0 30px rgba(255, 215, 0, 0.4),
+            0 0 45px rgba(255, 215, 0, 0.2) !important;
           background-color: rgba(42, 42, 42, 0.8) !important;
+          transition: color 0.3s ease, text-shadow 0.3s ease, background-color 0.3s ease !important;
+        }
+
+        /* Clicked - Green with glow (fast 0.3s in, slow 1s out via base rule) */
+        /* Double class selector to beat :hover specificity */
+        .agent-portal.clicked,
+        .agent-portal-mobile.clicked,
+        .agent-portal.clicked:hover,
+        .agent-portal-mobile.clicked:hover {
+          color: #00ff88 !important;
+          text-shadow:
+            0 0 15px rgba(0, 255, 136, 0.6),
+            0 0 30px rgba(0, 255, 136, 0.4),
+            0 0 45px rgba(0, 255, 136, 0.2) !important;
+          transition: color 0.3s ease, text-shadow 0.3s ease !important;
         }
 
         /* Hamburger Menu Animation */

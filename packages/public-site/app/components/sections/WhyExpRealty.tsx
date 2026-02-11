@@ -1,7 +1,7 @@
 'use client';
 
 import { H2 } from '@saa/shared/components/saa';
-import { IconCyberCard } from '@saa/shared/components/saa/cards';
+import { IconCard } from '@saa/shared/components/saa/cards';
 import { DollarSign, Building, GraduationCap, Globe, TrendingUp, Wallet } from 'lucide-react';
 
 const reasons = [
@@ -58,7 +58,7 @@ export function WhyExpRealty() {
         {/* Reasons Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reasons.map((reason, index) => (
-            <IconCyberCard
+            <IconCard
               key={index}
               icon={<reason.icon className="w-6 h-6 md:w-7 md:h-7" />}
               theme={reason.theme}
@@ -74,7 +74,7 @@ export function WhyExpRealty() {
               <p className="text-body opacity-80">
                 {reason.description}
               </p>
-            </IconCyberCard>
+            </IconCard>
           ))}
         </div>
       </div>

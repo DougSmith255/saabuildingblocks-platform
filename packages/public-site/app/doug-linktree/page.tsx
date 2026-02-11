@@ -50,7 +50,7 @@ export default function DougLinktree() {
     {
       title: "Join My eXp Sponsor Team",
       description: "Partner with the Wolf Pack",
-      href: "/join-exp-sponsor-team/",
+      href: "/exp-realty-sponsor/",
       highlight: true
     },
     {

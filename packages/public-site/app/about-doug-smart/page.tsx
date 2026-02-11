@@ -1,7 +1,7 @@
 'use client';
 
 import { H1, H2, Tagline, CTAButton, GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
-import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
+import { GrainCard } from '@saa/shared/components/saa/cards';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
@@ -120,10 +120,10 @@ export default function AboutDougSmart() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {systemsBuilt.map((system, index) => (
-                <GenericCyberCardGold key={index} padding="md" className="h-full">
+                <GrainCard key={index} padding="md" className="h-full">
                   <h3 className="text-h6 mb-2">{system.name}</h3>
                   <p className="text-body opacity-80">{system.desc}</p>
-                </GenericCyberCardGold>
+                </GrainCard>
               ))}
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function AboutDougSmart() {
               Join The Alliance and get access to the digital infrastructure that powers top-producing agents.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="/join-exp-sponsor-team/">
+              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
                 Join The Alliance
               </CTAButton>
               <CTAButton href="/our-exp-team/">

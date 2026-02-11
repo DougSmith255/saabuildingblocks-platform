@@ -1,13 +1,13 @@
 'use client';
 
-import { CTAButton, SecondaryButton, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
+import { CTAButton, SecondaryButton, NeonCard, NeonGoldText } from '@saa/shared/components/saa';
 
 export function FinalCTA() {
   return (
     <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
       <div className="max-w-[1900px] mx-auto">
         {/* CTA Card - Premium Gold Treatment */}
-        <CyberCardGold padding="xl">
+        <NeonCard padding="xl">
           {/* Header */}
           <div className="text-center mb-8 pt-4">
             <NeonGoldText as="h2" className="text-h2">
@@ -20,10 +20,10 @@ export function FinalCTA() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <CTAButton href="/join-exp-sponsor-team/">
+            <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
               Join The Alliance
             </CTAButton>
-            <SecondaryButton href="/join-exp-sponsor-team/webinar-registration/">
+            <SecondaryButton href="https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7">
               Watch Free Webinar
             </SecondaryButton>
           </div>
@@ -32,7 +32,7 @@ export function FinalCTA() {
           <p className="text-caption text-center opacity-60 mt-8">
             No commitment required. See if we're the right fit for you.
           </p>
-        </CyberCardGold>
+        </NeonCard>
       </div>
     </section>
   );

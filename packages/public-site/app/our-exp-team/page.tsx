@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, CyberCardGold, NeonGoldText, ProfileCyberFrame, Icon3D } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, NeonCard, NeonGoldText, ProfileCyberFrame, Icon3D } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import Image from 'next/image';
@@ -229,7 +229,7 @@ export default function OurExpTeam() {
       <LazySection height={200}>
         <section className="relative py-12 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
-            <CyberCardGold padding="lg">
+            <NeonCard padding="lg">
               <NeonGoldText as="p" className="text-h3 text-center mb-4">
                 Passive Income Potential
               </NeonGoldText>
@@ -241,7 +241,7 @@ export default function OurExpTeam() {
                   View Your Potential
                 </CTAButton>
               </div>
-            </CyberCardGold>
+            </NeonCard>
           </div>
         </section>
       </LazySection>
@@ -255,7 +255,7 @@ export default function OurExpTeam() {
               Get 7 layers of support above you, plus access to all our systems, training, and community.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="/join-exp-sponsor-team/">
+              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
                 Join The Alliance
               </CTAButton>
               <CTAButton href="/exp-realty-sponsor/">

@@ -276,7 +276,7 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
         })));
       case 'cyber-card-gold':
         return lazy(() => Promise.all([
-          import('@saa/shared/components/saa/cards/CyberCardGold'),
+          import('@saa/shared/components/saa/cards/NeonCard'),
           import('@saa/shared/components/saa/text/NeonGoldText')
         ]).then(([cardMod, textMod]) => ({
           default: () => (
@@ -284,22 +284,22 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
               {/* Neon gold border with NeonGoldText heading */}
               <div>
                 <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Neon Gold Border + Glow Text</p>
-                <cardMod.CyberCardGold>
+                <cardMod.NeonCard>
                   <textMod.NeonGoldText as="h3" className="text-2xl font-bold mb-2">
                     Premium Feature
                   </textMod.NeonGoldText>
                   <p className="text-[#dcdbd5]">White text inside</p>
-                </cardMod.CyberCardGold>
+                </cardMod.NeonCard>
               </div>
               {/* Large padding version */}
               <div>
                 <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Large Padding</p>
-                <cardMod.CyberCardGold padding="xl">
+                <cardMod.NeonCard padding="xl">
                   <textMod.NeonGoldText as="h3" className="text-3xl font-bold mb-2">
                     VIP Access
                   </textMod.NeonGoldText>
                   <p className="text-[#dcdbd5]">Extra padding for emphasis</p>
-                </cardMod.CyberCardGold>
+                </cardMod.NeonCard>
               </div>
             </div>
           )

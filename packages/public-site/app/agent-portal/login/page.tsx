@@ -22,7 +22,7 @@ type NewPasswordStep = 'form' | 'success';
 
 /**
  * Agent Portal Login Page
- * Features the Data Stream effect in green with centered login form in CyberCardGold
+ * Features the Data Stream effect in green with centered login form in NeonCard
  */
 export default function AgentPortalLogin() {
   return (

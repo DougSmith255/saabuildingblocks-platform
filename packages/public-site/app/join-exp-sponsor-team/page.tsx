@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { H1, H2, Tagline, CTAButton, GenericCard, FAQ, ProfileCyberFrame, JoinModal, InstructionsModal } from '@saa/shared/components/saa';
-import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
+import { GrainCard } from '@saa/shared/components/saa/cards';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
@@ -154,23 +154,23 @@ export default function JoinExpSponsorTeam() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 items-stretch">
-              <GenericCyberCardGold padding="lg" className="h-full">
+              <GrainCard padding="lg" className="h-full">
                 <p className="text-h2 mb-4 stat-3d-text">3,700+</p>
                 <h3 className="text-h6 mb-2" style={{ color: 'var(--color-header-text)' }}>Realtors Strong</h3>
                 <p className="text-body">Join a community of over 3,700 Realtors committed to supporting one another's success.</p>
-              </GenericCyberCardGold>
+              </GrainCard>
 
-              <GenericCyberCardGold padding="lg" className="h-full">
+              <GrainCard padding="lg" className="h-full">
                 <p className="text-h2 mb-4 stat-3d-text">100%</p>
                 <h3 className="text-h6 mb-2" style={{ color: 'var(--color-header-text)' }}>Free Resources</h3>
                 <p className="text-body">No commission splits or fees. Smart Agent Alliance provides extraordinary value at no cost to you.</p>
-              </GenericCyberCardGold>
+              </GrainCard>
 
-              <GenericCyberCardGold padding="lg" className="h-full">
+              <GrainCard padding="lg" className="h-full">
                 <p className="text-h2 mb-4 stat-3d-text">#1</p>
                 <h3 className="text-h6 mb-2" style={{ color: 'var(--color-header-text)' }}>Retention Rate</h3>
                 <p className="text-body">Smart Agent Alliance has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
-              </GenericCyberCardGold>
+              </GrainCard>
             </div>
           </div>
         </section>

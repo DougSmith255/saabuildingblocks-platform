@@ -595,9 +595,9 @@ function GlassPanel({ variant, children, className = '' }: { variant: GlassPanel
 }
 
 // =============================================================================
-// SHARED COMPONENT: CyberCardGold
+// SHARED COMPONENT: NeonCard
 // =============================================================================
-function CyberCardGold({ children, className = '', padding = 'md', centered = true }: {
+function NeonCard({ children, className = '', padding = 'md', centered = true }: {
   children: React.ReactNode; className?: string; padding?: 'sm' | 'md' | 'lg' | 'xl'; centered?: boolean;
 }) {
   const paddingClasses = { sm: 'p-4', md: 'p-6', lg: 'p-8', xl: 'p-10' };
@@ -1451,11 +1451,11 @@ function ProvenAtScale() {
               </div>
             </div>
             <div className="md:col-span-4">
-              <CyberCardGold padding="lg">
+              <NeonCard padding="lg">
                 <Icon3D><Globe className="w-14 h-14 mx-auto mb-3" /></Icon3D>
                 <p className="font-heading text-3xl md:text-4xl font-bold text-heading"><StaticCounterNeon value="3700" suffix="+" /></p>
                 <p className="text-body text-base mt-2">Agents Strong</p>
-              </CyberCardGold>
+              </NeonCard>
             </div>
           </div>
         </div>
@@ -1832,7 +1832,7 @@ function WhyOnlyAtExp() {
                         radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
                         linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
                       `;
-                      // Grainy dark background matching GenericCyberCardGold
+                      // Grainy dark background matching GrainCard
                       const darkBackground = `
                         url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
                         linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)

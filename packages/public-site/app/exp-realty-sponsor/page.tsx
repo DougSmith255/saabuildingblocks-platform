@@ -1,10 +1,21 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { H1, H2, Tagline, GlassPanel, IconCyberCard, CyberCardGold, GenericCard, Icon3D } from '@saa/shared/components/saa';
+import dynamic from 'next/dynamic';
+import { H1, H2, Tagline } from '@saa/shared/components/saa';
+import { GrainCard } from '@saa/shared/components/saa/cards';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
-import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers } from 'lucide-react';
+import { AgentCounter, TaglineCounterSuffix } from '@/app/components/AgentCounter';
+import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers, Rocket, BarChart3, Link2, LifeBuoy, TrendingUp, UserCircle, Video, Megaphone, UserPlus, Download, type LucideIcon } from 'lucide-react';
+
+// Counter animation (scramble effect) - loads after initial paint
+const CounterAnimation = dynamic(
+  () => import('@/app/components/CounterAnimation').then(mod => ({ default: mod.CounterAnimation }))
+);
+// Portal recording videos are displayed inside a phone mockup frame.
+// Video files: scripts/portal-recordings/recordings/
+// Phase 4: Upload to Cloudflare Stream and add videoId to each FEATURE_GROUP.
 
 // ============================================================================
 // SECTION 1 CONTENT — word for word
@@ -90,9 +101,9 @@ const PANELS = [
 // SECTION 2 CONTENT — word for word
 // ============================================================================
 
-const SECTION2_HEADING = 'Why Smart Agent Alliance Is Different';
+const SECTION2_HEADING = 'Why SAA Is Different';
 const SECTION2_INTRO = 'At eXp Realty, sponsors are not required to provide any ongoing support. As a result, most never do.';
-const SECTION2_SUBHEADING = 'Smart Agent Alliance was built differently.';
+const SECTION2_SUBHEADING = 'SAA was designed to change that.';
 
 const DIFFERENTIATORS = [
   { icon: Building2, text: 'Built as a sponsor organization, not an individual sponsor' },
@@ -113,6 +124,90 @@ const ORG_BENEFITS = [
   { icon: Users, text: 'Community is active and intentional' },
   { icon: Layers, text: 'Infrastructure exists independently of any single leader' },
 ];
+
+// ============================================================================
+// SECTION 3 CONTENT — "What You Get Inside SAA" (Interactive Portal Showcase)
+// ============================================================================
+
+interface PortalMenuItem {
+  icon: LucideIcon;
+  label: string;
+  groupIndex: number;
+}
+
+interface FeatureGroup {
+  id: string;
+  heading: string;
+  description: string;
+  videoSrc?: string;           // Local .webm path (legacy)
+  streamId?: string;           // Cloudflare Stream video ID
+  duration?: number;           // Video duration in seconds
+  posterUrl?: string;          // Video thumbnail
+}
+
+// Sidebar items mirror the real agent portal navigation
+const SIDEBAR_ITEMS: PortalMenuItem[] = [
+  { icon: Rocket, label: 'Onboarding', groupIndex: 0 },
+  { icon: TrendingUp, label: 'Analytics', groupIndex: 1 },
+  { icon: Link2, label: 'Link Page', groupIndex: 1 },
+  { icon: UserCircle, label: 'Agent Attraction', groupIndex: 1 },
+  { icon: Video, label: 'Team Calls', groupIndex: 2 },
+  { icon: LifeBuoy, label: 'Get Support', groupIndex: 3 },
+  { icon: Megaphone, label: 'Templates', groupIndex: 4 },
+  { icon: GraduationCap, label: 'Elite Courses', groupIndex: 5 },
+  { icon: Users, label: 'Landing Pages', groupIndex: 4 },
+  { icon: UserPlus, label: 'New Agents', groupIndex: 4 },
+  { icon: Download, label: 'Download App', groupIndex: 0 },
+];
+
+const STREAM_BASE = 'https://customer-2twfsluc6inah5at.cloudflarestream.com';
+const WALKTHROUGH_AUDIO_URL = 'https://assets.saabuildingblocks.com/Team%20Value%20Audio.MP3';
+
+const FEATURE_GROUPS: FeatureGroup[] = [
+  {
+    id: 'onboarding',
+    heading: 'Day One, You\u2019re Guided',
+    description: 'From the moment you join, SAA walks you through everything \u2014 profile setup, link page, attraction page, team calls. Each step is tracked so you always know what\u2019s next.',
+    streamId: '4ef314e003e5ed900f60292ffe9d372a',
+    duration: 32.2,
+  },
+  {
+    id: 'system',
+    heading: 'Your Passive Income System',
+    description: 'Every agent gets a customizable link page and a branded attraction page. Visitors click through, learn about eXp, and request to join your team \u2014 with every click tracked in your analytics dashboard.',
+    streamId: '4675bd85413a19bdce639680c4894da1',
+    duration: 70.0,
+  },
+  {
+    id: 'team-calls',
+    heading: 'You\u2019re Never Alone',
+    description: 'Weekly team calls and an active community of agents building together. Show up, plug in, grow with the group.',
+    streamId: 'a3ce2f36ee12578f6b9275e85eee2f8b',
+    duration: 26.1,
+  },
+  {
+    id: 'support',
+    heading: 'Help Is One Click Away',
+    description: 'Direct access to support whenever you need it. No tickets, no waiting \u2014 real people who know the system inside and out.',
+    streamId: '5e5756cde89be0345578a85e614ff0f8',
+    duration: 44.1,
+  },
+  {
+    id: 'templates',
+    heading: 'Launch-Ready Resources',
+    description: 'Professional templates for social media, landing pages, and outreach \u2014 plus new agent playbooks to hit the ground running. Grab, customize, deploy.',
+    streamId: '41aca33121f42ad6f6e9e681cfb1ab81',
+    duration: 41.7,
+  },
+  {
+    id: 'training',
+    heading: 'Training That Builds Businesses',
+    description: 'Premium courses from social media lead generation to AI-powered productivity. Structured modules, progress tracking, and live coaching calls \u2014 continuously updated.',
+    streamId: '680066ad9eb3c563f4152782876a2da0',
+    duration: 31.7,
+  },
+];
+
 
 // ============================================================================
 // SECTION 1 — Focus Cards with edge-to-edge GlassPanel
@@ -475,6 +570,881 @@ function Section1() {
 
 
 // ============================================================================
+// SECTION 2 — "Why SAA Is Different" (Cards + Description Panel)
+// ============================================================================
+
+function Section2() {
+  const [activeCard, setActiveCard] = useState(0);
+  const [autoRotate, setAutoRotate] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const userClicked = useRef(false);
+
+  // Start auto-rotate only after 60% of section is visible
+  useEffect(() => {
+    if (userClicked.current) return;
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !userClicked.current) {
+          setAutoRotate(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.6 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto-rotate cards every 5 seconds
+  useEffect(() => {
+    if (!autoRotate) return;
+    const id = setInterval(() => {
+      setActiveCard(prev => (prev + 1) % 3);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [autoRotate]);
+
+  const handleCardClick = (idx: number) => {
+    userClicked.current = true;
+    setAutoRotate(false);
+    setActiveCard(idx);
+  };
+
+  const cards = [
+    { label: 'Organization-First', icon: Building2 },
+    { label: 'Zero Cost to Agents', icon: Shield },
+    { label: 'Lasting Infrastructure', icon: Layers },
+  ];
+
+  const mistyGoldBg = 'radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%), radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%), radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%), radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%), linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)';
+
+  const darkCardBg = 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)';
+
+  const renderContent = () => {
+    switch (activeCard) {
+      case 0:
+        return (
+          <ul className="space-y-3">
+            {DIFFERENTIATORS.map((d, i) => (
+              <li key={i} className="flex items-start gap-3">
+                <span className="flex-shrink-0" style={{ color: '#ffd700', fontSize: '8px', lineHeight: '24px' }}>●</span>
+                <span className="text-body">{d.text}</span>
+              </li>
+            ))}
+          </ul>
+        );
+      case 1:
+        return (
+          <div className="space-y-3">
+            {FINANCIAL_LINES.map((line, i) => (
+              <p key={i} className="text-body">{line}</p>
+            ))}
+            <p style={{
+              color: '#ffd700',
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              fontSize: 'clamp(15px, 2vw, 18px)',
+              fontWeight: 600,
+              fontStyle: 'italic',
+              marginTop: '0.75rem',
+            }}>
+              {FINANCIAL_TAGLINE}
+            </p>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-3">
+            <p className="text-body" style={{ color: '#b0b0b0' }}>
+              {ORG_HEADING}
+            </p>
+            <ul className="space-y-3">
+              {ORG_BENEFITS.map((b, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="flex-shrink-0" style={{ color: '#ffd700', fontSize: '8px', lineHeight: '24px' }}>●</span>
+                  <span className="text-body">{b.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12 pb-12 md:pb-20">
+      <style>{`
+        @keyframes section2FadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .section2-content-fade {
+          animation: section2FadeIn 0.6s ease-out;
+        }
+      `}</style>
+
+      <div className="max-w-[1200px] mx-auto">
+        {/* Heading */}
+        <div className="text-center mb-8 md:mb-10">
+          <H2 style={{ marginBottom: '1rem' }}>
+            {SECTION2_HEADING}
+          </H2>
+          <p className="text-body mx-auto" style={{ maxWidth: '700px' }}>
+            {SECTION2_INTRO}
+          </p>
+          <p className="text-body mt-3 mx-auto" style={{ fontWeight: 600, maxWidth: '700px' }}>
+            {SECTION2_SUBHEADING}
+          </p>
+        </div>
+
+        {/* 3 Cards */}
+        <div className="grid grid-cols-3 gap-2 md:gap-4">
+          {cards.map((card, idx) => {
+            const isActive = activeCard === idx;
+            const IconComp = card.icon;
+            return (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleCardClick(idx)}
+                className="relative rounded-xl md:rounded-2xl p-3 md:p-6 text-center overflow-hidden"
+                style={{
+                  background: darkCardBg,
+                  border: isActive
+                    ? '1px solid rgba(255,215,0,0.35)'
+                    : '1px solid rgba(255,215,0,0.1)',
+                  boxShadow: isActive
+                    ? '0 0 40px 8px rgba(255,200,80,0.35)'
+                    : '0 8px 32px rgba(0,0,0,0.4)',
+                  transition: 'border-color 0.6s ease, box-shadow 0.6s ease',
+                  cursor: isActive ? 'default' : 'pointer',
+                }}
+              >
+                {/* Misty gold overlay */}
+                <div
+                  className="absolute inset-0 rounded-2xl pointer-events-none"
+                  style={{
+                    background: mistyGoldBg,
+                    opacity: isActive ? 1 : 0,
+                    transition: 'opacity 0.6s ease',
+                  }}
+                />
+                <div className="relative z-10">
+                {/* Icon ring */}
+                  <div className="relative mx-auto mb-2 md:mb-3 w-9 h-9 md:w-14 md:h-14">
+                    <div
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: isActive
+                          ? 'linear-gradient(135deg, rgba(80,60,0,0.4), rgba(60,40,0,0.25))'
+                          : 'linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1))',
+                        boxShadow: isActive
+                          ? '0 0 15px rgba(120,80,0,0.3)'
+                          : '0 0 25px rgba(255,215,0,0.2), inset 0 0 15px rgba(255,215,0,0.1)',
+                        transition: 'background 0.6s ease, box-shadow 0.6s ease',
+                      }}
+                    />
+                    <div
+                      className="absolute inset-1.5 rounded-full flex items-center justify-center"
+                      style={{
+                        background: isActive
+                          ? 'linear-gradient(180deg, rgba(220,190,80,0.2), rgba(200,160,50,0.15))'
+                          : 'linear-gradient(180deg, rgba(15,15,10,0.95), rgba(10,10,5,0.98))',
+                        border: isActive
+                          ? '1px solid rgba(120,80,0,0.4)'
+                          : '1px solid rgba(255,215,0,0.3)',
+                        transition: 'background 0.6s ease, border-color 0.6s ease',
+                      }}
+                    >
+                      <IconComp
+                        className="w-3.5 h-3.5 md:w-5 md:h-5"
+                        style={{
+                          color: isActive ? '#4a3200' : '#ffd700',
+                          filter: isActive ? 'none' : 'drop-shadow(0 0 8px rgba(255,215,0,0.5))',
+                          transition: 'color 0.6s ease, filter 0.6s ease',
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Card label */}
+                  <h3
+                    className="text-h6"
+                    style={{
+                      color: isActive ? '#3a2800' : '#e5e4dd',
+                      transition: 'color 0.6s ease',
+                    }}
+                  >
+                    {card.label}
+                  </h3>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Shared description panel */}
+        <div className="mt-3 md:mt-4">
+          <GrainCard padding="md" centered={false}>
+            <div key={activeCard} className="section2-content-fade relative" style={{ minHeight: '200px' }}>
+              {/* Watermark icon */}
+              {(() => {
+                const WatermarkIcon = cards[activeCard].icon;
+                return (
+                  <div
+                    className="absolute pointer-events-none"
+                    style={{
+                      right: '0px',
+                      bottom: '0px',
+                      opacity: 0.04,
+                      color: '#ffd700',
+                    }}
+                  >
+                    <WatermarkIcon size={160} strokeWidth={1} />
+                  </div>
+                );
+              })()}
+              <div className="relative z-10">
+                {renderContent()}
+              </div>
+            </div>
+          </GrainCard>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// SECTION 3 — "What You Get Inside SAA" (Interactive Portal Showcase)
+// Desktop: sidebar nav + video/animation content area
+// Mobile: horizontal pill tabs + content below
+// ============================================================================
+
+function StreamVideo({ streamId, isActive }: { streamId: string; isActive: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hlsRef = useRef<any>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !streamId) return;
+
+    const src = `${STREAM_BASE}/${streamId}/manifest/video.m3u8`;
+
+    // If native HLS support (Safari)
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = src;
+      if (isActive) video.play().catch(() => {});
+      return;
+    }
+
+    // Dynamic import HLS.js
+    let cancelled = false;
+    import('hls.js').then(({ default: Hls }) => {
+      if (cancelled) return;
+      if (!Hls.isSupported()) return;
+
+      const hls = new Hls({
+        enableWorker: true,
+        maxBufferLength: 10,
+        maxMaxBufferLength: 20,
+      });
+      hlsRef.current = hls;
+      hls.loadSource(src);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        if (isActive) video.play().catch(() => {});
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+        hlsRef.current = null;
+      }
+    };
+  }, [streamId]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (isActive) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, [isActive]);
+
+  return (
+    <video
+      ref={videoRef}
+      autoPlay
+      loop
+      muted
+      playsInline
+      className="s3-phone-video"
+    />
+  );
+}
+
+function Section3() {
+  const [activeGroup, setActiveGroup] = useState(0);
+  const [isWalkthrough, setIsWalkthrough] = useState(false);
+  const [walkthroughPlaying, setWalkthroughPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const group = FEATURE_GROUPS[activeGroup];
+
+  // Determine group boundaries for dividers in sidebar
+  const prevGroupIndex = (i: number) => i > 0 ? SIDEBAR_ITEMS[i - 1].groupIndex : -1;
+
+  // Compute cumulative start times for each section (for auto-advance)
+  const sectionTimings = useRef(
+    FEATURE_GROUPS.reduce<{ start: number; switchAt: number }[]>((acc, g, i) => {
+      const start = i === 0 ? 0 : acc[i - 1].start + (FEATURE_GROUPS[i - 1].duration || 30);
+      const dur = g.duration || 30;
+      const isLast = i === FEATURE_GROUPS.length - 1;
+      acc.push({ start, switchAt: start + dur - (isLast ? 0 : 1) });
+      return acc;
+    }, [])
+  ).current;
+
+  // Handle manual tab click — stops walkthrough
+  const handleTabClick = useCallback((index: number) => {
+    if (isWalkthrough) {
+      // Stop walkthrough
+      setIsWalkthrough(false);
+      setWalkthroughPlaying(false);
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      if (advanceTimerRef.current) {
+        clearTimeout(advanceTimerRef.current);
+        advanceTimerRef.current = null;
+      }
+    }
+    setActiveGroup(index);
+  }, [isWalkthrough]);
+
+  // Start walkthrough
+  const startWalkthrough = useCallback(() => {
+    setActiveGroup(0);
+    setIsWalkthrough(true);
+    setWalkthroughPlaying(true);
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    }
+  }, []);
+
+  // Toggle play/pause during walkthrough
+  const toggleWalkthroughPlayback = useCallback(() => {
+    if (walkthroughPlaying) {
+      setWalkthroughPlaying(false);
+      audioRef.current?.pause();
+      if (advanceTimerRef.current) {
+        clearTimeout(advanceTimerRef.current);
+        advanceTimerRef.current = null;
+      }
+    } else {
+      setWalkthroughPlaying(true);
+      audioRef.current?.play().catch(() => {});
+    }
+  }, [walkthroughPlaying]);
+
+  // Stop walkthrough
+  const stopWalkthrough = useCallback(() => {
+    setIsWalkthrough(false);
+    setWalkthroughPlaying(false);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    if (advanceTimerRef.current) {
+      clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+  }, []);
+
+  // Auto-advance logic: schedule next section switch
+  useEffect(() => {
+    if (!isWalkthrough || !walkthroughPlaying) return;
+
+    const timing = sectionTimings[activeGroup];
+    if (!timing) return;
+    const isLast = activeGroup === FEATURE_GROUPS.length - 1;
+    const dur = (FEATURE_GROUPS[activeGroup].duration || 30);
+    // Switch 1s before end, unless last
+    const delay = (dur - (isLast ? 0 : 1)) * 1000;
+
+    advanceTimerRef.current = setTimeout(() => {
+      if (isLast) {
+        // Walkthrough finished
+        stopWalkthrough();
+      } else {
+        setActiveGroup(prev => prev + 1);
+      }
+    }, delay);
+
+    return () => {
+      if (advanceTimerRef.current) {
+        clearTimeout(advanceTimerRef.current);
+        advanceTimerRef.current = null;
+      }
+    };
+  }, [activeGroup, isWalkthrough, walkthroughPlaying, sectionTimings, stopWalkthrough]);
+
+  // Audio ended handler
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const onEnded = () => stopWalkthrough();
+    audio.addEventListener('ended', onEnded);
+    return () => audio.removeEventListener('ended', onEnded);
+  }, [stopWalkthrough]);
+
+  // Total walkthrough duration & progress
+  const totalDuration = FEATURE_GROUPS.reduce((sum, g) => sum + (g.duration || 30), 0);
+  const elapsedUpToCurrent = sectionTimings[activeGroup]?.start || 0;
+  const currentDuration = FEATURE_GROUPS[activeGroup]?.duration || 30;
+
+  return (
+    <section className="relative py-16 md:py-24">
+      <style>{`
+        @keyframes portalFadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .portal-content-fade {
+          animation: portalFadeIn 0.4s ease-out;
+        }
+        .s3-phone-mockup {
+          position: relative;
+          background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+          border-radius: 40px;
+          padding: 12px;
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.1),
+            0 25px 50px -12px rgba(0,0,0,0.5),
+            inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .s3-phone-mockup::before { display: none; }
+        .s3-phone-mockup::after {
+          content: '';
+          position: absolute;
+          bottom: 8px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100px;
+          height: 4px;
+          background: rgba(255,255,255,0.2);
+          border-radius: 2px;
+        }
+        .s3-phone-screen {
+          background: linear-gradient(180deg, #0a0a0a 0%, #151515 100%);
+          border-radius: 28px;
+          overflow: hidden;
+          position: relative;
+        }
+        .s3-phone-video {
+          display: block;
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .s3-pills::-webkit-scrollbar { display: none; }
+
+        /* Walkthrough play button — rainbow border */
+        @keyframes s3GradientFlow {
+          0% { background-position: 0 0; }
+          50% { background-position: 400% 0; }
+          100% { background-position: 0 0; }
+        }
+        .s3-tour-wrapper {
+          position: relative;
+          border-radius: 14px;
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .s3-tour-border,
+        .s3-tour-glow {
+          position: absolute;
+          left: -2px;
+          top: -2px;
+          border-radius: 14px;
+          background: linear-gradient(45deg,
+            #fb0094, #0000ff, #00ff00, #ffff00, #ff0000,
+            #fb0094, #0000ff, #00ff00, #ffff00, #ff0000
+          );
+          background-size: 400%;
+          width: calc(100% + 4px);
+          height: calc(100% + 4px);
+          z-index: 0;
+          animation: s3GradientFlow 20s linear infinite;
+        }
+        .s3-tour-glow {
+          filter: blur(10px);
+          opacity: 0.35;
+          z-index: -1;
+        }
+        .s3-tour-wrapper:hover .s3-tour-glow {
+          opacity: 0.55;
+          filter: blur(16px);
+        }
+        .s3-tour-inner {
+          position: relative;
+          z-index: 1;
+          border-radius: 12px;
+          background: linear-gradient(180deg, rgb(14,14,14) 0%, rgb(10,10,10) 100%);
+          padding: 10px 20px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .s3-tour-inner::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 12px;
+          background:
+            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,215,0,0.025) 2px, rgba(255,215,0,0.025) 4px),
+            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px);
+          pointer-events: none;
+        }
+
+        /* Walkthrough controls bar */
+        .s3-controls-bar {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 8px 16px;
+          border-radius: 12px;
+          background: rgba(10,10,10,0.95);
+          border: 1px solid rgba(255,215,0,0.15);
+        }
+        .s3-progress-track {
+          flex: 1;
+          height: 4px;
+          background: rgba(255,255,255,0.1);
+          border-radius: 2px;
+          overflow: hidden;
+          cursor: pointer;
+        }
+        .s3-progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #ffd700, #e6c200);
+          border-radius: 2px;
+          transition: width 0.3s linear;
+        }
+        .s3-ctrl-btn {
+          background: none;
+          border: none;
+          color: #e5e4dd;
+          cursor: pointer;
+          padding: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .s3-ctrl-btn:hover { color: #ffd700; }
+      `}</style>
+
+      {/* Hidden audio element for walkthrough voiceover */}
+      <audio ref={audioRef} src={WALKTHROUGH_AUDIO_URL} preload="none" />
+
+      {/* Section heading */}
+      <div className="text-center max-w-[800px] mx-auto mb-10 lg:mb-14 px-4">
+        <H2 style={{ marginBottom: '1rem' }}>
+          What You Get Inside Smart Agent Alliance
+        </H2>
+        <Tagline style={{ maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto' }}>
+          Click any feature to see it in action.
+        </Tagline>
+      </div>
+
+      {/* Portal showcase frame */}
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12">
+        <div
+          className="relative overflow-hidden rounded-2xl"
+          style={{
+            background: 'linear-gradient(180deg, rgba(15,15,15,0.95) 0%, rgba(10,10,10,0.98) 100%)',
+            border: '1px solid rgba(255,215,0,0.15)',
+            boxShadow: `
+              0 0 0 1px rgba(255,215,0,0.05),
+              0 8px 32px rgba(0,0,0,0.5),
+              0 2px 8px rgba(0,0,0,0.3),
+              inset 0 1px 0 rgba(255,255,255,0.05)
+            `,
+          }}
+        >
+          {/* Top gold accent line */}
+          <div
+            className="absolute top-0 left-0 right-0 h-px"
+            style={{
+              background: 'linear-gradient(90deg, transparent 5%, rgba(255,215,0,0.3) 30%, rgba(255,215,0,0.4) 50%, rgba(255,215,0,0.3) 70%, transparent 95%)',
+            }}
+          />
+
+          {/* Crosshatch texture */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: `
+                repeating-linear-gradient(45deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 6px),
+                repeating-linear-gradient(-45deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 6px)
+              `,
+              backgroundSize: '16px 16px',
+            }}
+          />
+
+          {/* ── Walkthrough Play Button / Controls ── */}
+          <div className="relative z-20 flex justify-center" style={{ padding: '12px 16px 0' }}>
+            {!isWalkthrough ? (
+              <div className="s3-tour-wrapper" onClick={startWalkthrough}>
+                <div className="s3-tour-border" />
+                <div className="s3-tour-glow" />
+                <div className="s3-tour-inner">
+                  {/* Play icon */}
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffd700" stroke="none">
+                    <polygon points="5,3 19,12 5,21" />
+                  </svg>
+                  <span style={{
+                    fontFamily: 'var(--font-taskor)',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: 'rgba(255,255,255,0.75)',
+                    letterSpacing: '0.04em',
+                    textTransform: 'uppercase',
+                  }}>
+                    Watch the Full Tour
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="s3-controls-bar" style={{ width: '100%', maxWidth: '500px' }}>
+                {/* Play/Pause */}
+                <button type="button" className="s3-ctrl-btn" onClick={toggleWalkthroughPlayback}>
+                  {walkthroughPlaying ? (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" /></svg>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21" /></svg>
+                  )}
+                </button>
+
+                {/* Section indicator */}
+                <span style={{ fontSize: '12px', color: '#a8a7a0', whiteSpace: 'nowrap', fontFamily: 'var(--font-synonym)' }}>
+                  {activeGroup + 1} / {FEATURE_GROUPS.length}
+                </span>
+
+                {/* Progress bar */}
+                <div className="s3-progress-track">
+                  <div
+                    className="s3-progress-fill"
+                    style={{
+                      width: `${((elapsedUpToCurrent + currentDuration) / totalDuration) * 100}%`,
+                    }}
+                  />
+                </div>
+
+                {/* Stop */}
+                <button type="button" className="s3-ctrl-btn" onClick={stopWalkthrough}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2" /></svg>
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="relative z-10 flex flex-col lg:flex-row">
+            {/* ── Desktop Sidebar ── */}
+            <nav
+              className="hidden lg:flex flex-col flex-shrink-0 py-4"
+              style={{
+                width: '220px',
+                borderRight: '1px solid rgba(255,255,255,0.06)',
+                background: 'rgba(12,12,12,0.5)',
+              }}
+            >
+              {SIDEBAR_ITEMS.map((item, i) => {
+                const isInActiveGroup = item.groupIndex === activeGroup;
+                const showDivider = i > 0 && item.groupIndex !== prevGroupIndex(i);
+                const Icon = item.icon;
+
+                return (
+                  <React.Fragment key={i}>
+                    {showDivider && (
+                      <div
+                        className="mx-4 my-1"
+                        style={{
+                          height: '1px',
+                          background: 'rgba(255,215,0,0.08)',
+                        }}
+                      />
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => handleTabClick(item.groupIndex)}
+                      className="flex items-center gap-3 px-5 py-2.5 text-left w-full relative"
+                      style={{
+                        color: isInActiveGroup ? '#ffd700' : '#a8a7a0',
+                        background: isInActiveGroup ? 'rgba(255,215,0,0.05)' : 'transparent',
+                        transition: 'color 0.3s ease, background 0.3s ease',
+                      }}
+                    >
+                      {/* Gold left accent bar */}
+                      <div
+                        className="absolute left-0 top-1/2 -translate-y-1/2 rounded-r-sm"
+                        style={{
+                          width: '3px',
+                          height: isInActiveGroup ? '60%' : '0%',
+                          background: '#ffd700',
+                          boxShadow: isInActiveGroup ? '0 0 8px rgba(255,215,0,0.4)' : 'none',
+                          transition: 'height 0.3s ease, box-shadow 0.3s ease',
+                        }}
+                      />
+                      <Icon
+                        size={16}
+                        style={{
+                          flexShrink: 0,
+                          filter: isInActiveGroup ? 'drop-shadow(0 0 4px rgba(255,215,0,0.4))' : 'none',
+                          transition: 'filter 0.3s ease',
+                        }}
+                      />
+                      <span
+                        className="text-body"
+                        style={{
+                          fontSize: '14px',
+                          fontWeight: isInActiveGroup ? 500 : 400,
+                        }}
+                      >
+                        {item.label}
+                      </span>
+                    </button>
+                  </React.Fragment>
+                );
+              })}
+            </nav>
+
+            {/* ── Mobile Pill Tabs ── */}
+            <div
+              className="s3-pills lg:hidden flex gap-2 px-4 py-3 overflow-x-auto"
+              style={{
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
+            >
+              {FEATURE_GROUPS.map((g, i) => {
+                const isActive = activeGroup === i;
+                const firstItem = SIDEBAR_ITEMS.find(si => si.groupIndex === i);
+                const Icon = firstItem?.icon || Rocket;
+                return (
+                  <button
+                    key={g.id}
+                    type="button"
+                    onClick={() => handleTabClick(i)}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-full flex-shrink-0 whitespace-nowrap"
+                    style={{
+                      fontSize: '13px',
+                      fontWeight: 500,
+                      color: isActive ? '#0a0a0a' : '#a8a7a0',
+                      background: isActive
+                        ? 'linear-gradient(135deg, #ffd700, #e6c200)'
+                        : 'rgba(255,255,255,0.06)',
+                      border: isActive
+                        ? '1px solid rgba(255,215,0,0.6)'
+                        : '1px solid rgba(255,255,255,0.08)',
+                      boxShadow: isActive
+                        ? '0 0 12px rgba(255,215,0,0.3)'
+                        : 'none',
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    <Icon size={14} />
+                    <span>{g.heading.split(/[,\u2014\u2019]/, 1)[0].trim()}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ── Content Area ── */}
+            <div className="flex-1 p-4 sm:p-6 lg:p-8 flex flex-col">
+              <div key={activeGroup} className="portal-content-fade flex flex-col lg:flex-row gap-6 lg:gap-8 flex-1 items-center lg:items-start">
+                {/* Phone mockup with video */}
+                <div className="flex-shrink-0 flex justify-center">
+                  <div className="s3-phone-mockup" style={{ width: '250px', padding: '8px' }}>
+                    <div className="s3-phone-screen" style={{ height: '460px' }}>
+                      {group.streamId ? (
+                        <StreamVideo
+                          key={group.id}
+                          streamId={group.streamId}
+                          isActive={true}
+                        />
+                      ) : (
+                        <div
+                          className="w-full h-full flex flex-col items-center justify-center gap-3"
+                          style={{ background: 'linear-gradient(180deg, #0a0a0a 0%, #111 100%)' }}
+                        >
+                          {(() => {
+                            const firstItem = SIDEBAR_ITEMS.find(si => si.groupIndex === activeGroup);
+                            const PlaceholderIcon = firstItem?.icon || Rocket;
+                            return (
+                              <>
+                                <div
+                                  className="w-14 h-14 rounded-full flex items-center justify-center"
+                                  style={{
+                                    background: 'rgba(255,215,0,0.08)',
+                                    border: '1px solid rgba(255,215,0,0.2)',
+                                  }}
+                                >
+                                  <PlaceholderIcon size={24} style={{ color: '#ffd700', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.4))' }} />
+                                </div>
+                                <p style={{ color: '#a8a7a0', fontSize: '13px', textAlign: 'center', padding: '0 20px' }}>
+                                  Video coming soon
+                                </p>
+                              </>
+                            );
+                          })()}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Heading + description */}
+                <div className="flex-1 flex flex-col justify-center text-center lg:text-left">
+                  <h3
+                    className="text-h3"
+                    style={{
+                      fontFamily: 'var(--font-taskor, sans-serif)',
+                      color: '#e5e4dd',
+                      marginBottom: '0.5rem',
+                    }}
+                  >
+                    {group.heading}
+                  </h3>
+                  <p className="text-body" style={{ color: '#dcdbd5', maxWidth: '500px' }}>
+                    {group.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
 // MAIN PAGE COMPONENT
 // ============================================================================
 
@@ -487,6 +1457,10 @@ export default function ExpRealtySponsor() {
       <StickyHeroWrapper>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <QuantumGridEffect />
+
+          {/* Agent Counter - viewport-aware (only renders desktop OR mobile counter) */}
+          <AgentCounter />
+
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]">
             <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
               <img
@@ -513,12 +1487,15 @@ export default function ExpRealtySponsor() {
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>Smart Agent Alliance</H1>
-              <Tagline className="mt-4" style={{ maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>For agents who want more, without giving up independence.</Tagline>
+              <Tagline className="mt-4" style={{ maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }} counterSuffix={<TaglineCounterSuffix />}>For agents who want more, without giving up independence.</Tagline>
               <p className="text-body mt-4" style={{ maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
                 Aligned incentives. We succeed only when you do.
               </p>
             </div>
           </div>
+
+          {/* Counter Animation - Hydrates after initial render */}
+          <CounterAnimation />
         </section>
       </StickyHeroWrapper>
 
@@ -529,7 +1506,15 @@ export default function ExpRealtySponsor() {
       {/* ================================================================== */}
       <Section1 />
 
-      {/* SECTION 2 — TBD: researching novel interactive patterns */}
+      {/* ================================================================== */}
+      {/* SECTION 2 — "Why SAA Is Different" (3 versions for review)       */}
+      {/* ================================================================== */}
+      <Section2 />
+
+      {/* ================================================================== */}
+      {/* SECTION 3 — "What You Get Inside SAA" (Animated Portal Showcase)  */}
+      {/* ================================================================== */}
+      <Section3 />
 
     </main>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
-import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
+import { GrainCard } from '@saa/shared/components/saa/cards';
 import { LazySection } from '@/components/shared/LazySection';
 import { AuroraNetworkEffect } from '@/components/shared/hero-effects/AuroraNetworkEffect';
 
@@ -117,29 +117,29 @@ export default function TraditionalBrokerageComparison() {
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
           <div className="grid md:grid-cols-4 gap-6 text-center">
-            <GenericCyberCardGold padding="md">
+            <GrainCard padding="md">
               <div className="text-h4 text-link mb-2">$85</div>
               <p className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>eXp Monthly Fee</p>
               <p className="text-caption mt-1">vs $500-$2,000+ traditional</p>
-            </GenericCyberCardGold>
+            </GrainCard>
 
-            <GenericCyberCardGold padding="md">
+            <GrainCard padding="md">
               <div className="text-h4 text-link mb-2">100%</div>
               <p className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>Commission After Cap</p>
               <p className="text-caption mt-1">vs 50-70% traditional</p>
-            </GenericCyberCardGold>
+            </GrainCard>
 
-            <GenericCyberCardGold padding="md">
+            <GrainCard padding="md">
               <div className="text-h4 text-link mb-2">$0</div>
               <p className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>Franchise Fees</p>
               <p className="text-caption mt-1">vs 6-8% traditional</p>
-            </GenericCyberCardGold>
+            </GrainCard>
 
-            <GenericCyberCardGold padding="md">
+            <GrainCard padding="md">
               <div className="text-h4 text-link mb-2">7</div>
               <p className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>Revenue Share Tiers</p>
               <p className="text-caption mt-1">vs 0 traditional</p>
-            </GenericCyberCardGold>
+            </GrainCard>
           </div>
         </div>
       </section>
@@ -298,7 +298,7 @@ export default function TraditionalBrokerageComparison() {
               Thousands of agents have made the switch. Join them.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="/join-exp-sponsor-team/">
+              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
                 Join The Alliance
               </CTAButton>
               <CTAButton href="/exp-realty-sponsor/">

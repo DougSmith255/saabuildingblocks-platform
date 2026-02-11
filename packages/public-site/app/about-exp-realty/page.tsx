@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { H1, H2, Tagline, GlassPanel, Icon3D, CyberCardGold, CTAButton, SecondaryButton, GenericCard } from '@saa/shared/components/saa';
-import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
+import { H1, H2, Tagline, GlassPanel, Icon3D, NeonCard, CTAButton, SecondaryButton, GenericCard } from '@saa/shared/components/saa';
+import { GrainCard } from '@saa/shared/components/saa/cards';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { LazyAuroraNetworkEffect } from '@/components/shared/hero-effects/LazyHeroEffects';
 import { Building2, Layers, Infinity, TrendingUp, Award, Cloud, Users, DollarSign, Receipt,
@@ -152,7 +152,7 @@ function AnimatedStat({
   const { displayValue, elementRef, hasAnimated } = useScrambleCounter(targetNumber, 2000);
 
   return (
-    <GenericCyberCardGold padding="md" centered>
+    <GrainCard padding="md" centered>
       <div className="flex items-center justify-center gap-3 mb-2">
         <p
           className="text-4xl lg:text-5xl font-bold tabular-nums"
@@ -172,7 +172,7 @@ function AnimatedStat({
       <p className="text-sm uppercase tracking-wider" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
         {label}
       </p>
-    </GenericCyberCardGold>
+    </GrainCard>
   );
 }
 
@@ -644,7 +644,7 @@ function IntroFlipCard() {
 
   // Card 01 - Red theme with Ban icon
   const card01 = (
-    <GenericCyberCardGold padding="md" centered className="h-full intro-card-red">
+    <GrainCard padding="md" centered className="h-full intro-card-red">
       {/* Ban Icon Badge */}
       <span
         className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
@@ -669,12 +669,12 @@ function IntroFlipCard() {
           {INTRO_CARDS[0].text}
         </p>
       </div>
-    </GenericCyberCardGold>
+    </GrainCard>
   );
 
   // Card 02 - Blue theme with eXp X logo
   const card02 = (
-    <CyberCardGold padding="md" centered className="h-full">
+    <NeonCard padding="md" centered className="h-full">
       {/* eXp X Logo Badge */}
       <span
         className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
@@ -699,7 +699,7 @@ function IntroFlipCard() {
           {INTRO_CARDS[1].text}
         </p>
       </div>
-    </CyberCardGold>
+    </NeonCard>
   );
 
   return (
@@ -753,7 +753,7 @@ function HowExpIsBuilt() {
           <div className="hidden sm:grid grid-cols-2 gap-5 max-w-[1400px] mx-auto mb-10">
             {/* Card 01 - CyberCard with Ban icon and red text */}
             <div className="relative h-full">
-              <GenericCyberCardGold padding="md" centered className="h-full flex flex-col intro-card-red">
+              <GrainCard padding="md" centered className="h-full flex flex-col intro-card-red">
                 {/* Ban Icon Badge */}
                 <span
                   className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
@@ -778,11 +778,11 @@ function HowExpIsBuilt() {
                     {INTRO_CARDS[0].text}
                   </p>
                 </div>
-              </GenericCyberCardGold>
+              </GrainCard>
             </div>
-            {/* Card 02 - CyberCardGold with eXp X logo and blue text */}
+            {/* Card 02 - NeonCard with eXp X logo and blue text */}
             <div className="relative h-full">
-              <CyberCardGold padding="md" centered className="h-full flex flex-col">
+              <NeonCard padding="md" centered className="h-full flex flex-col">
                 {/* eXp X Logo Badge */}
                 <span
                   className="absolute top-3 left-3 flex items-center justify-center w-7 h-7 rounded"
@@ -807,7 +807,7 @@ function HowExpIsBuilt() {
                     {INTRO_CARDS[1].text}
                   </p>
                 </div>
-              </CyberCardGold>
+              </NeonCard>
             </div>
           </div>
 
@@ -1212,12 +1212,12 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
 
   return (
     <>
-      {/* Style override to make GenericCyberCardGold's inner wrapper full-height flex */}
+      {/* Style override to make GrainCard's inner wrapper full-height flex */}
       <style>{`
         .detail-panel-card.generic-cyber-card-gold { display: flex; flex-direction: column; }
         .detail-panel-card.generic-cyber-card-gold > div { flex: 1; display: flex; flex-direction: column; justify-content: center; }
       `}</style>
-      <GenericCyberCardGold padding="md" centered={false} className="h-full detail-panel-card">
+      <GrainCard padding="md" centered={false} className="h-full detail-panel-card">
         <div className="relative overflow-visible">
         {/* Watermark icon — large faded background icon (matches WHAT EXP PROVIDES styling) */}
         <div
@@ -1263,7 +1263,7 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
           </span>
         </div>
       </div>
-    </GenericCyberCardGold>
+    </GrainCard>
     </>
   );
 }
@@ -3159,7 +3159,7 @@ function WhereSAAFitsSection() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <SecondaryButton href="/exp-realty-sponsor/">Learn About SAA</SecondaryButton>
-            <CTAButton href="/join-exp-sponsor-team/">Join the Alliance</CTAButton>
+            <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>Join the Alliance</CTAButton>
             <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
           </div>
         </div>
@@ -3747,7 +3747,7 @@ function WhereSAAFitsVersionA() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <SecondaryButton href="/exp-realty-sponsor/">Learn About SAA</SecondaryButton>
-          <CTAButton href="/join-exp-sponsor-team/">Join the Alliance</CTAButton>
+          <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>Join the Alliance</CTAButton>
           <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
         </div>
       </div>
@@ -3870,7 +3870,7 @@ export default function AboutExpRealty() {
           filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.8)) !important;
         }
 
-        /* Blue CyberCardGold — scoped to main content only (not slide panels) */
+        /* Blue NeonCard — scoped to main content only (not slide panels) */
         .about-exp-blue-theme #main-content .cyber-card-gold-frame {
           border-color: #00bfff;
           box-shadow:

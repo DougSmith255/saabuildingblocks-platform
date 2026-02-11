@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function GlassScrollbar() {
   const [isVisible, setIsVisible] = useState(false);
-  const [hideTimeout, setHideTimeout] = useState<NodeJS.Timeout | null>(null);
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     let scrollTimeout: NodeJS.Timeout;
@@ -15,16 +15,14 @@ export default function GlassScrollbar() {
       setIsVisible(true);
 
       // Clear existing timeout
-      if (hideTimeout) {
-        clearTimeout(hideTimeout);
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
       }
 
       // Set new timeout to hide after 2 seconds
-      const timeout = setTimeout(() => {
+      hideTimeoutRef.current = setTimeout(() => {
         setIsVisible(false);
       }, 2000);
-
-      setHideTimeout(timeout);
     };
 
     // Debounced scroll handler
@@ -52,15 +50,15 @@ export default function GlassScrollbar() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
-    // Cleanup
+    // Cleanup — runs only on unmount since deps are empty
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
-      if (hideTimeout) clearTimeout(hideTimeout);
+      if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
       clearTimeout(scrollTimeout);
       clearTimeout(mouseMoveTimeout);
     };
-  }, [hideTimeout]);
+  }, []);
 
   useEffect(() => {
     // Inject global styles for scrollbar

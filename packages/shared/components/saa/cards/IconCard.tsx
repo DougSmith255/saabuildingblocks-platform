@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export interface IconCyberCardProps {
+export interface IconCardProps {
   /** Card content */
   children: React.ReactNode;
   /** Icon component to display at the top */
@@ -70,7 +70,7 @@ const THEME_COLORS = {
 };
 
 /**
- * IconCyberCard - Cyberpunk card with animated icon ring
+ * IconCard - Card with animated icon ring
  *
  * Based on the "Four Priorities" card design. Features:
  * - Dark gradient background with themed border
@@ -80,25 +80,25 @@ const THEME_COLORS = {
  *
  * @example
  * ```tsx
- * <IconCyberCard icon={<Users className="w-6 h-6" />} theme="yellow">
+ * <IconCard icon={<Users className="w-6 h-6" />} theme="yellow">
  *   <p>Card content goes here</p>
- * </IconCyberCard>
+ * </IconCard>
  * ```
  */
-export function IconCyberCard({
+export function IconCard({
   children,
   icon,
   theme = 'yellow',
   className = '',
   hover = true,
   centered = true,
-}: IconCyberCardProps) {
+}: IconCardProps) {
   const colors = THEME_COLORS[theme];
   const centerClass = centered ? 'text-center' : '';
   const hoverClass = hover ? 'group' : '';
 
   // Unique animation name based on theme
-  const pulseKeyframes = `iconCyberCardPulse-${theme}`;
+  const pulseKeyframes = `iconCardPulse-${theme}`;
 
   return (
     <>
@@ -172,4 +172,4 @@ export function IconCyberCard({
   );
 }
 
-export default IconCyberCard;
+export default IconCard;

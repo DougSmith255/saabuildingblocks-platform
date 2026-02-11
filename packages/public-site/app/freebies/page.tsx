@@ -237,7 +237,7 @@ export default function Freebies() {
               These downloads are just a preview. Join the Alliance for the complete library.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="/join-exp-sponsor-team/">
+              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
                 Join The Alliance
               </CTAButton>
               <CTAButton href="/exp-realty-sponsor/">

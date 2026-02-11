@@ -27,12 +27,12 @@ export interface NeonGoldTextProps {
  * - Copy/paste gives real letters
  * - Font's ss01 stylistic set renders alternate glyphs visually
  *
- * Use inside CyberCardGold for premium headings:
+ * Use inside NeonCard for premium headings:
  * ```tsx
- * <CyberCardGold>
+ * <NeonCard>
  *   <NeonGoldText as="h2" className="text-h2">Premium Title</NeonGoldText>
  *   <p className="text-body">Regular body text</p>
- * </CyberCardGold>
+ * </NeonCard>
  * ```
  */
 export function NeonGoldText({

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { H2 } from '@saa/shared/components/saa';
-import { IconCyberCard } from '@saa/shared/components/saa/cards';
+import { IconCard } from '@saa/shared/components/saa/cards';
 import { TrendingUp, Cloud, Users, Percent, Award } from 'lucide-react';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
@@ -112,7 +112,7 @@ export function MediaLogos() {
           {/* Top Row - 3 cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             {/* Card 1: Profitable */}
-            <IconCyberCard
+            <IconCard
               icon={<TrendingUp className="w-6 h-6 md:w-7 md:h-7" />}
               theme="yellow"
               hover
@@ -120,10 +120,10 @@ export function MediaLogos() {
             >
               <h3 className="font-bold mb-2" style={{ color: '#ffd700', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Proven Profitability</h3>
               <p className="text-body opacity-90 text-sm">The only cumulatively profitable public real estate company.</p>
-            </IconCyberCard>
+            </IconCard>
 
             {/* Card 2: Cloud-Based */}
-            <IconCyberCard
+            <IconCard
               icon={<Cloud className="w-6 h-6 md:w-7 md:h-7" />}
               theme="yellow"
               hover
@@ -131,10 +131,10 @@ export function MediaLogos() {
             >
               <h3 className="font-bold mb-2" style={{ color: '#ffd700', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Cloud-First Pioneer</h3>
               <p className="text-body opacity-90 text-sm">S&P 600 SmallCap. First cloud-based brokerage.</p>
-            </IconCyberCard>
+            </IconCard>
 
             {/* Card 3: Sponsor Choice */}
-            <IconCyberCard
+            <IconCard
               icon={<Users className="w-6 h-6 md:w-7 md:h-7" />}
               theme="yellow"
               hover
@@ -142,13 +142,13 @@ export function MediaLogos() {
             >
               <h3 className="font-bold mb-2" style={{ color: '#ffd700', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Choose Your Sponsor</h3>
               <p className="text-body opacity-90 text-sm">Access real systems and support through the sponsor you choose.</p>
-            </IconCyberCard>
+            </IconCard>
           </div>
 
           {/* Bottom Row - 2 cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Card 4: Commission - Green */}
-            <IconCyberCard
+            <IconCard
               icon={<Percent className="w-6 h-6 md:w-7 md:h-7" />}
               theme="green"
               hover
@@ -156,10 +156,10 @@ export function MediaLogos() {
             >
               <h3 className="font-bold mb-2" style={{ color: '#00cc66', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Industry-Leading Splits</h3>
               <p className="text-body opacity-90 text-sm">80/20 split until cap → 100% commission. Flat monthly fee.</p>
-            </IconCyberCard>
+            </IconCard>
 
             {/* Card 5: RevShare - Purple */}
-            <IconCyberCard
+            <IconCard
               icon={<Award className="w-6 h-6 md:w-7 md:h-7" />}
               theme="purple"
               hover
@@ -167,7 +167,7 @@ export function MediaLogos() {
             >
               <h3 className="font-bold mb-2" style={{ color: '#9933ff', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Passive Income Potential</h3>
               <p className="text-body opacity-90 text-sm">Optional revenue share income + stock opportunities.</p>
-            </IconCyberCard>
+            </IconCard>
           </div>
         </div>
       </div>

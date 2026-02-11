@@ -929,7 +929,7 @@ function RevenueShareCalculatorContent() {
               Join Smart Agent Alliance and start building passive income that can outlast your career.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="/join-exp-sponsor-team/">
+              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
                 Join The Alliance
               </CTAButton>
               <CTAButton href="/about-exp-realty/">

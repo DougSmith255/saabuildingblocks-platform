@@ -137,20 +137,17 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
               <Link
                 href={item.href!}
                 onClick={handlePortalClick}
-                className={`nav-link agent-portal flex items-center px-2 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white whitespace-nowrap ${isPortalClicked ? 'clicked' : ''}`}
+                className={`nav-link agent-portal flex items-center px-2 py-3 rounded-md mx-[2px] bg-transparent text-white whitespace-nowrap ${isPortalClicked ? 'clicked' : ''}`}
                 style={{
                   fontSize: 'clamp(18px, 1.6vw, 25px)',
-                  fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
-                  fontWeight: '400',
+                  fontFamily: 'var(--font-family-menuMainItem)',
+                  fontWeight: '700',
                   letterSpacing: 'var(--letter-spacing-menuMainItem)',
                   lineHeight: 'var(--line-height-menuMainItem)',
                   color: 'var(--text-color-menuMainItem)',
-                  willChange: 'background-color, color',
                 }}
               >
-                <span className="agent-portal-styled">
-                  ag<span className="alt-glyph">e</span><span className="alt-glyph">n</span>t po<span className="alt-glyph">r</span>tal
-                </span>
+                Agent Portal
               </Link>
             ) : (
               <Link
@@ -174,7 +171,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
 
       {/* CTA Button (Desktop) - Right-aligned */}
       <div className="header-btn hidden xlg:flex items-center flex-shrink-0">
-        <SecondaryButton href="/join-exp-sponsor-team/">
+        <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('open-join-modal'))}>
           <span style={{ fontFeatureSettings: '"ss01" 1' }}>JOIN THE ALLIANCE</span>
         </SecondaryButton>
       </div>

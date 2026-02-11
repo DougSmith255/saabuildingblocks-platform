@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo, useRef, useState, useEffect } from 'react';
+import { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { createPortal } from 'react-dom';
 import Header from '@/components/shared/Header';
 import { DeferredFooter } from '@saa/shared/components/performance/DeferredContent';
 
@@ -30,6 +31,16 @@ const FloatingVideoButton = dynamic(
 // Dynamic import VIPGuestPassPopup - one-time VIP Guest Pass lead capture
 const VIPGuestPassPopup = dynamic(
   () => import('@/components/shared/VIPGuestPassPopup'),
+  { ssr: false }
+);
+
+// Dynamic import JoinModal + InstructionsModal - global "Join the Alliance" form
+const JoinModal = dynamic(
+  () => import('@saa/shared/components/saa/interactive/JoinModal').then(mod => ({ default: mod.JoinModal })),
+  { ssr: false }
+);
+const InstructionsModal = dynamic(
+  () => import('@saa/shared/components/saa/interactive/InstructionsModal').then(mod => ({ default: mod.InstructionsModal })),
   { ssr: false }
 );
 
@@ -138,6 +149,10 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const [isEmbedMode, setIsEmbedMode] = useState(false);
   // State for controlling VIP Guest Pass popup (triggered by debug button or custom event)
   const [forceVipOpen, setForceVipOpen] = useState(false);
+  // State for global "Join the Alliance" modal (triggered by custom event from any CTA button)
+  const [joinPanel, setJoinPanel] = useState<'join' | 'instructions' | null>(null);
+  const [joinUserName, setJoinUserName] = useState('');
+  const [joinPortalRoot, setJoinPortalRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     // Check URL for embed=true parameter (client-side only)
@@ -152,6 +167,28 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     const handleOpenVip = () => setForceVipOpen(true);
     window.addEventListener('open-vip-guest-pass', handleOpenVip);
     return () => window.removeEventListener('open-vip-guest-pass', handleOpenVip);
+  }, []);
+
+  // Listen for custom event to open Join the Alliance modal from any CTA button
+  useEffect(() => {
+    const handleOpenJoin = () => setJoinPanel('join');
+    window.addEventListener('open-join-modal', handleOpenJoin);
+    return () => window.removeEventListener('open-join-modal', handleOpenJoin);
+  }, []);
+
+  // Get portal mount point for join modal (after hydration)
+  useEffect(() => {
+    setJoinPortalRoot(document.body);
+  }, []);
+
+  // Join modal handlers (same pattern as VideoSection)
+  const handleJoinSuccess = useCallback((data: { firstName: string }) => {
+    setJoinUserName(data.firstName);
+    setJoinPanel('instructions');
+  }, []);
+
+  const handleJoinClose = useCallback(() => {
+    setJoinPanel(null);
   }, []);
 
   // Progressive scroll-based preloading: cache panel background assets
@@ -272,6 +309,37 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       {!shouldHideHeaderFooter && <Header />}
       {!shouldHideHeaderFooter && !shouldHideFloatingButton && <FloatingVideoButton />}
       {!shouldHideHeaderFooter && !shouldHideVipPopup && <VIPGuestPassPopup forceOpen={forceVipOpen} onForceClose={() => setForceVipOpen(false)} />}
+      {/* Global "Join the Alliance" modal — triggered via window.dispatchEvent(new Event('open-join-modal')) */}
+      {joinPortalRoot && joinPanel !== null && createPortal(
+        <>
+          {/* Shared backdrop */}
+          <div
+            className="fixed inset-0 z-[10019] bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            onClick={handleJoinClose}
+            aria-hidden="true"
+          />
+          <JoinModal
+            isOpen={joinPanel === 'join' || joinPanel === 'instructions'}
+            onClose={handleJoinClose}
+            onSuccess={handleJoinSuccess}
+            sponsorName={null}
+            hideBackdrop={true}
+            zIndexOffset={0}
+          />
+          <InstructionsModal
+            isOpen={joinPanel === 'instructions'}
+            onClose={handleJoinClose}
+            userName={joinUserName}
+            hideBackdrop={true}
+            zIndexOffset={1}
+            onNotYou={() => {
+              try { localStorage.removeItem('saa_join_submitted'); } catch {}
+              setJoinPanel('join');
+            }}
+          />
+        </>,
+        joinPortalRoot
+      )}
       {/*
         Using div instead of main to avoid nested <main> elements.
         Pages already have their own <main id="main-content"> for accessibility.

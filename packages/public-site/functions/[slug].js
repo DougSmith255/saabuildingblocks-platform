@@ -758,6 +758,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       z-index: 10;
       -webkit-appearance: none;
       appearance: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+    .cta-button:focus, .cta-button:active {
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .cta-button::before {
@@ -777,6 +783,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       position: relative;
       display: inline-block;
       padding: 8px 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .cta-light-bar {
@@ -1718,17 +1725,21 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     .why-only-card-stack {
       position: relative;
-      height: 253px;
+      height: 300px;
       width: 100%;
       perspective: 1200px;
       cursor: pointer;
+    }
+    .why-only-right-card {
+      height: auto !important;
+      min-height: 320px !important;
     }
     @media (min-width: 768px) {
       .why-only-card-stack {
         height: 313px;
       }
       .why-only-right-card {
-        height: 373px;
+        min-height: 373px !important;
       }
     }
     .why-only-card {
@@ -2860,7 +2871,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     @media (max-width: 595px) {
       .saa-pills .text-body {
-        font-size: calc(var(--font-size-body) - 5px);
+        font-size: max(13px, calc(var(--font-size-body) - 3px));
       }
       .saa-pills .icon-3d svg {
         width: 18px;
@@ -2869,7 +2880,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     @media (max-width: 400px) {
       .saa-pills .text-body {
-        font-size: calc(var(--font-size-body) - 7px);
+        font-size: max(12px, calc(var(--font-size-body) - 4px));
       }
       .saa-pills .icon-3d svg {
         width: 16px;
@@ -3586,17 +3597,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       .why-exp-grid {
         grid-template-columns: 1fr !important;
       }
-      /* Proven at Scale grid stacks on mobile */
-      .proven-scale-grid {
-        grid-template-columns: 1fr !important;
-      }
-      /* Center the button when stacked on mobile */
-      .proven-scale-grid > div:first-child {
-        text-align: center;
-      }
-      .proven-scale-grid .text-left {
-        text-align: center !important;
-      }
     }
 
     /* FAQ Styles */
@@ -3846,7 +3846,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <div class="why-saa-grid">
           <!-- Left Card - visible immediately -->
           <div class="expand-reveal-element" data-expand-id="saa-left" data-expand-dir="left" style="height: 100%;">
-            <div id="saa-left-frame" class="rounded-xl overflow-hidden" style="background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03); clip-path: inset(-1px -1px -1px -1px round 12px); height: 100%;">
+            <div id="saa-left-frame" class="rounded-xl overflow-hidden" style="background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03); height: 100%;">
               <div id="saa-left-content" style="padding: 2rem 2.5rem; opacity: 0;">
                 <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.875rem;">Elite systems. Proven training. Real community.</p>
                 <p class="text-body mt-3 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
@@ -3875,7 +3875,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </div>
           <!-- Right Card - Aligned Incentives - visible immediately -->
           <div class="expand-reveal-element" data-expand-id="saa-right" data-expand-dir="right" style="height: 100%; min-height: 300px;">
-            <div id="saa-right-frame" class="rounded-2xl overflow-hidden" style="position: relative; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); clip-path: inset(-1px -1px -1px -1px round 17px); height: 100%; min-height: 300px;">
+            <div id="saa-right-frame" class="rounded-2xl overflow-hidden" style="position: relative; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; background: rgba(255,255,255,0.05); height: 100%; min-height: 300px;">
               <!-- Image is always visible -->
               <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;">
               <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
@@ -3909,13 +3909,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </div>
 
           <div style="max-width: 1600px; margin: 0 auto; position: relative; z-index: 10;">
-            <div class="proven-scale-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: center;">
-              <!-- Left Content -->
+            <div style="max-width: 900px; margin: 0 auto;">
               <div>
                 <!-- H2 - always visible, no animation -->
-                <h2 class="text-h2 h2-3d text-left">Proven at Scale</h2>
+                <h2 class="text-h2 h2-3d" style="text-align: center;">Proven at Scale</h2>
 
-                <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+                <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
                   <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem;">
                     <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span>
                     <p class="text-body">One of the fastest-growing sponsor organizations at eXp Realty</p>
@@ -3930,25 +3929,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   </div>
                 </div>
 
-                <div class="scroll-reveal" style="transition-delay: 0.3s;">
+                <div class="scroll-reveal" style="transition-delay: 0.3s; text-align: center;">
                   <div class="cta-button-wrapper" style="display: inline-block;">
                     <div class="cta-light-bar cta-light-bar-top"></div>
                     <a href="#watch-and-decide" class="cta-button">Learn More About SAA</a>
                     <div class="cta-light-bar cta-light-bar-bottom"></div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Right - Counter Card -->
-              <div class="scroll-reveal" style="transition-delay: 0.2s;">
-                <div class="cyber-card-gold">
-                  <div class="cyber-card-gold-frame">
-                    <div class="cyber-card-gold-glass"></div>
-                    <div class="cyber-card-gold-content">
-                      <span class="icon-3d" style="margin: 0 auto 0.5rem; display: block; width: fit-content;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
-                      <p style="font-family: 'Amulya', var(--font-amulya), sans-serif; font-size: clamp(1.875rem, 4vw, 2.5rem); font-weight: 700; color: #bfbdb0; text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; text-align: center; margin: 0;">3700+</p>
-                      <p class="text-body" style="text-align: center; margin-top: 0.25rem;">Agents in Sponsor Network</p>
-                    </div>
                   </div>
                 </div>
               </div>

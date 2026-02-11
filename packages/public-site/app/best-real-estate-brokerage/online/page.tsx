@@ -300,7 +300,7 @@ export default function OnlineBrokerageComparison() {
               <CTAButton href="/about-exp-realty/">
                 More About eXp
               </CTAButton>
-              <CTAButton href="/join-exp-sponsor-team/">
+              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
                 Join The Alliance
               </CTAButton>
             </div>
@@ -354,7 +354,7 @@ export default function OnlineBrokerageComparison() {
               Stop leaving money on the table. Join the Alliance at eXp.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="/join-exp-sponsor-team/">
+              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
                 Join The Alliance
               </CTAButton>
               <CTAButton href="/exp-realty-sponsor/">

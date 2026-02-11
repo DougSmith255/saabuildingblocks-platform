@@ -1,7 +1,7 @@
 'use client';
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
-import { GenericCyberCardGold } from '@saa/shared/components/saa/cards';
+import { GrainCard } from '@saa/shared/components/saa/cards';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { AuroraNetworkEffect } from '@/components/shared/hero-effects/AuroraNetworkEffect';
@@ -78,10 +78,10 @@ export default function Locations() {
         <div className="max-w-[1900px] mx-auto">
           <div className="grid md:grid-cols-3 gap-6 text-center items-stretch">
             {stats.map((stat, index) => (
-              <GenericCyberCardGold key={index} padding="lg" className="h-full">
+              <GrainCard key={index} padding="lg" className="h-full">
                 <p className="text-h2 mb-2 stat-3d-text">{stat.value}</p>
                 <p className="text-body">{stat.label}</p>
-              </GenericCyberCardGold>
+              </GrainCard>
             ))}
           </div>
         </div>
@@ -188,7 +188,7 @@ export default function Locations() {
               Join the fastest-growing cloud brokerage and build without borders.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="/join-exp-sponsor-team/">
+              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
                 Join The Alliance
               </CTAButton>
               <CTAButton href="/about-exp-realty/">

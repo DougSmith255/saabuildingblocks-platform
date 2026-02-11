@@ -74,7 +74,7 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
                     ${imageLoaded ? 'opacity-100' : 'opacity-0'}
                   `}
                   style={{
-                    transition: 'opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease-out',
+                    transition: 'opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), scale 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease-out',
                   }}
                   loading="lazy"
                   onLoad={handleImageLoad}

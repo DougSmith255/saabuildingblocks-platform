@@ -58,7 +58,8 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
                 alt={post.featuredImage.alt || post.title}
                 fill
                 sizes={featured ? '(max-width: 768px) 100vw, 66vw' : '(max-width: 768px) 100vw, 33vw'}
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                className="object-cover group-hover:scale-105 duration-300"
+                style={{ transition: 'transform 0.3s, scale 0.3s' }}
                 loading="lazy"
                 quality={85}
               />
