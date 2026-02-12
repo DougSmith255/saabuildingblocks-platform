@@ -2385,27 +2385,7 @@ function SupportInfrastructureSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative px-4 sm:px-8 md:px-12 overflow-hidden">
-      {/* Top gradient edge - extends 5px up over previous section */}
-      <div
-        className="absolute left-0 right-0 pointer-events-none"
-        style={{
-          top: '-5px',
-          height: '25px',
-          background: 'linear-gradient(to bottom, #070707 0%, transparent 100%)',
-          zIndex: 2,
-        }}
-      />
-      {/* Bottom gradient edge - extends 5px down behind next section's glass */}
-      <div
-        className="absolute left-0 right-0 pointer-events-none"
-        style={{
-          bottom: '-5px',
-          height: '25px',
-          background: 'linear-gradient(to top, #070707 0%, transparent 100%)',
-          zIndex: 0,
-        }}
-      />
+    <section ref={sectionRef} className="relative px-4 sm:px-8 md:px-12 overflow-hidden" style={{ margin: '-50px 0', padding: '50px 0' }}>
 
       {/* HolographicGlobe background */}
       <div
