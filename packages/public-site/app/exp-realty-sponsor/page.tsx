@@ -211,7 +211,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
   {
     id: 'support',
     heading: 'Help Is One Click Away',
-    description: 'Every support channel organized in one spot.',
+    description: 'Broker rooms, leadership contacts, and team support \u2014 all one click away.',
     bullets: [
       'eXp Expert Care \u2014 eXp World room link plus direct phone and email',
       'Broker support \u2014 direct link to your state\u2019s broker room in eXp World for contracts, compliance, and transactions',
@@ -330,7 +330,7 @@ function Section1() {
     : { minWidth: '550px' };
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24">
+    <section ref={sectionRef} className="py-[50px]">
       <style>{`
         @keyframes focusPulse {
           0% { opacity: 0.55; }
@@ -718,7 +718,7 @@ function Section2() {
   };
 
   return (
-    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12 py-16 md:py-24">
+    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12 py-[50px]">
       <style>{`
         @keyframes section2FadeIn {
           from { opacity: 0; transform: translateY(8px); }
@@ -1055,7 +1055,7 @@ function Section3() {
   const currentDuration = FEATURE_GROUPS[activeGroup]?.duration || 30;
 
   return (
-    <section className="relative py-16 md:py-24" style={{ overflowAnchor: 'none' }}>
+    <section className="relative py-[50px]" style={{ overflowAnchor: 'none' }}>
       <style>{`
         @keyframes portalFadeIn {
           from { opacity: 0; transform: translateY(8px); }
@@ -1225,6 +1225,89 @@ function Section3() {
       <div className="text-center max-w-[800px] mx-auto pt-4 md:pt-6 pb-6 md:pb-8 px-4">
         <H2>
           What You Get Inside Smart Agent Alliance
+        </H2>
+      </div>
+
+      {/* Value overview — benefit-framed summary above the portal demo */}
+      <div className="max-w-[1000px] mx-auto px-4 sm:px-8 md:px-12 pb-8 md:pb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+          {[
+            {
+              icon: Rocket,
+              title: 'Guided Launch',
+              text: 'Structured onboarding, strategy sessions, and step-by-step setup so you\u2019re producing from day one \u2014 not guessing.',
+              color: '#ffd700',
+            },
+            {
+              icon: BarChart3,
+              title: 'Marketing & Lead Systems',
+              text: 'A branded link page, lead capture pages, Canva templates, and analytics \u2014 integrated tools that drive visibility and track results.',
+              color: '#00bfff',
+            },
+            {
+              icon: GraduationCap,
+              title: 'Training & Development',
+              text: 'Five premium courses, weekly mastermind calls, and new agent resources \u2014 real training led by agents who are actively producing.',
+              color: '#ffd700',
+            },
+            {
+              icon: TrendingUp,
+              title: 'Growth & Attraction',
+              text: 'A passive attraction funnel built into your brand presence \u2014 expand beyond production if and when you choose.',
+              color: '#00bfff',
+            },
+            {
+              icon: LifeBuoy,
+              title: 'Ongoing Support',
+              text: 'Broker rooms, leadership contacts, and team support channels \u2014 centralized so you always know where to go.',
+              color: '#ffd700',
+            },
+          ].map((item, i) => (
+            <div
+              key={i}
+              className="relative overflow-hidden rounded-xl p-5"
+              style={{
+                background: 'rgba(12,12,12,0.7)',
+                border: `1px solid ${item.color === '#ffd700' ? 'rgba(255,215,0,0.1)' : 'rgba(0,191,255,0.1)'}`,
+              }}
+            >
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(${item.color === '#ffd700' ? 'rgba(255,215,0,0.01)' : 'rgba(0,191,255,0.01)'} 1px, transparent 1px),
+                    linear-gradient(90deg, ${item.color === '#ffd700' ? 'rgba(255,215,0,0.01)' : 'rgba(0,191,255,0.01)'} 1px, transparent 1px)
+                  `,
+                  backgroundSize: '20px 20px',
+                }}
+              />
+              <div className="relative z-10">
+                <div className="flex items-center gap-2.5 mb-2.5">
+                  <item.icon size={18} style={{ color: item.color, flexShrink: 0 }} />
+                  <h3
+                    className="text-display"
+                    style={{
+                      fontSize: 'clamp(14px, 1.6vw, 16px)',
+                      fontWeight: 600,
+                      color: '#e5e4dd',
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                </div>
+                <p className="text-body" style={{ fontSize: 'clamp(13px, 1.4vw, 14px)', color: '#a8a7a0', lineHeight: 1.55 }}>
+                  {item.text}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Portal walkthrough label */}
+      <div className="text-center max-w-[800px] mx-auto pb-4 md:pb-6 px-4">
+        <H2 style={{ fontSize: 'clamp(18px, 2.2vw, 22px)' }}>
+          Agent Portal Walkthrough
         </H2>
       </div>
 
@@ -1549,7 +1632,7 @@ const DUAL_ADVANTAGE_BULLETS = [
 
 function Section4() {
   return (
-    <section className="relative py-16 md:py-24">
+    <section className="relative py-[50px]">
       <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12">
         <div className="text-center mb-8 md:mb-10">
           <H2 style={{ marginBottom: '0.75rem' }}>Your Dual Advantage</H2>
@@ -1612,7 +1695,7 @@ const BOTTOM_LINE_BULLETS = [
 
 function Section6() {
   return (
-    <section className="relative py-16 md:py-24">
+    <section className="relative py-[50px]">
       <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12 text-center">
         <H2 style={{ marginBottom: '1.25rem' }}>The Bottom Line</H2>
 
@@ -1678,7 +1761,7 @@ function IconRing({ icon: Icon, color }: { icon: LucideIcon; color: string }) {
 
 function Section4Final() {
   return (
-    <section className="relative py-16 md:py-24">
+    <section className="relative py-[50px]">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12">
         <div className="text-center mb-8 md:mb-10">
           <H2>Your Dual Advantage</H2>
@@ -1772,7 +1855,7 @@ function Section4Final() {
 
 function Section6Final() {
   return (
-    <section className="relative py-16 md:py-24">
+    <section className="relative py-[50px]">
       <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12">
         <H2 style={{ marginBottom: '1.25rem', textAlign: 'center' }}>The Bottom Line</H2>
 

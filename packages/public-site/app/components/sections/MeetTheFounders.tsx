@@ -38,7 +38,7 @@ export function MeetTheFounders() {
           }
         }
       `}</style>
-      <section ref={ref} className="py-16 md:py-24 px-6 relative">
+      <section ref={ref} className="py-[50px] px-6 relative">
         <div className="mx-auto relative z-10" style={{ maxWidth: '1500px' }}>
         {/* H2 - always visible, no animation */}
         <div className="text-center mb-12">

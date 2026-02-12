@@ -738,7 +738,7 @@ function IntroFlipCard() {
 function HowExpIsBuilt() {
   return (
     <GlassPanel variant="champagne">
-      <section className="py-12 md:py-20">
+      <section className="py-[50px]">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="text-center mb-10">
             <H2>How eXp is Built for Agents</H2>
@@ -1444,7 +1444,7 @@ function SpotlightConsole() {
   }, []);
 
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
+    <section className="py-[50px] px-4 sm:px-8 md:px-12">
       <div className="max-w-[1400px] mx-auto">
         {/* H2 */}
         <div className="text-center mb-8">
@@ -1912,7 +1912,7 @@ function IncomeOwnershipSection() {
   return (
     <div style={{ marginBottom: '-3px', position: 'relative', zIndex: 2 }}>
     <GlassPanel variant="expBlueCrosshatch" noBlur>
-      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
+      <section className="py-[50px] px-4 sm:px-8 md:px-12">
         <div className="max-w-[1400px] mx-auto">
 
           {/* A. H2 Heading */}
@@ -2385,7 +2385,7 @@ function SupportInfrastructureSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12 overflow-hidden">
+    <section ref={sectionRef} className="relative py-[50px] px-4 sm:px-8 md:px-12 overflow-hidden">
       {/* Top gradient edge - extends 5px up over previous section */}
       <div
         className="absolute left-0 right-0 pointer-events-none"
@@ -2551,7 +2551,7 @@ function WhatExpProvidesSection() {
   return (
     <div style={{ marginTop: '-3px', position: 'relative', zIndex: 1 }}>
     <GlassPanel variant="tealCrosshatch" noBlur>
-    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
+    <section className="py-[50px] px-4 sm:px-8 md:px-12">
       <div ref={containerRef} className="max-w-[1400px] mx-auto">
         {/* H2 Heading */}
         <div className="text-center mb-10">
@@ -2740,7 +2740,7 @@ function WhatExpProvidesSection() {
 
 function AdditionalAreasDivider() {
   return (
-    <div className="py-16 md:py-20 px-4 sm:px-8 md:px-12 relative overflow-hidden">
+    <div className="py-[50px] px-4 sm:px-8 md:px-12 relative overflow-hidden">
       {/* Subtle background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -2827,7 +2827,7 @@ function AdditionalAreasDivider() {
 
 function DivisionsSolutionsSection() {
   return (
-    <section className="py-12 md:py-20 px-4 sm:px-8 md:px-12">
+    <section className="py-[50px] px-4 sm:px-8 md:px-12">
       <div className="max-w-[1200px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Divisions Card */}
@@ -2976,7 +2976,7 @@ function DivisionsSolutionsSection() {
 function WhoExpWorksBestForSection() {
   return (
     <GlassPanel variant="champagne">
-      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden">
+      <section className="py-[50px] px-4 sm:px-8 md:px-12 relative overflow-hidden">
         <div className="max-w-[1200px] mx-auto relative">
           {/* H2 Heading */}
           <div className="text-center mb-12">
@@ -3085,7 +3085,7 @@ function WhoExpWorksBestForSection() {
 function WhereSAAFitsSection() {
   return (
     <GlassPanel variant="champagne">
-      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden">
+      <section className="py-[50px] px-4 sm:px-8 md:px-12 relative overflow-hidden">
         {/* Decorative gold accent lines */}
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-[2px]"
@@ -3283,7 +3283,7 @@ function WhatExpProvidesVersionB() {
           backgroundSize: '16px 16px',
         }}
       />
-      <section ref={providesSectionRef} className="relative z-10 py-16 md:py-24 px-4 sm:px-8 md:px-12">
+      <section ref={providesSectionRef} className="relative z-10 py-[50px] px-4 sm:px-8 md:px-12">
         <div className="max-w-[1400px] mx-auto">
           {/* Mobile: stacked panels — single div per card for smooth transitions */}
           <div className="lg:hidden space-y-4">
@@ -3531,7 +3531,7 @@ function WhatExpProvidesVersionB() {
 
 function AdditionalAreasSection() {
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12">
+    <section className="py-[50px] px-4 sm:px-8 md:px-12">
       <div className="max-w-[1200px] mx-auto">
         {/* H2 Heading */}
         <div className="text-center mb-10">
@@ -3623,7 +3623,7 @@ function WhereSAAFitsVersionA() {
   ];
 
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-8 md:px-12 relative overflow-hidden">
+    <section className="py-[50px] px-4 sm:px-8 md:px-12 relative overflow-hidden">
       <div className="max-w-[1500px] mx-auto">
         {/* H2 Heading */}
         <div className="text-center mb-12">
