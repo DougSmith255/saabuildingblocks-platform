@@ -1444,7 +1444,7 @@ function SpotlightConsole() {
   }, []);
 
   return (
-    <section className="py-[50px] px-4 sm:px-8 md:px-12">
+    <section className="px-4 sm:px-8 md:px-12">
       <div className="max-w-[1400px] mx-auto">
         {/* H2 */}
         <div className="text-center mb-8">
@@ -2385,7 +2385,7 @@ function SupportInfrastructureSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative py-[50px] px-4 sm:px-8 md:px-12 overflow-hidden">
+    <section ref={sectionRef} className="relative px-4 sm:px-8 md:px-12 overflow-hidden">
       {/* Top gradient edge - extends 5px up over previous section */}
       <div
         className="absolute left-0 right-0 pointer-events-none"
@@ -3531,7 +3531,7 @@ function WhatExpProvidesVersionB() {
 
 function AdditionalAreasSection() {
   return (
-    <section className="py-[50px] px-4 sm:px-8 md:px-12">
+    <section className="px-4 sm:px-8 md:px-12">
       <div className="max-w-[1200px] mx-auto">
         {/* H2 Heading */}
         <div className="text-center mb-10">
@@ -3623,7 +3623,7 @@ function WhereSAAFitsVersionA() {
   ];
 
   return (
-    <section className="py-[50px] px-4 sm:px-8 md:px-12 relative overflow-hidden">
+    <section className="px-4 sm:px-8 md:px-12 relative overflow-hidden">
       <div className="max-w-[1500px] mx-auto">
         {/* H2 Heading */}
         <div className="text-center mb-12">
@@ -3963,29 +3963,17 @@ export default function AboutExpRealty() {
         </section>
       </StickyHeroWrapper>
 
-      {/* ════ How eXp is Built ════ */}
-      <HowExpIsBuilt />
-
-      {/* ════ Section 1: Why Agents Look Closely at eXp ════ */}
-      <SpotlightConsole />
-
-      {/* ════ Section 2: Income & Ownership ════ */}
-      <IncomeOwnershipSection />
-
-      {/* ════ Section 2: Support Infrastructure ════ */}
-      <SupportInfrastructureSection />
-
-      {/* ════ Sections 3-5: What eXp Provides (Chosen: Horizontal Accordion) ════ */}
-      <WhatExpProvidesVersionB />
-
-      {/* ════ Additional Areas Section (Divisions & Solutions) ════ */}
-      <AdditionalAreasSection />
-
-      {/* ════ Section 9: Who eXp Works Best For ════ */}
-      <WhoExpWorksBestForSection />
-
-      {/* ════ Section 10: Where Smart Agent Alliance Fits (Chosen: Timeline Journey) ════ */}
-      <WhereSAAFitsVersionA />
+      {/* Sections wrapper — consistent 150px gap between all sections */}
+      <div className="flex flex-col" style={{ gap: '150px' }}>
+        <HowExpIsBuilt />
+        <SpotlightConsole />
+        <IncomeOwnershipSection />
+        <SupportInfrastructureSection />
+        <WhatExpProvidesVersionB />
+        <AdditionalAreasSection />
+        <WhoExpWorksBestForSection />
+        <WhereSAAFitsVersionA />
+      </div>
 
       {/* Blue H1 glow — must render AFTER H1 component so this keyframe wins */}
       <style>{`
