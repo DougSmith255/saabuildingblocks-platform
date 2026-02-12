@@ -1324,7 +1324,7 @@ function Section3() {
       </div>
 
       {/* Portal showcase frame */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12">
+      <div className="max-w-[1300px] mx-auto px-4 sm:px-8 md:px-12">
         <div
           className="relative overflow-hidden rounded-2xl"
           style={{
@@ -1869,7 +1869,7 @@ function Section4Final() {
 function Section6Final() {
   return (
     <section className="relative">
-      <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12">
         <H2 style={{ marginBottom: '1.25rem', textAlign: 'center' }}>The Bottom Line</H2>
 
         {/* Content panel with gold grid */}
