@@ -116,7 +116,7 @@ jobs:
 
       # Cache node_modules for faster installs
       - name: Cache node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             node_modules
@@ -133,7 +133,7 @@ jobs:
 
       # Cache shared package build
       - name: Cache shared package build
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: packages/shared/dist
           key: shared-build-${{ hashFiles('packages/shared/**/*.ts', 'packages/shared/**/*.tsx') }}
@@ -150,7 +150,7 @@ jobs:
 
       # Cache Next.js build for faster rebuilds
       - name: Cache Next.js build
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             packages/public-site/.next/cache
