@@ -6144,6 +6144,63 @@ function DashboardView({
 
   const maxClicks = allButtons.length > 0 ? Math.max(...allButtons.map(b => b.clicks_this_week), 1) : 1;
 
+  // ── Analytics Animations ──
+  const statsContainerRef = useRef<HTMLDivElement>(null);
+  const [statsVisible, setStatsVisible] = useState(false);
+  const [barsAnimated, setBarsAnimated] = useState(false);
+
+  // IntersectionObserver: trigger animations when stats scroll into view
+  useEffect(() => {
+    const el = statsContainerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStatsVisible(true);
+          // Slight delay for bars so numbers start first
+          setTimeout(() => setBarsAnimated(true), 300);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [stats]);
+
+  // Animated number counter — counts from 0 to target over duration
+  const AnimatedNumber = useCallback(({ value, duration = 1200, format }: { value: number; duration?: number; format?: boolean }) => {
+    const ref = useRef<HTMLSpanElement>(null);
+    const prevValue = useRef(0);
+
+    useEffect(() => {
+      if (!statsVisible || !ref.current) return;
+      const start = prevValue.current;
+      const end = value;
+      if (start === end) return;
+      const startTime = performance.now();
+
+      const animate = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(start + (end - start) * eased);
+        if (ref.current) {
+          ref.current.textContent = format ? current.toLocaleString() : String(current);
+        }
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          prevValue.current = end;
+        }
+      };
+      requestAnimationFrame(animate);
+    }, [value, statsVisible, duration, format]);
+
+    return <span ref={ref}>{statsVisible ? '0' : (format ? value.toLocaleString() : String(value))}</span>;
+  }, [statsVisible]);
+
   return (
     <div className="space-y-4 px-1 sm:px-2">
       {/* Onboarding Card - Prominent 3D metal plate (only when not complete) */}
@@ -6269,7 +6326,7 @@ function DashboardView({
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div ref={statsContainerRef} className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {/* Link Page Stats */}
             <div
               className="p-5 rounded-2xl relative overflow-hidden"
@@ -6286,14 +6343,14 @@ function DashboardView({
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.links.views_this_week}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]"><AnimatedNumber value={stats.links.views_this_week} /></p>
                   <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">viewers this month</p>
-                  <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.links.views_all_time.toLocaleString()} all time</p>
+                  <p className="text-xs text-[#e5e4dd]/30 font-amulya"><AnimatedNumber value={stats.links.views_all_time} format /> all time</p>
                 </div>
                 <div>
-                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.links.clicks_this_week}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]"><AnimatedNumber value={stats.links.clicks_this_week} /></p>
                   <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">button clicks this month</p>
-                  <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.links.clicks_all_time.toLocaleString()} all time</p>
+                  <p className="text-xs text-[#e5e4dd]/30 font-amulya"><AnimatedNumber value={stats.links.clicks_all_time} format /> all time</p>
                 </div>
               </div>
             </div>
@@ -6314,14 +6371,14 @@ function DashboardView({
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.attraction.views_this_week}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]"><AnimatedNumber value={stats.attraction.views_this_week} /></p>
                   <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">viewers this month</p>
-                  <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.attraction.views_all_time.toLocaleString()} all time</p>
+                  <p className="text-xs text-[#e5e4dd]/30 font-amulya"><AnimatedNumber value={stats.attraction.views_all_time} format /> all time</p>
                 </div>
                 <div>
-                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]">{stats.attraction.clicks_this_week}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-[#e5e4dd]"><AnimatedNumber value={stats.attraction.clicks_this_week} /></p>
                   <p className="text-xs text-[#e5e4dd]/50 font-amulya mt-0.5">join clicks this month</p>
-                  <p className="text-xs text-[#e5e4dd]/30 font-amulya">{stats.attraction.clicks_all_time.toLocaleString()} all time</p>
+                  <p className="text-xs text-[#e5e4dd]/30 font-amulya"><AnimatedNumber value={stats.attraction.clicks_all_time} format /> all time</p>
                 </div>
               </div>
             </div>
@@ -6352,18 +6409,20 @@ function DashboardView({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm text-[#e5e4dd]/80 font-amulya truncate pr-2">{btn.label}</span>
-                        <span className="text-sm font-semibold text-[#e5e4dd] tabular-nums shrink-0">{btn.clicks_this_week}</span>
+                        <span className="text-sm font-semibold text-[#e5e4dd] tabular-nums shrink-0"><AnimatedNumber value={btn.clicks_this_week} duration={1400} /></span>
                       </div>
                       <div className="rounded-full overflow-hidden" style={{ height: '6px', background: 'rgba(255,255,255,0.06)' }}>
                         <div
-                          className="transition-all duration-700 ease-out"
                           style={{
                             height: '6px',
-                            width: `${Math.max((btn.clicks_this_week / maxClicks) * 100, btn.clicks_this_week > 0 ? 4 : 0)}%`,
+                            width: barsAnimated
+                              ? `${Math.max((btn.clicks_this_week / maxClicks) * 100, btn.clicks_this_week > 0 ? 4 : 0)}%`
+                              : '0%',
                             borderRadius: '9999px',
                             background: btn.source === 'links' && btn.button_id !== 'learn-about'
                               ? 'linear-gradient(90deg, #00ff88, #00cc6a)'
                               : 'linear-gradient(90deg, #a855f7, #7c3aed)',
+                            transition: 'width 1.2s cubic-bezier(0.22, 1, 0.36, 1)',
                           }}
                         />
                       </div>
