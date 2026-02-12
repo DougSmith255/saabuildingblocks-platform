@@ -1224,9 +1224,9 @@ function Section3() {
       {/* Section heading */}
       <div className="text-center max-w-[1400px] mx-auto px-4">
         <H2>
-          What You Get Inside Smart Agent Alliance
+          What You Get Inside SAA
         </H2>
-        <p className="text-body" style={{ marginTop: '-1.5rem', marginBottom: '2rem' }}>
+        <p className="text-body max-w-[950px] mx-auto" style={{ marginTop: '-1.5rem', marginBottom: '2rem' }}>
           As an SAA agent, you&apos;re also part of the Wolf Pack &mdash; our team within eXp Realty. Your Agent Portal brings everything together in one place.
         </p>
       </div>
@@ -1318,7 +1318,7 @@ function Section3() {
         <H2 style={{ fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', marginBottom: '0.5rem' }}>
           Agent Portal Walkthrough
         </H2>
-        <p className="text-body">
+        <p className="text-body max-w-[950px] mx-auto">
           The Agent Portal is your central hub for everything SAA and Wolf Pack &mdash; onboarding, marketing tools, training, templates, and team support, all in one place.
         </p>
       </div>
@@ -1606,6 +1606,7 @@ function Section3() {
                       <li
                         key={bIdx}
                         className="flex gap-2.5 text-body"
+                        style={{ fontSize: 'clamp(16px, calc(15.09px + 0.36vw), 21px)' }}
                       >
                         <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
                         <span>{bullet}</span>
