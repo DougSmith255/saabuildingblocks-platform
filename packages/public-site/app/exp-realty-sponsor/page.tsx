@@ -2,13 +2,13 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { H1, H2, Tagline, CTAButton, GlassPanel, GenericCard, NeonCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GlassPanel, GenericCard } from '@saa/shared/components/saa';
 import { MeetTheFounders } from '@/app/components/sections/MeetTheFounders';
 import { GrainCard } from '@saa/shared/components/saa/cards';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
 import { AgentCounter, TaglineCounterSuffix } from '@/app/components/AgentCounter';
-import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers, Rocket, BarChart3, Link2, LifeBuoy, TrendingUp, UserCircle, Video, Megaphone, UserPlus, Download, Handshake, Sparkles, CheckCircle2, ArrowRight, type LucideIcon } from 'lucide-react';
+import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers, Rocket, BarChart3, Link2, LifeBuoy, TrendingUp, UserCircle, Video, Megaphone, UserPlus, Download, Handshake, Sparkles, ArrowRight, type LucideIcon } from 'lucide-react';
 
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
@@ -150,16 +150,16 @@ interface FeatureGroup {
 // Sidebar items mirror the real agent portal navigation
 const SIDEBAR_ITEMS: PortalMenuItem[] = [
   { icon: Rocket, label: 'Onboarding', groupIndex: 0 },
+  { icon: Download, label: 'Download App', groupIndex: 0 },
   { icon: TrendingUp, label: 'Analytics', groupIndex: 1 },
   { icon: Link2, label: 'Link Page', groupIndex: 1 },
   { icon: UserCircle, label: 'Agent Attraction', groupIndex: 1 },
   { icon: Video, label: 'Team Calls', groupIndex: 2 },
   { icon: LifeBuoy, label: 'Get Support', groupIndex: 3 },
   { icon: Megaphone, label: 'Templates', groupIndex: 4 },
-  { icon: GraduationCap, label: 'Elite Courses', groupIndex: 5 },
   { icon: Users, label: 'Landing Pages', groupIndex: 4 },
   { icon: UserPlus, label: 'New Agents', groupIndex: 4 },
-  { icon: Download, label: 'Download App', groupIndex: 0 },
+  { icon: GraduationCap, label: 'Elite Courses', groupIndex: 5 },
 ];
 
 const STREAM_BASE = 'https://customer-2twfsluc6inah5at.cloudflarestream.com';
@@ -1673,28 +1673,6 @@ function IconRing({ icon: Icon, color }: { icon: LucideIcon; color: string }) {
 }
 
 // ============================================================================
-// VERSION WRAPPER — dashed yellow border + label badge for review
-// ============================================================================
-
-function VersionWrapper({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="relative border-4 border-dashed border-yellow-500/60 my-8">
-      <span
-        className="absolute -top-4 left-4 px-3 py-1 text-sm font-bold z-20"
-        style={{
-          background: '#eab308',
-          color: '#000',
-          borderRadius: '4px',
-        }}
-      >
-        {label}
-      </span>
-      {children}
-    </div>
-  );
-}
-
-// ============================================================================
 // SECTION 4 — "Your Dual Advantage" — Two-Column Cards with + divider
 // ============================================================================
 
@@ -1716,7 +1694,12 @@ function Section4Final() {
 
         {/* Two cards with + symbol between them — equal height via items-stretch */}
         <div className="flex flex-col md:flex-row md:items-stretch items-center gap-4 md:gap-6 mb-8">
-          <div className="flex-1 w-full" style={{ border: '1px solid rgba(255,215,0,0.25)', borderRadius: '12px' }}>
+          <div
+            className="flex-1 w-full"
+            style={{ border: '1px solid rgba(255,215,0,0.25)', borderRadius: '12px', transition: 'all 0.4s ease-out', cursor: 'pointer' }}
+            onMouseEnter={e => { e.currentTarget.style.border = '1px solid rgba(255,215,0,0.5)'; e.currentTarget.style.boxShadow = '0 0 16px rgba(255,215,0,0.15)'; }}
+            onMouseLeave={e => { e.currentTarget.style.border = '1px solid rgba(255,215,0,0.25)'; e.currentTarget.style.boxShadow = 'none'; }}
+          >
             <GrainCard padding="lg" className="h-full">
               <IconRing icon={Shield} color="#ffd700" />
               <p className="text-body text-center">
@@ -1740,7 +1723,12 @@ function Section4Final() {
             +
           </span>
 
-          <div className="flex-1 w-full" style={{ border: '1px solid rgba(0,191,255,0.25)', borderRadius: '12px' }}>
+          <div
+            className="flex-1 w-full"
+            style={{ border: '1px solid rgba(0,191,255,0.25)', borderRadius: '12px', transition: 'all 0.4s ease-out', cursor: 'pointer' }}
+            onMouseEnter={e => { e.currentTarget.style.border = '1px solid rgba(0,191,255,0.5)'; e.currentTarget.style.boxShadow = '0 0 16px rgba(0,191,255,0.15)'; }}
+            onMouseLeave={e => { e.currentTarget.style.border = '1px solid rgba(0,191,255,0.25)'; e.currentTarget.style.boxShadow = 'none'; }}
+          >
             <GrainCard padding="lg" className="h-full">
               <IconRing icon={Users} color="#00bfff" />
               <p className="text-body text-center">
@@ -1779,119 +1767,13 @@ function Section4Final() {
 }
 
 // ============================================================================
-// SECTION 6A — Emerald GlassPanel CTA
+// SECTION 6 — "The Bottom Line" — Gold Grid Prose + CTA
 // ============================================================================
 
-function Section6A() {
-  return (
-    <GlassPanel variant="emerald" noBlur>
-      <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12 py-16 md:py-24">
-        <GenericCard padding="lg" centered style={{ border: '1px solid rgba(16,185,129,0.2)' }}>
-          <H2 style={{ marginBottom: '1.25rem' }}>The Bottom Line</H2>
-
-          <p className="text-body mb-6" style={{ color: '#dcdbd5' }}>
-            Choosing an eXp sponsor isn&apos;t about logos or promises. It&apos;s about what actually shows up after onboarding.
-          </p>
-
-          <ul className="space-y-2.5 mb-6 text-left max-w-[600px] mx-auto" style={{ listStyle: 'none', padding: 0, margin: '0 auto 1.5rem' }}>
-            {BOTTOM_LINE_BULLETS.map((bullet, i) => (
-              <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
-                <span
-                  className="mt-[6px] flex-shrink-0 w-2 h-2 rounded-full"
-                  style={{ background: '#10b981', boxShadow: '0 0 6px rgba(16,185,129,0.4)' }}
-                />
-                <span>{bullet}</span>
-              </li>
-            ))}
-          </ul>
-
-          <p className="text-body" style={{ color: '#a8a7a0' }}>
-            If those things matter to you, structure is what makes support dependable over time.
-          </p>
-        </GenericCard>
-
-        <div className="text-center mt-8">
-          <CTAButton href="#" onClick={(e: React.MouseEvent) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-            Join the Alliance
-          </CTAButton>
-        </div>
-
-        <div className="mt-10 mx-auto" style={{
-          height: '1px',
-          maxWidth: '300px',
-          background: 'linear-gradient(90deg, transparent, #ffd700, transparent)',
-        }} />
-      </div>
-    </GlassPanel>
-  );
-}
-
-// ============================================================================
-// SECTION 6B — NeonCard Closing Statement
-// ============================================================================
-
-function Section6B() {
+function Section6Final() {
   return (
     <section className="relative py-16 md:py-24">
-      {/* Noise texture */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n6b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n6b)' opacity='0.03'/%3E%3C/svg%3E")`,
-      }} />
-
-      <div className="relative z-10 max-w-[800px] mx-auto px-4 sm:px-8 md:px-12">
-        {/* Gold separator above */}
-        <div className="mb-8 mx-auto" style={{
-          height: '1px',
-          maxWidth: '200px',
-          background: 'linear-gradient(90deg, transparent, #ffd700, transparent)',
-        }} />
-
-        <NeonCard padding="lg" centered>
-          <H2 style={{ marginBottom: '1.25rem' }}>The Bottom Line</H2>
-
-          <p className="text-body mb-6" style={{ color: '#dcdbd5' }}>
-            Choosing an eXp sponsor isn&apos;t about logos or promises. It&apos;s about what actually shows up after onboarding.
-          </p>
-
-          <ul className="space-y-2.5 mb-6 text-left max-w-[600px] mx-auto" style={{ listStyle: 'none', padding: 0, margin: '0 auto 1.5rem' }}>
-            {BOTTOM_LINE_BULLETS.map((bullet, i) => (
-              <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
-                <CheckCircle2 size={16} style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }} />
-                <span>{bullet}</span>
-              </li>
-            ))}
-          </ul>
-
-          <p className="text-body" style={{ color: '#a8a7a0' }}>
-            If those things matter to you, structure is what makes support dependable over time.
-          </p>
-        </NeonCard>
-
-        <div className="text-center mt-8">
-          <CTAButton href="#" onClick={(e: React.MouseEvent) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-            Join the Alliance
-          </CTAButton>
-        </div>
-
-        {/* Gold separator below */}
-        <div className="mt-8 mx-auto" style={{
-          height: '1px',
-          maxWidth: '200px',
-          background: 'linear-gradient(90deg, transparent, #ffd700, transparent)',
-        }} />
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// SECTION 6C — Marigold GlassPanel + Gold Grid Prose
-// ============================================================================
-
-function Section6C() {
-  return (
-    <GlassPanel variant="marigoldCrosshatch" noBlur>
-      <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12 py-16 md:py-24">
+      <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12">
         <H2 style={{ marginBottom: '1.25rem', textAlign: 'center' }}>The Bottom Line</H2>
 
         {/* Content panel with gold grid */}
@@ -1942,44 +1824,14 @@ function Section6C() {
           </div>
         </div>
 
-        {/* CTA with rainbow border */}
-        <div className="flex justify-center">
-          <div className="relative" style={{ borderRadius: '14px' }}>
-            <div style={{
-              position: 'absolute',
-              left: '-2px',
-              top: '-2px',
-              borderRadius: '14px',
-              background: 'linear-gradient(45deg, #fb0094, #0000ff, #00ff00, #ffff00, #ff0000, #fb0094, #0000ff, #00ff00, #ffff00, #ff0000)',
-              backgroundSize: '400%',
-              width: 'calc(100% + 4px)',
-              height: 'calc(100% + 4px)',
-              zIndex: 0,
-              animation: 's3GradientFlow 20s linear infinite',
-            }} />
-            <div style={{
-              position: 'absolute',
-              left: '-2px',
-              top: '-2px',
-              borderRadius: '14px',
-              background: 'linear-gradient(45deg, #fb0094, #0000ff, #00ff00, #ffff00, #ff0000, #fb0094, #0000ff, #00ff00, #ffff00, #ff0000)',
-              backgroundSize: '400%',
-              width: 'calc(100% + 4px)',
-              height: 'calc(100% + 4px)',
-              filter: 'blur(10px)',
-              opacity: 0.35,
-              zIndex: -1,
-              animation: 's3GradientFlow 20s linear infinite',
-            }} />
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <CTAButton href="#" onClick={(e: React.MouseEvent) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-                Join the Alliance
-              </CTAButton>
-            </div>
-          </div>
+        {/* CTA */}
+        <div className="text-center">
+          <CTAButton href="#" onClick={(e: React.MouseEvent) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
+            Join the Alliance
+          </CTAButton>
         </div>
       </div>
-    </GlassPanel>
+    </section>
   );
 }
 
@@ -2066,17 +1918,9 @@ export default function ExpRealtySponsor() {
       <MeetTheFounders />
 
       {/* ================================================================== */}
-      {/* SECTION 6 — "The Bottom Line" (3 versions for review)              */}
+      {/* SECTION 6 — "The Bottom Line"                                      */}
       {/* ================================================================== */}
-      <VersionWrapper label="Section 6 — Version A">
-        <Section6A />
-      </VersionWrapper>
-      <VersionWrapper label="Section 6 — Version B">
-        <Section6B />
-      </VersionWrapper>
-      <VersionWrapper label="Section 6 — Version C">
-        <Section6C />
-      </VersionWrapper>
+      <Section6Final />
 
     </main>
   );
