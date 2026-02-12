@@ -1226,7 +1226,7 @@ function Section3() {
         <H2>
           What You Get Inside Smart Agent Alliance
         </H2>
-        <p className="text-body" style={{ fontSize: 'clamp(14px, 1.6vw, 16px)', color: '#a8a7a0', lineHeight: 1.6, marginTop: '-1.5rem', marginBottom: '2rem' }}>
+        <p className="text-body" style={{ marginTop: '-1.5rem', marginBottom: '2rem' }}>
           As an SAA agent, you&apos;re also part of the Wolf Pack &mdash; our team within eXp Realty. Your Agent Portal brings everything together in one place.
         </p>
       </div>
@@ -1288,18 +1288,11 @@ function Section3() {
               <div className="relative z-10">
                 <div className="flex items-center gap-2.5 mb-2.5">
                   <item.icon size={18} style={{ color: item.color, flexShrink: 0 }} />
-                  <h3
-                    className="text-display"
-                    style={{
-                      fontSize: 'clamp(14px, 1.6vw, 16px)',
-                      fontWeight: 600,
-                      color: '#e5e4dd',
-                    }}
-                  >
+                  <h3 className="text-h6">
                     {item.title}
                   </h3>
                 </div>
-                <p className="text-body" style={{ fontSize: 'clamp(13px, 1.4vw, 14px)', color: '#a8a7a0', lineHeight: 1.55 }}>
+                <p className="text-body">
                   {item.text}
                 </p>
               </div>
@@ -1321,11 +1314,11 @@ function Section3() {
       </div>
 
       {/* Portal walkthrough label */}
-      <div className="text-center max-w-[1400px] mx-auto pb-2 md:pb-3 px-4">
+      <div className="text-center max-w-[1400px] mx-auto pb-2 md:pb-3 px-4" style={{ paddingTop: '40px' }}>
         <H2 style={{ fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', marginBottom: '0.5rem' }}>
           Agent Portal Walkthrough
         </H2>
-        <p className="text-body" style={{ fontSize: 'clamp(13px, 1.4vw, 15px)', color: '#a8a7a0', lineHeight: 1.55 }}>
+        <p className="text-body">
           The Agent Portal is your central hub for everything SAA and Wolf Pack &mdash; onboarding, marketing tools, training, templates, and team support, all in one place.
         </p>
       </div>
@@ -1602,25 +1595,17 @@ function Section3() {
                 {/* Heading + bullet points — stable-height wrapper prevents mobile scroll jumps when content changes */}
                 <div className="flex-1 flex flex-col justify-center" style={{ minHeight: '280px' }}>
                 <div key={activeGroup} className="portal-content-fade flex flex-col justify-center text-center lg:text-left">
-                  <h3
-                    style={{
-                      fontFamily: 'var(--font-taskor, sans-serif)',
-                      fontSize: 'clamp(1rem, 1.1vw + 0.6rem, 1.25rem)',
-                      color: '#e5e4dd',
-                      marginBottom: '0.75rem',
-                    }}
-                  >
+                  <h3 className="text-h6" style={{ marginBottom: '0.75rem' }}>
                     {group.heading}
                   </h3>
-                  <p className="text-body" style={{ color: '#a8a7a0', fontSize: '14px', marginBottom: '0.75rem' }}>
+                  <p style={{ fontSize: 'var(--font-size-caption)', lineHeight: 'var(--line-height-caption)', fontWeight: 'var(--font-weight-caption)', fontFamily: 'var(--font-family-caption)', color: 'var(--text-color-caption)', marginBottom: '0.75rem' }}>
                     {group.description}
                   </p>
                   <ul className="space-y-2 text-left" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                     {group.bullets.map((bullet, bIdx) => (
                       <li
                         key={bIdx}
-                        className="flex gap-2.5"
-                        style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}
+                        className="flex gap-2.5 text-body"
                       >
                         <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
                         <span>{bullet}</span>
@@ -1906,13 +1891,13 @@ function Section6Final() {
           />
 
           <div className="relative z-10">
-            <p className="text-body mb-6 text-center" style={{ color: '#dcdbd5' }}>
+            <p className="text-body mb-6 text-center">
               Choosing an eXp sponsor isn&apos;t about logos or promises. It&apos;s about what actually shows up after onboarding.
             </p>
 
             <ul className="space-y-2.5 mb-6 text-left max-w-[600px] mx-auto" style={{ listStyle: 'none', padding: 0, margin: '0 auto 1.5rem' }}>
               {BOTTOM_LINE_BULLETS.map((bullet, i) => (
-                <li key={i} className="flex gap-2.5 text-body" style={{ fontSize: '14px', color: '#dcdbd5', lineHeight: '1.5' }}>
+                <li key={i} className="flex gap-2.5 text-body">
                   <span
                     className="mt-[6px] flex-shrink-0 w-2 h-2 rounded-full"
                     style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.4)' }}
