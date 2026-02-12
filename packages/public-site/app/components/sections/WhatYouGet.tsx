@@ -1,154 +1,173 @@
 'use client';
 
-import { useRef } from 'react';
-import { H2 } from '@saa/shared/components/saa';
-import { SecondaryButton } from '@saa/shared/components/saa';
-import { Users, DollarSign, Bot, GraduationCap, Globe } from 'lucide-react';
+import { H2, SecondaryButton } from '@saa/shared/components/saa';
+import { IconCard } from '@saa/shared/components/saa/cards/IconCard';
+import { Rocket, BarChart3, GraduationCap, TrendingUp, LifeBuoy } from 'lucide-react';
 
 /**
- * What You Get with SAA Section
- * Cards display immediately - no entrance animations
+ * What You Get with SAA — Homepage Section
+ *
+ * Three versions (A/B/C) for comparison. Uses IconCards with the same
+ * 5 benefit cards from the team value page. Toggle activeVersion below.
  */
 
-const BRAND_YELLOW = '#ffd700';
-const ICON_GOLD = '#c4a94d';
-
-const BENEFITS = [
+const CARDS = [
   {
-    icon: Bot,
-    title: "Done-For-You Production Systems",
-    subtitle: "Systems",
-    description: "Curated systems designed to save time, not create tech overload.",
-    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public',
+    icon: Rocket,
+    title: 'Guided Launch',
+    text: 'Structured onboarding, strategy sessions, and step-by-step setup so you\u2019re producing from day one.',
+    theme: 'yellow' as const,
   },
   {
-    icon: Users,
-    title: "Connected Leadership and Community",
-    subtitle: "Leadership",
-    description: "Big enough to back you. Small enough to know you. Real access, real wins, real support.",
-    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public',
+    icon: BarChart3,
+    title: 'Marketing & Lead Systems',
+    text: 'A branded link page, lead capture pages, Canva templates, and analytics \u2014 integrated tools that drive visibility.',
+    theme: 'blue' as const,
   },
   {
     icon: GraduationCap,
-    title: "Elite Training Libraries",
-    subtitle: "Training",
-    description: "AI, social media, investing, and modern production systems, available when you need them.",
-    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public',
+    title: 'Training & Development',
+    text: 'Five premium courses, weekly mastermind calls, and new agent resources \u2014 real training led by producing agents.',
+    theme: 'yellow' as const,
   },
   {
-    icon: DollarSign,
-    title: "Passive Income Infrastructure",
-    subtitle: "Income",
-    description: "We handle the structure so you can build long-term income without relying solely on transactions.",
-    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public',
+    icon: TrendingUp,
+    title: 'Growth & Attraction',
+    text: 'A passive attraction funnel and referral network built into your brand presence \u2014 expand beyond production when you choose.',
+    theme: 'blue' as const,
   },
   {
-    icon: Globe,
-    title: "Private Referrals & Global Collaboration",
-    subtitle: "Referral",
-    description: "Warm introductions and deal flow inside a global agent network.",
-    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public',
+    icon: LifeBuoy,
+    title: 'Ongoing Support',
+    text: 'Broker rooms, leadership contacts, and team support channels \u2014 centralized so you always know where to go.',
+    theme: 'yellow' as const,
   },
 ];
 
-export function WhatYouGet() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
+/* ─── Shared header + CTA ─── */
+function SectionHeader() {
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
+    <div className="text-center mb-10 md:mb-12">
+      <H2>What You Get Inside SAA</H2>
+      <p className="text-body opacity-60 mt-4 max-w-[750px] mx-auto">
+        Systems, training, and support built around how agents actually work &mdash; all accessible from your Agent Portal.
+      </p>
+    </div>
+  );
+}
+
+function SectionCTA() {
+  return (
+    <div className="text-center mt-10 md:mt-12">
+      <SecondaryButton href="/exp-realty-sponsor">See the Full Value Stack</SecondaryButton>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   VERSION A — 3+2 Grid (mirrors team value page layout)
+   ═══════════════════════════════════════════════════════ */
+function VersionA() {
+  return (
+    <section className="py-16 md:py-24 px-6 relative">
       <div className="mx-auto relative z-10" style={{ maxWidth: '1200px' }}>
-        {/* Header - always visible */}
-        <div className="text-center mb-12">
-          <H2>What You Get with SAA</H2>
-          <p className="text-body opacity-60 mt-4 max-w-2xl mx-auto">
-            Smart Agent Alliance provides systems, training, income infrastructure, and collaboration through five core pillars.
-          </p>
+        <SectionHeader />
+
+        {/* Top row: 3 cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {CARDS.slice(0, 3).map((card) => (
+            <IconCard key={card.title} icon={<card.icon className="w-6 h-6" />} theme={card.theme}>
+              <h3 className="text-h6 mb-2">{card.title}</h3>
+              <p className="text-body">{card.text}</p>
+            </IconCard>
+          ))}
         </div>
 
-        {/* Cards - no entrance animations */}
-        <div className="space-y-10 md:space-y-12">
-          {BENEFITS.map((benefit, index) => {
-            const Icon = benefit.icon;
-            const isEven = index % 2 === 0;
-
-            return (
-              <div
-                key={benefit.title}
-                className={`flex items-center gap-4 md:gap-6 ${isEven ? 'flex-row' : 'flex-row-reverse'}`}
-              >
-                {/* Icon circle - transparent with backdrop blur, smaller on mobile */}
-                <div
-                  className="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
-                  style={{
-                    background: 'rgba(10,10,10,0.25)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                    border: `2px solid ${BRAND_YELLOW}`,
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-                  }}
-                >
-                  {/* Icon - responsive size */}
-                  <div className="relative z-10 w-7 h-7 sm:w-9 sm:h-9 md:w-12 md:h-12">
-                    <Icon className="w-full h-full" style={{ color: ICON_GOLD }} />
-                  </div>
-                </div>
-
-                {/* Card content - glassmorphism with backdrop blur and background image */}
-                <div
-                  className={`flex-1 p-6 rounded-2xl relative overflow-hidden ${isEven ? '' : 'text-right'}`}
-                  style={{
-                    background: 'rgba(10,10,10,0.3)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                    border: `1px solid ${BRAND_YELLOW}44`,
-                    boxShadow: `0 0 40px ${BRAND_YELLOW}15, inset 0 1px 0 rgba(255,255,255,0.05)`,
-                  }}
-                >
-                  {/* Background image */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      backgroundImage: `url(${benefit.bgImage})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      opacity: 0.25,
-                    }}
-                  />
-                  {/* Title row with badge - badge on icon side, hidden below 600px */}
-                  <div className={`relative z-10 flex min-[600px]:flex-row min-[600px]:items-center min-[600px]:gap-3 mb-3 ${isEven ? '' : 'min-[600px]:flex-row-reverse'}`}>
-                    {/* Subtitle badge - hidden below 600px to save vertical space */}
-                    <div
-                      className="hidden min-[600px]:inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider w-fit"
-                      style={{
-                        background: `${BRAND_YELLOW}22`,
-                        color: BRAND_YELLOW,
-                      }}
-                    >
-                      {benefit.subtitle}
-                    </div>
-                    <h3
-                      className="font-heading font-bold text-gray-100"
-                      style={{
-                        fontSize: 'clamp(20px, calc(18px + 0.5vw), 26px)',
-                      }}
-                    >
-                      {benefit.title}
-                    </h3>
-                  </div>
-                  <p className="relative z-10 text-body leading-relaxed" style={{ color: '#bfbdb0' }}>
-                    {benefit.description}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+        {/* Bottom row: 2 cards spanning full width */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5">
+          {CARDS.slice(3).map((card) => (
+            <IconCard key={card.title} icon={<card.icon className="w-6 h-6" />} theme={card.theme}>
+              <h3 className="text-h6 mb-2">{card.title}</h3>
+              <p className="text-body">{card.text}</p>
+            </IconCard>
+          ))}
         </div>
 
-        {/* CTA - always visible */}
-        <div className="text-center mt-12">
-          <SecondaryButton href="/exp-realty-sponsor">See the Full Value Stack</SecondaryButton>
-        </div>
+        <SectionCTA />
       </div>
     </section>
   );
+}
+
+/* ═══════════════════════════════════════════════════════
+   VERSION B — Compact 5-column grid (desktop) / stacked (mobile)
+   All 5 cards in one row on large screens
+   ═══════════════════════════════════════════════════════ */
+function VersionB() {
+  return (
+    <section className="py-16 md:py-24 px-6 relative">
+      <div className="mx-auto relative z-10" style={{ maxWidth: '1400px' }}>
+        <SectionHeader />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+          {CARDS.map((card) => (
+            <IconCard key={card.title} icon={<card.icon className="w-6 h-6" />} theme={card.theme}>
+              <h3 className="text-h6 mb-2">{card.title}</h3>
+              <p className="text-body" style={{ fontSize: 'clamp(14px, calc(13.5px + 0.2vw), 18px)' }}>{card.text}</p>
+            </IconCard>
+          ))}
+        </div>
+
+        <SectionCTA />
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   VERSION C — 2+3 Grid (wider top cards, 3 compact bottom)
+   Alternating gold/blue with larger hero cards on top
+   ═══════════════════════════════════════════════════════ */
+function VersionC() {
+  return (
+    <section className="py-16 md:py-24 px-6 relative">
+      <div className="mx-auto relative z-10" style={{ maxWidth: '1200px' }}>
+        <SectionHeader />
+
+        {/* Top row: 2 larger feature cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {CARDS.slice(0, 2).map((card) => (
+            <IconCard key={card.title} icon={<card.icon className="w-7 h-7" />} theme={card.theme}>
+              <h3 className="text-h6 mb-2">{card.title}</h3>
+              <p className="text-body">{card.text}</p>
+            </IconCard>
+          ))}
+        </div>
+
+        {/* Bottom row: 3 compact cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
+          {CARDS.slice(2).map((card) => (
+            <IconCard key={card.title} icon={<card.icon className="w-6 h-6" />} theme={card.theme}>
+              <h3 className="text-h6 mb-2">{card.title}</h3>
+              <p className="text-body">{card.text}</p>
+            </IconCard>
+          ))}
+        </div>
+
+        <SectionCTA />
+      </div>
+    </section>
+  );
+}
+
+/* ─── Active version toggle ─── */
+// Change this to 'A', 'B', or 'C' to preview each version
+const ACTIVE_VERSION: 'A' | 'B' | 'C' = 'A';
+
+export function WhatYouGet() {
+  switch (ACTIVE_VERSION) {
+    case 'A': return <VersionA />;
+    case 'B': return <VersionB />;
+    case 'C': return <VersionC />;
+  }
 }
