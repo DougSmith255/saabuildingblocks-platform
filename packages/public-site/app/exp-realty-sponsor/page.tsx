@@ -1324,7 +1324,7 @@ function Section3() {
       </div>
 
       {/* Portal showcase frame */}
-      <div className="max-w-[1300px] mx-auto px-4 sm:px-8 md:px-12">
+      <div className="max-w-[1300px] mx-auto px-4 sm:px-8 md:px-12" style={{ marginTop: '15px' }}>
         <div
           className="relative overflow-hidden rounded-2xl"
           style={{
@@ -1360,7 +1360,7 @@ function Section3() {
 
           {/* ── Walkthrough Play Button / Chapter Nav header ── */}
           <div className="relative z-20" style={{ background: 'rgba(12,12,12,0.5)' }}>
-            <div className="flex justify-center" style={{ padding: '12px 16px' }}>
+            <div className="flex justify-center items-center" style={{ padding: '12px 16px', minHeight: '52px' }}>
               {/* Tour button — fades out when walkthrough starts */}
               <div
                 className="s3-tour-wrapper"
