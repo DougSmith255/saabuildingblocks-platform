@@ -656,9 +656,9 @@ function Section2() {
   };
 
   const cards = [
-    { label: 'Organization-First', icon: Building2 },
+    { label: 'Team-Built', icon: Building2 },
     { label: 'Zero Cost to Agents', icon: Shield },
-    { label: 'Lasting Infrastructure', icon: Layers },
+    { label: 'Built to Last', icon: Layers },
   ];
 
   const mistyGoldBg = 'radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%), radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%), radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%), radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%), linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)';
