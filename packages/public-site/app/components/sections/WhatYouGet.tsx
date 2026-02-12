@@ -160,14 +160,27 @@ function VersionC() {
   );
 }
 
-/* ─── Active version toggle ─── */
-// Change this to 'A', 'B', or 'C' to preview each version
-const ACTIVE_VERSION: 'A' | 'B' | 'C' = 'A';
-
+/* ─── Show all 3 versions for comparison ─── */
 export function WhatYouGet() {
-  switch (ACTIVE_VERSION) {
-    case 'A': return <VersionA />;
-    case 'B': return <VersionB />;
-    case 'C': return <VersionC />;
-  }
+  return (
+    <>
+      {/* Version A label */}
+      <div className="text-center py-4" style={{ background: 'rgba(255,215,0,0.08)', borderTop: '1px solid rgba(255,215,0,0.2)', borderBottom: '1px solid rgba(255,215,0,0.2)' }}>
+        <p className="text-h6" style={{ color: '#ffd700' }}>VERSION A &mdash; 3+2 Grid</p>
+      </div>
+      <VersionA />
+
+      {/* Version B label */}
+      <div className="text-center py-4" style={{ background: 'rgba(0,191,255,0.08)', borderTop: '1px solid rgba(0,191,255,0.2)', borderBottom: '1px solid rgba(0,191,255,0.2)' }}>
+        <p className="text-h6" style={{ color: '#00bfff' }}>VERSION B &mdash; 5-Column Row</p>
+      </div>
+      <VersionB />
+
+      {/* Version C label */}
+      <div className="text-center py-4" style={{ background: 'rgba(255,215,0,0.08)', borderTop: '1px solid rgba(255,215,0,0.2)', borderBottom: '1px solid rgba(255,215,0,0.2)' }}>
+        <p className="text-h6" style={{ color: '#ffd700' }}>VERSION C &mdash; 2+3 Grid</p>
+      </div>
+      <VersionC />
+    </>
+  );
 }
