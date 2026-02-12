@@ -989,41 +989,17 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       pointer-events: none;
     }
 
-    /* Agent Counter (Desktop - corner position) */
-    .agent-counter {
-      position: absolute;
-      z-index: 50;
-      left: 8px;
-      top: 130px;
-    }
-
-    @media (min-width: 1024px) {
-      .agent-counter { left: auto; right: 32px; }
-    }
-
-    /* Hide desktop counter on mobile (<500px) */
-    @media (max-width: 499px) {
-      .agent-counter { display: none !important; }
-    }
-
     .counter-digit {
       display: inline-block;
       width: 0.6em;
       text-align: center;
     }
 
-    /* Tagline Counter Suffix (Mobile - inline with tagline) */
+    /* Tagline Counter Suffix (always visible, inline with tagline) */
     .tagline-counter-suffix {
-      display: none;
+      display: inline-flex;
       align-items: baseline;
       gap: 0;
-    }
-
-    /* Show tagline counter on mobile (<500px) */
-    @media (max-width: 499px) {
-      .tagline-counter-suffix {
-        display: inline-flex !important;
-      }
     }
 
     /* Scroll Indicator */
@@ -3746,16 +3722,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <div class="hero-fixed">
       <div class="hero-content">
         <section class="hero-section" aria-label="Hero">
-          <!-- Agent Counter (Desktop) -->
-          <div class="agent-counter" id="agent-counter-desktop">
-            <span style="display: inline-flex; align-items: center; gap: 0.25em; font-size: clamp(1.75rem, 2.625vw, 2.1875rem);">
-              <span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: calc(1em + 10px);">
-                <span class="counter-digit">1</span><span class="counter-digit">6</span><span class="counter-digit">8</span><span class="counter-digit">8</span><span>+</span>
-              </span>
-              <span style="color: #bfbdb0; font-family: var(--font-taskor), sans-serif; font-feature-settings: 'ss01' 1; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8); filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));">AGENTS</span>
-            </span>
-          </div>
-
           <!-- Reveal Mask Effect -->
           <div class="reveal-mask-effect">
             <div class="reveal-glow" style="background: radial-gradient(52.3329% 36.633% at 50% 42%, rgba(255, 215, 0, 0.2) 0%, rgba(255, 180, 0, 0.12) 35%, rgba(255, 150, 0, 0.06) 55%, transparent 80%);"></div>
@@ -5748,13 +5714,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
       // Counter scramble animation (matches homepage)
       function setupCounterAnimation() {
-        // Get both desktop and tagline counter digits
-        const desktopCounter = document.getElementById('agent-counter-desktop');
-        const desktopDigits = desktopCounter ? desktopCounter.querySelectorAll('.counter-digit') : [];
         const taglineDigits = document.querySelectorAll('.counter-digit-tagline');
-
-        // Need at least one set of digits
-        if (desktopDigits.length !== 4 && taglineDigits.length !== 4) return;
+        if (taglineDigits.length !== 4) return;
 
         let animationId = null;
 
@@ -5772,22 +5733,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             const progress = Math.min(elapsed / duration, 1);
 
             if (progress >= 1) {
-              // End animation - show final value
-              if (desktopDigits.length === 4) {
-                desktopDigits[0].textContent = '3';
-                desktopDigits[1].textContent = '7';
-                desktopDigits[2].textContent = '0';
-                desktopDigits[3].textContent = '0';
-              }
-              if (taglineDigits.length === 4) {
-                taglineDigits[0].textContent = '3';
-                taglineDigits[1].textContent = '7';
-                taglineDigits[2].textContent = '0';
-                taglineDigits[3].textContent = '0';
-              }
+              taglineDigits[0].textContent = '3';
+              taglineDigits[1].textContent = '7';
+              taglineDigits[2].textContent = '0';
+              taglineDigits[3].textContent = '0';
               animationId = null;
             } else {
-              // Scramble effect - show random numbers that gradually approach target
               const currentValue = Math.floor(target * progress);
               const scrambleIntensity = 1 - progress;
 
@@ -5801,12 +5752,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               });
 
               scrambled.forEach(function(digit, index) {
-                if (desktopDigits.length === 4) {
-                  desktopDigits[index].textContent = digit;
-                }
-                if (taglineDigits.length === 4) {
-                  taglineDigits[index].textContent = digit;
-                }
+                taglineDigits[index].textContent = digit;
               });
 
               animationId = requestAnimationFrame(animate);
