@@ -217,27 +217,32 @@ export function UserManagementTab() {
         throw new Error(data.error || 'Failed to create user');
       }
 
-      // Extract email service response
-      const emailResponse = data.emailResponse || {};
+      // Extract email status from API response (field is "emailStatus", not "emailResponse")
+      const emailResult = data.emailStatus || {};
+      const emailSent = emailResult.sent === true;
 
-      // Set email status based on response
+      // Set email status based on actual delivery result
       setEmailStatus({
-        success: true,
-        message: 'Invitation email sent successfully!',
+        success: emailSent,
+        message: emailSent
+          ? 'Invitation email sent successfully!'
+          : `User created but email failed: ${emailResult.error || 'Unknown error'}. Use the retry button to resend.`,
         email: addUserForm.email,
-        messageId: emailResponse.messageId || emailResponse.id || 'N/A',
-        timestamp: new Date().toISOString(),
+        messageId: emailResult.messageId || 'N/A',
+        timestamp: emailResult.timestamp || new Date().toISOString(),
       });
 
       // Success - refresh user list but keep modal open to show email status
       await fetchData();
 
-      // Auto-close modal after 3 seconds
-      setTimeout(() => {
-        setShowAddUserModal(false);
-        setAddUserForm({ first_name: '', last_name: '', email: '' });
-        setEmailStatus(null);
-      }, 3000);
+      // Auto-close modal after 3 seconds only if email sent successfully
+      if (emailSent) {
+        setTimeout(() => {
+          setShowAddUserModal(false);
+          setAddUserForm({ first_name: '', last_name: '', email: '' });
+          setEmailStatus(null);
+        }, 3000);
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create user';
       setAddUserError(errorMessage);
