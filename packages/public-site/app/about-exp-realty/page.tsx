@@ -2385,7 +2385,7 @@ function SupportInfrastructureSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative py-[50px] px-4 sm:px-8 md:px-12 overflow-hidden">
+    <section ref={sectionRef} className="relative px-4 sm:px-8 md:px-12 overflow-hidden">
       {/* Top gradient edge - extends 5px up over previous section */}
       <div
         className="absolute left-0 right-0 pointer-events-none"
