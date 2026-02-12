@@ -989,9 +989,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       pointer-events: none;
     }
 
-    .counter-digit {
+    .counter-digit-tagline {
       display: inline-block;
-      width: 0.6em;
+      width: 0.65em;
       text-align: center;
     }
 
@@ -1000,6 +1000,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       display: inline-flex;
       align-items: baseline;
       gap: 0;
+      margin-left: 0.3em;
     }
 
     /* Scroll Indicator */
@@ -3745,7 +3746,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               </h1>
               <div class="tagline-backdrop">
                 <p class="text-tagline tagline">
-                Join ${escapeHTML(displayName)}'s Team<span class="tagline-counter-suffix"><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;"> (</span><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;" class="counter-numbers-tagline"><span class="counter-digit-tagline">1</span><span class="counter-digit-tagline">6</span><span class="counter-digit-tagline">8</span><span class="counter-digit-tagline">8</span><span>+ </span></span><span style="color: #bfbdb0; font-family: var(--font-taskor), sans-serif; font-feature-settings: 'ss01' 1; text-transform: uppercase; letter-spacing: 0.05em;">AGENTS)</span></span>
+                Join ${escapeHTML(displayName)}'s Team<span class="tagline-counter-suffix"><span style="color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;">(</span><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;" class="counter-numbers-tagline"><span class="counter-digit-tagline">1</span><span class="counter-digit-tagline">6</span><span class="counter-digit-tagline">8</span><span class="counter-digit-tagline">8</span><span>+</span></span><span style="color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;">&nbsp;</span><span style="color: #bfbdb0; font-family: var(--font-taskor), sans-serif; font-feature-settings: 'ss01' 1; text-transform: uppercase; letter-spacing: 0.05em;">Agents)</span></span>
               </p>
               </div>
               <div class="flex justify-center items-center" style="margin-top: 14px;">
