@@ -175,24 +175,23 @@ jobs:
           
           echo "✅ Type check passed"
 
-      # Generate static CSS (file is gitignored, so generate fresh on each deploy)
+      # Generate static CSS (non-fatal — falls back to committed version if Supabase is unreachable)
       - name: Generate static CSS
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          echo "🎨 Generating static CSS from Master Controller..."
           cd packages/public-site
 
-          # Generate CSS using the build-time script
-          npm run generate:css
-
-          if [ -f "public/static-master-controller.css" ]; then
-            echo "✅ Static CSS generated successfully"
+          if npm run generate:css 2>&1; then
+            echo "Static CSS generated fresh from Supabase"
+            ls -lh public/static-master-controller.css
+          elif [ -f "public/static-master-controller.css" ]; then
+            echo "Supabase unreachable — using committed CSS fallback"
             ls -lh public/static-master-controller.css
           else
-            echo "⚠️  Static CSS not generated, proceeding without it"
+            echo "No CSS available — build will proceed without Master Controller styles"
           fi
 
       # Clean Next.js cache before build
