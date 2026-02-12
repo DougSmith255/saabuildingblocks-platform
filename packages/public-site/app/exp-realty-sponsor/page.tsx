@@ -253,6 +253,144 @@ const FEATURE_GROUPS: FeatureGroup[] = [
 
 
 // ============================================================================
+// VALUE SECTION 1 — "Launch Your Business With Clarity From Day One"
+// ============================================================================
+
+function BrowserMockup({ children, url = 'saabuildingblocks.com/agent-portal' }: { children: React.ReactNode; url?: string }) {
+  return (
+    <div className="rounded-xl overflow-hidden" style={{
+      border: '1px solid rgba(255,255,255,0.08)',
+      boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3)',
+    }}>
+      <div className="flex items-center gap-2 px-3 py-2" style={{
+        background: 'linear-gradient(180deg, rgba(30,30,30,0.95) 0%, rgba(22,22,22,0.98) 100%)',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        <div className="flex gap-1.5">
+          <div className="w-2 h-2 rounded-full" style={{ background: '#ff5f57' }} />
+          <div className="w-2 h-2 rounded-full" style={{ background: '#febc2e' }} />
+          <div className="w-2 h-2 rounded-full" style={{ background: '#28c840' }} />
+        </div>
+        <div className="flex-1 mx-2 px-3 py-1 rounded-md text-center" style={{
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.06)',
+          fontSize: '11px',
+          color: 'rgba(255,255,255,0.35)',
+          fontFamily: 'monospace',
+        }}>
+          {url}
+        </div>
+      </div>
+      <div style={{ background: '#0a0a0a' }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function ScreenshotPlaceholder({ label }: { label: string }) {
+  return (
+    <div
+      data-placeholder="true"
+      className="w-full flex items-center justify-center"
+      style={{
+        aspectRatio: '16/10',
+        background: 'linear-gradient(135deg, rgba(15,15,15,1) 0%, rgba(20,20,18,1) 100%)',
+        backgroundImage: `
+          linear-gradient(rgba(255,215,0,0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,215,0,0.015) 1px, transparent 1px)
+        `,
+        backgroundSize: '20px 20px',
+      }}
+    >
+      <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: '14px', fontFamily: 'monospace' }}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function ValueSection1_Launch() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12">
+      <style>{`
+        @keyframes vs1FadeIn {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      <div className="max-w-[1200px] mx-auto" style={{
+        opacity: visible ? 1 : 0,
+        animation: visible ? 'vs1FadeIn 0.6s ease-out' : 'none',
+      }}>
+        {/* Heading */}
+        <div className="text-center mb-10 md:mb-14">
+          <H2 style={{ marginBottom: '1rem' }}>
+            Launch Your Business With Clarity From Day One
+          </H2>
+          <p className="text-body mx-auto" style={{ maxWidth: '700px', color: '#dcdbd5' }}>
+            Structured onboarding designed to move you from joining to operating without confusion or delay.
+          </p>
+        </div>
+
+        {/* Two-column: text + mockup */}
+        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+          {/* Text side */}
+          <div className="w-full md:w-1/2 space-y-6">
+            <p className="text-body" style={{ color: '#9a9a9a', fontSize: 'clamp(13px, 1.6vw, 15px)', fontFamily: 'var(--font-taskor, sans-serif)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+              Includes
+            </p>
+            <ul className="space-y-4">
+              {[
+                'Onboarding dashboard',
+                'Step-by-step setup checklist',
+                '1-on-1 strategy session',
+              ].map((item, i) => (
+                <li key={i} className="flex items-center gap-3 text-body" style={{ color: '#dcdbd5', fontSize: 'clamp(16px, 2vw, 19px)' }}>
+                  <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p className="text-body pt-2" style={{ color: '#9a9a9a', fontSize: 'clamp(14px, 1.6vw, 16px)', fontStyle: 'italic' }}>
+              Move into production quickly with guided systems that remove guesswork from your launch.
+            </p>
+          </div>
+
+          {/* Mockup side */}
+          <div className="w-full md:w-1/2">
+            <BrowserMockup url="saabuildingblocks.com/agent-portal/onboarding">
+              <ScreenshotPlaceholder label="Portal Screenshot — Onboarding Dashboard" />
+            </BrowserMockup>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+// ============================================================================
 // SECTION 1 — Focus Cards with edge-to-edge GlassPanel
 // Content rendered at a JS-measured fixed pixel width so it NEVER reflows.
 // Card overflow:hidden clips it — expanding the card reveals content.
@@ -1991,6 +2129,7 @@ export default function ExpRealtySponsor() {
         <Section1 />
         <Section2 />
         <Section3 />
+        <ValueSection1_Launch />
         <Section4Final />
         <MeetTheFounders />
         <Section6Final />
