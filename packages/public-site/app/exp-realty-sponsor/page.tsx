@@ -1314,7 +1314,7 @@ function Section3() {
       </div>
 
       {/* Portal walkthrough label */}
-      <div className="text-center max-w-[1400px] mx-auto pb-2 md:pb-3 px-4" style={{ paddingTop: '40px' }}>
+      <div id="agent-portal-walkthrough" className="text-center max-w-[1400px] mx-auto pb-2 md:pb-3 px-4" style={{ paddingTop: '40px' }}>
         <H2 style={{ fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', marginBottom: '0.5rem' }}>
           Agent Portal Walkthrough
         </H2>

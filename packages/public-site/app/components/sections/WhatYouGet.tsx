@@ -15,31 +15,31 @@ const CARDS = [
   {
     icon: Rocket,
     title: 'Guided Launch',
-    text: 'Structured onboarding, strategy sessions, and step-by-step setup so you\u2019re producing from day one.',
+    text: 'Launch your business with clarity from day one.',
     theme: 'yellow' as const,
   },
   {
     icon: BarChart3,
     title: 'Marketing & Lead Systems',
-    text: 'A branded link page, lead capture pages, Canva templates, and analytics \u2014 integrated tools that drive visibility.',
+    text: 'Built-in systems that drive visibility and leads.',
     theme: 'blue' as const,
   },
   {
     icon: GraduationCap,
     title: 'Training & Development',
-    text: 'Five premium courses, weekly mastermind calls, and new agent resources \u2014 real training led by producing agents.',
+    text: 'Practical training designed for production growth.',
     theme: 'yellow' as const,
   },
   {
     icon: TrendingUp,
-    title: 'Growth & Attraction',
-    text: 'A passive attraction funnel and referral network built into your brand presence \u2014 expand beyond production when you choose.',
+    title: 'Income Growth & Attraction',
+    text: 'Expand income through optional attraction pathways.',
     theme: 'blue' as const,
   },
   {
     icon: LifeBuoy,
     title: 'Ongoing Support',
-    text: 'Broker rooms, leadership contacts, and team support channels \u2014 centralized so you always know where to go.',
+    text: 'Accessible support and expanding resources.',
     theme: 'yellow' as const,
   },
 ];
@@ -50,7 +50,7 @@ function SectionHeader() {
     <div className="text-center mb-10 md:mb-12">
       <H2>What You Get Inside SAA</H2>
       <p className="text-body opacity-60 mt-4 max-w-[750px] mx-auto">
-        Systems, training, and support built around how agents actually work &mdash; all accessible from your Agent Portal.
+        Systems, training, and support built around how agents actually work &mdash; all accessible from your <a href="/exp-realty-sponsor#agent-portal-walkthrough" style={{ color: '#ffd700', textDecoration: 'underline', textUnderlineOffset: '3px' }}>Agent Portal</a>.
       </p>
     </div>
   );
