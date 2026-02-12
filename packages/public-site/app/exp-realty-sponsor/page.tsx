@@ -330,7 +330,7 @@ function Section1() {
     : { minWidth: '550px' };
 
   return (
-    <section ref={sectionRef} className="py-[50px]">
+    <section ref={sectionRef} className="">
       <style>{`
         @keyframes focusPulse {
           0% { opacity: 0.55; }
@@ -404,7 +404,7 @@ function Section1() {
         />
 
         {/* Content — max-width centered inside the glass */}
-        <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-10">
+        <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
 
           {/* Desktop: flex layout — fixed-width content, height equalized */}
           <div ref={flexRef} className="hidden md:flex gap-4">
@@ -718,7 +718,7 @@ function Section2() {
   };
 
   return (
-    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12 py-[50px]">
+    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12">
       <style>{`
         @keyframes section2FadeIn {
           from { opacity: 0; transform: translateY(8px); }
@@ -1055,7 +1055,7 @@ function Section3() {
   const currentDuration = FEATURE_GROUPS[activeGroup]?.duration || 30;
 
   return (
-    <section className="relative py-[50px]" style={{ overflowAnchor: 'none' }}>
+    <section className="relative" style={{ overflowAnchor: 'none' }}>
       <style>{`
         @keyframes portalFadeIn {
           from { opacity: 0; transform: translateY(8px); }
@@ -1222,16 +1222,19 @@ function Section3() {
       <GlassPanel variant="champagne" noBlur>
 
       {/* Section heading */}
-      <div className="text-center max-w-[800px] mx-auto pt-4 md:pt-6 pb-6 md:pb-8 px-4">
+      <div className="text-center max-w-[1400px] mx-auto px-4">
         <H2>
           What You Get Inside Smart Agent Alliance
         </H2>
+        <p className="text-body" style={{ fontSize: 'clamp(14px, 1.6vw, 16px)', color: '#a8a7a0', lineHeight: 1.6, marginTop: '-1.5rem', marginBottom: '2rem' }}>
+          As an SAA agent, you&apos;re also part of the Wolf Pack &mdash; our team within eXp Realty. Your Agent Portal brings everything together in one place.
+        </p>
       </div>
 
       {/* Value overview — benefit-framed summary above the portal demo */}
-      <div className="max-w-[1000px] mx-auto px-4 sm:px-8 md:px-12 pb-8 md:pb-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-          {[
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 md:px-12 pb-4 md:pb-6">
+        {(() => {
+          const cards = [
             {
               icon: Rocket,
               title: 'Guided Launch',
@@ -1262,7 +1265,8 @@ function Section3() {
               text: 'Broker rooms, leadership contacts, and team support channels \u2014 centralized so you always know where to go.',
               color: '#ffd700',
             },
-          ].map((item, i) => (
+          ];
+          const renderCard = (item: typeof cards[0], i: number) => (
             <div
               key={i}
               className="relative overflow-hidden rounded-xl p-5"
@@ -1300,19 +1304,44 @@ function Section3() {
                 </p>
               </div>
             </div>
-          ))}
-        </div>
+          );
+          return (
+            <>
+              {/* Top row: 3 cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+                {cards.slice(0, 3).map(renderCard)}
+              </div>
+              {/* Bottom row: 2 cards spanning full width */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 mt-4 md:mt-5">
+                {cards.slice(3).map((item, i) => renderCard(item, i + 3))}
+              </div>
+            </>
+          );
+        })()}
       </div>
 
       {/* Portal walkthrough label */}
-      <div className="text-center max-w-[800px] mx-auto pb-4 md:pb-6 px-4">
-        <H2 style={{ fontSize: 'clamp(18px, 2.2vw, 22px)' }}>
+      <div className="text-center max-w-[1400px] mx-auto pb-2 md:pb-3 px-4">
+        <h4
+          className="text-display"
+          style={{
+            fontFamily: 'var(--font-taskor), sans-serif',
+            fontSize: 'clamp(1.25rem, 1vw + 0.5rem, 1.5rem)',
+            fontWeight: 600,
+            lineHeight: 1.35,
+            color: '#e5e4dd',
+            marginBottom: '0.5rem',
+          }}
+        >
           Agent Portal Walkthrough
-        </H2>
+        </h4>
+        <p className="text-body" style={{ fontSize: 'clamp(13px, 1.4vw, 15px)', color: '#a8a7a0', lineHeight: 1.55 }}>
+          The Agent Portal is your central hub for everything SAA and Wolf Pack &mdash; onboarding, marketing tools, training, templates, and team support, all in one place.
+        </p>
       </div>
 
       {/* Portal showcase frame */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 pb-6 md:pb-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12">
         <div
           className="relative overflow-hidden rounded-2xl"
           style={{
@@ -1632,7 +1661,7 @@ const DUAL_ADVANTAGE_BULLETS = [
 
 function Section4() {
   return (
-    <section className="relative py-[50px]">
+    <section className="relative">
       <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12">
         <div className="text-center mb-8 md:mb-10">
           <H2 style={{ marginBottom: '0.75rem' }}>Your Dual Advantage</H2>
@@ -1695,7 +1724,7 @@ const BOTTOM_LINE_BULLETS = [
 
 function Section6() {
   return (
-    <section className="relative py-[50px]">
+    <section className="relative">
       <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12 text-center">
         <H2 style={{ marginBottom: '1.25rem' }}>The Bottom Line</H2>
 
@@ -1761,7 +1790,7 @@ function IconRing({ icon: Icon, color }: { icon: LucideIcon; color: string }) {
 
 function Section4Final() {
   return (
-    <section className="relative py-[50px]">
+    <section className="relative">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12">
         <div className="text-center mb-8 md:mb-10">
           <H2>Your Dual Advantage</H2>
@@ -1778,11 +1807,15 @@ function Section4Final() {
         {/* Two cards with + symbol between them — equal height via items-stretch */}
         <div className="flex flex-col md:flex-row md:items-stretch items-center gap-4 md:gap-6 mb-8">
           <div
-            className="flex-1 w-full"
+            className="group flex-1 w-full relative overflow-hidden"
             style={{ border: '1px solid rgba(255,215,0,0.25)', borderRadius: '12px', transition: 'all 0.4s ease-out', cursor: 'pointer' }}
             onMouseEnter={e => { e.currentTarget.style.border = '1px solid rgba(255,215,0,0.5)'; e.currentTarget.style.boxShadow = '0 0 16px rgba(255,215,0,0.15)'; }}
             onMouseLeave={e => { e.currentTarget.style.border = '1px solid rgba(255,215,0,0.25)'; e.currentTarget.style.boxShadow = 'none'; }}
           >
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+              style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255,215,0,0.12) 0%, transparent 70%)' }}
+            />
             <GrainCard padding="lg" className="h-full">
               <IconRing icon={Shield} color="#ffd700" />
               <p className="text-body text-center">
@@ -1807,11 +1840,15 @@ function Section4Final() {
           </span>
 
           <div
-            className="flex-1 w-full"
+            className="group flex-1 w-full relative overflow-hidden"
             style={{ border: '1px solid rgba(0,191,255,0.25)', borderRadius: '12px', transition: 'all 0.4s ease-out', cursor: 'pointer' }}
             onMouseEnter={e => { e.currentTarget.style.border = '1px solid rgba(0,191,255,0.5)'; e.currentTarget.style.boxShadow = '0 0 16px rgba(0,191,255,0.15)'; }}
             onMouseLeave={e => { e.currentTarget.style.border = '1px solid rgba(0,191,255,0.25)'; e.currentTarget.style.boxShadow = 'none'; }}
           >
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+              style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,191,255,0.12) 0%, transparent 70%)' }}
+            />
             <GrainCard padding="lg" className="h-full">
               <IconRing icon={Users} color="#00bfff" />
               <p className="text-body text-center">
@@ -1855,7 +1892,7 @@ function Section4Final() {
 
 function Section6Final() {
   return (
-    <section className="relative py-[50px]">
+    <section className="relative">
       <div className="max-w-[800px] mx-auto px-4 sm:px-8 md:px-12">
         <H2 style={{ marginBottom: '1.25rem', textAlign: 'center' }}>The Bottom Line</H2>
 
@@ -1973,37 +2010,15 @@ export default function ExpRealtySponsor() {
         </section>
       </StickyHeroWrapper>
 
-      {/* ================================================================== */}
-      {/* SECTION 1 — Focus Cards                                            */}
-      {/* Edge-to-edge gold↔blue glass panel. Sliding-door card reveal.     */}
-      {/* Glowing border + pulse on active. Vertical H2 on inactive.         */}
-      {/* ================================================================== */}
-      <Section1 />
-
-      {/* ================================================================== */}
-      {/* SECTION 2 — "Why SAA Is Different" (3 versions for review)       */}
-      {/* ================================================================== */}
-      <Section2 />
-
-      {/* ================================================================== */}
-      {/* SECTION 3 — "What You Get Inside SAA" (Animated Portal Showcase)  */}
-      {/* ================================================================== */}
-      <Section3 />
-
-      {/* ================================================================== */}
-      {/* SECTION 4 — "Your Dual Advantage"                                  */}
-      {/* ================================================================== */}
-      <Section4Final />
-
-      {/* ================================================================== */}
-      {/* SECTION 5 — Leadership (Meet the Founders)                         */}
-      {/* ================================================================== */}
-      <MeetTheFounders />
-
-      {/* ================================================================== */}
-      {/* SECTION 6 — "The Bottom Line"                                      */}
-      {/* ================================================================== */}
-      <Section6Final />
+      {/* Sections wrapper — consistent 100px gap between all sections */}
+      <div className="flex flex-col" style={{ gap: '100px' }}>
+        <Section1 />
+        <Section2 />
+        <Section3 />
+        <Section4Final />
+        <MeetTheFounders />
+        <Section6Final />
+      </div>
 
     </main>
   );
