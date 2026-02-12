@@ -3963,8 +3963,8 @@ export default function AboutExpRealty() {
         </section>
       </StickyHeroWrapper>
 
-      {/* Sections wrapper — consistent 150px gap between all sections */}
-      <div className="flex flex-col" style={{ gap: '150px' }}>
+      {/* Sections wrapper — 100px gap + 50px glass padding = 150px visual spacing */}
+      <div className="flex flex-col" style={{ gap: '100px' }}>
         <HowExpIsBuilt />
         <SpotlightConsole />
         <IncomeOwnershipSection />
