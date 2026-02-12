@@ -358,7 +358,7 @@ function Section1() {
 
       {/* Glass panel — rounded-3xl matching about-exp GlassPanel pattern */}
       <div
-        className="relative overflow-hidden rounded-3xl"
+        className="relative overflow-hidden rounded-3xl py-[50px]"
         style={{
           boxShadow: `
             0 8px 32px rgba(0,0,0,0.4),
@@ -1219,7 +1219,7 @@ function Section3() {
       <audio ref={audioRef} src={WALKTHROUGH_AUDIO_URL} preload="auto" />
 
       {/* Champagne GlassPanel wraps entire section — heading + portal showcase */}
-      <GlassPanel variant="champagne" noBlur>
+      <GlassPanel variant="champagne" noBlur className="py-[50px]">
 
       {/* Section heading */}
       <div className="text-center max-w-[1400px] mx-auto px-4">
@@ -1256,7 +1256,7 @@ function Section3() {
             {
               icon: TrendingUp,
               title: 'Growth & Attraction',
-              text: 'A passive attraction funnel built into your brand presence \u2014 expand beyond production if and when you choose.',
+              text: 'A passive attraction funnel and referral network built into your brand presence \u2014 expand beyond production if and when you choose.',
               color: '#00bfff',
             },
             {
@@ -1322,19 +1322,9 @@ function Section3() {
 
       {/* Portal walkthrough label */}
       <div className="text-center max-w-[1400px] mx-auto pb-2 md:pb-3 px-4">
-        <h4
-          className="text-display"
-          style={{
-            fontFamily: 'var(--font-taskor), sans-serif',
-            fontSize: 'clamp(1.25rem, 1vw + 0.5rem, 1.5rem)',
-            fontWeight: 600,
-            lineHeight: 1.35,
-            color: '#e5e4dd',
-            marginBottom: '0.5rem',
-          }}
-        >
+        <H2 style={{ fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', marginBottom: '0.5rem' }}>
           Agent Portal Walkthrough
-        </h4>
+        </H2>
         <p className="text-body" style={{ fontSize: 'clamp(13px, 1.4vw, 15px)', color: '#a8a7a0', lineHeight: 1.55 }}>
           The Agent Portal is your central hub for everything SAA and Wolf Pack &mdash; onboarding, marketing tools, training, templates, and team support, all in one place.
         </p>
@@ -2011,7 +2001,7 @@ export default function ExpRealtySponsor() {
       </StickyHeroWrapper>
 
       {/* Sections wrapper — consistent 100px gap between all sections */}
-      <div className="flex flex-col" style={{ gap: '100px' }}>
+      <div className="flex flex-col" style={{ gap: '150px' }}>
         <Section1 />
         <Section2 />
         <Section3 />

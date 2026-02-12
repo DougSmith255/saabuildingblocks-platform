@@ -26,7 +26,7 @@ export function MeetTheFounders() {
   const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <GlassPanel variant="marigoldCrosshatch" noBlur>
+    <GlassPanel variant="marigoldCrosshatch" noBlur className="py-[50px]">
       {/* H1-style glow animation for founder names */}
       <style>{`
         @keyframes h1GlowBreathe {
