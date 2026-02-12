@@ -17,6 +17,7 @@ import {
 import { createOrUpdateGHLContact } from '@/lib/gohighlevel';
 import { ZodError } from 'zod';
 import bcrypt from 'bcryptjs';
+import { AGENT_PAGE_DEFAULTS } from '@/lib/agent-page-defaults';
 
 export const dynamic = 'force-dynamic';
 
@@ -383,7 +384,7 @@ export async function POST(request: NextRequest) {
           validatedData.last_name
         );
 
-        // Create agent page record
+        // Create agent page record with default settings
         const { data: newPage, error: pageError } = await supabase
           .from('agent_pages')
           .insert({
@@ -392,16 +393,7 @@ export async function POST(request: NextRequest) {
             display_first_name: validatedData.first_name,
             display_last_name: validatedData.last_name,
             email: user.email,
-            phone: null,
-            show_phone: false,
-            phone_text_only: false,
-            activated: false, // Agent must manually activate their page
-            facebook_url: null,
-            instagram_url: null,
-            twitter_url: null,
-            youtube_url: null,
-            tiktok_url: null,
-            linkedin_url: null,
+            ...AGENT_PAGE_DEFAULTS,
           })
           .select()
           .single();

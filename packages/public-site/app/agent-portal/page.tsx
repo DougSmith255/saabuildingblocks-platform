@@ -15,6 +15,11 @@ import { HexColorPicker, HexColorInput } from 'react-colorful';
 import confetti from 'canvas-confetti';
 
 // ============================================================================
+// Demo Account — Jane Smith (for walkthrough video recordings)
+// ============================================================================
+const DEMO_USER_ID = '0b48cf2a-f6f8-4337-bd3f-6630e8144ae2';
+
+// ============================================================================
 // Custom SVG Icon Components
 // ============================================================================
 
@@ -3929,6 +3934,7 @@ function AgentPortal() {
                   onComplete={handleCompleteOnboarding}
                   isCompleting={isCompletingOnboarding}
                   onboardingCompletedAt={onboardingCompletedAt}
+                  userId={user?.id}
                 />
               </div>
             )}
@@ -3951,7 +3957,7 @@ function AgentPortal() {
 
             {/* Get Support */}
             {activeSection === 'support' && (
-              <SupportSection userState={user?.state} />
+              <SupportSection userState={user?.state} userId={user?.id} />
             )}
 
             {/* Team Calls */}
@@ -6453,9 +6459,11 @@ interface OnboardingSectionProps {
   isCompleting: boolean;
   onboardingCompletedAt: string | null;
   onNavigate: (id: SectionId) => void;
+  userId?: string;
 }
 
-function OnboardingSection({ progress, onUpdateProgress, userName, userLastName, onNavigate, onComplete, isCompleting, onboardingCompletedAt }: OnboardingSectionProps) {
+function OnboardingSection({ progress, onUpdateProgress, userName, userLastName, onNavigate, onComplete, isCompleting, onboardingCompletedAt, userId }: OnboardingSectionProps) {
+  const isDemoAccount = userId === DEMO_USER_ID;
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
 
   // Onboarding steps configuration
@@ -6871,10 +6879,13 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
           const isChecked = progress[step.key];
           const isExpanded = expandedStep === index;
 
+          // For demo account, blur steps 1-5 (eXp-specific steps, not SAA tools)
+          const isDemoBlurred = isDemoAccount && index < 5;
+
           return (
             <div
               key={step.key}
-              className="rounded-xl overflow-hidden transition-all duration-300"
+              className="rounded-xl overflow-hidden transition-all duration-300 relative"
               style={{
                 background: isChecked
                   ? 'linear-gradient(145deg, rgba(26, 37, 24, 0.95) 0%, rgba(21, 31, 18, 0.98) 100%)'
@@ -6885,6 +6896,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                 boxShadow: isChecked
                   ? '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 12px rgba(34, 197, 94, 0.1)'
                   : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+                ...(isDemoBlurred ? { filter: 'blur(6px)', pointerEvents: 'none' as const } : {}),
               }}
             >
               {/* Step Header */}
@@ -7146,9 +7158,16 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
 
 interface SupportSectionProps {
   userState?: string | null;
+  userId?: string;
 }
 
-function SupportSection({ userState }: SupportSectionProps) {
+function SupportSection({ userState, userId }: SupportSectionProps) {
+  const isDemoAccount = userId === DEMO_USER_ID;
+
+  // Helper to blur sensitive text for demo account recordings
+  const demoBlur = (text: string) => isDemoAccount
+    ? <span style={{ filter: 'blur(5px)', userSelect: 'none' }}>{text}</span>
+    : text;
   const brokerInfo = userState ? STATE_BROKER_URLS[userState.toUpperCase()] : null;
 
   // Platform detection for My eXp App links
@@ -7205,19 +7224,19 @@ function SupportSection({ userState }: SupportSectionProps) {
               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              (833) 303-0610
+              {demoBlur('(833) 303-0610')}
             </a>
 
             {/* Email */}
             <a
-              href="mailto:expexpertcare@exprealty.net"
+              href={isDemoAccount ? undefined : "mailto:expexpertcare@exprealty.net"}
               className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-black/30 border border-[#3b82f6]/30 text-[#3b82f6] font-semibold hover:bg-[#3b82f6]/10 transition-colors text-sm"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              <span className="truncate">expexpertcare@exprealty.net</span>
+              <span className="truncate">{demoBlur('expexpertcare@exprealty.net')}</span>
             </a>
 
             {/* eXp World Link */}
@@ -7325,7 +7344,7 @@ function SupportSection({ userState }: SupportSectionProps) {
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span className="truncate">team@smartagentalliance.com</span>
+                <span className="truncate">{demoBlur('team@smartagentalliance.com')}</span>
               </a>
             </div>
 
@@ -7340,16 +7359,16 @@ function SupportSection({ userState }: SupportSectionProps) {
                 >
                   <span className="text-[9px] text-[#e5e4dd]/50 uppercase tracking-wide">SAA Tech Issue</span>
                   <span className="text-xs font-semibold">Doug</span>
-                  <span className="text-[10px] text-[#e5e4dd]/50">415-320-5606</span>
+                  <span className="text-[10px] text-[#e5e4dd]/50">{demoBlur('415-320-5606')}</span>
                 </a>
                 <a
-                  href="sms:+14152380922"
+                  href={isDemoAccount ? undefined : "sms:+14152380922"}
                   className="flex flex-col items-center py-2.5 px-3 rounded-xl bg-black/30 border border-[#ffd700]/20 text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
                   style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
                 >
                   <span className="text-[9px] text-[#e5e4dd]/50 uppercase tracking-wide">Agent Issue</span>
                   <span className="text-xs font-semibold">Karrie</span>
-                  <span className="text-[10px] text-[#e5e4dd]/50">415-238-0922</span>
+                  <span className="text-[10px] text-[#e5e4dd]/50">{demoBlur('415-238-0922')}</span>
                 </a>
               </div>
             </div>
@@ -7392,7 +7411,7 @@ function SupportSection({ userState }: SupportSectionProps) {
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span className="truncate">support@mikesherrard.com</span>
+                <span className="truncate">{demoBlur('support@mikesherrard.com')}</span>
               </a>
             </div>
             {/* Connor - Investor Army */}
@@ -7406,7 +7425,7 @@ function SupportSection({ userState }: SupportSectionProps) {
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span className="truncate">connor.steinbrook@exprealty.com</span>
+                <span className="truncate">{demoBlur('connor.steinbrook@exprealty.com')}</span>
               </a>
             </div>
           </div>

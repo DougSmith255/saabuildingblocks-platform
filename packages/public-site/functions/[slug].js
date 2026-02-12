@@ -6798,6 +6798,154 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   })();
   </script>
 
+${agent.slug === 'jane-smith' ? `
+<!-- Demo Overlay: Hides middle content for walkthrough video -->
+<style>
+  #demo-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease-out;
+  }
+  #demo-overlay.active {
+    opacity: 1;
+  }
+  #demo-overlay-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(8,8,8,0.97) 0%, rgba(8,8,8,0.99) 60%, rgba(8,8,8,1) 100%);
+  }
+  #demo-overlay-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+  #demo-lock-icon {
+    width: 64px;
+    height: 64px;
+    color: #ffd700;
+    opacity: 0.7;
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 0 12px rgba(255,215,0,0.3));
+  }
+  #demo-overlay.unlocking #demo-lock-icon {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+  #demo-overlay-text {
+    font-family: var(--font-taskor), sans-serif;
+    color: #ffd700;
+    font-size: clamp(14px, 2vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.6;
+    text-shadow: 0 0 8px rgba(255,215,0,0.3);
+  }
+  /* Top & bottom gradient edges for smooth transition */
+  #demo-overlay::before,
+  #demo-overlay::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 120px;
+    z-index: 1;
+    pointer-events: none;
+  }
+  #demo-overlay::before {
+    top: 0;
+    background: linear-gradient(to bottom, transparent, rgba(8,8,8,1) 100%);
+    transform: translateY(-100%);
+  }
+  #demo-overlay::after {
+    bottom: 0;
+    background: linear-gradient(to top, transparent, rgba(8,8,8,1) 100%);
+    transform: translateY(100%);
+  }
+</style>
+<div id="demo-overlay">
+  <div id="demo-overlay-bg"></div>
+  <div id="demo-overlay-content">
+    <svg id="demo-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0110 0v4"/>
+      <circle cx="12" cy="16" r="1" fill="currentColor"/>
+    </svg>
+    <span id="demo-overlay-text">Premium Content</span>
+  </div>
+</div>
+<script>
+(function() {
+  var overlay = document.getElementById('demo-overlay');
+  if (!overlay) return;
+
+  // Sections that define the visible zones
+  var heroSection = document.querySelector('.hero-section');
+  var bottomSection = document.getElementById('watch-and-decide');
+  if (!heroSection || !bottomSection) return;
+
+  function updateOverlay() {
+    var scrollY = window.scrollY || window.pageYOffset;
+    var viewportH = window.innerHeight;
+
+    // Get hero bottom and bottom section top
+    var heroRect = heroSection.getBoundingClientRect();
+    var heroBottom = scrollY + heroRect.bottom;
+
+    var bottomRect = bottomSection.getBoundingClientRect();
+    var bottomTop = scrollY + bottomRect.top;
+
+    // Fade in zone: from hero bottom to hero bottom + 300px
+    var fadeInStart = heroBottom - viewportH * 0.5;
+    var fadeInEnd = fadeInStart + 300;
+
+    // Fade out zone: from bottom section top - 400px to bottom section top
+    var fadeOutStart = bottomTop - viewportH - 400;
+    var fadeOutEnd = fadeOutStart + 400;
+
+    if (scrollY < fadeInStart) {
+      // Before middle content — no overlay
+      overlay.classList.remove('active');
+      overlay.classList.remove('unlocking');
+    } else if (scrollY >= fadeInStart && scrollY < fadeInEnd) {
+      // Fading in
+      overlay.classList.add('active');
+      overlay.classList.remove('unlocking');
+      var progress = (scrollY - fadeInStart) / (fadeInEnd - fadeInStart);
+      overlay.style.opacity = Math.min(1, progress).toFixed(3);
+    } else if (scrollY >= fadeInEnd && scrollY < fadeOutStart) {
+      // Fully visible
+      overlay.classList.add('active');
+      overlay.classList.remove('unlocking');
+      overlay.style.opacity = '1';
+    } else if (scrollY >= fadeOutStart && scrollY < fadeOutEnd) {
+      // Fading out
+      overlay.classList.add('active');
+      overlay.classList.add('unlocking');
+      var progress = 1 - ((scrollY - fadeOutStart) / (fadeOutEnd - fadeOutStart));
+      overlay.style.opacity = Math.max(0, progress).toFixed(3);
+    } else {
+      // Past bottom section — no overlay
+      overlay.classList.remove('active');
+      overlay.style.opacity = '0';
+    }
+  }
+
+  window.addEventListener('scroll', updateOverlay, { passive: true });
+  window.addEventListener('resize', updateOverlay, { passive: true });
+  updateOverlay();
+})();
+</script>
+` : ''}
 </body></html>`;
 }
 

@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { verifyAccessToken } from '@/lib/auth/jwt';
+import { AGENT_PAGE_DEFAULTS } from '@/lib/agent-page-defaults';
 
 export const dynamic = 'force-dynamic';
 
@@ -123,17 +124,7 @@ export async function POST(request: NextRequest) {
         display_first_name: user.first_name,
         display_last_name: user.last_name,
         email: user.email,
-        activated: false,
-        show_phone: false,
-        phone_text_only: false,
-        custom_links: [],
-        links_settings: {
-          accentColor: '#ffd700',
-          iconStyle: 'light',
-          font: 'synonym',
-          bio: '',
-          showColorPhoto: false,
-        },
+        ...AGENT_PAGE_DEFAULTS,
       })
       .select()
       .single();

@@ -29,6 +29,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { createInvitation } from '@saa/shared/lib/supabase/invitation-service';
 import { sendWelcomeEmail } from '@/lib/email/send';
+import { AGENT_PAGE_DEFAULTS } from '@/lib/agent-page-defaults';
 
 export const dynamic = 'force-dynamic';
 
@@ -149,10 +150,7 @@ export async function POST(request: NextRequest) {
             display_first_name: firstName,
             display_last_name: lastName,
             email,
-            phone: phone || null,
-            show_phone: false,
-            phone_text_only: false,
-            activated: false,
+            ...AGENT_PAGE_DEFAULTS,
           })
           .select()
           .single();
