@@ -2385,7 +2385,7 @@ function SupportInfrastructureSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative px-4 sm:px-8 md:px-12 overflow-hidden">
+    <section ref={sectionRef} className="relative py-[50px] px-4 sm:px-8 md:px-12 overflow-hidden">
       {/* Top gradient edge - extends 5px up over previous section */}
       <div
         className="absolute left-0 right-0 pointer-events-none"
@@ -3247,10 +3247,10 @@ function WhatExpProvidesVersionB() {
       style={{
         boxShadow: `
           0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25),
-          inset 0 1px 0 0 rgba(255,255,255,0.35), inset 0 2px 4px 0 rgba(255,255,255,0.2),
-          inset 0 20px 40px -20px rgba(255,255,255,0.15),
-          inset 0 -1px 0 0 rgba(0,0,0,0.7), inset 0 -2px 6px 0 rgba(0,0,0,0.5),
-          inset 0 -10px 25px -8px rgba(0,0,0,0.6), inset 0 -25px 50px -20px rgba(0,0,0,0.45)
+          inset 0 1px 0 0 rgba(0,0,0,0.7), inset 0 2px 6px 0 rgba(0,0,0,0.5),
+          inset 0 10px 25px -8px rgba(0,0,0,0.6), inset 0 25px 50px -20px rgba(0,0,0,0.45),
+          inset 0 -1px 0 0 rgba(255,255,255,0.35), inset 0 -2px 4px 0 rgba(255,255,255,0.2),
+          inset 0 -20px 40px -20px rgba(255,255,255,0.15)
         `,
       }}
     >
