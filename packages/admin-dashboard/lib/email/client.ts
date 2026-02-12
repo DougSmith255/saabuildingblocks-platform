@@ -157,13 +157,19 @@ export async function sendEmail(
   }
 
   try {
+    // Sanitize tags — Resend only allows ASCII letters, numbers, underscores, dashes
+    const sanitizedTags = options.tags?.map(tag => ({
+      name: tag.name.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100) || 'unknown',
+      value: tag.value.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100) || 'unknown',
+    }));
+
     const result = await resend.emails.send({
       from: EMAIL_CONFIG.from,
       to: Array.isArray(options.to) ? options.to : [options.to],
       subject: options.subject,
       react: options.react,
       replyTo: options.replyTo || EMAIL_CONFIG.replyTo,
-      tags: options.tags,
+      tags: sanitizedTags,
     });
 
     if (result.error) {
