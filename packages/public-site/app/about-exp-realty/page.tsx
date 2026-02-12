@@ -2385,7 +2385,7 @@ function SupportInfrastructureSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative px-4 sm:px-8 md:px-12 overflow-hidden" style={{ margin: '-50px 0', padding: '50px 0' }}>
+    <section ref={sectionRef} className="relative px-4 sm:px-8 md:px-12 overflow-hidden" style={{ margin: '-100px 0', padding: '100px 0' }}>
 
       {/* HolographicGlobe background */}
       <div
