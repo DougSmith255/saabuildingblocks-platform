@@ -56,12 +56,13 @@ function SAAContent() {
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-body"
             style={{
               fontSize: 'clamp(13px, 1.6vw, 15px)',
-              background: 'rgba(255,80,80,0.08)',
-              border: '1px solid rgba(255,80,80,0.2)',
+              background: 'rgba(255,50,50,0.03)',
+              border: '1px solid rgba(255,215,0,0.5)',
+              boxShadow: '0 0 8px rgba(255,215,0,0.25), 0 0 20px rgba(255,215,0,0.1)',
               color: '#e8a0a0',
             }}
           >
-            <Ban size={13} style={{ color: '#ff5050', flexShrink: 0 }} />
+            <Ban size={13} style={{ color: '#ff5050', flexShrink: 0, filter: 'drop-shadow(0 0 4px rgba(255,50,50,0.8)) drop-shadow(0 0 8px rgba(255,50,50,0.4))' }} />
             {s}
           </span>
         ))}
@@ -343,9 +344,9 @@ function ValueSection1_Launch() {
         opacity: visible ? 1 : 0,
         animation: visible ? 'vs1FadeIn 0.6s ease-out' : 'none',
       }}>
-        {/* Two-column: card + oversized mockup */}
-        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
-          {/* Card side */}
+        {/* Two-column: mockup left, card right */}
+        <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-0">
+          {/* Card side (right on desktop) */}
           <div className="w-full lg:w-[35%] relative z-10">
             <GenericCard padding="lg">
               <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
@@ -374,10 +375,23 @@ function ValueSection1_Launch() {
             </GenericCard>
           </div>
 
-          {/* Mockup side — oversized, overlaps behind the card */}
-          <div className="w-full lg:w-[75%] lg:-ml-[10%] flex items-center justify-center">
+          {/* Mockup side (left on desktop) — oversized, overlaps behind the card */}
+          <div className="w-full lg:w-[75%] lg:-mr-[10%] flex items-center justify-center">
             <BrowserMockup url="saabuildingblocks.com/agent-portal/onboarding">
-              <ScreenshotPlaceholder label="Portal Screenshot — Onboarding Dashboard" />
+              <img
+                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/desktop"
+                srcSet="
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/mobile 640w,
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/tablet 1024w,
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/desktop 2000w
+                "
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 60vw"
+                alt="Agent Portal Onboarding Dashboard"
+                width={2558}
+                height={1242}
+                className="w-full h-auto block"
+                loading="lazy"
+              />
             </BrowserMockup>
           </div>
         </div>
@@ -452,8 +466,8 @@ function PhoneScreenPlaceholder({ label }: { label: string }) {
 }
 
 const PHONE_FAN_ITEMS = [
-  'Link Page',
   'Lead Funnel',
+  'Link Page',
   'Templates',
   'Analytics',
 ];
@@ -485,7 +499,7 @@ function ValueSection2_Marketing() {
           from { opacity: 0; transform: translateY(12px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        .vs2-phone-fan { aspect-ratio: 3/4; }
+        .vs2-phone-fan { aspect-ratio: 1/1; }
         .vs2-phone-item { width: 40%; }
         @media (min-width: 640px) {
           .vs2-phone-fan { aspect-ratio: 16/10; }
@@ -497,9 +511,9 @@ function ValueSection2_Marketing() {
         opacity: visible ? 1 : 0,
         animation: visible ? 'vs2FadeIn 0.6s ease-out' : 'none',
       }}>
-        {/* Two-column: reversed — phone fan left, card right */}
-        <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-0">
-          {/* Card side (right on desktop) */}
+        {/* Two-column: card left, phone fan right */}
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
+          {/* Card side (left on desktop) */}
           <div className="w-full lg:w-[35%] relative z-10">
             <GenericCard padding="lg">
               <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
@@ -529,8 +543,8 @@ function ValueSection2_Marketing() {
             </GenericCard>
           </div>
 
-          {/* Phone fan (left on desktop) — oversized, overlaps behind the card */}
-          <div className="w-full lg:w-[75%] lg:-mr-[10%] flex items-center justify-center">
+          {/* Phone fan (right on desktop) — oversized, overlaps behind the card */}
+          <div className="w-full lg:w-[75%] lg:-ml-[10%] flex items-center justify-center">
             <div className="relative w-full vs2-phone-fan">
               {PHONE_FAN_ITEMS.map((label, i) => {
                 const count = PHONE_FAN_ITEMS.length;
@@ -552,7 +566,19 @@ function ValueSection2_Marketing() {
                     }}
                   >
                     <PhoneMockup>
-                      <PhoneScreenPlaceholder label={label} />
+                      {label === 'Link Page' ? (
+                        <img
+                          src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-link-page-phone-mockup/public"
+                          alt="SAA Link Page"
+                          width={810}
+                          height={1440}
+                          className="w-full h-auto block"
+                          loading="lazy"
+                          style={{ aspectRatio: '9/16' }}
+                        />
+                      ) : (
+                        <PhoneScreenPlaceholder label={label} />
+                      )}
                     </PhoneMockup>
                   </div>
                 );

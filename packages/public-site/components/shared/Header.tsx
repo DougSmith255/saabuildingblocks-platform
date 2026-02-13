@@ -715,7 +715,8 @@ export default function Header() {
         }
 
         /* Hover - Yellow with glow (fast 0.3s in) */
-        .agent-portal:hover,
+        /* header ancestor bumps specificity above header .nav-link:hover (0,2,1) */
+        header .agent-portal:hover,
         .agent-portal-mobile:hover {
           color: #ffd700 !important;
           text-shadow:
@@ -727,10 +728,10 @@ export default function Header() {
         }
 
         /* Clicked - Green with glow (fast 0.3s in, slow 1s out via base rule) */
-        /* Double class selector to beat :hover specificity */
-        .agent-portal.clicked,
+        /* header ancestor + double class beats hover specificity */
+        header .agent-portal.clicked,
         .agent-portal-mobile.clicked,
-        .agent-portal.clicked:hover,
+        header .agent-portal.clicked:hover,
         .agent-portal-mobile.clicked:hover {
           color: #00ff88 !important;
           text-shadow:
