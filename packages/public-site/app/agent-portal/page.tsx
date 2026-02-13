@@ -1127,6 +1127,7 @@ function AgentPortal() {
   const [showSupportHelpModal, setShowSupportHelpModal] = useState(false);
   const [showTeamCallsHelpModal, setShowTeamCallsHelpModal] = useState(false);
   const [showAnalyticsHelpModal, setShowAnalyticsHelpModal] = useState(false);
+  const [showFixIssuesPanel, setShowFixIssuesPanel] = useState(false);
 
   // Help panel closing animation state
   const [closingHelpPanel, setClosingHelpPanel] = useState<string | null>(null);
@@ -1221,7 +1222,8 @@ function AgentPortal() {
   // Check if any popup is open (for header slide animation and body scroll lock)
   const isAnyPopupOpen = showEditProfile || showImageEditor ||
     showLinkPageHelpModal || showNewAgentsHelpModal || showTemplatesHelpModal ||
-    showAgentAttractionHelpModal || showEliteCoursesHelpModal || showSupportHelpModal || showTeamCallsHelpModal;
+    showAgentAttractionHelpModal || showEliteCoursesHelpModal || showSupportHelpModal || showTeamCallsHelpModal ||
+    showFixIssuesPanel;
 
 
   // Calculate minimum crop size percentage based on 900px minimum
@@ -1775,6 +1777,31 @@ function AgentPortal() {
     localStorage.removeItem('agent_portal_user');
     localStorage.removeItem('agent_portal_token');
     router.push('/agent-portal/login');
+  };
+
+  const handleClearCache = async () => {
+    // 1. Unregister service worker
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const reg of registrations) {
+        await reg.unregister();
+      }
+    }
+    // 2. Clear service worker caches
+    if ('caches' in window) {
+      const cacheNames = await caches.keys();
+      for (const name of cacheNames) {
+        await caches.delete(name);
+      }
+    }
+    // 3. Clear localStorage
+    localStorage.removeItem('agent_portal_token');
+    localStorage.removeItem('agent_portal_user');
+    localStorage.removeItem('agent_portal_page_data');
+    // 4. Clear sessionStorage
+    sessionStorage.removeItem('agent_portal_loaded');
+    // 5. Hard reload
+    window.location.href = '/agent-portal/login';
   };
 
   const handleOpenEditProfile = () => {
@@ -3367,13 +3394,25 @@ function AgentPortal() {
                   );
                 })}
 
-                {/* Separator line before logout */}
+                {/* Separator line before fix issues + logout */}
                 <div
                   className="mx-6 my-4 h-[1px]"
                   style={{
                     background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.3) 20%, rgba(180, 180, 180, 0.3) 80%, transparent 100%)',
                   }}
                 />
+
+                {/* Fix Issues Button */}
+                <button
+                  onClick={() => {
+                    closeMobileMenu();
+                    setShowFixIssuesPanel(true);
+                  }}
+                  className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200 text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/5"
+                >
+                  <Wrench className="w-5 h-5" />
+                  <span className="text-sm font-medium">Fix Issues</span>
+                </button>
 
                 {/* Logout Button at bottom */}
                 <button
@@ -3868,6 +3907,35 @@ function AgentPortal() {
                 );
               })}
               </nav>
+
+              {/* Fix Issues Button - bottom of sidebar */}
+              <div className="flex-shrink-0 px-1 pt-1">
+                <div
+                  className="mx-0 mb-1 h-[1px]"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent 0%, rgba(180, 180, 180, 0.15) 20%, rgba(180, 180, 180, 0.15) 80%, transparent 100%)',
+                  }}
+                />
+                <button
+                  onClick={() => setShowFixIssuesPanel(true)}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-all duration-200 hover:animate-[shakeHover_0.3s_ease-in-out]"
+                  style={{
+                    background: 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}
+                >
+                  <div style={{ color: 'rgba(229,228,221,0.6)' }}>
+                    <Wrench className="w-4 h-4 min-[1300px]:w-[18px] min-[1300px]:h-[18px] min-[1500px]:w-5 min-[1500px]:h-5" />
+                  </div>
+                  <span
+                    className="font-medium font-taskor text-[10px] min-[1300px]:text-xs min-[1500px]:text-sm"
+                    style={{ color: 'rgba(229,228,221,0.8)' }}
+                  >
+                    Fix Issues
+                  </span>
+                </button>
+              </div>
 
             </div>
           </div>
@@ -5869,6 +5937,135 @@ function AgentPortal() {
                 }}
               >
                 Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fix Issues Panel */}
+      {showFixIssuesPanel && (
+        <div
+          className="fixed inset-0 z-[99990] flex items-end min-[1024px]:items-stretch min-[1024px]:justify-end"
+          onClick={() => closeHelpPanel('fixissues', setShowFixIssuesPanel)}
+        >
+          {/* Backdrop with blur */}
+          <div
+            className={`help-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${closingHelpPanel === 'fixissues' ? 'help-backdrop-closing' : ''}`}
+            style={{ isolation: 'isolate' }}
+          />
+
+          {/* Slide-in Panel */}
+          <div
+            className={`help-panel help-panel-gold relative overflow-y-auto overscroll-contain ${closingHelpPanel === 'fixissues' ? 'help-panel-closing' : ''}`}
+            style={{
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+            {...createSwipeHandlers('fixissues', setShowFixIssuesPanel)}
+          >
+            {/* Header */}
+            <div
+              className="help-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(20,20,20,0.98) 50%)',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    background: 'rgba(255, 215, 0, 0.2)',
+                    border: '1px solid rgba(255, 215, 0, 0.4)',
+                    boxShadow: '0 0 12px rgba(255, 215, 0, 0.3)',
+                  }}
+                >
+                  <Wrench className="w-6 h-6 text-[#ffd700]" />
+                </div>
+                <h2 className="text-xl font-semibold text-[#ffd700]" style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}>Fix Issues</h2>
+              </div>
+              <button
+                onClick={() => closeHelpPanel('fixissues', setShowFixIssuesPanel)}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              <p className="text-[#e5e4dd]/80">
+                If something isn&apos;t displaying correctly or feels outdated, clearing the cache usually fixes it.
+              </p>
+
+              {/* What it does */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <p className="text-[#e5e4dd] text-sm mb-2 font-medium">What This Does</p>
+                <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700] mt-0.5">•</span>
+                    <span>Removes saved data so the app loads fresh content</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700] mt-0.5">•</span>
+                    <span>Clears any cached pages or images that may be outdated</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700] mt-0.5">•</span>
+                    <span>You&apos;ll need to <strong className="text-[#e5e4dd]">log in again</strong> after clearing</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* When to use */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 215, 0, 0.05)',
+                  border: '1px solid rgba(255, 215, 0, 0.15)',
+                }}
+              >
+                <p className="text-[#ffd700] text-sm font-medium mb-1">When To Use This</p>
+                <p className="text-[#e5e4dd]/70 text-sm">
+                  Pages look outdated, buttons aren&apos;t responding, images are missing, or anything feels &quot;stuck.&quot; Clearing the cache resolves most issues.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10 space-y-3">
+              <button
+                onClick={handleClearCache}
+                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #ffd700 0%, #cc9900 100%)',
+                  color: '#1a1500',
+                  boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Clear Cache & Reload
+              </button>
+              <button
+                onClick={() => closeHelpPanel('fixissues', setShowFixIssuesPanel)}
+                className="w-full px-4 py-3 rounded-lg text-[#e5e4dd]/60 hover:text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+              >
+                Cancel
               </button>
             </div>
           </div>

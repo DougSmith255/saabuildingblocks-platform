@@ -15,7 +15,7 @@
  * STATIC EXPORT: Excluded via layout.tsx (parent has dynamic = 'force-dynamic')
  */
 
-import { useEffect, Suspense } from 'react';
+import { useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import LoginForm from './components/LoginForm';
@@ -25,6 +25,26 @@ function LoginPageContent() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const handleClearCache = useCallback(async () => {
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const reg of registrations) {
+        await reg.unregister();
+      }
+    }
+    if ('caches' in window) {
+      const cacheNames = await caches.keys();
+      for (const name of cacheNames) {
+        await caches.delete(name);
+      }
+    }
+    localStorage.removeItem('agent_portal_token');
+    localStorage.removeItem('agent_portal_user');
+    localStorage.removeItem('agent_portal_page_data');
+    sessionStorage.removeItem('agent_portal_loaded');
+    window.location.reload();
+  }, []);
 
   // Redirect authenticated users
   useEffect(() => {
@@ -61,9 +81,18 @@ function LoginPageContent() {
       </CyberCard>
 
       {/* Footer */}
-      <div className="mt-8 text-center text-sm">
+      <div className="mt-8 text-center text-sm space-y-2">
         <p className="text-[#ffd700]">
           🔒 Secured by Supabase Auth
+        </p>
+        <p className="text-[#e5e4dd]/40">
+          Having trouble?{' '}
+          <button
+            onClick={handleClearCache}
+            className="text-[#e5e4dd]/60 hover:text-[#ffd700] underline underline-offset-2 transition-colors"
+          >
+            Clear cache
+          </button>
         </p>
       </div>
     </div>
