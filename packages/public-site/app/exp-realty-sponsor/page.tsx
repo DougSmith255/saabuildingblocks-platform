@@ -344,19 +344,19 @@ function ValueSection1_Launch() {
         animation: visible ? 'vs1FadeIn 0.6s ease-out' : 'none',
       }}>
         {/* Heading */}
-        <div className="text-center mb-10 md:mb-14">
-          <H2 style={{ marginBottom: '1rem', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>
+        <div className="mb-8 md:mb-10">
+          <H2 style={{ marginBottom: '0.75rem', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', textAlign: 'left' }}>
             Launch Your Business With Clarity From Day One
           </H2>
+          <p className="text-body">
+            Structured onboarding designed to move you from joining to operating without confusion or delay.
+          </p>
         </div>
 
         {/* Two-column: text + mockup */}
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           {/* Text side */}
           <div className="w-full md:w-1/2 space-y-6">
-            <p className="text-body">
-              Structured onboarding designed to move you from joining to operating without confusion or delay.
-            </p>
             <ul className="space-y-4">
               {[
                 'Onboarding dashboard',
@@ -492,19 +492,19 @@ function ValueSection2_Marketing() {
         animation: visible ? 'vs2FadeIn 0.6s ease-out' : 'none',
       }}>
         {/* Heading */}
-        <div className="text-center mb-10 md:mb-14">
-          <H2 style={{ marginBottom: '1rem', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>
+        <div className="mb-8 md:mb-10">
+          <H2 style={{ marginBottom: '0.75rem', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', textAlign: 'left' }}>
             Generate Business Through Built-In Marketing &amp; Lead Systems
           </H2>
+          <p className="text-body">
+            Integrated marketing infrastructure built to create visibility and capture opportunity from day one.
+          </p>
         </div>
 
         {/* Two-column: text + phone fan */}
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           {/* Text side */}
           <div className="w-full md:w-[40%] space-y-6">
-            <p className="text-body">
-              Integrated marketing infrastructure built to create visibility and capture opportunity from day one.
-            </p>
             <ul className="space-y-4">
               {[
                 'Branded Link Page system',
@@ -2302,8 +2302,21 @@ export default function ExpRealtySponsor() {
         <Section1 />
         <Section2 />
         <Section3 />
-        <ValueSection1_Launch />
-        <ValueSection2_Marketing />
+        {/* Value Sections — grouped under a shared H2 */}
+        <div className="flex flex-col" style={{ gap: '80px' }}>
+          <div className="px-4 sm:px-8 md:px-12">
+            <div className="max-w-[1200px] mx-auto text-center">
+              <H2 style={{ marginBottom: '1rem' }}>
+                What You Get Inside SAA
+              </H2>
+              <p className="text-body mx-auto" style={{ maxWidth: '750px' }}>
+                From your first day to your long-term growth, SAA provides structured systems across onboarding, marketing, training, income expansion, and ongoing support — all built into the portal and ready to use.
+              </p>
+            </div>
+          </div>
+          <ValueSection1_Launch />
+          <ValueSection2_Marketing />
+        </div>
         <Section4Final />
         <MeetTheFounders />
         <Section6Final />
