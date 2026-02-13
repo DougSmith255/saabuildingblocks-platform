@@ -348,17 +348,14 @@ function ValueSection1_Launch() {
           <H2 style={{ marginBottom: '1rem' }}>
             Launch Your Business With Clarity From Day One
           </H2>
-          <p className="text-body mx-auto" style={{ maxWidth: '700px', color: '#dcdbd5' }}>
-            Structured onboarding designed to move you from joining to operating without confusion or delay.
-          </p>
         </div>
 
         {/* Two-column: text + mockup */}
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           {/* Text side */}
           <div className="w-full md:w-1/2 space-y-6">
-            <p className="text-body" style={{ color: '#9a9a9a', fontSize: 'clamp(13px, 1.6vw, 15px)', fontFamily: 'var(--font-taskor, sans-serif)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-              Includes
+            <p className="text-body">
+              Structured onboarding designed to move you from joining to operating without confusion or delay. Includes:
             </p>
             <ul className="space-y-4">
               {[
@@ -366,13 +363,13 @@ function ValueSection1_Launch() {
                 'Step-by-step setup checklist',
                 '1-on-1 strategy session',
               ].map((item, i) => (
-                <li key={i} className="flex items-center gap-3 text-body" style={{ color: '#dcdbd5', fontSize: 'clamp(16px, 2vw, 19px)' }}>
+                <li key={i} className="flex items-center gap-3 text-body">
                   <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                   {item}
                 </li>
               ))}
             </ul>
-            <p className="text-body pt-2" style={{ color: '#9a9a9a', fontSize: 'clamp(14px, 1.6vw, 16px)', fontStyle: 'italic' }}>
+            <p className="text-body pt-2" style={{ color: '#9a9a9a', fontStyle: 'italic' }}>
               Move into production quickly with guided systems that remove guesswork from your launch.
             </p>
           </div>
