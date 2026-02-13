@@ -348,15 +348,15 @@ function ValueSection1_Launch() {
           <H2 style={{ marginBottom: '0.75rem', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', textAlign: 'left' }}>
             Launch Your Business With Clarity From Day One
           </H2>
-          <p className="text-body">
-            Structured onboarding designed to move you from joining to operating without confusion or delay.
-          </p>
         </div>
 
         {/* Two-column: text + mockup */}
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           {/* Text side */}
           <div className="w-full md:w-1/2 space-y-6">
+            <p className="text-body">
+              Structured onboarding designed to move you from joining to operating without confusion or delay.
+            </p>
             <ul className="space-y-4">
               {[
                 'Onboarding dashboard',
@@ -496,15 +496,15 @@ function ValueSection2_Marketing() {
           <H2 style={{ marginBottom: '0.75rem', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', textAlign: 'left' }}>
             Generate Business Through Built-In Marketing &amp; Lead Systems
           </H2>
-          <p className="text-body">
-            Integrated marketing infrastructure built to create visibility and capture opportunity from day one.
-          </p>
         </div>
 
         {/* Two-column: text + phone fan */}
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           {/* Text side */}
           <div className="w-full md:w-[40%] space-y-6">
+            <p className="text-body">
+              Integrated marketing infrastructure built to create visibility and capture opportunity from day one.
+            </p>
             <ul className="space-y-4">
               {[
                 'Branded Link Page system',
@@ -931,6 +931,7 @@ function Section2() {
   const [activeCard, setActiveCard] = useState(0);
   const [autoRotate, setAutoRotate] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const userClicked = useRef(false);
 
   // Start auto-rotate only after 60% of section is visible
@@ -966,10 +967,20 @@ function Section2() {
     setActiveCard(idx);
   };
 
+  // Auto-scroll mobile slider to center active card
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const card = container.children[activeCard] as HTMLElement;
+    if (!card) return;
+    const scrollLeft = card.offsetLeft - container.offsetWidth / 2 + card.offsetWidth / 2;
+    container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+  }, [activeCard]);
+
   const cards = [
     { label: 'Zero Cost to Agents', icon: Shield },
     { label: 'Built to Last', icon: Layers },
-    { label: 'Team-Built', icon: Building2 },
+    { label: 'Beyond One Sponsor', icon: Building2 },
   ];
 
   const mistyGoldBg = 'radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%), radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%), radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%), radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%), linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)';
@@ -1059,9 +1070,9 @@ function Section2() {
           </p>
         </div>
 
-        {/* 3 Cards */}
-        <div className="grid grid-cols-3 gap-2 md:gap-4">
-          {cards.map((card, idx) => {
+        {/* 3 Cards — Desktop: grid, Mobile: horizontal scroll slider */}
+        {(() => {
+          const renderCard = (card: typeof cards[0], idx: number) => {
             const isActive = activeCard === idx;
             const IconComp = card.icon;
             return (
@@ -1092,7 +1103,7 @@ function Section2() {
                   }}
                 />
                 <div className="relative z-10">
-                {/* Icon ring */}
+                  {/* Icon ring */}
                   <div className="relative mx-auto mb-2 md:mb-3 w-9 h-9 md:w-14 md:h-14">
                     <div
                       className="absolute inset-0 rounded-full"
@@ -1131,7 +1142,7 @@ function Section2() {
 
                   {/* Card label */}
                   <h3
-                    className="text-h6"
+                    className="text-h6 whitespace-nowrap"
                     style={{
                       color: isActive ? '#3a2800' : '#e5e4dd',
                       transition: 'color 0.6s ease',
@@ -1142,8 +1153,37 @@ function Section2() {
                 </div>
               </button>
             );
-          })}
-        </div>
+          };
+
+          return (
+            <>
+              {/* Desktop */}
+              <div className="hidden md:grid grid-cols-3 gap-4">
+                {cards.map((card, idx) => renderCard(card, idx))}
+              </div>
+
+              {/* Mobile: horizontal scroll with edge fades */}
+              <div className="md:hidden relative">
+                <div
+                  ref={scrollRef}
+                  className="s2-scroll flex gap-2 overflow-x-auto pb-2"
+                  style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+                >
+                  <style>{`.s2-scroll::-webkit-scrollbar { display: none; }`}</style>
+                  {cards.map((card, idx) => (
+                    <div key={idx} className="flex-shrink-0" style={{ width: '70%', scrollSnapAlign: 'center' }}>
+                      {renderCard(card, idx)}
+                    </div>
+                  ))}
+                </div>
+                {/* Left fade */}
+                <div className="absolute left-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to right, var(--background, #0a0a0a), transparent)' }} />
+                {/* Right fade */}
+                <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to left, var(--background, #0a0a0a), transparent)' }} />
+              </div>
+            </>
+          );
+        })()}
 
         {/* Shared description panel */}
         <div className="mt-3 md:mt-4">

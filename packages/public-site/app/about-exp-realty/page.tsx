@@ -1409,16 +1409,15 @@ function SpotlightConsole() {
     return () => clearInterval(interval);
   }, [chipsInView, isStopped]);
 
-  // Scroll active chip into view on mobile — only when chips are in view
+  // Scroll active chip into center on mobile
   useEffect(() => {
     if (!chipsInView || !chipRailRef.current) return;
-    const rail = chipRailRef.current;
-    // Chips are inside a centering wrapper div
-    const inner = rail.firstElementChild;
-    const activeChip = inner?.children[activeIndex] as HTMLElement | undefined;
-    if (activeChip) {
-      activeChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    }
+    const container = chipRailRef.current;
+    const chips = Array.from(container.querySelectorAll<HTMLElement>(':scope > div'));
+    const chip = chips[activeIndex];
+    if (!chip) return;
+    const scrollLeft = chip.offsetLeft - container.offsetWidth / 2 + chip.offsetWidth / 2;
+    container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
   }, [activeIndex, chipsInView]);
 
   const handleSelect = useCallback((index: number) => {
@@ -1515,13 +1514,17 @@ function SpotlightConsole() {
           </div>
         </div>
 
-        {/* Mobile / Tablet: stacked layout */}
+        {/* Mobile / Tablet: horizontal scroll slider with edge fades */}
         <div className="lg:hidden">
-          {/* 4 chips in 2x2 grid above description */}
-          <div className="mb-4">
-            <div className="grid grid-cols-2 gap-2" style={{ height: '100px' }}>
-              {FEATURES.slice(0, 2).map((f, i) => (
-                <div key={f.keyword} style={{ height: '100%' }}>
+          <div className="relative mb-4">
+            <div
+              ref={chipRailRef}
+              className="sc-chip-rail flex gap-2 overflow-x-auto pb-2"
+              style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+            >
+              <style>{`.sc-chip-rail::-webkit-scrollbar { display: none; }`}</style>
+              {FEATURES.map((f, i) => (
+                <div key={f.keyword} className="flex-shrink-0" style={{ width: '55%', height: '100px', scrollSnapAlign: 'center' }}>
                   <FeatureChip
                     icon={f.icon}
                     keyword={f.keyword}
@@ -1531,18 +1534,10 @@ function SpotlightConsole() {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-2 gap-2 mt-2" style={{ height: '100px' }}>
-              {FEATURES.slice(2, 4).map((f, i) => (
-                <div key={f.keyword} style={{ height: '100%' }}>
-                  <FeatureChip
-                    icon={f.icon}
-                    keyword={f.keyword}
-                    isActive={activeIndex === i + 2}
-                    onSelect={() => handleSelect(i + 2)}
-                  />
-                </div>
-              ))}
-            </div>
+            {/* Left fade */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to right, var(--background, #0a0a0a), transparent)' }} />
+            {/* Right fade */}
+            <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to left, var(--background, #0a0a0a), transparent)' }} />
           </div>
 
           {/* Detail panel (full width) — grid overlay for stable height (tallest panel wins) */}
