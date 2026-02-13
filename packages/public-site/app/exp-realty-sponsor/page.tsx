@@ -8,7 +8,7 @@ import { GrainCard } from '@saa/shared/components/saa/cards';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
 import { AgentCounter, TaglineCounterSuffix } from '@/app/components/AgentCounter';
-import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers, Rocket, BarChart3, Link2, LifeBuoy, TrendingUp, UserCircle, Video, Megaphone, UserPlus, Download, Handshake, Sparkles, ArrowRight, type LucideIcon } from 'lucide-react';
+import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers, Rocket, Link2, LifeBuoy, TrendingUp, UserCircle, Video, Megaphone, UserPlus, Download, Handshake, Sparkles, ArrowRight, type LucideIcon } from 'lucide-react';
 
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
@@ -1587,9 +1587,6 @@ function Section3() {
       {/* Hidden audio element for walkthrough voiceover */}
       <audio ref={audioRef} src={WALKTHROUGH_AUDIO_URL} preload="auto" />
 
-      {/* Champagne GlassPanel wraps entire section — heading + portal showcase */}
-      <GlassPanel variant="champagne" noBlur className="py-[50px]">
-
       {/* Section heading */}
       <div className="text-center max-w-[1400px] mx-auto px-4">
         <H2>
@@ -1597,98 +1594,6 @@ function Section3() {
         </H2>
         <p className="text-body max-w-[950px] mx-auto" style={{ marginTop: '-1.5rem', marginBottom: '2rem' }}>
           As an SAA agent, you&apos;re also part of the Wolf Pack &mdash; our team within eXp Realty. Your Agent Portal brings everything together in one place.
-        </p>
-      </div>
-
-      {/* Value overview — benefit-framed summary above the portal demo */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 md:px-12 pb-4 md:pb-6">
-        {(() => {
-          const cards = [
-            {
-              icon: Rocket,
-              title: 'Guided Launch',
-              text: 'Structured onboarding, strategy sessions, and step-by-step setup so you\u2019re producing from day one \u2014 not guessing.',
-              color: '#ffd700',
-            },
-            {
-              icon: BarChart3,
-              title: 'Marketing & Lead Systems',
-              text: 'A branded link page, lead capture pages, Canva templates, and analytics \u2014 integrated tools that drive visibility and track results.',
-              color: '#00bfff',
-            },
-            {
-              icon: GraduationCap,
-              title: 'Training & Development',
-              text: 'Five premium courses, weekly mastermind calls, and new agent resources \u2014 real training led by agents who are actively producing.',
-              color: '#ffd700',
-            },
-            {
-              icon: TrendingUp,
-              title: 'Growth & Attraction',
-              text: 'A passive attraction funnel and referral network built into your brand presence \u2014 expand beyond production if and when you choose.',
-              color: '#00bfff',
-            },
-            {
-              icon: LifeBuoy,
-              title: 'Ongoing Support',
-              text: 'Broker rooms, leadership contacts, and team support channels \u2014 centralized so you always know where to go.',
-              color: '#ffd700',
-            },
-          ];
-          const renderCard = (item: typeof cards[0], i: number) => (
-            <div
-              key={i}
-              className="relative overflow-hidden rounded-xl p-5"
-              style={{
-                background: 'rgba(12,12,12,0.7)',
-                border: `1px solid ${item.color === '#ffd700' ? 'rgba(255,215,0,0.1)' : 'rgba(0,191,255,0.1)'}`,
-              }}
-            >
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  backgroundImage: `
-                    linear-gradient(${item.color === '#ffd700' ? 'rgba(255,215,0,0.01)' : 'rgba(0,191,255,0.01)'} 1px, transparent 1px),
-                    linear-gradient(90deg, ${item.color === '#ffd700' ? 'rgba(255,215,0,0.01)' : 'rgba(0,191,255,0.01)'} 1px, transparent 1px)
-                  `,
-                  backgroundSize: '20px 20px',
-                }}
-              />
-              <div className="relative z-10">
-                <div className="flex items-center gap-2.5 mb-2.5">
-                  <item.icon size={18} style={{ color: item.color, flexShrink: 0 }} />
-                  <h3 className="text-h6">
-                    {item.title}
-                  </h3>
-                </div>
-                <p className="text-body">
-                  {item.text}
-                </p>
-              </div>
-            </div>
-          );
-          return (
-            <>
-              {/* Top row: 3 cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-                {cards.slice(0, 3).map(renderCard)}
-              </div>
-              {/* Bottom row: 2 cards spanning full width */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 mt-4 md:mt-5">
-                {cards.slice(3).map((item, i) => renderCard(item, i + 3))}
-              </div>
-            </>
-          );
-        })()}
-      </div>
-
-      {/* Portal walkthrough label */}
-      <div id="agent-portal-walkthrough" className="text-center max-w-[1400px] mx-auto pb-2 md:pb-3 px-4" style={{ paddingTop: '40px' }}>
-        <H2 style={{ fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', marginBottom: '0.5rem' }}>
-          Agent Portal Walkthrough
-        </H2>
-        <p className="text-body max-w-[950px] mx-auto">
-          The Agent Portal is your central hub for everything SAA and Wolf Pack &mdash; onboarding, marketing tools, training, templates, and team support, all in one place.
         </p>
       </div>
 
@@ -1990,7 +1895,6 @@ function Section3() {
         </div>
       </div>
 
-      </GlassPanel>
     </section>
   );
 }
