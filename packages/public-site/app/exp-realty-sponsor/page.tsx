@@ -491,9 +491,9 @@ function ValueSection2_Marketing() {
         opacity: visible ? 1 : 0,
         animation: visible ? 'vs2FadeIn 0.6s ease-out' : 'none',
       }}>
-        {/* Two-column: card + oversized phone fan */}
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-0">
-          {/* Card side */}
+        {/* Two-column: reversed — phone fan left, card right */}
+        <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-0">
+          {/* Card side (right on desktop) */}
           <div className="w-full md:w-[40%] relative z-10">
             <GenericCard padding="lg">
               <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
@@ -523,8 +523,8 @@ function ValueSection2_Marketing() {
             </GenericCard>
           </div>
 
-          {/* Phone fan — oversized, overlaps ~20% behind the card */}
-          <div className="w-full md:w-[68%] md:-ml-[8%] flex items-center justify-center">
+          {/* Phone fan (left on desktop) — oversized, overlaps ~20% behind the card */}
+          <div className="w-full md:w-[68%] md:-mr-[8%] flex items-center justify-center">
             <div className="relative w-full" style={{ aspectRatio: '16/10' }}>
               {PHONE_FAN_ITEMS.map((label, i) => {
                 const count = PHONE_FAN_ITEMS.length;
