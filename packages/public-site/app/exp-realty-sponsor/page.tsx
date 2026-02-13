@@ -388,6 +388,179 @@ function ValueSection1_Launch() {
 
 
 // ============================================================================
+// VALUE SECTION 2 — "Generate Business Through Built-In Marketing & Lead Systems"
+// ============================================================================
+
+function PhoneMockup({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{
+      background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)',
+      borderRadius: '20px',
+      padding: '8px',
+      boxShadow: '0 0 0 1px rgba(255,255,255,0.1), 0 20px 40px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)',
+      width: '140px',
+      flexShrink: 0,
+    }}>
+      {/* Notch */}
+      <div style={{
+        width: '40px',
+        height: '4px',
+        background: 'rgba(255,255,255,0.15)',
+        borderRadius: '2px',
+        margin: '0 auto 6px',
+      }} />
+      {/* Screen */}
+      <div style={{
+        borderRadius: '14px',
+        overflow: 'hidden',
+        background: '#0a0a0a',
+      }}>
+        {children}
+      </div>
+      {/* Home indicator */}
+      <div style={{
+        width: '50px',
+        height: '3px',
+        background: 'rgba(255,255,255,0.15)',
+        borderRadius: '2px',
+        margin: '6px auto 0',
+      }} />
+    </div>
+  );
+}
+
+function PhoneScreenPlaceholder({ label }: { label: string }) {
+  return (
+    <div
+      data-placeholder="true"
+      className="w-full flex items-center justify-center"
+      style={{
+        aspectRatio: '9/16',
+        background: 'linear-gradient(135deg, rgba(15,15,15,1) 0%, rgba(20,20,18,1) 100%)',
+        backgroundImage: `
+          linear-gradient(rgba(255,215,0,0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,215,0,0.015) 1px, transparent 1px)
+        `,
+        backgroundSize: '12px 12px',
+      }}
+    >
+      <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: '9px', fontFamily: 'monospace', textAlign: 'center', padding: '4px' }}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
+const PHONE_FAN_ITEMS = [
+  'Link Page',
+  'Attraction Page',
+  'Lead Funnel',
+  'Templates',
+  'Analytics',
+  'Dashboard',
+];
+
+function ValueSection2_Marketing() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12">
+      <style>{`
+        @keyframes vs2FadeIn {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      <div className="max-w-[1200px] mx-auto" style={{
+        opacity: visible ? 1 : 0,
+        animation: visible ? 'vs2FadeIn 0.6s ease-out' : 'none',
+      }}>
+        {/* Heading */}
+        <div className="text-center mb-10 md:mb-14">
+          <H2 style={{ marginBottom: '1rem' }}>
+            Generate Business Through Built-In Marketing &amp; Lead Systems
+          </H2>
+        </div>
+
+        {/* Two-column: text + phone fan */}
+        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+          {/* Text side */}
+          <div className="w-full md:w-[40%] space-y-6">
+            <p className="text-body">
+              Integrated marketing infrastructure built to create visibility and capture opportunity from day one. Includes:
+            </p>
+            <ul className="space-y-4">
+              {[
+                'Branded Link Page system',
+                'Lead capture funnels',
+                'Canva template library',
+                'Performance analytics dashboard',
+              ].map((item, i) => (
+                <li key={i} className="flex items-center gap-3 text-body">
+                  <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p className="text-body pt-2" style={{ color: '#9a9a9a', fontStyle: 'italic' }}>
+              Everything works together to drive exposure, leads, and measurable results.
+            </p>
+          </div>
+
+          {/* Phone fan */}
+          <div className="w-full md:w-[60%] flex justify-center">
+            <div className="relative flex items-end justify-center" style={{ height: '340px', width: '100%' }}>
+              {PHONE_FAN_ITEMS.map((label, i) => {
+                const count = PHONE_FAN_ITEMS.length;
+                const mid = (count - 1) / 2;
+                const offset = i - mid;
+                const rotate = offset * 6;
+                const translateX = offset * 58;
+                const translateY = Math.abs(offset) * 12;
+                return (
+                  <div
+                    key={i}
+                    className="absolute"
+                    style={{
+                      transform: `translateX(${translateX}px) translateY(${translateY}px) rotate(${rotate}deg)`,
+                      transformOrigin: 'bottom center',
+                      zIndex: count - Math.abs(Math.round(offset)),
+                    }}
+                  >
+                    <PhoneMockup>
+                      <PhoneScreenPlaceholder label={label} />
+                    </PhoneMockup>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+// ============================================================================
 // SECTION 1 — Focus Cards with edge-to-edge GlassPanel
 // Content rendered at a JS-measured fixed pixel width so it NEVER reflows.
 // Card overflow:hidden clips it — expanding the card reveals content.
@@ -2127,6 +2300,7 @@ export default function ExpRealtySponsor() {
         <Section2 />
         <Section3 />
         <ValueSection1_Launch />
+        <ValueSection2_Marketing />
         <Section4Final />
         <MeetTheFounders />
         <Section6Final />
