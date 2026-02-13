@@ -395,10 +395,10 @@ function PhoneMockup({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
       background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)',
-      borderRadius: '16px',
-      padding: '4px',
+      borderRadius: 'clamp(12px, 2vw, 20px)',
+      padding: 'clamp(3px, 0.4vw, 6px)',
       boxShadow: '0 0 0 1px rgba(255,255,255,0.1), 0 20px 40px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)',
-      width: '140px',
+      width: '100%',
       flexShrink: 0,
     }}>
       {/* Notch */}
@@ -524,21 +524,26 @@ function ValueSection2_Marketing() {
           </div>
 
           {/* Phone fan */}
-          <div className="w-full md:w-[60%] flex justify-center">
-            <div className="relative flex items-end justify-center" style={{ height: '340px', width: '100%' }}>
+          <div className="w-full md:w-[60%] flex justify-center items-center">
+            <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
               {PHONE_FAN_ITEMS.map((label, i) => {
                 const count = PHONE_FAN_ITEMS.length;
                 const mid = (count - 1) / 2;
                 const offset = i - mid;
                 const rotate = offset * 6;
-                const translateX = offset * 58;
-                const translateY = Math.abs(offset) * 12;
+                // Percentage-based positioning so phones scale with container
+                const leftPercent = 50 + offset * 14;
+                const topOffset = Math.abs(offset) * 3;
                 return (
                   <div
                     key={i}
                     className="absolute"
                     style={{
-                      transform: `translateX(${translateX}px) translateY(${translateY}px) rotate(${rotate}deg)`,
+                      width: '22%',
+                      left: `${leftPercent}%`,
+                      top: `${topOffset}%`,
+                      bottom: `${topOffset}%`,
+                      transform: `translateX(-50%) rotate(${rotate}deg)`,
                       transformOrigin: 'bottom center',
                       zIndex: count - Math.abs(Math.round(offset)),
                     }}
