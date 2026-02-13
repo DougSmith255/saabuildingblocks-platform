@@ -345,7 +345,7 @@ function ValueSection1_Launch() {
       }}>
         {/* Heading */}
         <div className="text-center mb-10 md:mb-14">
-          <H2 style={{ marginBottom: '1rem' }}>
+          <H2 style={{ marginBottom: '1rem', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>
             Launch Your Business With Clarity From Day One
           </H2>
         </div>
@@ -493,7 +493,7 @@ function ValueSection2_Marketing() {
       }}>
         {/* Heading */}
         <div className="text-center mb-10 md:mb-14">
-          <H2 style={{ marginBottom: '1rem' }}>
+          <H2 style={{ marginBottom: '1rem', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>
             Generate Business Through Built-In Marketing &amp; Lead Systems
           </H2>
         </div>
