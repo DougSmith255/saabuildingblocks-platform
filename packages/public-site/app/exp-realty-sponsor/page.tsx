@@ -339,7 +339,7 @@ function ValueSection1_Launch() {
         }
       `}</style>
 
-      <div className="max-w-[1200px] mx-auto" style={{
+      <div className="max-w-[1400px] mx-auto" style={{
         opacity: visible ? 1 : 0,
         animation: visible ? 'vs1FadeIn 0.6s ease-out' : 'none',
       }}>
@@ -487,7 +487,7 @@ function ValueSection2_Marketing() {
         }
       `}</style>
 
-      <div className="max-w-[1200px] mx-auto" style={{
+      <div className="max-w-[1400px] mx-auto" style={{
         opacity: visible ? 1 : 0,
         animation: visible ? 'vs2FadeIn 0.6s ease-out' : 'none',
       }}>
@@ -524,7 +524,7 @@ function ValueSection2_Marketing() {
           </div>
 
           {/* Phone fan */}
-          <div className="w-full md:w-[60%] flex justify-center items-center">
+          <div className="w-full md:w-[60%] flex justify-center items-center self-center">
             <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
               {PHONE_FAN_ITEMS.map((label, i) => {
                 const count = PHONE_FAN_ITEMS.length;
