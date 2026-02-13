@@ -8,7 +8,8 @@
  * - mobile (375px) for widths ≤ 375
  * - tablet (768px) for widths ≤ 768
  * - desktop (1280px) for widths ≤ 1280
- * - public (original) for larger sizes
+ * - tablet2x (1536px) for widths ≤ 1536 (retina tablets)
+ * - desktop2x (2560px) for larger sizes (retina desktops)
  *
  * NOTE: The URL mapping (WordPress → Cloudflare) is done at BUILD TIME
  * by sync-cloudflare-images.ts. This loader only handles variant selection
@@ -33,15 +34,19 @@ export default function cloudflareLoader({ src, width, quality }: {
   }
 
   // For Cloudflare Images URLs, select the appropriate variant
-  // based on the requested width (Next.js provides this)
-  let variant = 'public'; // default fallback
+  // based on the requested width (Next.js provides this).
+  // On retina/HiDPI displays, Next.js requests 2× the CSS width,
+  // so we need 2× variants to avoid blurry images.
+  let variant = 'desktop2x'; // default fallback — largest variant
 
   if (width <= 375) {
-    variant = 'mobile';   // 375px variant
+    variant = 'mobile';     // 375px — 1× phone
   } else if (width <= 768) {
-    variant = 'tablet';   // 768px variant
+    variant = 'tablet';     // 768px — 1× tablet / 2× small phone
   } else if (width <= 1280) {
-    variant = 'desktop';  // 1280px variant
+    variant = 'desktop';    // 1280px — 1× desktop
+  } else if (width <= 1536) {
+    variant = 'tablet2x';   // 1536px — 2× tablet
   }
 
   // Replace the variant in the URL

@@ -3943,15 +3943,10 @@ function AgentPortal() {
             {activeSection === 'dashboard' && (
               <DashboardView
                 onNavigate={setActiveSection}
-                isOnboardingComplete={isOnboardingComplete}
-                completedStepsCount={completedStepsCount}
-                totalStepsCount={totalStepsCount}
-                isSafari={isSafari}
                 preloadedStats={dashboardStats?.stats || null}
                 agentPageId={dashboardStats?.agentPageId || null}
                 onRefresh={refreshDashboardStats}
                 isRefreshing={isRefreshingStats}
-                statsStale={statsStale}
               />
             )}
 
@@ -6098,6 +6093,20 @@ interface PageStatsData {
   }>;
 }
 
+interface TimeseriesData {
+  daily_clicks: Array<{ date: string; button_id: string; label: string; clicks: number }>;
+  date_range: { start: string; end: string };
+  buttons: Array<{ button_id: string; label: string }>;
+}
+
+const CHART_LINE_COLORS = ['#00ff88', '#a855f7', '#ffd700', '#3b82f6', '#f97316', '#ec4899', '#14b8a6', '#ef4444'];
+
+function formatDateLabel(dateStr: string): string {
+  const [, m, d] = dateStr.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[parseInt(m, 10) - 1]} ${parseInt(d, 10)}`;
+}
+
 interface TrackingStats {
   links: PageStatsData;
   attraction: PageStatsData;
@@ -6105,31 +6114,18 @@ interface TrackingStats {
 
 function DashboardView({
   onNavigate,
-  isOnboardingComplete,
-  completedStepsCount,
-  totalStepsCount,
-  isSafari = false,
   preloadedStats,
   agentPageId,
   onRefresh,
   isRefreshing = false,
-  statsStale = false,
 }: {
   onNavigate: (id: SectionId) => void;
-  isOnboardingComplete: boolean;
-  completedStepsCount: number;
-  totalStepsCount: number;
-  isSafari?: boolean;
   preloadedStats: TrackingStats | null;
   agentPageId: string | null;
   onRefresh: () => void;
   isRefreshing?: boolean;
-  statsStale?: boolean;
 }) {
   const stats = preloadedStats;
-
-  // Calculate onboarding progress percentage
-  const progressPercentage = totalStepsCount > 0 ? (completedStepsCount / totalStepsCount) * 100 : 0;
 
   // Merge both page type button breakdowns for the unified chart
   const allButtons = useMemo(() => {
@@ -6168,6 +6164,127 @@ function DashboardView({
     return () => observer.disconnect();
   }, [stats]);
 
+  // ── Timeseries Chart State ──
+  const [timeseriesData, setTimeseriesData] = useState<TimeseriesData | null>(null);
+  const [timeseriesMonths, setTimeseriesMonths] = useState<1 | 2 | 3>(1);
+  const [timeseriesLoading, setTimeseriesLoading] = useState(false);
+  const [hiddenLines, setHiddenLines] = useState<Set<string>>(new Set());
+
+  // Fetch timeseries data (separate from main stats fetch — lazy load)
+  useEffect(() => {
+    if (!agentPageId) return;
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('agent_portal_token') : null;
+    if (!token) return;
+    let cancelled = false;
+    setTimeseriesLoading(true);
+    fetch(`${API_URL}/api/tracking/stats?agent_page_id=${agentPageId}&include_timeseries=true&months_back=${timeseriesMonths}`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    })
+      .then(res => res.ok ? res.json() : null)
+      .then(json => {
+        if (!cancelled && json?.success && json.data?.timeseries) {
+          setTimeseriesData(json.data.timeseries);
+        }
+      })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setTimeseriesLoading(false); });
+    return () => { cancelled = true; };
+  }, [agentPageId, timeseriesMonths]);
+
+  // Assign colors to buttons by index
+  const buttonColorMap = useMemo(() => {
+    const map = new Map<string, string>();
+    if (!timeseriesData) return map;
+    timeseriesData.buttons.forEach((btn, i) => {
+      map.set(btn.button_id, CHART_LINE_COLORS[i % CHART_LINE_COLORS.length]);
+    });
+    return map;
+  }, [timeseriesData]);
+
+  // Compute SVG chart data
+  const chartData = useMemo(() => {
+    if (!timeseriesData || timeseriesData.buttons.length === 0) return null;
+
+    const { daily_clicks, buttons, date_range } = timeseriesData;
+
+    // Build per-button daily arrays: Map<button_id, number[]>
+    // First collect all unique dates in order
+    const dates: string[] = [];
+    const dateSet = new Set<string>();
+    for (const d of daily_clicks) {
+      if (!dateSet.has(d.date)) { dateSet.add(d.date); dates.push(d.date); }
+    }
+    dates.sort();
+    if (dates.length === 0) return null;
+
+    const dateIndex = new Map<string, number>();
+    dates.forEach((d, i) => dateIndex.set(d, i));
+
+    const series = new Map<string, number[]>();
+    for (const btn of buttons) {
+      series.set(btn.button_id, new Array(dates.length).fill(0));
+    }
+    for (const d of daily_clicks) {
+      const arr = series.get(d.button_id);
+      const idx = dateIndex.get(d.date);
+      if (arr && idx !== undefined) arr[idx] = d.clicks;
+    }
+
+    // Find max y value
+    let maxY = 0;
+    for (const arr of series.values()) {
+      for (const v of arr) { if (v > maxY) maxY = v; }
+    }
+    // Round maxY up to a nice number
+    if (maxY === 0) maxY = 1;
+    else if (maxY <= 5) maxY = 5;
+    else if (maxY <= 10) maxY = 10;
+    else maxY = Math.ceil(maxY / 5) * 5;
+
+    // SVG dimensions
+    const W = 600, H = 220;
+    const padL = 40, padR = 15, padT = 15, padB = 30;
+    const chartW = W - padL - padR;
+    const chartH = H - padT - padB;
+
+    // X scale
+    const xScale = (i: number) => padL + (dates.length > 1 ? (i / (dates.length - 1)) * chartW : chartW / 2);
+    // Y scale
+    const yScale = (v: number) => padT + chartH - (v / maxY) * chartH;
+
+    // Build SVG path strings per button
+    const lines: Array<{ button_id: string; label: string; color: string; path: string }> = [];
+    for (const btn of buttons) {
+      const arr = series.get(btn.button_id)!;
+      const color = buttonColorMap.get(btn.button_id) || '#ffffff';
+      let path = '';
+      for (let i = 0; i < arr.length; i++) {
+        const x = xScale(i).toFixed(1);
+        const y = yScale(arr[i]).toFixed(1);
+        path += i === 0 ? `M${x},${y}` : `L${x},${y}`;
+      }
+      lines.push({ button_id: btn.button_id, label: btn.label, color, path });
+    }
+
+    // Y-axis ticks (5 ticks including 0)
+    const yTicks: Array<{ value: number; y: number }> = [];
+    const tickCount = Math.min(maxY, 5);
+    for (let i = 0; i <= tickCount; i++) {
+      const v = Math.round((maxY / tickCount) * i);
+      yTicks.push({ value: v, y: yScale(v) });
+    }
+
+    // X-axis date labels (pick ~6 evenly spaced dates)
+    const xLabels: Array<{ label: string; x: number }> = [];
+    const labelCount = Math.min(dates.length, 7);
+    for (let i = 0; i < labelCount; i++) {
+      const idx = labelCount <= 1 ? 0 : Math.round((i / (labelCount - 1)) * (dates.length - 1));
+      xLabels.push({ label: formatDateLabel(dates[idx]), x: xScale(idx) });
+    }
+
+    return { W, H, padL, padR, padT, padB, chartW, chartH, lines, yTicks, xLabels, maxY, yScale };
+  }, [timeseriesData, buttonColorMap]);
+
   // Animated number counter — counts from 0 to target over duration
   const AnimatedNumber = useCallback(({ value, duration = 1200, format }: { value: number; duration?: number; format?: boolean }) => {
     const ref = useRef<HTMLSpanElement>(null);
@@ -6203,77 +6320,6 @@ function DashboardView({
 
   return (
     <div className="space-y-4 px-1 sm:px-2">
-      {/* Onboarding Card - Prominent 3D metal plate (only when not complete) */}
-      {!isOnboardingComplete && (
-        <button
-          onClick={() => onNavigate('onboarding')}
-          className="w-full text-left group relative"
-          style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-        >
-          <div
-            className="relative p-5 sm:p-6 rounded-2xl overflow-hidden transition-all duration-300 ease-out hover:scale-[1.01] group-active:scale-[0.99]"
-            style={{
-              background: 'linear-gradient(145deg, rgba(35, 32, 24, 0.95) 0%, rgba(25, 22, 16, 0.98) 100%)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 215, 0, 0.1), 0 0 30px rgba(255, 215, 0, 0.08)',
-              border: '1px solid rgba(255, 215, 0, 0.3)',
-            }}
-          >
-            <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#ffd700]/40 to-transparent" />
-            <div className="relative flex items-center gap-4 sm:gap-6">
-              <div className="relative p-4 sm:p-5 rounded-md bg-[#ffd700]/15 border border-[#ffd700]/40 group-hover:border-[#ffd700]/60 group-hover:bg-[#ffd700]/20 transition-all duration-300 flex items-center justify-center aspect-square">
-                <Icon3D color="#ffd700">
-                  <Rocket className="w-8 h-8 sm:w-10 sm:h-10 text-[#ffd700] transition-transform duration-300" />
-                </Icon3D>
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3
-                  className="text-xl sm:text-2xl font-bold uppercase tracking-wide"
-                  style={{
-                    fontFamily: 'var(--font-taskor, sans-serif)',
-                    color: '#ffd700',
-                    textShadow: isSafari
-                      ? '0 0 4px rgba(255,215,0,0.3), 0 0 8px rgba(255,215,0,0.15)'
-                      : '0 0 8px rgba(255,215,0,0.6), 0 0 20px rgba(255,215,0,0.3)',
-                  }}
-                >
-                  Onboarding
-                </h3>
-                <p className="text-sm sm:text-base text-[#e5e4dd]/70 mt-1">
-                  {completedStepsCount} of {totalStepsCount} steps complete
-                </p>
-                <div
-                  className="mt-3 h-2 rounded-full overflow-hidden relative"
-                  style={{
-                    background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
-                    border: '1px solid rgba(245, 245, 240, 0.25)',
-                    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
-                  }}
-                >
-                  <div
-                    className="h-full rounded-full transition-all duration-500 ease-out"
-                    style={{
-                      width: `${progressPercentage}%`,
-                      background: 'linear-gradient(180deg, #ffe566 0%, #ffd700 40%, #cc9900 100%)',
-                      boxShadow: isSafari
-                        ? '0 0 4px #ffd700, 0 0 8px #ffd70066, inset 0 1px 2px rgba(255,255,255,0.4)'
-                        : '0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px #ffd70066, inset 0 1px 2px rgba(255,255,255,0.4)',
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="hidden sm:flex flex-col items-center gap-1">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#ffd700]/15 group-hover:bg-[#ffd700]/25 border border-[#ffd700]/30 group-hover:border-[#ffd700]/50 transition-all duration-300">
-                  <svg className="w-5 h-5 text-[#ffd700] group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                <span className="text-xs text-[#ffd700]/70 font-synonym">Continue</span>
-              </div>
-            </div>
-          </div>
-        </button>
-      )}
-
       {/* No Agent Page State */}
       {!agentPageId && (
         <div
@@ -6299,7 +6345,7 @@ function DashboardView({
       {agentPageId && stats && (
         <>
           {/* Refresh Button */}
-          <div className="flex justify-end">
+          <div className="flex justify-start">
             <button
               onClick={onRefresh}
               disabled={isRefreshing}
@@ -6431,6 +6477,128 @@ function DashboardView({
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Clicks Over Time Chart */}
+          <div
+            className="p-5 rounded-2xl"
+            style={{
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold text-[#e5e4dd] uppercase tracking-wider" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>Clicks Over Time</h3>
+              <div className="flex gap-1">
+                {([1, 2, 3] as const).map(m => (
+                  <button
+                    key={m}
+                    onClick={() => setTimeseriesMonths(m)}
+                    className="px-2.5 py-1 rounded-md text-xs font-semibold transition-all"
+                    style={{
+                      background: timeseriesMonths === m ? '#00ff88' : 'rgba(255,255,255,0.06)',
+                      color: timeseriesMonths === m ? '#000' : 'rgba(229,228,221,0.5)',
+                    }}
+                  >
+                    {m}M
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ minHeight: '160px' }}>
+              {timeseriesLoading ? (
+                <div className="flex items-center justify-center" style={{ minHeight: '160px' }}>
+                  <RefreshCw className="w-5 h-5 text-[#00ff88]/50 animate-spin" />
+                </div>
+              ) : chartData && chartData.lines.length > 0 ? (
+                <>
+                  <svg viewBox={`0 0 ${chartData.W} ${chartData.H}`} className="w-full" preserveAspectRatio="xMidYMid meet">
+                    {/* Grid lines */}
+                    {chartData.yTicks.map((tick, i) => (
+                      <g key={i}>
+                        <line
+                          x1={chartData.padL} y1={tick.y}
+                          x2={chartData.W - chartData.padR} y2={tick.y}
+                          stroke="rgba(255,255,255,0.06)" strokeWidth="1"
+                        />
+                        <text
+                          x={chartData.padL - 8} y={tick.y + 4}
+                          textAnchor="end" fill="rgba(229,228,221,0.35)"
+                          fontSize="10" fontFamily="sans-serif"
+                        >
+                          {tick.value}
+                        </text>
+                      </g>
+                    ))}
+                    {/* X-axis labels */}
+                    {chartData.xLabels.map((lbl, i) => (
+                      <text
+                        key={i} x={lbl.x} y={chartData.H - 6}
+                        textAnchor="middle" fill="rgba(229,228,221,0.35)"
+                        fontSize="10" fontFamily="sans-serif"
+                      >
+                        {lbl.label}
+                      </text>
+                    ))}
+                    {/* Data lines */}
+                    {chartData.lines.map(line => (
+                      <path
+                        key={line.button_id}
+                        d={line.path}
+                        fill="none"
+                        stroke={line.color}
+                        strokeWidth="2"
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                        style={{ opacity: hiddenLines.has(line.button_id) ? 0 : 1, transition: 'opacity 0.3s ease' }}
+                      />
+                    ))}
+                  </svg>
+                  {/* Legend — checkboxes to toggle line visibility */}
+                  <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3">
+                    {chartData.lines.map(line => {
+                      const isVisible = !hiddenLines.has(line.button_id);
+                      return (
+                        <button
+                          key={line.button_id}
+                          type="button"
+                          className="flex items-center gap-1.5 group"
+                          onClick={() => {
+                            setHiddenLines(prev => {
+                              const next = new Set(prev);
+                              if (next.has(line.button_id)) next.delete(line.button_id);
+                              else next.add(line.button_id);
+                              return next;
+                            });
+                          }}
+                        >
+                          <span
+                            className="w-3.5 h-3.5 rounded-[3px] shrink-0 flex items-center justify-center transition-all"
+                            style={{
+                              background: isVisible ? line.color : 'transparent',
+                              border: `2px solid ${isVisible ? line.color : 'rgba(229,228,221,0.25)'}`,
+                            }}
+                          >
+                            {isVisible && (
+                              <svg viewBox="0 0 12 12" className="w-2.5 h-2.5">
+                                <path d="M2.5 6L5 8.5L9.5 3.5" fill="none" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            )}
+                          </span>
+                          <span className={`text-xs font-amulya truncate max-w-[140px] transition-colors ${isVisible ? 'text-[#e5e4dd]/70' : 'text-[#e5e4dd]/30 line-through'}`}>{line.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <p className="text-sm text-[#e5e4dd]/40 font-amulya py-8 text-center">
+                  No click data for this period
+                </p>
+              )}
+            </div>
           </div>
         </>
       )}
