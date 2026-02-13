@@ -343,39 +343,39 @@ function ValueSection1_Launch() {
         opacity: visible ? 1 : 0,
         animation: visible ? 'vs1FadeIn 0.6s ease-out' : 'none',
       }}>
-        {/* Heading */}
-        <div className="mb-4 md:mb-6">
-          <H2 style={{ marginBottom: '0.75rem', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', textAlign: 'left' }}>
-            Launch Your Business With Clarity From Day One
-          </H2>
-        </div>
-
-        {/* Two-column: text + mockup */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
-          {/* Text side */}
-          <div className="w-full md:w-[40%] space-y-6">
-            <p className="text-body">
-              Structured onboarding designed to move you from joining to operating without confusion or delay.
-            </p>
-            <ul className="space-y-4">
-              {[
-                'Onboarding dashboard',
-                'Step-by-step setup checklist',
-                '1-on-1 strategy session',
-              ].map((item, i) => (
-                <li key={i} className="flex items-center gap-3 text-body">
-                  <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <p className="text-body pt-2" style={{ color: '#9a9a9a', fontStyle: 'italic' }}>
-              Move into production quickly with guided systems that remove guesswork from your launch.
-            </p>
+        {/* Two-column: card + oversized mockup */}
+        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-0">
+          {/* Card side */}
+          <div className="w-full md:w-[40%] relative z-10">
+            <GenericCard padding="lg">
+              <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
+                Launch Your Business With Clarity From Day One
+              </h3>
+              <div className="space-y-5">
+                <p className="text-body">
+                  Structured onboarding designed to move you from joining to operating without confusion or delay.
+                </p>
+                <ul className="space-y-4">
+                  {[
+                    'Onboarding dashboard',
+                    'Step-by-step setup checklist',
+                    '1-on-1 strategy session',
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-body">
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-body pt-1" style={{ color: '#9a9a9a', fontStyle: 'italic' }}>
+                  Move into production quickly with guided systems that remove guesswork from your launch.
+                </p>
+              </div>
+            </GenericCard>
           </div>
 
-          {/* Mockup side */}
-          <div className="w-full md:w-[60%] flex items-center justify-center">
+          {/* Mockup side — oversized, overlaps ~20% behind the card */}
+          <div className="w-full md:w-[68%] md:-ml-[8%] flex items-center justify-center">
             <BrowserMockup url="saabuildingblocks.com/agent-portal/onboarding">
               <ScreenshotPlaceholder label="Portal Screenshot — Onboarding Dashboard" />
             </BrowserMockup>
@@ -491,40 +491,40 @@ function ValueSection2_Marketing() {
         opacity: visible ? 1 : 0,
         animation: visible ? 'vs2FadeIn 0.6s ease-out' : 'none',
       }}>
-        {/* Heading */}
-        <div className="mb-4 md:mb-6">
-          <H2 style={{ marginBottom: '0.75rem', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', textAlign: 'left' }}>
-            Generate Business Through Built-In Marketing &amp; Lead Systems
-          </H2>
-        </div>
-
-        {/* Two-column: text + phone fan */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
-          {/* Text side */}
-          <div className="w-full md:w-[40%] space-y-6">
-            <p className="text-body">
-              Integrated marketing infrastructure built to create visibility and capture opportunity from day one.
-            </p>
-            <ul className="space-y-4">
-              {[
-                'Branded Link Page system',
-                'Lead capture funnels',
-                'Canva template library',
-                'Performance analytics dashboard',
-              ].map((item, i) => (
-                <li key={i} className="flex items-center gap-3 text-body">
-                  <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <p className="text-body pt-2" style={{ color: '#9a9a9a', fontStyle: 'italic' }}>
-              Everything works together to drive exposure, leads, and measurable results.
-            </p>
+        {/* Two-column: card + oversized phone fan */}
+        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-0">
+          {/* Card side */}
+          <div className="w-full md:w-[40%] relative z-10">
+            <GenericCard padding="lg">
+              <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
+                Generate Business Through Built-In Marketing &amp; Lead Systems
+              </h3>
+              <div className="space-y-5">
+                <p className="text-body">
+                  Integrated marketing infrastructure built to create visibility and capture opportunity from day one.
+                </p>
+                <ul className="space-y-4">
+                  {[
+                    'Branded Link Page system',
+                    'Lead capture funnels',
+                    'Canva template library',
+                    'Performance analytics dashboard',
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-body">
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-body pt-1" style={{ color: '#9a9a9a', fontStyle: 'italic' }}>
+                  Everything works together to drive exposure, leads, and measurable results.
+                </p>
+              </div>
+            </GenericCard>
           </div>
 
-          {/* Phone fan */}
-          <div className="w-full md:w-[60%] flex items-center justify-center">
+          {/* Phone fan — oversized, overlaps ~20% behind the card */}
+          <div className="w-full md:w-[68%] md:-ml-[8%] flex items-center justify-center">
             <div className="relative w-full" style={{ aspectRatio: '16/10' }}>
               {PHONE_FAN_ITEMS.map((label, i) => {
                 const count = PHONE_FAN_ITEMS.length;
