@@ -967,9 +967,9 @@ function Section2() {
   };
 
   const cards = [
-    { label: 'Team-Built', icon: Building2 },
     { label: 'Zero Cost to Agents', icon: Shield },
     { label: 'Built to Last', icon: Layers },
+    { label: 'Team-Built', icon: Building2 },
   ];
 
   const mistyGoldBg = 'radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%), radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%), radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%), radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%), linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)';
@@ -979,17 +979,6 @@ function Section2() {
   const renderContent = () => {
     switch (activeCard) {
       case 0:
-        return (
-          <ul className="space-y-3">
-            {DIFFERENTIATORS.map((d, i) => (
-              <li key={i} className="flex items-start gap-3">
-                <span className="flex-shrink-0" style={{ color: '#ffd700', fontSize: '8px', lineHeight: '24px' }}>●</span>
-                <span className="text-body">{d.text}</span>
-              </li>
-            ))}
-          </ul>
-        );
-      case 1:
         return (
           <div className="space-y-3">
             {FINANCIAL_LINES.map((line, i) => (
@@ -1007,7 +996,7 @@ function Section2() {
             </p>
           </div>
         );
-      case 2:
+      case 1:
         return (
           <div className="space-y-3">
             <p className="text-body" style={{ color: '#b0b0b0' }}>
@@ -1021,6 +1010,22 @@ function Section2() {
                 </li>
               ))}
             </ul>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-3">
+            <ul className="space-y-3">
+              {DIFFERENTIATORS.map((d, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="flex-shrink-0" style={{ color: '#ffd700', fontSize: '8px', lineHeight: '24px' }}>●</span>
+                  <span className="text-body">{d.text}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-body pt-2" style={{ color: '#b0b0b0' }}>
+              SAA is directly aligned with the Wolf Pack, one of eXp Realty&apos;s largest and most experienced leadership organizations. Agents receive everything provided by both — scale, leadership depth, global collaboration, and long-term stability — without additional fees or obligations.
+            </p>
           </div>
         );
       default:
@@ -2317,7 +2322,6 @@ export default function ExpRealtySponsor() {
           <ValueSection1_Launch />
           <ValueSection2_Marketing />
         </div>
-        <Section4Final />
         <MeetTheFounders />
         <Section6Final />
       </div>
