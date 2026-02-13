@@ -351,7 +351,7 @@ function ValueSection1_Launch() {
         </div>
 
         {/* Two-column: text + mockup */}
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
           {/* Text side */}
           <div className="w-full md:w-1/2 space-y-6">
             <p className="text-body">
@@ -375,7 +375,7 @@ function ValueSection1_Launch() {
           </div>
 
           {/* Mockup side */}
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2 flex items-center justify-center">
             <BrowserMockup url="saabuildingblocks.com/agent-portal/onboarding">
               <ScreenshotPlaceholder label="Portal Screenshot — Onboarding Dashboard" />
             </BrowserMockup>
@@ -499,7 +499,7 @@ function ValueSection2_Marketing() {
         </div>
 
         {/* Two-column: text + phone fan */}
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
           {/* Text side */}
           <div className="w-full md:w-[40%] space-y-6">
             <p className="text-body">
@@ -524,16 +524,15 @@ function ValueSection2_Marketing() {
           </div>
 
           {/* Phone fan */}
-          <div className="w-full md:w-[60%] flex justify-center items-center self-center">
-            <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
+          <div className="w-full md:w-[60%] flex items-center justify-center">
+            <div className="relative w-full" style={{ aspectRatio: '16/10' }}>
               {PHONE_FAN_ITEMS.map((label, i) => {
                 const count = PHONE_FAN_ITEMS.length;
                 const mid = (count - 1) / 2;
                 const offset = i - mid;
                 const rotate = offset * 6;
-                // Percentage-based positioning so phones scale with container
                 const leftPercent = 50 + offset * 14;
-                const topOffset = Math.abs(offset) * 3;
+                const verticalNudge = Math.abs(offset) * 2;
                 return (
                   <div
                     key={i}
@@ -541,9 +540,8 @@ function ValueSection2_Marketing() {
                     style={{
                       width: '22%',
                       left: `${leftPercent}%`,
-                      top: `${topOffset}%`,
-                      bottom: `${topOffset}%`,
-                      transform: `translateX(-50%) rotate(${rotate}deg)`,
+                      top: '50%',
+                      transform: `translateX(-50%) translateY(calc(-50% + ${verticalNudge}%)) rotate(${rotate}deg)`,
                       transformOrigin: 'bottom center',
                       zIndex: count - Math.abs(Math.round(offset)),
                     }}
