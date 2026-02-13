@@ -3598,7 +3598,7 @@ function WhereSAAFitsVersionA() {
   ];
 
   return (
-    <section className="px-4 sm:px-8 md:px-12 relative overflow-hidden">
+    <section className="px-4 sm:px-8 md:px-12 relative overflow-x-clip">
       <div className="max-w-[1500px] mx-auto">
         {/* H2 Heading */}
         <div className="text-center mb-12">
@@ -3848,6 +3848,11 @@ export default function AboutExpRealty() {
         .about-exp-blue-theme #headerLogoGradient stop:nth-child(3),
         .about-exp-blue-theme #footerLogoGradient stop:nth-child(3) {
           stop-color: #0090c0 !important;
+        }
+
+        /* Blue compact S logo (PNG) — CSS filter to match blue theme */
+        .about-exp-blue-theme .logo-compact img {
+          filter: brightness(0) saturate(100%) invert(60%) sepia(90%) saturate(2000%) hue-rotate(170deg) brightness(1.05);
         }
 
         /* Blue hover borders on header CTA */

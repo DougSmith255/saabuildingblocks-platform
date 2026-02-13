@@ -6955,7 +6955,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                 boxShadow: isChecked
                   ? '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 12px rgba(34, 197, 94, 0.1)'
                   : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-                ...(isDemoBlurred ? { filter: 'blur(6px)', pointerEvents: 'none' as const } : {}),
+                ...(isDemoBlurred ? { pointerEvents: 'none' as const } : {}),
               }}
             >
               {/* Step Header */}
@@ -7027,6 +7027,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                       className={`font-semibold text-sm transition-colors ${
                         isChecked ? 'text-green-400' : 'text-[#e5e4dd]'
                       }`}
+                      style={isDemoBlurred ? { filter: 'blur(6px)', userSelect: 'none' } : undefined}
                     >
                       {step.title}
                     </h3>
@@ -7041,7 +7042,10 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                       </span>
                     )}
                   </div>
-                  <p className="text-[#e5e4dd]/50 text-xs mt-0.5 line-clamp-1">
+                  <p
+                    className="text-[#e5e4dd]/50 text-xs mt-0.5 line-clamp-1"
+                    style={isDemoBlurred ? { filter: 'blur(6px)', userSelect: 'none' } : undefined}
+                  >
                     {step.description}
                   </p>
                 </div>
@@ -7067,7 +7071,10 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                 }}
               >
                 <div className="overflow-hidden">
-                  <div className="px-4 pb-4 pt-0 border-t border-white/[0.05]">
+                  <div
+                    className="px-4 pb-4 pt-0 border-t border-white/[0.05]"
+                    style={isDemoBlurred ? { filter: 'blur(6px)', userSelect: 'none' } : undefined}
+                  >
                     <div className="pt-4">
                       {step.content}
                     </div>

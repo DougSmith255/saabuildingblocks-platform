@@ -258,7 +258,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
 
 function BrowserMockup({ children, url = 'saabuildingblocks.com/agent-portal' }: { children: React.ReactNode; url?: string }) {
   return (
-    <div className="rounded-xl overflow-hidden" style={{
+    <div className="w-full rounded-xl overflow-hidden" style={{
       border: '1px solid rgba(255,255,255,0.08)',
       boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3)',
     }}>
@@ -339,14 +339,14 @@ function ValueSection1_Launch() {
         }
       `}</style>
 
-      <div className="max-w-[1400px] mx-auto" style={{
+      <div className="max-w-[1800px] mx-auto" style={{
         opacity: visible ? 1 : 0,
         animation: visible ? 'vs1FadeIn 0.6s ease-out' : 'none',
       }}>
         {/* Two-column: card + oversized mockup */}
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-0">
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
           {/* Card side */}
-          <div className="w-full md:w-[40%] relative z-10">
+          <div className="w-full lg:w-[35%] relative z-10">
             <GenericCard padding="lg">
               <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
                 Launch Your Business With Clarity From Day One
@@ -374,8 +374,8 @@ function ValueSection1_Launch() {
             </GenericCard>
           </div>
 
-          {/* Mockup side — oversized, overlaps ~20% behind the card */}
-          <div className="w-full md:w-[68%] md:-ml-[8%] flex items-center justify-center">
+          {/* Mockup side — oversized, overlaps behind the card */}
+          <div className="w-full lg:w-[75%] lg:-ml-[10%] flex items-center justify-center">
             <BrowserMockup url="saabuildingblocks.com/agent-portal/onboarding">
               <ScreenshotPlaceholder label="Portal Screenshot — Onboarding Dashboard" />
             </BrowserMockup>
@@ -485,16 +485,22 @@ function ValueSection2_Marketing() {
           from { opacity: 0; transform: translateY(12px); }
           to { opacity: 1; transform: translateY(0); }
         }
+        .vs2-phone-fan { aspect-ratio: 3/4; }
+        .vs2-phone-item { width: 40%; }
+        @media (min-width: 640px) {
+          .vs2-phone-fan { aspect-ratio: 16/10; }
+          .vs2-phone-item { width: 28%; }
+        }
       `}</style>
 
-      <div className="max-w-[1400px] mx-auto" style={{
+      <div className="max-w-[1800px] mx-auto" style={{
         opacity: visible ? 1 : 0,
         animation: visible ? 'vs2FadeIn 0.6s ease-out' : 'none',
       }}>
         {/* Two-column: reversed — phone fan left, card right */}
-        <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-0">
+        <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-0">
           {/* Card side (right on desktop) */}
-          <div className="w-full md:w-[40%] relative z-10">
+          <div className="w-full lg:w-[35%] relative z-10">
             <GenericCard padding="lg">
               <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
                 Generate Business Through Built-In Marketing &amp; Lead Systems
@@ -523,9 +529,9 @@ function ValueSection2_Marketing() {
             </GenericCard>
           </div>
 
-          {/* Phone fan (left on desktop) — oversized, overlaps ~20% behind the card */}
-          <div className="w-full md:w-[68%] md:-mr-[8%] flex items-center justify-center">
-            <div className="relative w-full" style={{ aspectRatio: '16/10' }}>
+          {/* Phone fan (left on desktop) — oversized, overlaps behind the card */}
+          <div className="w-full lg:w-[75%] lg:-mr-[10%] flex items-center justify-center">
+            <div className="relative w-full vs2-phone-fan">
               {PHONE_FAN_ITEMS.map((label, i) => {
                 const count = PHONE_FAN_ITEMS.length;
                 const mid = (count - 1) / 2;
@@ -536,9 +542,8 @@ function ValueSection2_Marketing() {
                 return (
                   <div
                     key={i}
-                    className="absolute"
+                    className="absolute vs2-phone-item"
                     style={{
-                      width: '22%',
                       left: `${leftPercent}%`,
                       top: '50%',
                       transform: `translateX(-50%) translateY(calc(-50% + ${verticalNudge}%)) rotate(${rotate}deg)`,
