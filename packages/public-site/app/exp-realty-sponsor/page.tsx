@@ -355,7 +355,7 @@ function ValueSection1_Launch() {
           {/* Text side */}
           <div className="w-full md:w-1/2 space-y-6">
             <p className="text-body">
-              Structured onboarding designed to move you from joining to operating without confusion or delay. Includes:
+              Structured onboarding designed to move you from joining to operating without confusion or delay.
             </p>
             <ul className="space-y-4">
               {[
@@ -395,23 +395,23 @@ function PhoneMockup({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
       background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)',
-      borderRadius: '20px',
-      padding: '8px',
+      borderRadius: '16px',
+      padding: '4px',
       boxShadow: '0 0 0 1px rgba(255,255,255,0.1), 0 20px 40px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)',
       width: '140px',
       flexShrink: 0,
     }}>
       {/* Notch */}
       <div style={{
-        width: '40px',
-        height: '4px',
+        width: '32px',
+        height: '3px',
         background: 'rgba(255,255,255,0.15)',
         borderRadius: '2px',
-        margin: '0 auto 6px',
+        margin: '0 auto 3px',
       }} />
       {/* Screen */}
       <div style={{
-        borderRadius: '14px',
+        borderRadius: '12px',
         overflow: 'hidden',
         background: '#0a0a0a',
       }}>
@@ -419,11 +419,11 @@ function PhoneMockup({ children }: { children: React.ReactNode }) {
       </div>
       {/* Home indicator */}
       <div style={{
-        width: '50px',
-        height: '3px',
+        width: '40px',
+        height: '2px',
         background: 'rgba(255,255,255,0.15)',
         borderRadius: '2px',
-        margin: '6px auto 0',
+        margin: '3px auto 0',
       }} />
     </div>
   );
@@ -453,11 +453,9 @@ function PhoneScreenPlaceholder({ label }: { label: string }) {
 
 const PHONE_FAN_ITEMS = [
   'Link Page',
-  'Attraction Page',
   'Lead Funnel',
   'Templates',
   'Analytics',
-  'Dashboard',
 ];
 
 function ValueSection2_Marketing() {
@@ -505,7 +503,7 @@ function ValueSection2_Marketing() {
           {/* Text side */}
           <div className="w-full md:w-[40%] space-y-6">
             <p className="text-body">
-              Integrated marketing infrastructure built to create visibility and capture opportunity from day one. Includes:
+              Integrated marketing infrastructure built to create visibility and capture opportunity from day one.
             </p>
             <ul className="space-y-4">
               {[
