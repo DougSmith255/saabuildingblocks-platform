@@ -1794,14 +1794,12 @@ function AgentPortal() {
         await caches.delete(name);
       }
     }
-    // 3. Clear localStorage
-    localStorage.removeItem('agent_portal_token');
-    localStorage.removeItem('agent_portal_user');
+    // 3. Clear cached page data (keep token + user so they stay logged in)
     localStorage.removeItem('agent_portal_page_data');
-    // 4. Clear sessionStorage
+    // 4. Clear session flag so fresh data is fetched
     sessionStorage.removeItem('agent_portal_loaded');
     // 5. Hard reload
-    window.location.href = '/agent-portal/login';
+    window.location.reload();
   };
 
   const handleOpenEditProfile = () => {
@@ -6020,7 +6018,7 @@ function AgentPortal() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-[#ffd700] mt-0.5">•</span>
-                    <span>You&apos;ll need to <strong className="text-[#e5e4dd]">log in again</strong> after clearing</span>
+                    <span>The page will reload — you&apos;ll <strong className="text-[#e5e4dd]">stay logged in</strong></span>
                   </li>
                 </ul>
               </div>
