@@ -987,14 +987,27 @@ function Section2() {
 
   const darkCardBg = 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)';
 
+  const goldDot = <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[6px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />;
+
   const renderContent = () => {
     switch (activeCard) {
       case 0:
         return (
-          <div className="space-y-3">
-            {FINANCIAL_LINES.map((line, i) => (
-              <p key={i} className="text-body">{line}</p>
-            ))}
+          <div className="space-y-4">
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                {goldDot}
+                <span className="text-body">Agents pay Smart Agent Alliance nothing</span>
+              </li>
+              <li className="flex items-start gap-3">
+                {goldDot}
+                <span className="text-body">Compensated from eXp&apos;s company revenue only when agents close transactions</span>
+              </li>
+              <li className="flex items-start gap-3">
+                {goldDot}
+                <span className="text-body">No commission splits, no platform fees, no monthly charges</span>
+              </li>
+            </ul>
             <p style={{
               color: '#ffd700',
               fontFamily: 'var(--font-taskor, sans-serif)',
@@ -1009,14 +1022,14 @@ function Section2() {
         );
       case 1:
         return (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <p className="text-body" style={{ color: '#b0b0b0' }}>
               {ORG_HEADING}
             </p>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               {ORG_BENEFITS.map((b, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <span className="flex-shrink-0" style={{ color: '#ffd700', fontSize: '8px', lineHeight: '24px' }}>●</span>
+                  {goldDot}
                   <span className="text-body">{b.text}</span>
                 </li>
               ))}
@@ -1025,17 +1038,17 @@ function Section2() {
         );
       case 2:
         return (
-          <div className="space-y-3">
-            <ul className="space-y-3">
+          <div className="space-y-4">
+            <ul className="space-y-4">
               {DIFFERENTIATORS.map((d, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <span className="flex-shrink-0" style={{ color: '#ffd700', fontSize: '8px', lineHeight: '24px' }}>●</span>
+                  {goldDot}
                   <span className="text-body">{d.text}</span>
                 </li>
               ))}
             </ul>
-            <p className="text-body pt-2" style={{ color: '#b0b0b0' }}>
-              SAA is directly aligned with the Wolf Pack, one of eXp Realty&apos;s largest and most experienced leadership organizations. Agents receive everything provided by both — scale, leadership depth, global collaboration, and long-term stability — without additional fees or obligations.
+            <p className="text-body pt-1" style={{ color: '#b0b0b0' }}>
+              Directly aligned with the Wolf Pack — agents receive everything from both organizations, including scale, leadership depth, and global collaboration.
             </p>
           </div>
         );
@@ -1188,7 +1201,7 @@ function Section2() {
         {/* Shared description panel */}
         <div className="mt-3 md:mt-4">
           <GrainCard padding="md" centered={false}>
-            <div key={activeCard} className="section2-content-fade relative" style={{ minHeight: '200px' }}>
+            <div key={activeCard} className="section2-content-fade relative flex flex-col justify-center" style={{ minHeight: '200px' }}>
               {/* Watermark icon */}
               {(() => {
                 const WatermarkIcon = cards[activeCard].icon;
@@ -2345,10 +2358,10 @@ export default function ExpRealtySponsor() {
       {/* Sections wrapper — 100px gap + 50px glass padding = 150px visual spacing */}
       <div className="flex flex-col" style={{ gap: '100px' }}>
         <Section1 />
-        <Section2 />
         <Section3 />
         <ValueSection1_Launch />
         <ValueSection2_Marketing />
+        <Section2 />
         <MeetTheFounders />
         <Section6Final />
       </div>
