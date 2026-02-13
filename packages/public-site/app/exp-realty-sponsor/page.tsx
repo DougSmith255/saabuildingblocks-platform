@@ -2347,21 +2347,8 @@ export default function ExpRealtySponsor() {
         <Section1 />
         <Section2 />
         <Section3 />
-        {/* Value Sections — grouped under a shared H2 */}
-        <div className="flex flex-col" style={{ gap: '80px' }}>
-          <div className="px-4 sm:px-8 md:px-12">
-            <div className="max-w-[1200px] mx-auto text-center">
-              <H2 style={{ marginBottom: '1rem' }}>
-                What You Get Inside SAA
-              </H2>
-              <p className="text-body mx-auto" style={{ maxWidth: '750px' }}>
-                From your first day to your long-term growth, SAA provides structured systems across onboarding, marketing, training, income expansion, and ongoing support — all built into the portal and ready to use.
-              </p>
-            </div>
-          </div>
-          <ValueSection1_Launch />
-          <ValueSection2_Marketing />
-        </div>
+        <ValueSection1_Launch />
+        <ValueSection2_Marketing />
         <MeetTheFounders />
         <Section6Final />
       </div>
