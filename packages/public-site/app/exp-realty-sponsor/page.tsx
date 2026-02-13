@@ -344,7 +344,7 @@ function ValueSection1_Launch() {
         animation: visible ? 'vs1FadeIn 0.6s ease-out' : 'none',
       }}>
         {/* Heading */}
-        <div className="mb-8 md:mb-10">
+        <div className="mb-4 md:mb-6">
           <H2 style={{ marginBottom: '0.75rem', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', textAlign: 'left' }}>
             Launch Your Business With Clarity From Day One
           </H2>
@@ -353,7 +353,7 @@ function ValueSection1_Launch() {
         {/* Two-column: text + mockup */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
           {/* Text side */}
-          <div className="w-full md:w-1/2 space-y-6">
+          <div className="w-full md:w-[40%] space-y-6">
             <p className="text-body">
               Structured onboarding designed to move you from joining to operating without confusion or delay.
             </p>
@@ -375,7 +375,7 @@ function ValueSection1_Launch() {
           </div>
 
           {/* Mockup side */}
-          <div className="w-full md:w-1/2 flex items-center justify-center">
+          <div className="w-full md:w-[60%] flex items-center justify-center">
             <BrowserMockup url="saabuildingblocks.com/agent-portal/onboarding">
               <ScreenshotPlaceholder label="Portal Screenshot — Onboarding Dashboard" />
             </BrowserMockup>
@@ -492,7 +492,7 @@ function ValueSection2_Marketing() {
         animation: visible ? 'vs2FadeIn 0.6s ease-out' : 'none',
       }}>
         {/* Heading */}
-        <div className="mb-8 md:mb-10">
+        <div className="mb-4 md:mb-6">
           <H2 style={{ marginBottom: '0.75rem', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', textAlign: 'left' }}>
             Generate Business Through Built-In Marketing &amp; Lead Systems
           </H2>
