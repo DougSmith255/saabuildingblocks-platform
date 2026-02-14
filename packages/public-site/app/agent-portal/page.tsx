@@ -4018,7 +4018,7 @@ function AgentPortal() {
 
             {/* Get Support */}
             {activeSection === 'support' && (
-              <SupportSection userState={user?.state} userId={user?.id} />
+              <SupportSection userState={user?.state} userId={user?.id} onClearCache={handleClearCache} />
             )}
 
             {/* Team Calls */}
@@ -7588,9 +7588,10 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
 interface SupportSectionProps {
   userState?: string | null;
   userId?: string;
+  onClearCache?: () => void;
 }
 
-function SupportSection({ userState, userId }: SupportSectionProps) {
+function SupportSection({ userState, userId, onClearCache }: SupportSectionProps) {
   const isDemoAccount = userId === DEMO_USER_ID;
 
   // Helper to blur sensitive text for demo account recordings
@@ -7800,6 +7801,26 @@ function SupportSection({ userState, userId }: SupportSectionProps) {
                   <span className="text-[10px] text-[#e5e4dd]/50">{demoBlur('415-238-0922')}</span>
                 </a>
               </div>
+            </div>
+
+            {/* Clear Cache - Quick Fix */}
+            <div className="pt-1">
+              <div
+                className="h-[1px] mb-3"
+                style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.15) 50%, transparent 100%)' }}
+              />
+              <p className="text-[10px] text-[#e5e4dd]/40 uppercase tracking-wider mb-1.5">Quick Fix</p>
+              <button
+                onClick={onClearCache}
+                className="flex items-center gap-2.5 w-full py-2.5 px-3 rounded-xl bg-black/30 border border-[#ffd700]/15 text-[#e5e4dd]/70 hover:text-[#ffd700] hover:bg-[#ffd700]/10 hover:border-[#ffd700]/30 transition-all text-sm"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                <Wrench className="w-4 h-4 flex-shrink-0" />
+                <div className="text-left">
+                  <span className="font-semibold block text-xs">Clear Cache & Reload</span>
+                  <span className="text-[10px] text-[#e5e4dd]/40 block">Pages look outdated or something feels stuck</span>
+                </div>
+              </button>
             </div>
           </div>
         </div>

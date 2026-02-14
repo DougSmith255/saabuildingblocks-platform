@@ -402,7 +402,7 @@ function ValueSection1_Launch() {
 
 
 // ============================================================================
-// VALUE SECTION 2 — "Generate Business Through Built-In Marketing & Lead Systems"
+// VALUE SECTION 2 — "Generate Business with Done-For-You Marketing Assets"
 // ============================================================================
 
 function PhoneMockup({ children }: { children: React.ReactNode }) {
@@ -428,6 +428,7 @@ function PhoneMockup({ children }: { children: React.ReactNode }) {
         borderRadius: '12px',
         overflow: 'hidden',
         background: '#0a0a0a',
+        aspectRatio: '9/16',
       }}>
         {children}
       </div>
@@ -466,10 +467,10 @@ function PhoneScreenPlaceholder({ label }: { label: string }) {
 }
 
 const PHONE_FAN_ITEMS = [
-  'Lead Funnel',
+  'Landing Page',
   'Link Page',
-  'Templates',
   'Analytics',
+  'Templates',
 ];
 
 function ValueSection2_Marketing() {
@@ -517,17 +518,17 @@ function ValueSection2_Marketing() {
           <div className="w-full lg:w-[35%] relative z-10">
             <GenericCard padding="lg">
               <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
-                Generate Business Through Built-In Marketing &amp; Lead Systems
+                Generate Business with Done-For-You Marketing Assets
               </h3>
               <div className="space-y-5">
                 <p className="text-body">
-                  Integrated marketing infrastructure built to create visibility and capture opportunity from day one.
+                  Move into active marketing without building all pages or materials from scratch.
                 </p>
                 <ul className="space-y-4">
                   {[
                     'Branded Link Page system',
-                    'Lead capture funnels',
-                    'Canva template library',
+                    'Lead capture landing pages',
+                    'eXp-ready marketing templates',
                     'Performance analytics dashboard',
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-body">
@@ -566,15 +567,41 @@ function ValueSection2_Marketing() {
                     }}
                   >
                     <PhoneMockup>
-                      {label === 'Link Page' ? (
+                      {label === 'Landing Page' ? (
                         <img
-                          src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-link-page-phone-mockup/public"
+                          src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-landing-page-phone-mockup/desktop"
+                          alt="SAA Landing Page"
+                          width={810}
+                          height={1440}
+                          className="w-full h-full block object-cover"
+                          loading="lazy"
+                        />
+                      ) : label === 'Link Page' ? (
+                        <img
+                          src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-link-page-phone-mockup/desktop"
                           alt="SAA Link Page"
                           width={810}
                           height={1440}
-                          className="w-full h-auto block"
+                          className="w-full h-full block object-cover"
                           loading="lazy"
-                          style={{ aspectRatio: '9/16' }}
+                        />
+                      ) : label === 'Analytics' ? (
+                        <img
+                          src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-analytics-phone-mockup/desktop"
+                          alt="SAA Analytics Dashboard"
+                          width={810}
+                          height={1440}
+                          className="w-full h-full block object-cover"
+                          loading="lazy"
+                        />
+                      ) : label === 'Templates' ? (
+                        <img
+                          src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-templates-phone-mockup/desktop"
+                          alt="SAA Marketing Templates"
+                          width={810}
+                          height={1440}
+                          className="w-full h-full block object-cover"
+                          loading="lazy"
                         />
                       ) : (
                         <PhoneScreenPlaceholder label={label} />
@@ -996,15 +1023,17 @@ function Section2() {
     setActiveCard(idx);
   };
 
-  // Auto-scroll mobile slider to center active card
+  // Auto-scroll mobile slider to center active card (only after section is visible)
   useEffect(() => {
+    if (!autoRotate && !userClicked.current) return;
     const container = scrollRef.current;
     if (!container) return;
-    const card = container.children[activeCard] as HTMLElement;
+    const cardEls = Array.from(container.querySelectorAll<HTMLElement>(':scope > div'));
+    const card = cardEls[activeCard];
     if (!card) return;
     const scrollLeft = card.offsetLeft - container.offsetWidth / 2 + card.offsetWidth / 2;
     container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
-  }, [activeCard]);
+  }, [activeCard, autoRotate]);
 
   const cards = [
     { label: 'Zero Cost to Agents', icon: Shield },
@@ -1205,23 +1234,43 @@ function Section2() {
               </div>
 
               {/* Mobile: horizontal scroll with edge fades */}
-              <div className="md:hidden relative">
-                <div
-                  ref={scrollRef}
-                  className="s2-scroll flex gap-2 overflow-x-auto pb-2"
-                  style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
-                >
-                  <style>{`.s2-scroll::-webkit-scrollbar { display: none; }`}</style>
-                  {cards.map((card, idx) => (
-                    <div key={idx} className="flex-shrink-0" style={{ width: '70%', scrollSnapAlign: 'center' }}>
-                      {renderCard(card, idx)}
-                    </div>
+              <div className="md:hidden -mx-4 sm:-mx-8">
+                <div className="relative -my-4">
+                  <div
+                    ref={scrollRef}
+                    className="s2-scroll flex gap-2 overflow-x-auto py-4 px-4 sm:px-8"
+                    style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+                  >
+                    <style>{`.s2-scroll::-webkit-scrollbar { display: none; }`}</style>
+                    {cards.map((card, idx) => (
+                      <div key={idx} className="flex-shrink-0" style={{ width: '65%', scrollSnapAlign: 'center' }}>
+                        {renderCard(card, idx)}
+                      </div>
+                    ))}
+                  </div>
+                  {/* Left fade */}
+                  <div className="absolute left-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to right, #080808, transparent)' }} />
+                  {/* Right fade */}
+                  <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to left, #080808, transparent)' }} />
+                </div>
+
+                {/* Progress dots */}
+                <div className="flex justify-center gap-2 mt-2">
+                  {cards.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => handleCardClick(i)}
+                      aria-label={`Go to ${cards[i].label}`}
+                      className="w-2 h-2 rounded-full transition-all duration-300"
+                      style={{
+                        background: i === activeCard ? '#ffd700' : 'rgba(255,255,255,0.25)',
+                        boxShadow: i === activeCard ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                        transform: i === activeCard ? 'scale(1.3)' : 'scale(1)',
+                      }}
+                    />
                   ))}
                 </div>
-                {/* Left fade */}
-                <div className="absolute left-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to right, var(--background, #0a0a0a), transparent)' }} />
-                {/* Right fade */}
-                <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to left, var(--background, #0a0a0a), transparent)' }} />
               </div>
             </>
           );

@@ -31,6 +31,12 @@ function getMonthStart(): string {
   return first.toISOString();
 }
 
+/** Get start date for timeseries range (1/2/3 months back from today) */
+function getTimeseriesStart(monthsBack: number): Date {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - monthsBack, now.getUTCDate()));
+}
+
 interface ButtonBreakdown {
   button_id: string;
   label: string;
@@ -44,6 +50,19 @@ interface PageStats {
   clicks_this_week: number;
   clicks_all_time: number;
   button_breakdown: ButtonBreakdown[];
+}
+
+interface DailyClickData {
+  date: string;
+  button_id: string;
+  label: string;
+  clicks: number;
+}
+
+interface TimeseriesData {
+  daily_clicks: DailyClickData[];
+  date_range: { start: string; end: string };
+  buttons: Array<{ button_id: string; label: string }>;
 }
 
 export async function GET(request: NextRequest) {
@@ -113,6 +132,13 @@ export async function GET(request: NextRequest) {
     }
     labelLookup.set('learn-about', 'About My eXp Team');
 
+    // Timeseries params (opt-in for backward compatibility)
+    const includeTimeseries = request.nextUrl.searchParams.get('include_timeseries') === 'true';
+    const monthsBackParam = parseInt(request.nextUrl.searchParams.get('months_back') || '1', 10);
+    const monthsBack = [1, 2, 3].includes(monthsBackParam) ? monthsBackParam : 1;
+    const tsStart = includeTimeseries ? getTimeseriesStart(monthsBack) : null;
+    const tsStartStr = tsStart ? tsStart.toISOString().slice(0, 10) : '';
+
     // Fetch all events for this agent page
     const { data: events, error: eventsError } = await supabase
       .from('page_events')
@@ -133,6 +159,9 @@ export async function GET(request: NextRequest) {
 
     // Button click accumulators (links page only — attraction has no breakdown)
     const linksButtonClicks = new Map<string, { all: number; week: number }>();
+
+    // Timeseries accumulator: Map<"YYYY-MM-DD", Map<button_id, count>>
+    const dailyBuckets = new Map<string, Map<string, number>>();
 
     for (const event of events || []) {
       const isThisWeek = event.created_at >= weekStart;
@@ -157,6 +186,19 @@ export async function GET(request: NextRequest) {
           existing.all++;
           if (isThisWeek) existing.week++;
           linksButtonClicks.set(event.button_id, existing);
+
+          // Accumulate into daily buckets for timeseries
+          if (includeTimeseries && event.created_at) {
+            const eventDate = event.created_at.slice(0, 10); // "YYYY-MM-DD"
+            if (eventDate >= tsStartStr) {
+              let dayMap = dailyBuckets.get(eventDate);
+              if (!dayMap) {
+                dayMap = new Map<string, number>();
+                dailyBuckets.set(eventDate, dayMap);
+              }
+              dayMap.set(event.button_id, (dayMap.get(event.button_id) || 0) + 1);
+            }
+          }
         }
       }
     }
@@ -188,11 +230,56 @@ export async function GET(request: NextRequest) {
       b.clicks_this_week - a.clicks_this_week || b.clicks_all_time - a.clicks_all_time;
     linksStats.button_breakdown.sort(sortBreakdown);
 
+    // Build timeseries response (only when requested)
+    let timeseries: TimeseriesData | undefined;
+    if (includeTimeseries && tsStart) {
+      const now = new Date();
+      const endDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+      const endStr = endDate.toISOString().slice(0, 10);
+
+      // Build list of all buttons that appear in the data
+      const tsButtonIds = new Set<string>();
+      for (const dayMap of dailyBuckets.values()) {
+        for (const btnId of dayMap.keys()) {
+          tsButtonIds.add(btnId);
+        }
+      }
+
+      const buttons: Array<{ button_id: string; label: string }> = [];
+      for (const btnId of tsButtonIds) {
+        buttons.push({ button_id: btnId, label: labelLookup.get(btnId) || btnId });
+      }
+
+      // Generate continuous date range with zero-fill
+      const dailyClicks: DailyClickData[] = [];
+      const cursor = new Date(tsStart);
+      while (cursor <= endDate) {
+        const dateStr = cursor.toISOString().slice(0, 10);
+        const dayMap = dailyBuckets.get(dateStr);
+        for (const btn of buttons) {
+          dailyClicks.push({
+            date: dateStr,
+            button_id: btn.button_id,
+            label: btn.label,
+            clicks: dayMap?.get(btn.button_id) || 0,
+          });
+        }
+        cursor.setUTCDate(cursor.getUTCDate() + 1);
+      }
+
+      timeseries = {
+        daily_clicks: dailyClicks,
+        date_range: { start: tsStartStr, end: endStr },
+        buttons,
+      };
+    }
+
     return NextResponse.json({
       success: true,
       data: {
         links: linksStats,
         attraction: attractionStats,
+        ...(timeseries ? { timeseries } : {}),
       },
     }, { headers: CORS_HEADERS });
 

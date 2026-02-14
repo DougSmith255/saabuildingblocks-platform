@@ -20,8 +20,8 @@ const CARDS = [
   },
   {
     icon: BarChart3,
-    title: 'Marketing & Lead Systems',
-    text: 'Built-in systems that drive visibility and leads.',
+    title: 'Done-For-You Lead Systems',
+    text: 'Pre-built business assets ready for implementation.',
     theme: 'blue' as const,
   },
   {
@@ -33,7 +33,7 @@ const CARDS = [
   {
     icon: TrendingUp,
     title: 'Income Growth & Attraction',
-    text: 'Expand income through optional attraction pathways.',
+    text: 'Structured attraction pathways with team support.',
     theme: 'blue' as const,
   },
   {

@@ -77,7 +77,7 @@ function LoginPageContent() {
 
       {/* Login Card */}
       <CyberCard className="w-full min-h-fit">
-        <LoginForm />
+        <LoginForm onClearCache={handleClearCache} />
       </CyberCard>
 
       {/* Footer */}

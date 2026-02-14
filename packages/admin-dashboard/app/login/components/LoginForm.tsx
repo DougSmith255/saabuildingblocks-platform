@@ -19,7 +19,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Mail, Loader2 } from 'lucide-react';
+import { Mail, Loader2, Wrench } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import {
   Form,
@@ -52,7 +52,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export default function LoginForm() {
+export default function LoginForm({ onClearCache }: { onClearCache?: () => void }) {
   const { login, error, clearError } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -220,14 +220,27 @@ export default function LoginForm() {
           )}
         </SecondaryButton>
 
-        {/* Get Help Link */}
-        <div className="flex justify-start mt-4 pb-5">
+        {/* Get Help & Clear Cache */}
+        <div className="flex items-center justify-between mt-4 pb-5">
           <a
             href="mailto:team@smartagentalliance.com"
             className="text-sm text-[#ffd700] hover:opacity-80 transition-opacity"
           >
             Get Help
           </a>
+          {onClearCache && (
+            <button
+              type="button"
+              onClick={onClearCache}
+              className="flex items-center gap-1.5 text-[#e5e4dd]/50 hover:text-[#ffd700] transition-colors group"
+            >
+              <Wrench className="w-3.5 h-3.5" />
+              <div className="text-left">
+                <span className="text-xs font-medium block leading-tight">Clear Cache</span>
+                <span className="text-[10px] text-[#e5e4dd]/30 group-hover:text-[#ffd700]/60 block leading-tight">Page not loading right?</span>
+              </div>
+            </button>
+          )}
         </div>
       </form>
 

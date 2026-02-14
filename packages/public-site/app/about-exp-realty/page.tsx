@@ -1515,11 +1515,11 @@ function SpotlightConsole() {
         </div>
 
         {/* Mobile / Tablet: horizontal scroll slider with edge fades */}
-        <div className="lg:hidden">
-          <div className="relative mb-4">
+        <div className="lg:hidden -mx-4 sm:-mx-8 md:-mx-12">
+          <div className="relative mb-4 -my-4">
             <div
               ref={chipRailRef}
-              className="sc-chip-rail flex gap-2 overflow-x-auto pb-2"
+              className="sc-chip-rail flex gap-2 overflow-x-auto py-4 px-4 sm:px-8 md:px-12"
               style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
             >
               <style>{`.sc-chip-rail::-webkit-scrollbar { display: none; }`}</style>
@@ -1535,13 +1535,13 @@ function SpotlightConsole() {
               ))}
             </div>
             {/* Left fade */}
-            <div className="absolute left-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to right, var(--background, #0a0a0a), transparent)' }} />
+            <div className="absolute left-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to right, #080808, transparent)' }} />
             {/* Right fade */}
-            <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to left, var(--background, #0a0a0a), transparent)' }} />
+            <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to left, #080808, transparent)' }} />
           </div>
 
           {/* Detail panel (full width) — grid overlay for stable height (tallest panel wins) */}
-          <div style={{ display: 'grid', position: 'relative', zIndex: 1 }}>
+          <div className="px-4 sm:px-8 md:px-12" style={{ display: 'grid', position: 'relative', zIndex: 1 }}>
             {FEATURES.map((f, i) => (
               <div
                 key={f.keyword}
