@@ -76,7 +76,7 @@ jobs:
 
           # Critical file to verify
           LOCAL_FILE="packages/public-site/functions/[slug].js"
-          LIVE_URL="https://saabuildingblocks.pages.dev/doug-smart"
+          LIVE_URL="https://smartagentalliance.com/doug-smart"
 
           if [ ! -f "$LOCAL_FILE" ]; then
             echo "❌ CRITICAL: $LOCAL_FILE not found in repo!"

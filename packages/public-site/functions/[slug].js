@@ -516,21 +516,21 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   <meta property="og:image" content="${escapeHTML(agentImageUrl)}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHTML(title)}">
-  <link rel="icon" href="https://saabuildingblocks.pages.dev/icons/s-logo-1000.png" type="image/png">
-  <link rel="preconnect" href="https://saabuildingblocks.pages.dev" crossorigin="">
+  <link rel="icon" href="https://smartagentalliance.com/icons/s-logo-1000.png" type="image/png">
+  <link rel="preconnect" href="https://smartagentalliance.com" crossorigin="">
   <link rel="preconnect" href="https://imagedelivery.net" crossorigin="">
-  <link rel="preload" href="https://saabuildingblocks.pages.dev/_next/static/media/Amulya_Variable-s.6f10ee89.woff2" as="font" type="font/woff2" crossorigin="">
-  <link rel="preload" href="https://saabuildingblocks.pages.dev/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2" as="font" type="font/woff2" crossorigin="">
-  <link rel="preload" href="https://saabuildingblocks.pages.dev/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2" as="font" type="font/woff2" crossorigin="">
+  <link rel="preload" href="https://smartagentalliance.com/_next/static/media/Amulya_Variable-s.6f10ee89.woff2" as="font" type="font/woff2" crossorigin="">
+  <link rel="preload" href="https://smartagentalliance.com/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2" as="font" type="font/woff2" crossorigin="">
+  <link rel="preload" href="https://smartagentalliance.com/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2" as="font" type="font/woff2" crossorigin="">
 
   <!-- Plausible Analytics -->
   <script defer="" data-domain="smartagentalliance.com" src="https://plausible.io/js/script.js"></script>
 
   <style>
     /* Font Faces */
-    @font-face { font-family: 'Taskor'; src: url('https://saabuildingblocks.pages.dev/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2') format('woff2'); font-display: swap; font-weight: 400; }
-    @font-face { font-family: 'Amulya'; src: url('https://saabuildingblocks.pages.dev/_next/static/media/Amulya_Variable-s.6f10ee89.woff2') format('woff2'); font-display: swap; font-weight: 100 900; }
-    @font-face { font-family: 'Synonym'; src: url('https://saabuildingblocks.pages.dev/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2') format('woff2'); font-display: swap; font-weight: 100 900; }
+    @font-face { font-family: 'Taskor'; src: url('https://smartagentalliance.com/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2') format('woff2'); font-display: swap; font-weight: 400; }
+    @font-face { font-family: 'Amulya'; src: url('https://smartagentalliance.com/_next/static/media/Amulya_Variable-s.6f10ee89.woff2') format('woff2'); font-display: swap; font-weight: 100 900; }
+    @font-face { font-family: 'Synonym'; src: url('https://smartagentalliance.com/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2') format('woff2'); font-display: swap; font-weight: 100 900; }
 
     /* CSS Custom Properties */
     :root {

@@ -9,9 +9,8 @@
  * This ensures every request gets fresh data from the database.
  */
 
-const VPS_API_URL = 'https://saabuildingblocks.com';
-
 export async function onRequestGet(context) {
+  const VPS_API_URL = context.env.VPS_API_URL || 'https://saabuildingblocks.com';
   const authorization = context.request.headers.get('Authorization');
 
   if (!authorization) {

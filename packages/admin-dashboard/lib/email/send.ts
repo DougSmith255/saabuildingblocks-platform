@@ -22,7 +22,7 @@ export async function sendPasswordResetEmail(
   expiresInMinutes: number = 15
 ): Promise<EmailResult> {
   // Link goes to login page with reset_token param, which opens the reset password modal
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.pages.dev';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
   const resetLink = `${baseUrl}/agent-portal/login?reset_token=${resetToken}`;
 
   try {
@@ -101,7 +101,7 @@ export async function sendWelcomeEmail(
   expiresInHours: number = 48
 ): Promise<EmailResult> {
   // Use Cloudflare Pages URL for activation (public-facing site)
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.pages.dev';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
   const activationLink = `${baseUrl}/agent-portal/activate?token=${activationToken}`;
 
   try {
@@ -136,7 +136,7 @@ export async function sendAccountLockedEmail(
   unlockTime: Date,
   reason?: string
 ): Promise<EmailResult> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.pages.dev';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
   const supportUrl = `${baseUrl}/contact`;
 
   try {
@@ -171,7 +171,7 @@ export async function sendEmailVerificationEmail(
   username: string,
   verificationToken: string
 ): Promise<EmailResult> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.pages.dev';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
   const verificationLink = `${baseUrl}/verify-email?token=${verificationToken}`;
 
   try {
@@ -208,7 +208,7 @@ export async function sendEmailChangeVerification(
   verificationToken: string,
   expiresInHours: number = 24
 ): Promise<EmailResult> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.pages.dev';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
   const verificationLink = `${baseUrl}/verify-email-change/${verificationToken}`;
 
   try {
@@ -243,7 +243,7 @@ export async function sendEmailChangeConfirmation(
   username: string,
   newEmail: string
 ): Promise<EmailResult> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.pages.dev';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
   const supportUrl = `${baseUrl}/contact`;
 
   try {

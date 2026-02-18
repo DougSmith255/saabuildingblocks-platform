@@ -270,7 +270,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Send verification email to NEW email address
-    const verificationLink = `${process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com'}/verify-email-change/${verificationToken}`;
+    const verificationLink = `${process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com'}/verify-email-change/${verificationToken}`;
 
     // Import email sending function
     const { sendEmailChangeVerification } = await import('@/lib/email/send');

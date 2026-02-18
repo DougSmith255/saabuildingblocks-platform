@@ -14,24 +14,24 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Home', href: 'https://saabuildingblocks.com/' },
-  { label: 'About eXp', href: 'https://saabuildingblocks.com/about-exp-realty/' },
+  { label: 'Home', href: 'https://smartagentalliance.com/' },
+  { label: 'About eXp', href: 'https://smartagentalliance.com/about-exp-realty/' },
   {
     label: 'Our Team',
     dropdown: [
-      { label: 'Team Value', href: 'https://saabuildingblocks.com/team-value/' },
-      { label: 'About Us', href: 'https://saabuildingblocks.com/about-us/' },
+      { label: 'eXp Realty Sponsor', href: 'https://smartagentalliance.com/exp-realty-sponsor/' },
+      { label: 'Our eXp Team', href: 'https://smartagentalliance.com/our-exp-team/' },
+      { label: 'About Doug Smart', href: 'https://smartagentalliance.com/about-doug-smart/' },
+      { label: 'About Karrie Hill', href: 'https://smartagentalliance.com/about-karrie-hill/' },
     ],
   },
   {
     label: 'Resources',
     dropdown: [
-      { label: 'Commission & Fees Calc', href: 'https://saabuildingblocks.com/agent-tools/exp-commission-and-fees-calculator/' },
-      { label: 'RevShare Calc', href: 'https://saabuildingblocks.com/agent-tools/exp-revshare-calculator/' },
-      { label: 'Compare Brokerages', href: 'https://saabuildingblocks.com/agent-tools/compare-brokerages/' },
-      { label: 'Agent Success Hub', href: 'https://saabuildingblocks.com/agent-success-hub/' },
-      { label: 'Agent Freebies', href: 'https://saabuildingblocks.com/agent-freebies/' },
-      { label: 'Become an Agent', href: 'https://saabuildingblocks.com/become-an-agent/' },
+      { label: 'Commission & Fees Calc', href: 'https://smartagentalliance.com/exp-commission-calculator/' },
+      { label: 'RevShare Calc', href: 'https://smartagentalliance.com/exp-realty-revenue-share-calculator/' },
+      { label: 'Best Real Estate Brokerage', href: 'https://smartagentalliance.com/best-real-estate-brokerage/' },
+      { label: 'Agent Freebies', href: 'https://smartagentalliance.com/freebies/' },
     ],
   },
   { label: 'Agent Portal', href: '/login' },
@@ -214,7 +214,7 @@ export default function Header() {
             {/* Logo - Hidden on 404 */}
             {!is404Page && (
             <Link
-              href="https://saabuildingblocks.com/"
+              href="https://smartagentalliance.com/"
               className="logo-container"
               aria-label="Smart Agent Alliance Home"
               style={{
@@ -342,7 +342,7 @@ export default function Header() {
           {/* CTA Button (Desktop) - Hidden on 404 */}
           {!is404Page && (
           <div className="header-btn hidden xlg:flex items-center">
-            <CTAButton href="https://saabuildingblocks.com/book-a-call/">
+            <CTAButton href="https://smartagentalliance.com/book-a-call/">
               GET STARTED
             </CTAButton>
           </div>
@@ -511,7 +511,7 @@ export default function Header() {
 
                 {/* Mobile CTA Button */}
                 <div className="pt-8 pb-4 text-center">
-                  <CTAButton href="https://saabuildingblocks.com/book-a-call/">
+                  <CTAButton href="https://smartagentalliance.com/book-a-call/">
                     GET STARTED
                   </CTAButton>
                 </div>

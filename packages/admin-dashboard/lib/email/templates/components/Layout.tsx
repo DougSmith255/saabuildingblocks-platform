@@ -100,7 +100,7 @@ export function EmailLayout({
           {/* Logo uses Cloudflare Images CDN for reliable display in email clients */}
           <Section style={header}>
             <Img
-              src="https://saabuildingblocks.pages.dev/images/saa-logo-gold.png"
+              src="https://smartagentalliance.com/images/saa-logo-gold.png"
               alt="Smart Agent Alliance"
               width={180}
               height={64}

@@ -30,7 +30,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preload" as="image" href="https://saabuildingblocks.pages.dev/images/saa-logo-gold.png"/>
+  <link rel="preload" as="image" href="https://smartagentalliance.com/images/saa-logo-gold.png"/>
   <title>Welcome to Smart Agent Alliance</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
@@ -41,7 +41,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
           <!-- Logo Header -->
           <tr>
             <td style="padding: 20px 24px 16px; background-color: #0a0a0a; text-align: center; border-bottom: 1px solid rgba(255,215,0,0.2); border-radius: 12px 12px 0 0;">
-              <img alt="Smart Agent Alliance" height="64" src="https://saabuildingblocks.pages.dev/images/saa-logo-gold.png" width="180" style="display: inline-block;" />
+              <img alt="Smart Agent Alliance" height="64" src="https://smartagentalliance.com/images/saa-logo-gold.png" width="180" style="display: inline-block;" />
             </td>
           </tr>
 

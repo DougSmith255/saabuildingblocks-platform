@@ -154,7 +154,7 @@ export function WebPerformanceTab() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !isLoading && runLighthouse()}
-              placeholder="Enter URL to analyze (e.g., saabuildingblocks.pages.dev)"
+              placeholder="Enter URL to analyze (e.g., smartagentalliance.com)"
               className="w-full pl-10 pr-4 py-3 rounded-lg border bg-[#2a2a2a] text-[#e5e4dd] placeholder-[#888] focus:outline-none focus:border-[#00ff88] transition-colors"
               style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
               disabled={isLoading}
