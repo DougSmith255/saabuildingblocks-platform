@@ -10,7 +10,7 @@ export { ProfileCyberFrame } from './ProfileCyberFrame';
 export type { ProfileCyberFrameProps } from './ProfileCyberFrame';
 
 export { VideoPlayer } from './VideoPlayer';
-export type { VideoPlayerProps } from './VideoPlayer';
+export type { VideoPlayerProps, VideoPlayerRef } from './VideoPlayer';
 
 export { VideoSection } from './VideoSection';
 export type { VideoSectionProps } from './VideoSection';

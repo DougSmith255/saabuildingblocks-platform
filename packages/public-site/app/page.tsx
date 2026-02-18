@@ -174,8 +174,8 @@ export default function Home() {
 
             {/* CTA Button */}
             <div className="hero-cta-buttons flex justify-center items-center" style={{ marginTop: '14px' }}>
-              <CTAButton href="/exp-realty-sponsor">
-                VIEW TEAM VALUE
+              <CTAButton href="#" onClick={(e: React.MouseEvent) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
+                JOIN THE ALLIANCE
               </CTAButton>
             </div>
           </div>
@@ -205,8 +205,8 @@ export default function Home() {
         <p className="text-body mx-auto mb-8" style={{ maxWidth: '700px' }}>
           If you want to understand exactly how sponsorship works, what you keep, and what you never give up, see how Smart Agent Alliance fits inside eXp Realty.
         </p>
-        <SecondaryButton href="https://saabuildingblocks.pages.dev/exp-realty-sponsor/">
-          Our Team
+        <SecondaryButton href="/exp-realty-sponsor">
+          See SAA's Full Value Stack
         </SecondaryButton>
       </section>
 

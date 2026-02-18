@@ -1,9 +1,7 @@
 'use client';
 
-import { Icon3D, SecondaryButton } from '@saa/shared/components/saa';
+import { Icon3D } from '@saa/shared/components/saa';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
-import { Globe, Users, TrendingUp } from 'lucide-react';
-
 // Number style - H2 3D styling (larger than text)
 const pillarNumberStyle: React.CSSProperties = {
   color: '#bfbdb0',
@@ -133,11 +131,6 @@ export function ValuePillarsTab() {
                 <span className="text-body text-sm md:text-base" style={pillarNumberStyle}>03</span>
                 <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span style={pillarLabelStyle}>Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
               </div>
-            </div>
-            <div className="mt-3">
-              <SecondaryButton href="/about-exp-realty">
-                How Sponsorship Works
-              </SecondaryButton>
             </div>
           </div>
         </div>

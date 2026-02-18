@@ -541,8 +541,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       --color-headingText: #e5e4dd;
       --color-bodyText: #bfbdb0;
       --font-size-h1: clamp(38px, calc(27.82px + 4.07vw), 150px);
-      --font-size-h2: clamp(28px, calc(24.00px + 1.60vw), 72px);
-      --font-size-body: clamp(16px, calc(14.91px + 0.44vw), 28px);
+      --font-size-h2: clamp(28px, calc(24.36px + 1.45vw), 68px);
+      --font-size-body: clamp(16px, calc(15.09px + 0.36vw), 26px);
       --font-size-tagline: clamp(21px, calc(17.45px + 1.42vw), 60px);
       --font-size-button: clamp(16px, calc(14.55px + 0.58vw), 32px);
       --section-padding-y: clamp(4rem, calc(3rem + 2vw), 6rem);
@@ -648,7 +648,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       50% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45)); }
     }
 
-    /* H2 3D Text Effect */
+    /* H2 3D Text Effect - matches homepage H2 component default theme */
     .h2-3d {
       text-align: center;
       font-feature-settings: "ss01" 1;
@@ -656,17 +656,16 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       margin-right: auto;
       margin-bottom: 2.5rem;
       max-width: 1400px;
-      color: #bfbdb0;
+      color: #e5e4dd;
       text-shadow:
-        /* WHITE CORE */
-        0 0 0.01em #fff,
-        0 0 0.02em #fff,
-        0 0 0.03em rgba(255,255,255,0.8),
-        /* WARM WHITE GLOW - extended and dilute for sharp definition */
-        0 0 0.04em rgba(255,250,240,0.7),
-        0 0 0.08em rgba(255, 255, 255, 0.35),
-        0 0 0.14em rgba(255, 255, 255, 0.15),
-        0 0 0.22em rgba(200, 200, 200, 0.08),
+        /* WARM CORE GLOW */
+        0 0 0.01em #bfbdb0,
+        0 0 0.02em #bfbdb0,
+        0 0 0.03em rgba(191,189,176,0.8),
+        0 0 0.04em rgba(191,189,176,0.7),
+        0 0 0.08em rgba(191,189,176,0.35),
+        0 0 0.14em rgba(191,189,176,0.15),
+        0 0 0.22em rgba(160,158,148,0.08),
         /* METAL BACKING (3D depth - thicker) */
         0.02em 0.02em 0 #2a2a2a,
         0.04em 0.04em 0 #222222,
@@ -1452,163 +1451,176 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       flex-shrink: 0;
     }
 
-    /* What You Get - Clip-Path Reveal Cards */
-    .wyg-container {
+    /* What You Get - Icon Cards */
+    .wyg-icon-cards {
       display: flex;
-      flex-direction: column;
-      gap: 2.5rem;
-      max-width: 1200px;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      max-width: 1400px;
       margin: 0 auto;
     }
-    @media (min-width: 768px) {
-      .wyg-container {
-        gap: 3rem;
-      }
-    }
-    .wyg-reveal-card {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 1rem;
-      transition: transform 0.1s ease-out, opacity 0.1s ease-out;
-    }
-    @media (min-width: 640px) {
-      .wyg-reveal-card {
-        gap: 1.5rem;
-      }
-    }
-    .wyg-reveal-card.wyg-from-right {
-      flex-direction: row-reverse;
-    }
-    .wyg-icon-circle {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      flex-shrink: 0;
+    .wyg-icon-card {
+      flex: 1 1 260px;
       position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(10,10,10,0.25);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 2px solid #ffd700;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      transition: transform 0.1s ease-out, opacity 0.1s ease-out;
-    }
-    @media (min-width: 640px) {
-      .wyg-icon-circle {
-        width: 80px;
-        height: 80px;
-      }
-    }
-    @media (min-width: 768px) {
-      .wyg-icon-circle {
-        width: 112px;
-        height: 112px;
-        border-width: 3px;
-      }
-    }
-    @media (min-width: 1024px) {
-      .wyg-icon-circle {
-        width: 144px;
-        height: 144px;
-      }
-    }
-    .wyg-icon-inner {
-      position: relative;
-      z-index: 10;
-    }
-    .wyg-icon-circle .icon-3d svg {
-      width: 28px;
-      height: 28px;
-    }
-    @media (min-width: 640px) {
-      .wyg-icon-circle .icon-3d svg {
-        width: 36px;
-        height: 36px;
-      }
-    }
-    @media (min-width: 768px) {
-      .wyg-icon-circle .icon-3d svg {
-        width: 48px;
-        height: 48px;
-      }
-    }
-    .wyg-card-content {
-      flex: 1;
-      padding: 1.5rem;
       border-radius: 1rem;
-      position: relative;
+      padding: 1.5rem;
+      text-align: center;
       overflow: hidden;
-      background: rgba(10,10,10,0.3);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,215,0,0.27);
-      box-shadow: 0 0 40px rgba(255,215,0,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
-      transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+      background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
     }
-    .wyg-card-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      opacity: 0.25;
+    @media (min-width: 768px) {
+      .wyg-icon-card { padding: 2rem; }
     }
-    .wyg-card-glass-overlay {
-      display: none;
+    .wyg-icon-card.wyg-theme-yellow { border: 1px solid rgba(255,215,0,0.15); }
+    .wyg-icon-card.wyg-theme-blue   { border: 1px solid rgba(0,191,255,0.15); }
+    .wyg-card-hover-glow {
+      position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.5s;
     }
-    .wyg-card-content-inner {
-      position: relative;
-      z-index: 10;
+    .wyg-icon-card:hover .wyg-card-hover-glow { opacity: 1; }
+    .wyg-theme-yellow .wyg-card-hover-glow { background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255,215,0,0.12) 0%, transparent 70%); }
+    .wyg-theme-blue   .wyg-card-hover-glow { background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,191,255,0.12) 0%, transparent 70%); }
+    .wyg-icon-ring-wrap { position: relative; margin: 0 auto 1.25rem; width: 64px; height: 64px; }
+    @media (min-width: 768px) { .wyg-icon-ring-wrap { width: 80px; height: 80px; } }
+    .wyg-icon-ring-outer {
+      position: absolute; inset: 0; border-radius: 50%;
     }
-    .wyg-reveal-card.wyg-from-right .wyg-card-content {
-      text-align: right;
+    .wyg-theme-yellow .wyg-icon-ring-outer {
+      background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1));
+      box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1);
+      animation: iconPulseYellow 3s ease-in-out infinite;
     }
-    .wyg-title-row {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
+    .wyg-theme-blue .wyg-icon-ring-outer {
+      background: linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1));
+      box-shadow: 0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1);
+      animation: iconPulseBlue 3s ease-in-out infinite;
     }
-    @media (min-width: 600px) {
-      .wyg-title-row {
-        flex-direction: row;
-        align-items: center;
-        gap: 0.75rem;
-      }
-      .wyg-reveal-card.wyg-from-right .wyg-title-row {
-        flex-direction: row-reverse;
-      }
+    @keyframes iconPulseYellow {
+      0%, 100% { box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1); }
+      50%      { box-shadow: 0 0 40px rgba(255,215,0,0.35), inset 0 0 25px rgba(255,215,0,0.15); }
     }
-    .wyg-badge {
-      display: none;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      background: rgba(255,215,0,0.13);
-      color: #ffd700;
-      width: fit-content;
+    @keyframes iconPulseBlue {
+      0%, 100% { box-shadow: 0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1); }
+      50%      { box-shadow: 0 0 40px rgba(0,191,255,0.35), inset 0 0 25px rgba(0,191,255,0.15); }
     }
-    @media (min-width: 600px) {
-      .wyg-badge {
-        display: inline-block;
-      }
+    .wyg-icon-ring-inner {
+      position: absolute; inset: 8px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
     }
-    .wyg-card-title {
+    .wyg-theme-yellow .wyg-icon-ring-inner {
+      background: linear-gradient(180deg, rgba(15,15,10,0.95), rgba(10,10,5,0.98));
+      border: 1px solid rgba(255,215,0,0.3);
+    }
+    .wyg-theme-blue .wyg-icon-ring-inner {
+      background: linear-gradient(180deg, rgba(15,20,30,0.95), rgba(5,10,20,0.98));
+      border: 1px solid rgba(0,191,255,0.3);
+    }
+    .wyg-icon-ring-inner svg {
+      width: 24px; height: 24px;
+    }
+    .wyg-theme-yellow .wyg-icon-ring-inner svg { color: #ffd700; filter: drop-shadow(0 0 8px rgba(255,215,0,0.5)); }
+    .wyg-theme-blue   .wyg-icon-ring-inner svg { color: #00bfff; filter: drop-shadow(0 0 8px rgba(0,191,255,0.5)); }
+    .wyg-icon-card-title {
       font-family: var(--font-amulya), system-ui, sans-serif;
       font-weight: 700;
-      font-size: clamp(20px, calc(18px + 0.5vw), 26px);
-      color: var(--color-heading, #f5f5f0);
+      font-size: clamp(17px, calc(15px + 0.4vw), 22px);
+      color: var(--color-heading, #e5e4dd);
+      margin-bottom: 0.5rem;
     }
-    .wyg-card-desc {
-      color: var(--color-bodyText);
-      font-family: var(--font-synonym);
-      font-size: var(--font-size-body);
+    .wyg-icon-card-text {
+      color: var(--color-bodyText, #dcdbd5);
+      font-family: var(--font-synonym, var(--font-amulya), sans-serif);
+      font-size: clamp(14px, calc(13.5px + 0.2vw), 18px);
       line-height: 1.6;
+    }
+
+    /* What You Get - Video Player */
+    /* Fullscreen the entire wrap (video + timestamp strip together) */
+    #wyg-video-wrap:fullscreen,
+    #wyg-video-wrap:-webkit-full-screen {
+      width: 100vw !important; height: 100vh !important; max-width: 100vw !important;
+      background: #000 !important; border: none !important; border-radius: 0 !important;
+      overflow: visible !important;
+      display: flex !important; flex-direction: column !important; align-items: stretch !important; justify-content: flex-start !important;
+    }
+    #wyg-video-wrap:fullscreen .wyg-video-container,
+    #wyg-video-wrap:-webkit-full-screen .wyg-video-container {
+      position: relative !important; width: 100% !important; height: auto !important;
+      min-height: 0 !important; flex: 1 1 auto !important;
+      max-height: none !important; aspect-ratio: auto !important; overflow: visible !important;
+      left: unset !important; top: unset !important; z-index: unset !important;
+      transform: none !important; transition: none !important;
+      border-radius: 0 !important; box-shadow: none !important;
+    }
+    #wyg-video-wrap:fullscreen .wyg-video-container iframe,
+    #wyg-video-wrap:-webkit-full-screen .wyg-video-container iframe { width: 100% !important; height: 100% !important; object-fit: contain; }
+    #wyg-video-wrap:fullscreen #wyg-timestamp-strip,
+    #wyg-video-wrap:-webkit-full-screen #wyg-timestamp-strip,
+    #wyg-video-wrap.wyg-fs-active #wyg-timestamp-strip {
+      display: block !important; max-height: none !important; height: auto !important;
+      width: 100% !important; overflow: visible !important; transition: none !important;
+      visibility: visible !important; opacity: 1 !important;
+      position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
+      z-index: 20 !important;
+      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%) !important;
+    }
+    #wyg-video-wrap.wyg-fs-active #wyg-ts-title {
+      font-size: clamp(18px, 2.5vw, 28px) !important;
+    }
+    #wyg-video-wrap.wyg-fs-active #wyg-ts-subtitle {
+      font-size: clamp(14px, 1.8vw, 20px) !important;
+    }
+    #wyg-video-wrap:fullscreen #wyg-float-placeholder,
+    #wyg-video-wrap:-webkit-full-screen #wyg-float-placeholder { display: none !important; }
+    /* Loading spinner for video */
+    @keyframes wyg-spin { to { transform: rotate(360deg); } }
+    .wyg-video-spinner {
+      position: absolute; inset: 0; z-index: 5; display: none;
+      align-items: center; justify-content: center; background: rgba(0,0,0,0.6);
+    }
+    .wyg-video-spinner.visible { display: flex; }
+    .wyg-video-spinner-ring {
+      width: 48px; height: 48px; border: 3px solid rgba(255,215,0,0.2);
+      border-top-color: #ffd700; border-radius: 50%; animation: wyg-spin 0.8s linear infinite;
+    }
+    .wyg-vol-slider {
+      -webkit-appearance: none !important; appearance: none !important;
+      width: 50px !important; height: 2px !important;
+      background: rgba(255,255,255,0.25) !important;
+      border-radius: 1px !important; outline: none !important; margin: 0 !important; padding: 0 !important;
+    }
+    .wyg-vol-slider::-webkit-slider-thumb {
+      -webkit-appearance: none !important; appearance: none !important;
+      width: 8px !important; height: 8px !important; border-radius: 50% !important;
+      background: #ffd700 !important; cursor: pointer !important; margin-top: -3px !important;
+    }
+    .wyg-vol-slider::-moz-range-thumb {
+      width: 8px !important; height: 8px !important; border-radius: 50% !important;
+      background: #ffd700 !important; cursor: pointer !important; border: none !important;
+    }
+    .wyg-vol-slider::-webkit-slider-runnable-track {
+      height: 2px !important; background: rgba(255,255,255,0.25) !important; border-radius: 1px !important;
+    }
+    .wyg-vol-slider::-moz-range-track {
+      height: 2px !important; background: rgba(255,255,255,0.25) !important;
+      border-radius: 1px !important; border: none !important;
+    }
+    /* Ensure controls are interactive above iframe in all states */
+    #wyg-controls-overlay { z-index: 10 !important; }
+    #wyg-controls-bar { z-index: 11 !important; }
+    #wyg-controls-bar * { pointer-events: auto !important; }
+
+    /* Play button - responsive size + transparency */
+    .wyg-play-circle {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: rgba(255,215,0,0.65);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 20px rgba(255,215,0,0.3);
+    }
+    .wyg-play-circle svg { width: 20px; height: 22px; margin-left: 2px; }
+    @media (min-width: 768px) {
+      .wyg-play-circle { width: 64px; height: 64px; }
+      .wyg-play-circle svg { width: 24px; height: 28px; margin-left: 3px; }
     }
 
     /* WhyOnlyAtExp - 3D Rotating Card Stack with ScrollTrigger */
@@ -2221,6 +2233,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     @keyframes spinnerRotate {
       to { transform: rotate(360deg); }
+    }
+    @keyframes wygTsFadeInDown {
+      0% { opacity: 0; transform: translateY(-12px); }
+      50% { opacity: 0.6; transform: translateY(2px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     /* Slide Panel Container */
@@ -2987,7 +3004,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
 
     /* Cyber Card Gold */
-    .cyber-card-gold {
+    .cyber-card-gold, .cyber-card-gold-3d {
       perspective: 1000px;
       display: block;
     }
@@ -3075,6 +3092,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       z-index: 10;
       padding: 24px;
       text-align: center;
+    }
+
+    /* Proven at Scale - 2-column grid on md+ */
+    .proven-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center; }
+    @media (min-width: 768px) {
+      .proven-grid { grid-template-columns: 2fr 1fr; }
+      .proven-grid-left { grid-column: 1; }
+      .proven-grid-right { grid-column: 2; }
     }
 
     /* Generic Cyber Card Gold - grainy background with subtle grey border */
@@ -3813,7 +3838,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <div class="why-saa-grid">
           <!-- Left Card - visible immediately -->
           <div class="expand-reveal-element" data-expand-id="saa-left" data-expand-dir="left" style="height: 100%;">
-            <div id="saa-left-frame" class="rounded-xl overflow-hidden" style="background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03); height: 100%;">
+            <div id="saa-left-frame" class="rounded-xl" style="background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03); height: 100%;">
               <div id="saa-left-content" style="padding: 2rem 2.5rem; opacity: 0;">
                 <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.875rem;">Elite systems. Proven training. Real community.</p>
                 <p class="text-body mt-3 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
@@ -3842,7 +3867,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </div>
           <!-- Right Card - Aligned Incentives - visible immediately -->
           <div class="expand-reveal-element" data-expand-id="saa-right" data-expand-dir="right" style="height: 100%; min-height: 300px;">
-            <div id="saa-right-frame" class="rounded-2xl overflow-hidden" style="position: relative; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; background: rgba(255,255,255,0.05); height: 100%; min-height: 300px;">
+            <div id="saa-right-frame" class="rounded-2xl" style="position: relative; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; background: rgba(255,255,255,0.05); height: 100%; min-height: 300px;">
               <!-- Image is always visible -->
               <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;">
               <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
@@ -3876,12 +3901,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </div>
 
           <div style="max-width: 1600px; margin: 0 auto; position: relative; z-index: 10;">
-            <div style="max-width: 900px; margin: 0 auto;">
-              <div>
+            <div class="proven-grid">
+              <!-- Left - Content -->
+              <div class="proven-grid-left">
                 <!-- H2 - always visible, no animation -->
-                <h2 class="text-h2 h2-3d" style="text-align: center;">Proven at Scale</h2>
+                <h2 class="text-h2 h2-3d" style="text-align: left;">Proven at Scale</h2>
 
-                <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
                   <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem;">
                     <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span>
                     <p class="text-body">One of the fastest-growing sponsor organizations at eXp Realty</p>
@@ -3896,11 +3922,27 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   </div>
                 </div>
 
-                <div class="scroll-reveal" style="transition-delay: 0.3s; text-align: center;">
+                <div class="scroll-reveal" style="transition-delay: 0.3s;">
                   <div class="cta-button-wrapper" style="display: inline-block;">
                     <div class="cta-light-bar cta-light-bar-top"></div>
                     <a href="#watch-and-decide" class="cta-button">Learn More About SAA</a>
                     <div class="cta-light-bar cta-light-bar-bottom"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right - Featured NeonCard with 3700+ stat -->
+              <div class="proven-grid-right">
+                <div class="cyber-card-gold-3d" style="margin: 0 auto;">
+                  <div class="cyber-card-gold-frame">
+                    <div class="cyber-card-gold-glass"></div>
+                    <div class="cyber-card-gold-content" style="padding: 2rem; text-align: center; position: relative; z-index: 10;">
+                      <span class="icon-3d" style="display: inline-flex; margin-bottom: 0.75rem;">
+                        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                      </span>
+                      <p class="font-heading" style="font-size: clamp(1.875rem, 2vw, 2.25rem); font-weight: 700; color: #bfbdb0; text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4); font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">3700+</p>
+                      <p class="text-body" style="margin-top: 0.5rem;">Agents in Sponsor Network</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -3913,100 +3955,167 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <!-- What You Get Section - Blur Reveal Cards -->
     <section style="padding: var(--section-padding-y) 1.5rem; position: relative;" id="what-you-get-section">
       <div style="max-width: 1500px; margin: 0 auto; position: relative; z-index: 10;">
-        <div class="text-center" style="margin-bottom: 3rem;">
+        <div class="text-center" style="margin-bottom: 2.5rem;">
           <h2 class="text-h2 h2-3d">What You Get with SAA</h2>
-          <p class="text-body" style="opacity: 0.6; margin-top: 1rem; max-width: 700px; margin-left: auto; margin-right: auto;">Smart Agent Alliance provides systems, training, income infrastructure, and collaboration through five core pillars.</p>
+          <p class="text-body" style="opacity: 0.6; margin-top: -1.5rem; max-width: 950px; margin-left: auto; margin-right: auto;">As an SAA agent, you are part of both Smart Agent Alliance and the Wolfpack, our larger team network within eXp Realty. Your Agent Portal brings everything together in one place.</p>
         </div>
 
-        <!-- Clip-Path Reveal Cards - Alternating left/right -->
-        <div class="wyg-container" id="wyg-cards">
-          <!-- Card 1: Connected Leadership (from left) -->
-          <div class="wyg-reveal-card" data-wyg-card="0" data-wyg-direction="left">
-            <div class="wyg-icon-circle">
-              <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
-            </div>
-            <div class="wyg-card-content">
-              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public');"></div>
-              <div class="wyg-card-glass-overlay"></div>
-              <div class="wyg-card-content-inner">
-                <div class="wyg-title-row">
-                  <span class="wyg-badge">Leadership</span>
-                  <h3 class="wyg-card-title">Connected Leadership and Community</h3>
-                </div>
-                <p class="text-body wyg-card-desc">Big enough to back you. Small enough to know you. Real access, real wins, real support.</p>
-              </div>
+        <!-- Walkthrough Video - Custom Player -->
+        <div id="wyg-video-wrap" style="max-width: 900px; margin: 0 auto 3rem; border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 12px; overflow: hidden; position: relative;">
+          <!-- Timestamp strip (above video) -->
+          <div id="wyg-timestamp-strip" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease; background: rgba(0, 0, 0, 0.85);">
+            <div style="padding: 8px 16px; text-align: center; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">
+              <span id="wyg-ts-title" style="font-family: var(--font-taskor, 'Taskor', sans-serif); font-size: clamp(13px, 1.5vw, 16px); font-weight: 700; color: #ffd700; letter-spacing: 0.08em; text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);">BUILT FOR AGENT GROWTH</span>
+              <span id="wyg-ts-subtitle" style="display: block; font-family: var(--font-amulya, 'Amulya', sans-serif); font-size: clamp(12px, 1.3vw, 14px); color: #a8a7a0; margin-top: 2px; padding-bottom: 9px;">Clarity. Efficiency. Scale</span>
             </div>
           </div>
 
-          <!-- Card 2: Passive Income (from right) -->
-          <div class="wyg-reveal-card wyg-from-right" data-wyg-card="1" data-wyg-direction="right">
-            <div class="wyg-icon-circle">
-              <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span>
-            </div>
-            <div class="wyg-card-content">
-              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public');"></div>
-              <div class="wyg-card-glass-overlay"></div>
-              <div class="wyg-card-content-inner">
-                <div class="wyg-title-row">
-                  <span class="wyg-badge">Income</span>
-                  <h3 class="wyg-card-title">Passive Income Infrastructure</h3>
-                </div>
-                <p class="text-body wyg-card-desc">We handle the structure so you can build long-term income without relying solely on transactions.</p>
+          <!-- Float placeholder (hidden until floating) -->
+          <div id="wyg-float-placeholder" style="display: none;"></div>
+
+          <div id="wyg-video-container" class="wyg-video-container" style="position: relative; aspect-ratio: 2228/1080; background: #000; overflow: hidden;">
+            <!-- Poster image (removed on first play) -->
+            <img id="wyg-video-poster" src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/agent-portal-walkthrough-thumbnail/desktop" alt="Agent Portal Walkthrough" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2;" loading="lazy" />
+
+            <!-- Play button overlay (before first play) -->
+            <div id="wyg-play-btn" style="position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+              <div class="wyg-play-circle">
+                <svg viewBox="0 0 24 28" fill="none"><path d="M24 14L0 28V0L24 14Z" fill="#1a1a1a" /></svg>
               </div>
+            </div>
+
+            <!-- Iframe inserted here by JS (preloaded on scroll into view) -->
+
+            <!-- Loading spinner (shown while video is buffering) -->
+            <div id="wyg-video-spinner" class="wyg-video-spinner">
+              <div class="wyg-video-spinner-ring"></div>
+            </div>
+
+            <!-- Custom controls overlay (hidden until first play) -->
+            <div id="wyg-controls-overlay" style="position: absolute; inset: 0; z-index: 10; display: none; cursor: pointer;">
+              <!-- Controls bar -->
+              <div id="wyg-controls-bar" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 6px 12px; display: flex; align-items: center; gap: 8px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); opacity: 0; transition: opacity 0.3s; pointer-events: none;">
+                <!-- Play/Pause -->
+                <button id="wyg-ctrl-playpause" style="background: none; border: none; color: #fff; cursor: pointer; padding: 4px;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1.5v13l11-6.5L3 1.5z" /></svg>
+                </button>
+                <!-- Time -->
+                <span id="wyg-ctrl-time" style="color: #fff; font-size: 12px; min-width: 80px; font-variant-numeric: tabular-nums;">0:00 / 0:00</span>
+                <!-- Scrubber -->
+                <div id="wyg-ctrl-scrubber" style="flex: 1; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; cursor: pointer; position: relative;">
+                  <div id="wyg-ctrl-scrubber-fill" style="height: 100%; background: #ffd700; border-radius: 2px; width: 0%; transition: width 0.1s linear;"></div>
+                </div>
+                <!-- Volume -->
+                <button id="wyg-ctrl-mute" style="background: none; border: none; color: #fff; cursor: pointer; padding: 4px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" /></svg>
+                </button>
+                <input id="wyg-ctrl-volume" type="range" min="0" max="1" step="0.05" value="1" class="wyg-vol-slider" />
+                <!-- Quality selector -->
+                <div id="wyg-quality-wrap" style="position: relative;">
+                  <button id="wyg-ctrl-quality" style="background: none; border: none; color: #fff; cursor: pointer; padding: 4px; font-size: 11px; font-weight: 600; min-width: 36px;">1080<span style="font-size: 8px; vertical-align: super; color: #ffd700;">HD</span></button>
+                  <div id="wyg-quality-menu" style="display: none; position: absolute; bottom: 100%; right: 0; margin-bottom: 8px; background: rgba(0,0,0,0.9); border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); padding: 4px 0; min-width: 100px; z-index: 100;">
+                    <button data-quality="1080p" style="display: block; width: 100%; padding: 6px 14px; background: rgba(255,215,0,0.15); border: none; color: #ffd700; font-size: 13px; text-align: left; cursor: pointer;">1080p <span style="font-size: 10px; margin-left: 4px; color: #ffd700;">HD</span></button>
+                    <button data-quality="720p" style="display: block; width: 100%; padding: 6px 14px; background: transparent; border: none; color: #e5e4dd; font-size: 13px; text-align: left; cursor: pointer;">720p</button>
+                    <button data-quality="360p" style="display: block; width: 100%; padding: 6px 14px; background: transparent; border: none; color: #e5e4dd; font-size: 13px; text-align: left; cursor: pointer;">360p</button>
+                    <button data-quality="auto" style="display: block; width: 100%; padding: 6px 14px; background: transparent; border: none; color: #e5e4dd; font-size: 13px; text-align: left; cursor: pointer;">Auto</button>
+                  </div>
+                </div>
+                <!-- Fullscreen -->
+                <button id="wyg-ctrl-fullscreen" style="background: none; border: none; color: #fff; cursor: pointer; padding: 4px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Post-video CTA overlay -->
+            <div id="wyg-end-overlay" style="display: none; position: absolute; inset: 0; z-index: 20; background: rgba(0,0,0,0.85); flex-direction: column; align-items: center; justify-content: center; gap: 16px;">
+              <a href="/book-a-call" class="cta-button" style="text-decoration: none;">BOOK A CALL</a>
+              <button id="wyg-end-join" class="cta-button" style="cursor: pointer;">JOIN THE ALLIANCE</button>
+              <button id="wyg-end-rewatch" style="background: none; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: #e5e4dd; padding: 8px 20px; cursor: pointer; font-size: 14px; font-family: var(--font-taskor, sans-serif); display: flex; align-items: center; gap: 6px; transition: all 0.2s ease;">
+                <span style="font-size: 18px;">&#8635;</span> Rewatch
+              </button>
+            </div>
+
+            <!-- Floating dismiss button (shown only when floating) -->
+            <button id="wyg-float-dismiss" style="display: none; position: absolute; top: 4px; left: 4px; z-index: 20; background: rgba(0,0,0,0.7); border: none; color: #fff; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; align-items: center; justify-content: center; font-size: 14px; line-height: 1; padding-bottom: 2px;">&times;</button>
+          </div>
+
+        </div>
+
+        <!-- Icon Cards (matching homepage WhatYouGet) -->
+        <div class="wyg-icon-cards" id="wyg-cards">
+          <!-- Card 1: Guided Launch (yellow) -->
+          <div class="wyg-icon-card wyg-theme-yellow">
+            <div class="wyg-card-hover-glow"></div>
+            <div class="wyg-icon-ring-wrap">
+              <div class="wyg-icon-ring-outer"></div>
+              <div class="wyg-icon-ring-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
+              </div>
+            </div>
+            <div style="position: relative; z-index: 10;">
+              <h3 class="wyg-icon-card-title">Guided Launch</h3>
+              <p class="wyg-icon-card-text">Launch your business with clarity from day one.</p>
             </div>
           </div>
 
-          <!-- Card 3: Done-For-You (from left) -->
-          <div class="wyg-reveal-card" data-wyg-card="2" data-wyg-direction="left">
-            <div class="wyg-icon-circle">
-              <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="M9 16l2 2 4-4"></path></svg></span>
-            </div>
-            <div class="wyg-card-content">
-              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public');"></div>
-              <div class="wyg-card-glass-overlay"></div>
-              <div class="wyg-card-content-inner">
-                <div class="wyg-title-row">
-                  <span class="wyg-badge">Systems</span>
-                  <h3 class="wyg-card-title">Done-For-You Production Systems</h3>
-                </div>
-                <p class="text-body wyg-card-desc">Curated systems designed to save time, not create tech overload.</p>
+          <!-- Card 2: Done-For-You Lead Systems (blue) -->
+          <div class="wyg-icon-card wyg-theme-blue">
+            <div class="wyg-card-hover-glow"></div>
+            <div class="wyg-icon-ring-wrap">
+              <div class="wyg-icon-ring-outer"></div>
+              <div class="wyg-icon-ring-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
               </div>
+            </div>
+            <div style="position: relative; z-index: 10;">
+              <h3 class="wyg-icon-card-title">Done-For-You Lead Systems</h3>
+              <p class="wyg-icon-card-text">Pre-built business assets ready for implementation.</p>
             </div>
           </div>
 
-          <!-- Card 4: Elite Training (from right) -->
-          <div class="wyg-reveal-card wyg-from-right" data-wyg-card="3" data-wyg-direction="right">
-            <div class="wyg-icon-circle">
-              <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span>
-            </div>
-            <div class="wyg-card-content">
-              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public');"></div>
-              <div class="wyg-card-glass-overlay"></div>
-              <div class="wyg-card-content-inner">
-                <div class="wyg-title-row">
-                  <span class="wyg-badge">Training</span>
-                  <h3 class="wyg-card-title">Elite Training Libraries</h3>
-                </div>
-                <p class="text-body wyg-card-desc">AI, social media, investing, and modern production systems, available when you need them.</p>
+          <!-- Card 3: Training & Development (yellow) -->
+          <div class="wyg-icon-card wyg-theme-yellow">
+            <div class="wyg-card-hover-glow"></div>
+            <div class="wyg-icon-ring-wrap">
+              <div class="wyg-icon-ring-outer"></div>
+              <div class="wyg-icon-ring-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
               </div>
+            </div>
+            <div style="position: relative; z-index: 10;">
+              <h3 class="wyg-icon-card-title">Training &amp; Development</h3>
+              <p class="wyg-icon-card-text">Practical training designed for production growth.</p>
             </div>
           </div>
 
-          <!-- Card 5: Private Referrals (from left) -->
-          <div class="wyg-reveal-card" data-wyg-card="4" data-wyg-direction="left">
-            <div class="wyg-icon-circle">
-              <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
-            </div>
-            <div class="wyg-card-content">
-              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public');"></div>
-              <div class="wyg-card-glass-overlay"></div>
-              <div class="wyg-card-content-inner">
-                <div class="wyg-title-row">
-                  <span class="wyg-badge">Referrals</span>
-                  <h3 class="wyg-card-title">Private Referrals &amp; Global Collaboration</h3>
-                </div>
-                <p class="text-body wyg-card-desc">Warm introductions and deal flow inside a global agent network.</p>
+          <!-- Card 4: Income Growth & Attraction (blue) -->
+          <div class="wyg-icon-card wyg-theme-blue">
+            <div class="wyg-card-hover-glow"></div>
+            <div class="wyg-icon-ring-wrap">
+              <div class="wyg-icon-ring-outer"></div>
+              <div class="wyg-icon-ring-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
               </div>
+            </div>
+            <div style="position: relative; z-index: 10;">
+              <h3 class="wyg-icon-card-title">Income Growth &amp; Attraction</h3>
+              <p class="wyg-icon-card-text">Structured attraction pathways with team support.</p>
+            </div>
+          </div>
+
+          <!-- Card 5: Ongoing Support (yellow) -->
+          <div class="wyg-icon-card wyg-theme-yellow">
+            <div class="wyg-card-hover-glow"></div>
+            <div class="wyg-icon-ring-wrap">
+              <div class="wyg-icon-ring-outer"></div>
+              <div class="wyg-icon-ring-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line></svg>
+              </div>
+            </div>
+            <div style="position: relative; z-index: 10;">
+              <h3 class="wyg-icon-card-title">Ongoing Support</h3>
+              <p class="wyg-icon-card-text">Accessible support and expanding resources.</p>
             </div>
           </div>
         </div>
@@ -4465,49 +4574,24 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <section id="watch-and-decide" class="section py-16 md:py-24 px-4">
           <div style="max-width: 1900px; margin: 0 auto;">
             <div class="text-center mb-8 md:mb-12">
-              <h2 class="text-h2 h2-3d">The Inside Look</h2>
+              <h2 class="text-h2 h2-3d">Book a Call</h2>
               <p class="text-body mt-4 max-w-2xl mx-auto opacity-80">Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full.</p>
             </div>
             <div class="max-w-4xl mx-auto">
-              <!-- Video Player -->
+              <!-- Video Player (Disabled) -->
               <div class="video-player-container">
                 <div class="video-frame">
-                  <div class="video-wrapper" id="video-wrapper">
-                    <iframe id="video-iframe" src="https://customer-2twfsluc6inah5at.cloudflarestream.com/f8c3f1bd9c2db2409ed0e90f60fd4d5b/iframe?controls=false&amp;poster=https%3A%2F%2Fimagedelivery.net%2FRZBQ4dWu2c_YEpklnDDxFg%2Fexp-realty-smart-agent-alliance-explained%2Fdesktop&amp;letterboxColor=transparent" loading="lazy" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture" allowfullscreen=""></iframe>
-                    <div class="video-overlay" id="video-overlay">
-                      <div class="overlay-play-btn" id="play-btn">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                      </div>
-                    </div>
-                    <div class="scrubber-container" id="scrubber-container">
-                      <div class="scrubber-watched" id="scrubber-watched"></div>
-                      <div class="scrubber-current" id="scrubber-current"></div>
-                      <div class="scrubber-thumb" id="scrubber-thumb"></div>
-                    </div>
-                  </div>
-                  <div class="video-controls">
-                    <button class="control-btn control-btn--play" id="btn-play" aria-label="Play">
-                      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                    </button>
-                    <button class="control-btn" id="btn-rewind" aria-label="Rewind 15 seconds" title="Rewind 15s">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"></path><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
-                      <span class="rewind-text">15</span>
-                    </button>
-                    <button class="control-btn" id="btn-restart" aria-label="Restart video" title="Restart">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v6h6"></path><path d="M21 12A9 9 0 0 0 6 5.3L3 8"></path><path d="M21 22v-6h-6"></path><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"></path></svg>
-                    </button>
-                    <div class="time-display" id="time-display">0:00 / 0:00</div>
-                    <div class="volume-controls">
-                      <button class="control-btn" id="btn-mute" aria-label="Mute">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                      </button>
-                      <input type="range" min="0" max="1" step="0.1" value="1" class="volume-slider" id="volume-slider" aria-label="Volume">
+                  <div class="video-wrapper" style="position: relative; aspect-ratio: 16/9; background: #000; border-radius: 8px 8px 0 0; overflow: hidden;">
+                    <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-smart-agent-alliance-explained/desktop" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.3;" />
+                    <!-- Disabled overlay -->
+                    <div style="position: absolute; inset: 0; z-index: 10; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; border-radius: 8px 8px 0 0;">
+                      <span style="color: #ffd700; font-size: clamp(14px, 2.5vw, 22px); font-family: var(--font-taskor, sans-serif); font-weight: 600; letter-spacing: 0.05em; text-shadow: 0 0 20px rgba(255,215,0,0.4);">Video Update In Progress</span>
                     </div>
                   </div>
                 </div>
                 <div class="progress-area">
-                  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-                  <p class="text-body" id="progress-message">Most questions are answered here, once you've watched 50%, the option to book a call becomes available.</p>
+                  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 0%;"></div></div>
+                  <p class="text-body" id="progress-message">Most questions are answered here, once you have watched 50%, the option to book a call becomes available.</p>
                 </div>
               </div>
 
@@ -4518,7 +4602,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   <button class="cta-button" id="btn-join-alliance">JOIN THE ALLIANCE</button>
                   <div class="cta-light-bar cta-light-bar-bottom"></div>
                 </div>
-                <div id="book-call-wrapper" style="opacity: 0.4; filter: blur(1px) grayscale(0.8); pointer-events: none; transition: all 0.5s ease; padding: 0.5rem 0;">
+                <div id="book-call-wrapper" style="opacity: 1; filter: none; pointer-events: auto; transition: all 0.5s ease; padding: 0.5rem 0;">
                   <div class="group" style="position: relative; display: inline-block;">
                     <a href="https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7" target="_blank" rel="noopener noreferrer" id="btn-book-call" style="position: relative; display: flex; justify-content: center; align-items: center; height: clamp(45px, calc(43.182px + 0.7273vw), 65px); padding: 0.5rem 1.25rem; background-color: rgb(45,45,45); border-radius: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5); color: var(--color-headingText, #e5e4dd); font-family: var(--font-taskor), Taskor, system-ui, sans-serif; font-size: var(--font-size-button, 20px); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; text-decoration: none; white-space: nowrap; overflow: hidden; z-index: 10;">
                       <span style="position: absolute; inset: 0; background: linear-gradient(to left, rgba(255,255,255,0.15), transparent); width: 50%; transform: skewX(45deg); pointer-events: none;"></span>
@@ -5006,6 +5090,755 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         setupDeckStack();
         initGrayscaleDataStream();
         setupBuiltForFutureScrollAnimation();
+        initWygVideo();
+      }
+
+      // Walkthrough video in "What You Get" section - Full custom player
+      function initWygVideo() {
+        var VIDEO_ID = '14ba82ce03943a64ef90e3c9771a0d56';
+        var VIDEO_AR = 2228 / 1080;
+        var STREAM_BASE = 'https://customer-2twfsluc6inah5at.cloudflarestream.com/';
+
+        // DOM elements
+        var wrap = document.getElementById('wyg-video-wrap');
+        var container = document.getElementById('wyg-video-container');
+        var poster = document.getElementById('wyg-video-poster');
+        var playBtn = document.getElementById('wyg-play-btn');
+        var controlsOverlay = document.getElementById('wyg-controls-overlay');
+        var controlsBar = document.getElementById('wyg-controls-bar');
+        var ctrlPlayPause = document.getElementById('wyg-ctrl-playpause');
+        var ctrlTime = document.getElementById('wyg-ctrl-time');
+        var ctrlScrubber = document.getElementById('wyg-ctrl-scrubber');
+        var ctrlScrubberFill = document.getElementById('wyg-ctrl-scrubber-fill');
+        var ctrlMute = document.getElementById('wyg-ctrl-mute');
+        var ctrlVolume = document.getElementById('wyg-ctrl-volume');
+        var ctrlQuality = document.getElementById('wyg-ctrl-quality');
+        var qualityMenu = document.getElementById('wyg-quality-menu');
+        var qualityWrap = document.getElementById('wyg-quality-wrap');
+        var ctrlFullscreen = document.getElementById('wyg-ctrl-fullscreen');
+        var endOverlay = document.getElementById('wyg-end-overlay');
+        var endJoin = document.getElementById('wyg-end-join');
+        var endRewatch = document.getElementById('wyg-end-rewatch');
+        var floatPlaceholder = document.getElementById('wyg-float-placeholder');
+        var floatDismiss = document.getElementById('wyg-float-dismiss');
+        var tsTitle = document.getElementById('wyg-ts-title');
+        var tsSubtitle = document.getElementById('wyg-ts-subtitle');
+        var stripEl = document.getElementById('wyg-timestamp-strip');
+
+        var spinner = document.getElementById('wyg-video-spinner');
+
+        if (!wrap || !container) return;
+
+        // State
+        var wygPlayer = null;
+        var wygIframe = null;
+        var iframePreloaded = false;
+        var isPlaying = false;
+        var hasPlayed = false;
+        var videoEnded = false;
+        var currentTime = 0;
+        var duration = 0;
+        var isMuted = false;
+        var volumeVal = 1;
+        var currentQuality = '1080p';
+        var showControls = false;
+        var isDragging = false;
+        var hideTimer = null;
+        var tsInterval = null;
+        var tsPrevIdx = 0;
+        var floatState = 'inline'; // inline | floating | returning
+        var dismissed = false;
+        var inlineRect = null;
+        var placeholderH = 0;
+        var wantsPlay = false;
+        var playerBound = false;
+
+        var wygTimestamps = [
+          { time: 0,   title: 'BUILT FOR AGENT GROWTH', subtitle: 'Clarity. Efficiency. Scale' },
+          { time: 14,  title: 'TRANSITION SEAMLESSLY',   subtitle: 'Whether you are starting or moving' },
+          { time: 37,  title: 'TOTAL AGENT VISIBILITY',  subtitle: 'Your entire business in one link' },
+          { time: 59,  title: 'REVENUE SHARE GROWTH',    subtitle: 'Agents find you organically' },
+          { time: 89,  title: 'NO MORE GUESSING',        subtitle: 'See what actually converts' },
+          { time: 107, title: 'WINNING STRATEGIES',       subtitle: 'What is working, shared openly' },
+          { time: 138, title: 'FASTER ANSWERS',           subtitle: 'Zero hunting for help' },
+          { time: 183, title: 'EXECUTE FASTER',           subtitle: 'Professional marketing, done' },
+          { time: 202, title: 'CAPTURE YOUR TRAFFIC',     subtitle: 'Turn visibility into leads' },
+          { time: 212, title: 'NEW AGENT SUPPORT',        subtitle: 'Quick lessons for a faster start' },
+          { time: 223, title: 'HIGH-LEVEL TRAINING',      subtitle: 'Courses easy to find and access' }
+        ];
+
+        // SVG icons
+        var PLAY_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1.5v13l11-6.5L3 1.5z" /></svg>';
+        var PAUSE_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="1" width="4" height="14" rx="1" /><rect x="10" y="1" width="4" height="14" rx="1" /></svg>';
+        var VOL_ON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" /></svg>';
+        var VOL_OFF_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" /></svg>';
+
+        // Helpers
+        function fmtTime(s) {
+          if (isNaN(s) || s < 0) return '0:00';
+          var m = Math.floor(s / 60);
+          var sec = Math.floor(s % 60);
+          return m + ':' + (sec < 10 ? '0' : '') + sec;
+        }
+
+        function updatePlayPauseIcon() {
+          if (ctrlPlayPause) ctrlPlayPause.innerHTML = isPlaying ? PAUSE_SVG : PLAY_SVG;
+        }
+
+        function updateMuteIcon() {
+          if (ctrlMute) ctrlMute.innerHTML = (isMuted || volumeVal === 0) ? VOL_OFF_SVG : VOL_ON_SVG;
+        }
+
+        function updateTimeDisplay() {
+          if (ctrlTime) ctrlTime.textContent = fmtTime(currentTime) + ' / ' + fmtTime(duration);
+          if (ctrlScrubberFill && duration > 0) {
+            ctrlScrubberFill.style.width = ((currentTime / duration) * 100) + '%';
+            ctrlScrubberFill.style.transition = isDragging ? 'none' : 'width 0.1s linear';
+          }
+        }
+
+        function showControlsBar() {
+          if (!hasPlayed) return;
+          showControls = true;
+          if (controlsBar) { controlsBar.style.opacity = '1'; controlsBar.style.pointerEvents = 'auto'; }
+        }
+
+        function hideControlsBar() {
+          // Never hide controls when floating - too small to find them again
+          if (floatState === 'floating') return;
+          showControls = false;
+          if (controlsBar) { controlsBar.style.opacity = '0'; controlsBar.style.pointerEvents = 'none'; }
+        }
+
+        function scheduleHide() {
+          if (!hasPlayed) return;
+          showControlsBar();
+          if (hideTimer) clearTimeout(hideTimer);
+          if (isPlaying && floatState !== 'floating') {
+            hideTimer = setTimeout(hideControlsBar, 1500);
+          }
+        }
+
+        // Update timestamp strip
+        function updateTimestamp() {
+          if (!wygPlayer) return;
+          var ct = wygPlayer.currentTime || 0;
+          var idx = 0;
+          for (var i = wygTimestamps.length - 1; i >= 0; i--) {
+            if (ct >= wygTimestamps[i].time) { idx = i; break; }
+          }
+          if (idx !== tsPrevIdx) {
+            tsPrevIdx = idx;
+            var inner = stripEl ? stripEl.querySelector('div') : null;
+            if (inner) {
+              inner.style.animation = 'none';
+              inner.offsetHeight;
+              inner.style.animation = 'wygTsFadeInDown 0.5s ease both';
+            }
+            if (tsTitle) tsTitle.textContent = wygTimestamps[idx].title;
+            if (tsSubtitle) tsSubtitle.textContent = wygTimestamps[idx].subtitle;
+          }
+        }
+
+        // Build iframe src
+        function buildIframeSrc(quality) {
+          return STREAM_BASE + VIDEO_ID + '/iframe?preload=auto&autoplay=false&muted=false&controls=false&pip=false&defaultQuality=' + quality;
+        }
+
+        // Initialize player SDK (event listeners only, NO play)
+        function initWygPlayer() {
+          if (!wygIframe || !window.Stream || playerBound) return;
+          playerBound = true;
+          wygPlayer = window.Stream(wygIframe);
+          wygPlayer.addEventListener('play', function() {
+            isPlaying = true;
+            videoEnded = false;
+            hideSpinner();
+            updatePlayPauseIcon();
+            if (endOverlay) endOverlay.style.display = 'none';
+            if (stripEl && !isFullscreen) stripEl.style.maxHeight = '60px';
+            if (!tsInterval) tsInterval = setInterval(updateTimestamp, 500);
+            scheduleHide();
+          });
+          wygPlayer.addEventListener('pause', function() {
+            isPlaying = false;
+            updatePlayPauseIcon();
+            showControlsBar();
+          });
+          wygPlayer.addEventListener('ended', function() {
+            // Ignore stale ended events that fire during init before play has started
+            if (!isPlaying) return;
+            isPlaying = false;
+            videoEnded = true;
+            updatePlayPauseIcon();
+            if (tsInterval) { clearInterval(tsInterval); tsInterval = null; }
+            if (stripEl && !isFullscreen) stripEl.style.maxHeight = '0';
+            if (tsTitle) tsTitle.textContent = wygTimestamps[0].title;
+            if (tsSubtitle) tsSubtitle.textContent = wygTimestamps[0].subtitle;
+            tsPrevIdx = 0;
+            if (endOverlay) endOverlay.style.display = 'flex';
+            hideControlsBar();
+          });
+          wygPlayer.addEventListener('loadedmetadata', function() {
+            duration = wygPlayer.duration || 0;
+            updateTimeDisplay();
+          });
+          wygPlayer.addEventListener('timeupdate', function() {
+            currentTime = wygPlayer.currentTime || 0;
+            duration = wygPlayer.duration || 0;
+            updateTimeDisplay();
+          });
+          wygPlayer.addEventListener('volumechange', function() {
+            isMuted = wygPlayer.muted;
+            volumeVal = wygPlayer.volume;
+            updateMuteIcon();
+          });
+          wygPlayer.muted = false;
+          wygPlayer.volume = 1;
+          // If user already clicked play, start playback now
+          if (wantsPlay) {
+            wygPlayer.play();
+            setTimeout(hideSpinner, 3000);
+          }
+        }
+
+        // Re-bind player after quality change (iframe src changes)
+        function rebindPlayer() {
+          playerBound = false;
+          wygPlayer = null;
+          setTimeout(function() {
+            initWygPlayer();
+            if (wygPlayer && hasPlayed) {
+              wygPlayer.play();
+              setTimeout(hideSpinner, 3000);
+            }
+          }, 300);
+        }
+
+        // Create and insert iframe (used by preload and play)
+        function createIframe(quality) {
+          if (iframePreloaded) return;
+          iframePreloaded = true;
+          var iframe = document.createElement('iframe');
+          iframe.id = 'wyg-walkthrough-iframe';
+          iframe.src = buildIframeSrc(quality || currentQuality);
+          iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;z-index:1;';
+          iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media');
+          iframe.setAttribute('allowfullscreen', '');
+          container.insertBefore(iframe, container.firstChild);
+          wygIframe = iframe;
+        }
+
+        // Preload iframe when video section scrolls into view, then init player
+        function preloadOnScroll() {
+          if (typeof IntersectionObserver === 'undefined') return;
+          var obs = new IntersectionObserver(function(entries) {
+            if (entries[0].isIntersecting && !iframePreloaded) {
+              createIframe(currentQuality);
+              obs.disconnect();
+              // Try to init player immediately (no play yet)
+              waitForSdkAndInit();
+            }
+          }, { rootMargin: '200px' });
+          obs.observe(wrap);
+        }
+        preloadOnScroll();
+
+        // Show/hide spinner
+        function showSpinner() { if (spinner) spinner.classList.add('visible'); }
+        function hideSpinner() { if (spinner) spinner.classList.remove('visible'); }
+
+        // Poll for SDK readiness after iframe is created
+        function waitForSdkAndInit() {
+          var tryInit = function() {
+            if (window.Stream && wygIframe) {
+              initWygPlayer();
+              return true;
+            }
+            return false;
+          };
+          if (tryInit()) return;
+          var poll = setInterval(function() {
+            if (tryInit()) clearInterval(poll);
+          }, 100);
+        }
+
+        // First play click handler
+        function handleFirstPlay(e) {
+          if (hasPlayed) return;
+          e.preventDefault();
+          e.stopPropagation();
+          hasPlayed = true;
+          wantsPlay = true;
+          if (poster) poster.remove();
+          if (playBtn) playBtn.remove();
+          if (controlsOverlay) controlsOverlay.style.display = 'block';
+          if (!iframePreloaded) {
+            showSpinner();
+            createIframe(currentQuality);
+            waitForSdkAndInit();
+          } else if (wygPlayer) {
+            // Player already initialized — play directly in user gesture context
+            showSpinner();
+            wygPlayer.play();
+            setTimeout(hideSpinner, 3000);
+          } else {
+            // Iframe preloaded but SDK not bound yet
+            showSpinner();
+            waitForSdkAndInit();
+          }
+          // Show timestamp strip immediately
+          if (stripEl) stripEl.style.maxHeight = '60px';
+        }
+
+        // Toggle play/pause after first play
+        function togglePlay() {
+          if (!hasPlayed) return;
+          if (!wygPlayer) return;
+          if (isPlaying) wygPlayer.pause();
+          else wygPlayer.play();
+        }
+
+        // Controls overlay click (toggle play) + mousemove (show controls)
+        if (controlsOverlay) {
+          controlsOverlay.addEventListener('click', function(e) {
+            // Only toggle play if the click was NOT on a control button inside the bar
+            // (buttons in the bar call e.stopPropagation so they never reach here)
+            togglePlay();
+          });
+          controlsOverlay.addEventListener('mousemove', function() { scheduleHide(); });
+        }
+
+        // First play click on poster/play button
+        if (playBtn) playBtn.addEventListener('click', handleFirstPlay);
+        if (poster) poster.addEventListener('click', handleFirstPlay);
+
+        // Play/Pause button
+        if (ctrlPlayPause) {
+          ctrlPlayPause.addEventListener('click', function(e) {
+            e.stopPropagation();
+            togglePlay();
+          });
+        }
+
+        // Mute toggle
+        if (ctrlMute) {
+          ctrlMute.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (!wygPlayer) return;
+            wygPlayer.muted = !wygPlayer.muted;
+          });
+        }
+
+        // Volume slider
+        if (ctrlVolume) {
+          ctrlVolume.addEventListener('input', function(e) {
+            e.stopPropagation();
+            if (!wygPlayer) return;
+            var v = parseFloat(this.value);
+            wygPlayer.volume = v;
+            wygPlayer.muted = (v === 0);
+          });
+        }
+
+        // Scrubber click + drag
+        function scrubToEvent(e) {
+          if (!ctrlScrubber || !wygPlayer || duration <= 0) return;
+          var rect = ctrlScrubber.getBoundingClientRect();
+          var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+          wygPlayer.currentTime = pct * duration;
+        }
+
+        if (ctrlScrubber) {
+          ctrlScrubber.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            isDragging = true;
+            scrubToEvent(e);
+          });
+        }
+
+        window.addEventListener('mousemove', function(e) {
+          if (!isDragging) return;
+          scrubToEvent(e);
+        });
+
+        window.addEventListener('mouseup', function() {
+          if (isDragging) isDragging = false;
+        });
+
+        // Quality selector
+        if (ctrlQuality) {
+          ctrlQuality.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (qualityMenu) qualityMenu.style.display = qualityMenu.style.display === 'none' ? 'block' : 'none';
+          });
+        }
+
+        if (qualityMenu) {
+          var qBtns = qualityMenu.querySelectorAll('button[data-quality]');
+          for (var qi = 0; qi < qBtns.length; qi++) {
+            qBtns[qi].addEventListener('click', function(e) {
+              e.stopPropagation();
+              var newQ = this.getAttribute('data-quality');
+              if (newQ === currentQuality) { qualityMenu.style.display = 'none'; return; }
+              currentQuality = newQ;
+
+              // Update quality button label
+              var label = newQ === 'auto' ? 'AUTO' : newQ.replace('p', '');
+              var hdSpan = newQ === '1080p' ? '<span style="font-size:8px;vertical-align:super;color:#ffd700;">HD</span>' : '';
+              if (ctrlQuality) ctrlQuality.innerHTML = label + hdSpan;
+
+              // Update menu highlights
+              var allQ = qualityMenu.querySelectorAll('button[data-quality]');
+              for (var j = 0; j < allQ.length; j++) {
+                var isActive = allQ[j].getAttribute('data-quality') === newQ;
+                allQ[j].style.background = isActive ? 'rgba(255,215,0,0.15)' : 'transparent';
+                allQ[j].style.color = isActive ? '#ffd700' : '#e5e4dd';
+              }
+
+              qualityMenu.style.display = 'none';
+
+              // Reload iframe with new quality
+              if (wygIframe) {
+                wygIframe.src = buildIframeSrc(newQ);
+                rebindPlayer();
+              }
+            });
+          }
+        }
+
+        // Close quality menu on outside click
+        document.addEventListener('click', function(e) {
+          if (qualityMenu && qualityWrap && !qualityWrap.contains(e.target)) {
+            qualityMenu.style.display = 'none';
+          }
+        });
+
+        // Fullscreen — fullscreen the wrap (video + timestamp strip together)
+        if (ctrlFullscreen) {
+          ctrlFullscreen.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (document.fullscreenElement) {
+              document.exitFullscreen();
+            } else if (floatState === 'floating') {
+              // Corner mode: snap to inline first, then fullscreen
+              container.style.position = 'relative';
+              container.style.left = '';
+              container.style.top = '';
+              container.style.width = '';
+              container.style.height = '';
+              container.style.transform = '';
+              container.style.transition = 'none';
+              container.style.zIndex = '';
+              container.style.borderRadius = '';
+              container.style.boxShadow = '';
+              container.style.aspectRatio = '2228/1080';
+              container.style.overflow = 'hidden';
+              if (floatPlaceholder) floatPlaceholder.style.display = 'none';
+              if (floatDismiss) floatDismiss.style.display = 'none';
+              floatState = 'inline';
+              requestAnimationFrame(function() {
+                if (wrap.requestFullscreen) wrap.requestFullscreen();
+              });
+            } else if (wrap.requestFullscreen) {
+              wrap.requestFullscreen();
+            }
+          });
+        }
+
+        // Post-video CTA: Join the Alliance
+        if (endJoin) {
+          endJoin.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.dispatchEvent(new Event('open-join-modal'));
+          });
+        }
+
+        // Post-video CTA: Rewatch
+        if (endRewatch) {
+          endRewatch.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (wygPlayer) {
+              wygPlayer.currentTime = 0;
+              wygPlayer.play();
+              videoEnded = false;
+              if (endOverlay) endOverlay.style.display = 'none';
+            }
+          });
+          // Hover effects for rewatch button
+          endRewatch.addEventListener('mouseenter', function() {
+            this.style.borderColor = 'rgba(255,215,0,0.5)';
+            this.style.color = '#ffd700';
+          });
+          endRewatch.addEventListener('mouseleave', function() {
+            this.style.borderColor = 'rgba(255,255,255,0.3)';
+            this.style.color = '#e5e4dd';
+          });
+        }
+
+        // FLIP float-to-corner on scroll
+        function handleFloatScroll() {
+          if (dismissed || !wrap || !container) return;
+          // Never trigger float/return transitions during fullscreen
+          if (document.fullscreenElement) return;
+          var wrapRect = wrap.getBoundingClientRect();
+          var wrapH = wrap.offsetHeight;
+          var shouldFloat = (wrapRect.top + wrapH * 0.5) < 0;
+
+          if (shouldFloat && floatState === 'inline') {
+            inlineRect = container.getBoundingClientRect();
+            placeholderH = container.offsetHeight;
+            floatState = 'floating';
+            animateToCorner();
+          } else if (!shouldFloat && floatState === 'floating') {
+            floatState = 'returning';
+            animateToInline();
+          }
+        }
+
+        function animateToCorner() {
+          if (!inlineRect) return;
+          if (document.fullscreenElement) return;
+          var fromRect = inlineRect;
+          var targetW = Math.min(320, window.innerWidth * 0.4);
+          var targetH = targetW / VIDEO_AR;
+          var targetX = 20;
+          var targetY = window.innerHeight - 20 - targetH;
+
+          // Show placeholder
+          if (floatPlaceholder) { floatPlaceholder.style.display = 'block'; floatPlaceholder.style.height = placeholderH + 'px'; }
+
+          // Show dismiss button
+          if (floatDismiss) { floatDismiss.style.display = 'flex'; }
+
+          // Set fixed position at FROM location
+          container.style.position = 'fixed';
+          container.style.zIndex = '50';
+          container.style.left = '0px';
+          container.style.top = '0px';
+          container.style.width = fromRect.width + 'px';
+          container.style.height = fromRect.height + 'px';
+          container.style.aspectRatio = 'unset';
+          container.style.transform = 'translate(' + fromRect.left + 'px, ' + fromRect.top + 'px)';
+          container.style.transition = 'none';
+          container.style.borderRadius = '12px';
+          container.style.boxShadow = '0 8px 32px rgba(0,0,0,0.6)';
+
+          // Force reflow then animate to target
+          container.offsetHeight;
+          container.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), width 0.5s cubic-bezier(0.4, 0, 0.2, 1), height 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+          container.style.transform = 'translate(' + targetX + 'px, ' + targetY + 'px)';
+          container.style.width = targetW + 'px';
+          container.style.height = targetH + 'px';
+
+          // Always show controls when floating (too small for auto-hide)
+          showControlsBar();
+        }
+
+        function animateToInline() {
+          if (document.fullscreenElement) return;
+          var startRect = container.getBoundingClientRect();
+          var startLeft = startRect.left;
+          var startTop = startRect.top;
+          var startW = startRect.width;
+          var startH = startRect.height;
+          var animDuration = 450;
+          var startTime = performance.now();
+
+          container.style.transition = 'none';
+          container.style.transform = '';
+          container.style.left = startLeft + 'px';
+          container.style.top = startTop + 'px';
+          container.style.width = startW + 'px';
+          container.style.height = startH + 'px';
+
+          function ease(t) { return 1 - Math.pow(1 - t, 3); }
+
+          function tick(now) {
+            var elapsed = now - startTime;
+            var progress = Math.min(elapsed / animDuration, 1);
+            var t = ease(progress);
+
+            var wrapRect = wrap.getBoundingClientRect();
+            var stripH = stripEl ? stripEl.offsetHeight : 0;
+            var targetX = wrapRect.left;
+            var targetY = wrapRect.top + stripH;
+            var targetW = wrapRect.width;
+            var targetH = targetW / VIDEO_AR;
+
+            container.style.left = (startLeft + (targetX - startLeft) * t) + 'px';
+            container.style.top = (startTop + (targetY - startTop) * t) + 'px';
+            container.style.width = (startW + (targetW - startW) * t) + 'px';
+            container.style.height = (startH + (targetH - startH) * t) + 'px';
+
+            if (progress < 1) {
+              requestAnimationFrame(tick);
+            } else {
+              // Reset to inline flow — restore ALL original inline styles
+              if (floatPlaceholder) { floatPlaceholder.style.height = '0'; floatPlaceholder.style.display = 'none'; }
+              container.style.cssText = 'position: relative; aspect-ratio: 2228/1080; background: #000; overflow: hidden;';
+              if (floatDismiss) floatDismiss.style.display = 'none';
+              floatState = 'inline';
+            }
+          }
+          requestAnimationFrame(tick);
+        }
+
+        window.addEventListener('scroll', handleFloatScroll, { passive: true });
+
+        // Dismiss button
+        if (floatDismiss) {
+          floatDismiss.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dismissed = true;
+            floatState = 'returning';
+            animateToInline();
+          });
+        }
+
+        // Track fullscreen state — clear/restore float inline styles on the container
+        var isFullscreen = false;
+        function onWygFsChange() {
+          isFullscreen = !!document.fullscreenElement;
+          if (wrap) wrap.classList.toggle('wyg-fs-active', isFullscreen);
+
+          if (isFullscreen) {
+            // Hide float dismiss button
+            if (floatDismiss) floatDismiss.style.display = 'none';
+
+            // Apply fullscreen styles
+            wrap.style.width = '100vw';
+            wrap.style.height = '100vh';
+            wrap.style.maxWidth = '100vw';
+            wrap.style.background = '#000';
+            wrap.style.border = 'none';
+            wrap.style.borderRadius = '0';
+            wrap.style.overflow = 'visible';
+            wrap.style.display = 'flex';
+            wrap.style.flexDirection = 'column';
+            wrap.style.alignItems = 'stretch';
+            wrap.style.justifyContent = 'flex-start';
+
+            container.style.position = 'relative';
+            container.style.width = '100%';
+            container.style.height = '0';
+            container.style.flex = '1 1 0';
+            container.style.minHeight = '0';
+            container.style.maxHeight = 'none';
+            container.style.aspectRatio = 'auto';
+            container.style.overflow = 'hidden';
+            container.style.left = 'unset';
+            container.style.top = 'unset';
+            container.style.zIndex = 'unset';
+            container.style.transform = 'none';
+            container.style.transition = 'none';
+            container.style.borderRadius = '0';
+            container.style.boxShadow = 'none';
+
+            // Force strip visible as overlay on top of video
+            if (stripEl) {
+              stripEl.style.maxHeight = 'none';
+              stripEl.style.overflow = 'visible';
+              stripEl.style.transition = 'none';
+              stripEl.style.display = 'block';
+              stripEl.style.height = 'auto';
+              stripEl.style.visibility = 'visible';
+              stripEl.style.width = '100%';
+              stripEl.style.position = 'absolute';
+              stripEl.style.top = '0';
+              stripEl.style.left = '0';
+              stripEl.style.right = '0';
+              stripEl.style.zIndex = '20';
+              stripEl.style.background = 'linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)';
+            }
+
+            // Ensure iframe is visible
+            var iframeEl = container.querySelector('iframe');
+            if (iframeEl) { iframeEl.style.zIndex = '1'; }
+          } else {
+            // Exiting fullscreen — restore wrap's original inline styles
+            wrap.style.width = '';
+            wrap.style.height = '';
+            wrap.style.maxWidth = '900px';
+            wrap.style.background = '';
+            wrap.style.border = '1px solid rgba(255, 215, 0, 0.2)';
+            wrap.style.borderRadius = '12px';
+            wrap.style.overflow = 'hidden';
+            wrap.style.display = '';
+            wrap.style.flexDirection = '';
+            wrap.style.alignItems = '';
+            wrap.style.justifyContent = '';
+
+            // Restore strip (clear fullscreen overlay positioning)
+            if (stripEl) {
+              stripEl.style.display = '';
+              stripEl.style.height = '';
+              stripEl.style.visibility = '';
+              stripEl.style.width = '';
+              stripEl.style.position = '';
+              stripEl.style.top = '';
+              stripEl.style.left = '';
+              stripEl.style.right = '';
+              stripEl.style.zIndex = '';
+              stripEl.style.background = 'rgba(0, 0, 0, 0.85)';
+              if (hasPlayed && !videoEnded) {
+                stripEl.style.maxHeight = '60px';
+                stripEl.style.overflow = 'hidden';
+                stripEl.style.transition = 'max-height 0.5s ease';
+              } else {
+                stripEl.style.maxHeight = '0';
+                stripEl.style.overflow = 'hidden';
+                stripEl.style.transition = 'max-height 0.5s ease';
+              }
+            }
+
+            // Clear iframe z-index override
+            var iframeEl = container.querySelector('iframe');
+            if (iframeEl) { iframeEl.style.zIndex = ''; }
+
+            // Restore container based on float state
+            if (floatState === 'floating') {
+              var targetW = Math.min(320, window.innerWidth * 0.4);
+              var targetH = targetW / VIDEO_AR;
+              var targetX = 20;
+              var targetY = window.innerHeight - 20 - targetH;
+              container.style.position = 'fixed';
+              container.style.zIndex = '50';
+              container.style.left = '0px';
+              container.style.top = '0px';
+              container.style.width = targetW + 'px';
+              container.style.height = targetH + 'px';
+              container.style.flex = '';
+              container.style.minHeight = '';
+              container.style.maxHeight = '';
+              container.style.aspectRatio = 'unset';
+              container.style.transform = 'translate(' + targetX + 'px, ' + targetY + 'px)';
+              container.style.transition = 'none';
+              container.style.borderRadius = '12px';
+              container.style.boxShadow = '0 8px 32px rgba(0,0,0,0.6)';
+              if (floatDismiss) floatDismiss.style.display = 'flex';
+              showControlsBar();
+            } else {
+              // Inline: restore ALL original container styles
+              container.style.cssText = 'position: relative; aspect-ratio: 2228/1080; background: #000; overflow: hidden;';
+            }
+          }
+        }
+        document.addEventListener('fullscreenchange', onWygFsChange);
+        document.addEventListener('webkitfullscreenchange', onWygFsChange);
+
+        // Reset dismissed when user scrolls back to video
+        window.addEventListener('scroll', function() {
+          if (!dismissed || !wrap) return;
+          var rect = wrap.getBoundingClientRect();
+          if (rect.top + wrap.offsetHeight * 0.5 >= 0) dismissed = false;
+        }, { passive: true });
+
+        // Stop controls bar events from toggling play
+        if (controlsBar) {
+          controlsBar.addEventListener('click', function(e) { e.stopPropagation(); });
+        }
       }
 
       function initPlayer() {
@@ -5084,22 +5917,24 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       }
 
       function setupEventListeners() {
-        // Video controls
-        videoOverlay.addEventListener('click', togglePlayPause);
-        btnPlay.addEventListener('click', togglePlayPause);
-        btnRewind.addEventListener('click', () => { if (player) player.currentTime = Math.max(0, player.currentTime - 15); });
-        btnRestart.addEventListener('click', () => { if (player) player.currentTime = 0; });
-        btnMute.addEventListener('click', () => { if (player) { player.muted = !player.muted; updateMuteButton(); } });
-        volumeSlider.addEventListener('input', (e) => { if (player) { player.volume = e.target.value; player.muted = e.target.value == 0; } });
+        // Video controls (only if video player elements exist - disabled when video is off)
+        if (videoOverlay) videoOverlay.addEventListener('click', togglePlayPause);
+        if (btnPlay) btnPlay.addEventListener('click', togglePlayPause);
+        if (btnRewind) btnRewind.addEventListener('click', () => { if (player) player.currentTime = Math.max(0, player.currentTime - 15); });
+        if (btnRestart) btnRestart.addEventListener('click', () => { if (player) player.currentTime = 0; });
+        if (btnMute) btnMute.addEventListener('click', () => { if (player) { player.muted = !player.muted; updateMuteButton(); } });
+        if (volumeSlider) volumeSlider.addEventListener('input', (e) => { if (player) { player.volume = e.target.value; player.muted = e.target.value == 0; } });
 
         // Scrubber
-        videoWrapper.addEventListener('mouseenter', () => scrubberContainer.classList.add('visible'));
-        videoWrapper.addEventListener('mouseleave', () => { if (!isDragging) scrubberContainer.classList.remove('visible'); });
+        if (videoWrapper && scrubberContainer) {
+          videoWrapper.addEventListener('mouseenter', () => scrubberContainer.classList.add('visible'));
+          videoWrapper.addEventListener('mouseleave', () => { if (!isDragging) scrubberContainer.classList.remove('visible'); });
 
-        scrubberContainer.addEventListener('mousedown', (e) => {
-          isDragging = true;
-          seekToPosition(e);
-        });
+          scrubberContainer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            seekToPosition(e);
+          });
+        }
 
         document.addEventListener('mousemove', (e) => {
           if (isDragging) seekToPosition(e);
@@ -5900,14 +6735,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           var contentEl = document.getElementById(expandId + '-content');
 
           if (expandDir === 'left' && frameEl) {
-            // Fully expanded
-            frameEl.style.clipPath = 'inset(0 0 0 0 round 16px)';
+            // Use overflow:hidden (like homepage) instead of clipPath which clips borders
+            frameEl.style.overflow = 'hidden';
             if (contentEl) {
               contentEl.style.opacity = '1';
             }
           } else if (expandDir === 'right' && frameEl) {
-            // Fully expanded
-            frameEl.style.clipPath = 'inset(0 0 0 0 round 16px)';
+            frameEl.style.overflow = 'hidden';
           } else {
             // Default: visible (for disclaimer)
             el.style.opacity = '1';

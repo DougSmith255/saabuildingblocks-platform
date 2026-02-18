@@ -163,12 +163,9 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
           }`}
           style={{
             background: 'rgba(15, 15, 15, 0.98)',
-            // Reduced blur for better performance (was 20px)
             backdropFilter: isMobileMenuOpen ? 'blur(8px)' : 'none',
             WebkitBackdropFilter: isMobileMenuOpen ? 'blur(8px)' : 'none',
-            // GPU acceleration with translate3d
             transform: isMobileMenuOpen ? 'translate3d(0, 0, 0)' : 'translate3d(0, -100%, 0)',
-            // Prevent flickering on webkit
             WebkitBackfaceVisibility: 'hidden',
             backfaceVisibility: 'hidden',
             WebkitPerspective: 1000,
@@ -176,19 +173,21 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
             overscrollBehavior: 'contain',
             pointerEvents: isMobileMenuOpen ? 'auto' : 'none',
             WebkitOverflowScrolling: 'touch',
-            // Control visibility - always visible once rendered, transform handles show/hide
             visibility: isMobileMenuOpen ? 'visible' : 'hidden',
             opacity: isMobileMenuOpen ? 1 : 0,
-            // Transition for smooth open/close
             transition: 'transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0s linear 0.3s',
-            // When opening, visibility should be immediate (no delay)
             ...(isMobileMenuOpen && { transition: 'transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0s linear 0s' }),
           }}
         >
         <div
           className="mobile-menu-content pt-10 pb-32 min-h-screen"
           style={{
-            overscrollBehavior: 'none', // Prevent rubber banding on content
+            overscrollBehavior: 'none',
+            opacity: isMobileMenuOpen ? 1 : 0,
+            transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(15px)',
+            transition: isMobileMenuOpen
+              ? 'opacity 0.35s ease-out 0.15s, transform 0.35s ease-out 0.15s'
+              : 'opacity 0.2s ease-in, transform 0.2s ease-in',
           }}
         >
           <nav className="px-6 space-y-2" role="navigation" aria-label="Mobile navigation">

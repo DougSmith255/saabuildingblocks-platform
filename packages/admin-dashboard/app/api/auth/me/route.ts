@@ -10,15 +10,17 @@ export const dynamic = 'force-dynamic';
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseClient } from '@/app/master-controller/lib/supabaseClient';
+import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { verifyAccessToken } from '@/lib/auth/jwt';
 
-// CORS headers for cross-origin requests from public site
+// CORS + no-cache headers for cross-origin requests from public site
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Access-Control-Max-Age': '86400',
+  'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+  'Pragma': 'no-cache',
 };
 
 // Handle preflight requests
@@ -27,7 +29,7 @@ export async function OPTIONS() {
 }
 
 export async function GET(request: NextRequest) {
-  const supabase = getSupabaseClient();
+  const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
     return NextResponse.json(
@@ -81,18 +83,12 @@ export async function GET(request: NextRequest) {
         full_name,
         first_name,
         last_name,
-        display_name,
-        avatar_url,
         profile_picture_url,
-        bio,
         role,
-        permissions,
         email_verified,
         email_verification_pending,
-        is_active,
         created_at,
         last_login_at,
-        metadata,
         gender,
         is_leader,
         state
@@ -111,19 +107,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Check if account is active
-    if (!user.is_active) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'ACCOUNT_INACTIVE',
-          message: 'Your account has been deactivated',
-        },
-        { status: 403, headers: CORS_HEADERS }
-      );
-    }
+    // Note: is_active column does not exist in current schema, skipping check
 
     // Return user information
+    console.log('[/api/auth/me] Returning data for:', user.full_name, '| gender:', user.gender, '| is_leader:', user.is_leader, '| state:', user.state);
     return NextResponse.json({
       success: true,
       data: {
@@ -134,19 +121,14 @@ export async function GET(request: NextRequest) {
         full_name: user.full_name,
         first_name: user.first_name,
         last_name: user.last_name,
-        displayName: user.display_name,
-        avatarUrl: user.avatar_url,
         profile_picture_url: user.profile_picture_url,
         profilePictureUrl: user.profile_picture_url,
-        bio: user.bio,
         role: user.role,
-        permissions: user.permissions || [],
         emailVerified: user.email_verified,
         emailVerificationPending: user.email_verification_pending || false,
-        isActive: user.is_active,
+        isActive: true,
         createdAt: user.created_at,
         lastLoginAt: user.last_login_at,
-        metadata: user.metadata || {},
         gender: user.gender || 'male',
         is_leader: user.is_leader || false,
         state: user.state || null,

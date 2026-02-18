@@ -1,23 +1,25 @@
 'use client';
 
 import { useRef } from 'react';
-import { H2, SecondaryButton } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa';
 import { ProfileCyberFrame } from '@saa/shared/components/saa/media/ProfileCyberFrame';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 
 const BRAND_YELLOW = '#ffd700';
 
+const SECTION_INTRO = 'Smart Agent Alliance is led by operators, not figureheads. The leadership team is responsible for designing, maintaining, and improving the systems agents rely on every day.';
+
 const FOUNDERS = [
   {
     name: "Doug Smart",
-    title: "Co-Founder & Full-Stack Developer",
-    bio: "Top 1% eXp team builder. Designed and built this website, the agent portal, and the systems and automations powering production workflows and attraction tools across the organization.",
+    title: "Co-Founder | Systems & Infrastructure",
+    bio: "Doug built SAA\u2019s systems from the ground up \u2014 this website, the agent portal, every automation and workflow agents use daily. He believes agents deserve better tools than what most sponsors offer, so he builds them. His focus is on creating systems that actually work and showing agents what\u2019s possible when the right infrastructure is behind them.",
     image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public",
   },
   {
     name: "Karrie Hill, JD",
-    title: "Co-Founder & eXp Certified Mentor",
-    bio: "UC Berkeley Law (top 5%). Built a six-figure real estate business in her first full year without cold calling or door knocking, now helping agents do the same.",
+    title: "Co-Founder | Training & Agent Advocacy",
+    bio: "UC Berkeley Law graduate and experienced agent who built a six-figure real estate business in her first full year without cold calling or door knocking. Karrie focuses on training design, mentorship standards, and onboarding pathways \u2014 making sure agents have clear structure from day one. Her background as an attorney informs a focus on durability and getting things right.",
     image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public",
   },
 ];
@@ -43,6 +45,9 @@ export function MeetTheFounders() {
         {/* H2 - always visible, no animation */}
         <div className="text-center mb-12">
           <H2>Meet SAA's Founders</H2>
+          <p className="text-body mt-4 max-w-[800px] mx-auto opacity-80">
+            {SECTION_INTRO}
+          </p>
         </div>
 
         {/* Two column layout - Doug left, Karrie + CTA right */}
@@ -97,10 +102,10 @@ export function MeetTheFounders() {
             </div>
           </div>
 
-          {/* Right column - Karrie + CTA */}
-          <div className="flex flex-col gap-6">
+          {/* Right column - Karrie */}
+          <div>
             <div
-              className="p-6 md:p-8 rounded-xl text-center transition-all duration-300 flex-1 flex flex-col"
+              className="p-6 md:p-8 rounded-xl text-center transition-all duration-300 h-full flex flex-col"
               style={{
                 background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
                 border: '1px solid rgba(255,255,255,0.06)',
@@ -144,18 +149,6 @@ export function MeetTheFounders() {
               </h3>
               <p className="text-body text-sm opacity-60 mb-3">{FOUNDERS[1].title}</p>
               <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[1].bio}</p>
-            </div>
-
-            {/* CTA inside right column */}
-            <div
-              className="p-6 rounded-2xl border text-center"
-              style={{
-                backgroundColor: 'rgba(255,215,0,0.08)',
-                borderColor: 'rgba(255,215,0,0.2)',
-              }}
-            >
-              <p className="text-body text-sm mb-4 opacity-70">Want to meet the rest of our leadership team?</p>
-              <SecondaryButton href="/our-exp-team">Meet the Full Team</SecondaryButton>
             </div>
           </div>
         </div>

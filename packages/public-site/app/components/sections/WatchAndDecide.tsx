@@ -23,13 +23,15 @@ export function WatchAndDecide() {
     <div className="relative">
       <VideoSection
         id="watch-and-decide"
-        title="The Inside Look"
+        title="Book a Call"
         subtitle="Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full."
         videoId={VIDEO_ID}
         posterUrl={POSTER_URL}
         storageKey="homepage_video"
         unlockThreshold={50}
         sponsorName={null} // Joins under Doug directly (Website Lead)
+        disabled={true}
+        bookCallUrl="/book-a-call"
       />
     </div>
   );

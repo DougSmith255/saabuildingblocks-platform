@@ -10,6 +10,7 @@
  */
 
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
+import { execSync } from 'child_process';
 import { join } from 'path';
 
 // Load Cloudflare Images mapping for URL transformation (filename-based)
@@ -161,6 +162,31 @@ interface WPCategory {
 
 // Cache for category data
 let categoryCache: Map<number, WPCategory> = new Map();
+
+// Cache for Permalink Manager custom URIs (post ID -> "category/slug")
+let customUriCache: Map<number, string> = new Map();
+
+/**
+ * Fetch Permalink Manager custom URIs via WP-CLI
+ * These are the source of truth for blog post URL paths
+ */
+function loadCustomUris(): void {
+  console.log('🔗 Fetching Permalink Manager custom URIs...');
+  try {
+    const output = execSync(
+      'wp option get permalink-manager-uris --format=json --allow-root',
+      { cwd: '/var/www/wordpress', encoding: 'utf-8', timeout: 30000 }
+    );
+    const uris: Record<string, string> = JSON.parse(output.trim());
+    Object.entries(uris).forEach(([id, uri]) => {
+      customUriCache.set(parseInt(id, 10), uri.replace(/^\/|\/$/g, ''));
+    });
+    console.log(`✅ Loaded ${customUriCache.size} custom URIs`);
+  } catch (error) {
+    console.warn('⚠️  Could not load Permalink Manager URIs via WP-CLI:', (error as Error).message);
+    console.warn('   Blog paths will fall back to category/slug construction');
+  }
+}
 
 /**
  * Fetch all categories from WordPress and cache them
@@ -375,10 +401,14 @@ function transformPost(wpPost: any): BlogPost {
     || wpPost.rank_math_description
     || excerpt.slice(0, 160);
 
+  // Get custom URI from Permalink Manager (source of truth for URL path)
+  const customUri = customUriCache.get(wpPost.id) || '';
+
   return {
     id: wpPost.id,
     title: wpPost.title?.rendered || '',
     slug: wpPost.slug,
+    customUri,
     excerpt,
     content: transformContentImages(wpPost.content?.rendered || ''),
     date: wpPost.date,
@@ -400,6 +430,9 @@ async function generateBlogPostsJson() {
   try {
     // Load Cloudflare Images mapping for URL transformation
     loadImageMapping();
+
+    // Load Permalink Manager custom URIs (source of truth for blog paths)
+    loadCustomUris();
 
     // First, fetch and cache all categories
     await fetchCategories();

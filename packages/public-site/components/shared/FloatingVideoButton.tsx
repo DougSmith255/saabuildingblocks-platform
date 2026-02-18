@@ -1,21 +1,20 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { VideoSlidePanel } from '@saa/shared/components/saa/media/VideoSlidePanel';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 /**
- * FloatingVideoButton - Fixed bottom-right pill button for "The Inside Look" video
+ * FloatingVideoButton - Fixed bottom-right pill button for "Book a Call"
  *
  * Uses the same glass treatment as the site header (dark gradient + gold lines +
  * white grid + shimmer overlay) adapted to a pill shape.
  * Animated rainbow gradient border (Uiverse-inspired) with blurred glow behind.
  *
- * Opens VideoSlidePanel on click.
- * Hides when: video panel is open, scrolled near footer, on initial load (slides in).
+ * Links to /book-a-call page on click.
+ * Hides when: scrolled near footer, on initial load (slides in).
  * Should be excluded from blog post pages (handled by LayoutWrapper).
  */
 export function FloatingVideoButton() {
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isNearFooter, setIsNearFooter] = useState(false);
 
@@ -39,22 +38,7 @@ export function FloatingVideoButton() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleOpen = useCallback(() => {
-    setIsPanelOpen(true);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setIsPanelOpen(false);
-  }, []);
-
-  // Listen for custom event to open panel from other components
-  useEffect(() => {
-    const openFromExternal = () => setIsPanelOpen(true);
-    window.addEventListener('openInsideLookPanel', openFromExternal);
-    return () => window.removeEventListener('openInsideLookPanel', openFromExternal);
-  }, []);
-
-  const shouldShow = isVisible && !isPanelOpen && !isNearFooter;
+  const shouldShow = isVisible && !isNearFooter;
 
   return (
     <>
@@ -76,9 +60,9 @@ export function FloatingVideoButton() {
           {/* Blurred glow behind button — same gradient, heavily blurred */}
           <div className="fvb-gradient-glow" />
 
-        {/* Floating Button */}
-        <button
-          onClick={handleOpen}
+        {/* Floating Button — now a Link to /book-a-call */}
+        <Link
+          href="/book-a-call"
           className="floating-video-btn"
           style={{
             position: 'relative',
@@ -89,8 +73,9 @@ export function FloatingVideoButton() {
             overflow: 'hidden',
             display: 'block',
             background: 'transparent',
+            textDecoration: 'none',
           }}
-          aria-label="Watch The Inside Look video"
+          aria-label="Book a call with SAA"
         >
           {/* Layer 1: Dark base (matches agent portal L-frame) */}
           <div
@@ -139,35 +124,22 @@ export function FloatingVideoButton() {
             className="relative flex items-center gap-2.5"
             style={{ padding: '10px 16px' }}
           >
-            {/* Camera Icon */}
+            {/* Calendar Icon */}
             <svg
-              viewBox="0 0 256 256"
+              viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
               className="fvb-glass-icon"
               style={{ width: '16px', height: '16px', flexShrink: 0 }}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <defs>
-                <linearGradient id="mTop" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0" stopColor="#ea4335" />
-                  <stop offset="1" stopColor="#fbbc04" />
-                </linearGradient>
-                <linearGradient id="mRight" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#fbbc04" />
-                  <stop offset="1" stopColor="#34a853" />
-                </linearGradient>
-                <linearGradient id="mBottom" x1="1" y1="0" x2="0" y2="0">
-                  <stop offset="0" stopColor="#34a853" />
-                  <stop offset="1" stopColor="#4285f4" />
-                </linearGradient>
-                <linearGradient id="mLeft" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0" stopColor="#4285f4" />
-                  <stop offset="1" stopColor="#ea4335" />
-                </linearGradient>
-              </defs>
-              <path d="M 64 60 L 166 60 A 24 24 0 0 1 190 84" stroke="url(#mTop)" strokeWidth="28" strokeLinecap="round" fill="none" />
-              <path d="M 190 84 V 100 L 240 70 V 186 L 190 156 V 172 A 24 24 0 0 1 166 196" stroke="url(#mRight)" strokeWidth="28" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-              <path d="M 166 196 L 64 196 A 24 24 0 0 1 40 172" stroke="url(#mBottom)" strokeWidth="28" strokeLinecap="round" fill="none" />
-              <path d="M 40 172 L 40 84 A 24 24 0 0 1 64 60" stroke="url(#mLeft)" strokeWidth="28" strokeLinecap="round" fill="none" />
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
             </svg>
 
             {/* Label */}
@@ -180,10 +152,10 @@ export function FloatingVideoButton() {
                 fontFeatureSettings: '"ss01" 1',
               }}
             >
-              The Inside Look
+              Book a Call
             </span>
           </div>
-        </button>
+        </Link>
         </div>
       </div>
 
@@ -294,9 +266,6 @@ export function FloatingVideoButton() {
           }
         }
       `}</style>
-
-      {/* Video Slide Panel */}
-      <VideoSlidePanel isOpen={isPanelOpen} onClose={handleClose} />
     </>
   );
 }

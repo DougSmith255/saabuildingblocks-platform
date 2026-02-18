@@ -27,7 +27,11 @@ export default function Header() {
   // JS-driven responsive nav: null = CSS handles it, true = desktop fits, false = mobile
   const [desktopNavFits, setDesktopNavFits] = useState<boolean | null>(null);
   // Compact logo: switch from full SAA to S icon when mobile elements are too tight
-  const [compactLogo, setCompactLogo] = useState(false);
+  // Initialize based on viewport width to prevent layout shift on mobile
+  const [compactLogo, setCompactLogo] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 500;
+  });
   const headerContainerRef = useRef<HTMLDivElement>(null);
 
   // Track pathname for route change detection
@@ -128,8 +132,10 @@ export default function Header() {
         else el.removeAttribute('style');
       });
 
-      // Min width: header padding (32+32) + logo + 50px gap + nav + 50px gap + CTA
-      const minWidth = 64 + logoWidth + 50 + navWidth + 50 + ctaWidth;
+      // Min width: padding + logo + nav + CTA, with 15% compression tolerance
+      // Nav items use flexbox and can comfortably compress below their natural width
+      const rawMinWidth = 64 + logoWidth + 16 + navWidth + 16 + ctaWidth;
+      const minWidth = Math.round(rawMinWidth * 0.85);
 
       // Also measure mobile layout: logo + button + hamburger need comfortable gaps
       // Force mobile elements visible for measurement
@@ -522,11 +528,11 @@ export default function Header() {
         }
 
         .menu-opening {
-          animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          animation: slideDown 0.5s cubic-bezier(0.25, 0, 0.15, 1) forwards;
         }
 
         .menu-closing {
-          animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          animation: slideUp 0.4s cubic-bezier(0.25, 0, 0.15, 1) forwards;
         }
 
         /* Menu transition overlay - fades out to mask scroll restoration */

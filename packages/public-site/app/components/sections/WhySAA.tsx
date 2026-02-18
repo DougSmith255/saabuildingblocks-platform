@@ -2,7 +2,6 @@
 
 import { useRef } from 'react';
 import { H2 } from '@saa/shared/components/saa';
-import { SecondaryButton } from '@saa/shared/components/saa';
 import { Check } from 'lucide-react';
 
 // Shared content
@@ -17,7 +16,6 @@ const BENEFITS = [
   "No sponsor team fees",
   "No required meetings",
 ];
-const CTA_TEXT = "See How It Works";
 const DISCLAIMER = "SAA resources are available to agents who select a SAA-aligned sponsor at the time they join eXp Realty.";
 
 // Main image - Aligned Incentives
@@ -131,16 +129,6 @@ export function WhySAA() {
               </div>
             </div>
 
-            {/* CTA card */}
-            <div>
-              <div
-                className="bento-card relative rounded-2xl overflow-hidden border p-6 md:p-8 text-center"
-                style={{ backgroundColor: 'rgba(255, 215, 0, 0.1)', borderColor: 'rgba(255, 215, 0, 0.3)' }}
-              >
-                <p className="text-body text-lg mb-5">Grow independently. Succeed together.</p>
-                <SecondaryButton href="/exp-realty-sponsor">{CTA_TEXT}</SecondaryButton>
-              </div>
-            </div>
           </div>
         </div>
 

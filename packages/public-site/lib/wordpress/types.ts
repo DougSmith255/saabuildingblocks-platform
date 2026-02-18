@@ -6,6 +6,8 @@
 export interface BlogPost {
   id: number;
   slug: string;
+  /** Permalink Manager custom URI (e.g., 'about-exp-realty/technology') - source of truth for URL path */
+  customUri?: string;
   /** Full permalink path extracted from WordPress link (e.g., 'blog/agent-career-info/part-time') */
   permalink: string;
   title: string;

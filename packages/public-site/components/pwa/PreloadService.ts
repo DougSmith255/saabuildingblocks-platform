@@ -6,6 +6,8 @@
  * No loading spinners should appear in the UI after the loading screen.
  */
 
+import { API_URL } from '@/lib/api-config';
+
 export interface PreloadResult {
   success: boolean;
   userData?: any;
@@ -93,9 +95,56 @@ function getCachedAgentPageData(): any {
 }
 
 /**
+ * Fetch fresh user data from the API
+ * Uses same-origin Cloudflare Function proxy at /api/auth/me to avoid cross-origin issues.
+ * Falls back to cross-origin request to VPS API if same-origin fails.
+ * Returns fresh user data or null if both requests fail.
+ */
+async function fetchFreshUserData(token: string): Promise<any | null> {
+  // Cache-busting timestamp to prevent ANY caching layer from returning stale data
+  const cacheBuster = `_t=${Date.now()}`;
+
+  // Try same-origin Cloudflare Function proxy first (avoids CORS issues)
+  try {
+    const response = await fetch(`/api/auth/me?${cacheBuster}`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+      cache: 'no-store',
+    });
+    if (response.ok) {
+      const json = await response.json();
+      if (json?.success && json?.data) {
+        return json.data;
+      }
+    }
+  } catch {
+    // Same-origin proxy failed, try cross-origin fallback
+  }
+
+  // Fallback: direct cross-origin request to VPS API
+  try {
+    const response = await fetch(`${API_URL}/api/auth/me?${cacheBuster}`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+      cache: 'no-store',
+    });
+    if (!response.ok) return null;
+    const json = await response.json();
+    if (json?.success && json?.data) {
+      return json.data;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Main preload function
  * Call this during the loading screen to preload all critical data
  * Loading screen will NOT disappear until this completes
+ *
+ * Always fetches FRESH user data from the API to ensure admin changes
+ * (gender, is_leader, state) are reflected immediately.
+ * Falls back to localStorage cache only if the API call fails.
  */
 export async function preloadAppData(): Promise<PreloadResult> {
   const errors: string[] = [];
@@ -112,11 +161,22 @@ export async function preloadAppData(): Promise<PreloadResult> {
     : null;
 
   if (token) {
-    // Load user data from localStorage cache (no API calls needed)
-    const response = getCachedUserDataInternal();
-    if (response?.success && response.data) {
-      userData = response.data;
+    // Fetch fresh user data from API (catches admin changes to gender, leader, state)
+    // Falls back to localStorage cache if the API call fails
+    const freshData = await fetchFreshUserData(token);
+    if (freshData) {
+      userData = freshData;
+      // Update localStorage cache with fresh data
+      try { localStorage.setItem('agent_portal_user', JSON.stringify(freshData)); } catch {}
+    } else {
+      // API failed — fall back to cached data
+      const response = getCachedUserDataInternal();
+      if (response?.success && response.data) {
+        userData = response.data;
+      }
+    }
 
+    if (userData) {
       // Queue profile picture for preloading (WAIT for it)
       if (userData.profilePictureUrl || userData.profile_picture_url) {
         const profileUrl = userData.profilePictureUrl || userData.profile_picture_url;

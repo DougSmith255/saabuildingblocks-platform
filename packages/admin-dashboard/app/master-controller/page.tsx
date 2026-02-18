@@ -18,7 +18,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import dynamicImport from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Palette, Type, LayoutGrid, FileCode, Settings, Layers, Zap, Users } from 'lucide-react';
+import { Palette, Type, LayoutGrid, FileCode, Settings, Layers, Zap, Users, BarChart3 } from 'lucide-react';
 import { useUserRole, RoleBadge } from '@/lib/rbac';
 
 // Tab components - dynamically imported to prevent SSR
@@ -57,12 +57,17 @@ const UserManagementTab = dynamicImport(() => import('./components/tabs/UserMana
   loading: () => <div className="p-6 text-[#dcdbd5]">Loading Users tab...</div>
 });
 
+const AnalyticsTab = dynamicImport(() => import('./components/tabs/AnalyticsTab').then(mod => ({ default: mod.AnalyticsTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Analytics tab...</div>
+});
+
 // Store hooks - only used in client component after mount
 import { useBrandColorsStore } from './stores/brandColorsStore';
 import { useTypographyStore } from './stores/typographyStore';
 import { useSpacingStore } from './stores/spacingStore';
 
-type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'automations' | 'users';
+type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'automations' | 'users' | 'analytics';
 
 function MasterControllerContent() {
   const router = useRouter();
@@ -71,7 +76,7 @@ function MasterControllerContent() {
   // Initialize tab from URL or default to 'typography'
   const [activeTab, setActiveTab] = useState<TabId>(() => {
     const tabParam = searchParams.get('tab');
-    const validTabs: TabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'automations', 'users'];
+    const validTabs: TabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'automations', 'users', 'analytics'];
     return (tabParam && validTabs.includes(tabParam as TabId)) ? tabParam as TabId : 'typography';
   });
 
@@ -98,6 +103,7 @@ function MasterControllerContent() {
     { id: 'components' as TabId, label: 'Components', icon: Layers },
     { id: 'automations' as TabId, label: 'Automations', icon: Zap },
     { id: 'users' as TabId, label: 'Users', icon: Users },
+    { id: 'analytics' as TabId, label: 'Analytics', icon: BarChart3 },
   ];
 
   return (
@@ -212,6 +218,8 @@ function MasterControllerContent() {
         {activeTab === 'automations' && <AutomationsTab />}
 
         {activeTab === 'users' && <UserManagementTab />}
+
+        {activeTab === 'analytics' && <AnalyticsTab />}
       </div>
 
       {/* Footer Info */}

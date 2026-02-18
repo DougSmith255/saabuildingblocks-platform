@@ -78,7 +78,7 @@ export function ConsentCheckbox({
               height="16"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="white"
+              stroke="#1a1a1a"
               strokeWidth={3}
               strokeLinecap="round"
               strokeLinejoin="round"

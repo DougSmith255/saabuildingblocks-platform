@@ -1,9 +1,9 @@
-# Block all crawlers during development
-# This prevents Google/Bing from indexing saabuildingblocks.com
-# Remove this file when switching to smartagentalliance.com
-
+# Allow all standard crawlers
 User-agent: *
-Disallow: /
+Allow: /
+
+# Sitemap
+Sitemap: https://smartagentalliance.com/sitemap.xml
 
 # Block AI scrapers
 User-agent: GPTBot

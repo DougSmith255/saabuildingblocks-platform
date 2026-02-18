@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useImperativeHandle } from 'react';
 
 // Cloudflare Stream SDK typings
 declare global {
@@ -20,6 +20,11 @@ interface StreamPlayer {
   removeEventListener: (event: string, callback: () => void) => void;
 }
 
+export interface VideoPlayerRef {
+  /** Start playback, bypassing the onBeforePlay gate */
+  play(): void;
+}
+
 export interface VideoPlayerProps {
   /** Cloudflare Stream video ID */
   videoId: string;
@@ -35,6 +40,14 @@ export interface VideoPlayerProps {
   className?: string;
   /** Hide the progress area (for pages that don't need it) */
   hideProgressArea?: boolean;
+  /** Called before play starts; return false to prevent playback */
+  onBeforePlay?: () => boolean;
+  /** React 19 ref for imperative play control */
+  ref?: React.Ref<VideoPlayerRef>;
+  /** When true, shows a dark overlay with message and prevents playback */
+  disabled?: boolean;
+  /** Message shown on the disabled overlay (default: "Video Update In Progress") */
+  disabledMessage?: string;
 }
 
 /**
@@ -71,10 +84,21 @@ export function VideoPlayer({
   onThresholdReached,
   className = '',
   hideProgressArea = false,
+  onBeforePlay,
+  ref,
+  disabled = false,
+  disabledMessage = 'Video Update In Progress',
 }: VideoPlayerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<StreamPlayer | null>(null);
   const scrubberRef = useRef<HTMLDivElement>(null);
+
+  // Expose imperative play() that bypasses the gate
+  useImperativeHandle(ref, () => ({
+    play() {
+      playerRef.current?.play();
+    },
+  }));
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHoveringVideo, setIsHoveringVideo] = useState(false);
@@ -203,9 +227,10 @@ export function VideoPlayer({
     if (isPlaying) {
       playerRef.current.pause();
     } else {
+      if (onBeforePlay && !onBeforePlay()) return;
       playerRef.current.play();
     }
-  }, [isPlaying]);
+  }, [isPlaying, onBeforePlay]);
 
   const handleRewind = useCallback(() => {
     if (!playerRef.current) return;
@@ -304,7 +329,42 @@ export function VideoPlayer({
   };
 
   return (
-    <div className={`video-player-container ${className}`}>
+    <div className={`video-player-container ${className}`} style={{ position: 'relative' }}>
+      {/* Disabled overlay — covers entire player including controls */}
+      {disabled && (
+        <div
+          className="video-disabled-overlay"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 10,
+            background: 'rgba(0, 0, 0, 0.85)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'default',
+            borderRadius: '12px',
+          }}
+        >
+          <span
+            style={{
+              color: '#ffd700',
+              fontSize: 'clamp(14px, 2.5vw, 22px)',
+              fontFamily: 'var(--font-taskor, sans-serif)',
+              fontWeight: 600,
+              letterSpacing: '0.05em',
+              textAlign: 'center',
+              padding: '0 1rem',
+              textShadow: '0 0 20px rgba(255, 215, 0, 0.4)',
+            }}
+          >
+            {disabledMessage}
+          </span>
+        </div>
+      )}
       {/* Video Container with CyberFrame-style styling */}
       <div className="video-frame">
         <div
@@ -320,6 +380,7 @@ export function VideoPlayer({
             allowFullScreen
           />
           {/* Click overlay for play/pause */}
+          {!disabled && (
           <div
             className={`video-overlay ${isPlaying ? 'is-playing' : ''}`}
             onClick={togglePlayPause}
@@ -337,6 +398,7 @@ export function VideoPlayer({
               )}
             </div>
           </div>
+          )}
 
           {/* Scrubber Bar - appears on hover */}
           <div
@@ -457,7 +519,7 @@ export function VideoPlayer({
 
       {/* Progress Area */}
       {!hideProgressArea && (
-        <div className="progress-area">
+        <div className="progress-area" style={disabled ? { opacity: 0.25, filter: 'blur(2px) grayscale(1)', pointerEvents: 'none' } : undefined}>
           <div className="progress-bar">
             <div
               className="progress-fill"

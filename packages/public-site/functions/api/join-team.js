@@ -23,147 +23,136 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
   const fromEmail = 'Smart Agent Alliance <noreply@smartagentalliance.com>';
   const sponsorDisplay = sponsorName || 'the Smart Agent Alliance team';
 
-  // Email template v2 - Yellow theme matching site modal (2025-12-30)
+  // Email template v3 - Matches ApplyInstructionsEmail design (2026-02-17)
   const htmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preload" as="image" href="https://saabuildingblocks.pages.dev/images/saa-logo-gold.png"/>
   <title>Welcome to Smart Agent Alliance</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #0c0c0c; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0c0c0c; padding: 40px 16px;">
+<body style="margin: 0; padding: 0; background-color: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0a; padding: 40px 16px;">
     <tr>
       <td align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background-color: #151517; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
-          <!-- Header -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background-color: #111111; border-radius: 12px; border: 1px solid rgba(255,215,0,0.15);">
+          <!-- Logo Header -->
           <tr>
-            <td style="padding: 40px 24px 20px; text-align: center;">
-              <table width="60" height="60" cellpadding="0" cellspacing="0" style="margin: 0 auto 20px; background: rgba(0, 255, 136, 0.25); border-radius: 50%;">
-                <tr>
-                  <td align="center" valign="middle" style="color: #00ff88; font-size: 30px; line-height: 60px;">✓</td>
-                </tr>
-              </table>
-              <h1 style="color: #ffffff; font-size: 28px; margin: 0 0 10px; font-weight: 700;">Welcome, ${firstName}!</h1>
-              <p style="color: rgba(255,255,255,0.7); font-size: 16px; margin: 0; line-height: 1.5;">
-                You're on your way to joining Smart Agent Alliance at eXp Realty.
-              </p>
+            <td style="padding: 20px 24px 16px; background-color: #0a0a0a; text-align: center; border-bottom: 1px solid rgba(255,215,0,0.2); border-radius: 12px 12px 0 0;">
+              <img alt="Smart Agent Alliance" height="64" src="https://saabuildingblocks.pages.dev/images/saa-logo-gold.png" width="180" style="display: inline-block;" />
             </td>
           </tr>
 
-          <!-- Instructions -->
+          <!-- Content -->
           <tr>
-            <td style="padding: 20px 24px 40px;">
-              <h2 style="color: #ffd700; font-size: 18px; margin: 0 0 20px; text-transform: uppercase; letter-spacing: 0.05em;">How to Join eXp Realty</h2>
+            <td style="padding: 24px 24px 28px;">
+              <p style="font-size: 20px; line-height: 24px; color: #ffd700; font-weight: 600; margin: 0 0 16px 0;">Hi ${firstName},</p>
+              <p style="font-size: 16px; line-height: 1.6; color: #bfbdb0; margin: 0 0 16px 0;">
+                This is a great time to join eXp and Smart Agent Alliance. We're here to make the process simple and support you from start to finish.
+              </p>
+
+              <h2 style="color: #ffd700; font-size: 22px; font-weight: 700; margin: 20px 0 14px 0;">How to Join Smart Agent Alliance at eXp</h2>
 
               <!-- Step 1 -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 12px;">
                 <tr>
-                  <td width="40" valign="top">
-                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #ffd700; border-radius: 50%;">
+                  <td width="36" valign="top" style="padding-top: 2px;">
+                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3); border-radius: 50%;">
                       <tr>
-                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">1</td>
+                        <td align="center" valign="middle" style="color: #ffd700; font-size: 14px; font-weight: 700; line-height: 26px;">1</td>
                       </tr>
                     </table>
                   </td>
-                  <td style="padding-left: 12px;">
-                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Start Your Application</strong>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
-                      Visit <a href="https://joinapp.exprealty.com/" style="color: #ffd700; text-decoration: none;">joinapp.exprealty.com</a> to begin your eXp Realty application.
-                    </p>
+                  <td style="padding-left: 8px; padding-top: 4px;">
+                    <strong style="color: #ffffff; font-size: 15px;">Start Your Application</strong><br/>
+                    <span style="color: #bfbdb0; font-size: 14px; line-height: 1.5;">
+                      Visit <a href="https://joinapp.exprealty.com/" style="color: #ffd700; text-decoration: underline;">joinapp.exprealty.com</a> to begin your eXp Realty application.
+                    </span>
                   </td>
                 </tr>
               </table>
 
               <!-- Step 2 -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 12px;">
                 <tr>
-                  <td width="40" valign="top">
-                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #ffd700; border-radius: 50%;">
+                  <td width="36" valign="top" style="padding-top: 2px;">
+                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3); border-radius: 50%;">
                       <tr>
-                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">2</td>
+                        <td align="center" valign="middle" style="color: #ffd700; font-size: 14px; font-weight: 700; line-height: 26px;">2</td>
                       </tr>
                     </table>
                   </td>
-                  <td style="padding-left: 12px;">
-                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Search for Your Sponsor</strong>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
-                      Enter <strong style="color: #ffffff;">doug.smart@expreferral.com</strong> and click Search. Select <strong style="color: #ffffff;">Sheldon Douglas Smart</strong> as your sponsor.
-                    </p>
+                  <td style="padding-left: 8px; padding-top: 4px;">
+                    <strong style="color: #ffffff; font-size: 15px;">Search for Your Sponsor</strong><br/>
+                    <span style="color: #bfbdb0; font-size: 14px; line-height: 1.5;">
+                      Enter <strong style="color: #ffd700;">doug.smart@expreferral.com</strong> and click Search. Select <strong style="color: #ffd700;">Doug Smart</strong> as your sponsor.
+                    </span>
                   </td>
                 </tr>
               </table>
 
               <!-- Step 3 -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 12px;">
                 <tr>
-                  <td width="40" valign="top">
-                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #ffd700; border-radius: 50%;">
+                  <td width="36" valign="top" style="padding-top: 2px;">
+                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3); border-radius: 50%;">
                       <tr>
-                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">3</td>
+                        <td align="center" valign="middle" style="color: #ffd700; font-size: 14px; font-weight: 700; line-height: 26px;">3</td>
                       </tr>
                     </table>
                   </td>
-                  <td style="padding-left: 12px;">
-                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Complete Your Application</strong>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
+                  <td style="padding-left: 8px; padding-top: 4px;">
+                    <strong style="color: #ffffff; font-size: 15px;">Complete Your Application</strong><br/>
+                    <span style="color: #bfbdb0; font-size: 14px; line-height: 1.5;">
                       Fill out the application form and submit. You'll receive a confirmation email from eXp.
-                    </p>
+                    </span>
                   </td>
                 </tr>
               </table>
 
               <!-- Step 4 -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 12px;">
                 <tr>
-                  <td width="40" valign="top">
-                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #ffd700; border-radius: 50%;">
+                  <td width="36" valign="top" style="padding-top: 2px;">
+                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3); border-radius: 50%;">
                       <tr>
-                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">4</td>
+                        <td align="center" valign="middle" style="color: #ffd700; font-size: 14px; font-weight: 700; line-height: 26px;">4</td>
                       </tr>
                     </table>
                   </td>
-                  <td style="padding-left: 12px;">
-                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">eXp Realty Support</strong>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
-                      For application issues, call <strong style="color: #ffffff;">833-303-0610</strong> or email <a href="mailto:expertcare@exprealty.com" style="color: #ffd700; text-decoration: none;">expertcare@exprealty.com</a>.
-                    </p>
+                  <td style="padding-left: 8px; padding-top: 4px;">
+                    <strong style="color: #ffffff; font-size: 15px;">eXp Realty Support</strong><br/>
+                    <span style="color: #bfbdb0; font-size: 14px; line-height: 1.5;">
+                      For application issues, call <strong style="color: #ffffff;">833-303-0610</strong> or email <a href="mailto:expertcare@exprealty.com" style="color: #ffd700; text-decoration: underline;">expertcare@exprealty.com</a>
+                    </span>
                   </td>
                 </tr>
               </table>
 
-              <!-- CTA Button -->
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center">
-                    <a href="https://joinapp.exprealty.com/"
-                       style="display: inline-block; padding: 16px 32px; background-color: #ffd700; color: #1a1a1a; text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 8px;">
-                      Join eXp with SAA
-                    </a>
-                  </td>
-                </tr>
-              </table>
+              <hr style="width: 100%; border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 18px 0;" />
+
+              <p style="font-size: 16px; line-height: 1.6; color: #e5e4dd; margin: 24px 0 0 0;">
+                Best regards,<br/>
+                <strong>Smart Agent Alliance</strong>
+              </p>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="padding: 20px 24px 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
-              <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 0; line-height: 1.5;">
-                Questions? Reply to this email or contact us at<br>
+            <td style="padding: 24px; background-color: #0a0a0a; text-align: center; border-top: 1px solid rgba(255,215,0,0.1); border-radius: 0 0 12px 12px;">
+              <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin: 0 0 6px;">
                 <a href="mailto:team@smartagentalliance.com" style="color: #ffd700; text-decoration: none;">team@smartagentalliance.com</a>
               </p>
-            </td>
-          </tr>
-        </table>
-
-        <!-- Legal Footer -->
-        <table width="100%" style="max-width: 600px; margin-top: 20px;">
-          <tr>
-            <td style="text-align: center;">
-              <p style="color: rgba(255,255,255,0.3); font-size: 11px; margin: 0;">
+              <p style="color: rgba(255,255,255,0.25); font-size: 12px; margin: 0 0 8px;">
                 © ${new Date().getFullYear()} Smart Agent Alliance. All rights reserved.
+              </p>
+              <p style="color: rgba(255,255,255,0.25); font-size: 11px; margin: 0;">
+                <a href="https://smartagentalliance.com/privacy-policy/" style="color: rgba(255,255,255,0.35); text-decoration: none;">Privacy Policy</a>
+                &nbsp;|&nbsp;
+                <a href="https://smartagentalliance.com/terms-of-use/" style="color: rgba(255,255,255,0.35); text-decoration: none;">Terms of Use</a>
               </p>
             </td>
           </tr>
@@ -403,7 +392,7 @@ export async function onRequestPost(context) {
 
       // Send welcome email for existing contact (skip for VIP guest pass — they get a different flow)
       const resendApiKey = env.RESEND_API_KEY;
-      if (resendApiKey && source !== 'vip-guest-pass') {
+      if (resendApiKey && source !== 'vip-guest-pass' && source !== 'portal-walkthrough') {
         const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
         console.log('[join-team] Email result (existing contact):', emailResult);
       }
@@ -489,7 +478,7 @@ export async function onRequestPost(context) {
 
               // Send welcome email (skip for VIP guest pass)
               const resendApiKey = env.RESEND_API_KEY;
-              if (resendApiKey && source !== 'vip-guest-pass') {
+              if (resendApiKey && source !== 'vip-guest-pass' && source !== 'portal-walkthrough') {
                 const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
                 console.log('[join-team] Email result (duplicate contact update):', emailResult);
               }
@@ -516,7 +505,7 @@ export async function onRequestPost(context) {
             }
 
             const resendApiKey = env.RESEND_API_KEY;
-            if (resendApiKey && source !== 'vip-guest-pass') {
+            if (resendApiKey && source !== 'vip-guest-pass' && source !== 'portal-walkthrough') {
               const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
               console.log('[join-team] Email result (tag already exists):', emailResult);
             }
@@ -559,7 +548,7 @@ export async function onRequestPost(context) {
 
     // Send welcome email (skip for VIP guest pass)
     const resendApiKey = env.RESEND_API_KEY;
-    if (resendApiKey && source !== 'vip-guest-pass') {
+    if (resendApiKey && source !== 'vip-guest-pass' && source !== 'portal-walkthrough') {
       const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
       console.log('[join-team] Email result:', emailResult);
     } else if (!resendApiKey) {

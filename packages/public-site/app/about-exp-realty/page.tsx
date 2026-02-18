@@ -569,15 +569,15 @@ function RotatingStats() {
 
 // Awards Ribbon Component with Glass Panel (full-width)
 const EXP_PRIORITIES = [
-  { icon: Layers, keyword: 'Production efficiency', rest: 'via central systems' },
-  { icon: TrendingUp, keyword: 'Ownership', rest: 'in a publicly traded company' },
-  { icon: Users, keyword: 'Leverage', rest: 'from scale and shared infrastructure' },
-  { icon: Infinity, keyword: 'Income continuity', rest: 'beyond active sales' },
+  { icon: Layers, keyword: 'Keep more', rest: 'take-home income' },
+  { icon: TrendingUp, keyword: 'Earn stock', rest: 'in a publicly traded company' },
+  { icon: Users, keyword: 'Gain more business', rest: 'through collaboration' },
+  { icon: Infinity, keyword: 'Build income', rest: "that isn't tied to closings" },
 ];
 
 const INTRO_CARDS = [
-  { num: '01', text: 'Most brokerages are built around transactions.' },
-  { num: '02', text: 'eXp is built around what comes after.' },
+  { num: '01', text: 'Most brokerages focus on transactions.' },
+  { num: '02', text: 'eXp focuses on transactions and income beyond.' },
 ];
 
 const INTRO_TEXT_SHADOW = `
@@ -813,7 +813,7 @@ function HowExpIsBuilt() {
 
           {/* Priorities label */}
           <h3 className="text-h4 text-center mb-5">
-            The Model Is Built Around Four Priorities
+            eXp is structured to help agents:
           </h3>
 
           {/* Priority cards */}
@@ -972,25 +972,25 @@ const FEATURES: { icon: LucideIcon; keyword: string; type: 'pillar' | 'advantage
     icon: Award,
     keyword: 'Agent Rankings',
     type: 'advantage',
-    detail: 'Consistently ranked among the highest-rated brokerages by agents on Glassdoor, suggesting the day-to-day experience and support scale beyond individual offices.',
+    detail: 'eXp Realty is consistently ranked among the highest-rated brokerages by agents on Glassdoor and has been named one of the Top 100 Companies to Work for in the U.S. for eight consecutive years.',
   },
   {
     icon: Cloud,
     keyword: 'Innovation',
     type: 'advantage',
-    detail: 'Operates without physical office overhead, allowing more resources to be directed toward technology, training, and agent programs instead of locations.',
+    detail: 'Operates without physical office overhead, allowing more resources to be directed toward technology, training, and agent programs.',
   },
   {
     icon: TrendingUp,
     keyword: 'Profitability',
     type: 'advantage',
-    detail: 'Cumulatively profitable as a publicly traded brokerage in recent years, which supports long-term viability and continued investment in systems and support.',
+    detail: 'Based on reported financial results, eXp Realty is the only publicly traded residential brokerage with positive cumulative net income over many years, supporting long-term viability and investment in systems and support.',
   },
   {
     icon: Users,
     keyword: 'Sponsor Support',
     type: 'advantage',
-    detail: 'Allows sponsors to independently build and deliver systems and training, which is not permitted at most brokerages and directly affects the level of support agents receive.',
+    detail: 'Allows sponsors to independently create and deliver tools, systems, training, and resources, expanding support beyond brokerage-level offerings. This added layer can impact agents\u2019 success.',
   },
 ];
 
@@ -1040,13 +1040,10 @@ const SUPPORT_INFRASTRUCTURE_STATS = [
 ];
 
 const SUPPORT_INFRASTRUCTURE_BULLETS = [
-  { icon: Shield, text: '2,000+ salaried support staff across brokers, tech, and transactions' },
-  { icon: Headphones, text: '24/7 Expert Care help desk' },
   { icon: Sparkles, text: 'AI-assisted support through Mira' },
   { icon: GraduationCap, text: 'Live onboarding that gets agents operational quickly' },
-  { icon: Video, text: '50+ weekly live trainings plus on-demand access' },
   { icon: Handshake, text: 'Structured mentor program for newer agents through first transactions' },
-  { icon: Building2, text: 'Included access to Regus workspaces worldwide for professional meetings' },
+  { icon: Building2, text: 'Access to Regus business lounges worldwide' },
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1057,7 +1054,8 @@ const COMMUNITY_BULLETS = [
   { icon: Users, text: 'Live interaction inside eXp World' },
   { icon: Calendar, text: 'Cross-market masterminds and events' },
   { icon: Globe, text: 'Global referral opportunities' },
-  { icon: MessageSquare, text: 'Direct access to leadership through Workplace' },
+  { icon: MessageSquare, text: 'Direct access to leadership' },
+  { icon: MessageSquare, text: 'Internal communication tools \u2013 eXp Hub' },
   { icon: Share2, text: 'A culture of sharing strategies that are working now' },
 ];
 
@@ -1074,7 +1072,9 @@ const TECHNOLOGY_BULLETS = [
 const LEADS_BULLETS = [
   { icon: UserPlus, text: 'Revenos — referral-based programs powered by company-run teams' },
   { icon: DollarSign, text: 'Making It Rain — paid lead programs with ready-to-use ad infrastructure' },
-  { icon: Link, text: 'myLink and myLead — organic lead tools built into the platform' },
+  { icon: Link, text: 'My Link My Lead - organic lead tool' },
+  { icon: DollarSign, text: 'ExpressOffers — quick cash offers for home sellers' },
+  { icon: UserPlus, text: 'Zoocasa — qualified leads with this referral-based program' },
 ];
 
 const TAB_CONTENT = [
@@ -1098,7 +1098,6 @@ const DIVISIONS = [
 
 const SOLUTIONS = [
   'Healthcare options for agents and families',
-  'Transaction coordination',
   'Lending, warranty, and renovation partners',
   'Branded and discounted signage',
   'Utility and closing services',
@@ -1907,7 +1906,7 @@ function IncomeOwnershipSection() {
   return (
     <div style={{ marginBottom: '-3px', position: 'relative', zIndex: 2 }}>
     <GlassPanel variant="expBlueCrosshatch" noBlur>
-      <section className="py-[50px] px-4 sm:px-8 md:px-12">
+      <section id="income" className="py-[50px] px-4 sm:px-8 md:px-12">
         <div className="max-w-[1400px] mx-auto">
 
           {/* A. H2 Heading */}
@@ -2194,6 +2193,9 @@ function IncomeOwnershipSection() {
           </div>
 
         </div>
+        <div className="text-center mt-8">
+          <a href="/about-exp-realty/income" className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '14px', opacity: 0.7 }}>Learn more about income &amp; ownership →</a>
+        </div>
       </section>
     </GlassPanel>
     </div>
@@ -2380,7 +2382,7 @@ function SupportInfrastructureSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative px-4 sm:px-8 md:px-12 overflow-hidden" style={{ margin: '-100px 0', padding: '100px 0' }}>
+    <section id="support" ref={sectionRef} className="relative px-4 sm:px-8 md:px-12 overflow-hidden" style={{ margin: '-100px 0', padding: '100px 0' }}>
 
       {/* HolographicGlobe background */}
       <div
@@ -2395,7 +2397,7 @@ function SupportInfrastructureSection() {
 
         {/* H2 Heading */}
         <div className="text-center mb-8">
-          <H2>SUPPORT INFRASTRUCTURE</H2>
+          <H2>Support & Training</H2>
         </div>
 
         {/* Stat badges row — desktop */}
@@ -2460,6 +2462,9 @@ function SupportInfrastructureSection() {
               ))}
             </ul>
           </div>
+        </div>
+        <div className="text-center mt-8">
+          <a href="/about-exp-realty/support" className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '14px', opacity: 0.7 }}>Learn more about support &amp; training →</a>
         </div>
       </div>
     </section>
@@ -2766,7 +2771,7 @@ function AdditionalAreasDivider() {
             opacity: 0.7,
           }}
         >
-          As agents grow, specialize, or shift focus, these areas often become relevant later.
+          As agents grow, specialize, or shift focus, these areas often become relevant.
         </p>
 
         {/* Bottom line */}
@@ -2809,9 +2814,9 @@ function DivisionsSolutionsSection() {
           <div
             className="group relative rounded-2xl overflow-hidden"
             style={{
-              background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
-              border: '1px solid rgba(0,191,255,0.15)',
-              boxShadow: '0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
               transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
             }}
           >
@@ -2827,7 +2832,7 @@ function DivisionsSolutionsSection() {
             <div
               className="px-6 pt-6 pb-4 flex items-center gap-3"
               style={{
-                borderBottom: '1px solid rgba(0,191,255,0.1)',
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
               }}
             >
               <div
@@ -2876,9 +2881,9 @@ function DivisionsSolutionsSection() {
           <div
             className="group relative rounded-2xl overflow-hidden"
             style={{
-              background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
-              border: '1px solid rgba(0,191,255,0.15)',
-              boxShadow: '0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
               transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
             }}
           >
@@ -2894,7 +2899,7 @@ function DivisionsSolutionsSection() {
             <div
               className="px-6 pt-6 pb-4 flex items-center gap-3"
               style={{
-                borderBottom: '1px solid rgba(0,191,255,0.1)',
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
               }}
             >
               <div
@@ -2951,7 +2956,7 @@ function DivisionsSolutionsSection() {
 function WhoExpWorksBestForSection() {
   return (
     <GlassPanel variant="champagne">
-      <section className="py-[50px] px-4 sm:px-8 md:px-12 relative overflow-hidden">
+      <section id="fit" className="py-[50px] px-4 sm:px-8 md:px-12 relative overflow-hidden">
         <div className="max-w-[1200px] mx-auto relative">
           {/* H2 Heading */}
           <div className="text-center mb-12">
@@ -3031,6 +3036,7 @@ function WhoExpWorksBestForSection() {
               Agents who prefer structured oversight can choose to join an eXp production team after joining and selecting a sponsor.
             </p>
           </div>
+
 
         </div>
 
@@ -3361,6 +3367,7 @@ function WhatExpProvidesVersionB() {
                             </li>
                           ))}
                         </ul>
+                        {isExpanded && <a href={`/about-exp-realty/${panel.id}`} className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '13px', opacity: 0.7, display: 'block', marginTop: '16px' }}>Learn more about {panel.label.toLowerCase()} →</a>}
                       </div>
                     </div>
                   </div>
@@ -3376,6 +3383,7 @@ function WhatExpProvidesVersionB() {
               return (
                 <div
                   key={panel.id}
+                  id={`${panel.id}-desktop`}
                   className="relative overflow-hidden rounded-xl cursor-pointer transition-all"
                   style={{
                     flex: isExpanded ? '3' : '0.7',
@@ -3486,6 +3494,7 @@ function WhatExpProvidesVersionB() {
                         </li>
                       ))}
                     </ul>
+                    {isExpanded && <a href={`/about-exp-realty/${panel.id}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '13px', opacity: 0.7, display: 'block', marginTop: '16px' }}>Learn more about {panel.label.toLowerCase()} →</a>}
 
                     {/* Button - only visible when expanded */}
                   </div>
@@ -3512,7 +3521,7 @@ function AdditionalAreasSection() {
         <div className="text-center mb-10">
           <H2>ADDITIONAL AREAS AGENTS EXPLORE</H2>
           <p className="text-body mt-4 max-w-[600px] mx-auto" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
-            As agents grow, specialize, or shift focus, these areas often become relevant later.
+            As agents grow, specialize, or shift focus, these areas often become relevant.
           </p>
         </div>
 
@@ -3520,6 +3529,7 @@ function AdditionalAreasSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
           {/* Divisions Card */}
           <div
+            id="division"
             className="group relative rounded-2xl overflow-hidden"
             style={{
               background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
@@ -3532,7 +3542,7 @@ function AdditionalAreasSection() {
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))', border: '1px solid rgba(0,191,255,0.3)' }}>
                 <Layers size={20} style={{ color: '#00bfff' }} />
               </div>
-              <h3 className="text-h4" style={{ color: '#e5e4dd' }}>DIVISIONS</h3>
+              <h3 className="text-h4">DIVISIONS</h3>
             </div>
             <div className="p-6">
               <ul className="space-y-3">
@@ -3545,11 +3555,13 @@ function AdditionalAreasSection() {
                   </li>
                 ))}
               </ul>
+              <a href="/about-exp-realty/divisions" className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '13px', opacity: 0.7, marginTop: '16px', display: 'block' }}>Learn more about divisions →</a>
             </div>
           </div>
 
           {/* Solutions Card */}
           <div
+            id="solutions"
             className="group relative rounded-2xl overflow-hidden"
             style={{
               background: 'linear-gradient(180deg, rgba(20,25,35,0.95), rgba(10,15,25,0.98))',
@@ -3562,7 +3574,7 @@ function AdditionalAreasSection() {
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))', border: '1px solid rgba(0,191,255,0.3)' }}>
                 <Sparkles size={20} style={{ color: '#00bfff' }} />
               </div>
-              <h3 className="text-h4" style={{ color: '#e5e4dd' }}>SOLUTIONS</h3>
+              <h3 className="text-h4">SOLUTIONS</h3>
             </div>
             <div className="p-6">
               <ul className="space-y-3">
@@ -3575,6 +3587,7 @@ function AdditionalAreasSection() {
                   </li>
                 ))}
               </ul>
+              <a href="/about-exp-realty/solutions" className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '13px', opacity: 0.7, marginTop: '16px', display: 'block' }}>Learn more about solutions →</a>
             </div>
           </div>
         </div>
@@ -3750,10 +3763,11 @@ function WhereSAAFitsVersionA() {
           </div>
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <SecondaryButton href="/exp-realty-sponsor/">Learn About SAA</SecondaryButton>
+        <div className="text-center mb-4">
+          <a href="/about-exp-realty/fit" className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '14px', opacity: 0.7 }}>Learn more about where SAA fits →</a>
+        </div>
+        <div className="flex justify-center items-center gap-6">
           <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>Join the Alliance</CTAButton>
-          <SecondaryButton as="button" onClick={() => window.dispatchEvent(new Event('openInsideLookPanel'))}>See the Full Value</SecondaryButton>
         </div>
       </div>
     </section>

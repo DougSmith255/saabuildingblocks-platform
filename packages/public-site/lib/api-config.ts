@@ -20,7 +20,7 @@ export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://saabuildingbl
  *
  * For production: https://saabuildingblocks.pages.dev (or smartagentalliance.com after migration)
  */
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://saabuildingblocks.pages.dev';
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://smartagentalliance.com';
 
 /**
  * CDN URL for assets

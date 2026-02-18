@@ -107,6 +107,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const noScrollIndicatorPrefixes = useMemo(() => [
     '/agent-portal',            // All agent portal pages - has its own navigation
     '/download',                // Download page - single viewport
+    '/book-a-call',             // Book a Call - calendar visible in hero, no scroll needed
   ], []);
 
   // Routes where scroll progress bar should be hidden

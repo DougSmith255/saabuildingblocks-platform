@@ -1,10 +1,9 @@
 'use client';
 
 import { H2, Icon3D } from '@saa/shared/components/saa';
-import { SecondaryButton } from '@saa/shared/components/saa';
 import { NeonCard } from '@saa/shared/components/saa/cards';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
-import { Globe, TrendingUp, Check } from 'lucide-react';
+import { Globe, TrendingUp, Check, ArrowRight } from 'lucide-react';
 
 /**
  * Proven at Scale Section
@@ -20,7 +19,7 @@ const STATS = [
   { text: "Consistently strong agent retention", icon: Check },
   { text: "Supporting agents across the U.S., Canada, Mexico, Australia, and beyond", icon: Globe },
 ];
-const CTA_TEXT = "See What Agents Say";
+const CTA_TEXT = "Read Their Success Stories";
 
 // Simple wrapper - no animations
 function RevealFromLeft({ children }: { children: React.ReactNode; delay?: number }) {
@@ -106,7 +105,14 @@ export function ProvenAtScale() {
 
             <RevealFromLeft delay={0.5}>
               <div className="text-center md:text-left">
-                <SecondaryButton href="/exp-realty-sponsor">{CTA_TEXT}</SecondaryButton>
+                <a
+                  href="/exp-realty-sponsor#success-stories"
+                  className="inline-flex items-center gap-2 transition-all duration-300 hover:gap-3"
+                  style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: 'var(--font-size-body)', fontFamily: 'var(--font-family-body)', opacity: 0.8 }}
+                >
+                  <Icon3D><ArrowRight className="w-5 h-5 flex-shrink-0" /></Icon3D>
+                  <span>{CTA_TEXT}</span>
+                </a>
               </div>
             </RevealFromLeft>
           </div>

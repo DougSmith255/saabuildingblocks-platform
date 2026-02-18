@@ -161,7 +161,7 @@ const DataStreamColumn = React.memo(function DataStreamColumn({
 });
 
 const FUTURE_HEADLINE = "Built for Where Real Estate Is Going";
-const FUTURE_SUBLINE = "The future of real estate is cloud-based, global, and technology-driven. SAA is already there.";
+const FUTURE_SUBLINE = "The future of real estate is cloud-based, global, and technology-driven. SAA & eXp are already there.";
 
 const FUTURE_POINTS = [
   { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/public', text: "Cloud-First Brokerage Model", imgClass: "w-full h-full object-contain", imgStyle: {}, bgColor: 'rgba(17,17,17,0.5)' },

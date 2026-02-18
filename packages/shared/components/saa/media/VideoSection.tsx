@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { VideoPlayer } from './VideoPlayer';
+import { VideoPlayer, VideoPlayerRef } from './VideoPlayer';
 import { CTAButton } from '../buttons/CTAButton';
 import { SecondaryButton } from '../buttons/SecondaryButton';
 import H2 from '../headings/H2';
@@ -38,6 +38,10 @@ export interface VideoSectionProps {
   bookCallUrl?: string;
   /** Compact layout for panels — removes outer padding, stacks buttons vertically */
   compact?: boolean;
+  /** When true, shows disabled overlay on video and makes Book a Call always clickable */
+  disabled?: boolean;
+  /** Message shown on the disabled video overlay (default: "Video Update In Progress") */
+  disabledMessage?: string;
 }
 
 /**
@@ -84,12 +88,15 @@ export function VideoSection({
   bookCallButtonText = 'BOOK A CALL',
   bookCallUrl = 'https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7',
   compact = false,
+  disabled = false,
+  disabledMessage = 'Video Update In Progress',
 }: VideoSectionProps) {
   const [showBookCall, setShowBookCall] = useState(false);
   // Single activePanel state - mirrors New Agents pattern
   const [activePanel, setActivePanel] = useState<'join' | 'instructions' | null>(null);
   const [userName, setUserName] = useState('');
   const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
+  const videoPlayerRef = useRef<VideoPlayerRef>(null);
 
   // Get portal mount point after hydration
   useEffect(() => {
@@ -110,7 +117,6 @@ export function VideoSection({
 
   const handleJoinSuccess = useCallback((data: JoinFormData) => {
     setUserName(data.firstName);
-    // Switch to instructions panel - join panel stays open underneath (like New Agents pattern)
     setActivePanel('instructions');
   }, []);
 
@@ -137,13 +143,17 @@ export function VideoSection({
         )}
 
         {/* Video Player with Progress Tracking */}
-        <div className={compact ? 'max-w-[85%] mx-auto' : 'max-w-4xl mx-auto'}>
+        <div className={compact ? 'max-w-[85%] mx-auto' : disabled ? 'max-w-sm sm:max-w-md mx-auto' : 'max-w-4xl mx-auto'}>
           <VideoPlayer
+            ref={videoPlayerRef}
             videoId={videoId}
             posterUrl={posterUrl}
             storageKey={storageKey}
             unlockThreshold={unlockThreshold}
             onThresholdReached={handleThresholdReached}
+            onBeforePlay={disabled ? () => false : undefined}
+            disabled={disabled}
+            disabledMessage={disabledMessage}
           />
 
           {/* CTA Buttons */}
@@ -159,20 +169,24 @@ export function VideoSection({
               {joinButtonText}
             </CTAButton>
 
-            {/* Book A Call - greyed out until threshold, then unlocks */}
+            {/* Book A Call - always enabled when disabled, otherwise greyed out until threshold */}
             <div
               className="transition-all duration-500"
               style={{
-                opacity: showBookCall ? 1 : 0.4,
-                filter: showBookCall ? 'none' : 'blur(1px) grayscale(0.8)',
-                pointerEvents: showBookCall ? 'auto' : 'none',
+                opacity: (disabled || showBookCall) ? 1 : 0.4,
+                filter: (disabled || showBookCall) ? 'none' : 'blur(1px) grayscale(0.8)',
+                pointerEvents: (disabled || showBookCall) ? 'auto' : 'none',
               }}
             >
               <CTAButton
                 href={bookCallUrl}
                 onClick={(e) => {
+                  if (bookCallUrl.startsWith('/')) {
+                    // Internal link — let Next.js handle it via normal navigation
+                    return;
+                  }
                   e.preventDefault();
-                  if (showBookCall) {
+                  if (disabled || showBookCall) {
                     window.open(bookCallUrl, '_blank', 'noopener,noreferrer');
                   }
                 }}

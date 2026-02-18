@@ -1,6 +1,13 @@
 {
   "posts": [
     {
+      "id": 8071,
+      "categories": [
+        "about-exp-realty"
+      ],
+      "chunk": 1
+    },
+    {
       "id": 8072,
       "categories": [
         "about-exp-realty"
@@ -61,7 +68,7 @@
       "categories": [
         "about-exp-realty"
       ],
-      "chunk": 1
+      "chunk": 2
     },
     {
       "id": 8048,
@@ -86,13 +93,6 @@
     },
     {
       "id": 8045,
-      "categories": [
-        "about-exp-realty"
-      ],
-      "chunk": 2
-    },
-    {
-      "id": 8044,
       "categories": [
         "about-exp-realty"
       ],
@@ -1437,7 +1437,9 @@
     },
     {
       "id": 3923,
-      "categories": [],
+      "categories": [
+        "uncategorized"
+      ],
       "chunk": 23
     },
     {
@@ -1966,6 +1968,13 @@
       "chunk": 32
     },
     {
+      "id": 8173,
+      "categories": [
+        "exp-realty-sponsor"
+      ],
+      "chunk": 32
+    },
+    {
       "id": 3843,
       "categories": [
         "about-exp-realty"
@@ -2012,7 +2021,7 @@
       "categories": [
         "agent-career-info"
       ],
-      "chunk": 32
+      "chunk": 33
     },
     {
       "id": 3850,
@@ -2075,7 +2084,7 @@
       "categories": [
         "agent-career-info"
       ],
-      "chunk": 33
+      "chunk": 34
     },
     {
       "id": 3859,
@@ -2138,7 +2147,7 @@
       "categories": [
         "about-exp-realty"
       ],
-      "chunk": 34
+      "chunk": 35
     }
   ],
   "categoryMap": {
@@ -2165,7 +2174,7 @@
       31,
       32,
       33,
-      34
+      35
     ],
     "exp-realty-sponsor": [
       1,
@@ -2179,7 +2188,8 @@
       9,
       11,
       14,
-      15
+      15,
+      32
     ],
     "marketing-mastery": [
       8,
@@ -2249,6 +2259,9 @@
       32,
       33
     ],
+    "uncategorized": [
+      23
+    ],
     "become-an-agent": [
       25,
       26,
@@ -2265,7 +2278,7 @@
       30
     ]
   },
-  "totalPosts": 306,
-  "totalChunks": 34,
+  "totalPosts": 307,
+  "totalChunks": 35,
   "postsPerChunk": 9
 }

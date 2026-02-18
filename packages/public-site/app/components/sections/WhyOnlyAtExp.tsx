@@ -2,7 +2,6 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { H2 } from '@saa/shared/components/saa';
-import { SecondaryButton } from '@saa/shared/components/saa';
 
 /**
  * "Why This Only Works at eXp Realty" Section
@@ -24,7 +23,6 @@ const STEPS = [
 const DIFFERENTIATOR = "eXp Realty Sponsorship is Different.";
 const KEY_POINT = "It is the only brokerage that allows sponsors to build and deliver real systems, training, and support. Most sponsors don't use that freedom. Smart Agent Alliance does.";
 const TAGLINE = "When you succeed, we succeed.";
-const CTA_TEXT = "See Our Systems";
 
 // Brand colors
 const BRAND_YELLOW = '#ffd700';
@@ -167,11 +165,10 @@ export function WhyOnlyAtExp() {
               <div className="flex flex-col relative" style={{ zIndex: 10 }}>
                 {/* 3D Rotating Card Stack */}
                 <div
-                  className="relative w-full cursor-pointer"
+                  className="relative w-full cursor-pointer h-[300px] md:h-[313px]"
                   onClick={handleCardClick}
                   style={{
                     perspective: '1200px',
-                    height: '349px',
                   }}
                 >
                   {STEPS.map((step, index) => {
@@ -304,8 +301,8 @@ export function WhyOnlyAtExp() {
 
               {/* Right Column: Key message card */}
               <figure
-                className="relative rounded-2xl overflow-hidden border border-white/10"
-                style={{ minHeight: '315px', zIndex: 1 }}
+                className="relative rounded-2xl overflow-hidden border border-white/10 min-h-[320px] md:min-h-[373px]"
+                style={{ zIndex: 1 }}
                 itemScope
                 itemType="https://schema.org/ImageObject"
               >
@@ -330,9 +327,6 @@ export function WhyOnlyAtExp() {
                   <p className="font-heading text-2xl md:text-3xl font-bold mb-4" style={{ color: BRAND_YELLOW }}>{DIFFERENTIATOR}</p>
                   <p className="text-body text-lg leading-relaxed mb-4" itemProp="description">{KEY_POINT}</p>
                   <p className="text-body text-xl italic mb-6" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
-                  <div className="flex justify-center md:justify-start">
-                    <SecondaryButton href="/exp-realty-sponsor">{CTA_TEXT}</SecondaryButton>
-                  </div>
                 </figcaption>
 
                 <meta itemProp="name" content={ENTREPRENEURIAL_SPONSOR_TITLE} />

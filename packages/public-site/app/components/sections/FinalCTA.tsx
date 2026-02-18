@@ -23,8 +23,8 @@ export function FinalCTA() {
             <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
               Join The Alliance
             </CTAButton>
-            <SecondaryButton href="https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7">
-              Watch Free Webinar
+            <SecondaryButton href="/book-a-call">
+              Book a Call
             </SecondaryButton>
           </div>
 

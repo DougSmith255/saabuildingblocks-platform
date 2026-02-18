@@ -4,11 +4,12 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { H1, H2, Tagline, CTAButton, GlassPanel, GenericCard } from '@saa/shared/components/saa';
 import { MeetTheFounders } from '@/app/components/sections/MeetTheFounders';
+import { SuccessStories } from '@/app/components/sections/SuccessStories';
 import { GrainCard } from '@saa/shared/components/saa/cards';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
 import { AgentCounter, TaglineCounterSuffix } from '@/app/components/AgentCounter';
-import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers, Rocket, Link2, LifeBuoy, TrendingUp, UserCircle, Video, Megaphone, UserPlus, Download, Handshake, Sparkles, ArrowRight, type LucideIcon } from 'lucide-react';
+import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers, Rocket, Link2, LifeBuoy, TrendingUp, UserCircle, Video, Megaphone, UserPlus, Download, Handshake, Sparkles, type LucideIcon } from 'lucide-react';
 
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
@@ -53,16 +54,13 @@ function SAAContent() {
         {SAA_NOT_STATEMENTS.map((s, i) => (
           <span
             key={i}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-body"
+            className="inline-flex items-center gap-1.5 text-body"
             style={{
               fontSize: 'clamp(13px, 1.6vw, 15px)',
-              background: 'rgba(255,50,50,0.03)',
-              border: '1px solid rgba(255,215,0,0.5)',
-              boxShadow: '0 0 8px rgba(255,215,0,0.25), 0 0 20px rgba(255,215,0,0.1)',
               color: '#e8a0a0',
             }}
           >
-            <Ban size={13} style={{ color: '#ff5050', flexShrink: 0, filter: 'drop-shadow(0 0 4px rgba(255,50,50,0.8)) drop-shadow(0 0 8px rgba(255,50,50,0.4))' }} />
+            <Ban size={13} style={{ color: '#ff5050', flexShrink: 0 }} />
             {s}
           </span>
         ))}
@@ -104,8 +102,8 @@ const PANELS = [
 // ============================================================================
 
 const SECTION2_HEADING = 'Why SAA Is Different';
-const SECTION2_INTRO = 'At eXp Realty, sponsors are not required to provide any ongoing support. As a result, most never do.';
-const SECTION2_SUBHEADING = 'SAA was designed to change that.';
+const SECTION2_INTRO = 'At eXp Realty, sponsors are not required to provide any ongoing support \u2014 SAA was built differently.';
+const SECTION2_SUBHEADING = '';
 
 const DIFFERENTIATORS = [
   { icon: Building2, text: 'Built as a sponsor organization, not an individual sponsor' },
@@ -119,7 +117,7 @@ const FINANCIAL_LINES = [
 ];
 const FINANCIAL_TAGLINE = 'When our agents succeed, we succeed.';
 
-const ORG_HEADING = 'Because Smart Agent Alliance is built as an organization, not a personality-driven sponsor:';
+const ORG_HEADING = 'Because Smart Agent Alliance is built as an organization:';
 const ORG_BENEFITS = [
   { icon: Settings, text: 'Systems are designed, maintained, and updated' },
   { icon: GraduationCap, text: 'Training is structured, repeatable, and current' },
@@ -257,7 +255,7 @@ const FEATURE_GROUPS: FeatureGroup[] = [
 // VALUE SECTION 1 — "Launch Your Business With Clarity From Day One"
 // ============================================================================
 
-function BrowserMockup({ children, url = 'saabuildingblocks.com/agent-portal' }: { children: React.ReactNode; url?: string }) {
+function BrowserMockup({ children, url = 'smartagentalliance.com/agent-portal' }: { children: React.ReactNode; url?: string }) {
   return (
     <div className="w-full rounded-xl overflow-hidden" style={{
       border: '1px solid rgba(255,255,255,0.08)',
@@ -377,18 +375,18 @@ function ValueSection1_Launch() {
 
           {/* Mockup side (left on desktop) — oversized, overlaps behind the card */}
           <div className="w-full lg:w-[75%] lg:-mr-[10%] flex items-center justify-center">
-            <BrowserMockup url="saabuildingblocks.com/agent-portal/onboarding">
+            <BrowserMockup url="smartagentalliance.com/agent-portal">
               <img
-                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/desktop"
+                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/desktop2x"
                 srcSet="
                   https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/mobile 640w,
                   https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/tablet 1024w,
-                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/desktop 2000w
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/desktop2x 2160w
                 "
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 60vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
                 alt="Agent Portal Onboarding Dashboard"
-                width={2558}
-                height={1242}
+                width={2160}
+                height={1117}
                 className="w-full h-auto block"
                 loading="lazy"
               />
@@ -620,6 +618,681 @@ function ValueSection2_Marketing() {
 
 
 // ============================================================================
+// VALUE SECTION 3 — "Elite On-Demand Training" (Bento Grid)
+// ============================================================================
+
+const TRAINING_PROGRAMS = [
+  {
+    title: 'SAA Pro',
+    description: 'Generate leads through content and visibility. Used by thousands of agents, updated annually, with weekly live implementation calls.',
+    icon: GraduationCap,
+    featured: true,
+    colSpan: 2,
+  },
+  {
+    title: 'Personal Branding',
+    description: 'Build a personal brand that attracts clients and opportunities consistently.',
+    icon: UserCircle,
+    featured: false,
+    colSpan: 1,
+  },
+  {
+    title: 'Paid Ads',
+    description: 'Set up paid ads correctly, avoid common mistakes, and know when ads make sense.',
+    icon: Megaphone,
+    featured: false,
+    colSpan: 1,
+  },
+  {
+    title: 'Google Business',
+    description: 'Drive local visibility and inbound leads through an optimized Google Business Profile.',
+    icon: Building2,
+    featured: false,
+    colSpan: 1,
+  },
+  {
+    title: 'Master Attraction',
+    description: 'Attract agents into your downline using a structured, compliant approach.',
+    icon: UserPlus,
+    featured: false,
+    colSpan: 1,
+  },
+  {
+    title: 'Investor Agent',
+    description: 'Structure investor conversations correctly and avoid mistakes that slow or derail deals.',
+    icon: Handshake,
+    featured: false,
+    colSpan: 1,
+  },
+  {
+    title: 'AI Accelerator',
+    description: 'Automate content creation, follow-ups, listing prep, and admin workflows.',
+    icon: Sparkles,
+    featured: true,
+    colSpan: 2,
+  },
+  {
+    title: 'Agent Checklists',
+    description: 'Structured guides for buyer agents and listing agents covering every step from first client meeting through closing.',
+    icon: Download,
+    featured: false,
+    colSpan: 3,
+  },
+];
+
+function ValueSection3_Training() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12">
+      <style>{`
+        @keyframes vs3FadeIn {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      <div className="max-w-[1200px] mx-auto" style={{
+        opacity: visible ? 1 : 0,
+        animation: visible ? 'vs3FadeIn 0.6s ease-out' : 'none',
+      }}>
+        {/* Intro text */}
+        <GenericCard padding="lg" style={{ marginBottom: 'clamp(24px, 4vw, 40px)' }}>
+          <h3 className="text-h3" style={{ marginBottom: '0.5rem' }}>
+            Elite On-Demand Training
+          </h3>
+          <p className="text-body" style={{ color: '#ffd700', fontFamily: 'var(--font-taskor, sans-serif)', fontSize: 'clamp(14px, 1.8vw, 17px)', fontWeight: 600, marginBottom: '0.75rem' }}>
+            Generate business faster with proven systems.
+          </p>
+          <p className="text-body">
+            Training programs that help agents generate leads, stay current, and skip trial-and-error.
+          </p>
+        </GenericCard>
+
+        {/* Bento grid — 3 cols on desktop, 1 col on mobile */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {TRAINING_PROGRAMS.map((program, i) => {
+            const IconComp = program.icon;
+            if (program.featured) {
+              return (
+                <div
+                  key={i}
+                  className={`relative rounded-xl overflow-hidden ${program.colSpan === 2 ? 'md:col-span-2' : ''}`}
+                  style={{
+                    aspectRatio: '1.75 / 1',
+                    background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                    border: '1px solid rgba(255,215,0,0.15)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                  }}
+                >
+                  {/* Featured card image */}
+                  {program.title === 'SAA Pro' ? (
+                    <img
+                      src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-social-agent-academy/desktop"
+                      alt="Social Agent Academy Pro"
+                      width={1200}
+                      height={686}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : program.title === 'AI Accelerator' ? (
+                    <img
+                      src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-ai-agent-accelerator/desktop"
+                      alt="AI Agent Accelerator"
+                      width={1200}
+                      height={686}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <IconComp size={48} style={{ color: 'rgba(255,215,0,0.12)' }} />
+                    </div>
+                  )}
+                  {/* Title + description overlay at bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5" style={{
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 40%, transparent 100%)',
+                  }}>
+                    <h4 style={{
+                      fontFamily: 'var(--font-taskor, sans-serif)',
+                      fontSize: 'clamp(16px, 2vw, 20px)',
+                      fontWeight: 600,
+                      color: '#e5e4dd',
+                      marginBottom: '0.35rem',
+                    }}>
+                      {program.title}
+                    </h4>
+                    <p className="text-body" style={{ fontSize: 'clamp(12px, 1.4vw, 14px)', color: '#b0b0a8' }}>
+                      {program.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            }
+
+            // Icon cards
+            // Check if this card sits next to a featured card (stretched tall)
+            const isAdjacentToFeatured = program.title === 'Personal Branding' || program.title === 'Investor Agent';
+
+            return (
+              <div
+                key={i}
+                className={`relative rounded-xl p-4 sm:p-5 overflow-hidden ${program.colSpan === 3 ? 'md:col-span-3' : ''}`}
+                style={{
+                  background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+                }}
+              >
+                {/* Large decorative background icon for tall cards */}
+                {isAdjacentToFeatured && (
+                  <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                    <IconComp size={140} style={{ color: 'rgba(255,215,0,0.04)' }} />
+                    <div className="absolute bottom-0 left-0 right-0 h-1/2" style={{
+                      background: 'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255,215,0,0.06) 0%, transparent 70%)',
+                    }} />
+                  </div>
+                )}
+                <div className="flex items-start gap-3 relative">
+                  <div className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center" style={{
+                    background: 'linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,215,0,0.06))',
+                    border: '1px solid rgba(255,215,0,0.15)',
+                  }}>
+                    <IconComp size={18} style={{ color: '#ffd700' }} />
+                  </div>
+                  <div>
+                    <h4 style={{
+                      fontFamily: 'var(--font-taskor, sans-serif)',
+                      fontSize: 'clamp(14px, 1.6vw, 16px)',
+                      fontWeight: 600,
+                      color: '#e5e4dd',
+                      marginBottom: '0.25rem',
+                    }}>
+                      {program.title}
+                    </h4>
+                    <p className="text-body" style={{ fontSize: 'clamp(12px, 1.4vw, 14px)', color: '#b0b0a8' }}>
+                      {program.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+// ============================================================================
+// VALUE SECTION 4 — "Agent Attraction Infrastructure" (Browser + Zoom Mockup)
+// ============================================================================
+
+function ZoomMockup() {
+  const participants = [
+    { initials: 'DS', color: '#4A90D9' },
+    { initials: 'KS', color: '#D94A8C' },
+    { initials: 'MS', color: '#4AD9A5' },
+    { initials: 'JR', color: '#D9A54A' },
+  ];
+
+  return (
+    <div className="w-full rounded-xl overflow-hidden" style={{
+      border: '1px solid rgba(255,255,255,0.1)',
+      boxShadow: '0 12px 40px rgba(0,0,0,0.6)',
+      background: '#1a1a1a',
+    }}>
+      {/* Top bar */}
+      <div className="flex items-center justify-between px-3 py-2" style={{
+        background: 'linear-gradient(180deg, #2d2d2d 0%, #232323 100%)',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        <div className="flex items-center gap-2">
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#28c840' }} />
+          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace' }}>
+            Agent Prospect Meeting
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)' }}>
+            <Users size={10} style={{ display: 'inline', marginRight: '3px', verticalAlign: 'middle' }} />
+            47
+          </span>
+          <button type="button" className="px-2 py-0.5 rounded" style={{
+            background: '#e53935',
+            fontSize: '10px',
+            color: '#fff',
+            border: 'none',
+            cursor: 'default',
+          }}>
+            End
+          </button>
+        </div>
+      </div>
+
+      {/* Main presenter area */}
+      <div className="relative" style={{
+        aspectRatio: '16/9',
+        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+      }}>
+        {/* Presenter name label */}
+        <div className="absolute bottom-3 left-3 px-2 py-1 rounded" style={{
+          background: 'rgba(0,0,0,0.6)',
+          backdropFilter: 'blur(4px)',
+        }}>
+          <span style={{ fontSize: '11px', color: '#fff', fontFamily: 'monospace' }}>
+            Doug Smart
+          </span>
+        </div>
+        {/* Presenter avatar placeholder */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{
+            background: 'linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.08))',
+            border: '2px solid rgba(255,215,0,0.25)',
+          }}>
+            <span style={{ fontSize: '20px', color: 'rgba(255,215,0,0.6)', fontFamily: 'var(--font-taskor, sans-serif)', fontWeight: 600 }}>DS</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Participant thumbnails row */}
+      <div className="flex gap-1.5 px-2 py-2" style={{
+        background: '#1a1a1a',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        {participants.map((p, i) => (
+          <div key={i} className="flex-1 rounded-md flex items-center justify-center" style={{
+            aspectRatio: '16/9',
+            background: `linear-gradient(135deg, ${p.color}22, ${p.color}11)`,
+            border: `1px solid ${p.color}33`,
+          }}>
+            <span style={{ fontSize: '10px', color: p.color, fontWeight: 600, fontFamily: 'monospace' }}>
+              {p.initials}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Controls bar */}
+      <div className="flex items-center justify-center gap-4 px-3 py-2" style={{
+        background: '#232323',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        {/* Mic */}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+          <line x1="12" x2="12" y1="19" y2="22" />
+        </svg>
+        {/* Video */}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" />
+          <rect x="2" y="6" width="14" height="12" rx="2" />
+        </svg>
+        {/* Share screen */}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" />
+          <line x1="8" x2="16" y1="21" y2="21" />
+          <line x1="12" x2="12" y1="17" y2="21" />
+        </svg>
+        {/* Chat */}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        {/* End call */}
+        <div className="w-7 h-5 rounded-full flex items-center justify-center" style={{ background: '#e53935' }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91" />
+            <line x1="1" x2="23" y1="1" y2="23" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ValueSection4_Attraction() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12">
+      <style>{`
+        @keyframes vs4FadeIn {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      <div className="max-w-[1800px] mx-auto" style={{
+        opacity: visible ? 1 : 0,
+        animation: visible ? 'vs4FadeIn 0.6s ease-out' : 'none',
+      }}>
+        {/* Two-column: mockups left, card right — mirrors Section 1 (flex-row-reverse) */}
+        <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-0">
+          {/* Card side (right on desktop) */}
+          <div className="w-full lg:w-[35%] relative z-20">
+            <GenericCard padding="lg">
+              <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
+                Agent Attraction Infrastructure
+              </h3>
+              <div className="space-y-5">
+                <p className="text-body" style={{ color: '#ffd700', fontFamily: 'var(--font-taskor, sans-serif)', fontSize: 'clamp(14px, 1.8vw, 17px)', fontWeight: 600 }}>
+                  Build passive revenue share income.
+                </p>
+                <p className="text-body">
+                  Participation is optional, compliant, and designed for when and if an agent chooses.
+                </p>
+                <ul className="space-y-4">
+                  {[
+                    'Branded agent attraction webpage',
+                    'Long-term automated nurture systems',
+                    'Leadership hosted calls for your prospects',
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-body">
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </GenericCard>
+          </div>
+
+          {/* Mockup side (left on desktop) — stacked/overlapping composition */}
+          <div className="w-full lg:w-[75%] lg:-mr-[10%] flex items-center justify-center">
+            <div className="relative w-full">
+              {/* Browser mockup — main */}
+              <BrowserMockup url="smartagentalliance.com/Jane-Smith">
+                <img
+                  src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-attraction-page-screenshot/desktop2x"
+                  srcSet="
+                    https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-attraction-page-screenshot/mobile 640w,
+                    https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-attraction-page-screenshot/tablet 1024w,
+                    https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-attraction-page-screenshot/desktop2x 1600w
+                  "
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+                  alt="SAA Agent Attraction Page"
+                  width={1600}
+                  height={869}
+                  className="w-full h-auto block"
+                  loading="lazy"
+                />
+              </BrowserMockup>
+              {/* Zoom mockup — overlapping bottom-right */}
+              <div className="absolute bottom-[-8%] right-[-4%] w-[45%] sm:w-[40%] z-10">
+                <ZoomMockup />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+// ============================================================================
+// VALUE SECTION 5 — "Private Referrals & Global Collaboration" (WhatsApp Mockup)
+// ============================================================================
+
+function WhatsAppChat() {
+  const messages = [
+    { sender: 'Sarah M.', text: 'Looking for a great agent in Austin for a relocating buyer', time: '10:42 AM', sent: false },
+    { sender: 'Jason R.', text: "I've got you — DM sent!", time: '10:43 AM', sent: false },
+    { sender: 'Emily T.', text: 'Anyone have an investor-friendly agent in Miami?', time: '10:51 AM', sent: false },
+    { sender: 'You', text: 'Yes! Just connected you', time: '10:52 AM', sent: true },
+  ];
+
+  return (
+    <div className="w-full h-full flex flex-col" style={{ background: '#0b141a' }}>
+      {/* WhatsApp header */}
+      <div className="flex items-center" style={{
+        gap: 'clamp(6px, 0.8vw, 10px)',
+        padding: 'clamp(6px, 0.8vw, 12px) clamp(8px, 1vw, 16px)',
+        background: '#1f2c34',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        <svg style={{ width: 'clamp(10px, 1.2vw, 16px)', height: 'clamp(10px, 1.2vw, 16px)' }} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+        <div className="rounded-full flex items-center justify-center" style={{
+          width: 'clamp(20px, 2.5vw, 32px)',
+          height: 'clamp(20px, 2.5vw, 32px)',
+          background: 'linear-gradient(135deg, #25D366, #128C7E)',
+        }}>
+          <Users style={{ width: 'clamp(9px, 1.2vw, 16px)', height: 'clamp(9px, 1.2vw, 16px)', color: '#fff' }} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div style={{ fontSize: 'clamp(9px, 1.1vw, 14px)', color: '#e5e4dd', fontWeight: 600, fontFamily: 'var(--font-taskor, sans-serif)' }}>
+            Referrals - Texas
+          </div>
+          <div style={{ fontSize: 'clamp(7px, 0.8vw, 11px)', color: 'rgba(255,255,255,0.4)' }}>
+            3700+ members
+          </div>
+        </div>
+      </div>
+
+      {/* Messages area */}
+      <div className="flex-1 overflow-hidden" style={{
+        padding: 'clamp(8px, 1vw, 16px)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'clamp(6px, 0.8vw, 12px)',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+      }}>
+        {messages.map((msg, i) => (
+          <div key={i} className={`flex ${msg.sent ? 'justify-end' : 'justify-start'}`}>
+            <div className="max-w-[80%]" style={{
+              background: msg.sent ? '#005c4b' : '#1f2c34',
+              borderRadius: msg.sent ? '8px 8px 2px 8px' : '8px 8px 8px 2px',
+              padding: 'clamp(4px, 0.6vw, 10px) clamp(6px, 0.8vw, 12px)',
+            }}>
+              {!msg.sent && (
+                <div style={{ fontSize: 'clamp(7px, 0.9vw, 12px)', color: '#ffd700', fontWeight: 600, marginBottom: '1px' }}>
+                  {msg.sender}
+                </div>
+              )}
+              <p style={{ fontSize: 'clamp(8px, 1vw, 13px)', color: '#e5e4dd', lineHeight: '1.35', margin: 0 }}>
+                {msg.text}
+              </p>
+              <div style={{ fontSize: 'clamp(6px, 0.7vw, 10px)', color: 'rgba(255,255,255,0.35)', textAlign: 'right', marginTop: '2px' }}>
+                {msg.time}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Input bar */}
+      <div className="flex items-center" style={{
+        gap: 'clamp(6px, 0.8vw, 10px)',
+        padding: 'clamp(6px, 0.8vw, 10px) clamp(6px, 0.8vw, 12px)',
+        background: '#1f2c34',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        <div className="flex-1 rounded-full" style={{
+          padding: 'clamp(4px, 0.5vw, 8px) clamp(8px, 1vw, 14px)',
+          background: '#2a3942',
+          border: '1px solid rgba(255,255,255,0.04)',
+        }}>
+          <span style={{ fontSize: 'clamp(7px, 0.9vw, 12px)', color: 'rgba(255,255,255,0.25)' }}>Type a message</span>
+        </div>
+        <div className="rounded-full flex items-center justify-center" style={{
+          width: 'clamp(20px, 2.5vw, 32px)',
+          height: 'clamp(20px, 2.5vw, 32px)',
+          background: '#25D366',
+        }}>
+          <svg style={{ width: 'clamp(8px, 1vw, 14px)', height: 'clamp(8px, 1vw, 14px)' }} viewBox="0 0 24 24" fill="#fff">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ValueSection5_Referrals() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12" style={{ paddingTop: 'clamp(0px, 3vw, 60px)' }}>
+      <style>{`
+        @keyframes vs5FadeIn {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      <div className="max-w-[1800px] mx-auto" style={{
+        opacity: visible ? 1 : 0,
+        animation: visible ? 'vs5FadeIn 0.6s ease-out' : 'none',
+      }}>
+        {/* Two-column: card left, phone mockup right — mirrors Section 2 */}
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
+          {/* Card side (left on desktop) */}
+          <div className="w-full lg:w-[60%] relative z-10">
+            <GenericCard padding="lg">
+              <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
+                Private Referrals &amp; Global Collaboration
+              </h3>
+              <div className="space-y-5">
+                <p className="text-body" style={{ color: '#ffd700', fontFamily: 'var(--font-taskor, sans-serif)', fontSize: 'clamp(14px, 1.8vw, 17px)', fontWeight: 600 }}>
+                  Turn your relationships into consistent referral opportunities.
+                </p>
+                <p className="text-body">
+                  This network is intentionally relationship-based, not volume-driven.
+                </p>
+                <ul className="space-y-4">
+                  {[
+                    'Member-only WhatsApp referral groups',
+                    'City, state, and country-specific agent matching',
+                    'Collaboration across U.S. and international markets',
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-body">
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </GenericCard>
+          </div>
+
+          {/* Phone mockup side (right on desktop) — with orbital animation */}
+          <div className="w-full lg:w-[50%] lg:-ml-[10%] flex items-center justify-center">
+            <style>{`
+              @keyframes vs5Orbit1 { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+              @keyframes vs5Orbit2 { from { transform: rotate(120deg); } to { transform: rotate(480deg); } }
+              @keyframes vs5Orbit3 { from { transform: rotate(240deg); } to { transform: rotate(600deg); } }
+              @keyframes vs5DotPulse { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.4); } }
+            `}</style>
+            <div className="relative w-[85%] sm:w-[70%] md:w-[55%] lg:w-[80%]" style={{ aspectRatio: '1' }}>
+              {/* Orbital ring 1 */}
+              <div className="absolute inset-[5%] rounded-full pointer-events-none" style={{
+                border: '1px solid rgba(255,215,0,0.08)',
+                animation: 'vs5Orbit1 20s linear infinite',
+              }}>
+                <div className="absolute" style={{ top: '0%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ffd700', boxShadow: '0 0 12px rgba(255,215,0,0.6)', animation: 'vs5DotPulse 3s ease-in-out infinite' }} />
+                </div>
+                <div className="absolute" style={{ bottom: '0%', left: '50%', transform: 'translate(-50%, 50%)' }}>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#25D366', boxShadow: '0 0 10px rgba(37,211,102,0.5)', animation: 'vs5DotPulse 3s ease-in-out 1.5s infinite' }} />
+                </div>
+              </div>
+              {/* Orbital ring 2 */}
+              <div className="absolute inset-[-2%] rounded-full pointer-events-none" style={{
+                border: '1px dashed rgba(37,211,102,0.1)',
+                animation: 'vs5Orbit2 28s linear infinite',
+              }}>
+                <div className="absolute" style={{ top: '50%', right: '0%', transform: 'translate(50%, -50%)' }}>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00bfff', boxShadow: '0 0 10px rgba(0,191,255,0.5)', animation: 'vs5DotPulse 4s ease-in-out 0.5s infinite' }} />
+                </div>
+                <div className="absolute" style={{ top: '50%', left: '0%', transform: 'translate(-50%, -50%)' }}>
+                  <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#ffd700', boxShadow: '0 0 8px rgba(255,215,0,0.4)', animation: 'vs5DotPulse 4s ease-in-out 2s infinite' }} />
+                </div>
+              </div>
+              {/* Orbital ring 3 */}
+              <div className="absolute inset-[-8%] rounded-full pointer-events-none" style={{
+                border: '1px solid rgba(0,191,255,0.06)',
+                animation: 'vs5Orbit3 35s linear infinite',
+              }}>
+                <div className="absolute" style={{ top: '0%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                  <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#25D366', boxShadow: '0 0 8px rgba(37,211,102,0.4)', animation: 'vs5DotPulse 3.5s ease-in-out 1s infinite' }} />
+                </div>
+                <div className="absolute" style={{ bottom: '0%', left: '50%', transform: 'translate(-50%, 50%)' }}>
+                  <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#ffd700', boxShadow: '0 0 12px rgba(255,215,0,0.5)', animation: 'vs5DotPulse 3.5s ease-in-out 2.5s infinite' }} />
+                </div>
+              </div>
+              {/* Phone in center — tilted for visual interest */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-[55%]" style={{ transform: 'rotate(12deg)' }}>
+                  <PhoneMockup>
+                    <WhatsAppChat />
+                  </PhoneMockup>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+// ============================================================================
 // SECTION 1 — Focus Cards with edge-to-edge GlassPanel
 // Content rendered at a JS-measured fixed pixel width so it NEVER reflows.
 // Card overflow:hidden clips it — expanding the card reveals content.
@@ -718,8 +1391,12 @@ function Section1() {
             url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
             linear-gradient(180deg, rgba(18,18,18,0.85) 0%, rgba(12,12,12,0.92) 100%);
           background-blend-mode: overlay, normal;
-          backdrop-filter: blur(16px) saturate(120%);
-          -webkit-backdrop-filter: blur(16px) saturate(120%);
+        }
+        @media (min-width: 768px) {
+          .focus-card {
+            backdrop-filter: blur(16px) saturate(120%);
+            -webkit-backdrop-filter: blur(16px) saturate(120%);
+          }
         }
       `}</style>
 
@@ -890,13 +1567,12 @@ function Section1() {
               const mobRefs = [mobRef0, mobRef1];
               return (
                 <div key={panel.id} className="relative">
-                  {/* Pulsing glow ring — hidden when inactive */}
+                  {/* Glow ring — hidden when inactive */}
                   <div
                     className="absolute -inset-[3px] rounded-2xl pointer-events-none"
                     style={{
                       border: `2px solid ${panel.color}50`,
-                      boxShadow: isActive ? `0 0 12px 4px ${panel.color}44, 0 0 28px 8px ${panel.color}22` : 'none',
-                      animation: isActive ? 'focusPulse 2.4s linear infinite' : 'none',
+                      boxShadow: isActive ? `0 0 12px 4px ${panel.color}44` : 'none',
                       zIndex: 30,
                       opacity: isActive ? 1 : 0,
                       visibility: isActive ? 'visible' : 'hidden',
@@ -911,13 +1587,14 @@ function Section1() {
                     style={{
                       overflow: 'hidden',
                       height: isActive ? `${mobH[i] + 8}px` : `${COLLAPSED}px`,
+                      willChange: 'height',
                       ...(!isActive ? {
                         background: 'linear-gradient(180deg, rgba(18,18,18,0.95) 0%, rgba(12,12,12,0.98) 100%)',
                       } : {}),
                       border: isActive ? `3px solid ${panel.color}` : '1px solid rgba(255,255,255,0.06)',
                       boxShadow: isActive
-                        ? `0 0 6px 2px ${panel.color}44, 0 0 20px 4px ${panel.color}22, 0 8px 32px rgba(0,0,0,0.4)`
-                        : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+                        ? `0 0 6px 2px ${panel.color}44, 0 8px 32px rgba(0,0,0,0.4)`
+                        : '0 8px 32px rgba(0,0,0,0.4)',
                       transition: 'height 1.15s cubic-bezier(0.3, 0.1, 0.3, 1), border-color 0.9s ease, box-shadow 0.9s ease',
                     }}
                   >
@@ -1047,8 +1724,8 @@ function Section2() {
 
   const goldDot = <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[6px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />;
 
-  const renderContent = () => {
-    switch (activeCard) {
+  const renderContent = (cardIndex?: number) => {
+    switch (cardIndex ?? activeCard) {
       case 0:
         return (
           <div className="space-y-4">
@@ -1116,6 +1793,7 @@ function Section2() {
   };
 
   return (
+    <GlassPanel variant="marigoldCrosshatch" noBlur className="py-[50px]">
     <section ref={sectionRef} className="px-4 sm:px-8 md:px-12">
       <style>{`
         @keyframes section2FadeIn {
@@ -1136,9 +1814,11 @@ function Section2() {
           <p className="text-body mx-auto" style={{ maxWidth: '700px' }}>
             {SECTION2_INTRO}
           </p>
-          <p className="text-body mt-3 mx-auto" style={{ fontWeight: 600, maxWidth: '700px' }}>
-            {SECTION2_SUBHEADING}
-          </p>
+          {SECTION2_SUBHEADING && (
+            <p className="text-body mt-3 mx-auto" style={{ fontWeight: 600, maxWidth: '700px' }}>
+              {SECTION2_SUBHEADING}
+            </p>
+          )}
         </div>
 
         {/* 3 Cards — Desktop: grid, Mobile: horizontal scroll slider */}
@@ -1151,7 +1831,7 @@ function Section2() {
                 key={idx}
                 type="button"
                 onClick={() => handleCardClick(idx)}
-                className="relative rounded-xl md:rounded-2xl p-3 md:p-6 text-center overflow-hidden"
+                className="relative w-full h-full rounded-xl md:rounded-2xl p-3 md:p-6 text-center overflow-hidden"
                 style={{
                   background: darkCardBg,
                   border: isActive
@@ -1235,23 +1915,19 @@ function Section2() {
 
               {/* Mobile: horizontal scroll with edge fades */}
               <div className="md:hidden -mx-4 sm:-mx-8">
-                <div className="relative -my-4">
+                <div className="relative -my-12">
                   <div
                     ref={scrollRef}
-                    className="s2-scroll flex gap-2 overflow-x-auto py-4 px-4 sm:px-8"
+                    className="s2-scroll flex gap-2 overflow-x-auto py-12 px-4 sm:px-8"
                     style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
                   >
                     <style>{`.s2-scroll::-webkit-scrollbar { display: none; }`}</style>
                     {cards.map((card, idx) => (
-                      <div key={idx} className="flex-shrink-0" style={{ width: '65%', scrollSnapAlign: 'center' }}>
+                      <div key={idx} className="flex-shrink-0 flex" style={{ width: '65%', scrollSnapAlign: 'center' }}>
                         {renderCard(card, idx)}
                       </div>
                     ))}
                   </div>
-                  {/* Left fade */}
-                  <div className="absolute left-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to right, #080808, transparent)' }} />
-                  {/* Right fade */}
-                  <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none" style={{ background: 'linear-gradient(to left, #080808, transparent)' }} />
                 </div>
 
                 {/* Progress dots */}
@@ -1279,703 +1955,1149 @@ function Section2() {
         {/* Shared description panel */}
         <div className="mt-3 md:mt-4">
           <GrainCard padding="md" centered={false}>
-            <div key={activeCard} className="section2-content-fade relative flex flex-col justify-center" style={{ minHeight: '200px' }}>
-              {/* Watermark icon */}
-              {(() => {
-                const WatermarkIcon = cards[activeCard].icon;
+            <div className="relative" style={{ display: 'grid' }}>
+              {/* Render all panels stacked in same grid cell — tallest sets the height, only active is visible */}
+              {cards.map((card, idx) => {
+                const WatermarkIcon = card.icon;
+                const isActive = activeCard === idx;
                 return (
                   <div
-                    className="absolute pointer-events-none"
+                    key={idx}
+                    className={isActive ? 'section2-content-fade' : ''}
                     style={{
-                      right: '0px',
-                      bottom: '0px',
-                      opacity: 0.04,
-                      color: '#ffd700',
+                      gridArea: '1 / 1',
+                      ...(isActive ? { visibility: 'visible' as const, zIndex: 1 } : { visibility: 'hidden' as const, pointerEvents: 'none' as const, zIndex: 0 }),
                     }}
                   >
-                    <WatermarkIcon size={160} strokeWidth={1} />
+                    <div className="relative flex flex-col justify-center">
+                      <div
+                        className="absolute pointer-events-none"
+                        style={{
+                          right: '0px',
+                          bottom: '0px',
+                          opacity: 0.04,
+                          color: '#ffd700',
+                        }}
+                      >
+                        <WatermarkIcon size={160} strokeWidth={1} />
+                      </div>
+                      <div className="relative z-10">
+                        {renderContent(idx)}
+                      </div>
+                    </div>
                   </div>
                 );
-              })()}
-              <div className="relative z-10">
-                {renderContent()}
-              </div>
+              })}
             </div>
           </GrainCard>
         </div>
       </div>
     </section>
+    </GlassPanel>
   );
 }
 
 // ============================================================================
-// SECTION 3 — "What You Get Inside SAA" (Interactive Portal Showcase)
-// Desktop: sidebar nav + video/animation content area
-// Mobile: horizontal pill tabs + content below
+// SECTION 3 — "What You Get Inside SAA" (Agent Portal Walkthrough Video)
 // ============================================================================
 
-function StreamVideo({ streamId, isActive }: { streamId: string; isActive: boolean }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const hlsRef = useRef<any>(null);
-  const readyRef = useRef(false);
+const WALKTHROUGH_VIDEO_ID = '14ba82ce03943a64ef90e3c9771a0d56';
+const WALKTHROUGH_POSTER = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/agent-portal-walkthrough-thumbnail/desktop';
 
-  // Load HLS source once on mount — never destroyed while component is mounted
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !streamId) return;
+// Timestamp-based text strip for the walkthrough video
+const VIDEO_TIMESTAMPS = [
+  { time: 0,     title: 'BUILT FOR AGENT GROWTH',   subtitle: 'Clarity. Efficiency. Scale' },
+  { time: 14,    title: 'TRANSITION SEAMLESSLY',     subtitle: 'Whether you\'re starting or moving' },
+  { time: 37,    title: 'TOTAL AGENT VISIBILITY',    subtitle: 'Your entire business in one link' },
+  { time: 59,    title: 'REVENUE SHARE GROWTH',      subtitle: 'Agents find you organically' },
+  { time: 89,    title: 'NO MORE GUESSING',          subtitle: 'See what actually converts' },
+  { time: 107,   title: 'WINNING STRATEGIES',         subtitle: 'What\'s working, shared openly' },
+  { time: 138,   title: 'FASTER ANSWERS',             subtitle: 'Zero hunting for help' },
+  { time: 183,   title: 'EXECUTE FASTER',             subtitle: 'Professional marketing, done' },
+  { time: 202,   title: 'CAPTURE YOUR TRAFFIC',       subtitle: 'Turn visibility into leads' },
+  { time: 212,   title: 'NEW AGENT SUPPORT',          subtitle: 'Quick lessons for a faster start' },
+  { time: 223,   title: 'HIGH-LEVEL TRAINING',        subtitle: 'Courses easy to find and access' },
+];
 
-    const src = `${STREAM_BASE}/${streamId}/manifest/video.m3u8`;
-
-    // Native HLS (Safari)
-    if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = src;
-      video.load(); // Start buffering
-      readyRef.current = true;
-      return;
-    }
-
-    // HLS.js
-    let cancelled = false;
-    import('hls.js').then(({ default: Hls }) => {
-      if (cancelled) return;
-      if (!Hls.isSupported()) return;
-
-      const hls = new Hls({
-        enableWorker: true,
-        maxBufferLength: 10,
-        maxMaxBufferLength: 20,
-        startLevel: -1,
-        capLevelToPlayerSize: false,
-        minAutoBitrate: 900000,
-      });
-      hlsRef.current = hls;
-      hls.loadSource(src);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        readyRef.current = true;
-        // If this video is already the active one, start playing
-        if (isActive) video.play().catch(() => {});
-      });
-    });
-
-    return () => {
-      cancelled = true;
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-        hlsRef.current = null;
-      }
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [streamId]);
-
-  // Play/pause based on active state
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (isActive) {
-      video.currentTime = 0;
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-    }
-  }, [isActive]);
-
-  return (
-    <video
-      ref={videoRef}
-      loop
-      muted
-      playsInline
-      preload="auto"
-      className="s3-phone-video"
-    />
-  );
+// Cloudflare Stream SDK typings
+interface StreamPlayer {
+  play: () => void;
+  pause: () => void;
+  currentTime: number;
+  duration: number;
+  volume: number;
+  muted: boolean;
+  addEventListener: (event: string, callback: () => void) => void;
+  removeEventListener: (event: string, callback: () => void) => void;
 }
+declare global {
+  interface Window {
+    Stream?: (iframe: HTMLIFrameElement) => StreamPlayer;
+  }
+}
+
+type FloatState = 'inline' | 'floating' | 'returning';
 
 function Section3() {
-  const [activeGroup, setActiveGroup] = useState(0);
-  const [isWalkthrough, setIsWalkthrough] = useState(false);
-  const [walkthroughPlaying, setWalkthroughPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const activeGroupRef = useRef(0); // mirror for event listener
-  const group = FEATURE_GROUPS[activeGroup];
+  const videoWrapRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const playerRef = useRef<StreamPlayer | null>(null);
+  const scrubberRef = useRef<HTMLDivElement>(null);
+  const floatingFrameRef = useRef<HTMLDivElement>(null);
 
-  // Compute cumulative start times for each section
-  const sectionTimings = useRef(
-    FEATURE_GROUPS.reduce<{ start: number; end: number }[]>((acc, g, i) => {
-      const start = i === 0 ? 0 : acc[i - 1].end;
-      const end = start + (g.duration || 30);
-      acc.push({ start, end });
-      return acc;
-    }, [])
-  ).current;
+  const [floatState, setFloatState] = useState<FloatState>('inline');
+  const floatStateRef = useRef<FloatState>('inline');
+  const [dismissed, setDismissed] = useState(false);
+  const placeholderHeight = useRef(0);
 
-  // Keep ref in sync
-  useEffect(() => { activeGroupRef.current = activeGroup; }, [activeGroup]);
+  // Custom player controls state
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [hasPlayed, setHasPlayed] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+  const [volume, setVolume] = useState(1);
+  const [activeTimestampIdx, setActiveTimestampIdx] = useState(0);
+  const [showControls, setShowControls] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [videoQuality, setVideoQuality] = useState<'auto' | '360p' | '720p' | '1080p'>('1080p');
+  const [showQualityMenu, setShowQualityMenu] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Handle manual tab click — stops walkthrough
-  const handleTabClick = useCallback((index: number) => {
-    if (isWalkthrough) {
-      setIsWalkthrough(false);
-      setWalkthroughPlaying(false);
-      if (audioRef.current) audioRef.current.pause();
-    }
-    setActiveGroup(index);
-  }, [isWalkthrough]);
 
-  // Start walkthrough
-  const startWalkthrough = useCallback(() => {
-    setActiveGroup(0);
-    setIsWalkthrough(true);
-    setWalkthroughPlaying(true);
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {});
+  // Track whether the iframe should be rendered (preloaded on scroll or on play click)
+  const [iframeLoaded, setIframeLoaded] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
+  const sdkReadyRef = useRef(false);
+  const wantsAutoplay = useRef(false);
+
+  // Initialize player ONLY after iframe is rendered and SDK is loaded
+  const initPlayer = useCallback(() => {
+    if (!iframeRef.current || !window.Stream) return;
+    const player = window.Stream(iframeRef.current);
+    playerRef.current = player;
+    player.addEventListener('play', () => {
+      setIsPlaying(true); setHasPlayed(true); setVideoEnded(false); setShowSpinner(false);
+    });
+    player.addEventListener('pause', () => setIsPlaying(false));
+    player.addEventListener('ended', () => { setIsPlaying(false); setVideoEnded(true); });
+    player.addEventListener('loadedmetadata', () => setDuration(player.duration || 0));
+    player.addEventListener('timeupdate', () => {
+      setCurrentTime(player.currentTime || 0);
+      setDuration(player.duration || 0);
+    });
+    player.addEventListener('volumechange', () => {
+      setIsMuted(player.muted);
+      setVolume(player.volume);
+    });
+    // Ensure volume is on; only auto-play if user clicked play
+    player.muted = false;
+    player.volume = 1;
+    if (wantsAutoplay.current) {
+      player.play();
     }
   }, []);
 
-  // Toggle play/pause during walkthrough
-  const toggleWalkthroughPlayback = useCallback(() => {
-    if (walkthroughPlaying) {
-      setWalkthroughPlaying(false);
-      audioRef.current?.pause();
+  // Load SDK script once (but don't init player yet)
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !window.Stream) {
+      const script = document.createElement('script');
+      script.src = 'https://embed.cloudflarestream.com/embed/sdk.latest.js';
+      script.async = true;
+      script.onload = () => { sdkReadyRef.current = true; };
+      document.head.appendChild(script);
     } else {
-      setWalkthroughPlaying(true);
-      audioRef.current?.play().catch(() => {});
-    }
-  }, [walkthroughPlaying]);
-
-  // Stop walkthrough
-  const stopWalkthrough = useCallback(() => {
-    setIsWalkthrough(false);
-    setWalkthroughPlaying(false);
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
+      sdkReadyRef.current = true;
     }
   }, []);
 
-  // Jump to a specific chapter during walkthrough
-  const jumpToChapter = useCallback((index: number) => {
-    setActiveGroup(index);
-    if (audioRef.current) {
-      audioRef.current.currentTime = sectionTimings[index]?.start || 0;
-      if (!walkthroughPlaying) {
-        setWalkthroughPlaying(true);
-        audioRef.current.play().catch(() => {});
+  // Preload iframe when video section scrolls into view
+  useEffect(() => {
+    const wrap = videoWrapRef.current;
+    if (!wrap || iframeLoaded) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIframeLoaded(true);
+          obs.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    obs.observe(wrap);
+    return () => obs.disconnect();
+  }, [iframeLoaded]);
+
+  // Once iframe is in the DOM, wait for SDK then init player
+  useEffect(() => {
+    if (!iframeLoaded) return;
+    // SDK might already be loaded or still loading
+    const tryInit = () => {
+      if (window.Stream && iframeRef.current) {
+        initPlayer();
+        return true;
+      }
+      return false;
+    };
+    if (tryInit()) return;
+    // Poll briefly for SDK load
+    const interval = setInterval(() => {
+      if (tryInit()) clearInterval(interval);
+    }, 100);
+    return () => clearInterval(interval);
+  }, [iframeLoaded, initPlayer]);
+
+  // Re-initialize player after quality change (iframe src changes)
+  useEffect(() => {
+    if (!hasPlayed) return; // Only re-init if user has already started playing
+    const timer = setTimeout(() => {
+      if (!iframeRef.current || !window.Stream) return;
+      const player = window.Stream(iframeRef.current);
+      playerRef.current = player;
+      player.addEventListener('play', () => {
+        setIsPlaying(true); setHasPlayed(true); setVideoEnded(false); setShowSpinner(false);
+      });
+      player.addEventListener('pause', () => setIsPlaying(false));
+      player.addEventListener('ended', () => { setIsPlaying(false); setVideoEnded(true); });
+      player.addEventListener('loadedmetadata', () => setDuration(player.duration || 0));
+      player.addEventListener('timeupdate', () => {
+        setCurrentTime(player.currentTime || 0);
+        setDuration(player.duration || 0);
+      });
+      player.addEventListener('volumechange', () => {
+        setIsMuted(player.muted);
+        setVolume(player.volume);
+      });
+      // Auto-play after quality switch
+      player.play();
+    }, 300);
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoQuality]);
+
+  // Update active timestamp index based on currentTime
+  useEffect(() => {
+    if (!hasPlayed) return;
+    let idx = 0;
+    for (let i = VIDEO_TIMESTAMPS.length - 1; i >= 0; i--) {
+      if (currentTime >= VIDEO_TIMESTAMPS[i].time) {
+        idx = i;
+        break;
       }
     }
-  }, [sectionTimings, walkthroughPlaying]);
+    setActiveTimestampIdx(idx);
+  }, [currentTime, hasPlayed]);
 
-  // Audio-driven section switching — uses timeupdate for perfect sync
+  const togglePlay = useCallback(() => {
+    // First click: show spinner, hide poster, trigger playback
+    if (!hasPlayed) {
+      wantsAutoplay.current = true;
+      setHasPlayed(true);
+      setShowSpinner(true);
+      if (!iframeLoaded) {
+        setIframeLoaded(true); // triggers useEffect → initPlayer → play
+      } else if (playerRef.current) {
+        playerRef.current.play(); // iframe already preloaded and bound
+      }
+      return;
+    }
+    if (!playerRef.current) return;
+    if (isPlaying) playerRef.current.pause();
+    else playerRef.current.play();
+  }, [isPlaying, iframeLoaded, hasPlayed]);
+
+  const toggleMute = useCallback(() => {
+    if (!playerRef.current) return;
+    playerRef.current.muted = !playerRef.current.muted;
+  }, []);
+
+  const handleVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!playerRef.current) return;
+    const v = parseFloat(e.target.value);
+    playerRef.current.volume = v;
+    playerRef.current.muted = v === 0;
+  }, []);
+
+  const handleScrubberClick = useCallback((e: React.MouseEvent) => {
+    if (!scrubberRef.current || !playerRef.current || duration <= 0) return;
+    const rect = scrubberRef.current.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    playerRef.current.currentTime = pct * duration;
+  }, [duration]);
+
+  const handleScrubberMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+    handleScrubberClick(e);
+  }, [handleScrubberClick]);
+
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+    if (!isDragging) return;
+    function move(e: MouseEvent) {
+      if (!scrubberRef.current || !playerRef.current || duration <= 0) return;
+      const rect = scrubberRef.current.getBoundingClientRect();
+      const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      playerRef.current.currentTime = pct * duration;
+    }
+    function up() { setIsDragging(false); }
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    return () => { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
+  }, [isDragging, duration]);
 
-    const onTimeUpdate = () => {
-      if (!isWalkthrough || !walkthroughPlaying) return;
-      const t = audio.currentTime;
-      const current = activeGroupRef.current;
-      // Find which section the audio is in
-      for (let i = 0; i < sectionTimings.length; i++) {
-        if (t >= sectionTimings[i].start && t < sectionTimings[i].end) {
-          if (i !== current) setActiveGroup(i);
-          return;
+  const handleFullscreen = useCallback(() => {
+    const wrap = videoWrapRef.current;
+    const frame = floatingFrameRef.current;
+    if (!wrap) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else if (floatStateRef.current === 'floating' && frame) {
+      // Corner mode: snap to inline first, then fullscreen (inline→fs already works)
+      frame.style.position = 'relative';
+      frame.style.left = '';
+      frame.style.top = '';
+      frame.style.width = '';
+      frame.style.height = '';
+      frame.style.transform = '';
+      frame.style.transition = 'none';
+      frame.style.zIndex = '';
+      frame.style.borderRadius = '';
+      frame.style.boxShadow = '';
+      frame.style.aspectRatio = '2228 / 1080';
+      frame.style.overflow = 'hidden';
+      floatStateRef.current = 'inline';
+      setFloatState('inline');
+      requestAnimationFrame(() => wrap.requestFullscreen?.());
+    } else {
+      wrap.requestFullscreen?.();
+    }
+  }, []);
+
+  // Track fullscreen state — clear/restore float inline styles on the container
+  useEffect(() => {
+    const VIDEO_AR_FS = 2228 / 1080;
+    const onFsChange = () => {
+      const fs = !!document.fullscreenElement;
+      setIsFullscreen(fs);
+      const wrap = videoWrapRef.current;
+      const frame = floatingFrameRef.current;
+      if (wrap) wrap.classList.toggle('s3-fs-active', fs);
+
+      if (fs) {
+        // Apply fullscreen styles
+        if (wrap) {
+          wrap.style.width = '100vw';
+          wrap.style.height = '100vh';
+          wrap.style.maxWidth = '100vw';
+          wrap.style.background = '#000';
+          wrap.style.border = 'none';
+          wrap.style.borderRadius = '0';
+          wrap.style.overflow = 'visible';
+          wrap.style.display = 'flex';
+          wrap.style.flexDirection = 'column';
+          wrap.style.alignItems = 'stretch';
+          wrap.style.justifyContent = 'flex-start';
+        }
+        if (frame) {
+          frame.style.position = 'relative';
+          frame.style.width = '100%';
+          frame.style.height = '0';
+          frame.style.flex = '1 1 0';
+          frame.style.minHeight = '0';
+          frame.style.maxHeight = 'none';
+          frame.style.aspectRatio = 'auto';
+          frame.style.overflow = 'hidden';
+          frame.style.left = 'unset';
+          frame.style.top = 'unset';
+          frame.style.zIndex = 'unset';
+          frame.style.transform = 'none';
+          frame.style.transition = 'none';
+          frame.style.borderRadius = '0';
+          frame.style.boxShadow = 'none';
+          const iframeEl = frame.querySelector('iframe');
+          if (iframeEl) {
+            (iframeEl as HTMLElement).style.zIndex = '1';
+          }
+        }
+      } else {
+        // Exiting fullscreen: restore wrap's original React inline styles
+        if (wrap) {
+          wrap.style.width = '';
+          wrap.style.height = '';
+          wrap.style.maxWidth = '900px';
+          wrap.style.background = '';
+          wrap.style.border = '1px solid rgba(255, 215, 0, 0.2)';
+          wrap.style.borderRadius = '12px';
+          wrap.style.overflow = 'hidden';
+          wrap.style.display = '';
+          wrap.style.flexDirection = '';
+          wrap.style.alignItems = '';
+          wrap.style.justifyContent = '';
+        }
+        if (frame) {
+          if (floatStateRef.current === 'floating') {
+            // Exiting fullscreen while floating: re-apply corner position
+            const targetW = Math.min(320, window.innerWidth * 0.4);
+            const targetH = targetW / VIDEO_AR_FS;
+            const targetX = 20;
+            const targetY = window.innerHeight - 20 - targetH;
+            frame.style.position = 'fixed';
+            frame.style.zIndex = '50';
+            frame.style.left = '0px';
+            frame.style.top = '0px';
+            frame.style.width = `${targetW}px`;
+            frame.style.height = `${targetH}px`;
+            frame.style.flex = '';
+            frame.style.minHeight = '';
+            frame.style.maxHeight = '';
+            frame.style.aspectRatio = 'unset';
+            frame.style.transform = `translate(${targetX}px, ${targetY}px)`;
+            frame.style.transition = 'none';
+            frame.style.borderRadius = '12px';
+            frame.style.boxShadow = '0 8px 32px rgba(0,0,0,0.6)';
+          } else {
+            // Exiting fullscreen while inline: restore original container styles
+            frame.style.position = '';
+            frame.style.width = '';
+            frame.style.height = '';
+            frame.style.flex = '';
+            frame.style.minHeight = '';
+            frame.style.maxHeight = '';
+            frame.style.aspectRatio = '2228 / 1080';
+            frame.style.overflow = '';
+            frame.style.left = '';
+            frame.style.top = '';
+            frame.style.zIndex = '';
+            frame.style.transform = '';
+            frame.style.transition = '';
+            frame.style.borderRadius = '';
+            frame.style.boxShadow = '';
+          }
+          // Clear iframe z-index override
+          const iframeEl = frame.querySelector('iframe');
+          if (iframeEl) {
+            (iframeEl as HTMLElement).style.zIndex = '';
+          }
         }
       }
     };
-
-    const onEnded = () => stopWalkthrough();
-
-    audio.addEventListener('timeupdate', onTimeUpdate);
-    audio.addEventListener('ended', onEnded);
+    document.addEventListener('fullscreenchange', onFsChange);
+    document.addEventListener('webkitfullscreenchange', onFsChange);
     return () => {
-      audio.removeEventListener('timeupdate', onTimeUpdate);
-      audio.removeEventListener('ended', onEnded);
+      document.removeEventListener('fullscreenchange', onFsChange);
+      document.removeEventListener('webkitfullscreenchange', onFsChange);
     };
-  }, [isWalkthrough, walkthroughPlaying, sectionTimings, stopWalkthrough]);
+  }, []);
 
-  // Total walkthrough duration & progress
-  const totalDuration = FEATURE_GROUPS.reduce((sum, g) => sum + (g.duration || 30), 0);
-  const elapsedUpToCurrent = sectionTimings[activeGroup]?.start || 0;
-  const currentDuration = FEATURE_GROUPS[activeGroup]?.duration || 30;
+  // Auto-hide controls — only show after first play, hide faster (1.5s)
+  const scheduleHide = useCallback(() => {
+    if (!hasPlayed) return;
+    if (hideTimeout.current) clearTimeout(hideTimeout.current);
+    setShowControls(true);
+    if (isPlaying) {
+      hideTimeout.current = setTimeout(() => setShowControls(false), 1500);
+    }
+  }, [isPlaying, hasPlayed]);
+
+  useEffect(() => {
+    if (hasPlayed) scheduleHide();
+  }, [isPlaying, hasPlayed, scheduleHide]);
+
+  const formatTime = (s: number) => {
+    if (isNaN(s) || s < 0) return '0:00';
+    return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+  };
+
+  // FLIP-based float animation
+  const inlineRectRef = useRef<DOMRect | null>(null);
+
+  useEffect(() => {
+    const wrap = videoWrapRef.current;
+    const frame = floatingFrameRef.current;
+    if (!wrap || !frame) return;
+
+    function handleScroll() {
+      if (dismissed || !wrap || !frame) return;
+      // Never trigger float/return transitions during fullscreen
+      if (document.fullscreenElement) return;
+      const wrapRect = wrap.getBoundingClientRect();
+      const wrapHeight = wrap.offsetHeight;
+      // Float when 50% of the video is scrolled off screen
+      const shouldFloat = wrapRect.top + wrapHeight * 0.5 < 0;
+
+      if (shouldFloat && floatState === 'inline') {
+        // Capture inline position before floating
+        inlineRectRef.current = frame.getBoundingClientRect();
+        // Only hold space for the video frame, not the timestamp strip above it
+        placeholderHeight.current = frame.offsetHeight;
+        floatStateRef.current = 'floating';
+        setFloatState('floating');
+      } else if (!shouldFloat && floatState === 'floating') {
+        floatStateRef.current = 'returning';
+        setFloatState('returning');
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [dismissed, floatState]);
+
+  // Native video aspect ratio
+  const VIDEO_AR = 2228 / 1080;
+
+  // Animate float TO corner
+  useEffect(() => {
+    const frame = floatingFrameRef.current;
+    if (floatState !== 'floating' || !frame || !inlineRectRef.current) return;
+    // Don't animate float while in fullscreen
+    if (document.fullscreenElement) return;
+
+    const from = inlineRectRef.current;
+    // Target: bottom-left corner
+    const targetW = Math.min(320, window.innerWidth * 0.4);
+    const targetH = targetW / VIDEO_AR;
+    const targetX = 20;
+    const targetY = window.innerHeight - 20 - targetH;
+
+    // Apply fixed position at the FROM location first (using transform)
+    frame.style.position = 'fixed';
+    frame.style.zIndex = '50';
+    frame.style.left = '0px';
+    frame.style.top = '0px';
+    frame.style.width = `${from.width}px`;
+    frame.style.height = `${from.height}px`;
+    frame.style.aspectRatio = 'unset';
+    frame.style.transform = `translate(${from.left}px, ${from.top}px)`;
+    frame.style.transition = 'none';
+    frame.style.borderRadius = '12px';
+    frame.style.boxShadow = '0 8px 32px rgba(0,0,0,0.6)';
+
+    // Force reflow then animate to target
+    void frame.offsetHeight;
+    frame.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), width 0.5s cubic-bezier(0.4, 0, 0.2, 1), height 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+    frame.style.transform = `translate(${targetX}px, ${targetY}px)`;
+    frame.style.width = `${targetW}px`;
+    frame.style.height = `${targetH}px`;
+  }, [floatState]);
+
+  // Animate RETURN to inline — rAF loop recalculates target every frame
+  useEffect(() => {
+    const frame = floatingFrameRef.current;
+    const wrap = videoWrapRef.current;
+    if (floatState !== 'returning' || !frame || !wrap) return;
+    // Don't animate return while in fullscreen
+    if (document.fullscreenElement) return;
+
+    const duration = 450;
+    const startTime = performance.now();
+
+    // Capture starting position (the corner)
+    const startX = frame.offsetLeft !== undefined ? parseFloat(frame.style.left || '0') : 0;
+    const startY = parseFloat(frame.style.top || '0');
+    const startRect = frame.getBoundingClientRect();
+    const startLeft = startRect.left;
+    const startTop = startRect.top;
+    const startW = startRect.width;
+    const startH = startRect.height;
+
+    // Keep position: fixed during animation, animate left/top/width/height directly
+    frame.style.transition = 'none';
+    frame.style.transform = '';
+    frame.style.left = `${startLeft}px`;
+    frame.style.top = `${startTop}px`;
+    frame.style.width = `${startW}px`;
+    frame.style.height = `${startH}px`;
+
+    // Ease-out cubic
+    function ease(t: number) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    let rafId: number;
+
+    function tick(now: number) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const t = ease(progress);
+
+      // Recalculate target every frame (wrap moves with scroll)
+      // Account for timestamp strip height — video lands below it
+      const wrapRect = wrap!.getBoundingClientRect();
+      const tsStrip = wrap!.querySelector('.s3-timestamp-strip') as HTMLElement | null;
+      const stripH = tsStrip ? tsStrip.offsetHeight : 0;
+      const targetX = wrapRect.left;
+      const targetY = wrapRect.top + stripH;
+      const targetW = wrapRect.width;
+      const targetH = targetW / VIDEO_AR;
+
+      frame!.style.left = `${startLeft + (targetX - startLeft) * t}px`;
+      frame!.style.top = `${startTop + (targetY - startTop) * t}px`;
+      frame!.style.width = `${startW + (targetW - startW) * t}px`;
+      frame!.style.height = `${startH + (targetH - startH) * t}px`;
+
+      if (progress < 1) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        // Animation done — frame is fixed at exact inline position.
+        // Collapse placeholder to 0 height first (prevents doubled-height flash),
+        // then drop frame back to flow. All synchronous = single paint.
+        const placeholder = document.getElementById('s3-float-placeholder') || wrap!.querySelector('[data-float-placeholder]') as HTMLElement | null;
+        if (placeholder) {
+          placeholder.style.height = '0';
+        }
+        // Now reset to flow — placeholder is 0 height so no doubling
+        frame!.style.position = '';
+        frame!.style.zIndex = '';
+        frame!.style.left = '';
+        frame!.style.top = '';
+        frame!.style.width = '';
+        frame!.style.height = '';
+        frame!.style.aspectRatio = '2228/1080';
+        frame!.style.transform = '';
+        frame!.style.transition = '';
+        frame!.style.borderRadius = '';
+        frame!.style.boxShadow = '';
+        // Tell React — it will properly unmount the 0-height placeholder
+        floatStateRef.current = 'inline';
+        setFloatState('inline');
+      }
+    }
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [floatState]);
+
+  // Reset dismissed when user scrolls back to the video
+  useEffect(() => {
+    if (!dismissed) return;
+    const el = videoWrapRef.current;
+    if (!el) return;
+
+    function handleScroll() {
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.top + el.offsetHeight * 0.5 >= 0) setDismissed(false);
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [dismissed]);
+
+  // Dismiss: animate back then mark dismissed
+  const handleDismiss = useCallback(() => {
+    setDismissed(true);
+    floatStateRef.current = 'returning';
+    setFloatState('returning');
+  }, []);
+
 
   return (
-    <section className="relative" style={{ overflowAnchor: 'none' }}>
+    <section id="agent-portal-walkthrough" className="relative overflow-hidden">
       <style>{`
-        @keyframes portalFadeIn {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
+        /* Fullscreen the wrap (video + timestamp strip together) */
+        .s3-video-wrap:fullscreen,
+        .s3-video-wrap:-webkit-full-screen {
+          width: 100vw !important;
+          height: 100vh !important;
+          max-width: 100vw !important;
+          background: #000 !important;
+          border: none !important;
+          border-radius: 0 !important;
+          overflow: visible !important;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: stretch !important;
+          justify-content: flex-start !important;
         }
-        .portal-content-fade {
-          animation: portalFadeIn 0.4s ease-out;
+        .s3-video-wrap:fullscreen .s3-timestamp-strip,
+        .s3-video-wrap:-webkit-full-screen .s3-timestamp-strip,
+        .s3-video-wrap.s3-fs-active .s3-timestamp-strip {
+          display: block !important;
+          max-height: none !important;
+          height: auto !important;
+          min-height: 40px !important;
+          width: 100% !important;
+          flex-shrink: 0 !important;
+          overflow: visible !important;
+          transition: none !important;
+          visibility: visible !important;
+          opacity: 1 !important;
         }
-        .s3-phone-mockup {
-          position: relative;
-          background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
-          border-radius: 24px;
-          padding: 12px;
-          box-shadow:
-            0 0 0 1px rgba(255,255,255,0.1),
-            0 25px 50px -12px rgba(0,0,0,0.5),
-            inset 0 1px 0 rgba(255,255,255,0.1);
+        .s3-video-wrap:fullscreen .s3-video-container,
+        .s3-video-wrap:-webkit-full-screen .s3-video-container {
+          position: relative !important;
+          width: 100% !important;
+          height: auto !important;
+          min-height: 0 !important;
+          flex: 1 1 auto !important;
+          max-height: none !important;
+          aspect-ratio: auto !important;
+          overflow: visible !important;
+          left: unset !important;
+          top: unset !important;
+          z-index: unset !important;
+          transform: none !important;
+          transition: none !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
         }
-        .s3-phone-mockup::before { display: none; }
-        .s3-phone-mockup::after {
-          content: '';
-          position: absolute;
-          bottom: 6px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 100px;
-          height: 3px;
-          background: rgba(255,255,255,0.2);
-          border-radius: 2px;
+        .s3-video-wrap:fullscreen .s3-video-container iframe,
+        .s3-video-wrap:-webkit-full-screen .s3-video-container iframe {
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: contain;
         }
-        .s3-phone-screen {
-          background: linear-gradient(180deg, #0a0a0a 0%, #151515 100%);
-          border-radius: 16px;
-          overflow: hidden;
-          position: relative;
+        .s3-video-wrap:fullscreen [data-float-placeholder],
+        .s3-video-wrap:-webkit-full-screen [data-float-placeholder] {
+          display: none !important;
         }
-        .s3-phone-video {
-          display: block;
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
+        @keyframes s3-spin { to { transform: rotate(360deg); } }
+        .s3-vol-slider {
+          -webkit-appearance: none !important;
+          appearance: none !important;
+          width: 50px !important;
+          height: 2px !important;
+          background: rgba(255,255,255,0.25) !important;
+          border-radius: 1px !important;
+          outline: none !important;
+          margin: 0 !important;
+          padding: 0 !important;
         }
-        /* Cover the right-edge artifact line from the screen recordings */
-        .s3-phone-screen::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          width: 5px;
-          background: #0d0d0d;
-          z-index: 2;
-          pointer-events: none;
-          border-radius: 0 16px 16px 0;
+        .s3-vol-slider::-webkit-slider-thumb {
+          -webkit-appearance: none !important;
+          appearance: none !important;
+          width: 8px !important;
+          height: 8px !important;
+          border-radius: 50% !important;
+          background: #ffd700 !important;
+          cursor: pointer !important;
+          margin-top: -3px !important;
         }
-        .s3-pills::-webkit-scrollbar { display: none; }
-
-        /* Walkthrough play button — rainbow border */
-        @keyframes s3GradientFlow {
-          0% { background-position: 0 0; }
-          50% { background-position: 400% 0; }
-          100% { background-position: 0 0; }
+        .s3-vol-slider::-moz-range-thumb {
+          width: 8px !important;
+          height: 8px !important;
+          border-radius: 50% !important;
+          background: #ffd700 !important;
+          cursor: pointer !important;
+          border: none !important;
         }
-        .s3-tour-wrapper {
-          position: relative;
-          border-radius: 14px;
-          cursor: pointer;
-          -webkit-tap-highlight-color: transparent;
+        .s3-vol-slider::-webkit-slider-runnable-track {
+          height: 2px !important;
+          background: rgba(255,255,255,0.25) !important;
+          border-radius: 1px !important;
         }
-        .s3-tour-border,
-        .s3-tour-glow {
-          position: absolute;
-          left: -2px;
-          top: -2px;
-          border-radius: 14px;
-          background: linear-gradient(45deg,
-            #fb0094, #0000ff, #00ff00, #ffff00, #ff0000,
-            #fb0094, #0000ff, #00ff00, #ffff00, #ff0000
-          );
-          background-size: 400%;
-          width: calc(100% + 4px);
-          height: calc(100% + 4px);
-          z-index: 0;
-          animation: s3GradientFlow 20s linear infinite;
-        }
-        .s3-tour-glow {
-          filter: blur(10px);
-          opacity: 0.35;
-          z-index: -1;
-        }
-        .s3-tour-wrapper:hover .s3-tour-glow {
-          opacity: 0.55;
-          filter: blur(16px);
-        }
-        .s3-tour-inner {
-          position: relative;
-          z-index: 1;
-          border-radius: 12px;
-          background: linear-gradient(180deg, rgb(14,14,14) 0%, rgb(10,10,10) 100%);
-          padding: 8px 20px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .s3-tour-inner::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border-radius: 12px;
-          background:
-            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,215,0,0.025) 2px, rgba(255,215,0,0.025) 4px),
-            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px);
-          pointer-events: none;
-        }
-
-        /* Walkthrough controls bar */
-        .s3-controls-bar {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 8px 16px;
-          border-radius: 12px;
-          background: rgba(10,10,10,0.95);
-          border: 1px solid rgba(255,215,0,0.15);
-        }
-        .s3-progress-track {
-          flex: 1;
-          height: 4px;
-          background: rgba(255,255,255,0.1);
-          border-radius: 2px;
-          overflow: hidden;
-          cursor: pointer;
-        }
-        .s3-progress-fill {
-          height: 100%;
-          background: linear-gradient(90deg, #ffd700, #e6c200);
-          border-radius: 2px;
-          transition: width 0.3s linear;
-        }
-        .s3-ctrl-btn {
-          background: none;
-          border: none;
-          color: #e5e4dd;
-          cursor: pointer;
-          padding: 4px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          -webkit-tap-highlight-color: transparent;
-        }
-        .s3-ctrl-btn:hover { color: #ffd700; }
-        .s3-chapter-btn:hover {
-          color: #e5e4dd !important;
-          border-color: rgba(255,255,255,0.2) !important;
+        .s3-vol-slider::-moz-range-track {
+          height: 2px !important;
+          background: rgba(255,255,255,0.25) !important;
+          border-radius: 1px !important;
+          border: none !important;
         }
       `}</style>
+      <div className="max-w-[1400px] mx-auto px-4">
+        <div className="text-center">
+          <H2>
+            What You Get Inside SAA
+          </H2>
+          <p className="text-body max-w-[950px] mx-auto" style={{ marginTop: '-1.5rem' }}>
+            As an SAA agent, you&apos;re part of both Smart Agent Alliance and the Wolfpack, our larger team network within eXp Realty. Your Agent Portal brings everything together in one place.
+          </p>
+        </div>
 
-      {/* Hidden audio element for walkthrough voiceover */}
-      <audio ref={audioRef} src={WALKTHROUGH_AUDIO_URL} preload="auto" />
-
-      {/* Section heading */}
-      <div className="text-center max-w-[1400px] mx-auto px-4">
-        <H2>
-          What You Get Inside SAA
-        </H2>
-        <p className="text-body max-w-[950px] mx-auto" style={{ marginTop: '-1.5rem', marginBottom: '2rem' }}>
-          As an SAA agent, you&apos;re also part of the Wolf Pack &mdash; our team within eXp Realty. Your Agent Portal brings everything together in one place.
-        </p>
-      </div>
-
-      {/* Portal showcase frame */}
-      <div className="max-w-[1300px] mx-auto px-4 sm:px-8 md:px-12" style={{ marginTop: '15px' }}>
+        {/* Video player + timestamp strip wrapper */}
         <div
-          className="relative overflow-hidden rounded-2xl"
+          ref={videoWrapRef}
+          className="relative mx-auto mt-8 s3-video-wrap"
           style={{
-            background: 'linear-gradient(180deg, rgba(15,15,15,0.95) 0%, rgba(10,10,10,0.98) 100%)',
-            border: '1px solid rgba(255,215,0,0.15)',
-            boxShadow: `
-              0 0 0 1px rgba(255,215,0,0.05),
-              0 8px 32px rgba(0,0,0,0.5),
-              0 2px 8px rgba(0,0,0,0.3),
-              inset 0 1px 0 rgba(255,255,255,0.05)
-            `,
+            maxWidth: '900px',
+            border: '1px solid rgba(255, 215, 0, 0.2)',
+            borderRadius: '12px',
+            overflow: 'hidden',
           }}
         >
-          {/* Top gold accent line */}
+          {/* Timestamp text strip — slides down from top when video starts */}
           <div
-            className="absolute top-0 left-0 right-0 h-px"
-            style={{
-              background: 'linear-gradient(90deg, transparent 5%, rgba(255,215,0,0.3) 30%, rgba(255,215,0,0.4) 50%, rgba(255,215,0,0.3) 70%, transparent 95%)',
+            className="s3-timestamp-strip"
+            style={isFullscreen ? {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 20,
+              background: 'linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)',
+            } : {
+              maxHeight: hasPlayed && !videoEnded ? '60px' : '0px',
+              overflow: 'hidden',
+              transition: 'max-height 0.5s ease',
+              background: 'rgba(0, 0, 0, 0.85)',
+              borderBottom: hasPlayed && !videoEnded ? '1px solid rgba(255, 215, 0, 0.2)' : 'none',
             }}
-          />
-
-          {/* Crosshatch texture */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage: `
-                repeating-linear-gradient(45deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 6px),
-                repeating-linear-gradient(-45deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 6px)
-              `,
-              backgroundSize: '16px 16px',
-            }}
-          />
-
-          {/* ── Walkthrough Play Button / Chapter Nav header ── */}
-          <div className="relative z-20" style={{ background: 'rgba(12,12,12,0.5)' }}>
-            <div className="flex justify-center items-center" style={{ padding: '12px 16px', minHeight: '52px' }}>
-              {/* Tour button — fades out when walkthrough starts */}
-              <div
-                className="s3-tour-wrapper"
-                onClick={!isWalkthrough ? startWalkthrough : undefined}
-                style={{
-                  opacity: isWalkthrough ? 0 : 1,
-                  filter: isWalkthrough ? 'blur(8px)' : 'none',
-                  transform: isWalkthrough ? 'scale(0.95)' : 'scale(1)',
-                  transition: 'opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease',
-                  position: isWalkthrough ? 'absolute' : 'relative',
-                  pointerEvents: isWalkthrough ? 'none' : 'auto',
-                  zIndex: isWalkthrough ? 0 : 1,
-                }}
-              >
-                <div className="s3-tour-border" />
-                <div className="s3-tour-glow" />
-                <div className="s3-tour-inner">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffd700" stroke="none">
-                    <polygon points="5,3 19,12 5,21" />
-                  </svg>
-                  <span style={{
-                    fontFamily: 'var(--font-taskor)',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    color: 'rgba(255,255,255,0.75)',
-                    letterSpacing: '0.04em',
-                    textTransform: 'uppercase',
-                  }}>
-                    Watch the Full Tour
-                  </span>
-                </div>
-              </div>
-
-              {/* Chapter nav — fades in when walkthrough starts */}
-              <div
-                className="flex items-center gap-2 sm:gap-3 flex-wrap justify-center"
-                style={{
-                  opacity: isWalkthrough ? 1 : 0,
-                  filter: isWalkthrough ? 'none' : 'blur(8px)',
-                  transform: isWalkthrough ? 'scale(1)' : 'scale(0.95)',
-                  transition: 'opacity 0.4s ease 0.15s, filter 0.4s ease 0.15s, transform 0.4s ease 0.15s',
-                  pointerEvents: isWalkthrough ? 'auto' : 'none',
-                  position: isWalkthrough ? 'relative' : 'absolute',
-                  zIndex: isWalkthrough ? 1 : 0,
-                }}
-              >
-                {/* Play/Pause */}
-                <button type="button" className="s3-ctrl-btn" onClick={toggleWalkthroughPlayback} style={{ marginRight: '4px' }}>
-                  {walkthroughPlaying ? (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" /></svg>
-                  ) : (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21" /></svg>
-                  )}
-                </button>
-
-                {/* Chapter buttons — compact numbered pills */}
-                {FEATURE_GROUPS.map((g, i) => {
-                  const isActiveChapter = activeGroup === i;
-                  return (
-                    <button
-                      key={g.id}
-                      type="button"
-                      onClick={() => jumpToChapter(i)}
-                      className="s3-chapter-btn"
-                      style={{
-                        width: '28px',
-                        height: '28px',
-                        borderRadius: '50%',
-                        fontSize: '12px',
-                        fontFamily: 'var(--font-taskor)',
-                        fontWeight: 600,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: isActiveChapter ? '#0a0a0a' : '#a8a7a0',
-                        background: isActiveChapter ? 'linear-gradient(135deg, #ffd700, #e6c200)' : 'rgba(255,255,255,0.06)',
-                        border: isActiveChapter ? '1px solid rgba(255,215,0,0.6)' : '1px solid rgba(255,255,255,0.08)',
-                        boxShadow: isActiveChapter ? '0 0 10px rgba(255,215,0,0.25)' : 'none',
-                        cursor: 'pointer',
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      {i + 1}
-                    </button>
-                  );
-                })}
-
-                {/* Stop */}
-                <button type="button" className="s3-ctrl-btn" onClick={stopWalkthrough} style={{ marginLeft: '4px' }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2" /></svg>
-                </button>
-              </div>
-            </div>
-            {/* Bottom separator line */}
-            <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)' }} />
-          </div>
-
-          <div className="relative z-10 flex flex-col lg:flex-row">
-            {/* ── Desktop Sidebar ── */}
-            <nav
-              className="hidden lg:flex flex-col flex-shrink-0 py-4"
-              style={{
-                width: '220px',
-                borderRight: '1px solid rgba(255,255,255,0.06)',
-                background: 'rgba(12,12,12,0.5)',
-              }}
-            >
-              {SIDEBAR_ITEMS.map((item, i) => {
-                const isInActiveGroup = item.groupIndex === activeGroup;
-                const Icon = item.icon;
-
-                return (
-                  <React.Fragment key={i}>
-                    <button
-                      type="button"
-                      onClick={() => handleTabClick(item.groupIndex)}
-                      className="flex items-center gap-3 px-5 py-2.5 text-left w-full relative"
-                      style={{
-                        color: isInActiveGroup ? '#ffd700' : '#a8a7a0',
-                        background: isInActiveGroup ? 'rgba(255,215,0,0.05)' : 'transparent',
-                        transition: 'color 0.3s ease, background 0.3s ease',
-                      }}
-                    >
-                      {/* Gold left accent bar */}
-                      <div
-                        className="absolute left-0 top-1/2 -translate-y-1/2 rounded-r-sm"
-                        style={{
-                          width: '3px',
-                          height: isInActiveGroup ? '60%' : '0%',
-                          background: '#ffd700',
-                          boxShadow: isInActiveGroup ? '0 0 8px rgba(255,215,0,0.4)' : 'none',
-                          transition: 'height 0.3s ease, box-shadow 0.3s ease',
-                        }}
-                      />
-                      <Icon
-                        size={16}
-                        style={{
-                          flexShrink: 0,
-                          filter: isInActiveGroup ? 'drop-shadow(0 0 4px rgba(255,215,0,0.4))' : 'none',
-                          transition: 'filter 0.3s ease',
-                        }}
-                      />
-                      <span
-                        className="text-body"
-                        style={{
-                          fontSize: '14px',
-                          fontWeight: isInActiveGroup ? 500 : 400,
-                        }}
-                      >
-                        {item.label}
-                      </span>
-                    </button>
-                  </React.Fragment>
-                );
-              })}
-            </nav>
-
-            {/* ── Mobile Pill Tabs ── */}
+          >
             <div
-              className="s3-pills lg:hidden flex gap-2 px-4 py-3 overflow-x-auto"
+              key={activeTimestampIdx}
               style={{
-                borderBottom: '1px solid rgba(255,255,255,0.06)',
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none',
+                padding: '8px 16px',
+                textAlign: 'center',
+                animation: 'tsFadeInDown 0.5s ease both',
               }}
             >
-              {FEATURE_GROUPS.map((g, i) => {
-                const isActive = activeGroup === i;
-                const firstItem = SIDEBAR_ITEMS.find(si => si.groupIndex === i);
-                const Icon = firstItem?.icon || Rocket;
-                return (
-                  <button
-                    key={g.id}
-                    type="button"
-                    onClick={() => handleTabClick(i)}
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-full flex-shrink-0 whitespace-nowrap"
+              <span
+                style={{
+                  fontFamily: 'var(--font-taskor, sans-serif)',
+                  fontSize: isFullscreen ? 'clamp(18px, 2.5vw, 28px)' : 'clamp(13px, 1.5vw, 16px)',
+                  fontWeight: 700,
+                  color: '#ffd700',
+                  letterSpacing: '0.08em',
+                  textShadow: '0 0 12px rgba(255, 215, 0, 0.4)',
+                }}
+              >
+                {VIDEO_TIMESTAMPS[activeTimestampIdx].title}
+              </span>
+              <span
+                style={{
+                  display: 'block',
+                  fontFamily: 'var(--font-amulya, sans-serif)',
+                  fontSize: isFullscreen ? 'clamp(14px, 1.8vw, 20px)' : 'clamp(12px, 1.3vw, 14px)',
+                  color: '#a8a7a0',
+                  marginTop: '2px',
+                  paddingBottom: '4px',
+                }}
+              >
+                {VIDEO_TIMESTAMPS[activeTimestampIdx].subtitle}
+              </span>
+            </div>
+          </div>
+          <style>{`
+            @keyframes tsFadeInDown {
+              0% { opacity: 0; transform: translateY(-12px); }
+              50% { opacity: 0.6; transform: translateY(2px); }
+              100% { opacity: 1; transform: translateY(0); }
+            }
+            .s3-video-wrap.s3-fs-active .s3-timestamp-strip,
+            .s3-video-wrap:fullscreen .s3-timestamp-strip,
+            .s3-video-wrap:-webkit-full-screen .s3-timestamp-strip {
+              display: block !important;
+              max-height: none !important;
+              height: auto !important;
+              overflow: visible !important;
+              transition: none !important;
+              visibility: visible !important;
+              opacity: 1 !important;
+            }
+          `}</style>
+
+          {/* Placeholder for floating state */}
+          {floatState !== 'inline' && (
+            <div data-float-placeholder style={{ height: placeholderHeight.current || 'auto' }} />
+          )}
+
+          <div
+            ref={floatingFrameRef}
+            className="relative w-full overflow-hidden s3-video-container"
+            style={{
+              background: '#000',
+              aspectRatio: '2228/1080',
+            }}
+          >
+            {/* Poster image — removed from DOM once play is clicked */}
+            {!hasPlayed && (
+              <img
+                src={WALKTHROUGH_POSTER}
+                alt="Agent Portal Walkthrough"
+                className="absolute inset-0 w-full h-full"
+                style={{
+                  objectFit: 'cover',
+                  zIndex: 2,
+                }}
+              />
+            )}
+
+            {/* Play button overlay (before first play) */}
+            {!hasPlayed && (
+              <div
+                className="absolute inset-0 z-[2] cursor-pointer"
+                onClick={togglePlay}
+              >
+                <div
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  <div
+                    className="w-12 h-12 md:w-16 md:h-16"
                     style={{
-                      fontSize: '13px',
-                      fontWeight: 500,
-                      color: isActive ? '#0a0a0a' : '#a8a7a0',
-                      background: isActive
-                        ? 'linear-gradient(135deg, #ffd700, #e6c200)'
-                        : 'rgba(255,255,255,0.06)',
-                      border: isActive
-                        ? '1px solid rgba(255,215,0,0.6)'
-                        : '1px solid rgba(255,255,255,0.08)',
-                      boxShadow: isActive
-                        ? '0 0 12px rgba(255,215,0,0.3)'
-                        : 'none',
-                      transition: 'all 0.3s ease',
+                      borderRadius: '50%',
+                      background: 'rgba(255,215,0,0.65)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 0 20px rgba(255,215,0,0.3)',
                     }}
                   >
-                    <Icon size={14} />
-                    <span>{g.heading.split(/[,\u2014\u2019]/, 1)[0].trim()}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* ── Content Area ── */}
-            <div className="flex-1 p-4 sm:p-6 lg:p-8 flex flex-col">
-              <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 flex-1 items-center lg:items-start">
-                {/* Phone mockup — all videos mounted, only active one visible */}
-                <div className="flex-shrink-0 flex justify-center">
-                  <div className="s3-phone-mockup" style={{ width: '318px', padding: '6px' }}>
-                    <div className="s3-phone-screen" style={{ aspectRatio: '9/16' }}>
-                      {FEATURE_GROUPS.map((g, i) => (
-                        g.streamId ? (
-                          <div
-                            key={g.id}
-                            style={{
-                              position: i === 0 ? 'relative' : 'absolute',
-                              inset: 0,
-                              width: '100%',
-                              height: '100%',
-                              opacity: activeGroup === i ? 1 : 0,
-                              transition: 'opacity 0.3s ease',
-                              pointerEvents: activeGroup === i ? 'auto' : 'none',
-                            }}
-                          >
-                            <StreamVideo
-                              streamId={g.streamId}
-                              isActive={activeGroup === i}
-                            />
-                          </div>
-                        ) : null
-                      ))}
-                    </div>
+                    <svg className="w-5 h-5 md:w-6 md:h-7" viewBox="0 0 24 28" fill="none" style={{ marginLeft: '2px' }}>
+                      <path d="M24 14L0 28V0L24 14Z" fill="#1a1a1a" />
+                    </svg>
                   </div>
                 </div>
+              </div>
+            )}
 
-                {/* Heading + bullet points — stable-height wrapper prevents mobile scroll jumps when content changes */}
-                <div className="flex-1 flex flex-col justify-center" style={{ minHeight: '280px' }}>
-                <div key={activeGroup} className="portal-content-fade flex flex-col justify-center text-center lg:text-left">
-                  <h3 className="text-h6" style={{ marginBottom: '0.75rem' }}>
-                    {group.heading}
-                  </h3>
-                  <p style={{ fontSize: 'var(--font-size-caption)', lineHeight: 'var(--line-height-caption)', fontWeight: 'var(--font-weight-caption)', fontFamily: 'var(--font-family-caption)', color: 'var(--text-color-caption)', marginBottom: '0.75rem' }}>
-                    {group.description}
-                  </p>
-                  <ul className="space-y-2 text-left" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                    {group.bullets.map((bullet, bIdx) => (
-                      <li
-                        key={bIdx}
-                        className="flex gap-2.5 text-body"
-                        style={{ fontSize: 'clamp(16px, calc(15.09px + 0.36vw), 21px)' }}
+            {/* Cloudflare Stream iframe — preloaded on scroll, plays on user click */}
+            {iframeLoaded && (
+              <iframe
+                ref={iframeRef}
+                src={`https://customer-2twfsluc6inah5at.cloudflarestream.com/${WALKTHROUGH_VIDEO_ID}/iframe?preload=auto&autoplay=false&muted=false&controls=false&pip=false&defaultQuality=${videoQuality}`}
+                className="absolute inset-0 w-full h-full"
+                style={{ border: 'none' }}
+                allow="autoplay; fullscreen; encrypted-media"
+                allowFullScreen
+              />
+            )}
+
+            {/* Loading spinner */}
+            {showSpinner && (
+              <div
+                className="absolute inset-0 z-[5] flex items-center justify-center"
+                style={{ background: 'rgba(0,0,0,0.6)' }}
+              >
+                <div
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    border: '3px solid rgba(255,215,0,0.2)',
+                    borderTopColor: '#ffd700',
+                    borderRadius: '50%',
+                    animation: 's3-spin 0.8s linear infinite',
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Custom controls overlay (after first play) */}
+            {hasPlayed && (
+              <div
+                className="absolute inset-0 z-10"
+                onMouseMove={scheduleHide}
+                onClick={togglePlay}
+                style={{ cursor: 'pointer' }}
+              >
+                {/* Controls bar */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 px-3 py-2 flex items-center gap-2"
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
+                    opacity: showControls || !isPlaying ? 1 : 0,
+                    transition: 'opacity 0.3s',
+                    pointerEvents: showControls || !isPlaying ? 'auto' : 'none',
+                  }}
+                >
+                  {/* Play/Pause */}
+                  <button onClick={togglePlay} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '4px' }}>
+                    {isPlaying ? (
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="1" width="4" height="14" rx="1" /><rect x="10" y="1" width="4" height="14" rx="1" /></svg>
+                    ) : (
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1.5v13l11-6.5L3 1.5z" /></svg>
+                    )}
+                  </button>
+
+                  {/* Time */}
+                  <span style={{ color: '#fff', fontSize: '12px', minWidth: '80px', fontVariantNumeric: 'tabular-nums' }}>
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                  </span>
+
+                  {/* Scrubber */}
+                  <div
+                    ref={scrubberRef}
+                    onMouseDown={handleScrubberMouseDown}
+                    style={{
+                      flex: 1,
+                      height: '4px',
+                      background: 'rgba(255,255,255,0.2)',
+                      borderRadius: '2px',
+                      cursor: 'pointer',
+                      position: 'relative',
+                    }}
+                  >
+                    <div
+                      style={{
+                        height: '100%',
+                        background: '#ffd700',
+                        borderRadius: '2px',
+                        width: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%',
+                        transition: isDragging ? 'none' : 'width 0.1s linear',
+                      }}
+                    />
+                  </div>
+
+                  {/* Volume */}
+                  <button onClick={toggleMute} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '4px' }}>
+                    {isMuted || volume === 0 ? (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 5L6 9H2v6h4l5 4V5z" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" /></svg>
+                    ) : (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 5L6 9H2v6h4l5 4V5z" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" /></svg>
+                    )}
+                  </button>
+
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={isMuted ? 0 : volume}
+                    onChange={handleVolumeChange}
+                    className="s3-vol-slider"
+                  />
+
+                  {/* Quality selector */}
+                  <div style={{ position: 'relative' }}>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setShowQualityMenu(prev => !prev); }}
+                      style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '4px', fontSize: '11px', fontWeight: 600, minWidth: '36px' }}
+                    >
+                      {videoQuality === 'auto' ? 'AUTO' : videoQuality.replace('p', '')}
+                      <span style={{ fontSize: '8px', verticalAlign: 'super', color: videoQuality === '1080p' ? '#ffd700' : '#999' }}>
+                        {videoQuality === '1080p' ? 'HD' : ''}
+                      </span>
+                    </button>
+                    {showQualityMenu && (
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                          position: 'absolute',
+                          bottom: '100%',
+                          right: 0,
+                          marginBottom: '8px',
+                          background: 'rgba(0,0,0,0.9)',
+                          borderRadius: '8px',
+                          border: '1px solid rgba(255,255,255,0.15)',
+                          padding: '4px 0',
+                          minWidth: '100px',
+                          zIndex: 100,
+                        }}
                       >
-                        <span style={{ color: '#ffd700', flexShrink: 0, marginTop: '2px' }}>{'\u2022'}</span>
-                        <span>{bullet}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                        {(['1080p', '720p', '360p', 'auto'] as const).map((q) => (
+                          <button
+                            key={q}
+                            onClick={() => { setVideoQuality(q); setShowQualityMenu(false); }}
+                            style={{
+                              display: 'block',
+                              width: '100%',
+                              padding: '6px 14px',
+                              background: videoQuality === q ? 'rgba(255,215,0,0.15)' : 'transparent',
+                              border: 'none',
+                              color: videoQuality === q ? '#ffd700' : '#e5e4dd',
+                              fontSize: '13px',
+                              textAlign: 'left',
+                              cursor: 'pointer',
+                            }}
+                          >
+                            {q === 'auto' ? 'Auto' : q}
+                            {q === '1080p' && <span style={{ fontSize: '10px', marginLeft: '4px', color: '#ffd700' }}>HD</span>}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Fullscreen */}
+                  <button onClick={handleFullscreen} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '4px' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
+                  </button>
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Post-video CTA overlay */}
+            {videoEnded && !isPlaying && (
+              <div
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4"
+                style={{
+                  background: 'rgba(0, 0, 0, 0.85)',
+                }}
+              >
+                <CTAButton href="/book-a-call">BOOK A CALL</CTAButton>
+                <CTAButton
+                  href="#"
+                  onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    window.dispatchEvent(new Event('open-join-modal'));
+                  }}
+                >
+                  JOIN THE ALLIANCE
+                </CTAButton>
+                <button
+                  onClick={() => {
+                    if (playerRef.current) {
+                      playerRef.current.currentTime = 0;
+                      playerRef.current.play();
+                      setVideoEnded(false);
+                    }
+                  }}
+                  style={{
+                    background: 'none',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    borderRadius: '8px',
+                    color: '#e5e4dd',
+                    padding: '8px 20px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontFamily: 'var(--font-taskor, sans-serif)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255, 215, 0, 0.5)';
+                    e.currentTarget.style.color = '#ffd700';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    e.currentTarget.style.color = '#e5e4dd';
+                  }}
+                >
+                  <span style={{ fontSize: '18px' }}>&#8635;</span> Rewatch
+                </button>
+              </div>
+            )}
+
+            {/* Floating dismiss button */}
+            {floatState === 'floating' && !isFullscreen && (
+              <button
+                onClick={handleDismiss}
+                style={{
+                  position: 'absolute',
+                  top: '4px',
+                  left: '4px',
+                  zIndex: 20,
+                  background: 'rgba(0,0,0,0.7)',
+                  border: 'none',
+                  color: '#fff',
+                  borderRadius: '50%',
+                  width: '24px',
+                  height: '24px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '14px',
+                  lineHeight: 1,
+                  paddingBottom: '2px',
+                }}
+              >
+                ×
+              </button>
+            )}
           </div>
+
+
         </div>
       </div>
 
     </section>
   );
 }
+
 
 // ============================================================================
 // SECTION 4 — "Your Dual Advantage"
@@ -2287,6 +3409,19 @@ function Section6Final() {
 // ============================================================================
 
 export default function ExpRealtySponsor() {
+  // Handle hash scroll on mount (e.g. /exp-realty-sponsor#agent-portal-walkthrough)
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      // Delay to let React hydrate and layout settle
+      const timer = setTimeout(() => {
+        const el = document.querySelector(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <main id="main-content">
       {/* ================================================================== */}
@@ -2322,11 +3457,11 @@ export default function ExpRealtySponsor() {
               />
             </div>
           </div>
-          <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
+          <div className="max-w-[2500px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>Smart Agent Alliance</H1>
               <Tagline className="mt-4" style={{ maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }} counterSuffix={<TaglineCounterSuffix />}>For agents who want more, without giving up independence.</Tagline>
-              <p className="text-body mt-4" style={{ maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
+              <p className="text-body mt-4" style={{ maxWidth: '75%', marginLeft: 'auto', marginRight: 'auto' }}>
                 Aligned incentives. We succeed only when you do.
               </p>
             </div>
@@ -2343,7 +3478,11 @@ export default function ExpRealtySponsor() {
         <Section3 />
         <ValueSection1_Launch />
         <ValueSection2_Marketing />
+        <ValueSection3_Training />
+        <ValueSection4_Attraction />
+        <ValueSection5_Referrals />
         <Section2 />
+        <SuccessStories />
         <MeetTheFounders />
         <Section6Final />
       </div>

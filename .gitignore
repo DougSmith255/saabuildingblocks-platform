@@ -108,3 +108,6 @@ CLOUDFLARE_TOKENS.md
 
 # Function backups (local only)
 packages/public-site/functions/backups/
+
+# Playwright recordings
+scripts/portal-recordings/recordings/

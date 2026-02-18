@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { H2 } from '@saa/shared/components/saa';
+import { H2, SecondaryButton } from '@saa/shared/components/saa';
 import { IconCard } from '@saa/shared/components/saa/cards';
 import { TrendingUp, Cloud, Users, Percent, Award } from 'lucide-react';
 
@@ -119,7 +119,7 @@ export function MediaLogos() {
               centered
             >
               <h3 className="font-bold mb-2" style={{ color: '#ffd700', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Proven Profitability</h3>
-              <p className="text-body opacity-90 text-sm">The only cumulatively profitable public real estate company.</p>
+              <p className="text-body opacity-90 text-sm">The only cumulatively profitable public real estate brokerage in the last 6 years.</p>
             </IconCard>
 
             {/* Card 2: Cloud-Based */}
@@ -168,6 +168,11 @@ export function MediaLogos() {
               <h3 className="font-bold mb-2" style={{ color: '#9933ff', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Passive Income Potential</h3>
               <p className="text-body opacity-90 text-sm">Optional revenue share income + stock opportunities.</p>
             </IconCard>
+          </div>
+
+          {/* CTA */}
+          <div className="text-center mt-6">
+            <SecondaryButton href="/about-exp-realty">See eXp's Full Value Stack</SecondaryButton>
           </div>
         </div>
       </div>

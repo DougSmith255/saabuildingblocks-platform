@@ -1363,6 +1363,26 @@ function AgentPortal() {
       // Loading screen was skipped (session already loaded) - do background preload
       console.log('[Background] Loading screen skipped, doing background preload');
       preloadAppData().then(async (result) => {
+        if (result.userData) {
+          // Update user state with fresh data from API (same mapping as loading screen path)
+          const rawIsLeader = result.userData.is_leader ?? result.userData.isLeader;
+          const freshUserData = {
+            id: result.userData.id,
+            email: result.userData.email,
+            username: result.userData.username,
+            firstName: result.userData.first_name || result.userData.firstName || '',
+            lastName: result.userData.last_name || result.userData.lastName || '',
+            fullName: result.userData.full_name || result.userData.fullName || '',
+            role: result.userData.role,
+            profilePictureUrl: toCdnUrl(result.userData.profile_picture_url || result.userData.profilePictureUrl),
+            gender: result.userData.gender || 'male',
+            isLeader: rawIsLeader === true,
+            state: result.userData.state || null,
+          };
+          console.log('[Background] Updating user with fresh data, gender:', freshUserData.gender, 'isLeader:', freshUserData.isLeader, 'state:', freshUserData.state);
+          setUser(freshUserData);
+          localStorage.setItem('agent_portal_user', JSON.stringify(freshUserData));
+        }
         if (result.agentPageData) {
           setPreloadedAgentPageData(result.agentPageData);
         }
@@ -6709,7 +6729,7 @@ function DashboardView({
                 </div>
               ) : chartData && chartData.lines.length > 0 ? (
                 <>
-                  <svg viewBox={`0 0 ${chartData.W} ${chartData.H}`} className="w-full" preserveAspectRatio="xMidYMid meet">
+                  <svg viewBox={`0 0 ${chartData.W} ${chartData.H}`} className="w-full" style={{ maxHeight: '220px' }} preserveAspectRatio="xMidYMid meet">
                     {/* Grid lines */}
                     {chartData.yTicks.map((tick, i) => (
                       <g key={i}>
