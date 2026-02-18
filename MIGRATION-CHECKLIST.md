@@ -26,8 +26,7 @@
   - `packages/public-site/next.config.ts` (line 82, fallback value)
   - `packages/public-site/lib/api-config.ts` (line 23, fallback value)
 - [x] Verify `next-sitemap.config.js` siteUrl is `https://smartagentalliance.com` (already correct)
-- [ ] Commit all code changes to git and push to GitHub
-  - Uncommitted: blog post JSONs, types.ts, page.tsx, generate-blog-posts-json.ts, and many other files
+- [x] Commit all code changes to git and push to GitHub — 97 files, commit efdd7ecd
 
 ---
 
@@ -55,36 +54,29 @@ Wildcard catch-all rules (set up as Cloudflare Single Redirect Rules, NOT bulk):
 
 ## Phase 3: Build & Test
 
-- [ ] Run fresh build: `cd packages/public-site && npm run build`
-- [ ] Deploy to staging: `npx wrangler pages deploy out --project-name=saabuildingblocks`
-- [ ] Verify on saabuildingblocks.pages.dev:
-  - [ ] Homepage loads correctly
-  - [ ] Blog listing page works (`/blog/`)
-  - [ ] Sample blog posts load (check 5-10 across different categories)
-  - [ ] Sitemap accessible at `/sitemap.xml` with smartagentalliance.com URLs
-  - [ ] robots.txt allows crawling
-  - [ ] All page sections working (calculators, team page, etc.)
+- [x] Run fresh build: `cd packages/public-site && npm run build`
+- [x] Deploy to staging: `npx wrangler pages deploy out --project-name=saabuildingblocks`
+- [x] Verify on saabuildingblocks.pages.dev:
+  - [x] Homepage loads correctly (200)
+  - [x] Blog listing page works (`/blog/`) (200)
+  - [x] Sample blog posts load — 3 tested, all 200
+  - [x] Sitemap accessible at `/sitemap.xml` with smartagentalliance.com URLs (333 pages)
+  - [x] robots.txt allows crawling, blocks AI scrapers, has sitemap link
+  - [x] Calculator, team page both 200
 
 ---
 
 ## Phase 4: Cloudflare Redirect Setup (before DNS change)
 
-- [ ] Check Cloudflare plan's Bulk Redirect quota
-  - Free plan may be limited to 20 redirects (known bug — many free accounts stuck at old limit)
-  - If limited, either upgrade to Pro ($20/mo) OR use `_redirects` file (supports 2,000 static rules)
-- [ ] Upload Bulk Redirect CSV to Cloudflare:
-  - Dashboard → Account Home → Bulk Redirects → Create list
-  - Name: `saa-migration-redirects`
-  - Upload corrected CSV (no headers, full URLs, no wildcards)
-- [ ] Create Bulk Redirect Rule:
-  - Rule name: `SAA WordPress Migration Redirects`
-  - Expression: `http.request.full_uri in $saa-migration-redirects`
-- [ ] Create Single Redirect Rules for wildcards:
-  - Dashboard → smartagentalliance.com zone → Rules → Redirect Rules
+- [x] Created unified API token (SAA Unified Token) with all permissions via API
+- [x] Bulk Redirect List uploaded — `saa_migration_redirects`, 1,164 items (41 query-string URLs excluded)
+- [x] Bulk Redirect Rule created — `SAA WordPress Migration Redirects`
+- [x] Single Redirect Rules created (4 wildcard rules):
   - `/wp-content/uploads/*` → homepage (301)
   - `/wp-admin/*` → homepage (301)
   - `/wp-login.php` → homepage (301)
   - `/feed/*` → `/blog/` (301)
+- [ ] Delete old R2 Account Token and management token from Cloudflare dashboard
 
 ---
 

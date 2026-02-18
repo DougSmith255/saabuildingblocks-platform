@@ -1308,10 +1308,6 @@ function Section1() {
   const sectionRef = useRef<HTMLElement>(null);
   const hasAutoSwitched = useRef(false);
   const [contentW, setContentW] = useState(0);
-  // Mobile: measure card content heights for smooth height transitions
-  const mobRef0 = useRef<HTMLDivElement>(null);
-  const mobRef1 = useRef<HTMLDivElement>(null);
-  const [mobH, setMobH] = useState([300, 300]);
 
   // Measure the active card's width so content can be rendered at a fixed size
   const measure = useCallback(() => {
@@ -1329,19 +1325,6 @@ function Section1() {
     return () => ro.disconnect();
   }, [measure]);
 
-  // Mobile: measure content heights for smooth expand/collapse
-  useEffect(() => {
-    const measureMob = () => {
-      const h0 = mobRef0.current?.scrollHeight || 0;
-      const h1 = mobRef1.current?.scrollHeight || 0;
-      if (h0 > 0 || h1 > 0) setMobH([h0 || 300, h1 || 300]);
-    };
-    measureMob();
-    const ro = new ResizeObserver(measureMob);
-    if (mobRef0.current) ro.observe(mobRef0.current);
-    if (mobRef1.current) ro.observe(mobRef1.current);
-    return () => ro.disconnect();
-  }, []);
 
   // Auto-switch to card 1 (SAA) when user scrolls ~70% into the section
   useEffect(() => {
@@ -1559,95 +1542,38 @@ function Section1() {
             })}
           </div>
 
-          {/* Mobile: stacked cards — same animations as desktop, height transitions */}
+          {/* Mobile: both cards fully open, stacked */}
           <div className="md:hidden flex flex-col gap-3">
-            {PANELS.map((panel, i) => {
-              const isActive = active === i;
-              const COLLAPSED = 65;
-              const mobRefs = [mobRef0, mobRef1];
-              return (
-                <div key={panel.id} className="relative">
-                  {/* Glow ring — hidden when inactive */}
-                  <div
-                    className="absolute -inset-[3px] rounded-2xl pointer-events-none"
-                    style={{
-                      border: `2px solid ${panel.color}50`,
-                      boxShadow: isActive ? `0 0 12px 4px ${panel.color}44` : 'none',
-                      zIndex: 30,
-                      opacity: isActive ? 1 : 0,
-                      visibility: isActive ? 'visible' : 'hidden',
-                      transition: 'opacity 0.9s ease, visibility 0.9s ease',
-                    }}
-                  />
+            {PANELS.map((panel, i) => (
+              <div key={panel.id} className="relative">
+                {/* Glow ring */}
+                <div
+                  className="absolute -inset-[3px] rounded-2xl pointer-events-none"
+                  style={{
+                    border: `2px solid ${panel.color}50`,
+                    boxShadow: `0 0 12px 4px ${panel.color}44`,
+                    zIndex: 30,
+                  }}
+                />
 
-                  {/* Card — active: grain bg, colored border; inactive: solid bg, subtle border */}
-                  <div
-                    className={`${isActive ? 'focus-card' : ''} rounded-2xl relative ${!isActive ? 'cursor-pointer' : ''}`}
-                    onClick={() => !isActive && setActive(i)}
-                    style={{
-                      overflow: 'hidden',
-                      height: isActive ? `${mobH[i] + 8}px` : `${COLLAPSED}px`,
-                      willChange: 'height',
-                      ...(!isActive ? {
-                        background: 'linear-gradient(180deg, rgba(18,18,18,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-                      } : {}),
-                      border: isActive ? `3px solid ${panel.color}` : '1px solid rgba(255,255,255,0.06)',
-                      boxShadow: isActive
-                        ? `0 0 6px 2px ${panel.color}44, 0 8px 32px rgba(0,0,0,0.4)`
-                        : '0 8px 32px rgba(0,0,0,0.4)',
-                      transition: 'height 1.15s cubic-bezier(0.3, 0.1, 0.3, 1), border-color 0.9s ease, box-shadow 0.9s ease',
-                    }}
-                  >
-                    {/* Inner content — ref for height measurement */}
-                    <div ref={mobRefs[i]} className="p-5">
-                      {/* H2 title — slides down into place when active */}
-                      <div style={{
-                        transform: isActive ? 'translateY(0)' : 'translateY(-16px)',
-                        opacity: isActive ? 1 : 0,
-                        transition: isActive
-                          ? 'transform 0.85s cubic-bezier(0.3, 0.1, 0.3, 1) 0.2s, opacity 0.85s ease 0.2s'
-                          : 'transform 0.4s ease, opacity 0.3s ease',
-                      }}>
-                        <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1rem', maxWidth: '2500px' }}>
-                          {panel.label}
-                        </H2>
-                      </div>
-                      {/* Content body — fades in when active */}
-                      <div style={{
-                        opacity: isActive ? 1 : 0,
-                        transition: isActive
-                          ? 'opacity 0.85s ease 0.25s'
-                          : 'opacity 0.3s ease',
-                      }}>
-                        {i === 0 ? <SAAContent /> : <SponsorshipContent />}
-                      </div>
-                    </div>
-
-                    {/* Short label — horizontal text, slides off vertically on activation */}
-                    <div
-                      className="absolute inset-0 z-20 flex items-center justify-center"
-                      style={{
-                        pointerEvents: isActive ? 'none' : 'auto',
-                        transform: isActive
-                          ? `translateY(${i === 0 ? '-100%' : '100%'})`
-                          : 'translateY(0)',
-                        opacity: isActive ? 0 : 1,
-                        transition: isActive
-                          ? 'transform 0.85s cubic-bezier(0.3, 0.1, 0.3, 1), opacity 0.5s ease 0.2s'
-                          : 'transform 0.85s cubic-bezier(0.3, 0.1, 0.3, 1) 0.25s, opacity 0.55s ease 0.2s',
-                      }}
-                    >
-                      <H2 theme={panel.theme} style={{
-                        marginBottom: 0,
-                        fontSize: 'clamp(20px, 5vw, 28px)',
-                      }}>
-                        {panel.shortLabel}
-                      </H2>
-                    </div>
+                {/* Card — always open with grain bg and colored border */}
+                <div
+                  className="focus-card rounded-2xl relative"
+                  style={{
+                    overflow: 'hidden',
+                    border: `3px solid ${panel.color}`,
+                    boxShadow: `0 0 6px 2px ${panel.color}44, 0 8px 32px rgba(0,0,0,0.4)`,
+                  }}
+                >
+                  <div className="p-5">
+                    <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1rem', maxWidth: '2500px' }}>
+                      {panel.label}
+                    </H2>
+                    {i === 0 ? <SAAContent /> : <SponsorshipContent />}
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </div>

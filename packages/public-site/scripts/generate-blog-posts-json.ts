@@ -306,18 +306,143 @@ function fixStagingPaths(url: string): string {
 }
 
 /**
- * Transform all image URLs in HTML content to Cloudflare Images URLs
+ * Blog categories that need /blog/ prefix in links
+ */
+const BLOG_CATEGORIES = [
+  'about-exp-realty', 'agent-career-info', 'become-an-agent',
+  'brokerage-comparison', 'exp-realty-sponsor', 'fun-for-agents',
+  'industry-trends', 'marketing-mastery', 'real-estate-schools',
+  'uncategorized', 'winning-clients'
+];
+
+/**
+ * Slug-to-canonical-path map built from customUriCache
+ * Maps e.g. "keep-brand" → "/blog/exp-realty-sponsor/keep-brand/"
+ * Used to fix cross-category links (e.g. content links to /about-exp-realty/keep-brand
+ * but the post actually lives at /exp-realty-sponsor/keep-brand)
+ */
+let slugToCanonicalPath: Map<string, string> = new Map();
+
+function buildSlugPathMap(): void {
+  for (const [, uri] of customUriCache) {
+    // uri is "category/slug" (no leading/trailing slashes)
+    const parts = uri.split('/');
+    if (parts.length >= 2) {
+      const slug = parts[parts.length - 1];
+      slugToCanonicalPath.set(slug, `/blog/${uri}/`);
+    }
+  }
+  console.log(`✅ Built slug-to-path map: ${slugToCanonicalPath.size} entries`);
+}
+
+/**
+ * Old staging/page paths mapped to new site paths
+ */
+const LEGACY_PATH_MAP: Record<string, string> = {
+  '/best-real-estate-brokerage/': '/best-real-estate-brokerage/',
+  '/our-exp-team/': '/our-exp-team/',
+  '/join-top-real-estate-brokerage-firms/': '/exp-realty-sponsor/',
+  '/join-our-exp-realty-sponsor-team/': '/exp-realty-sponsor/',
+  '/team-benefits/': '/exp-realty-sponsor/',
+  '/brokerage-interview-questions/': '/blog/about-exp-realty/',
+  '/real-estate-agent-job/': '/blog/become-an-agent/',
+  '/become-real-estate-agent/': '/blog/become-an-agent/',
+  '/is-exp-realty-good-for-new-agents/': '/blog/about-exp-realty/new-agents/',
+  '/exp-revenue-share/': '/blog/about-exp-realty/revenue-share/',
+  '/exp-realty-revenue-share-2024/': '/blog/about-exp-realty/revenue-share/',
+  '/exp-world-tour-newly-improved/': '/blog/about-exp-realty/exp-world/',
+  '/tools/brokerage-comparison/': '/blog/brokerage-comparison/',
+  '/tools/online-real-estate-brokerage/': '/best-real-estate-brokerage/',
+  '/agent-tools/exp-realty-revenue-share-calculator/': '/exp-realty-revenue-share-calculator/',
+  '/agent-tools/exp-commission-calculator': '/exp-commission-calculator/',
+  '/agent-tools/exp-realty-good-new-agents/': '/blog/about-exp-realty/new-agents/',
+  '/agent-tools/': '/exp-commission-calculator/',
+  '/tools/': '/exp-commission-calculator/',
+};
+
+/**
+ * Rewrite an internal link path to the correct new site path
+ */
+function rewriteInternalPath(path: string): string {
+  // Strip trailing hash/query for matching, re-add after
+  const hashIdx = path.indexOf('#');
+  const hash = hashIdx >= 0 ? path.slice(hashIdx) : '';
+  const cleanPath = hashIdx >= 0 ? path.slice(0, hashIdx) : path;
+
+  // Ensure trailing slash for matching
+  const normalized = cleanPath.endsWith('/') ? cleanPath : cleanPath + '/';
+
+  // Check if path starts with a blog category → look up canonical path by slug first
+  for (const cat of BLOG_CATEGORIES) {
+    if (normalized.startsWith(`/${cat}/`)) {
+      // Extract slug from path (e.g. /about-exp-realty/keep-brand/ → keep-brand)
+      const pathParts = normalized.replace(/^\/|\/$/g, '').split('/');
+      if (pathParts.length >= 2) {
+        const slug = pathParts[pathParts.length - 1];
+        const canonical = slugToCanonicalPath.get(slug);
+        if (canonical) {
+          return canonical + hash;
+        }
+      }
+      // Fallback: use the category as-is with /blog/ prefix
+      return `/blog${normalized}${hash}`;
+    }
+  }
+
+  // Check legacy path map (exact match first, then prefix match)
+  if (LEGACY_PATH_MAP[normalized]) {
+    return LEGACY_PATH_MAP[normalized] + hash;
+  }
+  for (const [oldPath, newPath] of Object.entries(LEGACY_PATH_MAP)) {
+    if (normalized.startsWith(oldPath)) {
+      return newPath + hash;
+    }
+  }
+
+  // Return original path unchanged
+  return path;
+}
+
+/**
+ * Transform all image URLs and internal links in HTML content
  */
 function transformContentImages(content: string): string {
   if (!content) return content;
 
-  // First fix any /staging/ paths
+  // 1. Fix staging image paths
   let fixedContent = content.replace(
     /https:\/\/wp\.saabuildingblocks\.com\/staging\/wp-content\//g,
     'https://wp.saabuildingblocks.com/wp-content/'
   );
 
-  // Match all img src attributes and replace with Cloudflare URLs
+  // 2. Rewrite internal links: smartagentalliance.com/{path} → correct new path
+  fixedContent = fixedContent.replace(
+    /href="https?:\/\/(?:www\.)?smartagentalliance\.com(\/[^"]*)"/g,
+    (match, path) => {
+      // Skip wp-content links (images handled separately)
+      if (path.startsWith('/wp-content/')) return match;
+      const newPath = rewriteInternalPath(path);
+      return `href="${newPath}"`;
+    }
+  );
+
+  // 3. Rewrite staging links: wp.saabuildingblocks.com/staging/{path} → correct path
+  fixedContent = fixedContent.replace(
+    /href="https?:\/\/wp\.saabuildingblocks\.com\/staging\/?([^"]*)"/g,
+    (match, path) => {
+      if (!path || path === '/') return 'href="/"';
+      const newPath = rewriteInternalPath('/' + path);
+      return `href="${newPath}"`;
+    }
+  );
+
+  // 4. Rewrite remaining wp-content image URLs in src to use wp.saabuildingblocks.com
+  fixedContent = fixedContent.replace(
+    /src="https?:\/\/(?:www\.)?smartagentalliance\.com\/wp-content\/uploads\//g,
+    'src="https://wp.saabuildingblocks.com/wp-content/uploads/'
+  );
+
+  // 5. Match all img src attributes and replace with Cloudflare URLs
   return fixedContent.replace(
     /<img([^>]+)src=["']([^"']+)["']([^>]*)>/gi,
     (match, before, url, after) => {
@@ -433,6 +558,9 @@ async function generateBlogPostsJson() {
 
     // Load Permalink Manager custom URIs (source of truth for blog paths)
     loadCustomUris();
+
+    // Build slug-to-canonical-path map for cross-category link resolution
+    buildSlugPathMap();
 
     // First, fetch and cache all categories
     await fetchCategories();

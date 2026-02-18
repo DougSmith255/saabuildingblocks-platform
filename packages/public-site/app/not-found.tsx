@@ -70,8 +70,12 @@ export default function NotFound() {
         This signal has been lost to the void—either removed from our network or it never existed in this sector of space.
       </p>
 
-      {/* Return Home Button */}
-      <SecondaryButton href="/">
+      {/* Return Home Button - uses <a> instead of Next.js Link to force full
+         page reload, which resets the is404 ref in LayoutWrapper */}
+      <SecondaryButton href="/" as="a" onClick={(e) => {
+        e.preventDefault();
+        window.location.href = '/';
+      }}>
         Return to Base
       </SecondaryButton>
     </main>

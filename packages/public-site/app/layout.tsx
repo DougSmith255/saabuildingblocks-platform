@@ -282,7 +282,7 @@ export default async function RootLayout({
         {/* Plausible Analytics - Self-hosted, privacy-focused analytics */}
         <script
           defer
-          data-domain="saabuildingblocks.pages.dev"
+          data-domain="smartagentalliance.com"
           src="https://plausible.saabuildingblocks.com/js/script.file-downloads.pageview-props.tagged-events.js"
         />
         <script

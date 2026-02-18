@@ -15,30 +15,25 @@ import Link from 'next/link';
  * Should be excluded from blog post pages (handled by LayoutWrapper).
  */
 export function FloatingVideoButton() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isNearFooter, setIsNearFooter] = useState(false);
+  const [shouldShow, setShouldShow] = useState(false);
 
-  // Slide in after mount
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 1500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Hide near footer
+  // Show after 20% scroll, hide near footer
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight;
       const windowHeight = window.innerHeight;
+      const scrollableHeight = docHeight - windowHeight;
+      const scrollPercent = scrollableHeight > 0 ? scrollTop / scrollableHeight : 0;
       const nearBottom = scrollTop + windowHeight >= docHeight - 200;
-      setIsNearFooter(nearBottom);
+
+      setShouldShow(scrollPercent >= 0.2 && !nearBottom);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial position
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const shouldShow = isVisible && !isNearFooter;
 
   return (
     <>

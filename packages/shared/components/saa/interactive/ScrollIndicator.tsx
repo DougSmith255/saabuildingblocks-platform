@@ -123,10 +123,9 @@ export function ScrollIndicator() {
             drop-shadow(0 0 2px rgba(255,255,255,0.3));
         }
 
-        /* On screens < 1024px, align arrow right edge with Inside Look button right edge */
+        /* Slightly inset on mobile */
         @media (max-width: 1023px) {
           #global-scroll-indicator {
-            left: auto !important;
             right: 30px;
           }
         }
@@ -138,7 +137,7 @@ export function ScrollIndicator() {
         className="fixed pointer-events-none"
         style={{
           bottom: 'max(12px, calc(env(safe-area-inset-bottom, 0px) + 4px))',
-          left: '24px',
+          right: '24px',
           opacity,
           transform: `scale(${scale})`,
           transformOrigin: 'center bottom',
