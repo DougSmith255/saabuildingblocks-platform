@@ -236,9 +236,11 @@ export default async function RootLayout({
           crossOrigin="anonymous"
         />
 
-        {/* Favicon and app icons */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        {/* Favicon: SVG for modern browsers (gold S, dark stroke on light mode) */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        {/* Favicon: ICO fallback for legacy browsers (gold S on dark bg) */}
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        {/* Apple touch icon: gold S on dark rounded square (also used by Google Search) */}
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
         {/* Manifest for PWA support */}

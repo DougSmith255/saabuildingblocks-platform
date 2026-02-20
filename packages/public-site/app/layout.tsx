@@ -98,11 +98,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/icons/s-logo-1000.png', type: 'image/png', sizes: '512x512' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '32x32' },
     ],
-    shortcut: '/icons/s-logo-1000.png',
     apple: [
-      { url: '/icons/s-logo-1000.png', sizes: '180x180', type: 'image/png' },
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   description:
@@ -217,9 +217,12 @@ export default async function RootLayout({
           since it's a rare error case. Manual preloads caused duplicate downloads.
         */}
 
-        {/* Favicon - using s-logo-1000.png (gold S with transparent background) */}
-        {/* Note: Icons are configured in metadata.icons above, these are fallbacks */}
-        <link rel="icon" href="/icons/s-logo-1000.png" type="image/png" />
+        {/* Favicon: SVG for modern browsers (gold S, dark stroke on light mode) */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        {/* Favicon: ICO fallback for legacy browsers (gold S on dark bg) */}
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        {/* Apple touch icon: gold S on dark rounded square (also used by Google Search) */}
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
         {/* Manifest for PWA support */}
         <link rel="manifest" href="/manifest.json" />
