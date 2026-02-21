@@ -98,8 +98,9 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/favicon.svg?v=3', type: 'image/svg+xml', sizes: 'any' },
+      { url: '/icons/icon-48x48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/favicon.ico?v=3', sizes: '48x48' },
     ],
     apple: [
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
@@ -148,6 +149,7 @@ export const metadata: Metadata = {
     description:
       'Join eXp Realty with the Smart Agent Alliance for industry-leading commission splits and revenue share.',
     images: ['/twitter-image.jpg'],
+    site: '@smartagentalliance',
     creator: '@smartagentalliance',
   },
   robots: {
@@ -161,9 +163,8 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'your-google-verification-code',
-    // Add other verification codes as needed
+  alternates: {
+    canonical: 'https://smartagentalliance.com',
   },
 };
 
@@ -217,18 +218,13 @@ export default async function RootLayout({
           since it's a rare error case. Manual preloads caused duplicate downloads.
         */}
 
-        {/* Favicon: SVG for modern browsers (gold S, dark stroke on light mode) */}
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        {/* Favicon: ICO fallback for legacy browsers (gold S on dark bg) */}
-        <link rel="icon" href="/favicon.ico" sizes="32x32" />
-        {/* Apple touch icon: gold S on dark rounded square (also used by Google Search) */}
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        {/* Favicons declared in metadata.icons export — Next.js renders them automatically */}
 
         {/* Manifest for PWA support */}
         <link rel="manifest" href="/manifest.json" />
 
         {/* Theme color for browser UI */}
-        <meta name="theme-color" content="#191818" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f5f0" />
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191818" />
 
         {/* PWA meta tags for iOS */}
@@ -283,14 +279,15 @@ export default async function RootLayout({
         />
 
         {/* Plausible Analytics - Self-hosted, privacy-focused analytics */}
+        {/* Manual mode: delays pageview by 500ms to filter bots/accidental clicks */}
         <script
           defer
           data-domain="smartagentalliance.com"
-          src="https://plausible.saabuildingblocks.com/js/script.file-downloads.pageview-props.tagged-events.js"
+          src="https://plausible.saabuildingblocks.com/js/script.manual.file-downloads.pageview-props.tagged-events.js"
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`,
+            __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };setTimeout(function(){plausible('pageview')},500);`,
           }}
         />
 
@@ -301,9 +298,15 @@ export default async function RootLayout({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'Organization',
+              '@id': 'https://smartagentalliance.com/#organization',
               name: 'Smart Agent Alliance',
               url: 'https://smartagentalliance.com',
-              logo: 'https://smartagentalliance.com/logo.png',
+              logo: {
+                '@type': 'ImageObject',
+                url: 'https://smartagentalliance.com/logo.png',
+                width: 600,
+                height: 600,
+              },
               description: 'Real estate coaching and training platform helping agents build sustainable businesses through proven systems, lead generation strategies, and community support.',
               founder: [
                 {
@@ -312,7 +315,7 @@ export default async function RootLayout({
                 },
                 {
                   '@type': 'Person',
-                  name: 'Karrie Smart',
+                  name: 'Karrie Hill',
                 },
               ],
               sameAs: [

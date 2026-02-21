@@ -310,38 +310,9 @@ function ScreenshotPlaceholder({ label }: { label: string }) {
 }
 
 function ValueSection1_Launch() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   return (
-    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12">
-      <style>{`
-        @keyframes vs1FadeIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-
-      <div className="max-w-[1800px] mx-auto" style={{
-        opacity: visible ? 1 : 0,
-        animation: visible ? 'vs1FadeIn 0.6s ease-out' : 'none',
-      }}>
+    <section className="px-4 sm:px-8 md:px-12">
+      <div className="max-w-[1800px] mx-auto">
         {/* Two-column: mockup left, card right */}
         <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-0">
           {/* Card side (right on desktop) */}
@@ -472,32 +443,9 @@ const PHONE_FAN_ITEMS = [
 ];
 
 function ValueSection2_Marketing() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   return (
-    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12">
+    <section className="px-4 sm:px-8 md:px-12">
       <style>{`
-        @keyframes vs2FadeIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
         .vs2-phone-fan { aspect-ratio: 1/1; }
         .vs2-phone-item { width: 40%; }
         @media (min-width: 640px) {
@@ -506,10 +454,7 @@ function ValueSection2_Marketing() {
         }
       `}</style>
 
-      <div className="max-w-[1800px] mx-auto" style={{
-        opacity: visible ? 1 : 0,
-        animation: visible ? 'vs2FadeIn 0.6s ease-out' : 'none',
-      }}>
+      <div className="max-w-[1800px] mx-auto">
         {/* Two-column: card left, phone fan right */}
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
           {/* Card side (left on desktop) */}
@@ -681,38 +626,9 @@ const TRAINING_PROGRAMS = [
 ];
 
 function ValueSection3_Training() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   return (
-    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12">
-      <style>{`
-        @keyframes vs3FadeIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-
-      <div className="max-w-[1200px] mx-auto" style={{
-        opacity: visible ? 1 : 0,
-        animation: visible ? 'vs3FadeIn 0.6s ease-out' : 'none',
-      }}>
+    <section className="px-4 sm:px-8 md:px-12">
+      <div className="max-w-[1200px] mx-auto">
         {/* Intro text */}
         <GenericCard padding="lg" style={{ marginBottom: 'clamp(24px, 4vw, 40px)' }}>
           <h3 className="text-h3" style={{ marginBottom: '0.5rem' }}>
@@ -970,38 +886,9 @@ function ZoomMockup() {
 }
 
 function ValueSection4_Attraction() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   return (
-    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12">
-      <style>{`
-        @keyframes vs4FadeIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-
-      <div className="max-w-[1800px] mx-auto" style={{
-        opacity: visible ? 1 : 0,
-        animation: visible ? 'vs4FadeIn 0.6s ease-out' : 'none',
-      }}>
+    <section className="px-4 sm:px-8 md:px-12">
+      <div className="max-w-[1800px] mx-auto">
         {/* Two-column: mockups left, card right — mirrors Section 1 (flex-row-reverse) */}
         <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-0">
           {/* Card side (right on desktop) */}
@@ -1167,38 +1054,9 @@ function WhatsAppChat() {
 }
 
 function ValueSection5_Referrals() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   return (
-    <section ref={sectionRef} className="px-4 sm:px-8 md:px-12" style={{ paddingTop: 'clamp(0px, 3vw, 60px)' }}>
-      <style>{`
-        @keyframes vs5FadeIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-
-      <div className="max-w-[1800px] mx-auto" style={{
-        opacity: visible ? 1 : 0,
-        animation: visible ? 'vs5FadeIn 0.6s ease-out' : 'none',
-      }}>
+    <section className="px-4 sm:px-8 md:px-12" style={{ paddingTop: 'clamp(0px, 3vw, 60px)' }}>
+      <div className="max-w-[1800px] mx-auto">
         {/* Two-column: card left, phone mockup right — mirrors Section 2 */}
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
           {/* Card side (left on desktop) */}
@@ -1992,6 +1850,52 @@ function Section3() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // --- Video Analytics Tracking ---
+  const analyticsSessionId = useRef('');
+  const analyticsAccumulatedTime = useRef(0);
+  const analyticsLastTime = useRef(0);
+  const analyticsLastBeaconTime = useRef(0);
+
+  const getVisitorId = useCallback(() => {
+    let vid = sessionStorage.getItem('_saa_vid');
+    if (!vid) {
+      vid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      sessionStorage.setItem('_saa_vid', vid);
+    }
+    return vid;
+  }, []);
+
+  const sendVideoBeacon = useCallback((eventType: string) => {
+    try {
+      const payload = {
+        video_id: WALKTHROUGH_VIDEO_ID,
+        session_id: analyticsSessionId.current,
+        event_type: eventType,
+        watch_time_seconds: Math.round(analyticsAccumulatedTime.current * 10) / 10,
+        video_duration_seconds: playerRef.current?.duration || null,
+        visitor_id: getVisitorId(),
+        page_url: '/exp-realty-sponsor',
+        slug: null,
+      };
+      navigator.sendBeacon(
+        '/api/video/events',
+        new Blob([JSON.stringify(payload)], { type: 'application/json' })
+      );
+    } catch {
+      // fire-and-forget
+    }
+  }, [getVisitorId]);
+
+  // Send final beacon on page close
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (analyticsSessionId.current && analyticsAccumulatedTime.current > 0) {
+        sendVideoBeacon('ended');
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [sendVideoBeacon]);
 
   // Track whether the iframe should be rendered (preloaded on scroll or on play click)
   const [iframeLoaded, setIframeLoaded] = useState(false);
@@ -2006,13 +1910,32 @@ function Section3() {
     playerRef.current = player;
     player.addEventListener('play', () => {
       setIsPlaying(true); setHasPlayed(true); setVideoEnded(false); setShowSpinner(false);
+      // Analytics: start new session
+      analyticsSessionId.current = `${WALKTHROUGH_VIDEO_ID}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      analyticsAccumulatedTime.current = 0;
+      analyticsLastTime.current = player.currentTime || 0;
+      analyticsLastBeaconTime.current = Date.now();
+      sendVideoBeacon('play');
     });
     player.addEventListener('pause', () => setIsPlaying(false));
-    player.addEventListener('ended', () => { setIsPlaying(false); setVideoEnded(true); });
+    player.addEventListener('ended', () => {
+      setIsPlaying(false); setVideoEnded(true);
+      if (analyticsSessionId.current) sendVideoBeacon('ended');
+    });
     player.addEventListener('loadedmetadata', () => setDuration(player.duration || 0));
     player.addEventListener('timeupdate', () => {
-      setCurrentTime(player.currentTime || 0);
+      const time = player.currentTime || 0;
+      setCurrentTime(time);
       setDuration(player.duration || 0);
+      // Analytics: accumulate watch time (delta-based)
+      const delta = time - analyticsLastTime.current;
+      if (delta > 0 && delta < 2) analyticsAccumulatedTime.current += delta;
+      analyticsLastTime.current = time;
+      // Analytics: heartbeat every 15s
+      if (analyticsSessionId.current && Date.now() - analyticsLastBeaconTime.current >= 15000) {
+        analyticsLastBeaconTime.current = Date.now();
+        sendVideoBeacon('heartbeat');
+      }
     });
     player.addEventListener('volumechange', () => {
       setIsMuted(player.muted);
@@ -2023,8 +1946,10 @@ function Section3() {
     player.volume = 1;
     if (wantsAutoplay.current) {
       player.play();
+    } else {
+      player.pause();
     }
-  }, []);
+  }, [sendVideoBeacon]);
 
   // Load SDK script once (but don't init player yet)
   useEffect(() => {
@@ -2084,13 +2009,31 @@ function Section3() {
       playerRef.current = player;
       player.addEventListener('play', () => {
         setIsPlaying(true); setHasPlayed(true); setVideoEnded(false); setShowSpinner(false);
+        // Analytics: start new session on quality switch play
+        analyticsSessionId.current = `${WALKTHROUGH_VIDEO_ID}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        analyticsAccumulatedTime.current = 0;
+        analyticsLastTime.current = player.currentTime || 0;
+        analyticsLastBeaconTime.current = Date.now();
+        sendVideoBeacon('play');
       });
       player.addEventListener('pause', () => setIsPlaying(false));
-      player.addEventListener('ended', () => { setIsPlaying(false); setVideoEnded(true); });
+      player.addEventListener('ended', () => {
+        setIsPlaying(false); setVideoEnded(true);
+        if (analyticsSessionId.current) sendVideoBeacon('ended');
+      });
       player.addEventListener('loadedmetadata', () => setDuration(player.duration || 0));
       player.addEventListener('timeupdate', () => {
-        setCurrentTime(player.currentTime || 0);
+        const time = player.currentTime || 0;
+        setCurrentTime(time);
         setDuration(player.duration || 0);
+        // Analytics: accumulate watch time
+        const delta = time - analyticsLastTime.current;
+        if (delta > 0 && delta < 2) analyticsAccumulatedTime.current += delta;
+        analyticsLastTime.current = time;
+        if (analyticsSessionId.current && Date.now() - analyticsLastBeaconTime.current >= 15000) {
+          analyticsLastBeaconTime.current = Date.now();
+          sendVideoBeacon('heartbeat');
+        }
       });
       player.addEventListener('volumechange', () => {
         setIsMuted(player.muted);
@@ -2771,7 +2714,7 @@ function Section3() {
             {iframeLoaded && (
               <iframe
                 ref={iframeRef}
-                src={`https://customer-2twfsluc6inah5at.cloudflarestream.com/${WALKTHROUGH_VIDEO_ID}/iframe?preload=auto&autoplay=false&muted=false&controls=false&pip=false&defaultQuality=${videoQuality}`}
+                src={`https://customer-2twfsluc6inah5at.cloudflarestream.com/${WALKTHROUGH_VIDEO_ID}/iframe?preload=metadata&autoplay=false&muted=false&controls=false&pip=false&defaultQuality=${videoQuality}`}
                 className="absolute inset-0 w-full h-full"
                 style={{ border: 'none' }}
                 allow="autoplay; fullscreen; encrypted-media"
