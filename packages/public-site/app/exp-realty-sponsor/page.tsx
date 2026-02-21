@@ -1877,8 +1877,11 @@ function Section3() {
         page_url: '/exp-realty-sponsor',
         slug: null,
       };
+      const endpoint = typeof window !== 'undefined' && window.location.hostname !== 'saabuildingblocks.com'
+        ? 'https://saabuildingblocks.com/api/video/events'
+        : '/api/video/events';
       navigator.sendBeacon(
-        '/api/video/events',
+        endpoint,
         new Blob([JSON.stringify(payload)], { type: 'application/json' })
       );
     } catch {
