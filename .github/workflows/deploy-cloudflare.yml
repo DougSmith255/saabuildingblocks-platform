@@ -223,8 +223,16 @@ jobs:
           echo "   ✅ FIXED: Turbopack can now resolve '../../tsconfig.json'"
           echo ""
 
-          # cd into package directory and build
+          # cd into package directory
           cd packages/public-site
+
+          # Generate fresh blog post data from WordPress REST API
+          echo "📝 Generating blog post data from WordPress..."
+          npm run generate:blog-posts
+          echo "✅ Blog post data generated"
+          echo ""
+
+          # Build static export
           npx next build
 
           # Quick verification

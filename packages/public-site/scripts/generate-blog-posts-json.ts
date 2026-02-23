@@ -170,11 +170,29 @@ let categoryCache: Map<number, WPCategory> = new Map();
 let customUriCache: Map<number, string> = new Map();
 
 /**
- * Fetch Permalink Manager custom URIs via WP-CLI
+ * Fetch Permalink Manager custom URIs via REST API (works in CI and locally)
+ * Falls back to WP-CLI if REST API is unreachable
  * These are the source of truth for blog post URL paths
  */
-function loadCustomUris(): void {
+async function loadCustomUris(): Promise<void> {
   console.log('🔗 Fetching Permalink Manager custom URIs...');
+
+  // Try REST API first (works in GitHub Actions and locally)
+  try {
+    const response = await fetch('https://wp.saabuildingblocks.com/wp-json/saa/v1/permalink-uris');
+    if (response.ok) {
+      const uris: Record<string, string> = await response.json();
+      Object.entries(uris).forEach(([id, uri]) => {
+        customUriCache.set(parseInt(id, 10), uri.replace(/^\/|\/$/g, ''));
+      });
+      console.log(`✅ Loaded ${customUriCache.size} custom URIs via REST API`);
+      return;
+    }
+  } catch (error) {
+    console.warn('⚠️  REST API unreachable, trying WP-CLI fallback...');
+  }
+
+  // Fallback to WP-CLI (only works on VPS)
   try {
     const output = execSync(
       'wp option get permalink-manager-uris --format=json --allow-root',
@@ -184,9 +202,9 @@ function loadCustomUris(): void {
     Object.entries(uris).forEach(([id, uri]) => {
       customUriCache.set(parseInt(id, 10), uri.replace(/^\/|\/$/g, ''));
     });
-    console.log(`✅ Loaded ${customUriCache.size} custom URIs`);
+    console.log(`✅ Loaded ${customUriCache.size} custom URIs via WP-CLI`);
   } catch (error) {
-    console.warn('⚠️  Could not load Permalink Manager URIs via WP-CLI:', (error as Error).message);
+    console.warn('⚠️  Could not load Permalink Manager URIs:', (error as Error).message);
     console.warn('   Blog paths will fall back to category/slug construction');
   }
 }
@@ -595,7 +613,7 @@ async function generateBlogPostsJson() {
     loadImageMapping();
 
     // Load Permalink Manager custom URIs (source of truth for blog paths)
-    loadCustomUris();
+    await loadCustomUris();
 
     // Build slug-to-canonical-path map for cross-category link resolution
     buildSlugPathMap();
