@@ -11,24 +11,38 @@ import { verifyAccessToken } from '@/lib/auth/jwt';
 
 export const dynamic = 'force-dynamic';
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
 
-export async function OPTIONS() {
-  return NextResponse.json({}, {
-    status: 200,
-    headers: { ...CORS_HEADERS, 'Access-Control-Max-Age': '86400' },
-  });
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
 }
 
-/** Get 1st of the current month 00:00 UTC */
-function getMonthStart(): string {
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(request.headers.get('origin')) });
+}
+
+/** Get start of the current week (Monday 00:00 UTC) */
+function getWeekStart(): string {
   const now = new Date();
-  const first = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
-  return first.toISOString();
+  const day = now.getUTCDay(); // 0=Sun, 1=Mon, ...
+  const diff = day === 0 ? 6 : day - 1; // Days since Monday
+  const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - diff));
+  return monday.toISOString();
 }
 
 /** Get start date for timeseries range (1/2/3 months back from today) */
@@ -66,6 +80,7 @@ interface TimeseriesData {
 }
 
 export async function GET(request: NextRequest) {
+  const CORS_HEADERS = getCorsHeaders(request.headers.get('origin'));
   try {
     const supabase = getSupabaseServiceClient();
     if (!supabase) {
@@ -118,7 +133,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const weekStart = getMonthStart();
+    const weekStart = getWeekStart();
     const customLinks: Array<{ id: string; label: string }> = agentPage.custom_links || [];
 
     // Valid link page buttons: all custom links + learn-about default button

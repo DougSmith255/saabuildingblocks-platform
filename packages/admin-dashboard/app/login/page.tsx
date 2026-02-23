@@ -49,8 +49,12 @@ function LoginPageContent() {
   // Redirect authenticated users
   useEffect(() => {
     if (!isLoading && user) {
-      const redirect = searchParams.get('redirect') || '/agent-portal';
-      router.push(redirect);
+      const redirect = searchParams.get('redirect');
+      // Only allow relative paths to prevent open redirect attacks
+      const safeRedirect = redirect && redirect.startsWith('/') && !redirect.startsWith('//')
+        ? redirect
+        : '/agent-portal';
+      router.push(safeRedirect);
     }
   }, [user, isLoading, router, searchParams]);
 

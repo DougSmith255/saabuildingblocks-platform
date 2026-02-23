@@ -36,6 +36,18 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   console.log('🔔 [GHL WEBHOOK] Received active downline webhook');
 
+  // Security: All traffic reaches this endpoint via Cloudflare Tunnel only.
+  // Port 3002 is denied by UFW — no direct public access is possible.
+  // Verify the request came through Cloudflare as an additional safeguard.
+  const cfRay = request.headers.get('cf-ray');
+  if (!cfRay) {
+    console.error('[GHL WEBHOOK] Request did not come through Cloudflare');
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
+
   try {
     const supabase = getSupabaseServiceClient();
 
@@ -112,11 +124,11 @@ export async function POST(request: NextRequest) {
       phone: phone ? '***' : 'not provided',
     });
 
-    // Check if user with this email already exists
+    // Check if user with this email already exists (case-insensitive)
     const { data: existingUser, error: checkError } = await supabase
       .from('users')
       .select('id, email, status, gohighlevel_contact_id')
-      .eq('email', email)
+      .ilike('email', email)
       .single();
 
     if (existingUser) {

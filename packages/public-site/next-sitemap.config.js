@@ -1,3 +1,11 @@
+const fs = require('fs');
+const path = require('path');
+
+// Load slug → Cloudflare Images URL mapping (299 entries)
+const slugToFeatured = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'slug-to-cloudflare-featured.json'), 'utf8')
+);
+
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: process.env.SITE_URL || 'https://smartagentalliance.com',
@@ -41,13 +49,29 @@ module.exports = {
       };
     }
 
+    // Standalone category blog posts (about-exp-realty, exp-realty-sponsor)
+    if (path.match(/^\/(about-exp-realty|exp-realty-sponsor)\/[^/]+/)) {
+      const slug = path.replace(/\/$/, '').split('/').pop();
+      const featured = slug && slugToFeatured[slug];
+      return {
+        loc: path,
+        changefreq: 'monthly',
+        priority: 0.7,
+        lastmod: new Date().toISOString(),
+        ...(featured && { images: [{ loc: new URL(featured.cloudflareUrl) }] }),
+      };
+    }
+
     // Individual blog posts
     if (path.match(/^\/blog\/[^/]+\/[^/]+/)) {
+      const slug = path.replace(/\/$/, '').split('/').pop();
+      const featured = slug && slugToFeatured[slug];
       return {
         loc: path,
         changefreq: 'monthly',
         priority: 0.6,
         lastmod: new Date().toISOString(),
+        ...(featured && { images: [{ loc: new URL(featured.cloudflareUrl) }] }),
       };
     }
 

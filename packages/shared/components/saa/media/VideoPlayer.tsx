@@ -46,8 +46,10 @@ export interface VideoPlayerProps {
   ref?: React.Ref<VideoPlayerRef>;
   /** When true, shows a dark overlay with message and prevents playback */
   disabled?: boolean;
-  /** Message shown on the disabled overlay (default: "Video Update In Progress") */
+  /** Message shown on the disabled overlay (default: "Video Update Coming Soon") */
   disabledMessage?: string;
+  /** Slug for agent-specific attribution in video analytics */
+  pageSlug?: string;
 }
 
 /**
@@ -87,11 +89,53 @@ export function VideoPlayer({
   onBeforePlay,
   ref,
   disabled = false,
-  disabledMessage = 'Video Update In Progress',
+  disabledMessage = 'Video Update Coming Soon',
+  pageSlug,
 }: VideoPlayerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<StreamPlayer | null>(null);
   const scrubberRef = useRef<HTMLDivElement>(null);
+
+  // --- Video Analytics Tracking ---
+  const analyticsSessionId = useRef<string>('');
+  const analyticsAccumulatedTime = useRef(0);
+  const analyticsLastTime = useRef(0);
+  const analyticsLastBeaconTime = useRef(0);
+
+  const getVisitorId = useCallback(() => {
+    if (typeof sessionStorage === 'undefined') return '';
+    let vid = sessionStorage.getItem('_saa_vid');
+    if (!vid) {
+      vid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      sessionStorage.setItem('_saa_vid', vid);
+    }
+    return vid;
+  }, []);
+
+  const sendVideoBeacon = useCallback((eventType: string) => {
+    if (disabled) return;
+    try {
+      const payload = {
+        video_id: videoId,
+        session_id: analyticsSessionId.current,
+        event_type: eventType,
+        watch_time_seconds: Math.round(analyticsAccumulatedTime.current * 10) / 10,
+        video_duration_seconds: playerRef.current?.duration || null,
+        visitor_id: getVisitorId(),
+        page_url: typeof window !== 'undefined' ? window.location.pathname : '',
+        slug: pageSlug || null,
+      };
+      const endpoint = typeof window !== 'undefined' && window.location.hostname !== 'saabuildingblocks.com'
+        ? 'https://saabuildingblocks.com/api/video/events'
+        : '/api/video/events';
+      navigator.sendBeacon(
+        endpoint,
+        new Blob([JSON.stringify(payload)], { type: 'application/json' })
+      );
+    } catch {
+      // fire-and-forget
+    }
+  }, [videoId, disabled, getVisitorId, pageSlug]);
 
   // Expose imperative play() that bypasses the gate
   useImperativeHandle(ref, () => ({
@@ -163,9 +207,22 @@ export function VideoPlayer({
     playerRef.current = player;
     setIsLoaded(true);
 
-    player.addEventListener('play', () => setIsPlaying(true));
+    player.addEventListener('play', () => {
+      setIsPlaying(true);
+      // Start new analytics session on each play
+      analyticsSessionId.current = `${videoId}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      analyticsAccumulatedTime.current = 0;
+      analyticsLastTime.current = player.currentTime || 0;
+      analyticsLastBeaconTime.current = Date.now();
+      sendVideoBeacon('play');
+    });
     player.addEventListener('pause', () => setIsPlaying(false));
-    player.addEventListener('ended', () => setIsPlaying(false));
+    player.addEventListener('ended', () => {
+      setIsPlaying(false);
+      if (analyticsSessionId.current) {
+        sendVideoBeacon('ended');
+      }
+    });
 
     player.addEventListener('loadedmetadata', () => {
       setDuration(player.duration || 0);
@@ -194,6 +251,19 @@ export function VideoPlayer({
       // Save current position for resume on refresh/return
       localStorage.setItem(`${storageKey}_position`, time.toString());
 
+      // Analytics: accumulate watch time (delta-based, handles seeks correctly)
+      const delta = time - analyticsLastTime.current;
+      if (delta > 0 && delta < 2) {
+        analyticsAccumulatedTime.current += delta;
+      }
+      analyticsLastTime.current = time;
+
+      // Analytics: send heartbeat every 15s
+      if (analyticsSessionId.current && Date.now() - analyticsLastBeaconTime.current >= 15000) {
+        analyticsLastBeaconTime.current = Date.now();
+        sendVideoBeacon('heartbeat');
+      }
+
       if (player.duration > 0) {
         // Update max watched time (only increases, never decreases)
         // Use refs for stable comparison values
@@ -220,7 +290,7 @@ export function VideoPlayer({
         }
       }
     });
-  }, [storageKey, unlockThreshold, onThresholdReached]);
+  }, [storageKey, unlockThreshold, onThresholdReached, sendVideoBeacon]);
 
   const togglePlayPause = useCallback(() => {
     if (!playerRef.current) return;
@@ -307,6 +377,17 @@ export function VideoPlayer({
       };
     }
   }, [isDragging, handleScrubberMouseMove, handleScrubberMouseUp]);
+
+  // Send final beacon on page close
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (analyticsSessionId.current && analyticsAccumulatedTime.current > 0) {
+        sendVideoBeacon('ended');
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [sendVideoBeacon]);
 
   // Format time as M:SS
   const formatTime = (seconds: number) => {

@@ -10,8 +10,8 @@
  */
 
 // KV Namespace configuration
-const KV_NAMESPACE_ID = '9f886b7add144cc480d7fe0f4ef5eb5e';
-const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || 'a1ae4bb5913a89fea98821d7ba1ac304';
+const KV_NAMESPACE_ID = process.env.CLOUDFLARE_KV_NAMESPACE_ID || '';
+const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || '';
 // Use KV-specific token first, fallback to general API token
 const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_KV_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN;
 
@@ -107,8 +107,7 @@ export async function writeAgentPageToKV(
   const url = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${KV_NAMESPACE_ID}/values/${encodeURIComponent(slug)}`;
 
   try {
-    console.log(`[KV] Writing to: ${url}`);
-    console.log(`[KV] Token present: ${!!CLOUDFLARE_API_TOKEN}, Token starts with: ${CLOUDFLARE_API_TOKEN?.substring(0, 5)}...`);
+    console.log(`[KV] Writing slug: ${slug}`);
 
     const response = await fetch(url, {
       method: 'PUT',

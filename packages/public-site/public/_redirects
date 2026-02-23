@@ -1,7 +1,0 @@
-# Cloudflare Pages redirects
-# https://developers.cloudflare.com/pages/configuration/redirects/
-
-/should-you-join-exp /about-exp-realty/ 301
-/should-you-join-exp/ /about-exp-realty/ 301
-/join-exp-sponsor-team /exp-realty-sponsor/ 301
-/join-exp-sponsor-team/ /exp-realty-sponsor/ 301

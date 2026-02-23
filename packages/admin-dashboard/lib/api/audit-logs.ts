@@ -5,6 +5,16 @@
  * Client-side functions for fetching and filtering audit logs
  */
 
+import { getAccessToken } from '@/lib/auth/tokens';
+
+function authHeaders(): Record<string, string> {
+  const token = getAccessToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
 export interface AuditLog {
   id: string;
   user_id: string | null;
@@ -61,7 +71,9 @@ export async function fetchAuditLogs(
   if (filters.limit) params.append('limit', filters.limit.toString());
   if (filters.offset) params.append('offset', filters.offset.toString());
 
-  const response = await fetch(`/api/audit-logs?${params.toString()}`);
+  const response = await fetch(`/api/audit-logs?${params.toString()}`, {
+    headers: authHeaders(),
+  });
 
   if (!response.ok) {
     throw new Error(`Failed to fetch audit logs: ${response.statusText}`);
@@ -84,7 +96,9 @@ export async function exportAuditLogs(
   if (filters.endDate) params.append('endDate', filters.endDate);
   if (filters.severity) params.append('severity', filters.severity);
 
-  const response = await fetch(`/api/audit-logs/export?${params.toString()}`);
+  const response = await fetch(`/api/audit-logs/export?${params.toString()}`, {
+    headers: authHeaders(),
+  });
 
   if (!response.ok) {
     throw new Error(`Failed to export audit logs: ${response.statusText}`);

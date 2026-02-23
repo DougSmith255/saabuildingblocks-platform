@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSearch } from './hooks/useSearch';
+import { getPostUrl } from '@/lib/blog-post-urls';
 
 /**
  * SearchBar Component
@@ -81,7 +82,7 @@ export function SearchBar() {
         break;
       case 'Enter':
         if (focusedIndex >= 0 && results[focusedIndex]) {
-          window.location.href = `/blog/${results[focusedIndex].slug}`;
+          window.location.href = getPostUrl(results[focusedIndex]);
         }
         break;
       case 'Escape':
@@ -224,7 +225,7 @@ export function SearchBar() {
                 <Link
                   key={post.id}
                   id={`result-${index}`}
-                  href={`/blog/${post.slug}`}
+                  href={getPostUrl(post)}
                   role="option"
                   aria-selected={focusedIndex === index}
                   className={`

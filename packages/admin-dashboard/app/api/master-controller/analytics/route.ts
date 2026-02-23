@@ -1,133 +1,102 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifySessionAdminAuth } from '@/app/api/middleware/adminAuth';
+import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 
 export const dynamic = 'force-dynamic';
 
-// Per-video config: name + optional earliest date to include
+// Per-video config. startAfter excludes test/pre-launch data before that date.
 const VIDEO_CONFIG: Record<string, { name: string; startAfter?: string }> = {
-  'f8c3f1bd9c2db2409ed0e90f60fd4d5b': { name: 'The Inside Look', startAfter: '2026-02-17' },
-  'ff51a795a915986de673e181b6acfcfa': { name: 'Portal Walkthrough', startAfter: '2026-02-17' },
+  'f8c3f1bd9c2db2409ed0e90f60fd4d5b': { name: 'The Inside Look', startAfter: '2026-02-19' },
+  '14ba82ce03943a64ef90e3c9771a0d56': { name: 'Portal Walkthrough', startAfter: '2026-02-19' },
 };
 
 const VIDEO_IDS = Object.keys(VIDEO_CONFIG);
 
-function getDateRange(range: string): { start: string; end: string } {
-  const end = new Date();
-  const start = new Date();
-  switch (range) {
-    case '7d':
-      start.setDate(end.getDate() - 7);
-      break;
-    case '90d':
-      start.setDate(end.getDate() - 90);
-      break;
-    default:
-      start.setDate(end.getDate() - 30);
-  }
-  return {
-    start: start.toISOString().split('T')[0],
-    end: end.toISOString().split('T')[0],
-  };
+interface DailyBucket {
+  views: number;
+  minutesWatched: number;
+}
+
+function dateToString(d: Date): string {
+  return d.toISOString().split('T')[0];
+}
+
+function daysAgo(n: number): Date {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return d;
 }
 
 export async function GET(request: NextRequest) {
   try {
-    const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
-    const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+    const auth = await verifySessionAdminAuth();
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
 
-    if (!accountId || !apiToken) {
+    const supabase = getSupabaseServiceClient();
+    if (!supabase) {
       return NextResponse.json(
-        { success: false, error: 'Cloudflare credentials not configured' },
+        { success: false, error: 'Supabase not configured' },
         { status: 500 }
       );
     }
 
     const { searchParams } = new URL(request.url);
     const range = searchParams.get('range') || '30d';
-    const validRanges = ['7d', '30d', '90d'];
+    const validRanges = ['1d', '3d', '7d', '30d', '90d'];
     const safeRange = validRanges.includes(range) ? range : '30d';
-    const { start, end } = getDateRange(safeRange);
 
-    const query = `
-      query {
-        viewer {
-          accounts(filter: { accountTag: "${accountId}" }) {
-            streamMinutesViewedAdaptiveGroups(
-              filter: {
-                date_geq: "${start}"
-                date_leq: "${end}"
-                uid_in: ${JSON.stringify(VIDEO_IDS)}
-              }
-              orderBy: [date_ASC]
-              limit: 10000
-            ) {
-              count
-              sum {
-                minutesViewed
-              }
-              dimensions {
-                date
-                uid
-              }
-            }
-          }
-        }
-      }
-    `;
+    const rangeDays = safeRange === '1d' ? 1 : safeRange === '3d' ? 3 : safeRange === '7d' ? 7 : safeRange === '90d' ? 90 : 30;
+    const startDate = dateToString(daysAgo(rangeDays));
+    const endDate = dateToString(new Date());
 
-    const cfResponse = await fetch('https://api.cloudflare.com/client/v4/graphql', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query }),
-    });
+    // Query video_views from Supabase
+    const { data, error } = await supabase
+      .from('video_views')
+      .select('video_id, watch_time_seconds, created_at')
+      .in('video_id', VIDEO_IDS)
+      .gte('created_at', startDate + 'T00:00:00.000Z')
+      .lte('created_at', endDate + 'T23:59:59.999Z');
 
-    if (!cfResponse.ok) {
-      const text = await cfResponse.text();
-      console.error('[Analytics API] Cloudflare error:', cfResponse.status, text);
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch analytics from Cloudflare' },
-        { status: 502 }
-      );
+    if (error) {
+      throw new Error(`Supabase query error: ${error.message}`);
     }
 
-    const cfData = await cfResponse.json();
+    const rows = data || [];
 
-    if (cfData.errors && cfData.errors.length > 0) {
-      console.error('[Analytics API] GraphQL errors:', cfData.errors);
-      return NextResponse.json(
-        { success: false, error: cfData.errors[0].message || 'GraphQL query failed' },
-        { status: 502 }
-      );
-    }
-
-    const groups = cfData.data?.viewer?.accounts?.[0]?.streamMinutesViewedAdaptiveGroups || [];
-
-    // Build per-video data
-    const videoDataMap: Record<string, { daily: Record<string, { views: number; minutesWatched: number }> }> = {};
+    // Build per-video daily map
+    const videoDataMap: Record<string, { daily: Record<string, DailyBucket> }> = {};
     for (const id of VIDEO_IDS) {
       videoDataMap[id] = { daily: {} };
     }
 
-    for (const group of groups) {
-      const uid = group.dimensions.uid;
-      const date = group.dimensions.date;
-      if (!videoDataMap[uid]) continue;
+    for (const row of rows) {
+      if (!videoDataMap[row.video_id]) continue;
+      const date = row.created_at.split('T')[0];
+      const config = VIDEO_CONFIG[row.video_id];
 
-      if (!videoDataMap[uid].daily[date]) {
-        videoDataMap[uid].daily[date] = { views: 0, minutesWatched: 0 };
+      // Exclude test data before startAfter date
+      if (config.startAfter && date < config.startAfter) continue;
+
+      const daily = videoDataMap[row.video_id].daily;
+      if (!daily[date]) {
+        daily[date] = { views: 0, minutesWatched: 0 };
       }
-      videoDataMap[uid].daily[date].views += group.count;
-      videoDataMap[uid].daily[date].minutesWatched += group.sum.minutesViewed;
+      daily[date].views += 1;
+      daily[date].minutesWatched += (Number(row.watch_time_seconds) || 0) / 60;
     }
 
     const videos = VIDEO_IDS.map((id) => {
       const config = VIDEO_CONFIG[id];
       const vd = videoDataMap[id];
+
       const dailyEntries = Object.entries(vd.daily)
-        .map(([date, d]) => ({ date, views: d.views, minutesWatched: Math.round(d.minutesWatched * 100) / 100 }))
-        .filter((d) => !config.startAfter || d.date >= config.startAfter)
+        .map(([date, d]) => ({
+          date,
+          views: d.views,
+          minutesWatched: Math.round(d.minutesWatched * 100) / 100,
+        }))
         .sort((a, b) => a.date.localeCompare(b.date));
 
       const totalViews = dailyEntries.reduce((s, d) => s + d.views, 0);
@@ -150,8 +119,9 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('[Analytics API] Error:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
+      { success: false, error: message },
       { status: 500 }
     );
   }

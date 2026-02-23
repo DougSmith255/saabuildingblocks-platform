@@ -5,6 +5,12 @@ import { H1, Tagline } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
 
+declare global {
+  interface Window {
+    plausible?: (event: string, options?: { props: Record<string, string | number | boolean> }) => void;
+  }
+}
+
 /**
  * Book a Call Page
  *
@@ -12,6 +18,31 @@ import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridE
  * Uses the same hero pattern as other public pages.
  */
 export default function BookACallPage() {
+  // Track booking submission via GHL iframe postMessage
+  useEffect(() => {
+    function handleMessage(event: MessageEvent) {
+      // Only accept messages from our GHL domain
+      if (!event.origin.includes('smartagentalliance.com')) return;
+      const data = event.data;
+      if (!data) return;
+      // GHL booking widgets send "set-sticky-contacts" after form submission
+      // and various other signals on booking confirmation
+      const isBooking =
+        data === 'set-sticky-contacts' ||
+        (typeof data === 'object' && (
+          data.type === 'set-sticky-contacts' ||
+          data.action === 'set-sticky-contacts' ||
+          data.type === 'booking-confirmed' ||
+          data.action === 'formSubmitted'
+        ));
+      if (isBooking && window.plausible) {
+        window.plausible('Booking Submitted', { props: { page: '/book-a-call' } });
+      }
+    }
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
   // Load the GHL form embed script after mount
   useEffect(() => {
     const scriptId = 'ghl-form-embed';
@@ -33,7 +64,7 @@ export default function BookACallPage() {
     <main id="main-content">
       {/* Hero Section */}
       <StickyHeroWrapper>
-        <section className="relative min-h-[50dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-16 md:py-20">
+        <section className="relative min-h-[50dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 pt-[150px] pb-16 md:pb-20">
           <QuantumGridEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">

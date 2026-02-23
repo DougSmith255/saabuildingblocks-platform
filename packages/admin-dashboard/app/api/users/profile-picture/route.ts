@@ -11,17 +11,30 @@ import { verifyAccessToken } from '@/lib/auth/jwt';
 
 export const dynamic = 'force-dynamic';
 
-// CORS headers
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Max-Age': '86400',
-};
+// CORS configuration
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
+
+function getCorsHeaders(origin?: string | null) {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
+}
 
 // Handle CORS preflight
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(origin) });
 }
 
 // R2 Configuration using Cloudflare REST API
@@ -98,6 +111,7 @@ async function deleteFromR2(
 }
 
 export async function POST(request: NextRequest) {
+  const CORS_HEADERS = getCorsHeaders(request.headers.get('origin'));
   try {
     // Verify authentication
     const authHeader = request.headers.get('authorization');

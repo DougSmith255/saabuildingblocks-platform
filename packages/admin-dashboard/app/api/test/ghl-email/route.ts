@@ -1,7 +1,6 @@
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
-// Skip authentication for testing
 export const runtime = 'nodejs';
 
 /**
@@ -17,6 +16,7 @@ import {
   getContactByEmail,
   replacePersonalizationTokens,
 } from '@/lib/gohighlevel-email';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 
 // ============================================================================
 // Supabase Client
@@ -39,6 +39,11 @@ function getSupabaseClient() {
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const supabase = getSupabaseClient();
 
     // Fetch Independence Day template

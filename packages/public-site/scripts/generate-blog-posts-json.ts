@@ -90,10 +90,13 @@ function getFeaturedImageBySlug(slug: string): string | null {
  */
 function extractFilename(url: string): string {
   try {
-    // Get the last part of the URL path
+    // Get the last part of the URL path and decode URI encoding
+    // new URL() encodes Unicode chars (e.g. — becomes %E2%80%94),
+    // but our mapping keys use decoded Unicode, so we must decode.
     const urlObj = new URL(url);
     const pathParts = urlObj.pathname.split('/');
-    return pathParts[pathParts.length - 1] || '';
+    const raw = pathParts[pathParts.length - 1] || '';
+    return decodeURIComponent(raw);
   } catch {
     // If URL parsing fails, try simple extraction
     const parts = url.split('/');
@@ -323,13 +326,19 @@ const BLOG_CATEGORIES = [
  */
 let slugToCanonicalPath: Map<string, string> = new Map();
 
+/** Categories that live at /{category}/{slug} instead of /blog/{category}/{slug} */
+const STANDALONE_CATEGORIES = ['about-exp-realty', 'exp-realty-sponsor'];
+
 function buildSlugPathMap(): void {
   for (const [, uri] of customUriCache) {
     // uri is "category/slug" (no leading/trailing slashes)
     const parts = uri.split('/');
     if (parts.length >= 2) {
       const slug = parts[parts.length - 1];
-      slugToCanonicalPath.set(slug, `/blog/${uri}/`);
+      const category = parts[0];
+      // Standalone categories live outside /blog/
+      const prefix = STANDALONE_CATEGORIES.includes(category) ? '' : '/blog';
+      slugToCanonicalPath.set(slug, `${prefix}/${uri}/`);
     }
   }
   console.log(`✅ Built slug-to-path map: ${slugToCanonicalPath.size} entries`);
@@ -344,18 +353,18 @@ const LEGACY_PATH_MAP: Record<string, string> = {
   '/join-top-real-estate-brokerage-firms/': '/exp-realty-sponsor/',
   '/join-our-exp-realty-sponsor-team/': '/exp-realty-sponsor/',
   '/team-benefits/': '/exp-realty-sponsor/',
-  '/brokerage-interview-questions/': '/blog/about-exp-realty/',
+  '/brokerage-interview-questions/': '/about-exp-realty/',
   '/real-estate-agent-job/': '/blog/become-an-agent/',
   '/become-real-estate-agent/': '/blog/become-an-agent/',
-  '/is-exp-realty-good-for-new-agents/': '/blog/about-exp-realty/new-agents/',
-  '/exp-revenue-share/': '/blog/about-exp-realty/revenue-share/',
-  '/exp-realty-revenue-share-2024/': '/blog/about-exp-realty/revenue-share/',
-  '/exp-world-tour-newly-improved/': '/blog/about-exp-realty/exp-world/',
+  '/is-exp-realty-good-for-new-agents/': '/about-exp-realty/new-agents/',
+  '/exp-revenue-share/': '/about-exp-realty/revenue-share/',
+  '/exp-realty-revenue-share-2024/': '/about-exp-realty/revenue-share/',
+  '/exp-world-tour-newly-improved/': '/about-exp-realty/exp-world/',
   '/tools/brokerage-comparison/': '/blog/brokerage-comparison/',
   '/tools/online-real-estate-brokerage/': '/best-real-estate-brokerage/',
   '/agent-tools/exp-realty-revenue-share-calculator/': '/exp-realty-revenue-share-calculator/',
   '/agent-tools/exp-commission-calculator': '/exp-commission-calculator/',
-  '/agent-tools/exp-realty-good-new-agents/': '/blog/about-exp-realty/new-agents/',
+  '/agent-tools/exp-realty-good-new-agents/': '/about-exp-realty/new-agents/',
   '/agent-tools/': '/exp-commission-calculator/',
   '/tools/': '/exp-commission-calculator/',
 };
@@ -384,8 +393,9 @@ function rewriteInternalPath(path: string): string {
           return canonical + hash;
         }
       }
-      // Fallback: use the category as-is with /blog/ prefix
-      return `/blog${normalized}${hash}`;
+      // Fallback: standalone categories stay at /{cat}/, others get /blog/ prefix
+      const prefix = STANDALONE_CATEGORIES.includes(cat) ? '' : '/blog';
+      return `${prefix}${normalized}${hash}`;
     }
   }
 
@@ -442,9 +452,29 @@ function transformContentImages(content: string): string {
     'src="https://wp.saabuildingblocks.com/wp-content/uploads/'
   );
 
-  // 5. Match all img src attributes and replace with Cloudflare URLs
+  // 4b. Remove known missing images (not in backup or staging) — strip entire <figure> or <img> tag
+  fixedContent = fixedContent.replace(
+    /<figure[^>]*>[\s]*<img[^>]*real-estate-agent-training-The-Three-Elite-Training-Courses[^>]*>[\s]*<\/figure>/gi,
+    ''
+  );
+  fixedContent = fixedContent.replace(
+    /<img[^>]*real-estate-agent-training-The-Three-Elite-Training-Courses[^>]*>/gi,
+    ''
+  );
+
+  // 5. Strip srcset/data-srcset and sizes/data-sizes attributes (WordPress responsive variants
+  //    point to old wp-content URLs; Cloudflare Images handles responsive delivery via single src URL)
+  fixedContent = fixedContent.replace(/\s+(?:data-)?srcset="[^"]*"/gi, '');
+  fixedContent = fixedContent.replace(/\s+(?:data-)?sizes="[^"]*"/gi, '');
+
+  // 5b. Strip Perfmatters lazy-loading attributes (data-src, data-ll-status)
+  //     These interfere with the src= regex below (greedy match hits data-src instead of src)
+  fixedContent = fixedContent.replace(/\s+data-src="[^"]*"/gi, '');
+  fixedContent = fixedContent.replace(/\s+data-ll-status="[^"]*"/gi, '');
+
+  // 6. Match all img src attributes and replace with Cloudflare URLs
   return fixedContent.replace(
-    /<img([^>]+)src=["']([^"']+)["']([^>]*)>/gi,
+    /<img([^>]+?)src=["']([^"']+)["']([^>]*)>/gi,
     (match, before, url, after) => {
       const cloudflareUrl = transformToCloudflareUrl(url);
       return `<img${before}src="${cloudflareUrl}"${after}>`;
@@ -543,6 +573,8 @@ function transformPost(wpPost: any): BlogPost {
     featuredImage,
     author,
     metaDescription,
+    // YouTube video URL from ACF (exposed via registered meta)
+    youtubeVideoUrl: wpPost.meta?.youtube_video_url || undefined,
     // Additional fields that might be expected
     comparisonImages: [], // Standard WP API doesn't have this, but keep for compatibility
   };

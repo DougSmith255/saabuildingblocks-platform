@@ -81,9 +81,9 @@ export default function LoginForm({ onClearCache }: { onClearCache?: () => void 
       });
 
       // Login successful - redirect handled by AuthProvider
-      // But we can also handle redirect param here
+      // Only allow relative paths to prevent open redirect attacks
       const redirect = searchParams.get('redirect');
-      if (redirect) {
+      if (redirect && redirect.startsWith('/') && !redirect.startsWith('//')) {
         router.push(redirect);
       }
     } catch (err) {

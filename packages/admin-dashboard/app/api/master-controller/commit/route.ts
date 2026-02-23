@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { exec } from 'child_process';
+import { exec, execFile } from 'child_process';
 import { promisify } from 'util';
+import { verifySessionAdminAuth } from '@/app/api/middleware/adminAuth';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
 const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
 // Working directory for git operations
-const WORKING_DIR = '/home/claude-flow';
+const WORKING_DIR = '/home/ubuntu/saabuildingblocks-platform';
 
 // File patterns to stage - Comprehensive whitelist for component system workflow
 const STAGE_PATTERNS = [
@@ -68,6 +70,12 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
 
   try {
+    // Auth: admin only — this endpoint commits and pushes code
+    const auth = await verifySessionAdminAuth();
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     console.log('[Git Commit] Starting...');
     console.log('[Git Commit] Working directory:', WORKING_DIR);
 
@@ -75,7 +83,7 @@ export async function POST(request: NextRequest) {
     const branch = await getCurrentBranch();
     console.log('[Git Commit] Checking for unpushed commits...');
 
-    const { stdout: unpushedCommits } = await execAsync(`git log origin/${branch}..HEAD --oneline`, {
+    const { stdout: unpushedCommits } = await execFileAsync('git', ['log', `origin/${branch}..HEAD`, '--oneline'], {
       cwd: WORKING_DIR,
     }).catch(() => ({ stdout: '' })); // Ignore error if branch doesn't exist on remote
 
@@ -83,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     // Step 2: Check for uncommitted changes
     console.log('[Git Commit] Checking for uncommitted changes...');
-    const { stdout: statusOutput } = await execAsync('git status --porcelain', {
+    const { stdout: statusOutput } = await execFileAsync('git', ['status', '--porcelain'], {
       cwd: WORKING_DIR,
     });
 
@@ -110,14 +118,14 @@ export async function POST(request: NextRequest) {
       console.log('[Git Commit] Unpushed commits:', unpushedCommits.trim());
 
       // Get the latest commit SHA
-      const { stdout: shaOutput } = await execAsync('git rev-parse HEAD', {
+      const { stdout: shaOutput } = await execFileAsync('git', ['rev-parse', 'HEAD'], {
         cwd: WORKING_DIR,
       });
       const commitSha = shaOutput.trim();
 
       // Push to origin
       try {
-        await execAsync(`git push origin ${branch}`, {
+        await execFileAsync('git', ['push', 'origin', branch], {
           cwd: WORKING_DIR,
           timeout: 30000,
         });
@@ -155,7 +163,7 @@ export async function POST(request: NextRequest) {
 
     for (const pattern of STAGE_PATTERNS) {
       try {
-        const { stdout } = await execAsync(`git add ${pattern}`, {
+        await execFileAsync('git', ['add', pattern], {
           cwd: WORKING_DIR,
         });
         console.log(`[Git Commit] Staged pattern: ${pattern}`);
@@ -166,7 +174,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 4: Check what was actually staged
-    const { stdout: diffOutput } = await execAsync('git diff --cached --name-only', {
+    const { stdout: diffOutput } = await execFileAsync('git', ['diff', '--cached', '--name-only'], {
       cwd: WORKING_DIR,
     });
 
@@ -200,7 +208,7 @@ export async function POST(request: NextRequest) {
     if (blockedStagedFiles.length > 0) {
       console.error('[Git Commit] SECURITY VIOLATION: Blocked files were staged:', blockedStagedFiles);
       // Unstage everything
-      await execAsync('git reset HEAD', { cwd: WORKING_DIR });
+      await execFileAsync('git', ['reset', 'HEAD'], { cwd: WORKING_DIR });
       return NextResponse.json(
         {
           success: false,
@@ -220,12 +228,12 @@ Generated: ${timestamp}
 Triggered by: Master Controller Deploy UI`;
 
     console.log('[Git Commit] Creating commit...');
-    await execAsync(`git commit -m "${commitMessage.replace(/"/g, '\\"')}"`, {
+    await execFileAsync('git', ['commit', '-m', commitMessage], {
       cwd: WORKING_DIR,
     });
 
     // Step 5: Get commit SHA
-    const { stdout: shaOutput } = await execAsync('git rev-parse HEAD', {
+    const { stdout: shaOutput } = await execFileAsync('git', ['rev-parse', 'HEAD'], {
       cwd: WORKING_DIR,
     });
     const commitSha = shaOutput.trim();
@@ -235,7 +243,7 @@ Triggered by: Master Controller Deploy UI`;
     // Step 6: Push to origin
     console.log('[Git Commit] Pushing to origin...');
     try {
-      await execAsync(`git push origin ${branch}`, {
+      await execFileAsync('git', ['push', 'origin', branch], {
         cwd: WORKING_DIR,
         timeout: 30000, // 30 second timeout
       });
@@ -308,13 +316,19 @@ Triggered by: Master Controller Deploy UI`;
  */
 export async function GET() {
   try {
+    // Auth: admin only
+    const auth = await verifySessionAdminAuth();
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     console.log('[Git Commit Status] Checking status...');
 
     // Get current branch
     const branch = await getCurrentBranch();
 
     // Check for changes
-    const { stdout: statusOutput } = await execAsync('git status --porcelain', {
+    const { stdout: statusOutput } = await execFileAsync('git', ['status', '--porcelain'], {
       cwd: WORKING_DIR,
     });
 
@@ -395,7 +409,7 @@ export async function GET() {
  */
 async function getCurrentBranch(): Promise<string> {
   try {
-    const { stdout } = await execAsync('git rev-parse --abbrev-ref HEAD', {
+    const { stdout } = await execFileAsync('git', ['rev-parse', '--abbrev-ref', 'HEAD'], {
       cwd: WORKING_DIR,
     });
     return stdout.trim();

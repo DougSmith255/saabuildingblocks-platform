@@ -2586,9 +2586,12 @@ function JoinModal({ isOpen, onClose, onSuccess, sponsorName = null, apiEndpoint
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setIsSubmitting(true); setMessage(null);
     try {
-      const response = await fetch(apiEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ firstName: formData.firstName, lastName: formData.lastName, email: formData.email, country: formData.country, sponsorName }) });
+      const { getTurnstileToken } = await import('@saa/shared/lib/turnstile');
+      const turnstileToken = await getTurnstileToken('join-team');
+      const response = await fetch(apiEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ firstName: formData.firstName, lastName: formData.lastName, email: formData.email, country: formData.country, sponsorName, turnstileToken }) });
       const result = await response.json();
       if (result.success) {
+        if (typeof window !== 'undefined' && window.plausible) window.plausible('Join Form Submitted', { props: { form_type: 'attraction-template', sponsor: sponsorName || 'none' } });
         try { localStorage.setItem('saa_join_submitted', JSON.stringify(formData)); } catch {}
         setMessage({ type: 'success', text: 'Thank you! We will be in touch soon.' });
         onSuccess?.(formData);
@@ -2740,6 +2743,52 @@ function VideoPlayer({ videoId, posterUrl, storageKey = 'saa_video', unlockThres
   const progressRef = useRef<number>(0);
   const thresholdReachedRef = useRef<boolean>(false);
 
+  // --- Video Analytics Tracking ---
+  const analyticsSessionId = useRef('');
+  const analyticsAccumulatedTime = useRef(0);
+  const analyticsLastTime = useRef(0);
+  const analyticsLastBeaconTime = useRef(0);
+
+  const getVisitorId = useCallback(() => {
+    let vid = sessionStorage.getItem('_saa_vid');
+    if (!vid) {
+      vid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      sessionStorage.setItem('_saa_vid', vid);
+    }
+    return vid;
+  }, []);
+
+  const sendVideoBeacon = useCallback((eventType: string) => {
+    try {
+      const payload = {
+        video_id: videoId,
+        session_id: analyticsSessionId.current,
+        event_type: eventType,
+        watch_time_seconds: Math.round(analyticsAccumulatedTime.current * 10) / 10,
+        video_duration_seconds: playerRef.current?.duration || null,
+        visitor_id: getVisitorId(),
+        page_url: '/agent-attraction-template',
+        slug: null,
+      };
+      navigator.sendBeacon(
+        '/api/video/events',
+        new Blob([JSON.stringify(payload)], { type: 'application/json' })
+      );
+    } catch {
+      // fire-and-forget
+    }
+  }, [videoId, getVisitorId]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (analyticsSessionId.current && analyticsAccumulatedTime.current > 0) {
+        sendVideoBeacon('ended');
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [sendVideoBeacon]);
+
   useEffect(() => {
     const savedProgress = parseFloat(localStorage.getItem(`${storageKey}_progress`) || '0');
     const savedMaxTime = parseFloat(localStorage.getItem(`${storageKey}_maxTime`) || '0');
@@ -2754,9 +2803,19 @@ function VideoPlayer({ videoId, posterUrl, storageKey = 'saa_video', unlockThres
     if (!iframeRef.current || !window.Stream) return;
     const player = window.Stream(iframeRef.current);
     playerRef.current = player; setIsLoaded(true);
-    player.addEventListener('play', () => setIsPlaying(true));
+    player.addEventListener('play', () => {
+      setIsPlaying(true);
+      analyticsSessionId.current = `${videoId}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      analyticsAccumulatedTime.current = 0;
+      analyticsLastTime.current = player.currentTime || 0;
+      analyticsLastBeaconTime.current = Date.now();
+      sendVideoBeacon('play');
+    });
     player.addEventListener('pause', () => setIsPlaying(false));
-    player.addEventListener('ended', () => setIsPlaying(false));
+    player.addEventListener('ended', () => {
+      setIsPlaying(false);
+      if (analyticsSessionId.current) sendVideoBeacon('ended');
+    });
     player.addEventListener('loadedmetadata', () => {
       setDuration(player.duration || 0);
       if (savedPositionRef.current > 0 && player.duration > 0) {
@@ -2769,6 +2828,14 @@ function VideoPlayer({ videoId, posterUrl, storageKey = 'saa_video', unlockThres
       const time = player.currentTime || 0;
       setCurrentTime(time); setDuration(player.duration || 0); setScrubberPosition(time);
       localStorage.setItem(`${storageKey}_position`, time.toString());
+      // Analytics: accumulate watch time (delta-based)
+      const delta = time - analyticsLastTime.current;
+      if (delta > 0 && delta < 2) analyticsAccumulatedTime.current += delta;
+      analyticsLastTime.current = time;
+      if (analyticsSessionId.current && Date.now() - analyticsLastBeaconTime.current >= 15000) {
+        analyticsLastBeaconTime.current = Date.now();
+        sendVideoBeacon('heartbeat');
+      }
       if (player.duration > 0 && time > maxWatchedTimeRef.current) {
         const newMaxTime = time;
         setMaxWatchedTime(newMaxTime); maxWatchedTimeRef.current = newMaxTime;
@@ -2783,7 +2850,7 @@ function VideoPlayer({ videoId, posterUrl, storageKey = 'saa_video', unlockThres
         }
       }
     });
-  }, [storageKey, unlockThreshold, onThresholdReached]);
+  }, [storageKey, unlockThreshold, onThresholdReached, sendVideoBeacon]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !window.Stream) {

@@ -1,11 +1,14 @@
 /**
  * Admin Authorization Middleware
  *
- * Verifies JWT token and checks if user has admin role
+ * Verifies JWT access token and checks if user has admin role.
+ * Uses verifyAccessToken from lib/auth/jwt.ts (custom JWT, not Supabase Auth).
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { verifyAccessToken } from '@/lib/auth/jwt';
+import { createClient } from '@/lib/supabase/server';
 
 export interface AdminAuthResult {
   authorized: boolean;
@@ -16,22 +19,11 @@ export interface AdminAuthResult {
 }
 
 /**
- * Verify admin authorization
- *
- * Checks Authorization header for JWT token and verifies user is admin
+ * Verify that the request has a valid JWT and the user exists.
+ * Does NOT require admin role — use verifyAdminAuth for admin-only routes.
  */
-export async function verifyAdminAuth(request: NextRequest): Promise<AdminAuthResult> {
+export async function verifyAuth(request: NextRequest): Promise<AdminAuthResult> {
   try {
-    const supabase = getSupabaseServiceClient();
-
-    if (!supabase) {
-      return {
-        authorized: false,
-        error: 'Database connection unavailable',
-        status: 503,
-      };
-    }
-
     // Get token from Authorization header
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -42,24 +34,34 @@ export async function verifyAdminAuth(request: NextRequest): Promise<AdminAuthRe
       };
     }
 
-    const token = authHeader.replace('Bearer ', '');
+    const token = authHeader.substring(7);
 
-    // Verify token with Supabase
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    // Verify JWT access token
+    const { valid, payload, error: tokenError } = await verifyAccessToken(token);
 
-    if (authError || !user) {
+    if (!valid || !payload) {
       return {
         authorized: false,
-        error: 'Invalid or expired token',
+        error: tokenError || 'Invalid or expired token',
         status: 401,
       };
     }
 
-    // Get user role from database
+    const supabase = getSupabaseServiceClient();
+
+    if (!supabase) {
+      return {
+        authorized: false,
+        error: 'Database connection unavailable',
+        status: 503,
+      };
+    }
+
+    // Verify user exists and is active in database
     const { data: userData, error: userError } = await supabase
       .from('users')
-      .select('id, role')
-      .eq('id', user.id)
+      .select('id, role, status')
+      .eq('id', payload.sub)
       .single();
 
     if (userError || !userData) {
@@ -70,8 +72,85 @@ export async function verifyAdminAuth(request: NextRequest): Promise<AdminAuthRe
       };
     }
 
-    // Check if user is admin
-    if (userData.role !== 'admin') {
+    if (userData.status !== 'active') {
+      return {
+        authorized: false,
+        error: 'Account is not active',
+        status: 403,
+      };
+    }
+
+    return {
+      authorized: true,
+      userId: userData.id,
+      role: userData.role,
+    };
+  } catch (error) {
+    return {
+      authorized: false,
+      error: 'Internal server error',
+      status: 500,
+    };
+  }
+}
+
+/**
+ * Verify admin authorization
+ *
+ * Checks Authorization header for JWT token and verifies user is admin
+ */
+export async function verifyAdminAuth(request: NextRequest): Promise<AdminAuthResult> {
+  const result = await verifyAuth(request);
+
+  if (!result.authorized) {
+    return result;
+  }
+
+  // Check if user is admin
+  if (result.role !== 'admin') {
+    return {
+      authorized: false,
+      error: 'Forbidden - Admin access required',
+      status: 403,
+    };
+  }
+
+  return result;
+}
+
+/**
+ * Verify admin authorization via Supabase session cookies.
+ * Use this for Master Controller and 404 Triage routes (browser-based, no Bearer token).
+ */
+export async function verifySessionAdminAuth(): Promise<AdminAuthResult> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return {
+        authorized: false,
+        error: 'Unauthorized',
+        status: 401,
+      };
+    }
+
+    const serviceClient = getSupabaseServiceClient();
+    if (!serviceClient) {
+      return {
+        authorized: false,
+        error: 'Database connection unavailable',
+        status: 503,
+      };
+    }
+
+    const { data: userData } = await serviceClient
+      .from('users')
+      .select('id, role')
+      .eq('id', user.id)
+      .single();
+
+    if (!userData || userData.role !== 'admin') {
       return {
         authorized: false,
         error: 'Forbidden - Admin access required',
@@ -81,10 +160,10 @@ export async function verifyAdminAuth(request: NextRequest): Promise<AdminAuthRe
 
     return {
       authorized: true,
-      userId: user.id,
+      userId: userData.id,
       role: userData.role,
     };
-  } catch (error) {
+  } catch {
     return {
       authorized: false,
       error: 'Internal server error',

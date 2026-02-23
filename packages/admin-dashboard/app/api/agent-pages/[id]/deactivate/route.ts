@@ -11,12 +11,26 @@ import { requirePageOwner } from '@/app/api/middleware/agentPageAuth';
 
 export const dynamic = 'force-dynamic';
 
-// CORS headers for cross-origin requests from public site
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
+
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
+}
 
 export async function generateStaticParams() {
   return [];
@@ -25,14 +39,8 @@ export async function generateStaticParams() {
 /**
  * OPTIONS handler for CORS preflight requests
  */
-export async function OPTIONS() {
-  return NextResponse.json({}, {
-    status: 200,
-    headers: {
-      ...CORS_HEADERS,
-      'Access-Control-Max-Age': '86400',
-    },
-  });
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(request.headers.get('origin')) });
 }
 
 /**
@@ -44,6 +52,7 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const CORS_HEADERS = getCorsHeaders(request.headers.get('origin'));
   try {
     const supabase = getSupabaseServiceClient();
     const { id } = await params;
@@ -107,17 +116,16 @@ export async function POST(
     });
 
     // Remove from Cloudflare KV since page is no longer active
-    deleteAgentPageFromKV(updatedPage.slug)
-      .then(result => {
-        if (!result.success) {
-          console.error('KV delete failed on deactivate:', result.error);
-        } else {
-          console.log('Agent page removed from KV:', updatedPage.slug);
-        }
-      })
-      .catch(err => {
-        console.error('KV delete error on deactivate:', err);
-      });
+    try {
+      const kvResult = await deleteAgentPageFromKV(updatedPage.slug);
+      if (!kvResult.success) {
+        console.error('KV delete failed on deactivate:', kvResult.error);
+      } else {
+        console.log('Agent page removed from KV:', updatedPage.slug);
+      }
+    } catch (err) {
+      console.error('KV delete error on deactivate:', err);
+    }
 
     return NextResponse.json({
       success: true,

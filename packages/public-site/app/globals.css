@@ -3126,9 +3126,31 @@ body.light-mode .blog-post .border-t {
 
 /* ========================================
    LIGHT MODE - H2 Metal Plate
-   REMOVED: Light mode now uses same metal plate styling as dark mode
-   H2 metal plates are identical in both themes
+   Dark gray text (#191818) with medium gray (#404040) outline
+   Uses brand colors from Master Controller
    ======================================== */
+body.light-mode .blog-content h2,
+body.light-mode .blog-content.prose h2,
+body.light-mode .blog-content.prose-invert h2 {
+  color: #191818;
+  text-shadow:
+    /* LIGHT GREY OUTLINE - subtle definition on light background */
+    0 0 0.01em #404040,
+    0 0 0.02em #404040,
+    0 0 0.03em rgba(64, 64, 64, 0.6),
+    /* SOFT GREY GLOW */
+    0 0 0.04em rgba(64, 64, 64, 0.4),
+    0 0 0.08em rgba(64, 64, 64, 0.2),
+    0 0 0.14em rgba(64, 64, 64, 0.1),
+    /* METAL BACKING (3D depth) - lighter for light mode */
+    0.02em 0.02em 0 #9a9a9a,
+    0.04em 0.04em 0 #8a8a8a,
+    0.06em 0.06em 0 #7a7a7a,
+    0.08em 0.08em 0 #6a6a6a,
+    0.10em 0.10em 0 #5a5a5a,
+    0.12em 0.12em 0 #4a4a4a;
+  filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.25));
+}
 
 /* ========================================
    LIGHT MODE - Font Inheritance Notice
@@ -3156,10 +3178,20 @@ body.light-mode .blog-post .border-t {
  */
 
 /* Apply to all images by default - slower and more noticeable */
-/* EXCLUDES: .profile-image (homepage portrait), .hero-bg (hero backgrounds), .no-fade (explicit opt-out) */
-img:not(.profile-image):not(.hero-bg):not(.no-fade) {
+/* EXCLUDES: .profile-image (homepage portrait), .hero-bg (hero backgrounds), .no-fade (explicit opt-out), .blog-content images (handled by IntersectionObserver) */
+img:not(.profile-image):not(.hero-bg):not(.no-fade):not(.blog-img-lazy) {
   opacity: 0;
   animation: imgFadeIn 1.0s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+/* Blog content images: hidden until IntersectionObserver + load event triggers fade-in */
+.blog-content img.blog-img-lazy {
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.blog-content img.blog-img-loaded {
+  opacity: 1;
 }
 
 /* Respect user motion preferences */
@@ -3167,6 +3199,10 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
   img {
     opacity: 1;
     animation: none;
+  }
+  .blog-content img.blog-img-lazy {
+    opacity: 1;
+    transition: none;
   }
 }
 

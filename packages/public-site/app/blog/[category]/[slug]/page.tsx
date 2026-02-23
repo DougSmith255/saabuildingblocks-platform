@@ -1,104 +1,37 @@
 import { notFound } from 'next/navigation';
 import { CategoryBlogPostTemplate } from '@/components/blog';
-import type { BlogPost } from '@/lib/wordpress/types';
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
 import { extractFAQs, generateFAQSchema, transformFAQToRankMathMarkup } from '@/lib/faq-utils';
+import { getCachedBlogPosts, findPostBySlug, getRelatedPosts } from '@/lib/blog-post-page';
+import { STANDALONE_CATEGORIES, categoryToSlug, getPostUrl } from '@/lib/blog-post-urls';
+import { getAuthorData } from '@/lib/author-data';
 import type { Metadata } from 'next';
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
 
 /**
- * Load all blog posts from chunked JSON files
- * Uses fs.readFileSync for reliable build-time loading
- * Dynamically discovers chunk count from index file
- */
-function getAllBlogPosts(): BlogPost[] {
-  const allPosts: BlogPost[] = [];
-  const publicDir = join(process.cwd(), 'public');
-
-  // Read total chunks from index file
-  const indexPath = join(publicDir, 'blog-posts-index.json');
-  let totalChunks = 50; // generous upper bound as fallback
-  try {
-    if (existsSync(indexPath)) {
-      const index = JSON.parse(readFileSync(indexPath, 'utf-8'));
-      totalChunks = index.totalChunks || totalChunks;
-    }
-  } catch {}
-
-  for (let i = 1; i <= totalChunks; i++) {
-    const chunkPath = join(publicDir, `blog-posts-chunk-${i}.json`);
-    try {
-      if (existsSync(chunkPath)) {
-        const data = JSON.parse(readFileSync(chunkPath, 'utf-8'));
-        allPosts.push(...data);
-      }
-    } catch (error) {
-      console.warn(`Failed to load blog-posts-chunk-${i}.json:`, error);
-    }
-  }
-
-  console.log(`📚 Loaded ${allPosts.length} blog posts from ${totalChunks} chunks`);
-  return allPosts;
-}
-
-// Cache the posts since this runs multiple times during build
-let cachedPosts: BlogPost[] | null = null;
-function getCachedBlogPosts(): BlogPost[] {
-  if (!cachedPosts) {
-    cachedPosts = getAllBlogPosts();
-  }
-  return cachedPosts;
-}
-
-/**
- * Convert category name to URL slug
- */
-function categoryToSlug(category: string): string {
-  return category.toLowerCase().replace(/\s+/g, '-');
-}
-
-/**
- * Find a blog post by URL slug, checking custom URI first then WordPress slug
- */
-function findPostBySlug(posts: BlogPost[], slug: string): BlogPost | undefined {
-  // First: match by custom URI slug (source of truth from Permalink Manager)
-  const byUri = posts.find((p) => {
-    if (!p.customUri) return false;
-    const uriSlug = p.customUri.split('/').pop();
-    return uriSlug === slug;
-  });
-  if (byUri) return byUri;
-  // Fallback: match by WordPress post slug
-  return findPostBySlug(posts, slug);
-}
-
-/**
- * Generate static params for all blog posts
- * Uses Permalink Manager custom URIs as source of truth for URL paths
- * Falls back to category/slug construction if no custom URI exists
+ * Generate static params for all blog posts EXCEPT standalone categories.
+ * Posts in about-exp-realty and exp-realty-sponsor are served by their own routes.
  */
 export async function generateStaticParams() {
   const posts = getCachedBlogPosts();
 
-  return posts.map((post) => {
-    // Use customUri from Permalink Manager as source of truth
-    if (post.customUri) {
-      const parts = post.customUri.split('/');
-      if (parts.length >= 2) {
-        return {
-          category: parts[0],
-          slug: parts[parts.length - 1],
-        };
+  return posts
+    .map((post) => {
+      if (post.customUri) {
+        const parts = post.customUri.split('/');
+        if (parts.length >= 2) {
+          return {
+            category: parts[0],
+            slug: parts[parts.length - 1],
+          };
+        }
       }
-    }
-    // Fallback: construct from WordPress category + slug
-    const category = post.categories[0] || 'uncategorized';
-    return {
-      category: categoryToSlug(category),
-      slug: post.slug,
-    };
-  });
+      const category = post.categories[0] || 'uncategorized';
+      return {
+        category: categoryToSlug(category),
+        slug: post.slug,
+      };
+    })
+    .filter((params) => !STANDALONE_CATEGORIES.includes(params.category));
 }
 
 /**
@@ -109,7 +42,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ category: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { category, slug } = await params;
   const posts = getCachedBlogPosts();
   const post = findPostBySlug(posts, slug);
 
@@ -122,9 +55,23 @@ export async function generateMetadata({
   // Prefer Rank Math meta description, fallback to cleaned excerpt
   const description = post.metaDescription || cleanExcerpt(post.excerpt, 160);
 
+  // Build OG images array with dimensions when available
+  const ogImages = post.featuredImage?.url
+    ? [{
+        url: post.featuredImage.url,
+        width: post.featuredImage.width || undefined,
+        height: post.featuredImage.height || undefined,
+        alt: post.featuredImage.alt || post.title,
+      }]
+    : [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }];
+
   return {
     title: `${post.title} | Smart Agent Alliance`,
     description,
+    keywords: post.categories,
+    alternates: {
+      canonical: `https://smartagentalliance.com/blog/${category}/${slug}`,
+    },
     openGraph: {
       title: post.title,
       description,
@@ -132,13 +79,61 @@ export async function generateMetadata({
       publishedTime: post.date,
       modifiedTime: post.modified,
       authors: [post.author.name],
-      images: post.featuredImage?.url ? [post.featuredImage.url] : [],
+      section: post.categories[0],
+      tags: post.categories,
+      images: ogImages,
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description,
-      images: post.featuredImage?.url ? [post.featuredImage.url] : [],
+      images: post.featuredImage?.url ? [post.featuredImage.url] : ['/og-image.jpg'],
+    },
+  };
+}
+
+/**
+ * Build BlogPosting JSON-LD structured data for a post.
+ */
+function buildBlogPostingSchema(post: ReturnType<typeof findPostBySlug>, postUrl: string) {
+  if (!post) return null;
+
+  const authorData = getAuthorData(post.author.name);
+
+  const author = authorData
+    ? {
+        '@type': 'Person' as const,
+        name: authorData.name,
+        url: authorData.profileUrl,
+        jobTitle: authorData.jobTitle,
+        sameAs: authorData.sameAs,
+      }
+    : {
+        '@type': 'Person' as const,
+        name: post.author.name,
+      };
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.metaDescription || cleanExcerpt(post.excerpt, 160),
+    image: post.featuredImage?.url || 'https://smartagentalliance.com/og-image.jpg',
+    datePublished: post.date,
+    dateModified: post.modified,
+    author,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Smart Agent Alliance',
+      '@id': 'https://smartagentalliance.com/#organization',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://smartagentalliance.com/logo.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://smartagentalliance.com${postUrl}`,
     },
   };
 }
@@ -160,6 +155,7 @@ export default async function BlogPostPage({
   }
 
   const category = post.categories[0] || 'uncategorized';
+  const postUrl = getPostUrl(post);
 
   // Transform non-RankMath FAQ content to RankMath-style markup
   const transformedContent = transformFAQToRankMathMarkup(post.content);
@@ -172,15 +168,27 @@ export default async function BlogPostPage({
   const faqs = extractFAQs(post.content);
   const faqSchema = generateFAQSchema(faqs);
 
+  // BlogPosting structured data
+  const blogPostingSchema = buildBlogPostingSchema(post, postUrl);
+
+  // Pre-filter related posts on server side to minimize client payload
+  const relatedPosts = getRelatedPosts(posts, post);
+
   return (
     <main id="main-content">
+      {blogPostingSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+        />
+      )}
       {faqSchema && (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
       )}
-      <CategoryBlogPostTemplate post={postWithTransformedContent} category={category} />
+      <CategoryBlogPostTemplate post={postWithTransformedContent} category={category} relatedPosts={relatedPosts} />
     </main>
   );
 }

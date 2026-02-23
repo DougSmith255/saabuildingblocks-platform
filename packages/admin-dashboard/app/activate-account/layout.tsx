@@ -7,13 +7,12 @@ import GlassScrollbar from '@/components/GlassScrollbar';
  * Activate Account Page Layout
  *
  * Clean layout without header/footer for authentication pages.
- * Features optimized starfield background with brand colors.
+ * Matches login page layout exactly.
  */
 
 /**
  * Route segment config - excludes /activate-account from static export
- * Conditional dynamic export - allows static export to skip this route
- * VPS deployment: force-dynamic (requires auth)
+ * VPS deployment: force-dynamic (requires server rendering)
  * Cloudflare Pages: undefined (route excluded from build)
  */
 export const dynamic = 'force-dynamic';
@@ -21,7 +20,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Activate Your Account - Agent Portal',
   description: 'Activate your account to access the Agent Portal.',
-  robots: 'noindex, nofollow', // Prevent search engine indexing
+  robots: 'noindex, nofollow',
 };
 
 export default function ActivateAccountLayout({
@@ -34,7 +33,7 @@ export default function ActivateAccountLayout({
       {/* Load secondary-button CSS */}
       <link rel="stylesheet" href="/css/wordpress-components/secondary-button.css" />
 
-      <div className="relative min-h-screen min-h-dvh flex flex-col">
+      <div className="relative min-h-screen flex flex-col">
         {/* Star Background - Canvas-based animated starfield */}
         <StarBackground />
 
@@ -47,11 +46,10 @@ export default function ActivateAccountLayout({
         {/* Main content area - No header padding needed */}
         <main
           id="main-content"
-          className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8"
+          className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8"
           style={{
             position: 'relative',
-            zIndex: 20, // Above spaceman (10)
-            minHeight: '100dvh', // Use dynamic viewport height for mobile
+            zIndex: 20,
           }}
         >
           {children}

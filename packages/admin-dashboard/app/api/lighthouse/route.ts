@@ -3,6 +3,7 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import { readFile, unlink } from 'fs/promises';
 import { randomUUID } from 'crypto';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 
 const execAsync = promisify(exec);
 
@@ -15,6 +16,11 @@ const execAsync = promisify(exec);
  */
 export async function POST(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const body = await request.json();
     const { url } = body;
 

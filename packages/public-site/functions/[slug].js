@@ -466,7 +466,10 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
   </div>
 
   <!-- Plausible Analytics -->
-  <script defer data-domain="${analyticsDomain}" src="https://plausible.saabuildingblocks.com/js/script.js"></script>
+  <script defer data-domain="${analyticsDomain}" src="https://plausible.saabuildingblocks.com/js/script.manual.file-downloads.pageview-props.tagged-events.js"></script>
+  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };setTimeout(function(){plausible('pageview')},500);</script>
+  <!-- Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async></script>
 </body>
 </html>`;
 }
@@ -524,7 +527,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   <link rel="preload" href="https://smartagentalliance.com/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2" as="font" type="font/woff2" crossorigin="">
 
   <!-- Plausible Analytics -->
-  <script defer="" data-domain="smartagentalliance.com" src="https://plausible.io/js/script.js"></script>
+  <script defer data-domain="${analyticsDomain}" src="https://plausible.saabuildingblocks.com/js/script.manual.file-downloads.pageview-props.tagged-events.js"></script>
+  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };setTimeout(function(){plausible('pageview')},500);</script>
+  <!-- Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async></script>
 
   <style>
     /* Font Faces */
@@ -4585,7 +4591,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-smart-agent-alliance-explained/desktop" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.3;" />
                     <!-- Disabled overlay -->
                     <div style="position: absolute; inset: 0; z-index: 10; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; border-radius: 8px 8px 0 0;">
-                      <span style="color: #ffd700; font-size: clamp(14px, 2.5vw, 22px); font-family: var(--font-taskor, sans-serif); font-weight: 600; letter-spacing: 0.05em; text-shadow: 0 0 20px rgba(255,215,0,0.4);">Video Update In Progress</span>
+                      <span style="color: #ffd700; font-size: clamp(14px, 2.5vw, 22px); font-family: var(--font-taskor, sans-serif); font-weight: 600; letter-spacing: 0.05em; text-shadow: 0 0 20px rgba(255,215,0,0.4);">Video Update Coming Soon</span>
                     </div>
                   </div>
                 </div>
@@ -5019,6 +5025,42 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       let progress = 0;
       let thresholdReached = false;
 
+      // Bottom player video ID
+      const BOTTOM_VIDEO_ID = 'f8c3f1bd9c2db2409ed0e90f60fd4d5b';
+
+      // Video analytics tracking for bottom player
+      let btmAnalyticsSessionId = '';
+      let btmAnalyticsAccTime = 0;
+      let btmAnalyticsLastTime = 0;
+      let btmAnalyticsLastBeacon = 0;
+
+      function getBtmVisitorId() {
+        try {
+          var vid = sessionStorage.getItem('_saa_vid');
+          if (!vid) {
+            vid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+            sessionStorage.setItem('_saa_vid', vid);
+          }
+          return vid;
+        } catch(e) { return ''; }
+      }
+
+      function sendBtmBeacon(eventType) {
+        try {
+          var payload = {
+            video_id: BOTTOM_VIDEO_ID,
+            session_id: btmAnalyticsSessionId,
+            event_type: eventType,
+            watch_time_seconds: Math.round(btmAnalyticsAccTime * 10) / 10,
+            video_duration_seconds: player ? (player.duration || null) : null,
+            visitor_id: getBtmVisitorId(),
+            page_url: location.pathname,
+            slug: '${escapeJS(agent.slug)}'
+          };
+          navigator.sendBeacon(location.origin + '/api/video/events', new Blob([JSON.stringify(payload)], {type:'application/json'}));
+        } catch(e) {}
+      }
+
       // DOM Elements
       const videoIframe = document.getElementById('video-iframe');
       const videoOverlay = document.getElementById('video-overlay');
@@ -5153,6 +5195,39 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         var wantsPlay = false;
         var playerBound = false;
 
+        // Video analytics tracking for wygPlayer
+        var wygAnalyticsSessionId = '';
+        var wygAnalyticsAccTime = 0;
+        var wygAnalyticsLastTime = 0;
+        var wygAnalyticsLastBeacon = 0;
+
+        function getVisitorId() {
+          try {
+            var vid = sessionStorage.getItem('_saa_vid');
+            if (!vid) {
+              vid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+              sessionStorage.setItem('_saa_vid', vid);
+            }
+            return vid;
+          } catch(e) { return ''; }
+        }
+
+        function sendWygBeacon(eventType) {
+          try {
+            var payload = {
+              video_id: VIDEO_ID,
+              session_id: wygAnalyticsSessionId,
+              event_type: eventType,
+              watch_time_seconds: Math.round(wygAnalyticsAccTime * 10) / 10,
+              video_duration_seconds: wygPlayer ? (wygPlayer.duration || null) : null,
+              visitor_id: getVisitorId(),
+              page_url: location.pathname,
+              slug: '${escapeJS(agent.slug)}'
+            };
+            navigator.sendBeacon(location.origin + '/api/video/events', new Blob([JSON.stringify(payload)], {type:'application/json'}));
+          } catch(e) {}
+        }
+
         var wygTimestamps = [
           { time: 0,   title: 'BUILT FOR AGENT GROWTH', subtitle: 'Clarity. Efficiency. Scale' },
           { time: 14,  title: 'TRANSITION SEAMLESSLY',   subtitle: 'Whether you are starting or moving' },
@@ -5259,6 +5334,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             if (stripEl && !isFullscreen) stripEl.style.maxHeight = '60px';
             if (!tsInterval) tsInterval = setInterval(updateTimestamp, 500);
             scheduleHide();
+            // Analytics: start new session
+            wygAnalyticsSessionId = VIDEO_ID + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+            wygAnalyticsAccTime = 0;
+            wygAnalyticsLastTime = wygPlayer.currentTime || 0;
+            wygAnalyticsLastBeacon = Date.now();
+            sendWygBeacon('play');
           });
           wygPlayer.addEventListener('pause', function() {
             isPlaying = false;
@@ -5278,6 +5359,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             tsPrevIdx = 0;
             if (endOverlay) endOverlay.style.display = 'flex';
             hideControlsBar();
+            if (wygAnalyticsSessionId) sendWygBeacon('ended');
           });
           wygPlayer.addEventListener('loadedmetadata', function() {
             duration = wygPlayer.duration || 0;
@@ -5287,6 +5369,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             currentTime = wygPlayer.currentTime || 0;
             duration = wygPlayer.duration || 0;
             updateTimeDisplay();
+            // Analytics: accumulate watch time (delta-based)
+            var delta = currentTime - wygAnalyticsLastTime;
+            if (delta > 0 && delta < 2) wygAnalyticsAccTime += delta;
+            wygAnalyticsLastTime = currentTime;
+            if (wygAnalyticsSessionId && Date.now() - wygAnalyticsLastBeacon >= 15000) {
+              wygAnalyticsLastBeacon = Date.now();
+              sendWygBeacon('heartbeat');
+            }
           });
           wygPlayer.addEventListener('volumechange', function() {
             isMuted = wygPlayer.muted;
@@ -5839,6 +5929,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         if (controlsBar) {
           controlsBar.addEventListener('click', function(e) { e.stopPropagation(); });
         }
+
+        // Analytics: send final beacon on page close
+        window.addEventListener('beforeunload', function() {
+          if (wygAnalyticsSessionId && wygAnalyticsAccTime > 0) sendWygBeacon('ended');
+        });
       }
 
       function initPlayer() {
@@ -5849,6 +5944,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           updatePlayButton();
           videoOverlay.classList.add('is-playing');
           playBtn.classList.add('is-playing');
+          // Analytics: start new session
+          btmAnalyticsSessionId = BOTTOM_VIDEO_ID + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+          btmAnalyticsAccTime = 0;
+          btmAnalyticsLastTime = player.currentTime || 0;
+          btmAnalyticsLastBeacon = Date.now();
+          sendBtmBeacon('play');
         });
 
         player.addEventListener('pause', () => {
@@ -5863,6 +5964,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           updatePlayButton();
           videoOverlay.classList.remove('is-playing');
           playBtn.classList.remove('is-playing');
+          if (btmAnalyticsSessionId) sendBtmBeacon('ended');
         });
 
         player.addEventListener('loadedmetadata', () => {
@@ -5895,6 +5997,15 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             scrubberThumb.style.left = pct + '%';
           }
 
+          // Analytics: accumulate watch time (delta-based)
+          var btmDelta = time - btmAnalyticsLastTime;
+          if (btmDelta > 0 && btmDelta < 2) btmAnalyticsAccTime += btmDelta;
+          btmAnalyticsLastTime = time;
+          if (btmAnalyticsSessionId && Date.now() - btmAnalyticsLastBeacon >= 15000) {
+            btmAnalyticsLastBeacon = Date.now();
+            sendBtmBeacon('heartbeat');
+          }
+
           // Track progress
           if (duration > 0 && time > maxWatchedTime) {
             maxWatchedTime = time;
@@ -5915,6 +6026,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           }
         });
       }
+
+      // Analytics: send final beacon on page close for bottom player
+      window.addEventListener('beforeunload', function() {
+        if (btmAnalyticsSessionId && btmAnalyticsAccTime > 0) sendBtmBeacon('ended');
+      });
 
       function setupEventListeners() {
         // Video controls (only if video player elements exist - disabled when video is off)
@@ -6467,15 +6583,36 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         joinMessage.style.display = 'none';
 
         try {
+          // Get Turnstile token
+          var turnstileToken = '';
+          if (window.turnstile) {
+            try {
+              turnstileToken = await new Promise(function(resolve, reject) {
+                var container = document.createElement('div');
+                document.body.appendChild(container);
+                var timeout = setTimeout(function() { document.body.removeChild(container); reject(new Error('timeout')); }, 10000);
+                window.turnstile.render(container, {
+                  sitekey: '0x4AAAAAACgEEzOh7Es9ADzy',
+                  size: 'invisible',
+                  action: 'join-team',
+                  callback: function(token) { clearTimeout(timeout); document.body.removeChild(container); resolve(token); },
+                  'error-callback': function() { clearTimeout(timeout); document.body.removeChild(container); reject(new Error('failed')); }
+                });
+              });
+            } catch(te) { console.warn('Turnstile error:', te); }
+          }
+
           const response = await fetch('/api/join-team', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(Object.assign({}, formData, { turnstileToken: turnstileToken }))
           });
 
           const result = await response.json();
 
           if (result.success) {
+            // Track successful submission
+            if (window.plausible) window.plausible('Join Form Submitted', { props: { sponsor: SPONSOR_NAME, page_type: 'attraction' } });
             // Save to localStorage with timestamp for expiration
             localStorage.setItem('saa_join_submitted', JSON.stringify({
               ...formData,
@@ -8718,7 +8855,10 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   </div>
 
   <!-- Plausible Analytics -->
-  <script defer data-domain="${analyticsDomain}" src="https://plausible.saabuildingblocks.com/js/script.js"></script>
+  <script defer data-domain="${analyticsDomain}" src="https://plausible.saabuildingblocks.com/js/script.manual.file-downloads.pageview-props.tagged-events.js"></script>
+  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };setTimeout(function(){plausible('pageview')},500);</script>
+  <!-- Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async></script>
 
   <script>
     const agentSlug = '${escapeHTML(agent.slug)}';
@@ -8837,6 +8977,25 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       submitBtn.textContent = 'Sending...';
 
       try {
+        // Get Turnstile token
+        var turnstileToken = '';
+        if (window.turnstile) {
+          try {
+            turnstileToken = await new Promise(function(resolve, reject) {
+              var container = document.createElement('div');
+              document.body.appendChild(container);
+              var timeout = setTimeout(function() { document.body.removeChild(container); reject(new Error('timeout')); }, 10000);
+              window.turnstile.render(container, {
+                sitekey: '0x4AAAAAACgEEzOh7Es9ADzy',
+                size: 'invisible',
+                action: 'join-team',
+                callback: function(token) { clearTimeout(timeout); document.body.removeChild(container); resolve(token); },
+                'error-callback': function() { clearTimeout(timeout); document.body.removeChild(container); reject(new Error('failed')); }
+              });
+            });
+          } catch(te) { console.warn('Turnstile error:', te); }
+        }
+
         // Send to GoHighLevel via join-team API
         const response = await fetch('/api/join-team', {
           method: 'POST',
@@ -8846,11 +9005,13 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
             lastName: name.split(' ').slice(1).join(' ') || '',
             email,
             sponsorName: agentName,
-            source: 'links-page'
+            source: 'links-page',
+            turnstileToken: turnstileToken
           })
         });
 
         if (response.ok) {
+          if (window.plausible) window.plausible('Join Form Submitted', { props: { sponsor: agentName, page_type: 'links' } });
           document.getElementById('modalContent').innerHTML = \`
             <div class="success-message">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48">

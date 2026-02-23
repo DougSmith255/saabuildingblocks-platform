@@ -11,6 +11,12 @@ binding = "AGENT_PAGES"
 id = "9f886b7add144cc480d7fe0f4ef5eb5e"
 preview_id = "a486b1fc0da947aca21e526bccf40537"
 
+# KV Namespace for 404 redirect overrides (triage system)
+[[kv_namespaces]]
+binding = "REDIRECT_OVERRIDES"
+id = "3f4ec78dd5e54113abe5026c211cd437"
+preview_id = "3ff3ca59cf2c42baaeeedc6a84d8f8e8"
+
 # R2 Bucket binding for freebies/assets
 [[r2_buckets]]
 binding = "ASSETS_BUCKET"

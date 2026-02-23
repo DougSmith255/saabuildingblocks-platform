@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
 
     response.cookies.set('refreshToken', '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       sameSite: 'strict',
       maxAge: 0,
       path: '/',

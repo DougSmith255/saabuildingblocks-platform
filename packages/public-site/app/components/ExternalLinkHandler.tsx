@@ -2,6 +2,12 @@
 
 import { useEffect } from 'react';
 
+declare global {
+  interface Window {
+    plausible?: (event: string, options?: { props: Record<string, string | number | boolean> }) => void;
+  }
+}
+
 /**
  * ExternalLinkHandler - Global component that makes external links open in new tabs
  *
@@ -80,7 +86,31 @@ export function ExternalLinkHandler() {
       subtree: true,
     });
 
-    return () => observer.disconnect();
+    // Track external link clicks with Plausible analytics
+    function handleExternalLinkClick(event: MouseEvent) {
+      const target = (event.target as Element)?.closest?.('a[href]') as HTMLAnchorElement | null;
+      if (!target) return;
+
+      const href = target.getAttribute('href');
+      if (!href) return;
+
+      // Only track links starting with http(s) that are not our own domains
+      if (!href.startsWith('http://') && !href.startsWith('https://')) return;
+      if (href.includes('smartagentalliance.com') || href.includes('saabuildingblocks.com')) return;
+
+      if (typeof window !== 'undefined' && window.plausible) {
+        window.plausible('External Link Clicked', {
+          props: { url: href, page: window.location.pathname },
+        });
+      }
+    }
+
+    document.addEventListener('click', handleExternalLinkClick);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('click', handleExternalLinkClick);
+    };
   }, []);
 
   return null;

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { verifySessionAdminAuth } from '@/app/api/middleware/adminAuth';
 
 // Force dynamic rendering - exclude from static export
 export const dynamic = 'force-dynamic';
@@ -8,8 +9,13 @@ export const dynamic = 'force-dynamic';
  * GET /api/master-controller/brand-colors
  * Fetch brand colors from Supabase
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = await verifySessionAdminAuth();
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     // Lazy initialization - create client at runtime, not build time
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -45,6 +51,11 @@ export async function GET() {
  */
 export async function POST(request: NextRequest) {
   try {
+    const auth = await verifySessionAdminAuth();
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     // Lazy initialization - create client at runtime, not build time
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;

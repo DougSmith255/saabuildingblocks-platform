@@ -93,8 +93,8 @@ function transformPost(post: WordPressPost): BlogPost {
   // Extract full permalink path from link field
   const permalink = extractPermalink(post.link, post.slug);
 
-  // Extract YouTube video URL from ACF fields
-  const youtubeVideoUrl = post.acf?.youtube_video_url || undefined;
+  // Extract YouTube video URL from ACF fields or registered meta
+  const youtubeVideoUrl = post.acf?.youtube_video_url || post.meta?.youtube_video_url || undefined;
 
   return {
     id: post.id,

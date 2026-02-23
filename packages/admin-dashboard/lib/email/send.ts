@@ -22,8 +22,8 @@ export async function sendPasswordResetEmail(
   expiresInMinutes: number = 15
 ): Promise<EmailResult> {
   // Link goes to login page with reset_token param, which opens the reset password modal
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
-  const resetLink = `${baseUrl}/agent-portal/login?reset_token=${resetToken}`;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com';
+  const resetLink = `${baseUrl}/login?reset_token=${resetToken}`;
 
   try {
     const result = await sendEmail({
@@ -100,9 +100,10 @@ export async function sendWelcomeEmail(
   activationToken: string,
   expiresInHours: number = 48
 ): Promise<EmailResult> {
-  // Use Cloudflare Pages URL for activation (public-facing site)
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
-  const activationLink = `${baseUrl}/agent-portal/activate?token=${activationToken}`;
+  // Activation links must use saabuildingblocks.com (proxied to VPS admin dashboard on port 3002)
+  // smartagentalliance.com is a Cloudflare Pages custom domain with no route to the VPS
+  const activationBaseUrl = process.env.ACTIVATION_BASE_URL || 'https://saabuildingblocks.com';
+  const activationLink = `${activationBaseUrl}/activate-account?token=${activationToken}`;
 
   try {
     const result = await sendEmail({
@@ -136,7 +137,7 @@ export async function sendAccountLockedEmail(
   unlockTime: Date,
   reason?: string
 ): Promise<EmailResult> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com';
   const supportUrl = `${baseUrl}/contact`;
 
   try {
@@ -171,7 +172,7 @@ export async function sendEmailVerificationEmail(
   username: string,
   verificationToken: string
 ): Promise<EmailResult> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com';
   const verificationLink = `${baseUrl}/verify-email?token=${verificationToken}`;
 
   try {
@@ -208,7 +209,7 @@ export async function sendEmailChangeVerification(
   verificationToken: string,
   expiresInHours: number = 24
 ): Promise<EmailResult> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com';
   const verificationLink = `${baseUrl}/verify-email-change/${verificationToken}`;
 
   try {
@@ -243,7 +244,7 @@ export async function sendEmailChangeConfirmation(
   username: string,
   newEmail: string
 ): Promise<EmailResult> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com';
   const supportUrl = `${baseUrl}/contact`;
 
   try {

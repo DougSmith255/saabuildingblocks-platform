@@ -25,28 +25,39 @@ import { passwordResetConfirmSchema, formatZodErrors } from '@/lib/validation/pa
 
 const BCRYPT_ROUNDS = 12;
 
-// CORS headers for cross-origin requests
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Max-Age': '86400',
-};
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
+
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
+}
 
 // Handle CORS preflight
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(request.headers.get('origin')) });
 }
 
-// Helper to add CORS headers to responses
-function corsResponse(body: object, status: number = 200) {
-  return NextResponse.json(body, { status, headers: CORS_HEADERS });
+// JWT secret for password reset tokens — fails at runtime if not set
+function getPasswordResetSecret(): Uint8Array {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is not set');
+  }
+  return new TextEncoder().encode(process.env.JWT_SECRET);
 }
-
-// JWT secret for password reset tokens
-const PASSWORD_RESET_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'your-secret-key-min-32-chars-replace-in-production'
-);
 
 interface PasswordResetPayload {
   sub: string;      // User ID
@@ -56,6 +67,12 @@ interface PasswordResetPayload {
 }
 
 export async function POST(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  const corsHeaders = getCorsHeaders(origin);
+  function corsResponse(body: object, status: number = 200) {
+    return NextResponse.json(body, { status, headers: corsHeaders });
+  }
+
   const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
@@ -92,14 +109,14 @@ export async function POST(request: NextRequest) {
     // Verify JWT token
     let payload: PasswordResetPayload;
     try {
-      const { payload: verified } = await jwtVerify(token, PASSWORD_RESET_SECRET);
+      const { payload: verified } = await jwtVerify(token, getPasswordResetSecret());
       payload = verified as unknown as PasswordResetPayload;
 
       console.log('[Password Reset] Token verified for user:', payload.sub);
     } catch (jwtError) {
       console.error('[Password Reset] JWT verification failed:', jwtError);
       await logAuthEvent({
-        eventType: 'failed_login',
+        eventType: 'password_reset',
         success: false,
         ipAddress,
         userAgent,
@@ -123,7 +140,7 @@ export async function POST(request: NextRequest) {
 
     if (userError || !user) {
       await logAuthEvent({
-        eventType: 'failed_login',
+        eventType: 'password_reset',
         success: false,
         ipAddress,
         userAgent,
@@ -145,7 +162,7 @@ export async function POST(request: NextRequest) {
     if (payload.pwfp !== currentPasswordFingerprint) {
       await logAuthEvent({
         userId: user.id,
-        eventType: 'failed_login',
+        eventType: 'password_reset',
         success: false,
         ipAddress,
         userAgent,
@@ -237,7 +254,7 @@ export async function POST(request: NextRequest) {
     // Log successful password reset
     await logAuthEvent({
       userId: user.id,
-      eventType: 'failed_login', // Using failed_login type for password events
+      eventType: 'password_reset', // Using failed_login type for password events
       success: true,
       ipAddress,
       userAgent,

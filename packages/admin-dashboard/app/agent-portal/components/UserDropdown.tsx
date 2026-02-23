@@ -94,8 +94,8 @@ export function UserDropdown() {
         <DropdownMenuItem
           className="text-[#dcdbd5] hover:text-[#ffd700] hover:bg-[#404040]/50 cursor-pointer"
           onClick={() => {
-            // Navigate to change password page
-            window.location.href = '/auth/change-password';
+            // Navigate to password reset page
+            window.location.href = '/reset-password';
           }}
         >
           <KeyRound className="w-4 h-4 mr-2" />

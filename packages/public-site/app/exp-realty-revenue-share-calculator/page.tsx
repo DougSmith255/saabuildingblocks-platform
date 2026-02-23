@@ -1,11 +1,17 @@
 'use client';
 
-import { useState, useEffect, useRef, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { H1, H2, Tagline, CTAButton } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { GoldenRainEffect } from '@/components/shared/hero-effects/GoldenRainEffect';
+
+declare global {
+  interface Window {
+    plausible?: (event: string, options?: { props: Record<string, string | number | boolean> }) => void;
+  }
+}
 
 /**
  * Revenue Share Tier Configuration
@@ -733,6 +739,22 @@ function RevenueShareCalculatorContent() {
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(isEmbed); // Already visible in embed mode
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Debounced Plausible tracking for calculator usage
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isInitialScenario = useRef(true);
+  useEffect(() => {
+    if (isInitialScenario.current) {
+      isInitialScenario.current = false;
+      return;
+    }
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
+      if (typeof window !== 'undefined' && window.plausible) {
+        window.plausible('Calculator Used', { props: { calculator_type: 'revenue_share' } });
+      }
+    }, 2000);
+  }, [selectedScenario]);
 
   // Start animation only when card is 50% visible
   useEffect(() => {

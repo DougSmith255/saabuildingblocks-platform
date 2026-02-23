@@ -1589,7 +1589,10 @@ function AgentPortal() {
   useEffect(() => {
     if (user?.id && !isOnboardingLoaded) {
       console.log('[Onboarding] Fetching progress for user:', user.id);
-      fetch(`${API_URL}/api/users/onboarding?userId=${user.id}`)
+      const onboardingToken = localStorage.getItem('agent_portal_token');
+      fetch(`${API_URL}/api/users/onboarding?userId=${user.id}`, {
+        headers: { 'Authorization': `Bearer ${onboardingToken}` },
+      })
         .then(res => {
           if (isAuthError(res)) throw new Error('auth');
           return res.json();
@@ -1636,9 +1639,13 @@ function AgentPortal() {
     setOnboardingProgress(newProgress);
 
     try {
+      const patchToken = localStorage.getItem('agent_portal_token');
       await fetch(`${API_URL}/api/users/onboarding`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${patchToken}`,
+        },
         body: JSON.stringify({
           userId: user.id,
           onboarding_progress: newProgress,
@@ -1662,9 +1669,13 @@ function AgentPortal() {
     }
 
     try {
+      const dismissToken = localStorage.getItem('agent_portal_token');
       await fetch(`${API_URL}/api/users/onboarding`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${dismissToken}`,
+        },
         body: JSON.stringify({
           userId: user.id,
           ...(type === 'link_page' ? { link_page_intro_dismissed: true } : { elite_courses_intro_dismissed: true }),
@@ -5719,7 +5730,7 @@ function AgentPortal() {
                   </summary>
                   <div className="mt-2 p-3 rounded-lg bg-black/30 text-sm space-y-2">
                     <p className="text-[#e5e4dd]/70 font-mono text-xs">
-                      <strong className="text-[#00ff88]">To:</strong> support@mikesherrard.com
+                      <strong className="text-[#00ff88]">To:</strong> team@mikesherrard.com
                     </p>
                     <p className="text-[#e5e4dd]/70 font-mono text-xs">
                       <strong className="text-[#00ff88]">Subject:</strong> New Smart Agent Alliance Agent - Skool and Course Access
@@ -5735,7 +5746,7 @@ function AgentPortal() {
                         Copy Email
                       </button>
                       <a
-                        href={`mailto:support@mikesherrard.com?subject=${encodeURIComponent('New Smart Agent Alliance Agent - Skool and Course Access')}&body=${encodeURIComponent(`Hi,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.\n\nCould you please help me with:\n- Login credentials for Social Agent Academy PRO (includes SAA 2.0, Master Agent Attraction, and AI Accelerator)\n- Skool community invite\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
+                        href={`mailto:team@mikesherrard.com?subject=${encodeURIComponent('New Smart Agent Alliance Agent - Skool and Course Access')}&body=${encodeURIComponent(`Hi,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.\n\nCould you please help me with:\n- Login credentials for Social Agent Academy PRO (includes SAA 2.0, Master Agent Attraction, and AI Accelerator)\n- Skool community invite\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
                         className="flex-1 px-2 py-1.5 rounded bg-[#00ff88]/10 border border-[#00ff88]/30 text-[#00ff88] hover:bg-[#00ff88]/20 transition-colors text-xs text-center"
                       >
                         Open in Email
@@ -6187,7 +6198,7 @@ function AgentPortal() {
                     Wolf Pack / Social Agent Academy PRO
                   </h5>
                   <div className="bg-black/30 rounded-lg p-3 text-sm text-[#e5e4dd]/80 font-mono mb-3">
-                    <p><strong className="text-[#ffd700]">To:</strong> support@mikesherrard.com</p>
+                    <p><strong className="text-[#ffd700]">To:</strong> team@mikesherrard.com</p>
                     <p><strong className="text-[#ffd700]">Subject:</strong> New SAA Agent - Login Request</p>
                     <p className="mt-2">Hi,</p>
                     <p className="mt-1">My name is {user?.firstName || '[First Name]'} {user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.</p>
@@ -6211,7 +6222,7 @@ function AgentPortal() {
                       Copy Email
                     </button>
                     <a
-                      href={`mailto:support@mikesherrard.com?subject=${encodeURIComponent('New SAA Agent - Login Request')}&body=${encodeURIComponent(`Hi,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.\n\nCould you please help me with:\n- Login credentials for Social Agent Academy PRO\n- Skool community invite and/or setup information\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
+                      href={`mailto:team@mikesherrard.com?subject=${encodeURIComponent('New SAA Agent - Login Request')}&body=${encodeURIComponent(`Hi,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.\n\nCould you please help me with:\n- Login credentials for Social Agent Academy PRO\n- Skool community invite and/or setup information\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
                       className="flex-1 px-3 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-sm flex items-center justify-center gap-2"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -7796,6 +7807,7 @@ function SupportSection({ userState, userId, onClearCache }: SupportSectionProps
                 </svg>
                 <span className="truncate">{demoBlur('team@smartagentalliance.com')}</span>
               </a>
+              <p className="text-[10px] text-[#e5e4dd]/40 mt-1.5 leading-relaxed">Mon–Fri 9 AM – 5 PM MST · Response within 24 hrs · Weekend messages answered Monday</p>
             </div>
 
             {/* Urgent - Text Doug or Karrie */}
@@ -7874,15 +7886,16 @@ function SupportSection({ userState, userId, onClearCache }: SupportSectionProps
             <div>
               <p className="text-[10px] text-[#e5e4dd]/40 uppercase tracking-wider mb-1.5">Skool • SAA PRO • Agent Attraction • AI Accelerator</p>
               <a
-                href="mailto:support@mikesherrard.com"
+                href="mailto:team@mikesherrard.com"
                 className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#22c55e] text-[#1a1a1a] font-semibold hover:bg-[#4ade80] transition-colors text-sm"
                 style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
               >
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span className="truncate">{demoBlur('support@mikesherrard.com')}</span>
+                <span className="truncate">{demoBlur('team@mikesherrard.com')}</span>
               </a>
+              <p className="text-[10px] text-[#e5e4dd]/40 mt-1.5 leading-relaxed">Mon–Fri 9 AM – 5 PM MST · Response within 24 hrs · Weekend messages answered Monday</p>
             </div>
             {/* Connor - Investor Army */}
             <div>

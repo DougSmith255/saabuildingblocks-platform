@@ -52,6 +52,10 @@ export interface WordPressPost {
   acf?: {
     youtube_video_url?: string;
   };
+  /** REST API registered meta fields */
+  meta?: {
+    youtube_video_url?: string;
+  };
   _embedded?: {
     'wp:featuredmedia'?: Array<{
       source_url: string;

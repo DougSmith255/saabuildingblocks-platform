@@ -109,6 +109,10 @@ export function JoinModal({
     setMessage(null);
 
     try {
+      // Get Turnstile CAPTCHA token
+      const { getTurnstileToken } = await import('@saa/shared/lib/turnstile');
+      const turnstileToken = await getTurnstileToken('join-team');
+
       const response = await fetch(apiEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -118,6 +122,7 @@ export function JoinModal({
           email: formData.email,
           country: formData.country,
           sponsorName: sponsorName,
+          turnstileToken,
         }),
       });
 
@@ -135,14 +140,18 @@ export function JoinModal({
         }
 
         setMessage({ type: 'success', text: 'Thank you! We will be in touch soon.' });
-        onSuccess?.(formData);
 
-        // Close modal after success message displays
-        setTimeout(() => {
-          onClose();
-          setFormData({ firstName: '', lastName: '', email: '', country: '' });
-          setMessage(null);
-        }, 2500);
+        if (onSuccess) {
+          // Parent handles the transition (e.g. to instructions panel) — don't auto-close
+          onSuccess(formData);
+        } else {
+          // No onSuccess handler — auto-close after success message displays
+          setTimeout(() => {
+            onClose();
+            setFormData({ firstName: '', lastName: '', email: '', country: '' });
+            setMessage(null);
+          }, 2500);
+        }
       } else {
         setMessage({ type: 'error', text: result.error || 'Something went wrong. Please try again.' });
       }

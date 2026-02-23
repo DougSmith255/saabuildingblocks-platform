@@ -124,8 +124,15 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
   }, [showPopup, isPanelOpen]);
 
   useEffect(() => {
-    if (forceOpen) setIsOpen(true);
-  }, [forceOpen]);
+    if (forceOpen) {
+      // Don't open if another form/panel is already visible
+      if (isPanelOpen()) {
+        onForceClose?.();
+        return;
+      }
+      setIsOpen(true);
+    }
+  }, [forceOpen, isPanelOpen, onForceClose]);
 
   // Pre-warm Three.js modules during browser idle time so the globe
   // is ready instantly when the panel opens (no flash-in).
@@ -174,6 +181,10 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
     setSubmitStatus('idle');
 
     try {
+      // Get Turnstile CAPTCHA token
+      const { getTurnstileToken } = await import('@saa/shared/lib/turnstile');
+      const turnstileToken = await getTurnstileToken('join-team');
+
       const res = await fetch('/api/join-team', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -182,10 +193,14 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
           lastName: formData.lastName.trim(),
           email: formData.email.trim(),
           source: 'vip-guest-pass',
+          turnstileToken,
         }),
       });
       if (!res.ok) throw new Error('Failed to submit');
       setSubmitStatus('success');
+      if (typeof window !== 'undefined' && window.plausible) {
+        window.plausible('eXp World Guest Pass', { props: { page: window.location.pathname } });
+      }
       // Close with animation via SlidePanel's internal close (same as clicking X)
       setTimeout(() => {
         if (closePanelRef.current) closePanelRef.current();

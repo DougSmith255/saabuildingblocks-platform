@@ -32,15 +32,16 @@ const ALLOWED_ORIGINS = [
 
 // Get CORS headers based on request origin
 function getCorsHeaders(origin?: string | null): Record<string, string> {
-  // Check if origin is in allowed list
+  // Only set CORS origin if the request origin is in the allowed list
   const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin)
     ? origin
-    : ALLOWED_ORIGINS[0]; // Default to Cloudflare Pages
+    : ALLOWED_ORIGINS[0]; // Default for same-origin requests (no Origin header)
 
   return {
     'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Vary': 'Origin',
   };
 }
 
@@ -301,7 +302,7 @@ export async function POST(request: NextRequest) {
     // Update GoHighLevel contact
     try {
       const ghlResult = await createOrUpdateGHLContact({
-        email: user.email,
+        email: userEmail,
         firstName: validatedData.first_name,
         lastName: validatedData.last_name,
         tags: ['saa-portal-user', 'invitation-accepted', 'account-active'],
@@ -343,7 +344,7 @@ export async function POST(request: NextRequest) {
     // Create Supabase Auth user for future authentication
     try {
       const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-        email: user.email,
+        email: userEmail,
         password: validatedData.password,
         email_confirm: true,
         user_metadata: {
@@ -392,7 +393,7 @@ export async function POST(request: NextRequest) {
             slug,
             display_first_name: validatedData.first_name,
             display_last_name: validatedData.last_name,
-            email: user.email,
+            email: userEmail,
             ...AGENT_PAGE_DEFAULTS,
           })
           .select()

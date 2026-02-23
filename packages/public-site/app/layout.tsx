@@ -279,7 +279,7 @@ export default async function RootLayout({
         />
 
         {/* Plausible Analytics - Self-hosted, privacy-focused analytics */}
-        {/* Manual mode: delays pageview by 500ms to filter bots/accidental clicks */}
+        {/* Manual mode: delays pageview by 1s to filter bots and sub-1s bounces */}
         <script
           defer
           data-domain="smartagentalliance.com"
@@ -287,7 +287,7 @@ export default async function RootLayout({
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };setTimeout(function(){plausible('pageview')},500);`,
+            __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };setTimeout(function(){if(document.querySelector('main[data-is-404="true"]'))return;plausible('pageview')},1000);`,
           }}
         />
 

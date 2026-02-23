@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createGHLClient, GHLAPIError, validateContactData } from '@/lib/gohighlevel-client';
 import { randomBytes } from 'crypto';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 
 // ============================================================================
 // Request Validation
@@ -56,6 +57,11 @@ function getActivationExpiry(): string {
  */
 export async function POST(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     // Parse and validate request body
     const body: unknown = await request.json();
     const validation = CreateContactBodySchema.safeParse(body);
@@ -216,6 +222,11 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const searchParams = request.nextUrl.searchParams;
     const email = searchParams.get('email');
 

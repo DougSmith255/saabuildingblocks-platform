@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
-import { exec } from 'child_process';
+import { NextRequest, NextResponse } from 'next/server';
+import { execFile } from 'child_process';
 import { promisify } from 'util';
+import { verifySessionAdminAuth } from '@/app/api/middleware/adminAuth';
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -135,11 +136,18 @@ function parseRevList(output: string): boolean {
  * GET /api/master-controller/git-status
  * Returns current git status with filtered file list
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = await verifySessionAdminAuth();
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
+    const GIT_CWD = '/home/ubuntu/saabuildingblocks-platform';
+
     // Check if git is available
     try {
-      await execAsync('git --version');
+      await execFileAsync('git', ['--version']);
     } catch (error) {
       return NextResponse.json(
         {
@@ -153,8 +161,8 @@ export async function GET() {
 
     // Check if we're in a git repository
     try {
-      await execAsync('git rev-parse --git-dir', {
-        cwd: '/home/claude-flow',
+      await execFileAsync('git', ['rev-parse', '--git-dir'], {
+        cwd: GIT_CWD,
       });
     } catch (error) {
       return NextResponse.json(
@@ -169,10 +177,10 @@ export async function GET() {
 
     // Run git commands in parallel
     const [statusResult, branchResult, logResult, revListResult] = await Promise.allSettled([
-      execAsync('git status --porcelain', { cwd: '/home/claude-flow' }),
-      execAsync('git branch --show-current', { cwd: '/home/claude-flow' }),
-      execAsync('git log -1 --format="%H|%s|%aI"', { cwd: '/home/claude-flow' }),
-      execAsync('git rev-list --left-right --count origin/main...HEAD', { cwd: '/home/claude-flow' }),
+      execFileAsync('git', ['status', '--porcelain'], { cwd: GIT_CWD }),
+      execFileAsync('git', ['branch', '--show-current'], { cwd: GIT_CWD }),
+      execFileAsync('git', ['log', '-1', '--format=%H|%s|%aI'], { cwd: GIT_CWD }),
+      execFileAsync('git', ['rev-list', '--left-right', '--count', 'origin/main...HEAD'], { cwd: GIT_CWD }),
     ]);
 
     // Parse git status

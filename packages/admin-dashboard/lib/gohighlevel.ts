@@ -3,9 +3,9 @@
  * Handles contact management, custom fields, and workflow triggers
  */
 
-const GHL_API_KEY = process.env.GOHIGHLEVEL_API_KEY || 'pit-492db3c0-cdeb-4004-8de2-56e4491cd2e0';
+const GHL_API_KEY = process.env.GOHIGHLEVEL_API_KEY || '';
 const GHL_API_URL = 'https://rest.gohighlevel.com/v1';
-const GHL_LOCATION_ID = process.env.GOHIGHLEVEL_LOCATION_ID || 'VCj23sLEqnBVOtWdyQv8';
+const GHL_LOCATION_ID = process.env.GOHIGHLEVEL_LOCATION_ID || '';
 
 export interface GHLContact {
   id?: string;

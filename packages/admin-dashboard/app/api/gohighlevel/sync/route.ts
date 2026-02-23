@@ -13,6 +13,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getContactSyncService } from '@/lib/gohighlevel';
 import { createClient } from '@supabase/supabase-js';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,11 +27,10 @@ export const dynamic = 'force-dynamic';
  */
 export async function POST(request: NextRequest) {
   try {
-    // TODO: Add admin authentication check
-    // const session = await getServerSession();
-    // if (!session || session.user.role !== 'admin') {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
 
     const body = await request.json();
     const { action, limit = 10, userId } = body;
@@ -135,8 +135,13 @@ export async function POST(request: NextRequest) {
  *
  * Get sync status and statistics
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     // Lazy initialization - create client at runtime, not build time
     const supabaseUrl = process.env['NEXT_PUBLIC_SUPABASE_URL'] || '';
     const supabaseServiceKey = process.env['SUPABASE_SERVICE_ROLE_KEY'] || '';

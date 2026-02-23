@@ -3,6 +3,16 @@
  * Provides type-safe functions for role CRUD operations
  */
 
+import { getAccessToken } from '@/lib/auth/tokens';
+
+function authHeaders(): Record<string, string> {
+  const token = getAccessToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
 export interface Permission {
   id: string;
   name: string;
@@ -41,7 +51,7 @@ export interface UpdateRoleData {
 export async function getRoles(): Promise<{ success: boolean; roles: Role[] }> {
   const response = await fetch('/api/roles', {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
+    headers: authHeaders()
   });
 
   if (!response.ok) {
@@ -58,7 +68,7 @@ export async function getRoles(): Promise<{ success: boolean; roles: Role[] }> {
 export async function getRole(id: string): Promise<{ success: boolean; role: Role }> {
   const response = await fetch(`/api/roles/${id}`, {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
+    headers: authHeaders()
   });
 
   if (!response.ok) {
@@ -75,7 +85,7 @@ export async function getRole(id: string): Promise<{ success: boolean; role: Rol
 export async function createRole(data: CreateRoleData): Promise<{ success: boolean; role: Role }> {
   const response = await fetch('/api/roles', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: authHeaders(),
     body: JSON.stringify(data)
   });
 
@@ -96,7 +106,7 @@ export async function updateRole(
 ): Promise<{ success: boolean; role: Role }> {
   const response = await fetch(`/api/roles/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: authHeaders(),
     body: JSON.stringify(data)
   });
 
@@ -114,7 +124,7 @@ export async function updateRole(
 export async function deleteRole(id: string): Promise<{ success: boolean; message: string }> {
   const response = await fetch(`/api/roles/${id}`, {
     method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' }
+    headers: authHeaders()
   });
 
   if (!response.ok) {

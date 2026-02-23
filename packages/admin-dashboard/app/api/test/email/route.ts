@@ -16,11 +16,17 @@ import {
   sendAccountLockedEmail,
 } from '@/lib/email/send';
 import { validateEmailConfig, getEmailClientStatus } from '@/lib/email/client';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 
 // Only allow in development
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 export async function GET(request: NextRequest) {
+  const auth = await verifyAdminAuth(request);
+  if (!auth.authorized) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+  }
+
   if (!isDevelopment) {
     return NextResponse.json(
       { error: 'This endpoint is only available in development mode' },
@@ -100,6 +106,11 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const body = await request.json();
     const { template, email, data } = body;
 

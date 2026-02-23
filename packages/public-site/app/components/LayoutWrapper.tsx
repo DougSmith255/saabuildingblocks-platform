@@ -84,6 +84,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const noHeaderFooterRoutes = useMemo(() => [
     '/master-controller',
     '/login',
+    '/agent-portal/login',
     '/activate',
     '/activate-account',
     '/reset-password',
@@ -98,7 +99,6 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   // Routes where only footer should be hidden (header stays)
   const noFooterRoutes = useMemo(() => [
     '/agent-portal',       // Main portal - has its own mobile nav
-    '/agent-portal/login', // Login page - header yes, footer no
   ], []);
 
   // Routes where scroll indicator should be hidden (auth flows, utility pages)
@@ -283,11 +283,10 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     if (!pathname) return false;
     const normalizedPath = pathname.replace(/\/$/, '');
 
-    // Special handling for blog paths: only show popup on "about-exp-realty" category
-    if (normalizedPath.startsWith('/blog/')) {
-      // Allow popup only on /blog/about-exp-realty/* paths
-      return !normalizedPath.startsWith('/blog/about-exp-realty');
-    }
+    // Show popup on about-exp-realty posts (now at /about-exp-realty/*)
+    if (normalizedPath.startsWith('/about-exp-realty/')) return false;
+    // Hide popup on all other blog pages
+    if (normalizedPath.startsWith('/blog/')) return true;
 
     return noVipPopupPrefixes.some(prefix =>
       normalizedPath === prefix || normalizedPath.startsWith(prefix)

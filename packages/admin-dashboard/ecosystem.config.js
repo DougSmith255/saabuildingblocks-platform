@@ -29,14 +29,11 @@ module.exports = {
     name: 'nextjs-saa',
     script: 'npm',
     args: 'start',
-    cwd: '/home/claude-flow/packages/admin-dashboard',
+    cwd: '/home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard',
     env: {
       ...envVars,
-      PORT: 3001,
+      PORT: 3002,
       NODE_ENV: 'production',
-      GITHUB_TOKEN: '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',
-      GITHUB_OWNER: 'DougSmith255',
-      GITHUB_REPO: 'saabuildingblocks-platform'
     }
   }]
 };

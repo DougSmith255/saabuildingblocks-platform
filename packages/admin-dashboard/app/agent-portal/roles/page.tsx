@@ -14,17 +14,18 @@ import Link from 'next/link';
 import { RoleTable } from '@/components/roles/RoleTable';
 import { Role, getRoles, deleteRole } from '@/lib/api/roles';
 import { Plus, Shield, AlertCircle, Loader2 } from 'lucide-react';
+import { useAuth } from '@/app/providers/AuthProvider';
 
 export default function RolesPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<Role | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  // TODO: Get from auth context
-  const isAdmin = true;
+  const isAdmin = user?.role === 'admin';
 
   useEffect(() => {
     loadRoles();

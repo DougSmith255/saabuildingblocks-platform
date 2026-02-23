@@ -49,7 +49,7 @@ export function ShareButtons({ title, slug, excerpt }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
   // Build the post URL
-  const postUrl = `https://saabuildingblocks.com/blog/${slug}`;
+  const postUrl = `https://smartagentalliance.com/blog/${slug}`;
 
   // Clean excerpt for sharing
   const cleanExcerpt = excerpt

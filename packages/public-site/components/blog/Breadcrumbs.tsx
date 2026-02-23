@@ -110,7 +110,7 @@ export function Breadcrumbs({
         '@type': 'ListItem',
         position: item.position,
         name: item.label,
-        item: `https://saabuildingblocks.com${item.href}`
+        item: `https://smartagentalliance.com${item.href}`
       })),
       {
         '@type': 'ListItem',

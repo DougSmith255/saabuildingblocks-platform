@@ -13,6 +13,21 @@
 const GHL_API_BASE = 'https://services.leadconnectorhq.com';
 const GHL_API_VERSION = '2021-07-28';
 
+/**
+ * Verify Cloudflare Turnstile token
+ */
+async function verifyTurnstile(token, ip, secretKey) {
+  if (!secretKey) return { success: true }; // Skip if not configured
+  if (!token) return { success: false, error: 'Missing CAPTCHA token' };
+
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ secret: secretKey, response: token, remoteip: ip || '' }),
+  });
+  return res.json();
+}
+
 // Resend API configuration
 const RESEND_API_BASE = 'https://api.resend.com';
 
@@ -59,7 +74,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 12px;">
                 <tr>
                   <td width="36" valign="top" style="padding-top: 2px;">
-                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3); border-radius: 50%;">
+                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border-radius: 50%;">
                       <tr>
                         <td align="center" valign="middle" style="color: #ffd700; font-size: 14px; font-weight: 700; line-height: 26px;">1</td>
                       </tr>
@@ -78,7 +93,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 12px;">
                 <tr>
                   <td width="36" valign="top" style="padding-top: 2px;">
-                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3); border-radius: 50%;">
+                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border-radius: 50%;">
                       <tr>
                         <td align="center" valign="middle" style="color: #ffd700; font-size: 14px; font-weight: 700; line-height: 26px;">2</td>
                       </tr>
@@ -87,7 +102,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
                   <td style="padding-left: 8px; padding-top: 4px;">
                     <strong style="color: #ffffff; font-size: 15px;">Search for Your Sponsor</strong><br/>
                     <span style="color: #bfbdb0; font-size: 14px; line-height: 1.5;">
-                      Enter <strong style="color: #ffd700;">doug.smart@expreferral.com</strong> and click Search. Select <strong style="color: #ffd700;">Doug Smart</strong> as your sponsor.
+                      Enter <strong style="color: #ffd700;">doug.smart@expreferral.com</strong> and click Search. Select <strong style="color: #ffd700;">Sheldon Douglas Smart</strong> as your sponsor.
                     </span>
                   </td>
                 </tr>
@@ -97,7 +112,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 12px;">
                 <tr>
                   <td width="36" valign="top" style="padding-top: 2px;">
-                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3); border-radius: 50%;">
+                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border-radius: 50%;">
                       <tr>
                         <td align="center" valign="middle" style="color: #ffd700; font-size: 14px; font-weight: 700; line-height: 26px;">3</td>
                       </tr>
@@ -116,7 +131,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 12px;">
                 <tr>
                   <td width="36" valign="top" style="padding-top: 2px;">
-                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3); border-radius: 50%;">
+                    <table width="28" height="28" cellpadding="0" cellspacing="0" style="background-color: rgba(255,215,0,0.15); border-radius: 50%;">
                       <tr>
                         <td align="center" valign="middle" style="color: #ffd700; font-size: 14px; font-weight: 700; line-height: 26px;">4</td>
                       </tr>
@@ -274,9 +289,23 @@ export async function onRequestPost(context) {
   try {
     // Parse request body
     const body = await request.json();
-    const { firstName, lastName, email, country, sponsorName, source } = body;
+    const { firstName, lastName, email, country, sponsorName, source, turnstileToken } = body;
 
     console.log('[join-team] Request received:', { firstName, lastName, email, country, sponsorName, source });
+
+    // Verify Turnstile CAPTCHA
+    const turnstileResult = await verifyTurnstile(
+      turnstileToken,
+      request.headers.get('CF-Connecting-IP'),
+      env.TURNSTILE_SECRET_KEY
+    );
+    if (!turnstileResult.success) {
+      console.warn('[join-team] Turnstile verification failed:', turnstileResult);
+      return new Response(
+        JSON.stringify({ success: false, error: 'CAPTCHA verification failed' }),
+        { status: 403, headers: corsHeaders }
+      );
+    }
 
     // Validate required fields
     if (!firstName || !email) {
@@ -322,15 +351,16 @@ export async function onRequestPost(context) {
       );
     }
 
-    // Build the referral tag based on source
-    // - "Agent Referred" for agent attraction pages (has sponsorName)
-    // - "VIP Guest Pass" for the VIP popup form
-    // - "Website Lead" for main site join forms
+    // Build tags based on source
+    // - Agent attraction pages (has sponsorName): "{Agent Name} Join Form"
+    // - VIP Guest Pass popup: "VIP Guest Pass"
+    // - Main website join form: "Join SAA Form"
     const referralTag = sponsorName
-      ? 'Agent Referred'
+      ? `${sponsorName} Join Form`
       : source === 'vip-guest-pass'
         ? 'VIP Guest Pass'
-        : 'Website Lead';
+        : 'Join SAA Form';
+    const sourceTag = null;
 
     // Headers for GHL API
     const ghlHeaders = {
@@ -358,15 +388,16 @@ export async function onRequestPost(context) {
       const contactId = searchData.contacts[0].id;
       const existingTags = searchData.contacts[0].tags || [];
 
-      // Only add tag if not already present
-      if (!existingTags.includes(referralTag)) {
+      // Build new tags to add (skip any already present)
+      const tagsToAdd = [referralTag, sourceTag].filter(t => t && !existingTags.includes(t));
+      if (tagsToAdd.length > 0) {
         const updateResponse = await fetch(
           `${GHL_API_BASE}/contacts/${contactId}`,
           {
             method: 'PUT',
             headers: ghlHeaders,
             body: JSON.stringify({
-              tags: [...existingTags, referralTag],
+              tags: [...existingTags, ...tagsToAdd],
             }),
           }
         );
@@ -418,7 +449,7 @@ export async function onRequestPost(context) {
       firstName,
       lastName: lastName || '',
       email,
-      tags: [referralTag, 'agent_page_lead'],
+      tags: sourceTag ? [referralTag, sourceTag] : [referralTag],
       source: sponsorName || (source === 'vip-guest-pass' ? 'VIP Guest Pass' : 'Website'),
     };
 
@@ -457,73 +488,46 @@ export async function onRequestPost(context) {
           const contactData = await getContactResponse.json();
           const existingTags = contactData.contact?.tags || [];
 
-          if (!existingTags.includes(referralTag)) {
-            const updateResponse = await fetch(
+          const dupTagsToAdd = [referralTag, sourceTag].filter(t => t && !existingTags.includes(t));
+          if (dupTagsToAdd.length > 0) {
+            await fetch(
               `${GHL_API_BASE}/contacts/${existingContactId}`,
               {
                 method: 'PUT',
                 headers: ghlHeaders,
                 body: JSON.stringify({
-                  tags: [...existingTags, referralTag],
+                  tags: [...existingTags, ...dupTagsToAdd],
                 }),
               }
-            );
-
-            if (updateResponse.ok) {
-              // Add note with referring agent's name (only for agent attraction pages)
-              if (sponsorName) {
-                const noteBody = `Lead referred by agent: ${sponsorName}\nSubmitted via agent attraction page.`;
-                await addContactNote(existingContactId, noteBody, ghlHeaders);
-              }
-
-              // Send welcome email (skip for VIP guest pass)
-              const resendApiKey = env.RESEND_API_KEY;
-              if (resendApiKey && source !== 'vip-guest-pass' && source !== 'portal-walkthrough') {
-                const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
-                console.log('[join-team] Email result (duplicate contact update):', emailResult);
-              }
-
-              // Trigger eXp Guest Pass automation for VIP submissions
-              if (source === 'vip-guest-pass') {
-                triggerExpGuestPassAutomation(firstName, lastName, email, env, context);
-              }
-
-              return new Response(
-                JSON.stringify({
-                  success: true,
-                  message: 'Contact updated with referral tag',
-                  isExisting: true,
-                }),
-                { status: 200, headers: corsHeaders }
-              );
-            }
-          } else {
-            // Tag already exists - still add note if from agent page and send welcome email
-            if (sponsorName) {
-              const noteBody = `Lead referred by agent: ${sponsorName}\nSubmitted via agent attraction page.`;
-              await addContactNote(existingContactId, noteBody, ghlHeaders);
-            }
-
-            const resendApiKey = env.RESEND_API_KEY;
-            if (resendApiKey && source !== 'vip-guest-pass' && source !== 'portal-walkthrough') {
-              const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
-              console.log('[join-team] Email result (tag already exists):', emailResult);
-            }
-
-            // Trigger eXp Guest Pass automation for VIP submissions
-            if (source === 'vip-guest-pass') {
-              triggerExpGuestPassAutomation(firstName, lastName, email, env, context);
-            }
-
-            return new Response(
-              JSON.stringify({
-                success: true,
-                message: 'Contact already has referral tag',
-                isExisting: true,
-              }),
-              { status: 200, headers: corsHeaders }
             );
           }
+
+          // Add note with referring agent's name (only for agent attraction pages)
+          if (sponsorName) {
+            const noteBody = `Lead referred by agent: ${sponsorName}\nSubmitted via agent attraction page.`;
+            await addContactNote(existingContactId, noteBody, ghlHeaders);
+          }
+
+          // Send welcome email (skip for VIP guest pass)
+          const resendApiKey2 = env.RESEND_API_KEY;
+          if (resendApiKey2 && source !== 'vip-guest-pass' && source !== 'portal-walkthrough') {
+            const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey2);
+            console.log('[join-team] Email result (duplicate contact update):', emailResult);
+          }
+
+          // Trigger eXp Guest Pass automation for VIP submissions
+          if (source === 'vip-guest-pass') {
+            triggerExpGuestPassAutomation(firstName, lastName, email, env, context);
+          }
+
+          return new Response(
+            JSON.stringify({
+              success: true,
+              message: 'Contact updated with referral tag',
+              isExisting: true,
+            }),
+            { status: 200, headers: corsHeaders }
+          );
         }
       }
 

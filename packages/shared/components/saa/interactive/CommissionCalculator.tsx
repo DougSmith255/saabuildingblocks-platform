@@ -133,6 +133,8 @@ export interface CommissionCalculatorProps {
   showHowItWorks?: boolean;
   /** Additional CSS class */
   className?: string;
+  /** Callback fired whenever an input changes (for analytics tracking) */
+  onInputChange?: () => void;
 }
 
 /**
@@ -163,9 +165,20 @@ export function CommissionCalculator({
   subtitle = 'See exactly what you keep at eXp Realty',
   showHowItWorks = true,
   className = '',
+  onInputChange,
 }: CommissionCalculatorProps) {
   const [transactions, setTransactions] = useState(initialTransactions);
   const [avgCommission, setAvgCommission] = useState(initialCommission);
+  const isInitialMount = useRef(true);
+
+  // Notify parent when inputs change (skip initial mount)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    onInputChange?.();
+  }, [transactions, avgCommission, onInputChange]);
 
   // Minimum $500 commission - show zeros if under
   const isValidCommission = avgCommission >= 500;

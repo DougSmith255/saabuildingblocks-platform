@@ -6,8 +6,9 @@ export const runtime = 'nodejs';
  * Migration endpoint to add provider columns to email_send_logs table
  */
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 
 function getSupabaseClient() {
   const supabaseUrl = process.env['NEXT_PUBLIC_SUPABASE_URL'];
@@ -20,8 +21,13 @@ function getSupabaseClient() {
   return createClient(supabaseUrl, supabaseKey);
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const supabase = getSupabaseClient();
 
     // Execute the ALTER TABLE command

@@ -11,10 +11,12 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { useRouter } from 'next/navigation';
 import type { User, AuthState, LoginCredentials, AuthContextType } from '@/app/types/auth';
 import {
+  getAccessToken,
   setAccessToken,
   clearTokens,
   refreshAccessToken,
   setupTokenRefresh,
+  isTokenExpired,
   decodeToken,
 } from '@/lib/auth/tokens';
 
@@ -45,7 +47,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return null;
       }
 
-      const userData = await response.json();
+      const result = await response.json();
+      // /api/auth/me returns { success, data: { user fields } }
+      const userData = result.data || result;
       return userData as User;
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -55,7 +59,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Initialize auth state on mount
-   * Try to restore session from refresh token
+   * First checks for in-memory access token (set during login on same page session)
+   * Falls back to cookie-based refresh token for page reloads
    */
   useEffect(() => {
     const initAuth = async () => {
@@ -66,8 +71,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setAuthState({ user: null, isAuthenticated: false, isLoading: false, error: null });
         }, 10000);
 
-        // Try to get new access token from refresh token
-        const token = await refreshAccessToken();
+        let token: string | null = null;
+
+        // First: check if we already have a valid access token in memory
+        // This happens after login when navigating from /login to /agent-portal
+        const existingToken = getAccessToken();
+        if (existingToken && !isTokenExpired(existingToken)) {
+          token = existingToken;
+        } else {
+          // Fall back: try to get new access token from refresh token cookie
+          token = await refreshAccessToken();
+        }
 
         clearTimeout(initTimeout);
 
@@ -147,12 +161,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         });
 
-        // Redirect based on first login status
-        if (user.isFirstLogin) {
-          router.push('/auth/change-password?reason=first-login');
-        } else {
-          router.push('/agent-portal');
-        }
+        // Redirect to agent portal after login
+        router.push('/agent-portal');
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'An error occurred';
         setAuthState({ user: null, isAuthenticated: false, isLoading: false, error: errorMessage });

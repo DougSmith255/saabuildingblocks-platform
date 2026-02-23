@@ -40,8 +40,10 @@ export interface VideoSectionProps {
   compact?: boolean;
   /** When true, shows disabled overlay on video and makes Book a Call always clickable */
   disabled?: boolean;
-  /** Message shown on the disabled video overlay (default: "Video Update In Progress") */
+  /** Message shown on the disabled video overlay (default: "Video Update Coming Soon") */
   disabledMessage?: string;
+  /** Slug for agent-specific attribution in video analytics */
+  pageSlug?: string;
 }
 
 /**
@@ -89,7 +91,8 @@ export function VideoSection({
   bookCallUrl = 'https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7',
   compact = false,
   disabled = false,
-  disabledMessage = 'Video Update In Progress',
+  disabledMessage = 'Video Update Coming Soon',
+  pageSlug,
 }: VideoSectionProps) {
   const [showBookCall, setShowBookCall] = useState(false);
   // Single activePanel state - mirrors New Agents pattern
@@ -154,6 +157,7 @@ export function VideoSection({
             onBeforePlay={disabled ? () => false : undefined}
             disabled={disabled}
             disabledMessage={disabledMessage}
+            pageSlug={pageSlug}
           />
 
           {/* CTA Buttons */}

@@ -6,7 +6,6 @@
  * 1. Scans all built pages for image URLs (WordPress-hosted images)
  * 2. Uploads ONLY used images to Cloudflare Images (via API)
  * 3. Creates a mapping file (WordPress URL → Cloudflare URL)
- * 4. Generates _redirects file for legacy URL support
  *
  * USAGE:
  * - Run during build: npm run build && npm run sync-images
@@ -57,7 +56,7 @@ const CLOUDFLARE_IMAGES_HASH = process.env.CLOUDFLARE_IMAGES_HASH; // Account ha
 
 const OUT_DIR = path.join(process.cwd(), 'out');
 const MAPPING_FILE = path.join(process.cwd(), 'cloudflare-images-mapping.json');
-const REDIRECTS_FILE = path.join(OUT_DIR, '_redirects');
+
 
 // ============================================
 // STEP 1: FIND ALL IMAGES USED IN BUILT PAGES
@@ -405,38 +404,8 @@ async function syncImages() {
   );
   console.log(`  ✅ Saved to: ${MAPPING_FILE}\n`);
 
-  // Step 5: Generate _redirects file for legacy URLs
-  console.log('🔀 Generating redirect rules...\n');
-  await generateRedirects(mappings);
-
   console.log('='.repeat(60));
   console.log('\n✅ SYNC COMPLETE - GLOBAL DOMINANCE ACHIEVED!\n');
-}
-
-// ============================================
-// STEP 5: GENERATE _REDIRECTS FOR CLOUDFLARE PAGES
-// ============================================
-
-async function generateRedirects(mappings: ImageMapping[]) {
-  const redirects: string[] = [
-    '# Cloudflare Images - WordPress Legacy URL Redirects',
-    '# Generated automatically by sync-cloudflare-images.ts',
-    '# DO NOT EDIT MANUALLY',
-    '',
-  ];
-
-  for (const mapping of mappings) {
-    // Extract path from WordPress URL
-    const wpUrl = new URL(mapping.wordpressUrl);
-    const wpPath = wpUrl.pathname;
-
-    // Create redirect rule: /wp-content/uploads/... → Cloudflare Images URL
-    redirects.push(`${wpPath} ${mapping.cloudflareUrl} 301`);
-  }
-
-  await fs.writeFile(REDIRECTS_FILE, redirects.join('\n'), 'utf-8');
-  console.log(`  ✅ Generated ${mappings.length} redirect rules`);
-  console.log(`  ✅ Saved to: ${REDIRECTS_FILE}\n`);
 }
 
 // ============================================

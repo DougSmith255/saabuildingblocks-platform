@@ -27,6 +27,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { sendWelcomeEmail } from '@/lib/email/send';
 import { getEmailServiceHealth } from '@/lib/email/email-service';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 
 // Rate limiting (simple in-memory implementation)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -52,6 +53,11 @@ function checkRateLimit(ip: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     // Get client IP for rate limiting
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
 

@@ -14,23 +14,32 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { verifyAuth } from '@/app/api/middleware/adminAuth';
 
-// CORS headers for cross-origin requests
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, PATCH, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Max-Age': '86400',
-};
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
 
-// Handle CORS preflight
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'GET, PATCH, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
 }
 
-// Helper to add CORS headers to responses
-function corsResponse(body: object, status: number = 200) {
-  return NextResponse.json(body, { status, headers: CORS_HEADERS });
+// Handle CORS preflight
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(request.headers.get('origin')) });
 }
 
 // Default onboarding progress structure
@@ -52,10 +61,20 @@ const DEFAULT_ONBOARDING_PROGRESS = {
  * Get user's onboarding progress
  */
 export async function GET(request: NextRequest) {
+  const corsHeaders = getCorsHeaders(request.headers.get('origin'));
+  function corsResponse(body: object, status: number = 200) {
+    return NextResponse.json(body, { status, headers: corsHeaders });
+  }
+
+  // Auth: user can only access their own onboarding data
+  const auth = await verifyAuth(request);
+  if (!auth.authorized) {
+    return corsResponse({ success: false, error: auth.error || 'Unauthorized' }, auth.status || 401);
+  }
+
   const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
-    console.error('[Onboarding GET] Supabase client not available');
     return corsResponse(
       {
         success: false,
@@ -70,8 +89,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
 
-    console.log('[Onboarding GET] Request received for userId:', userId);
-
     if (!userId) {
       return corsResponse(
         {
@@ -81,6 +98,11 @@ export async function GET(request: NextRequest) {
         },
         400
       );
+    }
+
+    // IDOR check: users can only access their own data, admins can access any
+    if (auth.role !== 'admin' && auth.userId !== userId) {
+      return corsResponse({ success: false, error: 'Forbidden' }, 403);
     }
 
     // Get user's onboarding data
@@ -136,6 +158,17 @@ export async function GET(request: NextRequest) {
  * Update user's onboarding progress
  */
 export async function PATCH(request: NextRequest) {
+  const corsHeaders = getCorsHeaders(request.headers.get('origin'));
+  function corsResponse(body: object, status: number = 200) {
+    return NextResponse.json(body, { status, headers: corsHeaders });
+  }
+
+  // Auth: user can only update their own onboarding data
+  const auth = await verifyAuth(request);
+  if (!auth.authorized) {
+    return corsResponse({ success: false, error: auth.error || 'Unauthorized' }, auth.status || 401);
+  }
+
   const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
@@ -167,6 +200,11 @@ export async function PATCH(request: NextRequest) {
         },
         400
       );
+    }
+
+    // IDOR check: users can only update their own data, admins can update any
+    if (auth.role !== 'admin' && auth.userId !== userId) {
+      return corsResponse({ success: false, error: 'Forbidden' }, 403);
     }
 
     // Get current user data

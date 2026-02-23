@@ -10,18 +10,23 @@ import { SignJWT, jwtVerify } from 'jose';
 import { nanoid } from 'nanoid';
 import { createHash } from 'crypto';
 
-// Environment variables with fallbacks
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'your-secret-key-min-32-chars-replace-in-production'
-);
+// JWT secrets — validated lazily to avoid blocking builds
+function getJwtSecret(): Uint8Array {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('FATAL: JWT_SECRET environment variable is not set');
+  }
+  return new TextEncoder().encode(process.env.JWT_SECRET);
+}
 
-const JWT_REFRESH_SECRET = new TextEncoder().encode(
-  process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key-min-32-chars-replace-in-production'
-);
+function getJwtRefreshSecret(): Uint8Array {
+  if (!process.env.JWT_REFRESH_SECRET) {
+    throw new Error('FATAL: JWT_REFRESH_SECRET environment variable is not set');
+  }
+  return new TextEncoder().encode(process.env.JWT_REFRESH_SECRET);
+}
 
-// Access token expiry increased to 7 days since frontend doesn't implement token refresh
-// TODO: Implement proper token refresh flow and reduce back to 15m for better security
-const ACCESS_TOKEN_EXPIRY = '7d';
+// Frontend implements token refresh via AuthProvider + /api/auth/refresh
+const ACCESS_TOKEN_EXPIRY = '15m';
 const REFRESH_TOKEN_EXPIRY = '30d';
 
 export interface AccessTokenData {
@@ -74,7 +79,7 @@ export async function generateAccessToken(data: AccessTokenData): Promise<string
     .setIssuedAt()
     .setExpirationTime(ACCESS_TOKEN_EXPIRY)
     .setJti(nanoid())
-    .sign(JWT_SECRET);
+    .sign(getJwtSecret());
 
   return jwt;
 }
@@ -93,7 +98,7 @@ export async function generateRefreshToken(data: RefreshTokenData): Promise<stri
     .setIssuedAt()
     .setExpirationTime(REFRESH_TOKEN_EXPIRY)
     .setJti(nanoid())
-    .sign(JWT_REFRESH_SECRET);
+    .sign(getJwtRefreshSecret());
 
   return jwt;
 }
@@ -108,7 +113,7 @@ export async function verifyAccessToken(token: string): Promise<{
   error?: string;
 }> {
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET, {
+    const { payload } = await jwtVerify(token, getJwtSecret(), {
       algorithms: ['HS256'],
     });
 
@@ -134,7 +139,7 @@ export async function verifyRefreshToken(token: string): Promise<{
   error?: string;
 }> {
   try {
-    const { payload } = await jwtVerify(token, JWT_REFRESH_SECRET, {
+    const { payload } = await jwtVerify(token, getJwtRefreshSecret(), {
       algorithms: ['HS256'],
     });
 
@@ -182,7 +187,7 @@ export async function generateTokenPair(
   return {
     accessToken,
     refreshToken,
-    expiresIn: 604800, // 7 days in seconds
+    expiresIn: 900, // 15 minutes in seconds
   };
 }
 
@@ -224,7 +229,7 @@ export function extractUserIdFromHeader(authHeader: string | null): string | nul
  */
 export async function logAuthEvent(params: {
   userId?: string;
-  eventType: 'login' | 'logout' | 'refresh' | 'failed_login' | 'token_refresh' | 'token_revoked';
+  eventType: 'login' | 'logout' | 'refresh' | 'failed_login' | 'password_reset' | 'token_refresh' | 'token_revoked';
   success: boolean;
   ipAddress: string;
   userAgent: string;
@@ -323,17 +328,17 @@ export function resetRateLimit(identifier: string): void {
 }
 
 /**
- * Timing-safe string comparison to prevent timing attacks
+ * Timing-safe string comparison to prevent timing attacks.
+ * Uses Node.js crypto.timingSafeEqual for constant-time comparison.
  */
 export function timingSafeCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) {
+  const { timingSafeEqual } = require('crypto');
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) {
+    // Compare against self to maintain constant time even for length mismatch
+    timingSafeEqual(bufA, bufA);
     return false;
   }
-
-  let result = 0;
-  for (let i = 0; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-
-  return result === 0;
+  return timingSafeEqual(bufA, bufB);
 }

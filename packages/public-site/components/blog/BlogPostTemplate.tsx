@@ -9,6 +9,7 @@ import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { Breadcrumbs } from './Breadcrumbs';
 import type { BlogPost } from '@/lib/wordpress/types';
+import { getPostUrl } from '@/lib/blog-post-urls';
 
 // Lazy load CloudBackground - only loaded when user switches to light mode
 // Displays daylight sky scene with animated clouds
@@ -216,7 +217,7 @@ export function BlogPostTemplate({
 
             {/* Share Buttons - from shared components */}
             <ShareButtons
-              url={typeof window !== 'undefined' ? `${window.location.origin}/blog/${categorySlug}/${post.slug}` : `/blog/${categorySlug}/${post.slug}`}
+              url={typeof window !== 'undefined' ? `${window.location.origin}${getPostUrl(post)}` : getPostUrl(post)}
               title={post.title}
               excerpt={post.excerpt}
             />

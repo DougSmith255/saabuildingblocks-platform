@@ -5,35 +5,36 @@ export const dynamic = 'force-dynamic';
  * Password Reset Token Verification API Route
  * POST /api/auth/password-reset/verify
  *
- * Verifies the validity of a password reset token without consuming it.
+ * Verifies the validity of a password reset JWT token without consuming it.
  * Used to validate token before showing password reset form.
  *
  * Security Features:
- * - Timing-safe token comparison
- * - Expiration check
- * - Single-use validation
+ * - JWT signature and expiration verification
+ * - Password fingerprint validation
  * - No user information disclosure
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseClient } from '@/app/master-controller/lib/supabaseClient';
-import { hashToken, timingSafeCompare } from '@/lib/auth/jwt';
+import { jwtVerify } from 'jose';
+import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { tokenVerificationSchema, formatZodErrors } from '@/lib/validation/password-schemas';
 
-export async function POST(request: NextRequest) {
-  const supabase = getSupabaseClient();
-
-  if (!supabase) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'SERVICE_UNAVAILABLE',
-        message: 'Token verification service is not available',
-      },
-      { status: 503 }
-    );
+// JWT secret for password reset tokens — fails at runtime if not set
+function getPasswordResetSecret(): Uint8Array {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is not set');
   }
+  return new TextEncoder().encode(process.env.JWT_SECRET);
+}
 
+interface PasswordResetPayload {
+  sub: string;      // User ID
+  type: string;     // Should be 'password_reset'
+  pwfp: string;     // Password fingerprint
+  exp: number;      // Expiration
+}
+
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
@@ -45,16 +46,6 @@ export async function POST(request: NextRequest) {
 
     const { token } = validation.data;
 
-    // Hash the provided token for database lookup
-    const tokenHash = hashToken(token);
-
-    // Find token in database
-    const { data: resetToken, error: tokenError } = await supabase
-      .from('password_reset_tokens')
-      .select('id, user_id, token_hash, expires_at, used_at')
-      .eq('token_hash', tokenHash)
-      .single();
-
     // Generic invalid token response to prevent enumeration
     const invalidTokenResponse = {
       success: false,
@@ -62,45 +53,47 @@ export async function POST(request: NextRequest) {
       message: 'Invalid or expired reset token',
     };
 
-    if (tokenError || !resetToken) {
+    // Verify JWT token
+    let payload: PasswordResetPayload;
+    try {
+      const { payload: verified } = await jwtVerify(token, getPasswordResetSecret());
+      payload = verified as unknown as PasswordResetPayload;
+    } catch {
       return NextResponse.json(invalidTokenResponse, { status: 400 });
     }
 
-    // Timing-safe token comparison (prevent timing attacks)
-    if (!timingSafeCompare(resetToken.token_hash, tokenHash)) {
+    // Validate token type
+    if (payload.type !== 'password_reset') {
       return NextResponse.json(invalidTokenResponse, { status: 400 });
     }
 
-    // Check if token has already been used
-    if (resetToken.used_at) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'TOKEN_ALREADY_USED',
-          message: 'This reset token has already been used. Please request a new one.',
-        },
-        { status: 400 }
-      );
+    // Verify password fingerprint hasn't changed (token invalidated on password change)
+    const supabase = getSupabaseServiceClient();
+    if (supabase) {
+      const { data: user } = await supabase
+        .from('users')
+        .select('password_hash')
+        .eq('id', payload.sub)
+        .single();
+
+      if (user) {
+        const currentFingerprint = (user.password_hash || '').substring(0, 8);
+        if (payload.pwfp !== currentFingerprint) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: 'TOKEN_INVALIDATED',
+              message: 'This reset token is no longer valid. Please request a new password reset.',
+            },
+            { status: 400 }
+          );
+        }
+      }
     }
 
-    // Check if token has expired
-    const expiresAt = new Date(resetToken.expires_at);
-    const now = new Date();
-
-    if (expiresAt < now) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'TOKEN_EXPIRED',
-          message: 'This reset token has expired. Please request a new one.',
-          expiredAt: expiresAt.toISOString(),
-        },
-        { status: 400 }
-      );
-    }
-
-    // Token is valid
-    const timeRemaining = Math.floor((expiresAt.getTime() - now.getTime()) / 1000); // seconds
+    // Token is valid — return remaining time
+    const now = Math.floor(Date.now() / 1000);
+    const timeRemaining = payload.exp - now;
 
     return NextResponse.json({
       success: true,
@@ -108,7 +101,7 @@ export async function POST(request: NextRequest) {
       data: {
         valid: true,
         expiresIn: timeRemaining,
-        expiresAt: expiresAt.toISOString(),
+        expiresAt: new Date(payload.exp * 1000).toISOString(),
       },
     });
   } catch (error) {

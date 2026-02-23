@@ -14,6 +14,21 @@ const GHL_API_BASE = 'https://services.leadconnectorhq.com';
 const GHL_API_VERSION = '2021-07-28';
 
 /**
+ * Verify Cloudflare Turnstile token
+ */
+async function verifyTurnstile(token, ip, secretKey) {
+  if (!secretKey) return { success: true }; // Skip if not configured
+  if (!token) return { success: false, error: 'Missing CAPTCHA token' };
+
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ secret: secretKey, response: token, remoteip: ip || '' }),
+  });
+  return res.json();
+}
+
+/**
  * Add a note to a contact in GoHighLevel
  */
 async function addContactNote(contactId, noteBody, ghlHeaders) {
@@ -59,9 +74,23 @@ export async function onRequestPost(context) {
   try {
     // Parse request body
     const body = await request.json();
-    const { firstName, lastName, email, freebieTitle } = body;
+    const { firstName, lastName, email, freebieTitle, turnstileToken } = body;
 
     console.log('[freebie-download] Request received:', { firstName, lastName, email, freebieTitle });
+
+    // Verify Turnstile CAPTCHA
+    const turnstileResult = await verifyTurnstile(
+      turnstileToken,
+      request.headers.get('CF-Connecting-IP'),
+      env.TURNSTILE_SECRET_KEY
+    );
+    if (!turnstileResult.success) {
+      console.warn('[freebie-download] Turnstile verification failed:', turnstileResult);
+      return new Response(
+        JSON.stringify({ success: false, error: 'CAPTCHA verification failed' }),
+        { status: 403, headers: corsHeaders }
+      );
+    }
 
     // Validate required fields
     if (!firstName || !email) {

@@ -26,6 +26,7 @@
     "styled-jsx.d.ts",
     "components/saa/**/*.ts",
     "components/saa/**/*.tsx",
+    "lib/turnstile.ts",
     "utils/**/*.ts",
     "utils/**/*.tsx",
     "master-controller/**/*.ts",

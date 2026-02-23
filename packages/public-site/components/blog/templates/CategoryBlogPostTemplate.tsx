@@ -6,12 +6,14 @@ import Image from 'next/image';
 import { ChevronDown } from 'lucide-react';
 import { BlogPostHero } from '../BlogPostHero';
 import { AuthorSection } from '../AuthorSection';
+import { RelatedPosts } from '../RelatedPosts';
 import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { SchoolCardsSection } from '../SchoolCardsSection';
 import { getTemplateConfig, type CategoryTemplateConfig } from './templateConfig';
 import { LazySection } from '@/components/shared/LazySection';
 import type { BlogPost } from '@/lib/wordpress/types';
+import { getPostUrl } from '@/lib/blog-post-urls';
 
 // Lazy load CloudBackground - only loaded when user switches to light mode
 const CloudBackground = dynamic(
@@ -45,6 +47,68 @@ function extractYouTubeVideoId(url: string): string | null {
  */
 function BlogContentRenderer({ html }: { html: string }) {
   const containerRef = React.useRef<HTMLDivElement>(null);
+
+  // Lazy fade-in for blog content images using IntersectionObserver
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const imgs = container.querySelectorAll('img');
+
+    // Mark all images for lazy fade-in
+    imgs.forEach((img) => {
+      img.classList.add('blog-img-lazy');
+      // If image is already cached/loaded, fade in immediately
+      if (img.complete && img.naturalHeight > 0) {
+        img.classList.add('blog-img-loaded');
+      }
+    });
+
+    // Fade in when image loads AND is near viewport
+    const nearViewport = new Set<Element>();
+    const loaded = new Set<Element>();
+
+    const reveal = (img: Element) => {
+      if (nearViewport.has(img) && loaded.has(img)) {
+        img.classList.add('blog-img-loaded');
+      }
+    };
+
+    const handleLoad = (e: Event) => {
+      const img = e.target as Element;
+      loaded.add(img);
+      reveal(img);
+    };
+
+    imgs.forEach((img) => {
+      if (img.complete && img.naturalHeight > 0) {
+        loaded.add(img);
+      } else {
+        img.addEventListener('load', handleLoad, { once: true });
+      }
+    });
+
+    // Observe images — trigger when within 300px of viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            nearViewport.add(entry.target);
+            reveal(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '300px 0px' }
+    );
+
+    imgs.forEach((img) => observer.observe(img));
+
+    return () => {
+      observer.disconnect();
+      imgs.forEach((img) => img.removeEventListener('load', handleLoad));
+    };
+  }, [html]);
 
   // Add FAQ accordion toggle functionality
   useEffect(() => {
@@ -89,6 +153,8 @@ export interface CategoryBlogPostTemplateProps {
   post: BlogPost;
   /** Category for template customization (optional, defaults to post.categories[0]) */
   category?: string;
+  /** Pre-filtered related posts for internal linking (passed from server component) */
+  relatedPosts?: BlogPost[];
 }
 
 /**
@@ -104,6 +170,7 @@ export interface CategoryBlogPostTemplateProps {
 export function CategoryBlogPostTemplate({
   post,
   category,
+  relatedPosts,
 }: CategoryBlogPostTemplateProps) {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -313,7 +380,7 @@ export function CategoryBlogPostTemplate({
 
               {/* Share Buttons */}
               <ShareButtons
-                url={typeof window !== 'undefined' ? `${window.location.origin}/blog/${categorySlug}/${post.slug}` : `/blog/${categorySlug}/${post.slug}`}
+                url={typeof window !== 'undefined' ? `${window.location.origin}${getPostUrl(post)}` : getPostUrl(post)}
                 title={post.title}
                 excerpt={post.excerpt}
               />
@@ -332,6 +399,24 @@ export function CategoryBlogPostTemplate({
           </div>
         </section>
       </LazySection>
+
+      {/* Related Posts - internal linking for SEO */}
+      {relatedPosts && relatedPosts.length > 0 && (
+        <LazySection height={400}>
+          <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+            <div className="max-w-[1900px] mx-auto">
+              <div className="max-w-[1200px] mx-auto">
+                <RelatedPosts
+                  posts={relatedPosts}
+                  currentPostId={post.id}
+                  currentCategory={post.categories[0]}
+                  limit={3}
+                />
+              </div>
+            </div>
+          </section>
+        </LazySection>
+      )}
     </article>
   );
 }

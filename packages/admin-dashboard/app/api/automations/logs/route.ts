@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 
 // Allowed log files (whitelist for security)
 const ALLOWED_LOGS: Record<string, string> = {
@@ -11,6 +12,11 @@ const ALLOWED_LOGS: Record<string, string> = {
 
 export async function GET(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const file = searchParams.get('file');
     const lines = parseInt(searchParams.get('lines') || '100', 10);

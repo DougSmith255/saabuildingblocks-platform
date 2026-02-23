@@ -2,8 +2,7 @@
  * POST /api/automations/exp-guest-pass
  *
  * Receives guest info from the Cloudflare Function (join-team.js) and
- * spawns a Playwright automation that submits the guest pass on eXp's
- * invite-a-guest portal.
+ * submits a guest pass via eXp's API using Okta tokens (no browser needed).
  *
  * - Validates a shared AUTOMATION_SECRET to prevent unauthorized calls
  * - Responds 202 immediately (fire-and-forget)

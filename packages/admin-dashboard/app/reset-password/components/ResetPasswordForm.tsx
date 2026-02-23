@@ -87,7 +87,7 @@ export default function ResetPasswordForm({ initialToken = '' }: ResetPasswordFo
 
     try {
       // Call password reset API
-      const response = await fetch('/api/auth/password-reset/reset', {
+      const response = await fetch('/api/auth/password-reset/confirm', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -256,9 +256,9 @@ export default function ResetPasswordForm({ initialToken = '' }: ResetPasswordFo
         {/* Support Link */}
         <p className="text-center text-sm text-[#dcdbd5] mt-4 pb-5">
           Need help?{' '}
-          <Link href="/contact-support" className="text-[#ffd700] hover:opacity-80 transition-opacity">
+          <a href="mailto:team@smartagentalliance.com" className="text-[#ffd700] hover:opacity-80 transition-opacity">
             Contact Support
-          </Link>
+          </a>
         </p>
 
         {/* Back to Login */}

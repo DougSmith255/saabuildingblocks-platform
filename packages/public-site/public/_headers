@@ -93,6 +93,18 @@
   Cache-Control: public, max-age=31536000, immutable
 
 # ============================================================
+# FAVICONS & MANIFEST - Short cache (may change between deploys)
+# ============================================================
+/favicon.svg
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/favicon.ico
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/manifest.json
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# ============================================================
 # NO CACHE - Dynamic/API routes
 # ============================================================
 /api/*

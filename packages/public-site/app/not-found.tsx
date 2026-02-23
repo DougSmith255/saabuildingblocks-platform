@@ -11,6 +11,8 @@ import { SecondaryButton } from '@saa/shared/components/saa';
  *
  * Uses 'use client' with Tailwind classes for immediate CSS (no CLS).
  * Animations are defined in globals.css (float-404, glowBreathe-404).
+ * 404 tracking is handled server-side by the Cloudflare Pages middleware
+ * which logs to Supabase (see functions/_middleware.js).
  */
 export default function NotFound() {
   return (

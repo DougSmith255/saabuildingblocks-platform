@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { nanoid } from 'nanoid';
-import { getSupabaseClient } from '@/app/master-controller/lib/supabaseClient';
+import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import {
   verifyRefreshToken,
   generateAccessToken,
@@ -25,7 +25,7 @@ const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const RATE_LIMIT_MAX_ATTEMPTS = 100;
 
 export async function POST(request: NextRequest) {
-  const supabase = getSupabaseClient();
+  const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
     return NextResponse.json(
@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
     // Get user data
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id, username, email, role, permissions, is_active, locked_until')
+      .select('id, username, email, role, status, locked_until')
       .eq('id', payload.sub)
       .single();
 
@@ -192,7 +192,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check account status
-    if (!user.is_active) {
+    if (user.status !== 'active') {
       return NextResponse.json(
         {
           success: false,
@@ -221,7 +221,7 @@ export async function POST(request: NextRequest) {
       username: user.username,
       email: user.email,
       role: user.role,
-      permissions: user.permissions || [],
+      permissions: [],
     });
 
     // Update token usage in database
@@ -274,6 +274,7 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({
       success: true,
+      access_token: newAccessToken,
       data: {
         accessToken: newAccessToken,
         expiresIn: 900, // 15 minutes

@@ -53,13 +53,10 @@ function verifyWebhookSignature(
   publicKey: string
 ): boolean {
   try {
-    // If no public key is configured, log warning but allow in development
+    // If no public key is configured, reject all requests
     if (!publicKey) {
-      console.warn('⚠️ GHL webhook signature verification disabled - no public key configured');
-      if (process.env.NODE_ENV === 'production') {
-        return false;
-      }
-      return true; // Allow in development
+      console.error('⚠️ GHL_WEBHOOK_PUBLIC_KEY not configured - rejecting webhook');
+      return false;
     }
 
     const verify = crypto.createVerify('RSA-SHA256');
@@ -252,17 +249,18 @@ async function handleContactTagUpdate(event: WebhookEvent): Promise<void> {
       return;
     }
 
-    // Create invitation token
+    // Create invitation token and hash it for storage
     const invitationToken = crypto.randomBytes(32).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(invitationToken).digest('hex');
 
-    // Create user invitation
+    // Create user invitation (store hashed token, not plaintext)
     const { data: newInvitation, error: invitationError } = await supabase
       .from('user_invitations')
       .insert({
         email,
         name: name || email,
         ghl_contact_id: contact.id,
-        token: invitationToken,
+        token: tokenHash,
         status: 'pending',
         created_at: new Date().toISOString(),
         expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),

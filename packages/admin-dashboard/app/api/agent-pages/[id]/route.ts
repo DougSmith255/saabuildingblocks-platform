@@ -12,12 +12,26 @@ import { requirePageOwner } from '@/app/api/middleware/agentPageAuth';
 
 export const dynamic = 'force-dynamic';
 
-// CORS headers for cross-origin requests from public site
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, PATCH, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
+
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'GET, PATCH, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
+}
 
 export async function generateStaticParams() {
   return [];
@@ -26,14 +40,8 @@ export async function generateStaticParams() {
 /**
  * OPTIONS handler for CORS preflight requests
  */
-export async function OPTIONS() {
-  return NextResponse.json({}, {
-    status: 200,
-    headers: {
-      ...CORS_HEADERS,
-      'Access-Control-Max-Age': '86400',
-    },
-  });
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(request.headers.get('origin')) });
 }
 
 /**
@@ -45,6 +53,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const CORS_HEADERS = getCorsHeaders(request.headers.get('origin'));
   try {
     const supabase = getSupabaseServiceClient();
     const { id } = await params;
@@ -104,6 +113,7 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const CORS_HEADERS = getCorsHeaders(request.headers.get('origin'));
   try {
     const supabase = getSupabaseServiceClient();
     const { id } = await params;

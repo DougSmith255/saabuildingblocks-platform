@@ -22,32 +22,44 @@ import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseCl
 import { logAuthEvent, checkRateLimit } from '@/lib/auth/jwt';
 import { passwordResetRequestSchema, formatZodErrors } from '@/lib/validation/password-schemas';
 
-// CORS headers for cross-origin requests (public site calls this API)
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Max-Age': '86400',
-};
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
 
-// Handle CORS preflight
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
 }
 
-// Helper to add CORS headers to responses
-function corsResponse(body: object, status: number = 200, extraHeaders: Record<string, string> = {}) {
-  return NextResponse.json(body, { status, headers: { ...CORS_HEADERS, ...extraHeaders } });
+// Handle CORS preflight
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(request.headers.get('origin')) });
 }
 
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const RATE_LIMIT_MAX_ATTEMPTS = 3;
 const TOKEN_EXPIRY_MINUTES = 15;
+const MIN_RESPONSE_TIME_MS = 300; // Prevent email enumeration via timing
 
-// JWT secret for password reset tokens (separate from auth tokens for security)
-const PASSWORD_RESET_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'your-secret-key-min-32-chars-replace-in-production'
-);
+// JWT secret for password reset tokens — fails at runtime if not set
+function getPasswordResetSecret(): Uint8Array {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is not set');
+  }
+  return new TextEncoder().encode(process.env.JWT_SECRET);
+}
 
 /**
  * Mask email for security (show first 2 chars and domain)
@@ -78,12 +90,19 @@ async function generateResetToken(userId: string, passwordHash: string): Promise
     .setIssuedAt()
     .setExpirationTime(`${TOKEN_EXPIRY_MINUTES}m`)
     .setJti(crypto.randomUUID())
-    .sign(PASSWORD_RESET_SECRET);
+    .sign(getPasswordResetSecret());
 
   return token;
 }
 
 export async function POST(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  const corsHeaders = getCorsHeaders(origin);
+  function corsResponse(body: object, status: number = 200, extraHeaders: Record<string, string> = {}) {
+    return NextResponse.json(body, { status, headers: { ...corsHeaders, ...extraHeaders } });
+  }
+
+  const startTime = Date.now();
   const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
@@ -116,7 +135,7 @@ export async function POST(request: NextRequest) {
 
     if (!rateLimit.allowed) {
       await logAuthEvent({
-        eventType: 'failed_login',
+        eventType: 'password_reset',
         success: false,
         ipAddress,
         userAgent,
@@ -164,13 +183,18 @@ export async function POST(request: NextRequest) {
     if (userError || !user) {
       // Log failed attempt but return generic success
       await logAuthEvent({
-        eventType: 'failed_login',
+        eventType: 'password_reset',
         success: false,
         ipAddress,
         userAgent,
         metadata: { reason: 'user_not_found', email: maskedEmail, action: 'password_reset' },
       });
 
+      // Enforce minimum response time to prevent timing-based email enumeration
+      const elapsed = Date.now() - startTime;
+      if (elapsed < MIN_RESPONSE_TIME_MS) {
+        await new Promise(r => setTimeout(r, MIN_RESPONSE_TIME_MS - elapsed));
+      }
       return corsResponse(genericResponse);
     }
 
@@ -180,13 +204,17 @@ export async function POST(request: NextRequest) {
       // Don't reveal account status - return generic success
       await logAuthEvent({
         userId: user.id,
-        eventType: 'failed_login',
+        eventType: 'password_reset',
         success: false,
         ipAddress,
         userAgent,
         metadata: { reason: 'account_inactive', action: 'password_reset' },
       });
 
+      const elapsed = Date.now() - startTime;
+      if (elapsed < MIN_RESPONSE_TIME_MS) {
+        await new Promise(r => setTimeout(r, MIN_RESPONSE_TIME_MS - elapsed));
+      }
       return corsResponse(genericResponse);
     }
 
@@ -200,7 +228,7 @@ export async function POST(request: NextRequest) {
     // Log successful password reset request
     await logAuthEvent({
       userId: user.id,
-      eventType: 'failed_login', // Using failed_login for password events (audit table)
+      eventType: 'password_reset',
       success: true,
       ipAddress,
       userAgent,
@@ -235,6 +263,11 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Password Reset] Token generated for user ${user.id}. Email sent: ${emailResult.success}`);
 
+    // Enforce minimum response time to prevent timing-based email enumeration
+    const elapsed = Date.now() - startTime;
+    if (elapsed < MIN_RESPONSE_TIME_MS) {
+      await new Promise(r => setTimeout(r, MIN_RESPONSE_TIME_MS - elapsed));
+    }
     return corsResponse(genericResponse);
   } catch (error) {
     console.error('[Password Reset Request] Error:', error);

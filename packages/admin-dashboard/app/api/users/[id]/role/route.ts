@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +25,12 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Auth: admin only
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const supabase = getSupabaseServiceClient();
     const { id } = await params;
 

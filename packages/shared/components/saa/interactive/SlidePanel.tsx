@@ -92,6 +92,10 @@ const KEYFRAMES_CSS = `
 }
 `;
 
+// Reference counter: tracks how many SlidePanels are currently open.
+// The 'slide-panel-open' class on <html> is only removed when ALL panels close.
+let slidePanelOpenCount = 0;
+
 // Inject keyframes CSS once
 let keyframesInjected = false;
 function injectKeyframes() {
@@ -251,23 +255,24 @@ export function SlidePanel({
     wasOpenRef.current = isOpen;
   }, [isOpen]);
 
-  // Lock body scroll and hide scrollbar when open
+  // Lock body scroll and hide scrollbar when open (reference-counted).
+  // Multiple SlidePanels can be open simultaneously (e.g., JoinModal + InstructionsModal).
+  // The class and scroll lock only remove when the LAST panel closes.
   useEffect(() => {
     if (isOpen) {
-      // Add class to html element to completely hide scrollbar
+      slidePanelOpenCount++;
       document.documentElement.classList.add('slide-panel-open');
       document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
-    } else {
-      document.documentElement.classList.remove('slide-panel-open');
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
+      return () => {
+        slidePanelOpenCount = Math.max(0, slidePanelOpenCount - 1);
+        if (slidePanelOpenCount === 0) {
+          document.documentElement.classList.remove('slide-panel-open');
+          document.documentElement.style.overflow = '';
+          document.body.style.overflow = '';
+        }
+      };
     }
-    return () => {
-      document.documentElement.classList.remove('slide-panel-open');
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-    };
   }, [isOpen]);
 
   // Handle Escape key

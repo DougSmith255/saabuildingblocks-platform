@@ -26,11 +26,12 @@ export default function Header() {
   const [skipTransition, setSkipTransition] = useState(false);
   // JS-driven responsive nav: null = CSS handles it, true = desktop fits, false = mobile
   const [desktopNavFits, setDesktopNavFits] = useState<boolean | null>(null);
-  // Compact logo: switch from full SAA to S icon when mobile elements are too tight
-  // Initialize based on viewport width to prevent layout shift on mobile
+  // Compact logo: switch from full SAA to S icon when in mobile mode
+  // Default to compact (S icon) during SSR/static build to prevent flash of SAA on mobile
+  // Desktop JS will quickly switch to full logo after hydration
   const [compactLogo, setCompactLogo] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < 500;
+    if (typeof window === 'undefined') return true;
+    return window.innerWidth < 1024;
   });
   const headerContainerRef = useRef<HTMLDivElement>(null);
 
@@ -167,8 +168,8 @@ export default function Header() {
         if (cancelled) return;
         const vw = window.innerWidth;
         setDesktopNavFits(vw >= minWidth);
-        // Only apply compact logo when in mobile mode
-        setCompactLogo(vw < minWidth && vw < mobileMinFull);
+        // Show compact S logo whenever in mobile mode (desktop nav doesn't fit)
+        setCompactLogo(vw < minWidth);
       };
       resizeHandler();
       window.addEventListener('resize', resizeHandler);

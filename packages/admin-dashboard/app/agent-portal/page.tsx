@@ -12,6 +12,8 @@
  * STATIC EXPORT: Excluded via layout.tsx (parent has dynamic = 'force-dynamic')
  */
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { DashboardCard } from './components/DashboardCard';
 import { StatsCard } from './components/StatsCard';
@@ -19,13 +21,21 @@ import { RecentActivityWidget } from '@/components/activity/RecentActivityWidget
 import { Users, Shield, Activity, Settings, UserPlus, Lock } from 'lucide-react';
 
 export default function AgentPortalDashboard() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+
+  // Redirect to login if auth check completed and user is not authenticated
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/login');
+    }
+  }, [isLoading, user, router]);
 
   if (!user) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
-          <div className="text-[#dcdbd5]">Loading...</div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
         </div>
       </div>
     );

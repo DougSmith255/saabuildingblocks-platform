@@ -1,10 +1,16 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useCallback, useEffect, useRef } from 'react';
 import { H1, Tagline, CommissionCalculator } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { GoldenRainEffect } from '@/components/shared/hero-effects/GoldenRainEffect';
+
+declare global {
+  interface Window {
+    plausible?: (event: string, options?: { props: Record<string, string | number | boolean> }) => void;
+  }
+}
 
 /**
  * eXp Commission & Fees Calculator Page
@@ -18,6 +24,17 @@ function CalculatorContent() {
   const isEmbed = searchParams.get('embed') === 'true';
 
   const embedRef = useRef<HTMLDivElement>(null);
+
+  // Debounced Plausible tracking for calculator usage
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleInputChange = useCallback(() => {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
+      if (typeof window !== 'undefined' && window.plausible) {
+        window.plausible('Calculator Used', { props: { calculator_type: 'commission' } });
+      }
+    }, 2000);
+  }, []);
 
   // Send height to parent window when in embed mode
   useEffect(() => {
@@ -84,6 +101,7 @@ function CalculatorContent() {
           <CommissionCalculator
             initialTransactions={12}
             initialCommission={10000}
+            onInputChange={handleInputChange}
           />
         </div>
       </>
@@ -114,6 +132,7 @@ function CalculatorContent() {
           <CommissionCalculator
             initialTransactions={12}
             initialCommission={10000}
+            onInputChange={handleInputChange}
           />
         </div>
       </section>

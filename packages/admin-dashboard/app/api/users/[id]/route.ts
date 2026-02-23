@@ -12,6 +12,7 @@ import { createClient } from '@supabase/supabase-js';
 import bcryptjs from 'bcryptjs';
 import { deleteProfilePicture } from '@/lib/cloudflare-r2';
 import { deleteAgentPageFromKV, syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
+import { verifyAuth, verifyAdminAuth, verifySessionAdminAuth } from '@/app/api/middleware/adminAuth';
 
 /**
  * Get Supabase Admin client for managing auth users
@@ -46,8 +47,25 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Auth: try Bearer JWT first, fall back to session cookies (Master Controller browser)
+    const authHeader = request.headers.get('authorization');
+    let auth;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      auth = await verifyAuth(request);
+    } else {
+      auth = await verifySessionAdminAuth();
+    }
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const supabase = getSupabaseServiceClient();
     const { id } = await params;
+
+    // Non-admins can only view their own profile
+    if (auth.role !== 'admin' && auth.userId !== id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
     if (!supabase) {
       return NextResponse.json(
@@ -95,8 +113,25 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Auth: try Bearer JWT first, fall back to session cookies (Master Controller browser)
+    const authHeader = request.headers.get('authorization');
+    let auth;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      auth = await verifyAuth(request);
+    } else {
+      auth = await verifySessionAdminAuth();
+    }
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const supabase = getSupabaseServiceClient();
     const { id } = await params;
+
+    // Non-admins can only edit their own profile
+    if (auth.role !== 'admin' && auth.userId !== id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
     if (!supabase) {
       return NextResponse.json(
@@ -106,6 +141,14 @@ export async function PUT(
     }
 
     const body = await request.json();
+
+    // Non-admins cannot change role or status
+    if (auth.role !== 'admin' && (body.role !== undefined || body.status !== undefined)) {
+      return NextResponse.json(
+        { error: 'Forbidden - only admins can change role or status' },
+        { status: 403 }
+      );
+    }
     const {
       first_name,
       last_name,
@@ -169,7 +212,7 @@ export async function PUT(
       const hashedPassword = await bcryptjs.hash(password, BCRYPT_ROUNDS);
       updates.password_hash = hashedPassword;
       passwordChanged = true;
-      console.log(`🔐 Password update for user ${id}: hash generated (${hashedPassword.substring(0, 20)}...)`);
+      console.log(`🔐 Password updated for user ${id}`);
     }
 
     // Get current user email before update (for finding Supabase Auth user)
@@ -223,6 +266,18 @@ export async function PUT(
 
           if (authError) {
             console.error(`❌ Failed to sync to Supabase Auth for user ${id}:`, authError.message);
+            // Rollback email in users table if Auth sync failed to prevent inconsistency
+            if (emailChanged) {
+              await supabase
+                .from('users')
+                .update({ email: currentEmail, updated_at: new Date().toISOString() })
+                .eq('id', id);
+              console.warn(`⚠️ Rolled back email change for user ${id} due to Auth sync failure`);
+              return NextResponse.json(
+                { error: 'Failed to update email - please try again' },
+                { status: 500 }
+              );
+            }
           } else {
             console.log(`✅ Supabase Auth synced for user ${id}:`, Object.keys(authUpdates).join(', '));
           }
@@ -298,6 +353,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Auth: try Bearer JWT first, fall back to session cookies (Master Controller browser)
+    const authHeader = request.headers.get('authorization');
+    let auth;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      auth = await verifyAdminAuth(request);
+    } else {
+      auth = await verifySessionAdminAuth();
+    }
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const supabase = getSupabaseServiceClient();
     const { id } = await params;
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { verifySessionAdminAuth } from '@/app/api/middleware/adminAuth';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -12,6 +13,11 @@ const supabase = createClient(
  */
 export async function POST(request: NextRequest) {
   try {
+    const auth = await verifySessionAdminAuth();
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     console.log('[Viewport Migration] Starting migration...');
 
     // 1. Fetch all typography settings

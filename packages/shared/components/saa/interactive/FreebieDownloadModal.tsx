@@ -153,6 +153,10 @@ export function FreebieDownloadModal({
     setMessage(null);
 
     try {
+      // Get Turnstile CAPTCHA token
+      const { getTurnstileToken } = await import('@saa/shared/lib/turnstile');
+      const turnstileToken = await getTurnstileToken('freebie-download');
+
       const response = await fetch(apiEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -161,12 +165,17 @@ export function FreebieDownloadModal({
           lastName: formData.lastName,
           email: formData.email,
           freebieTitle: freebie.title,
+          turnstileToken,
         }),
       });
 
       const result = await response.json();
 
       if (result.success) {
+        // Track successful download
+        if (typeof window !== 'undefined' && window.plausible) {
+          window.plausible('Freebie Downloaded', { props: { freebie_name: freebie.title, freebie_type: freebie.type || 'pdf' } });
+        }
         // Store user info for future visits
         storeUser(formData.firstName, formData.lastName, formData.email);
         setShowSuccess(true);

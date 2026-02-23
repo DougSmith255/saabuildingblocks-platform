@@ -326,3 +326,44 @@ jobs:
             --data '{"purge_everything":true}' \
             && echo "✅ Cache purged successfully" \
             || echo "⚠️  Cache purge failed, but deployment succeeded"
+
+      # Notify Google Search Console to re-crawl sitemaps
+      - name: Ping Google Search Console
+        if: steps.deploy.outputs.status == 'success'
+        env:
+          GOOGLE_SEARCH_CONSOLE_KEY: ${{ secrets.GOOGLE_SEARCH_CONSOLE_KEY }}
+        run: |
+          if [ -z "$GOOGLE_SEARCH_CONSOLE_KEY" ]; then
+            echo "ℹ️  GOOGLE_SEARCH_CONSOLE_KEY not set — skipping Search Console ping"
+            echo "   To enable: add base64-encoded service account JSON as GitHub secret"
+            exit 0
+          fi
+
+          npm install googleapis@latest --no-save --silent
+
+          node -e '
+            const { google } = require("googleapis");
+
+            async function ping() {
+              const keyJson = JSON.parse(
+                Buffer.from(process.env.GOOGLE_SEARCH_CONSOLE_KEY, "base64").toString()
+              );
+
+              const auth = new google.auth.GoogleAuth({
+                credentials: keyJson,
+                scopes: ["https://www.googleapis.com/auth/webmasters"],
+              });
+
+              const searchconsole = google.webmasters({ version: "v3", auth });
+              const siteUrl = "sc-domain:smartagentalliance.com";
+              const sitemapUrl = "https://smartagentalliance.com/sitemap.xml";
+
+              await searchconsole.sitemaps.submit({ siteUrl, feedpath: sitemapUrl });
+              console.log("✅ Submitted " + sitemapUrl + " to Google Search Console");
+            }
+
+            ping().catch(err => {
+              console.error("⚠️  Search Console ping failed:", err.message);
+              process.exit(0); // non-blocking
+            });
+          '

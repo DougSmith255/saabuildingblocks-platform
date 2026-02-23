@@ -66,9 +66,21 @@ export interface AuthorSectionProps {
  *
  * Automatically maps WordPress author name to rich author data
  */
+// Map WordPress slugs/variations to canonical author names
+const AUTHOR_ALIASES: Record<string, string> = {
+  'karriehill': 'Karrie Hill',
+  'karrie hill': 'Karrie Hill',
+  'karrie-hill': 'Karrie Hill',
+  'dougsmith': 'Doug Smart',
+  'doug smart': 'Doug Smart',
+  'doug-smart': 'Doug Smart',
+  'dougsmart': 'Doug Smart',
+};
+
 export function AuthorSection({ authorName, index = 0 }: AuthorSectionProps) {
-  // Look up author data by name
-  const author = AUTHORS[authorName];
+  // Look up author data by name, with alias fallback
+  const canonicalName = AUTHOR_ALIASES[authorName.toLowerCase()] || authorName;
+  const author = AUTHORS[canonicalName];
 
   // If author not found in our mapping, don't render
   if (!author) {

@@ -102,6 +102,8 @@ packages/*/tsconfig.tsbuildinfo
 
 # Sensitive files - DO NOT COMMIT
 CLOUDFLARE_TOKENS.md
+packages/*/.env.local.full
+scripts/populate-token-vault.js
 
 # Playwright MCP screenshots
 .playwright-mcp/

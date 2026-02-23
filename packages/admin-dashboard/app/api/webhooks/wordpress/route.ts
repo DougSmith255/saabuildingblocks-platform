@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -33,6 +34,25 @@ export async function POST(request: NextRequest) {
       event_type: payload.event_type,
     });
 
+    // Verify webhook secret
+    const webhookSecret = process.env.WORDPRESS_WEBHOOK_SECRET;
+    if (webhookSecret) {
+      const signature = request.headers.get('x-webhook-signature') || '';
+      const expectedSig = crypto
+        .createHmac('sha256', webhookSecret)
+        .update(JSON.stringify(payload))
+        .digest('hex');
+      if (!signature || !crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSig))) {
+        console.error('[WordPress Webhook] Invalid signature');
+        return NextResponse.json(
+          { success: false, error: 'Invalid webhook signature' },
+          { status: 401 }
+        );
+      }
+    } else {
+      console.warn('[WordPress Webhook] WORDPRESS_WEBHOOK_SECRET not set - signature verification disabled');
+    }
+
     // Validate required fields
     if (!payload.post_id || !payload.post_slug) {
       return NextResponse.json(
@@ -44,12 +64,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    // TODO: Validate webhook signature for security
-    // const signature = request.headers.get('x-webhook-signature');
-    // if (!validateSignature(payload, signature)) {
-    //   return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
-    // }
 
     // Get GitHub credentials from environment
     const githubToken = process.env.GITHUB_TOKEN;

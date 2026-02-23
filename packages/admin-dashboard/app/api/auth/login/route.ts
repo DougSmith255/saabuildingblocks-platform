@@ -24,28 +24,43 @@ import { loginSchema, formatZodErrors } from '@/lib/auth/schemas';
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const RATE_LIMIT_MAX_ATTEMPTS = 5;
 
-// CORS headers for cross-origin requests from public site
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Max-Age': '86400',
-};
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
+
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
+}
 
 // Handle preflight OPTIONS request
-export async function OPTIONS() {
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin');
   return new NextResponse(null, {
     status: 204,
-    headers: CORS_HEADERS,
+    headers: getCorsHeaders(origin),
   });
 }
 
-// Helper to create JSON response with CORS headers
-function jsonResponse(data: object, status: number = 200, extraHeaders?: Record<string, string>) {
-  return NextResponse.json(data, {
-    status,
-    headers: { ...CORS_HEADERS, ...extraHeaders },
-  });
+// Helper to create scoped JSON response with CORS headers
+function createJsonResponse(origin?: string | null) {
+  return (data: object, status: number = 200, extraHeaders?: Record<string, string>) =>
+    NextResponse.json(data, {
+      status,
+      headers: { ...getCorsHeaders(origin), ...extraHeaders },
+    });
 }
 
 // Create Supabase clients
@@ -70,6 +85,8 @@ function getSupabaseClients() {
 }
 
 export async function POST(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  const jsonResponse = createJsonResponse(origin);
   const clients = getSupabaseClients();
 
   if (!clients) {
@@ -167,8 +184,8 @@ export async function POST(request: NextRequest) {
 
       return jsonResponse({
         success: false,
-        error: 'USER_NOT_FOUND',
-        message: 'User account not found. Please contact support.',
+        error: 'INVALID_CREDENTIALS',
+        message: 'Invalid email or password',
       }, 401);
     }
 
@@ -183,13 +200,12 @@ export async function POST(request: NextRequest) {
         metadata: { reason: 'account_inactive', status: user.status },
       });
 
+      // Use generic message to prevent account status enumeration
       return jsonResponse({
         success: false,
-        error: 'ACCOUNT_INACTIVE',
-        message: user.status === 'suspended'
-          ? 'Your account has been suspended. Please contact support.'
-          : 'Your account is not activated yet. Please complete activation first.',
-      }, 403);
+        error: 'INVALID_CREDENTIALS',
+        message: 'Invalid email or password',
+      }, 401);
     }
 
     // Generate JWT tokens for Agent Portal
@@ -212,7 +228,7 @@ export async function POST(request: NextRequest) {
     const tokenHash = hashToken(refreshToken);
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
-    await serviceClient.from('refresh_tokens').insert({
+    const { error: insertError } = await serviceClient.from('refresh_tokens').insert({
       id: tokenId,
       user_id: user.id,
       token_hash: tokenHash,
@@ -222,6 +238,15 @@ export async function POST(request: NextRequest) {
       ip_address: ipAddress,
       user_agent: userAgent,
     });
+
+    if (insertError) {
+      console.error('[Login API] Failed to store refresh token:', insertError.message);
+      return jsonResponse({
+        success: false,
+        error: 'INTERNAL_SERVER_ERROR',
+        message: 'Login failed. Please try again.',
+      }, 500);
+    }
 
     // Update user login info
     await serviceClient
@@ -268,13 +293,13 @@ export async function POST(request: NextRequest) {
         isFirstLogin: false,
       },
       expiresIn,
-    }, { headers: CORS_HEADERS });
+    }, { headers: getCorsHeaders(request.headers.get('origin')) });
 
     // Set refresh token in HttpOnly cookie
     response.cookies.set('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: true,
+      sameSite: 'lax',
       maxAge: rememberMe ? 30 * 24 * 60 * 60 : undefined, // 30 days or session
       path: '/',
     });

@@ -10,7 +10,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
-import { randomBytes, timingSafeEqual } from 'crypto';
+import { randomBytes, timingSafeEqual, createHash } from 'crypto';
 import { syncInvitationSent } from '@/lib/gohighlevel/index';
 import { sendWelcomeEmail } from '@/lib/email/send';
 import { z } from 'zod';
@@ -96,14 +96,6 @@ export async function POST(request: NextRequest) {
 
     if (!userMatch || !passMatch) {
       console.warn('[AUTH FAILED] Invalid credentials attempt', {
-        providedUser: username,
-        providedPassword: authPassword,
-        expectedUser: envUser,
-        expectedPassword: envPass,
-        userLengthMatch: username.length === envUser.length,
-        passLengthMatch: authPassword.length === envPass.length,
-        userMatch,
-        passMatch,
         timestamp: new Date().toISOString()
       });
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 403 });
@@ -185,11 +177,11 @@ export async function POST(request: NextRequest) {
       fullName = nameToSplit;
     }
 
-    // Check if user already exists
+    // Check if user already exists (case-insensitive)
     const { data: existingUser } = await supabase
       .from('users')
       .select('id')
-      .eq('email', email)
+      .ilike('email', email)
       .single();
 
     if (existingUser) {
@@ -226,7 +218,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create invitation record
+    // Create invitation record (hash token for secure storage)
+    const invitationTokenHash = createHash('sha256').update(invitationToken).digest('hex');
     const { error: invitationError } = await supabase
       .from('user_invitations')
       .insert({
@@ -235,7 +228,7 @@ export async function POST(request: NextRequest) {
         first_name: firstName,
         last_name: lastName,
         full_name: fullName, // Store for backward compatibility
-        token: invitationToken,
+        token: invitationTokenHash,
         status: 'pending',
         expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
         created_at: new Date().toISOString(),
@@ -287,7 +280,7 @@ export async function POST(request: NextRequest) {
             email_error: emailResult.error,
             email_attempts: emailResult.attempts,
           })
-          .eq('token', invitationToken);
+          .eq('token', invitationTokenHash);
 
         console.error('❌ [USER API] Email send failed:', {
           userId: newUser.id,
@@ -306,7 +299,7 @@ export async function POST(request: NextRequest) {
             email_attempts: emailResult.attempts,
             status: 'sent', // Update status to 'sent' when email succeeds
           })
-          .eq('token', invitationToken);
+          .eq('token', invitationTokenHash);
 
         console.log('✅ [USER API] Email sent successfully:', {
           userId: newUser.id,

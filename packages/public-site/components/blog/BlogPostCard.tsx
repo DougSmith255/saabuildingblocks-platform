@@ -6,13 +6,7 @@ import Image from 'next/image';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { SecondaryButton } from '@saa/shared/components/saa';
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
-
-/**
- * Convert category name to URL slug
- */
-function categoryToSlug(category: string): string {
-  return category.toLowerCase().replace(/\s+/g, '-');
-}
+import { getPostUrl } from '@/lib/blog-post-urls';
 
 export interface BlogPostCardProps {
   post: BlogPost;
@@ -36,10 +30,8 @@ export interface BlogPostCardProps {
  * ```
  */
 export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
-  // Get the primary category and convert to slug for URL
-  const primaryCategory = post.categories[0] || 'uncategorized';
-  const categorySlug = categoryToSlug(primaryCategory);
-  const postUrl = `/blog/${categorySlug}/${post.slug}`;
+  // Build URL using shared utility (handles standalone categories)
+  const postUrl = getPostUrl(post);
 
   return (
     <div

@@ -17,6 +17,7 @@ import { createClient } from '@supabase/supabase-js';
 import { createGHLClient } from '@/lib/gohighlevel-client';
 import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
 import bcrypt from 'bcryptjs';
+import { verifyAuth } from '@/app/api/middleware/adminAuth';
 
 /**
  * Get Supabase Admin client for managing auth users
@@ -32,25 +33,44 @@ function getSupabaseAdminClient() {
   });
 }
 
-// CORS headers for cross-origin requests
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'PATCH, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Max-Age': '86400',
-};
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
 
-// Handle CORS preflight
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'PATCH, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
 }
 
-// Helper to add CORS headers to responses
-function corsResponse(body: object, status: number = 200) {
-  return NextResponse.json(body, { status, headers: CORS_HEADERS });
+// Handle CORS preflight
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(request.headers.get('origin')) });
 }
 
 export async function PATCH(request: NextRequest) {
+  const corsHeaders = getCorsHeaders(request.headers.get('origin'));
+  function corsResponse(body: object, status: number = 200) {
+    return NextResponse.json(body, { status, headers: corsHeaders });
+  }
+
+  // Auth: user can only update their own profile
+  const auth = await verifyAuth(request);
+  if (!auth.authorized) {
+    return corsResponse({ success: false, error: auth.error || 'Unauthorized' }, auth.status || 401);
+  }
+
   const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
@@ -77,6 +97,11 @@ export async function PATCH(request: NextRequest) {
         },
         400
       );
+    }
+
+    // IDOR check: users can only update their own profile
+    if (auth.role !== 'admin' && auth.userId !== userId) {
+      return corsResponse({ success: false, error: 'Forbidden' }, 403);
     }
 
     // Get current user data

@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import fs from 'fs/promises';
 import path from 'path';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 
 const execAsync = promisify(exec);
 
@@ -204,8 +205,13 @@ async function parseDependencyLogFile(logPath: string): Promise<{
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const automations: Automation[] = [];
 
     // Check EverWebinar to GoHighLevel sync automation

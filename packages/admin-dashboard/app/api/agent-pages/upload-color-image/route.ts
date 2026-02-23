@@ -12,30 +12,44 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { uploadColorProfilePicture } from '@/lib/cloudflare-r2';
+import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
 import { requirePageOwner } from '@/app/api/middleware/agentPageAuth';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
 
-// CORS headers for cross-origin requests
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Max-Age': '86400',
-};
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
 
-// Handle CORS preflight
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
 }
 
-// Helper to add CORS headers to responses
-function corsResponse(body: object, status: number = 200) {
-  return NextResponse.json(body, { status, headers: CORS_HEADERS });
+// Handle CORS preflight
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(request.headers.get('origin')) });
 }
 
 export async function POST(request: NextRequest) {
+  const corsHeaders = getCorsHeaders(request.headers.get('origin'));
+  function corsResponse(body: object, status: number = 200) {
+    return NextResponse.json(body, { status, headers: corsHeaders });
+  }
+
   const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
@@ -78,7 +92,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify authentication and page ownership
-    const { error: authError } = await requirePageOwner(request, pageId, CORS_HEADERS);
+    const { error: authError } = await requirePageOwner(request, pageId, corsHeaders);
     if (authError) return authError;
 
     // Validate file type
@@ -162,6 +176,28 @@ export async function POST(request: NextRequest) {
         },
         500
       );
+    }
+
+    // Sync updated page to Cloudflare KV so linktree reflects the new color image
+    try {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('exp_email, legal_name')
+        .eq('id', updatedPage.user_id)
+        .single();
+
+      const kvData: AgentPageKVData = {
+        ...updatedPage,
+        exp_email: userData?.exp_email || null,
+        legal_name: userData?.legal_name || null,
+      };
+
+      const kvResult = await syncAgentPageToKV(kvData);
+      if (!kvResult.success) {
+        console.error('[Agent Page Color Image Upload] KV sync failed:', kvResult.error);
+      }
+    } catch (kvErr) {
+      console.error('[Agent Page Color Image Upload] KV sync error:', kvErr);
     }
 
     return corsResponse({

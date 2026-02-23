@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
@@ -10,8 +11,13 @@ const supabase = createClient(
  * GET /api/email-automations/typography
  * Fetch the active email typography settings
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const { data, error } = await supabase
       .from('email_typography_settings')
       .select('*')
@@ -149,6 +155,11 @@ function processElements(html: string, tag: string, settings: any): string {
  */
 export async function PUT(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const body = await request.json();
 
     console.log('=== TYPOGRAPHY UPDATE STARTED ===');

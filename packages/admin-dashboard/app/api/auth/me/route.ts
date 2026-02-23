@@ -13,19 +13,32 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { verifyAccessToken } from '@/lib/auth/jwt';
 
-// CORS + no-cache headers for cross-origin requests from public site
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Max-Age': '86400',
-  'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-  'Pragma': 'no-cache',
-};
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
+
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+    'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+    'Pragma': 'no-cache',
+    'Vary': 'Origin',
+  };
+}
 
 // Handle preflight requests
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(request.headers.get('origin')) });
 }
 
 export async function GET(request: NextRequest) {
@@ -38,7 +51,7 @@ export async function GET(request: NextRequest) {
         error: 'SERVICE_UNAVAILABLE',
         message: 'Authentication service is not available',
       },
-      { status: 503, headers: CORS_HEADERS }
+      { status: 503, headers: getCorsHeaders(request.headers.get('origin')) }
     );
   }
 
@@ -53,7 +66,7 @@ export async function GET(request: NextRequest) {
           error: 'AUTHENTICATION_REQUIRED',
           message: 'No access token provided',
         },
-        { status: 401, headers: CORS_HEADERS }
+        { status: 401, headers: getCorsHeaders(request.headers.get('origin')) }
       );
     }
 
@@ -69,7 +82,7 @@ export async function GET(request: NextRequest) {
           error: 'INVALID_TOKEN',
           message: error || 'Access token is invalid or expired',
         },
-        { status: 401, headers: CORS_HEADERS }
+        { status: 401, headers: getCorsHeaders(request.headers.get('origin')) }
       );
     }
 
@@ -85,6 +98,7 @@ export async function GET(request: NextRequest) {
         last_name,
         profile_picture_url,
         role,
+        status,
         email_verified,
         email_verification_pending,
         created_at,
@@ -103,19 +117,28 @@ export async function GET(request: NextRequest) {
           error: 'USER_NOT_FOUND',
           message: 'User account not found',
         },
-        { status: 404, headers: CORS_HEADERS }
+        { status: 404, headers: getCorsHeaders(request.headers.get('origin')) }
       );
     }
 
-    // Note: is_active column does not exist in current schema, skipping check
+    // Check account status — reject suspended/deactivated users
+    if (user.status && user.status !== 'active') {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'ACCOUNT_INACTIVE',
+          message: 'Your account is not active',
+        },
+        { status: 403, headers: getCorsHeaders(request.headers.get('origin')) }
+      );
+    }
 
     // Return user information
-    console.log('[/api/auth/me] Returning data for:', user.full_name, '| gender:', user.gender, '| is_leader:', user.is_leader, '| state:', user.state);
     return NextResponse.json({
       success: true,
       data: {
         id: user.id,
-        username: user.username,
+        username: user.username || user.email,
         email: user.email,
         fullName: user.full_name,
         full_name: user.full_name,
@@ -126,14 +149,14 @@ export async function GET(request: NextRequest) {
         role: user.role,
         emailVerified: user.email_verified,
         emailVerificationPending: user.email_verification_pending || false,
-        isActive: true,
+        isActive: user.status === 'active',
         createdAt: user.created_at,
         lastLoginAt: user.last_login_at,
         gender: user.gender || 'male',
         is_leader: user.is_leader || false,
         state: user.state || null,
       },
-    }, { headers: CORS_HEADERS });
+    }, { headers: getCorsHeaders(request.headers.get('origin')) });
   } catch (error) {
     console.error('[Get User Info API] Error:', error);
 
@@ -143,7 +166,7 @@ export async function GET(request: NextRequest) {
         error: 'INTERNAL_SERVER_ERROR',
         message: 'An unexpected error occurred while fetching user information',
       },
-      { status: 500, headers: CORS_HEADERS }
+      { status: 500, headers: getCorsHeaders(request.headers.get('origin')) }
     );
   }
 }

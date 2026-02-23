@@ -10,6 +10,7 @@ export const dynamic = 'force-dynamic';
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 
@@ -47,6 +48,11 @@ function getSupabaseClient() {
 
 export async function GET(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const supabase = getSupabaseClient();
     const { searchParams } = request.nextUrl;
 
@@ -93,6 +99,11 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const supabase = getSupabaseClient();
 
     // Parse and validate request body

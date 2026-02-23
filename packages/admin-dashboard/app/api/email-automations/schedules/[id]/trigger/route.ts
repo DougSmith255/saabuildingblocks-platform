@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { sendBatchEmails, type EmailTemplate } from '@/lib/email-automation-sender';
@@ -50,6 +51,11 @@ export async function POST(
   const { id } = await params;
 
   try {
+    const auth = await verifyAdminAuth(request);
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const supabase = getSupabaseClient();
 
     // Parse and validate request body

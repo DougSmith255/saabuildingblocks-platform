@@ -11,24 +11,32 @@ import { AGENT_PAGE_DEFAULTS } from '@/lib/agent-page-defaults';
 
 export const dynamic = 'force-dynamic';
 
-// CORS headers for cross-origin requests from public site
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+// CORS configuration
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
+
+function getCorsHeaders(origin?: string | null) {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
+}
 
 /**
  * OPTIONS handler for CORS preflight requests
  */
-export async function OPTIONS() {
-  return NextResponse.json({}, {
-    status: 200,
-    headers: {
-      ...CORS_HEADERS,
-      'Access-Control-Max-Age': '86400',
-    },
-  });
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(origin) });
 }
 
 /**
@@ -37,6 +45,7 @@ export async function OPTIONS() {
  * Create a new agent page for the authenticated user
  */
 export async function POST(request: NextRequest) {
+  const CORS_HEADERS = getCorsHeaders(request.headers.get('origin'));
   try {
     const supabase = getSupabaseServiceClient();
 

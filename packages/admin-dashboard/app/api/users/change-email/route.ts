@@ -99,11 +99,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find user by current email
+    // Find user by current email (case-insensitive)
     const { data: user, error: userError } = await supabase
       .from('users')
       .select('*')
-      .eq('email', current_email)
+      .ilike('email', current_email)
       .single();
 
     if (userError || !user) {
@@ -180,11 +180,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if new email is already in use
+    // Check if new email is already in use (case-insensitive)
     const { data: existingUser } = await supabase
       .from('users')
       .select('id')
-      .eq('email', new_email)
+      .ilike('email', new_email)
       .single();
 
     if (existingUser) {

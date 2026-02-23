@@ -2,7 +2,7 @@
 
 > **Single source of truth for infrastructure, architecture, and development.**
 > Every path, command, and claim in this file has been verified against the actual system.
-> Last verified: 2026-02-02
+> Last verified: 2026-02-20
 
 ## Project Overview
 
@@ -78,16 +78,44 @@ mcp__context7__query-docs { "libraryId": "...", "query": "..." }
 
 | Port | Service | Status | Description |
 |------|---------|--------|-------------|
-| 22 | SSH | Running | Remote access |
-| 80 | Apache | Running | HTTP → HTTPS redirect |
-| 443 | Apache | Running | SSL termination + reverse proxy |
+| 22 | SSH | Running | Remote access (only externally open port) |
+| 80 | Apache | Running | HTTP (localhost only, behind Cloudflare Tunnel) |
+| 443 | Apache | Running | HTTPS + reverse proxy (localhost only, behind Cloudflare Tunnel) |
 | 3002 | admin-dashboard | Running | PM2: `nextjs-saa`, proxied via Apache |
 | 3306 | MariaDB | Running | MySQL database (WordPress) |
 | 8000 | Plausible CE | Running | Docker, analytics dashboard |
 
-**Not running (remove if seen elsewhere):** Redis (6379), Vault (8200), Listmonk, n8n
+**Not running (remove if seen elsewhere):** Redis (6379), Vault (8200), Listmonk, n8n, Postiz, Secrets/Vault
 
-**Firewall (UFW):** Only ports 22, 80, 443 are open. Port 3002 is explicitly denied from external access.
+**Firewall (UFW):** Only port 22 (SSH) is open. Ports 80/443 are closed — all HTTP/HTTPS traffic flows through Cloudflare Tunnel. Port 3002 is explicitly denied.
+
+### Cloudflare Tunnel
+
+All web traffic to the VPS is routed through Cloudflare Tunnel (`saa-vps`), eliminating direct exposure of ports 80/443.
+
+| Hostname | Tunnel Target | Service |
+|---|---|---|
+| `saabuildingblocks.com` | `https://localhost:443` | Apache → admin dashboard / Cloudflare Pages |
+| `plausible.saabuildingblocks.com` | `http://localhost:8000` | Plausible CE analytics |
+| `wp.saabuildingblocks.com` | `https://localhost:443` | Apache → WordPress |
+
+**Tunnel details:**
+- **Name:** `saa-vps`
+- **ID:** `bd3a0ed0-0bac-45fe-8a06-c8db9dc41cf7`
+- **Service:** `cloudflared.service` (systemd, auto-starts on boot)
+- **Config:** Remotely managed via Cloudflare dashboard/API (not local config file)
+- **Cloudflare account email:** `doug@smartagentalliance.com`
+
+```bash
+# Check tunnel status
+sudo systemctl status cloudflared
+
+# View tunnel logs
+sudo journalctl -u cloudflared --since "5 minutes ago"
+
+# Restart tunnel
+sudo systemctl restart cloudflared
+```
 
 ---
 
@@ -145,7 +173,7 @@ pm2 restart nextjs-saa
 ### Request Flow
 
 ```
-Browser → saabuildingblocks.com (Apache :443)
+Browser → saabuildingblocks.com → Cloudflare Edge → Tunnel → Apache :443
   ├─ /api/*, /master-controller, /login, /agent-portal → 127.0.0.1:3002 (admin-dashboard)
   └─ everything else → saabuildingblocks.pages.dev (Cloudflare Pages)
 ```

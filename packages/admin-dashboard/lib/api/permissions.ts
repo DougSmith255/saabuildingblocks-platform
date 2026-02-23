@@ -3,6 +3,16 @@
  * Provides type-safe functions for permission operations
  */
 
+import { getAccessToken } from '@/lib/auth/tokens';
+
+function authHeaders(): Record<string, string> {
+  const token = getAccessToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
 export interface Permission {
   id: string;
   name: string;
@@ -31,7 +41,7 @@ export async function getPermissions(): Promise<{
 }> {
   const response = await fetch('/api/permissions', {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
+    headers: authHeaders()
   });
 
   if (!response.ok) {

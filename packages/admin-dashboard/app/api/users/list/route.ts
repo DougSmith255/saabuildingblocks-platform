@@ -5,7 +5,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { timingSafeEqual } from 'crypto';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { verifyAdminAuth, verifySessionAdminAuth } from '@/app/api/middleware/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -122,6 +124,18 @@ async function fetchUsers(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
+    // Auth: try session cookies first (Master Controller browser), fall back to Bearer JWT
+    const authHeader = request.headers.get('authorization');
+    let auth;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      auth = await verifyAdminAuth(request);
+    } else {
+      auth = await verifySessionAdminAuth();
+    }
+    if (!auth.authorized) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    }
+
     const response = await fetchUsers(request);
 
     // Add cache-busting headers to prevent stale data
@@ -147,7 +161,6 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    // Validate authentication (Basic auth or bearer token)
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader) {
@@ -157,22 +170,51 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Basic auth validation (optional - Master Controller uses this)
+    // Bearer token auth (admin JWT)
+    if (authHeader.startsWith('Bearer ')) {
+      const auth = await verifyAdminAuth(request);
+      if (!auth.authorized) {
+        return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+      }
+      return await fetchUsers(request);
+    }
+
+    // Basic auth (Master Controller service-to-service)
     if (authHeader.startsWith('Basic ')) {
+      const envUser = process.env.API_BASIC_AUTH_USER;
+      const envPass = process.env.API_BASIC_AUTH_PASSWORD;
+
+      if (!envUser || !envPass) {
+        return NextResponse.json(
+          { error: 'Server configuration error' },
+          { status: 500 }
+        );
+      }
+
       const base64Credentials = authHeader.slice(6);
       const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
       const [username, password] = credentials.split(':');
 
-      // Validate against expected credentials
-      if (username !== 'builder_user' || password !== 'K8mN#Build7$Q2') {
+      // Timing-safe comparison
+      const userMatch = username.length === envUser.length &&
+        timingSafeEqual(Buffer.from(username), Buffer.from(envUser));
+      const passMatch = password.length === envPass.length &&
+        timingSafeEqual(Buffer.from(password), Buffer.from(envPass));
+
+      if (!userMatch || !passMatch) {
         return NextResponse.json(
           { error: 'Invalid credentials' },
           { status: 401 }
         );
       }
+
+      return await fetchUsers(request);
     }
 
-    return await fetchUsers(request);
+    return NextResponse.json(
+      { error: 'Invalid authentication method' },
+      { status: 401 }
+    );
   } catch (error) {
     console.error('❌ Error in POST /api/users/list:', error);
     return NextResponse.json(

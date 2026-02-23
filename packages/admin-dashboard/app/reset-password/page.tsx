@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'error';
+
 /**
  * Reset Password Page
  * Phase 2: Agent Portal Authentication UI

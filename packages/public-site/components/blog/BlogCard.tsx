@@ -24,23 +24,16 @@ import { GenericCard } from '@saa/shared/components/saa';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
 import { useSharedVisibility } from './useSharedVisibility';
+import { getPostUrl } from '@/lib/blog-post-urls';
 
 export interface BlogCardProps {
   post: BlogPost;
   className?: string;
 }
 
-/**
- * Convert category name to URL slug
- */
-function categoryToSlug(category: string): string {
-  return category.toLowerCase().replace(/\s+/g, '-');
-}
-
 function BlogCardComponent({ post, className = '' }: BlogCardProps) {
-  // Get the primary category and convert to slug for URL
-  const primaryCategory = post.categories[0] || 'uncategorized';
-  const categorySlug = categoryToSlug(primaryCategory);
+  // Build URL using shared utility (handles standalone categories)
+  const postUrl = getPostUrl(post);
 
   // Use shared IntersectionObserver for all blog cards (1 observer vs 20+)
   const [cardRef, isVisible] = useSharedVisibility<HTMLDivElement>();
@@ -53,7 +46,7 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
     <div ref={cardRef} className={`h-full ${className}`}>
       <GenericCard hover padding="sm" className="h-full overflow-hidden !p-0">
         <Link
-          href={`/blog/${categorySlug}/${post.slug}`}
+          href={postUrl}
           className="flex flex-col h-full group"
           aria-label={`Read full article: ${post.title}`}
         >
