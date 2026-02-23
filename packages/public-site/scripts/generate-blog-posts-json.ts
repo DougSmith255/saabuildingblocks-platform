@@ -551,8 +551,13 @@ function transformPost(wpPost: any): BlogPost {
     ? wpPost.excerpt.rendered.replace(/<[^>]*>/g, '').trim()
     : '';
 
-  // Extract meta description from Yoast or Rank Math if available
-  const metaDescription = wpPost.yoast_head_json?.description
+  // Extract SEO title from Rank Math (used for <title> tag and search results)
+  // Falls back to post title if Rank Math title isn't set
+  const metaTitle = wpPost.meta?.rank_math_title || '';
+
+  // Extract meta description from Rank Math or Yoast if available
+  const metaDescription = wpPost.meta?.rank_math_description
+    || wpPost.yoast_head_json?.description
     || wpPost.rank_math_description
     || excerpt.slice(0, 160);
 
@@ -572,6 +577,7 @@ function transformPost(wpPost: any): BlogPost {
     categories: categoryNames,
     featuredImage,
     author,
+    metaTitle,
     metaDescription,
     // YouTube video URL from ACF (exposed via registered meta)
     youtubeVideoUrl: wpPost.meta?.youtube_video_url || undefined,

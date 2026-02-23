@@ -13,6 +13,8 @@ export interface BlogPost {
   title: string;
   content: string;
   excerpt: string;
+  /** Rank Math SEO title for search results (different from post title used in H1) */
+  metaTitle?: string;
   /** Rank Math SEO meta description (preferred over excerpt for display) */
   metaDescription?: string;
   date: string;
@@ -55,6 +57,8 @@ export interface WordPressPost {
   /** REST API registered meta fields */
   meta?: {
     youtube_video_url?: string;
+    rank_math_title?: string;
+    rank_math_description?: string;
   };
   _embedded?: {
     'wp:featuredmedia'?: Array<{

@@ -52,6 +52,8 @@ export async function generateMetadata({
     };
   }
 
+  // Rank Math SEO title for search results; falls back to post title
+  const seoTitle = post.metaTitle || post.title;
   // Prefer Rank Math meta description, fallback to cleaned excerpt
   const description = post.metaDescription || cleanExcerpt(post.excerpt, 160);
 
@@ -66,14 +68,14 @@ export async function generateMetadata({
     : [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }];
 
   return {
-    title: `${post.title} | Smart Agent Alliance`,
+    title: `${seoTitle} | Smart Agent Alliance`,
     description,
     keywords: post.categories,
     alternates: {
       canonical: `https://smartagentalliance.com/blog/${category}/${slug}`,
     },
     openGraph: {
-      title: post.title,
+      title: seoTitle,
       description,
       type: 'article',
       publishedTime: post.date,
@@ -85,7 +87,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.title,
+      title: seoTitle,
       description,
       images: post.featuredImage?.url ? [post.featuredImage.url] : ['/og-image.jpg'],
     },
