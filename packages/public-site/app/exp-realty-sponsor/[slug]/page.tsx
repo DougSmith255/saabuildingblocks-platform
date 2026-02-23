@@ -3,7 +3,7 @@ import { CategoryBlogPostTemplate } from '@/components/blog';
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
 import { extractFAQs, generateFAQSchema, transformFAQToRankMathMarkup } from '@/lib/faq-utils';
 import { getCachedBlogPosts, findPostBySlug, getRelatedPosts } from '@/lib/blog-post-page';
-import { getAuthorData } from '@/lib/author-data';
+import { buildBlogPostingSchema, buildVideoSchema } from '@/lib/blog-schema';
 import { getPostUrl } from '@/lib/blog-post-urls';
 import type { Metadata } from 'next';
 
@@ -95,32 +95,9 @@ export default async function ExpRealtySponsorPostPage({
   const faqs = extractFAQs(post.content);
   const faqSchema = generateFAQSchema(faqs);
 
-  // BlogPosting structured data
-  const authorData = getAuthorData(post.author.name);
-  const author = authorData
-    ? { '@type': 'Person' as const, name: authorData.name, url: authorData.profileUrl, jobTitle: authorData.jobTitle, sameAs: authorData.sameAs }
-    : { '@type': 'Person' as const, name: post.author.name };
-
-  const blogPostingSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title,
-    description: post.metaDescription || cleanExcerpt(post.excerpt, 160),
-    image: post.featuredImage?.url || 'https://smartagentalliance.com/og-image.jpg',
-    datePublished: post.date,
-    dateModified: post.modified,
-    author,
-    publisher: {
-      '@type': 'Organization',
-      name: 'Smart Agent Alliance',
-      '@id': 'https://smartagentalliance.com/#organization',
-      logo: { '@type': 'ImageObject', url: 'https://smartagentalliance.com/logo.png' },
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `https://smartagentalliance.com${postUrl}`,
-    },
-  };
+  // Structured data
+  const blogPostingSchema = buildBlogPostingSchema(post, postUrl);
+  const videoSchema = buildVideoSchema(post);
 
   // Pre-filter related posts on server side
   const relatedPosts = getRelatedPosts(posts, post);
@@ -131,6 +108,12 @@ export default async function ExpRealtySponsorPostPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
       />
+      {videoSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema) }}
+        />
+      )}
       {faqSchema && (
         <script
           type="application/ld+json"

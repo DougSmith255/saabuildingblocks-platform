@@ -375,7 +375,9 @@ export function CategoryBlogPostTemplate({
                     </CyberFrame>
                   </div>
                 )}
-                <BlogContentRenderer html={post.content} />
+                <div data-speakable="summary">
+                  <BlogContentRenderer html={post.content} />
+                </div>
               </div>
 
               {/* Share Buttons */}
