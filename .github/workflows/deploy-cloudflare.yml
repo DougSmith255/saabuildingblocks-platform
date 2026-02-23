@@ -223,13 +223,19 @@ jobs:
           echo "   ✅ FIXED: Turbopack can now resolve '../../tsconfig.json'"
           echo ""
 
-          # cd into package directory and build (npm run build triggers postbuild: sitemap + routes)
+          # cd into package directory and build
           cd packages/public-site
-          npm run build
+          npx next build
 
           # Quick verification
           [ -d "out/_next" ] && [ -f "out/index.html" ] || { echo "❌ Build failed"; exit 1; }
           echo "✅ Build complete: $(find out -type f | wc -l) files, $(du -sh out/ | cut -f1)"
+
+          # Run postbuild steps (skipped by npx next build since npm lifecycle hooks don't run)
+          echo "📍 Generating sitemap..."
+          npm run generate:sitemap
+          echo "📍 Generating routes..."
+          npm run generate:routes
 
       # Compute simple build hash (for tracking only)
       - name: Compute build hash
