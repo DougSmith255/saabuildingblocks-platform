@@ -1578,17 +1578,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     #wyg-video-wrap:fullscreen #wyg-float-placeholder,
     #wyg-video-wrap:-webkit-full-screen #wyg-float-placeholder { display: none !important; }
-    /* Loading spinner for video */
-    @keyframes wyg-spin { to { transform: rotate(360deg); } }
-    .wyg-video-spinner {
-      position: absolute; inset: 0; z-index: 5; display: none;
-      align-items: center; justify-content: center; background: rgba(0,0,0,0.6);
-    }
-    .wyg-video-spinner.visible { display: flex; }
-    .wyg-video-spinner-ring {
-      width: 48px; height: 48px; border: 3px solid rgba(255,215,0,0.2);
-      border-top-color: #ffd700; border-radius: 50%; animation: wyg-spin 0.8s linear infinite;
-    }
+    /* Spinner removed — not needed */
     .wyg-vol-slider {
       -webkit-appearance: none !important; appearance: none !important;
       width: 50px !important; height: 2px !important;
@@ -3992,10 +3982,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
             <!-- Iframe inserted here by JS (preloaded on scroll into view) -->
 
-            <!-- Loading spinner (shown while video is buffering) -->
-            <div id="wyg-video-spinner" class="wyg-video-spinner">
-              <div class="wyg-video-spinner-ring"></div>
-            </div>
+            <!-- Spinner removed — not needed, matches team value page behavior -->
 
             <!-- Custom controls overlay (hidden until first play) -->
             <div id="wyg-controls-overlay" style="position: absolute; inset: 0; z-index: 10; display: none; cursor: pointer;">
@@ -5167,8 +5154,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         var tsSubtitle = document.getElementById('wyg-ts-subtitle');
         var stripEl = document.getElementById('wyg-timestamp-strip');
 
-        var spinner = document.getElementById('wyg-video-spinner');
-
         if (!wrap || !container) return;
 
         // State
@@ -5317,7 +5302,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
         // Build iframe src
         function buildIframeSrc(quality) {
-          return STREAM_BASE + VIDEO_ID + '/iframe?preload=auto&autoplay=false&muted=false&controls=false&pip=false&defaultQuality=' + quality;
+          return STREAM_BASE + VIDEO_ID + '/iframe?preload=metadata&autoplay=false&muted=false&controls=false&pip=false&defaultQuality=' + quality;
         }
 
         // Initialize player SDK (event listeners only, NO play)
@@ -5329,6 +5314,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             isPlaying = true;
             videoEnded = false;
             hideSpinner();
+            // Safety: if video started without user click (e.g. browser autoplay),
+            // clean up poster/play button and enable controls
+            if (!hasPlayed) {
+              hasPlayed = true;
+              if (poster) poster.remove();
+              if (playBtn) playBtn.remove();
+              if (controlsOverlay) controlsOverlay.style.display = 'block';
+            }
             updatePlayPauseIcon();
             if (endOverlay) endOverlay.style.display = 'none';
             if (stripEl && !isFullscreen) stripEl.style.maxHeight = '60px';
@@ -5434,9 +5427,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         }
         preloadOnScroll();
 
-        // Show/hide spinner
-        function showSpinner() { if (spinner) spinner.classList.add('visible'); }
-        function hideSpinner() { if (spinner) spinner.classList.remove('visible'); }
+        // Spinner removed — no-op stubs for any remaining calls
+        function showSpinner() {}
+        function hideSpinner() {}
 
         // Poll for SDK readiness after iframe is created
         function waitForSdkAndInit() {
@@ -5704,7 +5697,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
           // Set fixed position at FROM location
           container.style.position = 'fixed';
-          container.style.zIndex = '50';
+          container.style.zIndex = '9999';
           container.style.left = '0px';
           container.style.top = '0px';
           container.style.width = fromRect.width + 'px';
@@ -5894,7 +5887,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               var targetX = 20;
               var targetY = window.innerHeight - 20 - targetH;
               container.style.position = 'fixed';
-              container.style.zIndex = '50';
+              container.style.zIndex = '9999';
               container.style.left = '0px';
               container.style.top = '0px';
               container.style.width = targetW + 'px';
