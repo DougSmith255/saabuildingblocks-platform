@@ -1,64 +1,46 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { H1, Tagline } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
-
-declare global {
-  interface Window {
-    plausible?: (event: string, options?: { props: Record<string, string | number | boolean> }) => void;
-  }
-}
+import CustomBookingWidget from './components/CustomBookingWidget';
 
 /**
  * Book a Call Page
  *
- * Embeds the GHL booking calendar for scheduling calls with SAA.
- * Uses the same hero pattern as other public pages.
+ * Custom booking widget that connects to GoHighLevel calendar API
+ * via Cloudflare Functions proxy. Replaces the GHL iframe embed
+ * with a fully styled experience matching the SAA design system.
+ *
+ * Supports embed mode via ?embed=true (strips nav/footer via LayoutWrapper).
+ * Supports agent referral tracking via ?agent=<slug>.
  */
-export default function BookACallPage() {
-  // Track booking submission via GHL iframe postMessage
-  useEffect(() => {
-    function handleMessage(event: MessageEvent) {
-      // Only accept messages from our GHL domain
-      if (!event.origin.includes('smartagentalliance.com')) return;
-      const data = event.data;
-      if (!data) return;
-      // GHL booking widgets send "set-sticky-contacts" after form submission
-      // and various other signals on booking confirmation
-      const isBooking =
-        data === 'set-sticky-contacts' ||
-        (typeof data === 'object' && (
-          data.type === 'set-sticky-contacts' ||
-          data.action === 'set-sticky-contacts' ||
-          data.type === 'booking-confirmed' ||
-          data.action === 'formSubmitted'
-        ));
-      if (isBooking && window.plausible) {
-        window.plausible('Booking Submitted', { props: { page: '/book-a-call' } });
-      }
-    }
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
 
-  // Load the GHL form embed script after mount
-  useEffect(() => {
-    const scriptId = 'ghl-form-embed';
-    if (document.getElementById(scriptId)) return;
+function BookACallContent() {
+  const searchParams = useSearchParams();
+  const isEmbed = searchParams.get('embed') === 'true';
+  const agentSlug = searchParams.get('agent') || undefined;
 
-    const script = document.createElement('script');
-    script.id = scriptId;
-    script.src = 'https://team.smartagentalliance.com/js/form_embed.js';
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      const el = document.getElementById(scriptId);
-      if (el) el.remove();
-    };
-  }, []);
+  if (isEmbed) {
+    return (
+      <main
+        style={{
+          minHeight: '100vh',
+          background: '#0a0a0a',
+          padding: '1rem',
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'center',
+        }}
+      >
+        <div style={{ width: '100%', maxWidth: '1400px' }}>
+          <CustomBookingWidget agentSlug={agentSlug} />
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main id="main-content">
@@ -77,23 +59,20 @@ export default function BookACallPage() {
         </section>
       </StickyHeroWrapper>
 
-      {/* Booking Calendar Section */}
+      {/* Booking Widget Section */}
       <section className="relative pb-12 md:pb-20 px-4 sm:px-8 md:px-12" style={{ marginTop: '-2rem' }}>
         <div className="max-w-[1400px] mx-auto">
-          <iframe
-            src="https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7"
-            style={{
-              width: '100%',
-              border: 'none',
-              overflow: 'hidden',
-              minHeight: '700px',
-            }}
-            scrolling="no"
-            id="v5LFLy12isdGJiZmTxP7_1739836498498"
-            title="Book a Call with Smart Agent Alliance"
-          />
+          <CustomBookingWidget agentSlug={agentSlug} />
         </div>
       </section>
     </main>
+  );
+}
+
+export default function BookACallPage() {
+  return (
+    <Suspense>
+      <BookACallContent />
+    </Suspense>
   );
 }
