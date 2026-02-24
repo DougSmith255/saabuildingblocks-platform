@@ -187,6 +187,7 @@ export async function PATCH(request: NextRequest) {
     const {
       userId,
       onboarding_progress,
+      complete_onboarding,
       link_page_intro_dismissed,
       elite_courses_intro_dismissed,
     } = body;
@@ -238,15 +239,19 @@ export async function PATCH(request: NextRequest) {
       const newProgress = { ...currentProgress, ...onboarding_progress };
       updates.onboarding_progress = newProgress;
 
-      // Check if all steps are complete
-      const allStepsComplete = Object.values(newProgress).every((value) => value === true);
-
-      if (allStepsComplete && !user.onboarding_completed_at) {
-        // Mark onboarding as complete
+      // Mark onboarding complete if explicitly requested by the Finished button
+      if (complete_onboarding && !user.onboarding_completed_at) {
         updates.onboarding_completed_at = new Date().toISOString();
-      } else if (!allStepsComplete && user.onboarding_completed_at) {
-        // If a step was unchecked, clear the completion timestamp
-        updates.onboarding_completed_at = null;
+      } else if (!complete_onboarding) {
+        // Auto-detect: check if all steps are complete
+        const allStepsComplete = Object.values(newProgress).every((value) => value === true);
+
+        if (allStepsComplete && !user.onboarding_completed_at) {
+          updates.onboarding_completed_at = new Date().toISOString();
+        } else if (!allStepsComplete && user.onboarding_completed_at) {
+          // If a step was unchecked, clear the completion timestamp
+          updates.onboarding_completed_at = null;
+        }
       }
     }
 

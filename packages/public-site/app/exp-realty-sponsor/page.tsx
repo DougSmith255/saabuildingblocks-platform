@@ -1882,7 +1882,7 @@ function Section3() {
         : '/api/video/events';
       navigator.sendBeacon(
         endpoint,
-        new Blob([JSON.stringify(payload)], { type: 'application/json' })
+        new Blob([JSON.stringify(payload)], { type: 'text/plain' })
       );
     } catch {
       // fire-and-forget
@@ -1912,6 +1912,11 @@ function Section3() {
     const player = window.Stream(iframeRef.current);
     playerRef.current = player;
     player.addEventListener('play', () => {
+      // If video started without explicit user gesture, force pause immediately
+      if (!wantsAutoplay.current) {
+        try { player.pause(); } catch(e) { /* ignore */ }
+        return;
+      }
       setIsPlaying(true); setHasPlayed(true); setVideoEnded(false); setShowSpinner(false);
       // Analytics: start new session
       analyticsSessionId.current = `${WALKTHROUGH_VIDEO_ID}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
@@ -2352,6 +2357,11 @@ function Section3() {
     frame.style.transform = `translate(${targetX}px, ${targetY}px)`;
     frame.style.width = `${targetW}px`;
     frame.style.height = `${targetH}px`;
+
+    // Prevent auto-play: if the user never explicitly clicked play, force pause
+    if (!wantsAutoplay.current && playerRef.current) {
+      try { playerRef.current.pause(); } catch(e) { /* ignore */ }
+    }
   }, [floatState]);
 
   // Animate RETURN to inline — rAF loop recalculates target every frame
@@ -2705,7 +2715,7 @@ function Section3() {
                       boxShadow: '0 0 20px rgba(255,215,0,0.3)',
                     }}
                   >
-                    <svg className="w-5 h-5 md:w-6 md:h-7" viewBox="0 0 24 28" fill="none" style={{ marginLeft: '2px' }}>
+                    <svg className="w-5 h-5 md:w-6 md:h-7" viewBox="0 0 24 28" fill="none" style={{ marginLeft: '4px' }}>
                       <path d="M24 14L0 28V0L24 14Z" fill="#1a1a1a" />
                     </svg>
                   </div>
@@ -2719,7 +2729,7 @@ function Section3() {
                 ref={iframeRef}
                 src={`https://customer-2twfsluc6inah5at.cloudflarestream.com/${WALKTHROUGH_VIDEO_ID}/iframe?preload=metadata&autoplay=false&muted=false&controls=false&pip=false&defaultQuality=${videoQuality}`}
                 className="absolute inset-0 w-full h-full"
-                style={{ border: 'none' }}
+                style={{ border: 'none', pointerEvents: hasPlayed ? 'auto' : 'none' }}
                 allow="autoplay; fullscreen; encrypted-media"
                 allowFullScreen
               />
@@ -3332,9 +3342,9 @@ export default function ExpRealtySponsor() {
           <div className="max-w-[2500px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>Smart Agent Alliance</H1>
-              <Tagline className="mt-4" style={{ maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }} counterSuffix={<TaglineCounterSuffix />}>For agents who want more, without giving up independence.</Tagline>
+              <Tagline className="mt-4" style={{ maxWidth: '1400px', marginLeft: 'auto', marginRight: 'auto' }} counterSuffix={<TaglineCounterSuffix />}>Built for your business. Paid for by eXp.</Tagline>
               <p className="text-body mt-4" style={{ maxWidth: '75%', marginLeft: 'auto', marginRight: 'auto' }}>
-                Aligned incentives. We succeed only when you do.
+                Systems, training, and support that never come out of your pocket.
               </p>
             </div>
           </div>

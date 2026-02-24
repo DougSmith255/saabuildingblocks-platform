@@ -78,6 +78,9 @@ function AgentPortalLoginContent() {
   // Get search params to check for reset_token
   const searchParams = useSearchParams();
 
+  // Check for activated flag in URL
+  const isActivated = searchParams?.get('activated') === 'true';
+
   // Check for reset_token in URL and open modal
   useEffect(() => {
     const resetToken = searchParams?.get('reset_token');
@@ -87,11 +90,58 @@ function AgentPortalLoginContent() {
     }
   }, [searchParams]);
 
-  // Check if already logged in
+  // Check for auto-login via hash (from activation page cross-domain redirect)
   useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.startsWith('#auth=')) {
+      try {
+        const payload = JSON.parse(atob(hash.slice(6)));
+        if (payload.access_token && payload.user) {
+          const user = payload.user;
+          const userData = {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            firstName: user.first_name || user.fullName?.split(' ')[0] || '',
+            lastName: user.last_name || user.fullName?.split(' ').slice(1).join(' ') || '',
+            fullName: user.fullName || user.full_name || `${user.first_name || ''} ${user.last_name || ''}`.trim(),
+            role: user.role,
+            profilePictureUrl: user.profile_picture_url || null,
+            gender: user.gender || 'male',
+            isLeader: user.is_leader || false,
+            state: user.state || null,
+          };
+          localStorage.setItem('agent_portal_user', JSON.stringify(userData));
+          localStorage.setItem('agent_portal_token', payload.access_token);
+          // Parse redirect and extract section param for reliable deep linking
+          const currentUrl = new URL(window.location.href.split('#')[0]);
+          const redirectTo = currentUrl.searchParams.get('redirect') || '/agent-portal';
+          try {
+            const redirectUrl = new URL(redirectTo, window.location.origin);
+            const section = redirectUrl.searchParams.get('section');
+            if (section) {
+              localStorage.setItem('agent_portal_pending_section', section);
+            }
+          } catch { /* ignore parse errors */ }
+          // Clear the hash to avoid token leaking in browser history
+          window.history.replaceState(null, '', window.location.pathname);
+          router.push(redirectTo);
+          return;
+        }
+      } catch {
+        // Invalid hash data — fall through to normal login
+      }
+    }
+  }, [router]);
+
+  // Check if already logged in (skip if #auth= is present — let the auto-login handler run)
+  useEffect(() => {
+    if (window.location.hash.startsWith('#auth=')) return;
     const user = localStorage.getItem('agent_portal_user');
     if (user) {
-      router.push('/agent-portal');
+      const params = new URLSearchParams(window.location.search);
+      const redirectTo = params.get('redirect') || '/agent-portal';
+      router.push(redirectTo);
     }
   }, [router]);
 
@@ -139,6 +189,9 @@ function AgentPortalLoginContent() {
 
       localStorage.setItem('agent_portal_user', JSON.stringify(userData));
       localStorage.setItem('agent_portal_token', data.access_token);
+      if (data.refresh_token) {
+        localStorage.setItem('agent_portal_refresh_token', data.refresh_token);
+      }
 
       // Prefetch the dashboard immediately so it's ready when we navigate
       router.prefetch('/agent-portal');
@@ -403,6 +456,11 @@ function AgentPortalLoginContent() {
           </ModalTitle>
 
           <form onSubmit={handleSubmit}>
+            {/* Account Activated Message */}
+            {isActivated && !error && (
+              <FormMessage type="success">Account activated! Log in with your new password.</FormMessage>
+            )}
+
             {/* Error Message */}
             {error && (
               <FormMessage type="error">{error}</FormMessage>

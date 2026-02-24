@@ -28,6 +28,7 @@ interface User {
   gender?: 'male' | 'female'; // Controls which team calls the user sees
   is_leader?: boolean; // Controls whether user sees leaders-only calls
   state?: string; // US state abbreviation for broker support
+  profile_picture_url?: string; // Profile picture URL
 }
 
 /**
@@ -102,6 +103,7 @@ async function fetchUsers(request: NextRequest) {
       gender: user.gender || 'male',
       is_leader: user.is_leader || false,
       state: user.state || '',
+      profile_picture_url: user.profile_picture_url || null,
     };
   });
 

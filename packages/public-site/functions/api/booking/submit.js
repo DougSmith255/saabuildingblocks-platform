@@ -32,7 +32,7 @@ export async function onRequestPost(context) {
   const {
     firstName, lastName, email, phone,
     country, state, experienceLevel, careerPlan,
-    selectedSlot, timezone,
+    selectedSlot, timezone, agentSlug,
   } = body;
 
   // Validate required fields
@@ -66,6 +66,7 @@ export async function onRequestPost(context) {
     if (country) contactPayload.country = country;
     if (state?.trim()) contactPayload.state = state.trim();
     if (timezone) contactPayload.timezone = timezone;
+    // Custom fields set separately in Step 1b below (V1 API)
 
     const contactRes = await fetch(`${API_BASE}/contacts/upsert`, {
       method: 'POST',
@@ -77,18 +78,44 @@ export async function onRequestPost(context) {
       body: JSON.stringify(contactPayload),
     });
 
+    const contactResText = await contactRes.text();
     if (!contactRes.ok) {
-      const errText = await contactRes.text();
-      console.error(`Contact upsert failed (${contactRes.status}):`, errText);
+      console.error(`Contact upsert failed (${contactRes.status}):`, contactResText);
       throw new Error('Failed to process your information');
     }
 
-    const contactData = await contactRes.json();
+    const contactData = JSON.parse(contactResText);
+    console.log('Contact upsert response:', JSON.stringify({ status: contactRes.status, hasContact: !!contactData.contact, customFieldsSent: contactPayload.customFields || 'none' }));
     const contactId = contactData.contact?.id;
 
     if (!contactId) {
       console.error('Contact upsert missing id:', JSON.stringify(contactData));
       throw new Error('Failed to process your information');
+    }
+
+    // Step 1b: Set referring agent custom field via V2 API with field ID
+    if (agentSlug) {
+      try {
+        const updateRes = await fetch(`${API_BASE}/contacts/${contactId}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${API_KEY}`,
+            'Content-Type': 'application/json',
+            'Version': '2021-07-28',
+          },
+          body: JSON.stringify({
+            customFields: [{ id: 'JWjVcIaOHwP0DYaxgkKU', field_value: agentSlug }],
+          }),
+        });
+        if (!updateRes.ok) {
+          const errText = await updateRes.text();
+          console.error(`Custom field update failed (${updateRes.status}):`, errText);
+        } else {
+          console.log(`Custom field referring_agent set to "${agentSlug}" for contact ${contactId}`);
+        }
+      } catch (cfErr) {
+        console.error('Custom field update error:', cfErr);
+      }
     }
 
     // Step 2: Create appointment
@@ -113,7 +140,7 @@ export async function onRequestPost(context) {
           startTime,
           endTime,
           title: `${firstName.trim()} ${lastName.trim()} SAA Meeting`,
-          appointmentStatus: 'new',
+          appointmentStatus: 'confirmed',
           toNotify: true,
         }),
       }
@@ -126,10 +153,32 @@ export async function onRequestPost(context) {
     }
 
     const appointmentData = await appointmentRes.json();
+    let meetingLink = appointmentData.address || null;
+
+    // Teams link may not be in the create response — fetch the appointment to get it
+    if (!meetingLink && appointmentData.id) {
+      try {
+        await new Promise(r => setTimeout(r, 3000)); // wait for GHL to generate the Teams link
+        const getRes = await fetch(
+          `${API_BASE}/calendars/events/appointments/${appointmentData.id}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${API_KEY}`,
+              'Version': '2021-04-15',
+            },
+          }
+        );
+        if (getRes.ok) {
+          const getData = await getRes.json();
+          meetingLink = getData.appointment?.address || getData.address || null;
+        }
+      } catch { /* non-critical */ }
+    }
 
     return Response.json({
       success: true,
       appointmentId: appointmentData.id,
+      meetingLink,
       message: 'Your call has been scheduled!',
     });
   } catch (err) {

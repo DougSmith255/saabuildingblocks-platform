@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
 import { requirePageOwner } from '@/app/api/middleware/agentPageAuth';
+import { createGHLClient } from '@/lib/gohighlevel-client';
 
 export const dynamic = 'force-dynamic';
 
@@ -253,6 +254,32 @@ export async function PATCH(
 
       if (userUpdateError) {
         console.error('[Agent Page Update] Failed to sync display name to users table:', userUpdateError);
+      }
+    }
+
+    // If email or phone changed, sync to GoHighLevel
+    if (email !== undefined || phone !== undefined || display_first_name !== undefined || display_last_name !== undefined) {
+      try {
+        const { data: ghlUser } = await supabase
+          .from('users')
+          .select('gohighlevel_contact_id')
+          .eq('id', updatedPage.user_id)
+          .single();
+
+        if (ghlUser?.gohighlevel_contact_id) {
+          const ghlClient = createGHLClient();
+          const ghlUpdates: Record<string, string> = {};
+          if (email !== undefined) ghlUpdates.email = email || '';
+          if (phone !== undefined) ghlUpdates.phone = phone || '';
+          if (display_first_name !== undefined) ghlUpdates.firstName = display_first_name || '';
+          if (display_last_name !== undefined) ghlUpdates.lastName = display_last_name || '';
+
+          await ghlClient.updateContact(ghlUser.gohighlevel_contact_id, ghlUpdates);
+          console.log('[Agent Page Update] Synced to GoHighLevel for contact:', ghlUser.gohighlevel_contact_id);
+        }
+      } catch (ghlError) {
+        console.error('[Agent Page Update] Failed to sync to GoHighLevel:', ghlError);
+        // Don't fail the request — DB update succeeded
       }
     }
 

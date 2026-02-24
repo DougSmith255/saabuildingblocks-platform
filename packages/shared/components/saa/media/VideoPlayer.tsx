@@ -130,7 +130,7 @@ export function VideoPlayer({
         : '/api/video/events';
       navigator.sendBeacon(
         endpoint,
-        new Blob([JSON.stringify(payload)], { type: 'application/json' })
+        new Blob([JSON.stringify(payload)], { type: 'text/plain' })
       );
     } catch {
       // fire-and-forget

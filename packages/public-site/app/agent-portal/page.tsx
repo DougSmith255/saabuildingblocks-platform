@@ -3,12 +3,12 @@
 import { useState, useEffect, useLayoutEffect, useRef, useMemo, Suspense, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
+import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D, GrainCard } from '@saa/shared/components/saa';
 import { API_URL, SITE_URL } from '@/lib/api-config';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
 import { SlidePanel } from '@/components/shared/SlidePanel';
 import SmoothScrollContainer from '@/components/SmoothScrollContainer';
-import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target, MessageSquare, LayoutTemplate, FileText, RefreshCw } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Sparkles, TrendingUp, Target, MessageSquare, LayoutTemplate, FileText, RefreshCw } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
@@ -822,7 +822,9 @@ const dashboardCards: { id: SectionId; title: string; description: string; icon:
 // This transforms assets.saabuildingblocks.com -> cdn.saabuildingblocks.com
 function toCdnUrl(url: string | null | undefined): string | null {
   if (!url) return null;
-  return url.replace('assets.saabuildingblocks.com', 'cdn.saabuildingblocks.com');
+  // CDN subdomain is currently returning 405 errors — use assets origin directly
+  // TODO: re-enable CDN once cdn.saabuildingblocks.com is fixed in Cloudflare dashboard
+  return url.replace('cdn.saabuildingblocks.com', 'assets.saabuildingblocks.com');
 }
 
 // Aggressively preload profile image using link preload tag (highest priority)
@@ -862,10 +864,54 @@ function isTokenExpired(): boolean {
   }
 }
 
+// Check if token will expire soon (within 2 minutes) — triggers silent refresh
+function isTokenExpiringSoon(): boolean {
+  if (typeof window === 'undefined') return false;
+  const token = localStorage.getItem('agent_portal_token');
+  if (!token) return false;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    if (!payload.exp) return false;
+    const timeLeft = (payload.exp * 1000) - Date.now();
+    return timeLeft > 0 && timeLeft < 2 * 60 * 1000; // Less than 2 minutes left
+  } catch {
+    return false;
+  }
+}
+
+// Silently refresh the access token using the stored refresh token
+let refreshInProgress = false;
+async function silentRefresh(): Promise<boolean> {
+  if (refreshInProgress) return false;
+  refreshInProgress = true;
+  try {
+    const refreshToken = localStorage.getItem('agent_portal_refresh_token');
+    if (!refreshToken) return false;
+    const res = await fetch(`${API_URL}/api/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.access_token) {
+        localStorage.setItem('agent_portal_token', data.access_token);
+        return true;
+      }
+    }
+    return false;
+  } catch {
+    return false;
+  } finally {
+    refreshInProgress = false;
+  }
+}
+
 // Clear all auth data and redirect to login
 function clearAuthAndRedirect() {
   if (typeof window === 'undefined') return;
   localStorage.removeItem('agent_portal_token');
+  localStorage.removeItem('agent_portal_refresh_token');
   localStorage.removeItem('agent_portal_user');
   localStorage.removeItem('agent_portal_page_data');
   sessionStorage.removeItem('agent_portal_loaded');
@@ -1025,6 +1071,41 @@ function AgentPortal() {
       setIsRefreshingStats(false);
     }
   }, [dashboardStats?.agentPageId]);
+  // Referral bookings - fetched for badge count and displayed in Agent Attraction tab
+  const [referralBookings, setReferralBookings] = useState<BookingReferral[]>([]);
+  // referralActionLoading removed — no RSVP actions needed
+
+  const upcomingReferrals = useMemo(() => {
+    const now = new Date();
+    return referralBookings.filter(r => {
+      // Always show recently cancelled/no-show bookings (within 7 days)
+      if (r.rsvp_status === 'cancelled' || r.rsvp_status === 'no_show') {
+        return (now.getTime() - new Date(r.created_at).getTime()) < 7 * 24 * 60 * 60 * 1000;
+      }
+      // Show if no booking time set (still relevant) OR booking hasn't ended yet
+      if (r.booking_start_time) {
+        const endTime = r.booking_end_time ? new Date(r.booking_end_time) : new Date(new Date(r.booking_start_time).getTime() + 30 * 60 * 1000);
+        return endTime > now;
+      }
+      // No booking time — show if created within last 7 days
+      return (now.getTime() - new Date(r.created_at).getTime()) < 7 * 24 * 60 * 60 * 1000;
+    });
+  }, [referralBookings]);
+
+  const fetchReferralBookings = useCallback(async () => {
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('agent_portal_token') : null;
+    if (!token) return;
+    try {
+      const res = await fetch(`${API_URL}/api/bookings/my-referrals`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setReferralBookings(data.referrals || []);
+      }
+    } catch { /* silent */ }
+  }, []);
+
   const [contrastLevel, setContrastLevel] = useState(130); // Default 130%
   const [originalImageFile, setOriginalImageFile] = useState<File | null>(null); // Store original for reprocessing
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -1272,13 +1353,22 @@ function AgentPortal() {
     setIsSafari(isSafariBrowser);
   }, []);
 
-  // Handle section query parameter for deep linking (e.g., /agent-portal?section=download)
+  // Handle section deep linking via query param OR localStorage (set by login page)
+  const deepLinkedSection = searchParams.get('section');
+  // Ref prevents the onboarding redirect from overriding a deep link found via localStorage
+  // (searchParams may be empty on the first render with static export)
+  const deepLinkFoundRef = useRef(false);
   useEffect(() => {
-    const sectionParam = searchParams.get('section');
-    if (sectionParam && navItems.some(item => item.id === sectionParam)) {
-      setActiveSection(sectionParam as SectionId);
+    const section = deepLinkedSection
+      || (typeof localStorage !== 'undefined' ? localStorage.getItem('agent_portal_pending_section') : null);
+    if (section) {
+      deepLinkFoundRef.current = true;
+      localStorage.removeItem('agent_portal_pending_section');
+      if (navItems.some(item => item.id === section)) {
+        setActiveSectionRaw(section as SectionId);
+      }
     }
-  }, [searchParams]);
+  }, [deepLinkedSection]);
 
   // Note: Scroll to top is now handled in setActiveSection with blur transition
 
@@ -1351,6 +1441,8 @@ function AgentPortal() {
           } catch {
             // Stats are non-critical — dashboard will show empty state
           }
+          // Fetch referral bookings in parallel (non-blocking)
+          fetchReferralBookings();
         }
         console.log('[Loading Screen] Setting isLoading=false');
         setIsLoading(false);
@@ -1420,6 +1512,7 @@ function AgentPortal() {
           } catch {
             // Silently ignore
           }
+          fetchReferralBookings();
         }
       }).catch(() => {
         // Silently ignore
@@ -1449,17 +1542,28 @@ function AgentPortal() {
   }, [isLoading, minLoadTimeElapsed, showLoadingScreen, isLoadingFadingOut]);
 
   // Check authentication on mount - redirect if not logged in or token expired
+  // Silently refreshes the access token before it expires using the HttpOnly refresh cookie
   useEffect(() => {
-    if (!user || isTokenExpired()) {
+    if (!user) {
       clearAuthAndRedirect();
       return;
     }
-    // Periodically check token expiry while app is open (every 60s)
-    const interval = setInterval(() => {
-      if (isTokenExpired()) {
-        clearAuthAndRedirect();
+    // If already expired on mount, try a silent refresh before giving up
+    if (isTokenExpired()) {
+      silentRefresh().then(ok => {
+        if (!ok) clearAuthAndRedirect();
+      });
+      return;
+    }
+    // Periodically check token — refresh when expiring soon, logout only if refresh fails
+    const interval = setInterval(async () => {
+      if (isTokenExpiringSoon() || isTokenExpired()) {
+        const refreshed = await silentRefresh();
+        if (!refreshed && isTokenExpired()) {
+          clearAuthAndRedirect();
+        }
       }
-    }, 60000);
+    }, 30000); // Check every 30s
     return () => clearInterval(interval);
   }, [user]);
 
@@ -1697,12 +1801,13 @@ function AgentPortal() {
   const dashboardAccentColor = user?.dashboardAccent || '#ffd700';
 
   // Redirect to dashboard if onboarding is complete and user is on onboarding tab
-  // But NOT during completion transition animation, or when forceShowOnboarding is true
+  // But NOT during completion transition animation, when forceShowOnboarding is true,
+  // or when a deep-linked section was specified via ?section= query param
   useEffect(() => {
-    if (isOnboardingComplete && activeSection === 'onboarding' && !isOnboardingTransitioning && !forceShowOnboarding) {
+    if (isOnboardingComplete && activeSection === 'onboarding' && !isOnboardingTransitioning && !forceShowOnboarding && !deepLinkedSection && !deepLinkFoundRef.current) {
       setActiveSection('dashboard');
     }
-  }, [isOnboardingComplete, activeSection, isOnboardingTransitioning, forceShowOnboarding]);
+  }, [isOnboardingComplete, activeSection, isOnboardingTransitioning, forceShowOnboarding, deepLinkedSection]);
 
   // Reset forceShowOnboarding when navigating away from onboarding section
   useEffect(() => {
@@ -1869,22 +1974,26 @@ function AgentPortal() {
     setIsCompletingOnboarding(true);
 
     try {
-      // Check if all steps are complete
-      const allComplete = Object.values(onboardingProgress).every(v => v === true);
+      // Check if all required (non-optional) steps are complete
+      const optionalSteps: (keyof typeof onboardingProgress)[] = ['step6_karrie_session'];
+      const allRequiredComplete = Object.entries(onboardingProgress).every(
+        ([key, value]) => optionalSteps.includes(key as keyof typeof onboardingProgress) || value === true
+      );
 
-      if (!allComplete) {
-        alert('Please complete all onboarding steps first!');
+      if (!allRequiredComplete) {
+        alert('Please complete all required onboarding steps first!');
         setIsCompletingOnboarding(false);
         return;
       }
 
-      // Trigger confetti immediately
-      triggerOnboardingConfetti();
-
       // Mark onboarding as complete via API (will set onboarding_completed_at)
-      const response = await fetch(`/api/users/onboarding`, {
+      const completeToken = localStorage.getItem('agent_portal_token');
+      const response = await fetch(`${API_URL}/api/users/onboarding`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${completeToken}`,
+        },
         body: JSON.stringify({
           userId: user?.id,
           onboarding_progress: onboardingProgress,
@@ -1894,7 +2003,8 @@ function AgentPortal() {
 
       if (response.ok) {
         const data = await response.json();
-        setOnboardingCompletedAt(data.onboarding_completed_at);
+        triggerOnboardingConfetti();
+        setOnboardingCompletedAt(data.data.onboarding_completed_at);
         setShowCompletionModal(true);
 
         // After 2.5 seconds, close modal and START the blur/fade transition
@@ -3376,50 +3486,74 @@ function AgentPortal() {
                 ].map((item) => {
                   const isActive = activeSection === item.id;
                   return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        setActiveSection(item.id);
-                        if (item.id === 'linktree') {
-                          // Smooth shrink: bar goes from menu height (85vh) to preview height (350px)
-                          setIsLinktreeTransitioning(true);
-                          setTimeout(() => {
-                            setIsMobileMenuOpen(false);
-                            setIsLinktreeTransitioning(false);
-                            menuOpenedFromLinktreeRef.current = false;
-                          }, 300);
-                        } else {
-                          // Normal slide-down close (always full close, even if currently on linktree)
-                          setIsMobileMenuClosing(true);
-                          setTimeout(() => {
-                            setIsMobileMenuOpen(false);
-                            setIsMobileMenuClosing(false);
-                            menuOpenedFromLinktreeRef.current = false;
-                          }, 250);
-                        }
-                      }}
-                      className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200"
-                      style={{
-                        color: isActive ? dashboardAccentColor : 'rgba(229, 228, 221, 0.7)',
-                        background: isActive ? 'rgba(255, 215, 0, 0.08)' : 'transparent',
-                      }}
-                    >
-                      {/* All menu items use their Icon - profile no longer shows picture */}
-                      <item.Icon
-                        className="w-5 h-5"
-                        style={{
-                          filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
+                    <div key={item.id} className="relative">
+                      <button
+                        onClick={() => {
+                          setActiveSection(item.id);
+                          if (item.id === 'linktree') {
+                            // Smooth shrink: bar goes from menu height (85vh) to preview height (350px)
+                            setIsLinktreeTransitioning(true);
+                            setTimeout(() => {
+                              setIsMobileMenuOpen(false);
+                              setIsLinktreeTransitioning(false);
+                              menuOpenedFromLinktreeRef.current = false;
+                            }, 300);
+                          } else {
+                            // Normal slide-down close (always full close, even if currently on linktree)
+                            setIsMobileMenuClosing(true);
+                            setTimeout(() => {
+                              setIsMobileMenuOpen(false);
+                              setIsMobileMenuClosing(false);
+                              menuOpenedFromLinktreeRef.current = false;
+                            }, 250);
+                          }
                         }}
-                      />
-                      <span
-                        className="text-sm font-medium"
+                        className="w-full flex items-center justify-center gap-3 py-3 transition-all duration-200"
                         style={{
-                          textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : 'none',
+                          color: isActive ? dashboardAccentColor : 'rgba(229, 228, 221, 0.7)',
+                          background: isActive ? 'rgba(255, 215, 0, 0.08)' : 'transparent',
                         }}
                       >
-                        {item.label}
-                      </span>
-                    </button>
+                        {/* All menu items use their Icon - profile no longer shows picture */}
+                        <item.Icon
+                          className="w-5 h-5"
+                          style={{
+                            filter: isActive ? `drop-shadow(0 0 6px ${dashboardAccentColor}CC)` : 'none',
+                          }}
+                        />
+                        <span
+                          className="text-sm font-medium"
+                          style={{
+                            textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : 'none',
+                          }}
+                        >
+                          {item.label}
+                        </span>
+                        {/* Referral booking count badge — inline next to label */}
+                        {item.id === 'agent-page' && upcomingReferrals.length > 0 && (
+                          <span
+                            className="font-synonym ml-2"
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              minWidth: '18px',
+                              height: '18px',
+                              padding: '0 5px',
+                              borderRadius: '9px',
+                              fontSize: '10px',
+                              fontWeight: 700,
+                              background: 'rgba(168, 85, 247, 0.6)',
+                              color: '#fff',
+                              border: '1px solid rgba(168, 85, 247, 0.7)',
+                              boxShadow: '0 0 10px rgba(168, 85, 247, 0.4)',
+                            }}
+                          >
+                            {upcomingReferrals.length}
+                          </span>
+                        )}
+                      </button>
+                    </div>
                   );
                 })}
 
@@ -3862,7 +3996,7 @@ function AgentPortal() {
                 const isOnboarding = item.id === 'onboarding';
                 const isOnboardingInactive = isOnboarding && !isActive;
                 return (
-                  <div key={item.id}>
+                  <div key={item.id} className="relative">
                     <button
                       data-section={item.id}
                       onClick={() => {
@@ -3911,7 +4045,7 @@ function AgentPortal() {
                       {/* Label - gold for onboarding, accent when active */}
                       {/* Responsive text: 10px (1024-1300), 12px (1300-1500), 14px (1500+) */}
                       <span
-                        className="font-medium font-taskor text-[10px] min-[1300px]:text-xs min-[1500px]:text-sm transition-all duration-200"
+                        className="font-medium font-taskor text-[10px] min-[1300px]:text-xs min-[1500px]:text-sm transition-all duration-200 whitespace-nowrap"
                         style={{
                           color: isActive ? dashboardAccentColor : isOnboardingInactive ? '#ffd700' : 'rgba(229,228,221,0.8)',
                           textShadow: isActive ? `0 0 8px ${dashboardAccentColor}99` : isOnboardingInactive ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
@@ -3932,6 +4066,32 @@ function AgentPortal() {
                         </span>
                       )}
                     </button>
+                    {/* Referral booking count badge — overlaps top-right corner */}
+                    {item.id === 'agent-page' && upcomingReferrals.length > 0 && (
+                      <span
+                        className="absolute font-synonym pointer-events-none"
+                        style={{
+                          top: '-2px',
+                          right: '-4px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minWidth: '18px',
+                          height: '18px',
+                          padding: '0 5px',
+                          borderRadius: '9px',
+                          fontSize: '10px',
+                          fontWeight: 700,
+                          background: 'rgba(168, 85, 247, 0.6)',
+                          color: '#fff',
+                          border: '1px solid rgba(168, 85, 247, 0.7)',
+                          boxShadow: '0 0 10px rgba(168, 85, 247, 0.4)',
+                          zIndex: 10,
+                        }}
+                      >
+                        {upcomingReferrals.length}
+                      </span>
+                    )}
                   </div>
                 );
               })}
@@ -4075,6 +4235,8 @@ function AgentPortal() {
             {activeSection === 'new-agents' && (
               <NewAgentsSection />
             )}
+
+            {/* Referral Bookings removed - now shown at top of Agent Attraction section */}
 
             {/* Download App */}
             {activeSection === 'download' && (
@@ -4368,8 +4530,12 @@ function AgentPortal() {
                 {onboardingCompletedAt && (
                   <button
                     onClick={() => {
-                      setActiveSection('onboarding');
+                      setForceShowOnboarding(true);
+                      setActiveSectionRaw('onboarding');
                       setSidebarOpen(false);
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                      const sc = document.getElementById('agent-portal-scroll-container');
+                      if (sc) sc.scrollTop = 0;
                     }}
                     className="w-full px-4 py-3 rounded-xl text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#ffd700]/30 transition-all text-left flex items-center gap-2"
                   >
@@ -4383,6 +4549,115 @@ function AgentPortal() {
             {/* Agent Page Section - kept mounted to avoid re-loading */}
             {user && (
             <div className={activeSection === 'agent-page' ? '' : 'hidden'}>
+              {/* Referral Bookings - always shown at top of Agent Attraction */}
+              <div className="mb-6 px-2 sm:px-4">
+                <GrainCard padding="sm" centered={false} className="!border-purple-500/25 !shadow-[0_0_0_1px_rgba(168,85,247,0.1),0_8px_32px_rgba(0,0,0,0.4),0_0_20px_rgba(168,85,247,0.08)]">
+                  <div className="flex items-center gap-2 mb-3 pb-2" style={{ borderBottom: '1px solid rgba(168, 85, 247, 0.12)' }}>
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(168, 85, 247, 0.15)' }}>
+                      <Video className="w-3 h-3" style={{ color: '#c084fc' }} />
+                    </div>
+                    <p className="font-taskor text-xs" style={{ color: '#c084fc', letterSpacing: '0.05em' }}>
+                      REFERRAL BOOKINGS
+                    </p>
+                    {upcomingReferrals.length > 0 && (
+                      <span className="ml-auto text-[10px] font-synonym" style={{
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        minWidth: '18px', height: '18px', padding: '0 5px', borderRadius: '9px',
+                        fontSize: '10px', fontWeight: 600,
+                        background: 'rgba(168, 85, 247, 0.25)', color: '#c084fc',
+                        border: '1px solid rgba(168, 85, 247, 0.4)',
+                      }}>
+                        {upcomingReferrals.length}
+                      </span>
+                    )}
+                  </div>
+                  {upcomingReferrals.length === 0 ? (
+                    <div className="py-4 text-center">
+                      <p className="font-synonym text-[13px]" style={{ color: '#555' }}>
+                        No upcoming meetings yet
+                      </p>
+                      <p className="font-synonym text-[11px] mt-1" style={{ color: '#444' }}>
+                        Bookings from your attraction page will appear here
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {upcomingReferrals.map((r) => {
+                        const isCancelled = r.rsvp_status === 'cancelled';
+                        const isNoShow = r.rsvp_status === 'no_show';
+                        const isDimmed = isCancelled || isNoShow;
+
+                        return (
+                          <div key={r.id} className="flex items-center gap-3 rounded-lg px-3 py-2.5" style={{
+                            background: isDimmed ? 'rgba(255,255,255,0.02)' : 'rgba(168, 85, 247, 0.04)',
+                            border: isDimmed ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(168, 85, 247, 0.1)',
+                            opacity: isCancelled ? 0.6 : 1,
+                          }}>
+                            {/* Date pill */}
+                            <div className="flex-shrink-0 w-11 text-center rounded-md py-1.5 px-1" style={{
+                              background: isDimmed ? 'rgba(255,255,255,0.03)' : 'rgba(168, 85, 247, 0.1)',
+                              border: isDimmed ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(168, 85, 247, 0.15)',
+                            }}>
+                              {r.booking_start_time ? (
+                                <>
+                                  <p className="font-taskor leading-none" style={{ fontSize: '9px', color: isDimmed ? '#666' : '#c084fc', textTransform: 'uppercase' }}>
+                                    {new Date(r.booking_start_time).toLocaleDateString('en-US', { month: 'short' })}
+                                  </p>
+                                  <p className="font-synonym font-bold leading-none mt-0.5" style={{ fontSize: '16px', color: isDimmed ? '#555' : '#e5e4dd' }}>
+                                    {new Date(r.booking_start_time).getDate()}
+                                  </p>
+                                </>
+                              ) : (
+                                <p className="font-synonym text-[10px]" style={{ color: '#555' }}>TBD</p>
+                              )}
+                            </div>
+                            {/* Details */}
+                            <div className="flex-1 min-w-0">
+                              {r.booking_start_time ? (
+                                <p className="font-synonym text-[13px] font-medium" style={{
+                                  color: isDimmed ? '#666' : '#e5e4dd',
+                                  textDecoration: isCancelled ? 'line-through' : 'none',
+                                }}>
+                                  {new Date(r.booking_start_time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                                  {r.visitor_name && <span style={{ color: '#888', fontWeight: 400 }}> — {r.visitor_name}</span>}
+                                </p>
+                              ) : (
+                                <p className="font-synonym text-[13px]" style={{ color: '#666' }}>Time pending</p>
+                              )}
+                              {r.meeting_link && !isDimmed && (
+                                <a
+                                  href={r.meeting_link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 mt-1 transition-colors hover:brightness-125"
+                                  style={{ fontSize: '11px', fontWeight: 600, color: '#ffd700', textDecoration: 'none' }}
+                                >
+                                  <Video className="w-3 h-3" />
+                                  Join Meeting
+                                </a>
+                              )}
+                            </div>
+                            {/* Status badge */}
+                            {isDimmed && (
+                              <span className="flex-shrink-0" style={{
+                                fontSize: '10px', fontWeight: 600, padding: '2px 8px', borderRadius: '6px',
+                                background: isCancelled ? 'rgba(239, 68, 68, 0.12)' : 'rgba(234, 179, 8, 0.12)',
+                                color: isCancelled ? '#ef4444' : '#eab308',
+                              }}>
+                                {isCancelled ? 'Cancelled' : 'No Show'}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </GrainCard>
+              </div>
+              {/* Separator between referral bookings and attraction page content */}
+              <div className="mb-6 px-6 sm:px-8">
+                <div className="h-[1px]" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(168, 85, 247, 0.15) 20%, rgba(168, 85, 247, 0.15) 80%, transparent 100%)' }} />
+              </div>
               <AgentPagesSection
                 user={user}
                 setUser={setUser}
@@ -4568,7 +4843,10 @@ function AgentPortal() {
                       />
                     </div>
                   )}
-                  {user?.profilePictureUrl && !profileImageError ? (
+                  {(() => {
+                    // Use agent page image (same source as sidebar), fall back to user profile picture
+                    const editPanelProfileUrl = preloadedAgentPageData?.page?.profile_image_url || user?.profilePictureUrl;
+                    return editPanelProfileUrl && !profileImageError ? (
                     <>
                       {/* Loading spinner - shows while image is loading */}
                       {profileImageLoading && (
@@ -4580,7 +4858,7 @@ function AgentPortal() {
                         </div>
                       )}
                       <img
-                        src={user?.profilePictureUrl}
+                        src={editPanelProfileUrl}
                         alt=""
                         className="w-full h-full object-cover"
                         loading="eager"
@@ -4588,8 +4866,14 @@ function AgentPortal() {
                         fetchPriority="high"
                         onLoad={() => setProfileImageLoading(false)}
                         onError={() => {
-                          setProfileImageError(true);
-                          setProfileImageLoading(false);
+                          if (!profileImageRetried.current && editPanelProfileUrl?.includes('cdn.saabuildingblocks.com')) {
+                            profileImageRetried.current = true;
+                            const fallbackUrl = editPanelProfileUrl.replace('cdn.saabuildingblocks.com', 'assets.saabuildingblocks.com');
+                            setUser(prev => prev ? { ...prev, profilePictureUrl: fallbackUrl } : prev);
+                          } else {
+                            setProfileImageError(true);
+                            setProfileImageLoading(false);
+                          }
                         }}
                       />
                     </>
@@ -4602,7 +4886,8 @@ function AgentPortal() {
                         {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
                       </span>
                     </div>
-                  )}
+                  );
+                  })()}
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -4791,7 +5076,10 @@ function AgentPortal() {
                     onClick={() => {
                       setForceShowOnboarding(true);
                       setShowEditProfile(false);
-                      setActiveSection('onboarding');
+                      setActiveSectionRaw('onboarding');
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                      const sc = document.getElementById('agent-portal-scroll-container');
+                      if (sc) sc.scrollTop = 0;
                     }}
                     className="w-full flex items-center justify-between px-4 py-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all group"
                   >
@@ -5423,6 +5711,26 @@ function AgentPortal() {
                 </p>
               </div>
 
+              {/* Referral Bookings */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(168, 85, 247, 0.02) 100%)',
+                  border: '1px solid rgba(168, 85, 247, 0.2)',
+                }}
+              >
+                <p className="text-purple-400 text-sm mb-2 font-medium flex items-center gap-2">
+                  <Video className="w-4 h-4" />
+                  Referral Bookings
+                </p>
+                <p className="text-[#e5e4dd]/80 text-sm mb-2">
+                  When someone books a call from your attraction page, you'll be <strong className="text-purple-400">notified by email</strong> with the meeting details and a link to your portal.
+                </p>
+                <p className="text-[#e5e4dd]/60 text-xs">
+                  Upcoming meetings appear at the top of this tab with the date, visitor name, and a link to join the Teams call. If a meeting is cancelled or rescheduled, the card updates automatically.
+                </p>
+              </div>
+
               {/* What's On Your Page */}
               <div
                 className="rounded-lg p-4"
@@ -5444,6 +5752,10 @@ function AgentPortal() {
                   <li className="flex items-start gap-2">
                     <span className="text-purple-400">•</span>
                     Video walkthrough of the opportunity
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400">•</span>
+                    Book a Call button to schedule a meeting with SAA
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-purple-400">•</span>
@@ -7260,6 +7572,10 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
 
   const completedCount = Object.values(progress).filter(Boolean).length;
   const progressPercentage = (completedCount / steps.length) * 100;
+  const optionalKeys: (keyof OnboardingProgress)[] = ['step6_karrie_session'];
+  const allRequiredComplete = Object.entries(progress).every(
+    ([key, value]) => optionalKeys.includes(key as keyof OnboardingProgress) || value === true
+  );
 
   return (
     <div className="space-y-6 px-1 sm:px-2">
@@ -7483,42 +7799,42 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       {/* Finish Onboarding Button - Always visible, grayed out until all steps checked */}
       {!onboardingCompletedAt && (
         <div className={`mt-6 p-6 rounded-xl transition-all duration-300 ${
-          Object.values(progress).every(v => v === true)
+          allRequiredComplete
             ? 'bg-gradient-to-br from-green-500/10 to-blue-500/10 border border-green-500/30'
             : 'bg-gradient-to-br from-gray-500/5 to-gray-600/5 border border-white/10'
         }`}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex-1">
               <h3 className={`text-lg font-semibold mb-2 flex items-center gap-2 transition-colors ${
-                Object.values(progress).every(v => v === true) ? 'text-green-400' : 'text-[#e5e4dd]/40'
+                allRequiredComplete ? 'text-green-400' : 'text-[#e5e4dd]/40'
               }`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {Object.values(progress).every(v => v === true) ? "You're All Set!" : "Complete All Steps"}
+                {allRequiredComplete ? "You're All Set!" : "Complete All Steps"}
               </h3>
               <p className={`text-sm mb-1 transition-colors ${
-                Object.values(progress).every(v => v === true) ? 'text-[#e5e4dd]/80' : 'text-[#e5e4dd]/40'
+                allRequiredComplete ? 'text-[#e5e4dd]/80' : 'text-[#e5e4dd]/40'
               }`}>
-                {Object.values(progress).every(v => v === true)
-                  ? "Congratulations! You've completed all onboarding steps."
+                {allRequiredComplete
+                  ? "Congratulations! You've completed all required onboarding steps."
                   : `${Object.values(progress).filter(v => v === true).length} of ${Object.values(progress).length} steps completed`
                 }
               </p>
               <p className={`text-xs transition-colors ${
-                Object.values(progress).every(v => v === true) ? 'text-[#e5e4dd]/60' : 'text-[#e5e4dd]/30'
+                allRequiredComplete ? 'text-[#e5e4dd]/60' : 'text-[#e5e4dd]/30'
               }`}>
-                {Object.values(progress).every(v => v === true)
+                {allRequiredComplete
                   ? "Click Finished to complete onboarding. You can access this guide anytime from your profile section."
-                  : "Check off all the steps above to enable the Finished button."
+                  : "Check off all required steps above to enable the Finished button."
                 }
               </p>
             </div>
             <button
               onClick={() => onComplete?.()}
-              disabled={isCompleting || !Object.values(progress).every(v => v === true)}
+              disabled={isCompleting || !allRequiredComplete}
               className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
-                Object.values(progress).every(v => v === true)
+                allRequiredComplete
                   ? 'bg-green-500 hover:bg-green-400 text-black'
                   : 'bg-gray-600/30 text-[#e5e4dd]/30 cursor-not-allowed'
               } disabled:cursor-not-allowed`}
@@ -10304,23 +10620,6 @@ function NewAgentsSection() {
         size="md"
         hideBackdrop={true}
         zIndexOffset={1}
-        footer={selectedDocument?.downloadUrl ? (
-          <a
-            href={selectedDocument.downloadUrl}
-            download
-            className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#ffd700] rounded-lg text-black font-semibold hover:bg-[#ffe55c] transition-colors"
-          >
-            <Download className="w-4 h-4" />
-            Download Document
-          </a>
-        ) : !skippedCategoryPanel ? (
-          <button
-            onClick={handleBackToCategory}
-            className="w-full px-4 py-3 rounded-lg text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
-          >
-            Back to {selectedCategory?.title}
-          </button>
-        ) : undefined}
       >
         {selectedDocument && (
           <div className="space-y-4">
@@ -10334,6 +10633,18 @@ function NewAgentsSection() {
                 <ChevronLeft className="w-4 h-4" />
                 Back to {selectedCategory?.title}
               </button>
+            )}
+
+            {/* Download button - above document content */}
+            {selectedDocument.downloadUrl && (
+              <a
+                href={selectedDocument.downloadUrl}
+                download
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#ffd700] rounded-lg text-black font-semibold hover:bg-[#ffe55c] transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                Download Document
+              </a>
             )}
 
             {/* Document Content */}
@@ -11442,6 +11753,17 @@ function AgentPagesSection({
 
       if (response.ok) {
         const data = await response.json();
+        // Wait for pages to propagate to Cloudflare before showing as ready
+        const slug = data.page?.slug;
+        if (slug) {
+          for (let i = 0; i < 10; i++) {
+            try {
+              const check = await fetch(`${SITE_URL}/${slug}`, { method: 'HEAD', mode: 'no-cors' });
+              if (check.ok || check.type === 'opaque') break;
+            } catch {}
+            await new Promise(r => setTimeout(r, 1500));
+          }
+        }
         setPageData(data.page);
         // Fire confetti to celebrate activation!
         triggerConfetti();
@@ -12047,7 +12369,7 @@ function AgentPagesSection({
               border: '1px solid rgba(255,255,255,0.06)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
-              <h3 className="text-lg font-medium text-[#ffd700] mb-3">Share Your Link Page & Agent Attraction URLs</h3>
+              <h3 className="text-lg font-medium text-[#22c55e] mb-3">Share Your Link Page & Agent Attraction URLs</h3>
               <p className="text-[#e5e4dd]/60 text-xs mb-4">Share both pages everywhere you can. Your Link Page already includes your Agent Attraction Page, so curious agents exploring your links will land on your recruiting funnel either way.</p>
               <div className="grid grid-cols-2 gap-3">
                 {/* Copy Link Page URL */}
@@ -12085,7 +12407,7 @@ function AgentPagesSection({
                     setTimeout(() => setCopiedLink(null), 2000);
                   }}
                   disabled={!pageData?.activated}
-                  className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-medium bg-[#ffd700]/10 border border-[#ffd700]/20 text-[#ffd700]/80 hover:bg-[#ffd700]/20 hover:text-[#ffd700] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-medium bg-[#22c55e]/10 border border-[#22c55e]/20 text-[#22c55e]/80 hover:bg-[#22c55e]/20 hover:text-[#22c55e] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                   {copiedLink === 'attraction' ? (
                     <>
@@ -12113,27 +12435,27 @@ function AgentPagesSection({
               border: '1px solid rgba(255,255,255,0.06)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
-              <h3 className="text-lg font-medium text-[#ffd700] mb-4">What Happens When Prospects Act</h3>
+              <h3 className="text-lg font-medium text-[#22c55e] mb-4">What Happens When Prospects Act</h3>
               <div className="space-y-3 text-sm">
-                <div className="p-3 rounded-lg bg-[#ffd700]/5 border border-[#ffd700]/20">
+                <div className="p-3 rounded-lg bg-[#22c55e]/5 border border-[#22c55e]/20">
                   <div className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-[#ffd700] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-[#22c55e] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <div>
                       <p className="font-medium text-[#e5e4dd] mb-1">When someone books a call</p>
-                      <p className="text-[#e5e4dd]/60 text-xs"><strong className="text-[#ffd700]">SAA runs the call</strong>. Afterward, join instructions are sent with you listed as the sponsor.</p>
+                      <p className="text-[#e5e4dd]/60 text-xs"><strong className="text-[#22c55e]">You get notified by email</strong> with the meeting details and a link to your portal. SAA runs the call, then join instructions are sent with you listed as the sponsor.</p>
                     </div>
                   </div>
                 </div>
-                <div className="p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                <div className="p-3 rounded-lg bg-[#22c55e]/5 border border-[#22c55e]/20">
                   <div className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-[#22c55e] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                     </svg>
                     <div>
                       <p className="font-medium text-[#e5e4dd] mb-1">When someone clicks Join</p>
-                      <p className="text-[#e5e4dd]/60 text-xs">The instructions list <strong className="text-green-400">you as the sponsor</strong>, with your name and email included.</p>
+                      <p className="text-[#e5e4dd]/60 text-xs">The instructions list <strong className="text-[#22c55e]">you as the sponsor</strong>, with your name and email included.</p>
                     </div>
                   </div>
                 </div>
@@ -12146,25 +12468,25 @@ function AgentPagesSection({
               border: '1px solid rgba(255,255,255,0.06)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
-              <h3 className="text-lg font-medium text-[#ffd700] mb-3">Where to Share Your Agent Attraction URL/QR Code</h3>
+              <h3 className="text-lg font-medium text-[#22c55e] mb-3">Where to Share Your Agent Attraction URL/QR Code</h3>
               {/* Top 2 highlighted placements */}
               <div className="grid grid-cols-2 gap-2 mb-3">
-                <div className="flex items-center gap-2 text-[#e5e4dd] p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
-                  <svg className="w-5 h-5 text-[#ffd700] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center gap-2 text-[#e5e4dd] p-3 rounded-lg bg-[#22c55e]/10 border border-[#22c55e]/30">
+                  <svg className="w-5 h-5 text-[#22c55e] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
                   </svg>
                   <div>
                     <span className="font-medium text-sm">Social Media Bios</span>
-                    <p className="text-[#ffd700]/60 text-[10px]">#1 URL placement</p>
+                    <p className="text-[#22c55e]/60 text-[10px]">#1 URL placement</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-[#e5e4dd] p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
-                  <svg className="w-5 h-5 text-[#ffd700] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center gap-2 text-[#e5e4dd] p-3 rounded-lg bg-[#22c55e]/10 border border-[#22c55e]/30">
+                  <svg className="w-5 h-5 text-[#22c55e] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
                   </svg>
                   <div>
                     <span className="font-medium text-sm">Business Cards</span>
-                    <p className="text-[#ffd700]/60 text-[10px]">#1 QR code placement</p>
+                    <p className="text-[#22c55e]/60 text-[10px]">#1 QR code placement</p>
                   </div>
                 </div>
               </div>
@@ -14667,6 +14989,25 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
     </>
   );
 }
+
+// ============================================================================
+// Referral Bookings Section
+// ============================================================================
+
+interface BookingReferral {
+  id: string;
+  visitor_name: string | null;
+  visitor_email: string | null;
+  visitor_phone: string | null;
+  rsvp_status: 'pending' | 'accepted' | 'declined' | 'cancelled' | 'no_show';
+  rsvp_expires_at: string;
+  booking_start_time: string | null;
+  booking_end_time: string | null;
+  meeting_link: string | null;
+  created_at: string;
+}
+
+// ReferralBookingsSection removed — referral cards now shown inline at top of Agent Attraction tab
 
 // ============================================================================
 // Download App Section

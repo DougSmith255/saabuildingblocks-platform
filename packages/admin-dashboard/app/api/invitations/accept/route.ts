@@ -341,7 +341,7 @@ export async function POST(request: NextRequest) {
       userAgent: request.headers.get('user-agent') || undefined,
     });
 
-    // Create Supabase Auth user for future authentication
+    // Create Supabase Auth user for login authentication
     try {
       const { data: authData, error: authError } = await supabase.auth.admin.createUser({
         email: userEmail,
@@ -356,7 +356,31 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      if (!authError && authData.user) {
+      if (authError) {
+        console.error('[Accept Invitation] Supabase Auth user creation failed:', authError.message);
+        // If user already exists in auth, try updating their password instead
+        if (authError.message?.includes('already been registered') || authError.message?.includes('already exists')) {
+          console.log('[Accept Invitation] Auth user already exists, attempting password update for:', userEmail);
+          const { data: listData } = await supabase.auth.admin.listUsers();
+          const existingAuthUser = listData?.users?.find(u => u.email === userEmail);
+          if (existingAuthUser) {
+            const { error: updateError } = await supabase.auth.admin.updateUserById(existingAuthUser.id, {
+              password: validatedData.password,
+              email_confirm: true,
+            });
+            if (updateError) {
+              console.error('[Accept Invitation] Failed to update auth user password:', updateError.message);
+            } else {
+              console.log('[Accept Invitation] Successfully updated auth user password');
+              await supabase
+                .from('users')
+                .update({ auth_user_id: existingAuthUser.id })
+                .eq('id', user.id);
+            }
+          }
+        }
+      } else if (authData.user) {
+        console.log('[Accept Invitation] Supabase Auth user created:', authData.user.id);
         // Link Supabase auth user to our users table
         await supabase
           .from('users')
@@ -364,7 +388,7 @@ export async function POST(request: NextRequest) {
           .eq('id', user.id);
       }
     } catch (authError) {
-      // Don't fail activation if auth creation fails
+      console.error('[Accept Invitation] Auth creation exception:', authError);
     }
 
     // Create agent_pages record for the newly activated user

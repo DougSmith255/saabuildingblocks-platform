@@ -2,7 +2,7 @@
 
 > **Single source of truth for infrastructure, architecture, and development.**
 > Every path, command, and claim in this file has been verified against the actual system.
-> Last verified: 2026-02-20
+> Last verified: 2026-02-24
 
 ## Project Overview
 
@@ -143,7 +143,8 @@ pm2 logs nextjs-saa --lines 50 --nostream
 ### Public Site → Cloudflare Pages
 
 **URL:** https://saabuildingblocks.pages.dev (CDN direct)
-**Proxied via:** https://saabuildingblocks.com (Apache sends non-admin traffic to Cloudflare)
+**Custom domain:** https://smartagentalliance.com (Cloudflare Pages custom domain, NOT routed through VPS)
+**Also proxied via:** https://saabuildingblocks.com (Apache sends non-admin traffic to Cloudflare Pages)
 **Config:** `next.config.ts` has `output: 'export'` (static HTML)
 
 ```bash
@@ -173,10 +174,17 @@ pm2 restart nextjs-saa
 ### Request Flow
 
 ```
+Browser → smartagentalliance.com → Cloudflare Pages (static + Cloudflare Functions)
+  ├─ /agent-slug → [slug].js Cloudflare Function (agent attraction pages)
+  ├─ /api/booking/* → Cloudflare Functions (slots.js, submit.js)
+  └─ everything else → static HTML from out/
+
 Browser → saabuildingblocks.com → Cloudflare Edge → Tunnel → Apache :443
   ├─ /api/*, /master-controller, /login, /agent-portal → 127.0.0.1:3002 (admin-dashboard)
   └─ everything else → saabuildingblocks.pages.dev (Cloudflare Pages)
 ```
+
+**Important:** `smartagentalliance.com` is a Cloudflare Pages custom domain — traffic goes directly to Cloudflare edge, NOT through the VPS tunnel. Only `saabuildingblocks.com` routes through the tunnel to Apache. Cross-origin requests from `smartagentalliance.com` to `saabuildingblocks.com/api/*` must traverse: Cloudflare edge → Tunnel → Apache → port 3002.
 
 ### When to Deploy Where
 
@@ -192,14 +200,74 @@ Located at `packages/public-site/functions/`. These are **Cloudflare Functions, 
 
 | File | Purpose |
 |---|---|
-| `[slug].js` | Agent Attraction Page template (325KB, ALL CODE INLINED) |
+| `[slug].js` | Agent Attraction Page template (325KB+, ALL CODE INLINED) |
 | `calculator.js` | eXp commission calculator |
 | `revshare.js` | Revenue share calculator |
 | `api/join-team.js` | Team join form handler |
 | `api/freebie-download.js` | Freebie download handler |
+| `api/booking/slots.js` | GHL calendar free-slots proxy (public, no auth) |
+| `api/booking/submit.js` | GHL contact upsert + appointment creation (uses `GOHIGHLEVEL_API_KEY` secret) |
 | `_middleware.js` | Request middleware |
 
-**Critical:** `[slug].js` has ALL code inlined — no imports, no external files. It fetches data from admin-dashboard API at runtime.
+**Critical:** `[slug].js` has ALL code inlined — no imports, no external files. It fetches data from admin-dashboard API at runtime. Contains two custom video players (portal walkthrough + bottom player), a floating/mini-player system with FLIP animations, and page/video analytics beacons.
+
+---
+
+## Custom Booking Widget (Book a Call)
+
+**Page:** `packages/public-site/app/book-a-call/components/CustomBookingWidget.tsx`
+**API proxies:** `packages/public-site/functions/api/booking/slots.js` and `submit.js`
+
+Replaces the GHL iframe embed with a fully custom React booking widget matching the SAA dark theme. Four-step flow: calendar → form → submitting → confirmation.
+
+**GoHighLevel integration:**
+- **Calendar ID:** `v5LFLy12isdGJiZmTxP7`
+- **Location ID:** `wmYRsn57bNL8Z2tMlIZ7`
+- **Slots endpoint (public, no auth):** `GET https://backend.leadconnectorhq.com/calendars/{calendarId}/free-slots`
+- **Submit endpoint (private):** `POST https://services.leadconnectorhq.com/contacts/upsert` + `POST .../calendars/events/appointments`
+- **API key:** `GOHIGHLEVEL_API_KEY` (set as Cloudflare Pages secret, accessed via `context.env`)
+
+**Key implementation notes:**
+- Uses `mounted` state pattern to prevent React hydration mismatch (no `new Date()` in useState)
+- Sub-components (`Field`, `PillButton`, `DarkSelect`, `inputClass`) defined OUTSIDE the main component to prevent focus loss on re-render
+- Country/state dropdowns use custom `DarkSelect` component (not native `<select>`) for dark theme compatibility
+- US states and Canadian provinces are dropdown lists; other countries fall back to text input
+
+---
+
+## Video Analytics Pipeline
+
+Tracks video play events from Cloudflare Stream players across the site.
+
+**Flow:** Browser `sendBeacon` → `POST /api/video/events` (admin-dashboard) → Supabase `upsert_video_view` RPC → `video_views` table
+
+| Component | Location |
+|---|---|
+| Beacon sender (shared) | `packages/shared/components/saa/media/VideoPlayer.tsx` |
+| Beacon sender (attraction pages) | `packages/public-site/functions/[slug].js` (inline, two players) |
+| Beacon sender (team value page) | `packages/public-site/app/exp-realty-sponsor/page.tsx` |
+| API receiver | `packages/admin-dashboard/app/api/video/events/route.ts` |
+| Database migration | `packages/admin-dashboard/supabase/migrations/20260221000000_create_video_views.sql` |
+| Dashboard display | `packages/admin-dashboard/app/master-controller/components/tabs/analytics/CloudflareStreamSection.tsx` |
+| Dashboard API | `packages/admin-dashboard/app/api/master-controller/analytics/route.ts` |
+
+**Tracked video IDs:**
+- `14ba82ce03943a64ef90e3c9771a0d56` — Portal Walkthrough (team value page + attraction pages)
+- `f8c3f1bd9c2db2409ed0e90f60fd4d5b` — The Inside Look (attraction pages bottom player)
+
+**Known issue (2026-02-24):** Video analytics show 0s despite visitors. Direct curl tests to the API write data to Supabase successfully. Root cause under investigation — browser `sendBeacon` from `smartagentalliance.com` to `saabuildingblocks.com/api/video/events` may not be reaching the VPS through the Cloudflare Tunnel → Apache → port 3002 chain. The API silently returns 200 on all errors (by design for sendBeacon).
+
+**Diagnostic commands:**
+```bash
+# Check Supabase table directly
+node -e "const{createClient}=require('@supabase/supabase-js');require('dotenv').config({path:'.env.local'});const sb=createClient(process.env.NEXT_PUBLIC_SUPABASE_URL,process.env.SUPABASE_SERVICE_ROLE_KEY);sb.from('video_views').select('*').limit(10).then(({data,error})=>console.log(error||data));"
+
+# Test beacon endpoint
+curl -X POST https://saabuildingblocks.com/api/video/events -H "Content-Type: text/plain" -d '{"video_id":"14ba82ce03943a64ef90e3c9771a0d56","session_id":"test_123","event_type":"play","watch_time_seconds":5}'
+
+# Check Apache logs for video requests
+sudo grep "video/events" /var/log/apache2/saabuildingblocks_nextjs_access.log
+```
 
 ---
 
@@ -361,6 +429,7 @@ import { CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
 Auto-applies to: H1 headlines (<100 chars), H2 titles (<100 chars), nav items (<50 chars), CTAs (<50 chars), badges (<30 chars).
 Never applies to: body paragraphs, long content, form help text, article content.
 Manual override: `className="text-display"`
+**To override auto-display font:** Use inline `style={{ fontFamily: 'var(--font-amulya)' }}` — Tailwind classes like `font-[var(--font-amulya)]` get overridden by the Master Controller auto-display CSS specificity.
 
 ---
 

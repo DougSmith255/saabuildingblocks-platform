@@ -99,14 +99,17 @@ export async function POST(request: NextRequest) {
     if (!event_type || !VALID_EVENT_TYPES.has(event_type)) return ok();
 
     const supabase = getSupabaseServiceClient();
-    if (!supabase) return ok();
+    if (!supabase) {
+      console.error('[video/events] Supabase service client is null — check SUPABASE_SERVICE_ROLE_KEY');
+      return ok();
+    }
 
     const completed = event_type === 'ended';
     const watchTime = typeof watch_time_seconds === 'number' ? watch_time_seconds : 0;
     const videoDuration = typeof video_duration_seconds === 'number' ? video_duration_seconds : null;
 
     // Use RPC function for proper GREATEST/OR upsert logic
-    await supabase.rpc('upsert_video_view', {
+    const { error: rpcError } = await supabase.rpc('upsert_video_view', {
       p_video_id: video_id,
       p_session_id: session_id,
       p_visitor_id: visitor_id || null,
@@ -117,8 +120,13 @@ export async function POST(request: NextRequest) {
       p_completed: completed,
     });
 
+    if (rpcError) {
+      console.error('[video/events] RPC upsert_video_view failed:', rpcError.message, rpcError.code, rpcError.details);
+    }
+
     return ok();
-  } catch {
+  } catch (err) {
+    console.error('[video/events] Unexpected error:', err);
     return ok();
   }
 }

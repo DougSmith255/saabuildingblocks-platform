@@ -1605,6 +1605,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     #wyg-controls-overlay { z-index: 10 !important; }
     #wyg-controls-bar { z-index: 11 !important; }
     #wyg-controls-bar * { pointer-events: auto !important; }
+    #wyg-float-dismiss { z-index: 60 !important; pointer-events: auto !important; }
 
     /* Play button - responsive size + transparency */
     .wyg-play-circle {
@@ -1613,10 +1614,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       display: flex; align-items: center; justify-content: center;
       box-shadow: 0 0 20px rgba(255,215,0,0.3);
     }
-    .wyg-play-circle svg { width: 20px; height: 22px; margin-left: 2px; }
+    .wyg-play-circle svg { width: 20px; height: 22px; margin-left: 4px; }
     @media (min-width: 768px) {
       .wyg-play-circle { width: 64px; height: 64px; }
-      .wyg-play-circle svg { width: 24px; height: 28px; margin-left: 3px; }
+      .wyg-play-circle svg { width: 24px; height: 28px; margin-left: 5px; }
     }
 
     /* WhyOnlyAtExp - 3D Rotating Card Stack with ScrollTrigger */
@@ -4022,7 +4023,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
             <!-- Post-video CTA overlay -->
             <div id="wyg-end-overlay" style="display: none; position: absolute; inset: 0; z-index: 20; background: rgba(0,0,0,0.85); flex-direction: column; align-items: center; justify-content: center; gap: 16px;">
-              <a href="/book-a-call" class="cta-button" style="text-decoration: none;">BOOK A CALL</a>
+              <button class="cta-button" id="wyg-end-book-call" style="cursor: pointer;">BOOK A CALL</button>
               <button id="wyg-end-join" class="cta-button" style="cursor: pointer;">JOIN THE ALLIANCE</button>
               <button id="wyg-end-rewatch" style="background: none; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: #e5e4dd; padding: 8px 20px; cursor: pointer; font-size: 14px; font-family: var(--font-taskor, sans-serif); display: flex; align-items: center; gap: 6px; transition: all 0.2s ease;">
                 <span style="font-size: 18px;">&#8635;</span> Rewatch
@@ -4030,7 +4031,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             </div>
 
             <!-- Floating dismiss button (shown only when floating) -->
-            <button id="wyg-float-dismiss" style="display: none; position: absolute; top: 4px; left: 4px; z-index: 20; background: rgba(0,0,0,0.7); border: none; color: #fff; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; align-items: center; justify-content: center; font-size: 14px; line-height: 1; padding-bottom: 2px;">&times;</button>
+            <button id="wyg-float-dismiss" style="display: none; position: absolute; top: 6px; right: 6px; z-index: 60; background: rgba(0,0,0,0.9); border: 2px solid rgba(255,255,255,0.5); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; padding: 0; align-items: center; justify-content: center; pointer-events: auto;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L13 13M13 1L1 13" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></button>
           </div>
 
         </div>
@@ -4597,10 +4598,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                 </div>
                 <div id="book-call-wrapper" style="opacity: 1; filter: none; pointer-events: auto; transition: all 0.5s ease; padding: 0.5rem 0;">
                   <div class="group" style="position: relative; display: inline-block;">
-                    <a href="https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7" target="_blank" rel="noopener noreferrer" id="btn-book-call" style="position: relative; display: flex; justify-content: center; align-items: center; height: clamp(45px, calc(43.182px + 0.7273vw), 65px); padding: 0.5rem 1.25rem; background-color: rgb(45,45,45); border-radius: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5); color: var(--color-headingText, #e5e4dd); font-family: var(--font-taskor), Taskor, system-ui, sans-serif; font-size: var(--font-size-button, 20px); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; text-decoration: none; white-space: nowrap; overflow: hidden; z-index: 10;">
+                    <button id="btn-book-call" style="position: relative; display: flex; justify-content: center; align-items: center; height: clamp(45px, calc(43.182px + 0.7273vw), 65px); padding: 0.5rem 1.25rem; background-color: rgb(45,45,45); border-radius: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5); color: var(--color-headingText, #e5e4dd); font-family: var(--font-taskor), Taskor, system-ui, sans-serif; font-size: var(--font-size-button, 20px); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; text-decoration: none; white-space: nowrap; overflow: hidden; z-index: 10; cursor: pointer; border: none;">
                       <span style="position: absolute; inset: 0; background: linear-gradient(to left, rgba(255,255,255,0.15), transparent); width: 50%; transform: skewX(45deg); pointer-events: none;"></span>
                       BOOK A CALL
-                    </a>
+                    </button>
                     <div class="cta-light-bar cta-light-bar-pulse cta-light-bar-side" style="position: absolute; top: 50%; left: -5px; transform: translateY(-50%); width: 10px; height: 18px; background: #ffd700; border-radius: 6px; z-index: 5; --glow-color: 255, 215, 0; transition: height 0.5s ease;"></div>
                     <div class="cta-light-bar cta-light-bar-pulse cta-light-bar-side" style="position: absolute; top: 50%; left: auto; right: -5px; transform: translateY(-50%); width: 10px; height: 18px; background: #ffd700; border-radius: 6px; z-index: 5; --glow-color: 255, 215, 0; transition: height 0.5s ease;"></div>
                   </div>
@@ -4794,6 +4795,35 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div class="spinner-ring"></div>
         </div>
         <iframe id="revshare-iframe" src="" title="Revenue Share Visualizer" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Book a Call Slide Panel -->
+  <div class="slide-panel-container" id="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-panel-title">
+    <div class="slide-panel-backdrop" id="booking-modal-backdrop"></div>
+    <div class="slide-panel tool-panel" id="booking-panel">
+      <div class="slide-panel-bg" id="booking-bg"><canvas id="booking-canvas"></canvas></div>
+      <div class="slide-panel-overlay"></div>
+      <div class="slide-panel-header">
+        <div class="slide-panel-header-left">
+          <div class="slide-panel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div>
+            <h3 id="booking-panel-title" class="slide-panel-title">Book a Call</h3>
+            <p class="slide-panel-subtitle">Schedule a one-on-one with our team</p>
+          </div>
+        </div>
+        <button class="slide-panel-close" id="booking-modal-close" aria-label="Close panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="slide-panel-content" id="booking-panel-content">
+        <div class="tool-panel-spinner" id="booking-spinner">
+          <div class="spinner-ring"></div>
+        </div>
+        <iframe id="booking-iframe" src="" title="Book a Call" loading="lazy" style="width: 100%; min-height: 800px; border: none;"></iframe>
       </div>
     </div>
   </div>
@@ -5044,7 +5074,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             page_url: location.pathname,
             slug: '${escapeJS(agent.slug)}'
           };
-          navigator.sendBeacon(location.origin + '/api/video/events', new Blob([JSON.stringify(payload)], {type:'application/json'}));
+          navigator.sendBeacon('https://saabuildingblocks.com/api/video/events', new Blob([JSON.stringify(payload)], {type:'text/plain'}));
         } catch(e) {}
       }
 
@@ -5077,6 +5107,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       const revshareIframe = document.getElementById('revshare-iframe');
       const calculatorSpinner = document.getElementById('calculator-spinner');
       const revshareSpinner = document.getElementById('revshare-spinner');
+      const bookingModal = document.getElementById('booking-modal');
+      const bookingIframe = document.getElementById('booking-iframe');
+      const bookingSpinner = document.getElementById('booking-spinner');
+      const agentSlug = '${escapeHTML(agent.slug)}';
+      let bookingConfirmed = false;
       const joinForm = document.getElementById('join-form');
       const joinSubmit = document.getElementById('join-submit');
       const joinMessage = document.getElementById('join-message');
@@ -5209,7 +5244,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               page_url: location.pathname,
               slug: '${escapeJS(agent.slug)}'
             };
-            navigator.sendBeacon(location.origin + '/api/video/events', new Blob([JSON.stringify(payload)], {type:'application/json'}));
+            navigator.sendBeacon('https://saabuildingblocks.com/api/video/events', new Blob([JSON.stringify(payload)], {type:'text/plain'}));
           } catch(e) {}
         }
 
@@ -5258,7 +5293,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         }
 
         function showControlsBar() {
-          if (!hasPlayed) return;
+          if (!hasPlayed && floatState !== 'floating') return;
           showControls = true;
           if (controlsBar) { controlsBar.style.opacity = '1'; controlsBar.style.pointerEvents = 'auto'; }
         }
@@ -5311,11 +5346,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           playerBound = true;
           wygPlayer = window.Stream(wygIframe);
           wygPlayer.addEventListener('play', function() {
+            // If video started without explicit user gesture, force pause immediately
+            if (!wantsPlay) {
+              try { wygPlayer.pause(); } catch(e) {}
+              return;
+            }
             isPlaying = true;
             videoEnded = false;
             hideSpinner();
-            // Safety: if video started without user click (e.g. browser autoplay),
-            // clean up poster/play button and enable controls
             if (!hasPlayed) {
               hasPlayed = true;
               if (poster) poster.remove();
@@ -5378,10 +5416,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           });
           wygPlayer.muted = false;
           wygPlayer.volume = 1;
-          // If user already clicked play, start playback now
+          // Prevent any SDK-triggered autoplay — only play on explicit user gesture
           if (wantsPlay) {
             wygPlayer.play();
             setTimeout(hideSpinner, 3000);
+          } else {
+            // Force pause in case Cloudflare Stream SDK auto-starts playback
+            try { wygPlayer.pause(); } catch(e) {}
           }
         }
 
@@ -5405,7 +5446,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           var iframe = document.createElement('iframe');
           iframe.id = 'wyg-walkthrough-iframe';
           iframe.src = buildIframeSrc(quality || currentQuality);
-          iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;z-index:1;';
+          iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;z-index:1;pointer-events:none;';
           iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media');
           iframe.setAttribute('allowfullscreen', '');
           container.insertBefore(iframe, container.firstChild);
@@ -5456,6 +5497,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           if (poster) poster.remove();
           if (playBtn) playBtn.remove();
           if (controlsOverlay) controlsOverlay.style.display = 'block';
+          if (wygIframe) wygIframe.style.pointerEvents = 'auto';
           if (!iframePreloaded) {
             showSpinner();
             createIframe(currentQuality);
@@ -5605,7 +5647,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             if (document.fullscreenElement) {
               document.exitFullscreen();
             } else if (floatState === 'floating') {
-              // Corner mode: snap to inline first, then fullscreen
+              // Corner mode: move back into wrap, snap to inline, then fullscreen
+              if (container.parentNode === document.body && floatPlaceholder && floatPlaceholder.parentNode) {
+                floatPlaceholder.parentNode.insertBefore(container, floatPlaceholder.nextSibling);
+              }
               container.style.position = 'relative';
               container.style.left = '';
               container.style.top = '';
@@ -5689,15 +5734,23 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           var targetX = 20;
           var targetY = window.innerHeight - 20 - targetH;
 
+          // Capture playback state BEFORE DOM move (appendChild can disrupt audio)
+          var wasPlaying = wantsPlay && isPlaying;
+          var savedMuted = wygPlayer ? wygPlayer.muted : false;
+          var savedVolume = wygPlayer ? wygPlayer.volume : 1;
+
           // Show placeholder
           if (floatPlaceholder) { floatPlaceholder.style.display = 'block'; floatPlaceholder.style.height = placeholderH + 'px'; }
+
+          // Move container to body so it escapes parent stacking contexts
+          document.body.appendChild(container);
 
           // Show dismiss button
           if (floatDismiss) { floatDismiss.style.display = 'flex'; }
 
           // Set fixed position at FROM location
           container.style.position = 'fixed';
-          container.style.zIndex = '9999';
+          container.style.zIndex = '2147483647';
           container.style.left = '0px';
           container.style.top = '0px';
           container.style.width = fromRect.width + 'px';
@@ -5707,6 +5760,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           container.style.transition = 'none';
           container.style.borderRadius = '12px';
           container.style.boxShadow = '0 8px 32px rgba(0,0,0,0.6)';
+          container.style.overflow = 'visible';
 
           // Force reflow then animate to target
           container.offsetHeight;
@@ -5717,10 +5771,29 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
           // Always show controls when floating (too small for auto-hide)
           showControlsBar();
+
+          if (!wantsPlay && wygPlayer) {
+            // User never clicked play — force pause
+            try { wygPlayer.pause(); } catch(e) {}
+          } else if (wasPlaying && wygPlayer) {
+            // User was actively watching — restore playback and audio state
+            // DOM move (appendChild) can cause browser to pause/mute the player
+            setTimeout(function() {
+              try {
+                wygPlayer.muted = savedMuted;
+                wygPlayer.volume = savedVolume;
+                if (wygPlayer.paused) wygPlayer.play();
+              } catch(e) {}
+            }, 100);
+          }
         }
 
         function animateToInline() {
           if (document.fullscreenElement) return;
+          // Capture playback state before DOM move back
+          var wasPlayingReturn = wantsPlay && isPlaying;
+          var savedMutedReturn = wygPlayer ? wygPlayer.muted : false;
+          var savedVolumeReturn = wygPlayer ? wygPlayer.volume : 1;
           var startRect = container.getBoundingClientRect();
           var startLeft = startRect.left;
           var startTop = startRect.top;
@@ -5758,11 +5831,25 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             if (progress < 1) {
               requestAnimationFrame(tick);
             } else {
+              // Move container back into its original parent (after placeholder)
+              if (floatPlaceholder && floatPlaceholder.parentNode) {
+                floatPlaceholder.parentNode.insertBefore(container, floatPlaceholder.nextSibling);
+              }
               // Reset to inline flow — restore ALL original inline styles
               if (floatPlaceholder) { floatPlaceholder.style.height = '0'; floatPlaceholder.style.display = 'none'; }
               container.style.cssText = 'position: relative; aspect-ratio: 2228/1080; background: #000; overflow: hidden;';
               if (floatDismiss) floatDismiss.style.display = 'none';
               floatState = 'inline';
+              // Restore playback/audio after DOM move back
+              if (wasPlayingReturn && wygPlayer) {
+                setTimeout(function() {
+                  try {
+                    wygPlayer.muted = savedMutedReturn;
+                    wygPlayer.volume = savedVolumeReturn;
+                    if (wygPlayer.paused) wygPlayer.play();
+                  } catch(e) {}
+                }, 100);
+              }
             }
           }
           requestAnimationFrame(tick);
@@ -5787,6 +5874,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           if (wrap) wrap.classList.toggle('wyg-fs-active', isFullscreen);
 
           if (isFullscreen) {
+            // Move container back into wrap for fullscreen (if it was reparented to body)
+            if (container.parentNode === document.body && floatPlaceholder && floatPlaceholder.parentNode) {
+              floatPlaceholder.parentNode.insertBefore(container, floatPlaceholder.nextSibling);
+            }
+
             // Hide float dismiss button
             if (floatDismiss) floatDismiss.style.display = 'none';
 
@@ -5882,12 +5974,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
             // Restore container based on float state
             if (floatState === 'floating') {
+              // Re-reparent to body for floating (escapes stacking contexts)
+              document.body.appendChild(container);
               var targetW = Math.min(320, window.innerWidth * 0.4);
               var targetH = targetW / VIDEO_AR;
               var targetX = 20;
               var targetY = window.innerHeight - 20 - targetH;
               container.style.position = 'fixed';
-              container.style.zIndex = '9999';
+              container.style.zIndex = '2147483647';
               container.style.left = '0px';
               container.style.top = '0px';
               container.style.width = targetW + 'px';
@@ -6099,6 +6193,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         document.getElementById('revshare-modal-close').addEventListener('click', () => closeModal('revshare'));
         document.getElementById('revshare-modal-backdrop').addEventListener('click', () => closeModal('revshare'));
 
+        // Booking panel
+        document.getElementById('btn-book-call').addEventListener('click', () => openModal('booking'));
+        document.getElementById('wyg-end-book-call').addEventListener('click', () => openModal('booking'));
+        document.getElementById('booking-modal-close').addEventListener('click', () => closeModal('booking'));
+        document.getElementById('booking-modal-backdrop').addEventListener('click', () => closeModal('booking'));
+
         // Iframe load handlers - hide spinner and fade in content
         calculatorIframe.addEventListener('load', () => {
           if (calculatorIframe.src) {
@@ -6110,6 +6210,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           if (revshareIframe.src) {
             revshareSpinner.classList.add('hidden');
             revshareIframe.classList.add('loaded');
+          }
+        });
+        bookingIframe.addEventListener('load', () => {
+          if (bookingIframe.src) {
+            bookingSpinner.classList.add('hidden');
+            bookingIframe.classList.add('loaded');
           }
         });
 
@@ -6131,6 +6237,18 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               panel.scrollTo({ top: panel.scrollHeight, behavior: 'smooth' });
             }
           }
+
+          // Custom booking widget confirmation detection
+          if (!bookingConfirmed && bookingModal.classList.contains('open')) {
+            var d = event.data;
+            if (d && typeof d === 'object' && d.type === 'booking-confirmed') {
+              bookingConfirmed = true;
+              // Fire Plausible event with agent referral context
+              if (window.plausible) {
+                window.plausible('Booking Submitted', { props: { referrer: agentSlug, page_type: 'attraction' } });
+              }
+            }
+          }
         });
 
         // Form submission
@@ -6144,6 +6262,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             // Calculator/RevShare use old pattern
             if (calculatorModal.classList.contains('open')) closeModal('calculator');
             if (revshareModal.classList.contains('open')) closeModal('revshare');
+            if (bookingModal.classList.contains('open')) closeModal('booking');
             // Close country dropdown if open
             const dropdown = document.getElementById('country-dropdown');
             if (dropdown && dropdown.classList.contains('open')) {
@@ -6298,6 +6417,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           // Calculator/RevShare still use individual backdrops
           case 'calculator': return { container: calculatorModal, panel: document.getElementById('calculator-panel'), backdrop: document.getElementById('calculator-modal-backdrop') };
           case 'revshare': return { container: revshareModal, panel: document.getElementById('revshare-panel'), backdrop: document.getElementById('revshare-modal-backdrop') };
+          case 'booking': return { container: bookingModal, panel: document.getElementById('booking-panel'), backdrop: document.getElementById('booking-modal-backdrop') };
           default: return null;
         }
       }
@@ -6308,13 +6428,15 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         join: 'join-canvas',
         instructions: 'instructions-canvas',
         calculator: 'calculator-canvas',
-        revshare: 'revshare-canvas'
+        revshare: 'revshare-canvas',
+        booking: 'booking-canvas'
       };
       var honeycombBgIds = {
         join: 'join-bg',
         instructions: 'instructions-bg',
         calculator: 'calculator-bg',
-        revshare: 'revshare-bg'
+        revshare: 'revshare-bg',
+        booking: 'booking-bg'
       };
 
       function startHoneycomb(type) {
@@ -6367,6 +6489,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           revshareIframe.classList.remove('loaded');
           revshareSpinner.classList.remove('hidden');
           revshareIframe.src = '/exp-realty-revenue-share-calculator/?embed=true';
+        } else if (type === 'booking' && bookingIframe) {
+          bookingConfirmed = false;
+          bookingIframe.classList.remove('loaded');
+          bookingSpinner.classList.remove('hidden');
+          bookingIframe.src = '/book-a-call?embed=true&agent=' + encodeURIComponent(agentSlug);
         }
 
         // Reset closing state
@@ -6417,6 +6544,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           } else if (type === 'revshare' && revshareIframe) {
             revshareIframe.src = '';
             revshareIframe.classList.remove('loaded');
+          } else if (type === 'booking' && bookingIframe) {
+            bookingIframe.src = '';
+            bookingIframe.classList.remove('loaded');
           }
         }, ANIMATION_DURATION);
       }
@@ -7735,14 +7865,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
   <script>
   (function(){
-    var API=location.origin+'/api/tracking/events';
+    var API='https://saabuildingblocks.com/api/tracking/events';
     var slug='${escapeJS(agent.slug)}';
     var vid=sessionStorage.getItem('_saa_vid');
     if(!vid){vid=Math.random().toString(36).substr(2)+Date.now().toString(36);sessionStorage.setItem('_saa_vid',vid);}
     function track(type,btnId,btnLabel,btnUrl){
       var p={slug:slug,page_type:'attraction',event_type:type,visitor_id:vid,referrer:document.referrer||null};
       if(btnId){p.button_id=btnId;p.button_label=btnLabel;p.button_url=btnUrl;}
-      try{navigator.sendBeacon(API,new Blob([JSON.stringify(p)],{type:'application/json'}));}catch(e){}
+      try{navigator.sendBeacon(API,new Blob([JSON.stringify(p)],{type:'text/plain'}));}catch(e){}
     }
     track('view');
     document.addEventListener('click',function(e){
@@ -9028,14 +9158,14 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
   <script>
   (function(){
-    var API=location.origin+'/api/tracking/events';
+    var API='https://saabuildingblocks.com/api/tracking/events';
     var slug='${escapeJS(agent.slug)}';
     var vid=sessionStorage.getItem('_saa_vid');
     if(!vid){vid=Math.random().toString(36).substr(2)+Date.now().toString(36);sessionStorage.setItem('_saa_vid',vid);}
     function track(type,btnId,btnLabel,btnUrl){
       var p={slug:slug,page_type:'links',event_type:type,visitor_id:vid,referrer:document.referrer||null};
       if(btnId){p.button_id=btnId;p.button_label=btnLabel;p.button_url=btnUrl;}
-      try{navigator.sendBeacon(API,new Blob([JSON.stringify(p)],{type:'application/json'}));}catch(e){}
+      try{navigator.sendBeacon(API,new Blob([JSON.stringify(p)],{type:'text/plain'}));}catch(e){}
     }
     track('view');
     document.addEventListener('click',function(e){

@@ -71,6 +71,26 @@ const COUNTRIES = [
   'United Kingdom',
 ];
 
+const US_STATES = [
+  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
+  'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho',
+  'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+  'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+  'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada',
+  'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
+  'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
+  'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
+  'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
+  'West Virginia', 'Wisconsin', 'Wyoming', 'District of Columbia',
+];
+
+const CA_PROVINCES = [
+  'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick',
+  'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia',
+  'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan',
+  'Yukon',
+];
+
 const DAY_HEADERS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const CARD = 'bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-2xl';
 
@@ -349,6 +369,7 @@ export default function CustomBookingWidget({ agentSlug }: { agentSlug?: string 
           careerPlan: form.careerPlan.join(', '),
           selectedSlot,
           timezone,
+          agentSlug: agentSlug || undefined,
         }),
       });
 
@@ -358,8 +379,19 @@ export default function CustomBookingWidget({ agentSlug }: { agentSlug?: string 
       setStep('confirmation');
       window.plausible?.('Booking Submitted', { props: { page: '/book-a-call' } });
 
+      // Notify parent window (for embedded mode in attraction pages)
+      if (window.parent !== window) {
+        window.parent.postMessage({
+          type: 'booking-confirmed',
+          agentSlug: agentSlug || null,
+          visitorName: `${form.firstName.trim()} ${form.lastName.trim()}`,
+        }, '*');
+      }
+
       // If booked from an agent's attraction page, notify the agent
       if (agentSlug) {
+        const startTime = selectedSlot;
+        const endTime = new Date(new Date(selectedSlot).getTime() + 30 * 60 * 1000).toISOString();
         fetch('https://saabuildingblocks.com/api/bookings/referral', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -368,6 +400,10 @@ export default function CustomBookingWidget({ agentSlug }: { agentSlug?: string 
             visitorName: `${form.firstName.trim()} ${form.lastName.trim()}`,
             visitorEmail: form.email.trim(),
             visitorPhone: form.phone.trim() || null,
+            bookingStartTime: startTime,
+            bookingEndTime: endTime,
+            appointmentId: data.appointmentId || null,
+            meetingLink: data.meetingLink || null,
           }),
         }).catch(() => { /* fire-and-forget */ });
       }
@@ -741,25 +777,40 @@ export default function CustomBookingWidget({ agentSlug }: { agentSlug?: string 
             {/* Country + State */}
             <div className="grid grid-cols-2 gap-3">
               <Field label="Country" required error={formErrors.country}>
-                <select
+                <DarkSelect
                   value={form.country}
-                  onChange={(e) => updateField('country', e.target.value)}
-                  className={inputClass(formErrors.country)}
-                >
-                  <option value="" className="bg-[#222]">Select country</option>
-                  {COUNTRIES.map((c) => (
-                    <option key={c} value={c} className="bg-[#222]">{c}</option>
-                  ))}
-                </select>
-              </Field>
-              <Field label="State" required error={formErrors.state}>
-                <input
-                  type="text"
-                  value={form.state}
-                  onChange={(e) => updateField('state', e.target.value)}
-                  placeholder="State / Province"
-                  className={inputClass(formErrors.state)}
+                  onChange={(v) => { updateField('country', v); updateField('state', ''); }}
+                  options={COUNTRIES}
+                  placeholder="Select country"
+                  error={formErrors.country}
                 />
+              </Field>
+              <Field label={form.country === 'Canada' ? 'Province' : 'State'} required error={formErrors.state}>
+                {form.country === 'United States' ? (
+                  <DarkSelect
+                    value={form.state}
+                    onChange={(v) => updateField('state', v)}
+                    options={US_STATES}
+                    placeholder="Select state"
+                    error={formErrors.state}
+                  />
+                ) : form.country === 'Canada' ? (
+                  <DarkSelect
+                    value={form.state}
+                    onChange={(v) => updateField('state', v)}
+                    options={CA_PROVINCES}
+                    placeholder="Select province"
+                    error={formErrors.state}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={form.state}
+                    onChange={(e) => updateField('state', e.target.value)}
+                    placeholder="State / Province"
+                    className={inputClass(formErrors.state)}
+                  />
+                )}
               </Field>
             </div>
 
@@ -970,6 +1021,62 @@ function inputClass(error?: string): string {
     'placeholder:text-white/20 outline-none transition-all duration-150',
     error
       ? 'border-red-500/40 focus:border-red-500/60 focus:ring-1 focus:ring-red-500/20'
-      : 'border-white/[0.08] focus:border-[#ffd700]/40 focus:ring-1 focus:ring-[#ffd700]/15',
+      : 'border-white/[0.03] focus:border-[#ffd700]/40 focus:ring-1 focus:ring-[#ffd700]/15',
   ].join(' ');
+}
+
+function DarkSelect({
+  value,
+  onChange,
+  options,
+  placeholder,
+  error,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
+  placeholder: string;
+  error?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className={[
+          'w-full bg-white/[0.04] border rounded-lg px-3.5 py-2.5 text-sm text-left flex items-center justify-between transition-all duration-150',
+          error
+            ? 'border-red-500/40'
+            : open ? 'border-[#ffd700]/40 ring-1 ring-[#ffd700]/15' : 'border-white/[0.03]',
+        ].join(' ')}
+      >
+        <span className={value ? 'text-white' : 'text-white/20'}>{value || placeholder}</span>
+        <ChevronRight className={`w-3.5 h-3.5 text-white/30 transition-transform duration-150 ${open ? 'rotate-90' : ''}`} />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute left-0 top-full mt-1 z-50 w-full bg-[#1a1a1a] border border-white/[0.1] rounded-lg shadow-xl py-1 max-h-[200px] overflow-y-auto">
+            {options.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => { onChange(opt); setOpen(false); }}
+                className={`
+                  w-full text-left px-3.5 py-2 text-sm transition-colors
+                  ${value === opt
+                    ? 'text-[#ffd700] bg-[#ffd700]/10'
+                    : 'text-[#dcdbd5]/70 hover:text-[#dcdbd5] hover:bg-white/[0.05]'
+                  }
+                `}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
 }

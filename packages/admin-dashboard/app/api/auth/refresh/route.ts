@@ -24,7 +24,33 @@ import {
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const RATE_LIMIT_MAX_ATTEMPTS = 100;
 
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://saabuildingblocks.com',
+  'https://www.saabuildingblocks.com',
+  'https://smartagentalliance.com',
+  'https://www.smartagentalliance.com',
+  'https://saabuildingblocks.pages.dev',
+];
+
+function getCorsHeaders(origin?: string | null): Record<string, string> {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
+}
+
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(request.headers.get('origin')) });
+}
+
 export async function POST(request: NextRequest) {
+  const CORS = getCorsHeaders(request.headers.get('origin'));
   const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
@@ -34,7 +60,7 @@ export async function POST(request: NextRequest) {
         error: 'SERVICE_UNAVAILABLE',
         message: 'Authentication service is not available',
       },
-      { status: 503 }
+      { status: 503, headers: CORS }
     );
   }
 
@@ -42,8 +68,16 @@ export async function POST(request: NextRequest) {
     const ipAddress = request.headers.get('x-forwarded-for') || 'unknown';
     const userAgent = request.headers.get('user-agent') || 'unknown';
 
-    // Get refresh token from HttpOnly cookie
-    const refreshToken = request.cookies.get('refreshToken')?.value;
+    // Get refresh token from HttpOnly cookie or request body (for cross-origin portal)
+    let refreshToken = request.cookies.get('refreshToken')?.value;
+    if (!refreshToken) {
+      try {
+        const body = await request.json();
+        refreshToken = body.refresh_token;
+      } catch {
+        // No body — refreshToken stays undefined
+      }
+    }
 
     if (!refreshToken) {
       return NextResponse.json(
@@ -52,7 +86,7 @@ export async function POST(request: NextRequest) {
           error: 'MISSING_REFRESH_TOKEN',
           message: 'No refresh token provided',
         },
-        { status: 401 }
+        { status: 401, headers: CORS }
       );
     }
 
@@ -74,7 +108,7 @@ export async function POST(request: NextRequest) {
           error: 'INVALID_REFRESH_TOKEN',
           message: error || 'Refresh token is invalid or expired',
         },
-        { status: 401 }
+        { status: 401, headers: CORS }
       );
     }
 
@@ -101,6 +135,7 @@ export async function POST(request: NextRequest) {
         {
           status: 429,
           headers: {
+            ...CORS,
             'X-RateLimit-Limit': String(RATE_LIMIT_MAX_ATTEMPTS),
             'X-RateLimit-Remaining': String(rateLimit.remaining),
             'X-RateLimit-Reset': String(Math.floor(rateLimit.resetAt / 1000)),
@@ -134,7 +169,7 @@ export async function POST(request: NextRequest) {
           error: 'INVALID_REFRESH_TOKEN',
           message: 'Refresh token has been revoked or does not exist',
         },
-        { status: 401 }
+        { status: 401, headers: CORS }
       );
     }
 
@@ -160,7 +195,7 @@ export async function POST(request: NextRequest) {
           error: 'REFRESH_TOKEN_EXPIRED',
           message: 'Refresh token has expired. Please log in again.',
         },
-        { status: 401 }
+        { status: 401, headers: CORS }
       );
     }
 
@@ -187,7 +222,7 @@ export async function POST(request: NextRequest) {
           error: 'USER_NOT_FOUND',
           message: 'User account not found',
         },
-        { status: 401 }
+        { status: 401, headers: CORS }
       );
     }
 
@@ -199,7 +234,7 @@ export async function POST(request: NextRequest) {
           error: 'ACCOUNT_INACTIVE',
           message: 'Account has been deactivated',
         },
-        { status: 403 }
+        { status: 403, headers: CORS }
       );
     }
 
@@ -211,7 +246,7 @@ export async function POST(request: NextRequest) {
           message: 'Account is locked',
           unlockAt: user.locked_until,
         },
-        { status: 423 }
+        { status: 423, headers: CORS }
       );
     }
 
@@ -279,7 +314,7 @@ export async function POST(request: NextRequest) {
         accessToken: newAccessToken,
         expiresIn: 900, // 15 minutes
       },
-    });
+    }, { headers: CORS });
 
     // If token rotation is enabled, set new refresh token cookie
     // response.cookies.set('refreshToken', newRefreshToken, { ... });
@@ -294,7 +329,7 @@ export async function POST(request: NextRequest) {
         error: 'INTERNAL_SERVER_ERROR',
         message: 'An unexpected error occurred during token refresh',
       },
-      { status: 500 }
+      { status: 500, headers: CORS }
     );
   }
 }

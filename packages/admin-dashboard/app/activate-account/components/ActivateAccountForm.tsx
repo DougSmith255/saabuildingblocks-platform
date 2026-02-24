@@ -9,7 +9,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -77,7 +77,6 @@ interface ActivateAccountFormProps {
 }
 
 export default function ActivateAccountForm({ initialToken = '' }: ActivateAccountFormProps) {
-  const router = useRouter();
   const [token] = useState(initialToken);
   const [step, setStep] = useState<'validating' | 'form' | 'success'>('validating');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -96,6 +95,7 @@ export default function ActivateAccountForm({ initialToken = '' }: ActivateAccou
   });
 
   const watchedPassword = form.watch('password');
+  const watchedConfirm = form.watch('confirmPassword');
 
   // Step 1: Validate the token on mount
   const validateToken = useCallback(async () => {
@@ -164,10 +164,15 @@ export default function ActivateAccountForm({ initialToken = '' }: ActivateAccou
         throw new Error(data.error || 'Activation failed. Please try again.');
       }
 
-      // Account activated — now auto-sign-in with the same credentials
+      // Account activated — auto-login and redirect to agent portal
       setStep('success');
 
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com';
       const loginEmail = (values.email && values.email.trim()) || invitationEmail;
+
+      // Brief delay for Supabase Auth user to propagate, then auto-login
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       try {
         const loginResponse = await fetch('/api/auth/login', {
           method: 'POST',
@@ -179,18 +184,26 @@ export default function ActivateAccountForm({ initialToken = '' }: ActivateAccou
           }),
         });
 
-        if (loginResponse.ok) {
-          router.push('/agent-portal');
+        const loginData = await loginResponse.json();
+
+        if (loginResponse.ok && loginData.success) {
+          // Pass auth data to the public site callback via URL hash (not sent to server)
+          // Uses a Cloudflare Function that bypasses the PWA service worker cache
+          const authPayload = btoa(JSON.stringify({
+            access_token: loginData.access_token,
+            user: loginData.user,
+          }));
+          window.location.href = `${appUrl}/auth/callback#auth=${authPayload}`;
           return;
         }
       } catch {
-        // Login failed silently — fall back to login page
+        // Auto-login failed — fall through to manual login redirect
       }
 
-      // Fallback: if auto-login fails, send to login page
+      // Fallback: redirect to login page if auto-login fails
       setTimeout(() => {
-        router.push('/login?activated=true');
-      }, 2000);
+        window.location.href = `${appUrl}/agent-portal/login?activated=true`;
+      }, 1000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -403,6 +416,22 @@ export default function ActivateAccountForm({ initialToken = '' }: ActivateAccou
                 />
               </FormControl>
               <FormMessage className="text-red-400" />
+              {/* Passwords match indicator */}
+              {watchedConfirm && (
+                <div className="mt-2 flex items-center gap-2 text-xs transition-colors duration-200">
+                  {watchedPassword && watchedConfirm === watchedPassword ? (
+                    <>
+                      <Check className="h-3 w-3 text-green-500 shrink-0" />
+                      <span className="text-green-500">Passwords match</span>
+                    </>
+                  ) : (
+                    <>
+                      <X className="h-3 w-3 text-[#dcdbd5]/40 shrink-0" />
+                      <span className="text-[#dcdbd5]/40">Passwords match</span>
+                    </>
+                  )}
+                </div>
+              )}
             </FormItem>
           )}
         />

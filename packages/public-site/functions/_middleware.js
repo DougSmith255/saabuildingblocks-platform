@@ -10,7 +10,7 @@
 
 // Junk path patterns - skip logging for these (bots, probes, static files)
 const JUNK_PATTERNS = [
-  /\.(php|asp|aspx|jsp|cgi|env|ini|yml|yaml|toml|xml|sql|bak|old|orig|swp)$/i,
+  /\.(php\d?|phtml|asp|aspx|jsp|cgi|env|ini|yml|yaml|toml|xml|sql|bak|old|orig|swp)$/i,
   /wp-(admin|login|content|includes|json)/i,
   /\/xmlrpc\.php/i,
   /\/(\.git|\.env|\.svn|\.hg|\.DS_Store)/i,
@@ -19,6 +19,31 @@ const JUNK_PATTERNS = [
   /\/favicon\./i,
   /\/_next\//,
   /\/node_modules\//,
+  // Media file probes (bots probing for leaked media with hex filenames)
+  /\.(ogg|mka|mkv|avi|mpeg|mpg|mp4|mp3|flac|wav|aac|webm|wmv|mov|m4a|m4v|3gp|flv|rar|zip|tar|gz|7z)$/i,
+  // Hex/random-string filenames (32+ hex chars = hash probe, not real content)
+  /^\/[0-9a-f]{16,}\.[a-z0-9]+$/i,
+  // Common directory probes (vulnerability scanners looking for exposed directories)
+  /^\/(vendor|assets|uploads?|files?|templates?|themes?|plugins?|modules?|includes?|components?|system|sites?|local|Public|web|www|static|dist|build|lib|src|conf|config|backup|tmp|temp|logs?|data|db|cache|storage|private|public_html|htdocs|cgi-bin|bin|scripts?|css|js|img|media)\//i,
+  // Well-known scanner probes (non-standard .well-known paths)
+  /^\/.well-known\/(?!acme-challenge)/i,
+  // Double-extension and path-traversal probes
+  /\.\.\//,
+  /\/\/(\/)+/,
+  // Common exploit path patterns
+  /^\/(ALFA_DATA|alfacgiapi|eval-stdin|shell|c99|r57|wso|leaf|indoxploit)/i,
+  /^\/(solr|actuator|telescope|debug|console|portal|manager|jmx|jolokia)\//i,
+  // Bot form-fill probes (bots appending /fill or /1 to real pages)
+  /\/(fill|submit|send|action|process)$/i,
+  // CMS/platform version probes
+  /^\/(magento_version|awsconfig|elmah|trace|server-info|server-status)/i,
+  /^\/(servlet|axis2?|invoker|jboss|struts)\//i,
+  // Common scanner one-word directory probes (backup, old, test, etc.)
+  /^\/(backup|bak|bk|bc|bac|old|oldsite|old-site|new|test|demo|staging|dev|www|wp|wp-old|wordpress|site|sito|sitio|shop|main)\/?$/i,
+  // Bare year paths (year archive probes)
+  /^\/\d{4}\/?$/,
+  // Joomla/Drupal/other CMS probes
+  /^\/(media\/system|sites\/default|misc\/drupal)\//i,
 ];
 
 // In-isolate rate limiter: avoid logging the same path more than once per 60s per edge location

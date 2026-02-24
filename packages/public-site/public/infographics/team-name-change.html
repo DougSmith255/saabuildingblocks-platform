@@ -37,6 +37,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 100vh;
       padding: 32px 24px;
       position: relative;
       overflow-x: hidden;
@@ -154,22 +155,28 @@
     }
 
     /* === NAME CHANGE VISUAL === */
+    .name-changes-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
     .name-change-container {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 32px;
-      margin-bottom: 20px;
     }
 
     .name-box {
       background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
       border: 1px solid rgba(255,215,0,0.2);
       border-radius: 16px;
-      padding: 28px 40px;
+      padding: 18px 36px;
       text-align: center;
       position: relative;
-      min-width: 280px;
+      width: 420px;
       box-shadow: 0 4px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
     }
 
@@ -195,9 +202,10 @@
 
     .name-box-value {
       font-family: 'Taskor', sans-serif;
-      font-size: 28px;
+      font-size: 24px;
       color: #e5e4dd;
       text-shadow: 0 0 15px rgba(255,255,255,0.1);
+      white-space: nowrap;
     }
 
     .name-box.old .name-box-value {
@@ -285,23 +293,73 @@
       <div class="header-divider"></div>
     </div>
 
-    <!-- Old Name → New Name Visual -->
-    <div class="name-change-container">
-      <div class="name-box old">
-        <div class="name-box-label">Current Name</div>
-        <div class="name-box-value">Old Team Name</div>
-      </div>
+    <!-- Old Names → New Names -->
+    <div class="name-changes-grid">
 
-      <div class="arrow-container">
-        <div class="arrow-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+      <div class="name-change-container">
+        <div class="name-box old">
+          <div class="name-box-label">Old Name</div>
+          <div class="name-box-value">Domestic Team</div>
+        </div>
+        <div class="arrow-container">
+          <div class="arrow-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </div>
+        </div>
+        <div class="name-box new">
+          <div class="name-box-label">New Name</div>
+          <div class="name-box-value">Domestic Partnership</div>
         </div>
       </div>
 
-      <div class="name-box new">
-        <div class="name-box-label">New Name</div>
-        <div class="name-box-value">New Team Name</div>
+      <div class="name-change-container">
+        <div class="name-box old">
+          <div class="name-box-label">Old Name</div>
+          <div class="name-box-value">Self-Organized Team</div>
+        </div>
+        <div class="arrow-container">
+          <div class="arrow-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </div>
+        </div>
+        <div class="name-box new">
+          <div class="name-box-label">New Name</div>
+          <div class="name-box-value">Full Cap Team</div>
+        </div>
       </div>
+
+      <div class="name-change-container">
+        <div class="name-box old">
+          <div class="name-box-label">Old Name</div>
+          <div class="name-box-value">Standard Team</div>
+        </div>
+        <div class="arrow-container">
+          <div class="arrow-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </div>
+        </div>
+        <div class="name-box new">
+          <div class="name-box-label">New Name</div>
+          <div class="name-box-value">Half Cap Team</div>
+        </div>
+      </div>
+
+      <div class="name-change-container">
+        <div class="name-box old">
+          <div class="name-box-label">Old Name</div>
+          <div class="name-box-value">Mega Icon Team</div>
+        </div>
+        <div class="arrow-container">
+          <div class="arrow-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </div>
+        </div>
+        <div class="name-box new">
+          <div class="name-box-label">New Name</div>
+          <div class="name-box-value">Quarter Cap Team</div>
+        </div>
+      </div>
+
     </div>
 
     <p class="brand">Smart Agent Alliance &mdash; <a href="https://smartagentalliance.com">smartagentalliance.com</a></p>

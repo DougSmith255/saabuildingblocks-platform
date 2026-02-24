@@ -293,6 +293,7 @@ export async function POST(request: NextRequest) {
         isFirstLogin: false,
       },
       expiresIn,
+      refresh_token: refreshToken,
     }, { headers: getCorsHeaders(request.headers.get('origin')) });
 
     // Set refresh token in HttpOnly cookie
