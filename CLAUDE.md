@@ -481,9 +481,14 @@ free -h
 
 ---
 
+## Writing Style
+
+- **Never use em dashes (—).** Use a regular hyphen (-) instead. Em dashes are an AI writing tell.
+- Keep copy concise. Don't over-explain when a short sentence will do.
+
 ## Key Principles
 
-- **Document actual state, not aspirational** — Built / Deployed / Working / Verified are distinct statuses
-- **Comprehensive analysis before action** — one thorough investigation beats ten incremental patches
-- **Ship pragmatically** — good software today beats perfect software never
+- **Document actual state, not aspirational** - Built / Deployed / Working / Verified are distinct statuses
+- **Comprehensive analysis before action** - one thorough investigation beats ten incremental patches
+- **Ship pragmatically** - good software today beats perfect software never
 - **Never claim "working" without verification**

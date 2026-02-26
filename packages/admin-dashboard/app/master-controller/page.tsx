@@ -15,10 +15,10 @@
  * It runs entirely in the browser with access to localStorage and Zustand stores.
  */
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import dynamicImport from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Settings, Zap, Users, BarChart3, AlertTriangle } from 'lucide-react';
+import { Settings, Zap, Users, BarChart3, AlertTriangle, Lightbulb } from 'lucide-react';
 import { useUserRole, RoleBadge } from '@/lib/rbac';
 
 // Tab components - dynamically imported to prevent SSR
@@ -47,7 +47,12 @@ const TriageTab = dynamicImport(() => import('./components/tabs/TriageTab').then
   loading: () => <div className="p-6 text-[#dcdbd5]">Loading 404 Watch tab...</div>
 });
 
-type TabId = 'web-settings' | 'automations' | 'users' | 'analytics' | 'triage';
+const SuggestionsTab = dynamicImport(() => import('./components/tabs/SuggestionsTab').then(mod => ({ default: mod.SuggestionsTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Suggestions tab...</div>
+});
+
+type TabId = 'web-settings' | 'automations' | 'users' | 'analytics' | 'triage' | 'suggestions';
 
 // Legacy tab IDs that should redirect to web-settings with the appropriate sub-tab
 const legacyTabMap: Record<string, string> = {
@@ -65,7 +70,7 @@ function MasterControllerContent() {
   // Initialize tab from URL or default to 'web-settings'
   const [activeTab, setActiveTab] = useState<TabId>(() => {
     const tabParam = searchParams.get('tab');
-    const validTabs: TabId[] = ['web-settings', 'automations', 'users', 'analytics', 'triage'];
+    const validTabs: TabId[] = ['web-settings', 'automations', 'users', 'analytics', 'triage', 'suggestions'];
     if (tabParam && validTabs.includes(tabParam as TabId)) return tabParam as TabId;
     // Backwards compatibility: redirect legacy tab IDs to web-settings
     if (tabParam && tabParam in legacyTabMap) return 'web-settings';
@@ -74,6 +79,29 @@ function MasterControllerContent() {
 
   // RBAC: Get user role
   const { role, isLoading: roleLoading } = useUserRole();
+
+  // Portal presence tracking
+  const [portalAgents, setPortalAgents] = useState<{ username: string; section: string; secsAgo: number }[]>([]);
+  const [portalCount, setPortalCount] = useState(0);
+  const [showPortalTooltip, setShowPortalTooltip] = useState(false);
+
+  const fetchPresence = useCallback(async () => {
+    try {
+      const res = await fetch('/api/portal-heartbeat');
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.success) {
+        setPortalCount(data.count);
+        setPortalAgents(data.agents || []);
+      }
+    } catch { /* silent */ }
+  }, []);
+
+  useEffect(() => {
+    fetchPresence();
+    const interval = setInterval(fetchPresence, 15000);
+    return () => clearInterval(interval);
+  }, [fetchPresence]);
 
   // Backwards compatibility: redirect legacy tab URLs to web-settings with sub-tab
   useEffect(() => {
@@ -96,6 +124,7 @@ function MasterControllerContent() {
     { id: 'users' as TabId, label: 'Users', icon: Users },
     { id: 'analytics' as TabId, label: 'Analytics', icon: BarChart3 },
     { id: 'triage' as TabId, label: '404 Watch', icon: AlertTriangle },
+    { id: 'suggestions' as TabId, label: 'Suggestions', icon: Lightbulb },
   ];
 
   return (
@@ -107,7 +136,53 @@ function MasterControllerContent() {
             <Settings className="w-8 h-8 text-[#ffd700]" />
             Master Controller
           </h1>
-          {!roleLoading && role && <RoleBadge role={role} size="md" />}
+          <div className="flex items-center gap-3">
+            {/* Portal presence badge */}
+            <div className="relative">
+              <button
+                onClick={() => setShowPortalTooltip(!showPortalTooltip)}
+                onBlur={() => setTimeout(() => setShowPortalTooltip(false), 200)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${
+                  portalCount > 0
+                    ? 'bg-[#00ff88]/10 border-[#00ff88]/30 text-[#00ff88]'
+                    : 'bg-[#404040]/30 border-[#404040] text-[#dcdbd5]/60'
+                }`}
+                title={portalCount > 0 ? `${portalCount} agent(s) in portal` : 'No agents in portal — safe to restart'}
+              >
+                <span className={`w-2 h-2 rounded-full ${portalCount > 0 ? 'bg-[#00ff88] animate-pulse' : 'bg-[#dcdbd5]/30'}`} />
+                {portalCount > 0 ? `${portalCount} in portal` : 'Portal clear'}
+              </button>
+
+              {/* Tooltip dropdown */}
+              {showPortalTooltip && (
+                <div className="absolute right-0 top-full mt-2 w-64 bg-[#191818] border border-[#404040] rounded-lg shadow-xl z-50 overflow-hidden">
+                  <div className="px-3 py-2 border-b border-[#404040]">
+                    <p className="text-xs font-medium text-[#dcdbd5]/60">
+                      {portalCount > 0 ? 'Agents currently in portal' : 'No agents online'}
+                    </p>
+                  </div>
+                  {portalAgents.length > 0 ? (
+                    <div className="max-h-48 overflow-y-auto">
+                      {portalAgents.map((agent, i) => (
+                        <div key={i} className="px-3 py-2 flex items-center justify-between border-b border-[#404040]/50 last:border-0">
+                          <div>
+                            <p className="text-sm text-[#e5e4dd] font-medium">{agent.username}</p>
+                            <p className="text-xs text-[#dcdbd5]/40 capitalize">{agent.section.replace(/-/g, ' ')}</p>
+                          </div>
+                          <span className="text-xs text-[#dcdbd5]/40">{agent.secsAgo}s ago</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="px-3 py-4 text-center">
+                      <p className="text-sm text-[#00ff88]">Safe to rebuild/restart</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            {!roleLoading && role && <RoleBadge role={role} size="md" />}
+          </div>
         </div>
       </div>
 
@@ -145,6 +220,8 @@ function MasterControllerContent() {
         {activeTab === 'analytics' && <AnalyticsTab />}
 
         {activeTab === 'triage' && <TriageTab />}
+
+        {activeTab === 'suggestions' && <SuggestionsTab />}
       </div>
 
       {/* Footer Info */}

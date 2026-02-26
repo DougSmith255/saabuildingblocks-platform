@@ -32,7 +32,7 @@ console.log(`[${new Date().toISOString()}] [INFO] === Starting My Automation ===
 console.log(`[${new Date().toISOString()}] [INFO] Automation Complete`);
 ```
 
-### Step 2: Add Cron Job
+### Step 2: Add Cron Job (if scheduled)
 ```bash
 crontab -e
 ```
@@ -45,62 +45,9 @@ Add your schedule (use https://crontab.guru for help):
 
 ### Step 3: Update API Endpoint
 
-Edit `/home/claude-flow/packages/admin-dashboard/app/api/automations/status/route.ts`
+Edit `packages/admin-dashboard/app/api/automations/status/route.ts`
 
-Add your automation to the `GET()` function:
-
-```typescript
-export async function GET() {
-  try {
-    const automations: Automation[] = [];
-
-    // EXISTING: EverWebinar to GoHighLevel sync
-    const scriptPath1 = '/home/claude-flow/sync-everwebinar-to-ghl.js';
-    const logPath1 = '/var/log/everwebinar-sync.log';
-    const cronExists1 = await checkCronJob(scriptPath1);
-    const { lastRun: lastRun1, status: status1 } = await parseLogFile(logPath1);
-
-    automations.push({
-      id: 'everwebinar-ghl-sync',
-      name: 'EverWebinar to GoHighLevel Sync',
-      description: 'Automatically syncs new EverWebinar registrants to GoHighLevel with geolocation enrichment',
-      schedule: 'Daily at 6:00 PM EST',
-      status: cronExists1 ? status1 : 'broken',
-      lastRun: lastRun1,
-      nextRun: cronExists1 ? calculateNextRun() : undefined,
-      logFile: 'everwebinar-sync.log'
-    });
-
-    // NEW: Add your automation here
-    const scriptPath2 = '/path/to/your-script.js';
-    const logPath2 = '/var/log/your-automation.log';
-    const cronExists2 = await checkCronJob(scriptPath2);
-    const { lastRun: lastRun2, status: status2 } = await parseLogFile(logPath2);
-
-    automations.push({
-      id: 'your-automation-id',  // Unique ID (kebab-case)
-      name: 'Your Automation Name',  // Display name
-      description: 'What this automation does',  // Brief description
-      schedule: 'Daily at 2:00 AM EST',  // Human-readable schedule
-      status: cronExists2 ? status2 : 'broken',
-      lastRun: lastRun2,
-      nextRun: cronExists2 ? calculateNextRunYourSchedule() : undefined,  // You may need to create a custom calculator
-      logFile: 'your-automation.log'  // Just the filename, not full path
-    });
-
-    return NextResponse.json({
-      automations,
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    console.error('Error fetching automation status:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch automation status' },
-      { status: 500 }
-    );
-  }
-}
-```
+Add a checker function and include it in the `Promise.all()` call in the `GET()` handler. See the existing checker functions (e.g., `checkAutoUpdate`, `checkDependencyUpdates`) for patterns.
 
 ### Step 4: Custom Next Run Calculator (if needed)
 
@@ -249,12 +196,11 @@ Example `/etc/logrotate.d/automations`:
 
 ## Current Automations
 
-### 1. EverWebinar to GoHighLevel Sync
-- **ID**: `everwebinar-ghl-sync`
-- **Script**: `/home/claude-flow/sync-everwebinar-to-ghl.js`
-- **Schedule**: Daily at 6:00 PM EST (`0 18 * * *`)
-- **Log**: `/var/log/everwebinar-sync.log`
-- **Purpose**: Syncs new EverWebinar registrants to GoHighLevel with geolocation
+See the Automations tab in Master Controller for the full live list (27 automations across 9 categories).
+
+### Key Cron Jobs
+1. **Auto-Update System** — Daily at 4 AM (`0 4 * * *`) — `/var/log/auto-updates/cron.log`
+2. **Dependency Update Check** — Weekly Monday 8 AM (`0 8 * * 1`) — `/var/log/dependency-updates.log`
 
 ## Future Enhancements
 

@@ -103,9 +103,9 @@ export async function uploadProfilePicture(
       return { success: false, error: 'Invalid file type. Only JPG, PNG, and WebP are allowed.' };
     }
 
-    // Validate file size (max 5MB)
-    if (fileBuffer.length > 5 * 1024 * 1024) {
-      return { success: false, error: 'File size exceeds 5MB limit.' };
+    // Validate file size (max 10MB)
+    if (fileBuffer.length > 10 * 1024 * 1024) {
+      return { success: false, error: 'File size exceeds 10MB limit.' };
     }
 
     // Check if API token is configured
@@ -215,9 +215,9 @@ export async function uploadColorProfilePicture(
       return { success: false, error: 'Invalid file type. Only JPG, PNG, and WebP are allowed.' };
     }
 
-    // Validate file size (max 5MB)
-    if (fileBuffer.length > 5 * 1024 * 1024) {
-      return { success: false, error: 'File size exceeds 5MB limit.' };
+    // Validate file size (max 10MB)
+    if (fileBuffer.length > 10 * 1024 * 1024) {
+      return { success: false, error: 'File size exceeds 10MB limit.' };
     }
 
     // Check if API token is configured

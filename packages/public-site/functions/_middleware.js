@@ -107,10 +107,13 @@ const WILDCARD_REDIRECTS = [
   ['/category/uncategorized/', '/blog', false],
   ['/category/clients/', '/blog#category=winning-clients', false],
   ['/category/', '/blog', false],
-  // Old sub-pages (all discard remainder)
-  ['/best-real-estate-brokerage/matchup/', '/best-real-estate-brokerage/', false],
+  // Old sub-pages
+  ['/best-real-estate-brokerage/matchup/', '/blog/brokerage-comparison/', true],
   ['/about-exp-realty/locations/', '/locations/', false],
-  ['/become-real-estate-agent/', '/', false],
+  // become-real-estate-agent: specific sub-paths before catch-all
+  ['/become-real-estate-agent/schools/', '/blog/real-estate-schools/', true],
+  ['/become-real-estate-agent/license/', '/blog/become-an-agent/', true],
+  ['/become-real-estate-agent/', '/blog#category=become-an-agent', false],
   ['/real-estate-schools-online/', '/', false],
   ['/join-exp-sponsor-team/', '/exp-realty-sponsor/', false],
   ['/tools/', '/', false],
@@ -140,6 +143,12 @@ const STATIC_REDIRECTS = new Map([
   // Old /our-exp-team sub-pages
   ['/our-exp-team/about-doug-smart', '/about-doug-smart/'],
   ['/our-exp-team/about-karrie-hill', '/about-karrie-hill/'],
+  // Old linktree URLs → new link pages
+  ['/doug-linktree', '/doug-smart-links/'],
+  ['/karrie-linktree', '/karrie-hilljd-links/'],
+  // Old parent index pages (no state/slug suffix)
+  ['/become-real-estate-agent/schools', '/blog#category=real-estate-schools'],
+  ['/become-real-estate-agent/license', '/blog#category=become-an-agent'],
   // best-real-estate-brokerage old sub-pages
   ['/best-real-estate-brokerage/commissions', '/best-real-estate-brokerage/'],
   ['/best-real-estate-brokerage/fees', '/best-real-estate-brokerage/'],
@@ -154,6 +163,8 @@ const STATIC_REDIRECTS = new Map([
   // exp-realty-sponsor old sub-pages
   ['/exp-realty-sponsor/topics', '/exp-realty-sponsor/'],
   ['/exp-realty-sponsor/experienced-agents-old', '/exp-realty-sponsor/experienced-agents/'],
+  ['/exp-realty-sponsor/keep-your-brand', '/exp-realty-sponsor/keep-brand/'],
+  ['/exp-realty-sponsor/beyond-commissions', '/exp-realty-sponsor/'],
   // Legacy vanity URLs
   ['/should-you-join-exp', '/about-exp-realty/'],
   ['/join-exp-sponsor-team', '/exp-realty-sponsor/'],

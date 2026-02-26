@@ -11,6 +11,7 @@ import { UsernameReminderEmail } from './templates/UsernameReminderEmail';
 import { WelcomeEmail } from './templates/WelcomeEmail';
 import { AccountLockedEmail } from './templates/AccountLockedEmail';
 import { ApplyInstructionsEmail } from './templates/ApplyInstructionsEmail';
+import { AgentActivationEmail } from './templates/AgentActivationEmail';
 
 /**
  * Send password reset email with token link
@@ -21,9 +22,9 @@ export async function sendPasswordResetEmail(
   resetToken: string,
   expiresInMinutes: number = 15
 ): Promise<EmailResult> {
-  // Link goes to login page with reset_token param, which opens the reset password modal
+  // Link goes to agent portal login page with reset_token param, which opens the reset password modal
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com';
-  const resetLink = `${baseUrl}/login?reset_token=${resetToken}`;
+  const resetLink = `${baseUrl}/agent-portal/login?reset_token=${resetToken}`;
 
   try {
     const result = await sendEmail({
@@ -116,6 +117,45 @@ export async function sendWelcomeEmail(
       }),
       tags: [
         { name: 'category', value: 'welcome_activation' },
+      ],
+    });
+
+    return result;
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
+ * Send agent activation email (batch onboarding flow)
+ *
+ * Similar to sendWelcomeEmail but uses the AgentActivationEmail template
+ * which includes a video walkthrough thumbnail and is tailored for
+ * existing agents who are being given portal access.
+ */
+export async function sendAgentActivationEmail(
+  email: string,
+  firstName: string,
+  activationToken: string,
+  expiresInHours: number = 48
+): Promise<EmailResult> {
+  const activationBaseUrl = process.env.ACTIVATION_BASE_URL || 'https://saabuildingblocks.com';
+  const activationLink = `${activationBaseUrl}/activate-account?token=${activationToken}`;
+
+  try {
+    const result = await sendEmail({
+      to: email,
+      subject: 'Your Smart Agent Alliance Portal is Ready!',
+      react: AgentActivationEmail({
+        firstName,
+        activationLink,
+        expiresInHours,
+      }),
+      tags: [
+        { name: 'category', value: 'agent_activation' },
       ],
     });
 

@@ -418,6 +418,17 @@ export async function DELETE(
       );
     }
 
+    // Step 2b: Delete booking_referrals records (foreign key dependency)
+    const { error: referralsError } = await supabase
+      .from('booking_referrals')
+      .delete()
+      .eq('agent_user_id', userId);
+
+    if (referralsError) {
+      console.error('❌ Error deleting booking_referrals:', referralsError);
+      // Non-critical - continue with deletion
+    }
+
     // Step 3: Delete agent_pages records (foreign key dependency)
     const { error: agentPagesError, count: agentPagesCount } = await supabase
       .from('agent_pages')

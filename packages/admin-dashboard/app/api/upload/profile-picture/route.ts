@@ -16,7 +16,7 @@ import { uploadProfilePicture } from '@/lib/cloudflare-r2';
 import { updateGHLCustomField } from '@/lib/gohighlevel';
 import { verifyAgentAuth } from '@/app/api/middleware/agentPageAuth';
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/jpg'];
 
 // CORS headers for cross-origin requests

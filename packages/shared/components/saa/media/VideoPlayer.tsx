@@ -115,6 +115,7 @@ export function VideoPlayer({
   const sendVideoBeacon = useCallback((eventType: string) => {
     if (disabled) return;
     try {
+      if (typeof window !== 'undefined' && localStorage.getItem('saa_no_track')) return;
       const payload = {
         video_id: videoId,
         session_id: analyticsSessionId.current,

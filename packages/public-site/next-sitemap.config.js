@@ -192,13 +192,44 @@ module.exports = {
   },
 
   // Additional paths not automatically discovered
-  // These are generated dynamically from WordPress at build time
   additionalPaths: async (config) => {
     const paths = [];
 
-    // The static export already generates all blog paths from WordPress
-    // next-sitemap will automatically discover them from the /out directory
-    // No need to fetch from WordPress API here - pages are already built
+    // Fetch activated agent link page slugs from Supabase
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
+
+    if (supabaseUrl && supabaseKey) {
+      try {
+        const res = await fetch(
+          `${supabaseUrl}/rest/v1/agent_pages?activated=eq.true&select=slug,profile_image_url,updated_at`,
+          {
+            headers: {
+              apikey: supabaseKey,
+              Authorization: `Bearer ${supabaseKey}`,
+            },
+          }
+        );
+        if (res.ok) {
+          const agents = await res.json();
+          for (const agent of agents) {
+            const entry = {
+              loc: `/${agent.slug}-links`,
+              changefreq: 'weekly',
+              priority: 0.5,
+              lastmod: agent.updated_at || new Date().toISOString(),
+            };
+            if (agent.profile_image_url) {
+              entry.images = [{ loc: new URL(agent.profile_image_url) }];
+            }
+            paths.push(entry);
+          }
+          console.log(`[sitemap] Added ${agents.length} agent link pages`);
+        }
+      } catch (err) {
+        console.warn('[sitemap] Failed to fetch agent link pages:', err.message);
+      }
+    }
 
     return paths;
   },

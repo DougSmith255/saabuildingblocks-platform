@@ -24,6 +24,7 @@ const navItems: NavItem[] = [
       { label: 'Agent Success Hub', href: '/blog/' },
       { label: 'eXp Locations', href: '/locations/' },
       { label: 'eXp Awards', href: '/awards/' },
+      { label: 'Recommended Tools', href: '/sites-and-software/' },
     ],
   },
   {
@@ -258,6 +259,8 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
                 ) : item.label === 'Agent Portal' ? (
                   <Link
                     href={item.href!}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={() => {
                       handlePortalClick();
                       setIsMobileMenuOpen(false);

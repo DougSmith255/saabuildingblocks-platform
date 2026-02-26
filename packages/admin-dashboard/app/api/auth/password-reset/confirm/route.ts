@@ -209,7 +209,34 @@ export async function POST(request: NextRequest) {
     // Hash new password
     const newPasswordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
-    // Update user password and reset security fields
+    // Update password in Supabase Auth (login authenticates via Supabase Auth)
+    // Look up Auth user by email, then update their password
+    const { data: authListData } = await supabase.auth.admin.listUsers();
+    const authUser = authListData?.users?.find(
+      u => u.email?.toLowerCase() === user.email.toLowerCase()
+    );
+
+    if (authUser) {
+      const { error: authUpdateError } = await supabase.auth.admin.updateUserById(authUser.id, {
+        password,
+      });
+      if (authUpdateError) {
+        console.error('[Password Reset] Supabase Auth update error:', authUpdateError);
+        return corsResponse(
+          {
+            success: false,
+            error: 'UPDATE_FAILED',
+            message: 'Failed to update password',
+          },
+          500
+        );
+      }
+      console.log(`[Password Reset] Supabase Auth password updated for user ${authUser.id}`);
+    } else {
+      console.warn(`[Password Reset] No Supabase Auth user found for email ${user.email}, skipping Auth update`);
+    }
+
+    // Update user password in users table and reset security fields
     const { error: updateError } = await supabase
       .from('users')
       .update({

@@ -100,6 +100,14 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
   const fullName = `${agent.display_first_name} ${agent.display_last_name}`.trim();
   const title = `${fullName} | Smart Agent Alliance`;
 
+  // Dynamic font size for name based on character count
+  const fbNameLen = fullName.length;
+  const fbNameFontSize = fbNameLen <= 10 ? 'clamp(2.2rem, 7vw, 3rem)'
+    : fbNameLen <= 14 ? 'clamp(1.9rem, 6vw, 2.7rem)'
+    : fbNameLen <= 18 ? 'clamp(1.75rem, 5vw, 2.5rem)'
+    : fbNameLen <= 22 ? 'clamp(1.5rem, 4.5vw, 2.2rem)'
+    : 'clamp(1.25rem, 4vw, 1.9rem)';
+
   // Analytics domain (always use smartagentalliance.com for Plausible)
   const analyticsDomain = 'smartagentalliance.com';
 
@@ -257,7 +265,7 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
 
     h1 {
       font-family: 'Taskor', 'Synonym', system-ui, sans-serif;
-      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-size: var(--name-font-size, clamp(1.75rem, 5vw, 2.5rem));
       color: #ffd700;
       margin-bottom: 0.5rem;
       text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
@@ -437,7 +445,7 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
   <div class="container">
     ${profileImageHTML}
 
-    <h1>${escapeHTML(fullName)}</h1>
+    <h1 style="--name-font-size: ${fbNameFontSize}">${escapeHTML(fullName)}</h1>
     <p class="subtitle">Real Estate Agent @ eXp Realty</p>
 
     ${socialLinks.length > 0 ? `
@@ -3928,7 +3936,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                 </div>
               </div>
 
-              <!-- Right - Featured NeonCard with 3700+ stat -->
+              <!-- Right - Featured NeonCard with 4000+ stat -->
               <div class="proven-grid-right">
                 <div class="cyber-card-gold-3d" style="margin: 0 auto;">
                   <div class="cyber-card-gold-frame">
@@ -3937,7 +3945,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                       <span class="icon-3d" style="display: inline-flex; margin-bottom: 0.75rem;">
                         <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                       </span>
-                      <p class="font-heading" style="font-size: clamp(1.875rem, 2vw, 2.25rem); font-weight: 700; color: #bfbdb0; text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4); font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">3700+</p>
+                      <p class="font-heading" style="font-size: clamp(1.875rem, 2vw, 2.25rem); font-weight: 700; color: #bfbdb0; text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4); font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">4000+</p>
                       <p class="text-body" style="margin-top: 0.5rem;">Agents in Sponsor Network</p>
                     </div>
                   </div>
@@ -5064,6 +5072,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
       function sendBtmBeacon(eventType) {
         try {
+          if (localStorage.getItem('saa_no_track')) return;
           var payload = {
             video_id: BOTTOM_VIDEO_ID,
             session_id: btmAnalyticsSessionId,
@@ -5234,6 +5243,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
         function sendWygBeacon(eventType) {
           try {
+            if (localStorage.getItem('saa_no_track')) return;
             var payload = {
               video_id: VIDEO_ID,
               session_id: wygAnalyticsSessionId,
@@ -6816,7 +6826,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         let animationId = null;
 
         function animateScramble() {
-          const target = 3700;
+          const target = 4000;
           const duration = 2000; // 2 seconds
           const startTime = performance.now();
 
@@ -7865,6 +7875,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
   <script>
   (function(){
+    if(localStorage.getItem('saa_no_track'))return;
     var API='https://saabuildingblocks.com/api/tracking/events';
     var slug='${escapeJS(agent.slug)}';
     var vid=sessionStorage.getItem('_saa_vid');
@@ -8059,6 +8070,15 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   const fullName = `${agent.display_first_name} ${agent.display_last_name}`.trim();
   const title = `${fullName} | Links`;
   const analyticsDomain = 'smartagentalliance.com';
+
+  // Dynamic font size for name based on character count
+  // Short names get bigger, long names get smaller
+  const nameLen = fullName.length;
+  const nameFontSize = nameLen <= 10 ? 'clamp(2.2rem, 7vw, 3rem)'
+    : nameLen <= 14 ? 'clamp(1.9rem, 6vw, 2.7rem)'
+    : nameLen <= 18 ? 'clamp(1.75rem, 5vw, 2.5rem)'
+    : nameLen <= 22 ? 'clamp(1.5rem, 4.5vw, 2.2rem)'
+    : 'clamp(1.25rem, 4vw, 1.9rem)';
 
   // Get customization settings with defaults
   const settings = agent.links_settings || {
@@ -8317,7 +8337,10 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   const customLinks = agent.custom_links || [];
 
   // Default buttons - always shown
-  const attractionPageUrl = `${siteUrl}/${escapeHTML(agent.slug)}/`;
+  // Karrie's "About My eXp Team" links to the main homepage instead of her attraction page
+  const attractionPageUrl = agent.slug === 'karrie-hilljd'
+    ? `${siteUrl}/`
+    : `${siteUrl}/${escapeHTML(agent.slug)}/`;
 
   // Link ordering from settings (default: learn-about only)
   const linkOrder = agent.links_settings?.linkOrder || ['learn-about'];
@@ -8496,7 +8519,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     /* Light accents: use accent color with full neon glow */
     h1 {
       font-family: 'Taskor', 'Synonym', system-ui, sans-serif;
-      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-size: var(--name-font-size, clamp(1.75rem, 5vw, 2.5rem));
       font-weight: ${nameWeight === 'bold' ? '700' : '400'};
       letter-spacing: 0em;
       color: ${isAccentDark ? '#e5e4dd' : accentColor};
@@ -8921,7 +8944,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   <div class="container">
     ${profileImageHTML}
 
-    <h1>${escapeHTML(fullName)}</h1>
+    <h1 style="--name-font-size: ${nameFontSize}">${escapeHTML(fullName)}</h1>
 
     ${socialLinks.length > 0 ? `
     <div class="social-links">
@@ -9158,6 +9181,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
   <script>
   (function(){
+    if(localStorage.getItem('saa_no_track'))return;
     var API='https://saabuildingblocks.com/api/tracking/events';
     var slug='${escapeJS(agent.slug)}';
     var vid=sessionStorage.getItem('_saa_vid');

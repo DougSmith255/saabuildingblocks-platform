@@ -8,7 +8,7 @@ import { API_URL, SITE_URL } from '@/lib/api-config';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
 import { SlidePanel } from '@/components/shared/SlidePanel';
 import SmoothScrollContainer from '@/components/SmoothScrollContainer';
-import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Sparkles, TrendingUp, Target, MessageSquare, LayoutTemplate, FileText, RefreshCw } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, ChevronDown, Crown, Smartphone, Building, Bot, Sparkles, TrendingUp, Target, MessageSquare, LayoutTemplate, FileText, RefreshCw, Lightbulb, Send, CheckCircle2 } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
@@ -752,6 +752,59 @@ const shakeKeyframes = `
     font-size: 0.9375rem;
   }
 }
+
+/* Rainbow gradient border for Activate Page button */
+.activate-rainbow-wrapper {
+  position: relative;
+  border-radius: 14px;
+  isolation: isolate;
+}
+.activate-rainbow-border,
+.activate-rainbow-glow {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  border-radius: 14px;
+  background: linear-gradient(45deg,
+    #fb0094, #0000ff, #00ff00, #ffff00, #ff0000,
+    #fb0094, #0000ff, #00ff00, #ffff00, #ff0000
+  );
+  background-size: 400%;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  z-index: 0;
+  animation: activateGradientFlow 20s linear infinite;
+}
+.activate-rainbow-glow {
+  filter: blur(12px);
+  opacity: 0.4;
+  z-index: -1;
+  animation: activateGradientFlow 20s linear infinite, activateGlowPulse 3s ease-in-out infinite;
+}
+@keyframes activateGradientFlow {
+  0% { background-position: 0 0; }
+  50% { background-position: 400% 0; }
+  100% { background-position: 0 0; }
+}
+@keyframes activateGlowPulse {
+  0%, 100% { opacity: 0.3; filter: blur(12px); }
+  50% { opacity: 0.55; filter: blur(18px); }
+}
+
+/* Mobile pill variant - thinner border */
+.activate-rainbow-wrapper-pill {
+  position: relative;
+  border-radius: 9999px;
+  isolation: isolate;
+}
+.activate-rainbow-wrapper-pill .activate-rainbow-border,
+.activate-rainbow-wrapper-pill .activate-rainbow-glow {
+  border-radius: 9999px;
+  left: -1.5px;
+  top: -1.5px;
+  width: calc(100% + 3px);
+  height: calc(100% + 3px);
+}
 `;
 
 // User type from stored session
@@ -864,7 +917,7 @@ function isTokenExpired(): boolean {
   }
 }
 
-// Check if token will expire soon (within 2 minutes) — triggers silent refresh
+// Check if token will expire soon (within 5 minutes) — triggers silent refresh
 function isTokenExpiringSoon(): boolean {
   if (typeof window === 'undefined') return false;
   const token = localStorage.getItem('agent_portal_token');
@@ -873,7 +926,7 @@ function isTokenExpiringSoon(): boolean {
     const payload = JSON.parse(atob(token.split('.')[1]));
     if (!payload.exp) return false;
     const timeLeft = (payload.exp * 1000) - Date.now();
-    return timeLeft > 0 && timeLeft < 2 * 60 * 1000; // Less than 2 minutes left
+    return timeLeft > 0 && timeLeft < 5 * 60 * 1000; // Less than 5 minutes left
   } catch {
     return false;
   }
@@ -918,10 +971,15 @@ function clearAuthAndRedirect() {
   window.location.href = '/agent-portal/login';
 }
 
-// Check fetch response for 401 (expired/invalid token) and redirect to login
+// Check fetch response for 401 (expired/invalid token)
+// Instead of immediately clearing auth, attempt a silent refresh first.
+// If refresh succeeds, user stays logged in (next API call uses new token).
+// If refresh fails, THEN clear auth and redirect to login.
 function isAuthError(response: Response): boolean {
   if (response.status === 401) {
-    clearAuthAndRedirect();
+    silentRefresh().then(ok => {
+      if (!ok) clearAuthAndRedirect();
+    });
     return true;
   }
   return false;
@@ -1041,7 +1099,14 @@ function AgentPortal() {
   const [attractionUploadError, setAttractionUploadError] = useState<string | null>(null);
   const [isUploadingDashboardImage, setIsUploadingDashboardImage] = useState(false);
   // Preloaded agent page data - fetched during loading screen to avoid loading on tab switch
-  const [preloadedAgentPageData, setPreloadedAgentPageData] = useState<any>(null);
+  // Initialize from localStorage cache so profile image is available immediately on refresh
+  const [preloadedAgentPageData, setPreloadedAgentPageData] = useState<any>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const cached = localStorage.getItem('agent_portal_page_data');
+      return cached ? JSON.parse(cached) : null;
+    } catch { return null; }
+  });
   // Preloaded dashboard stats - fetched once during init, no reload on tab switch
   const [dashboardStats, setDashboardStats] = useState<{ stats: any; agentPageId: string } | null>(null);
   const [isRefreshingStats, setIsRefreshingStats] = useState(false);
@@ -1115,6 +1180,7 @@ function AgentPortal() {
   const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
   const [pendingImageUrl, setPendingImageUrl] = useState<string | null>(null);
   const [profileImageError, setProfileImageError] = useState(false); // Track if profile image failed to load
+  const [editProfileImageError, setEditProfileImageError] = useState(false); // Separate error state for edit profile panel
   const [profileImageLoading, setProfileImageLoading] = useState(false); // Images are preloaded during loading screen
   const profileImageRetried = useRef(false); // Track if we already retried with non-CDN URL
   const [pendingBgRemovedUrl, setPendingBgRemovedUrl] = useState<string | null>(null);
@@ -1193,6 +1259,34 @@ function AgentPortal() {
   const [onboardingCompletedAt, setOnboardingCompletedAt] = useState<string | null>(null);
   const [linkPageIntroDismissed, setLinkPageIntroDismissed] = useState(false);
   const [eliteCoursesIntroDismissed, setEliteCoursesIntroDismissed] = useState(false);
+  const [linkPageBannerDismissed, setLinkPageBannerDismissed] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('agent_portal_link_banner_dismissed') === 'true';
+  });
+  const [linkPageBannerVisible, setLinkPageBannerVisible] = useState(false);
+  const [linkPageBannerDismissing, setLinkPageBannerDismissing] = useState(false);
+  const [forceShowBanner, setForceShowBanner] = useState(false);
+  // Check for preview_banner flag - set via URL param or localStorage
+  // URL param sets localStorage so it persists through login redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('preview_banner') === 'true') {
+      localStorage.setItem('agent_portal_preview_banner', 'true');
+    }
+    if (localStorage.getItem('agent_portal_preview_banner') === 'true') {
+      setForceShowBanner(true);
+      setActiveSectionRaw('dashboard');
+      localStorage.removeItem('agent_portal_link_banner_dismissed');
+      setLinkPageBannerDismissed(false);
+      // Directly show the banner after 4s - don't rely on the timer effect
+      // which can get cancelled by other state changes
+      const previewTimer = setTimeout(() => {
+        setLinkPageBannerVisible(true);
+        localStorage.removeItem('agent_portal_preview_banner');
+      }, 4000);
+      return () => clearTimeout(previewTimer);
+    }
+  }, []);
   const [isOnboardingLoaded, setIsOnboardingLoaded] = useState(false);
   const [showLinkPageIntroModal, setShowLinkPageIntroModal] = useState(false);
   const [showLinkPageHelpModal, setShowLinkPageHelpModal] = useState(false);
@@ -1553,7 +1647,10 @@ function AgentPortal() {
       silentRefresh().then(ok => {
         if (!ok) clearAuthAndRedirect();
       });
-      return;
+      // Still set up the interval even after refresh attempt
+    } else if (isTokenExpiringSoon()) {
+      // Token isn't expired yet but will be soon — proactively refresh now
+      silentRefresh();
     }
     // Periodically check token — refresh when expiring soon, logout only if refresh fails
     const interval = setInterval(async () => {
@@ -1563,7 +1660,7 @@ function AgentPortal() {
           clearAuthAndRedirect();
         }
       }
-    }, 30000); // Check every 30s
+    }, 10000); // Check every 10s for tighter refresh window
     return () => clearInterval(interval);
   }, [user]);
 
@@ -1574,6 +1671,15 @@ function AgentPortal() {
     }
   }, [user?.profilePictureUrl]);
 
+  // Reset image error state when preloadedAgentPageData loads with a valid image URL
+  // This handles the case where an initial load fails but fresh data comes in with a working URL
+  useEffect(() => {
+    if (preloadedAgentPageData?.page?.profile_image_url) {
+      setProfileImageError(false);
+      profileImageRetried.current = false;
+    }
+  }, [preloadedAgentPageData?.page?.profile_image_url]);
+
   // Listen for profile-picture-updated events from child components (e.g., agent page section)
   // so the parent user state stays in sync when uploads happen from within sub-sections
   useEffect(() => {
@@ -1581,6 +1687,7 @@ function AgentPortal() {
       setUser(prev => prev ? { ...prev, profilePictureUrl: event.detail.url } : prev);
       setProfileImageError(false);
       setProfileImageLoading(true);
+      profileImageRetried.current = false;
       if (user) {
         localStorage.setItem('agent_portal_user', JSON.stringify({ ...user, profilePictureUrl: event.detail.url }));
       }
@@ -1617,6 +1724,7 @@ function AgentPortal() {
           setUser(prev => prev ? { ...prev, profilePictureUrl: cacheBustUrl } : prev);
           setProfileImageError(false);
           setProfileImageLoading(true);
+          profileImageRetried.current = false;
           localStorage.setItem('agent_portal_user', JSON.stringify({
             ...user, profilePictureUrl: cacheBustUrl
           }));
@@ -1653,16 +1761,47 @@ function AgentPortal() {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [user]);
 
+  // Portal heartbeat — lets admin know agents are online
+  useEffect(() => {
+    if (!user?.id) return;
+    const token = localStorage.getItem('agent_portal_token');
+    if (!token) return;
+
+    const sendHeartbeat = () => {
+      if (document.visibilityState === 'hidden') return;
+      fetch(`${API_URL}/api/portal-heartbeat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ username: user.username || user.firstName || 'Agent', email: user.email || '', section: activeSection }),
+      }).catch(() => {});
+    };
+
+    // Send immediately, then every 30 seconds
+    sendHeartbeat();
+    const interval = setInterval(sendHeartbeat, 30000);
+    const handleVisibility = () => { if (document.visibilityState === 'visible') sendHeartbeat(); };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [user, activeSection]);
+
   // Sync preloadedAgentPageData when agent page images are updated from child components
   // This ensures the mobile menu profile image stays in sync with uploads
   // Also update localStorage cache so refreshes show the latest images
   useEffect(() => {
     const handleAgentPageImageUpdated = (event: CustomEvent<{ url: string }>) => {
+      // Reset image error/retry states so the new URL gets a fresh chance to load
+      setProfileImageError(false);
+      setProfileImageLoading(true);
+      profileImageRetried.current = false;
       setPreloadedAgentPageData((prev: any) => {
-        if (!prev?.page) return prev;
+        const page = prev?.page || {};
         const updated = {
           ...prev,
-          page: { ...prev.page, profile_image_url: event.detail.url }
+          page: { ...page, profile_image_url: event.detail.url }
         };
         // Also update localStorage cache
         try { localStorage.setItem('agent_portal_page_data', JSON.stringify(updated)); } catch {}
@@ -1671,10 +1810,10 @@ function AgentPortal() {
     };
     const handleAgentPageColorImageUpdated = (event: CustomEvent<{ url: string }>) => {
       setPreloadedAgentPageData((prev: any) => {
-        if (!prev?.page) return prev;
+        const page = prev?.page || {};
         const updated = {
           ...prev,
-          page: { ...prev.page, profile_image_color_url: event.detail.url }
+          page: { ...page, profile_image_color_url: event.detail.url }
         };
         // Also update localStorage cache
         try { localStorage.setItem('agent_portal_page_data', JSON.stringify(updated)); } catch {}
@@ -1792,6 +1931,19 @@ function AgentPortal() {
 
   // Check if onboarding is complete
   const isOnboardingComplete = onboardingCompletedAt !== null;
+
+  // Link page banner - slides in after 3 seconds (for non-preview, organic triggers)
+  // Shows on any tab, not just dashboard
+  useEffect(() => {
+    if (linkPageBannerDismissed || linkPageBannerVisible) return;
+    if (forceShowBanner) return; // Preview mode handles its own timer above
+    const shouldShow = isOnboardingComplete && !preloadedAgentPageData?.page?.activated;
+    if (!shouldShow) return;
+    const timer = setTimeout(() => {
+      setLinkPageBannerVisible(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [isOnboardingComplete, preloadedAgentPageData?.page?.activated, forceShowBanner, linkPageBannerDismissed, linkPageBannerVisible]);
 
   // Count completed onboarding steps
   const completedStepsCount = Object.values(onboardingProgress).filter(Boolean).length;
@@ -1954,6 +2106,7 @@ function AgentPortal() {
     });
     setEditFormError('');
     setEditFormSuccess('');
+    setEditProfileImageError(false);
     setShowEditProfile(true);
   };
 
@@ -2242,18 +2395,19 @@ function AgentPortal() {
         // Convert to grayscale
         let gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
 
-        // Stretch to full range (auto-levels)
-        gray = ((gray - low) / range) * 255;
-        gray = Math.max(0, Math.min(255, gray));
+        // Stretch range with capped white point (0-220) to prevent highlight blowout
+        gray = ((gray - low) / range) * 220;
+        gray = Math.max(0, Math.min(220, gray));
 
-        // Apply S-curve for semi-high contrast (strength ~1.3)
-        let normalized = gray / 255;
+        // Asymmetric S-curve: strong shadows (2.0), linear highlights (no push)
+        let normalized = gray / 220;
         if (normalized < 0.5) {
-          normalized = 0.5 * Math.pow(2 * normalized, 1.3);
+          normalized = 0.5 * Math.pow(2 * normalized, 2.0);
         } else {
-          normalized = 1 - 0.5 * Math.pow(2 * (1 - normalized), 1.3);
+          // Leave highlights linear — no brightening
+          normalized = normalized;
         }
-        gray = normalized * 255;
+        gray = normalized * 220;
 
         // Set RGB to grayscale value
         data[i] = data[i + 1] = data[i + 2] = Math.round(gray);
@@ -2324,9 +2478,9 @@ function AgentPortal() {
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setDashboardUploadError('Image must be less than 5MB');
+    // Validate file size (max 25MB — image gets cropped/processed before upload)
+    if (file.size > 25 * 1024 * 1024) {
+      setDashboardUploadError('Image must be less than 25MB');
       return;
     }
 
@@ -2374,17 +2528,23 @@ function AgentPortal() {
       setDashboardUploadStatus('Cropping image...');
       const croppedBlob = await cropImage(file, 0, 0, 100); // Full image, cropImage handles center square
 
-      // Step 2: Remove background
+      // Step 2: Remove background (server-side via rembg)
       setDashboardUploadStatus('Removing background...');
-      const { removeBackground } = await import('@imgly/background-removal');
-      const bgRemovedBlob = await removeBackground(croppedBlob, {
-        progress: (key: string, current: number, total: number) => {
-          const percent = total > 0 ? Math.round((current / total) * 100) : 0;
-          if (percent > 0) {
-            setDashboardUploadStatus(`Removing background... ${percent}%`);
-          }
-        },
-      });
+      let bgRemovedBlob: Blob;
+      try {
+        const bgFormData = new FormData();
+        bgFormData.append('file', croppedBlob, 'image.png');
+        const bgResponse = await fetch(`${API_URL}/api/images/remove-background`, {
+          method: 'POST',
+          body: bgFormData,
+        });
+        if (!bgResponse.ok) throw new Error(`Server returned ${bgResponse.status}`);
+        bgRemovedBlob = await bgResponse.blob();
+        console.log('[ImageUpload] Background removal complete:', bgRemovedBlob.size, 'bytes (input:', croppedBlob.size, 'bytes)');
+      } catch (bgError) {
+        console.error('[ImageUpload] Background removal failed, using cropped image:', bgError);
+        bgRemovedBlob = croppedBlob;
+      }
 
       // Step 3: Apply AUTO B&W contrast (percentile + S-curve)
       setDashboardUploadStatus('Applying B&W filter...');
@@ -2418,13 +2578,8 @@ function AgentPortal() {
       setUser(updatedUser);
       setProfileImageError(false);
       setProfileImageLoading(true);
+      profileImageRetried.current = false;
       localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
-
-      // Immediately notify agent page section so it shows the new image
-      // (even if the agent page API sync below fails)
-      window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
-        detail: { url: cacheBustUrl }
-      }));
 
       // Step 5: Upload B&W to attraction page
       setDashboardUploadStatus('Syncing to attraction page...');
@@ -2586,16 +2741,21 @@ function AgentPortal() {
 
       // Step 2: Remove background
       setStatus('Removing background...');
-      const { removeBackground } = await import('@imgly/background-removal');
-
-      const bgRemovedBlob = await removeBackground(croppedBlob, {
-        progress: (key: string, current: number, total: number) => {
-          const percent = total > 0 ? Math.round((current / total) * 100) : 0;
-          if (percent > 0) {
-            setStatus(`Removing background... ${percent}%`);
-          }
-        },
-      });
+      let bgRemovedBlob: Blob;
+      try {
+        const bgFormData = new FormData();
+        bgFormData.append('file', croppedBlob, 'image.png');
+        const bgResponse = await fetch(`${API_URL}/api/images/remove-background`, {
+          method: 'POST',
+          body: bgFormData,
+        });
+        if (!bgResponse.ok) throw new Error(`Server returned ${bgResponse.status}`);
+        bgRemovedBlob = await bgResponse.blob();
+        console.log('[ImageUpload] Background removal complete:', bgRemovedBlob.size, 'bytes (input:', croppedBlob.size, 'bytes)');
+      } catch (bgError) {
+        console.error('[ImageUpload] Background removal failed, using cropped image:', bgError);
+        bgRemovedBlob = croppedBlob;
+      }
 
       // Step 3: Apply B&W + contrast to the cutout (using bwContrastLevel from step 2)
       setStatus('Applying B&W filter...');
@@ -2631,13 +2791,8 @@ function AgentPortal() {
       setUser(updatedUser);
       setProfileImageError(false); // Reset error state for new image
       setProfileImageLoading(true); // Reset loading state for new image
+      profileImageRetried.current = false;
       localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
-
-      // Immediately notify agent page section so it shows the new image
-      // (even if the agent page API sync below fails)
-      window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
-        detail: { url: cacheBustUrl }
-      }));
 
       // Step 5: Upload same to attraction page (B&W version)
       setStatus('Syncing to attraction page...');
@@ -2772,18 +2927,23 @@ function AgentPortal() {
     try {
       const token = localStorage.getItem('agent_portal_token');
 
-      // Step 1: Remove background from stored original
+      // Step 1: Remove background from stored original (server-side via rembg)
       setDashboardUploadStatus('Removing background...');
-      const { removeBackground } = await import('@imgly/background-removal');
-
-      const bgRemovedBlob = await removeBackground(originalImageFile, {
-        progress: (key: string, current: number, total: number) => {
-          const percent = total > 0 ? Math.round((current / total) * 100) : 0;
-          if (percent > 0) {
-            setDashboardUploadStatus(`Removing background... ${percent}%`);
-          }
-        },
-      });
+      let bgRemovedBlob: Blob;
+      try {
+        const bgFormData = new FormData();
+        bgFormData.append('file', originalImageFile, 'image.png');
+        const bgResponse = await fetch(`${API_URL}/api/images/remove-background`, {
+          method: 'POST',
+          body: bgFormData,
+        });
+        if (!bgResponse.ok) throw new Error(`Server returned ${bgResponse.status}`);
+        bgRemovedBlob = await bgResponse.blob();
+        console.log('[ImageUpload] Background removal complete:', bgRemovedBlob.size, 'bytes');
+      } catch (bgError) {
+        console.error('[ImageUpload] Background removal failed, using original:', bgError);
+        bgRemovedBlob = originalImageFile;
+      }
 
       // Step 2: Apply new B&W + contrast
       setDashboardUploadStatus('Applying new contrast level...');
@@ -2807,19 +2967,13 @@ function AgentPortal() {
 
       if (dashboardResponse.ok) {
         const dashboardData = await dashboardResponse.json();
-        // Apply toCdnUrl to use edge-cached CDN instead of origin
         const cacheBustUrl = `${toCdnUrl(dashboardData.url)}?v=${Date.now()}`;
         const updatedUser = { ...user!, profilePictureUrl: cacheBustUrl };
         setUser(updatedUser);
-        setProfileImageError(false); // Reset error state for new image
-        setProfileImageLoading(true); // Reset loading state for new image
+        setProfileImageError(false);
+        setProfileImageLoading(true);
+        profileImageRetried.current = false;
         localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
-
-        // Immediately notify agent page section so it shows the new image
-        // (even if the agent page API sync below fails)
-        window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
-          detail: { url: cacheBustUrl }
-        }));
       }
 
       // Step 4: Upload same to attraction page
@@ -2836,11 +2990,21 @@ function AgentPortal() {
           attractionFormData.append('file', processedBlob, 'profile.png');
           attractionFormData.append('pageId', pageData.page.id);
 
-          await fetch(`${API_URL}/api/agent-pages/upload-image`, {
+          const uploadResponse = await fetch(`${API_URL}/api/agent-pages/upload-image`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` },
             body: attractionFormData,
           });
+
+          if (uploadResponse.ok) {
+            const uploadResult = await uploadResponse.json();
+            if (uploadResult.data?.url) {
+              const bwCacheBustUrl = `${uploadResult.data.url}?v=${Date.now()}`;
+              window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
+                detail: { url: bwCacheBustUrl }
+              }));
+            }
+          }
 
           // Step 5: Upload COLOR version for Linktree color option
           setDashboardUploadStatus('Uploading color version...');
@@ -3886,8 +4050,8 @@ function AgentPortal() {
                       </div>
                     )}
                     {(() => {
-                      // Use agent page B&W image for dashboard/profile sections
-                      const sidebarProfileUrl = preloadedAgentPageData?.page?.profile_image_url;
+                      // Use agent page B&W image, fall back to user profile picture
+                      const sidebarProfileUrl = preloadedAgentPageData?.page?.profile_image_url || user?.profilePictureUrl;
                       return sidebarProfileUrl && !profileImageError ? (
                       <>
                         {/* Loading spinner - shows while image is loading */}
@@ -3908,11 +4072,16 @@ function AgentPortal() {
                           fetchPriority="high"
                           onLoad={() => setProfileImageLoading(false)}
                           onError={() => {
-                            // If CDN URL fails, retry with original assets URL before giving up
-                            if (!profileImageRetried.current && sidebarProfileUrl?.includes('cdn.saabuildingblocks.com')) {
+                            // On first failure, retry with cache-bust to handle stale edge cache
+                            if (!profileImageRetried.current && sidebarProfileUrl) {
                               profileImageRetried.current = true;
-                              const fallbackUrl = sidebarProfileUrl.replace('cdn.saabuildingblocks.com', 'assets.saabuildingblocks.com');
-                              setUser(prev => prev ? { ...prev, profilePictureUrl: fallbackUrl } : prev);
+                              const bustUrl = sidebarProfileUrl.includes('?')
+                                ? `${sidebarProfileUrl}&_r=${Date.now()}`
+                                : `${sidebarProfileUrl}?_r=${Date.now()}`;
+                              setPreloadedAgentPageData((prev: any) => {
+                                if (!prev?.page) return prev;
+                                return { ...prev, page: { ...prev.page, profile_image_url: bustUrl } };
+                              });
                             } else {
                               setProfileImageError(true);
                               setProfileImageLoading(false);
@@ -3947,12 +4116,8 @@ function AgentPortal() {
                   {/* Email - hidden below 1500px */}
                   <p className="text-[#e5e4dd]/60 text-sm hidden min-[1500px]:block">{user?.email}</p>
 
-                  {/* Dashboard Upload Status - only show completion message, spinner is in image */}
-                  {dashboardUploadStatus && !isUploadingDashboardImage && (
-                    <div className="mt-3 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs text-center">
-                      {dashboardUploadStatus}
-                    </div>
-                  )}
+                  {/* Image requirement hint */}
+                  <p className="text-[#e5e4dd]/40 text-[10px] mt-1">Min 900x900px</p>
                   {dashboardUploadError && (
                     <div className="mt-3 p-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
                       {dashboardUploadError}
@@ -4163,6 +4328,60 @@ function AgentPortal() {
             userSelect: 'none',
           } as React.CSSProperties}
         >
+          {/* Link Page Setup Banner - persistent across all tabs, slides in after delay */}
+          {(linkPageBannerVisible || linkPageBannerDismissing) && (
+            <div
+              className="mb-4 relative overflow-hidden rounded-xl border border-red-500/40 bg-gradient-to-r from-red-500/15 via-red-500/8 to-transparent backdrop-blur-sm"
+              style={{
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                opacity: linkPageBannerDismissing ? 0 : 1,
+                transform: linkPageBannerVisible && !linkPageBannerDismissing ? 'translateY(0)' : 'translateY(-12px)',
+                maxHeight: linkPageBannerDismissing ? '0px' : '200px',
+                marginBottom: linkPageBannerDismissing ? '0px' : undefined,
+                padding: linkPageBannerDismissing ? '0px' : undefined,
+              }}
+            >
+              <div className="flex items-start gap-3 p-4 sm:p-5">
+                <div className="shrink-0 p-2 rounded-lg bg-red-500/20 border border-red-500/30 mt-0.5">
+                  <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-semibold text-red-400 mb-1">Your Pages Are Not Active Yet</h3>
+                  <p className="text-sm text-[#e5e4dd]/70 mb-2">
+                    Go to <strong className="text-[#e5e4dd]/90">Link Page</strong>, add your photo, links, and bio, then hit <strong className="text-[#e5e4dd]/90">Activate</strong>. Your Agent Attraction Page goes live automatically - it captures leads and helps grow your downline.
+                  </p>
+                  <button
+                    onClick={() => setActiveSection('linktree')}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-red-500 hover:bg-red-400 transition-colors"
+                  >
+                    Activate Now
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+                <button
+                  onClick={() => {
+                    setLinkPageBannerDismissing(true);
+                    setTimeout(() => {
+                      setLinkPageBannerVisible(false);
+                      setLinkPageBannerDismissed(true);
+                      localStorage.setItem('agent_portal_link_banner_dismissed', 'true');
+                    }, 500);
+                  }}
+                  className="shrink-0 p-1.5 rounded-lg text-[#e5e4dd]/40 hover:text-white hover:bg-white/10 transition-colors"
+                  title="Dismiss"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Tab transition wrapper - blur fade effect */}
           <div
             className="transition-all duration-150 ease-out"
@@ -4267,8 +4486,8 @@ function AgentPortal() {
                       </div>
                     )}
                     {(() => {
-                      // Use agent page B&W image for dashboard/profile sections
-                      const editProfileUrl = preloadedAgentPageData?.page?.profile_image_url;
+                      // Use agent page B&W image, fall back to user profile picture
+                      const editProfileUrl = preloadedAgentPageData?.page?.profile_image_url || user?.profilePictureUrl;
                       return editProfileUrl && !profileImageError ? (
                       <>
                         {/* Loading spinner - shows while image is loading */}
@@ -4289,11 +4508,16 @@ function AgentPortal() {
                           fetchPriority="high"
                           onLoad={() => setProfileImageLoading(false)}
                           onError={() => {
-                            // If CDN URL fails, retry with original assets URL before giving up
-                            if (!profileImageRetried.current && editProfileUrl?.includes('cdn.saabuildingblocks.com')) {
+                            // On first failure, retry with cache-bust to handle stale edge cache
+                            if (!profileImageRetried.current && editProfileUrl) {
                               profileImageRetried.current = true;
-                              const fallbackUrl = editProfileUrl.replace('cdn.saabuildingblocks.com', 'assets.saabuildingblocks.com');
-                              setUser(prev => prev ? { ...prev, profilePictureUrl: fallbackUrl } : prev);
+                              const bustUrl = editProfileUrl.includes('?')
+                                ? `${editProfileUrl}&_r=${Date.now()}`
+                                : `${editProfileUrl}?_r=${Date.now()}`;
+                              setPreloadedAgentPageData((prev: any) => {
+                                if (!prev?.page) return prev;
+                                return { ...prev, page: { ...prev.page, profile_image_url: bustUrl } };
+                              });
                             } else {
                               setProfileImageError(true);
                               setProfileImageLoading(false);
@@ -4320,13 +4544,7 @@ function AgentPortal() {
                     </div>
                   </button>
                   <p className="mt-2 text-sm text-[#e5e4dd]/60">Tap to change photo</p>
-
-                  {/* Upload Status - only show completion message */}
-                  {dashboardUploadStatus && !isUploadingDashboardImage && (
-                    <div className="mt-3 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs text-center w-full">
-                      {dashboardUploadStatus}
-                    </div>
-                  )}
+                  <p className="text-[#e5e4dd]/40 text-[10px]">Min 900x900px</p>
                   {dashboardUploadError && (
                     <div className="mt-3 p-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs w-full">
                       {dashboardUploadError}
@@ -4846,35 +5064,14 @@ function AgentPortal() {
                   {(() => {
                     // Use agent page image (same source as sidebar), fall back to user profile picture
                     const editPanelProfileUrl = preloadedAgentPageData?.page?.profile_image_url || user?.profilePictureUrl;
-                    return editPanelProfileUrl && !profileImageError ? (
+                    return editPanelProfileUrl && !editProfileImageError ? (
                     <>
-                      {/* Loading spinner - shows while image is loading */}
-                      {profileImageLoading && (
-                        <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center z-10">
-                          <div
-                            className="w-7 h-7 border-2 rounded-full animate-spin"
-                            style={{ borderColor: `${selectedAccentColor}30`, borderTopColor: selectedAccentColor }}
-                          />
-                        </div>
-                      )}
                       <img
                         src={editPanelProfileUrl}
                         alt=""
+                        crossOrigin="anonymous"
                         className="w-full h-full object-cover"
-                        loading="eager"
-                        decoding="async"
-                        fetchPriority="high"
-                        onLoad={() => setProfileImageLoading(false)}
-                        onError={() => {
-                          if (!profileImageRetried.current && editPanelProfileUrl?.includes('cdn.saabuildingblocks.com')) {
-                            profileImageRetried.current = true;
-                            const fallbackUrl = editPanelProfileUrl.replace('cdn.saabuildingblocks.com', 'assets.saabuildingblocks.com');
-                            setUser(prev => prev ? { ...prev, profilePictureUrl: fallbackUrl } : prev);
-                          } else {
-                            setProfileImageError(true);
-                            setProfileImageLoading(false);
-                          }
-                        }}
+                        onError={() => setEditProfileImageError(true)}
                       />
                     </>
                   ) : (
@@ -4896,13 +5093,7 @@ function AgentPortal() {
                   </div>
                 </button>
                 <p className="mt-1 text-xs text-[#e5e4dd]/60">Click to change</p>
-
-                {/* Dashboard Upload Status in Modal - only show completion message */}
-                {dashboardUploadStatus && !isUploadingDashboardImage && (
-                  <div className="mt-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs text-center w-full max-w-[200px]">
-                    {dashboardUploadStatus}
-                  </div>
-                )}
+                <p className="text-[#e5e4dd]/40 text-[10px]">Min 900x900px</p>
                 {dashboardUploadError && (
                   <div className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs w-full max-w-[200px]">
                     {dashboardUploadError}
@@ -7607,7 +7798,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
             >
               Onboarding
             </h2>
-            <p className="text-[#e5e4dd]/70 text-sm">Complete these steps to get started with eXp and Smart Agent Alliance</p>
+            <p className="text-[#e5e4dd]/70 text-sm">For the best results, complete these steps in order</p>
           </div>
         </div>
 
@@ -7946,6 +8137,14 @@ function SupportSection({ userState, userId, onClearCache }: SupportSectionProps
     ? <span style={{ filter: 'blur(5px)', userSelect: 'none' }}>{text}</span>
     : text;
   const brokerInfo = userState ? STATE_BROKER_URLS[userState.toUpperCase()] : null;
+
+  // Suggestion box state
+  const [suggestionText, setSuggestionText] = useState('');
+  const [suggestionCategory, setSuggestionCategory] = useState('general');
+  const [suggestionSubmitting, setSuggestionSubmitting] = useState(false);
+  const [suggestionSuccess, setSuggestionSuccess] = useState(false);
+  const [suggestionError, setSuggestionError] = useState('');
+  const [suggestionDropdownOpen, setSuggestionDropdownOpen] = useState(false);
 
   // Platform detection for My eXp App links
   const [isIOS, setIsIOS] = useState(false);
@@ -8345,6 +8544,180 @@ function SupportSection({ userState, userId, onClearCache }: SupportSectionProps
           )}
         </div>
       </div>
+
+        {/* Share a Suggestion Card - GrainCard with cyan accent, inside flex grid */}
+        <div className="flex-1" style={{ minWidth: '350px' }}>
+          <GrainCard padding="sm" centered={false} className="!border-cyan-500/25 !shadow-[0_0_0_1px_rgba(6,182,212,0.1),0_8px_32px_rgba(0,0,0,0.4),0_0_20px_rgba(6,182,212,0.08)]">
+            <div className="flex items-center gap-2 mb-3 pb-2" style={{ borderBottom: '1px solid rgba(6, 182, 212, 0.12)' }}>
+              <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(6, 182, 212, 0.15)' }}>
+                <Lightbulb className="w-3 h-3" style={{ color: '#22d3ee' }} />
+              </div>
+              <p className="font-taskor text-xs" style={{ color: '#22d3ee', letterSpacing: '0.05em' }}>
+                SHARE A SUGGESTION
+              </p>
+            </div>
+
+            {suggestionSuccess ? (
+              <div className="py-6 text-center">
+                <CheckCircle2 className="w-8 h-8 mx-auto mb-2" style={{ color: '#22d3ee' }} />
+                <p className="font-synonym text-[14px] font-medium" style={{ color: '#e5e4dd' }}>
+                  Thank you for your suggestion!
+                </p>
+                <p className="font-synonym text-[12px] mt-1" style={{ color: '#888' }}>
+                  We review every submission and appreciate your feedback.
+                </p>
+                <button
+                  onClick={() => { setSuggestionSuccess(false); setSuggestionText(''); setSuggestionCategory('general'); }}
+                  className="mt-3 font-synonym text-[12px] font-semibold transition-colors hover:brightness-125"
+                  style={{ color: '#22d3ee' }}
+                >
+                  Submit another
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <p className="font-synonym text-[12px]" style={{ color: '#888' }}>
+                  Have an idea to improve the portal, training, or templates? We'd love to hear it.
+                </p>
+
+                {/* Category - Custom dropdown */}
+                {(() => {
+                  const categoryOptions = [
+                    { value: 'portal-features', label: 'Portal Features' },
+                    { value: 'training', label: 'Training' },
+                    { value: 'templates', label: 'Templates' },
+                    { value: 'general', label: 'General' },
+                  ];
+                  const selectedLabel = categoryOptions.find(o => o.value === suggestionCategory)?.label || 'General';
+                  return (
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setSuggestionDropdownOpen(!suggestionDropdownOpen)}
+                        onBlur={() => setTimeout(() => setSuggestionDropdownOpen(false), 150)}
+                        className="w-full rounded-lg px-3 py-2 font-synonym text-[13px] text-left flex items-center justify-between focus:outline-none transition-colors"
+                        style={{
+                          background: 'rgba(6, 182, 212, 0.04)',
+                          border: '1px solid rgba(6, 182, 212, 0.15)',
+                          color: '#e5e4dd',
+                        }}
+                      >
+                        {selectedLabel}
+                        <ChevronDown
+                          className="w-4 h-4 transition-transform duration-200"
+                          style={{
+                            color: '#22d3ee',
+                            transform: suggestionDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                          }}
+                        />
+                      </button>
+                      <div
+                        className="absolute left-0 right-0 top-full mt-1 rounded-lg overflow-hidden z-50 transition-all duration-200 origin-top"
+                        style={{
+                          background: 'rgba(18, 18, 18, 0.98)',
+                          border: '1px solid rgba(6, 182, 212, 0.2)',
+                          boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                          opacity: suggestionDropdownOpen ? 1 : 0,
+                          transform: suggestionDropdownOpen ? 'scaleY(1)' : 'scaleY(0)',
+                          pointerEvents: suggestionDropdownOpen ? 'auto' : 'none',
+                        }}
+                      >
+                        {categoryOptions.map((opt) => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onMouseDown={(e) => { e.preventDefault(); setSuggestionCategory(opt.value); setSuggestionDropdownOpen(false); }}
+                            className="w-full px-3 py-2 text-left font-synonym text-[13px] transition-colors"
+                            style={{
+                              color: suggestionCategory === opt.value ? '#22d3ee' : '#e5e4dd',
+                              background: suggestionCategory === opt.value ? 'rgba(6, 182, 212, 0.1)' : 'transparent',
+                            }}
+                            onMouseEnter={(e) => { if (suggestionCategory !== opt.value) e.currentTarget.style.background = 'rgba(6, 182, 212, 0.06)'; }}
+                            onMouseLeave={(e) => { if (suggestionCategory !== opt.value) e.currentTarget.style.background = 'transparent'; }}
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Text area */}
+                <textarea
+                  value={suggestionText}
+                  onChange={(e) => { setSuggestionText(e.target.value); setSuggestionError(''); }}
+                  placeholder="Describe your suggestion..."
+                  rows={3}
+                  maxLength={2000}
+                  className="w-full rounded-lg px-3 py-2 font-synonym text-[13px] resize-none focus:outline-none transition-colors"
+                  style={{
+                    background: 'rgba(6, 182, 212, 0.04)',
+                    border: `1px solid ${suggestionError ? 'rgba(239, 68, 68, 0.4)' : 'rgba(6, 182, 212, 0.15)'}`,
+                    color: '#e5e4dd',
+                  }}
+                />
+
+                {suggestionError && (
+                  <p className="font-synonym text-[11px]" style={{ color: '#ef4444' }}>{suggestionError}</p>
+                )}
+
+                <div className="flex items-center justify-between">
+                  <span className="font-synonym text-[11px]" style={{ color: '#555' }}>
+                    {suggestionText.length}/2000
+                  </span>
+                  <button
+                    onClick={async () => {
+                      if (suggestionText.trim().length < 10) {
+                        setSuggestionError('Please write at least 10 characters.');
+                        return;
+                      }
+                      setSuggestionSubmitting(true);
+                      setSuggestionError('');
+                      try {
+                        const token = localStorage.getItem('agent_portal_token');
+                        const res = await fetch(`${API_URL}/api/suggestions`, {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                          },
+                          body: JSON.stringify({ category: suggestionCategory, suggestion: suggestionText.trim() }),
+                        });
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.error || 'Failed to submit');
+                        setSuggestionSuccess(true);
+                      } catch (err: any) {
+                        setSuggestionError(err.message || 'Something went wrong. Please try again.');
+                      } finally {
+                        setSuggestionSubmitting(false);
+                      }
+                    }}
+                    disabled={suggestionSubmitting || suggestionText.trim().length < 10}
+                    className="flex items-center gap-1.5 rounded-lg px-4 py-2 font-synonym text-[13px] font-semibold transition-all"
+                    style={{
+                      background: suggestionSubmitting || suggestionText.trim().length < 10 ? 'rgba(6, 182, 212, 0.15)' : 'rgba(6, 182, 212, 0.9)',
+                      color: suggestionSubmitting || suggestionText.trim().length < 10 ? '#888' : '#1a1a1a',
+                      cursor: suggestionSubmitting || suggestionText.trim().length < 10 ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    {suggestionSubmitting ? (
+                      <>
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-3.5 h-3.5" />
+                        Submit
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+          </GrainCard>
+        </div>
       </div>
     </div>
   );
@@ -11793,9 +12166,9 @@ function AgentPagesSection({
       return;
     }
 
-    // Validate file size (5MB max)
-    if (file.size > 5 * 1024 * 1024) {
-      setAttractionUploadError('Image must be less than 5MB');
+    // Validate file size (25MB max — image gets cropped/processed before upload)
+    if (file.size > 25 * 1024 * 1024) {
+      setAttractionUploadError('Image must be less than 25MB');
       return;
     }
 
@@ -11840,17 +12213,23 @@ function AgentPagesSection({
       setAttractionUploadStatus('Cropping image...');
       const croppedBlob = await cropImage(file, 0, 0, 100);
 
-      // Step 2: Remove background
+      // Step 2: Remove background (server-side via rembg)
       setAttractionUploadStatus('Removing background...');
-      const { removeBackground } = await import('@imgly/background-removal');
-      const bgRemovedBlob = await removeBackground(croppedBlob, {
-        progress: (key: string, current: number, total: number) => {
-          const percent = total > 0 ? Math.round((current / total) * 100) : 0;
-          if (percent > 0) {
-            setAttractionUploadStatus(`Removing background... ${percent}%`);
-          }
-        },
-      });
+      let bgRemovedBlob: Blob;
+      try {
+        const bgFormData = new FormData();
+        bgFormData.append('file', croppedBlob, 'image.png');
+        const bgResponse = await fetch(`${API_URL}/api/images/remove-background`, {
+          method: 'POST',
+          body: bgFormData,
+        });
+        if (!bgResponse.ok) throw new Error(`Server returned ${bgResponse.status}`);
+        bgRemovedBlob = await bgResponse.blob();
+        console.log('[ImageUpload] Background removal complete:', bgRemovedBlob.size, 'bytes (input:', croppedBlob.size, 'bytes)');
+      } catch (bgError) {
+        console.error('[ImageUpload] Background removal failed, using cropped image:', bgError);
+        bgRemovedBlob = croppedBlob;
+      }
 
       // Step 3: Apply AUTO B&W contrast
       setAttractionUploadStatus('Applying B&W filter...');
@@ -11982,18 +12361,23 @@ function AgentPagesSection({
     try {
       const token = localStorage.getItem('agent_portal_token');
 
-      // Step 1: Remove background from stored original
+      // Step 1: Remove background from stored original (server-side via rembg)
       setAttractionUploadStatus('Removing background...');
-      const { removeBackground } = await import('@imgly/background-removal');
-
-      const bgRemovedBlob = await removeBackground(originalImageFile, {
-        progress: (key: string, current: number, total: number) => {
-          const percent = total > 0 ? Math.round((current / total) * 100) : 0;
-          if (percent > 0) {
-            setAttractionUploadStatus(`Removing background... ${percent}%`);
-          }
-        },
-      });
+      let bgRemovedBlob: Blob;
+      try {
+        const bgFormData = new FormData();
+        bgFormData.append('file', originalImageFile, 'image.png');
+        const bgResponse = await fetch(`${API_URL}/api/images/remove-background`, {
+          method: 'POST',
+          body: bgFormData,
+        });
+        if (!bgResponse.ok) throw new Error(`Server returned ${bgResponse.status}`);
+        bgRemovedBlob = await bgResponse.blob();
+        console.log('[ImageUpload] Background removal complete:', bgRemovedBlob.size, 'bytes');
+      } catch (bgError) {
+        console.error('[ImageUpload] Background removal failed, using original:', bgError);
+        bgRemovedBlob = originalImageFile;
+      }
 
       // Step 2: Apply new B&W + contrast
       setAttractionUploadStatus('Applying new contrast level...');
@@ -12046,6 +12430,12 @@ function AgentPagesSection({
             profile_image_url: data.data.page.profile_image_url ? `${data.data.page.profile_image_url}?v=${Date.now()}` : null,
           };
           setPageData(updatedPage);
+          // Notify parent so sidebar/dashboard image updates too
+          if (updatedPage.profile_image_url) {
+            window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
+              detail: { url: updatedPage.profile_image_url }
+            }));
+          }
         }
 
         // Step 5: Upload COLOR version for Linktree color option
@@ -12581,12 +12971,15 @@ function AgentPagesSection({
               className="hidden"
               id="profile-photo-upload"
             />
-            <label
-              htmlFor="profile-photo-upload"
-              className="px-3 py-1.5 rounded text-xs bg-white/10 border border-white/20 text-white/80 hover:bg-white/20 cursor-pointer transition-colors text-center"
-            >
-              Upload Photo
-            </label>
+            <div className="flex flex-col items-center gap-0.5">
+              <label
+                htmlFor="profile-photo-upload"
+                className="px-3 py-1.5 rounded text-xs bg-white/10 border border-white/20 text-white/80 hover:bg-white/20 cursor-pointer transition-colors text-center"
+              >
+                Upload Photo
+              </label>
+              <span className="text-[9px] text-white/30">Min 900x900px</span>
+            </div>
             {/* B&W / Color Toggle - Pill Design with Animation */}
             <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '156px' }}>
               {/* Animated sliding pill indicator - fixed width */}
@@ -13246,20 +13639,29 @@ function AgentPagesSection({
       <div className="p-4 space-y-2">
         {/* Activate Button - Shows only when page is not activated */}
         {!pageData?.activated && (
-          <button
-            onClick={handleActivate}
-            disabled={isSaving}
-            className="w-full py-3 px-4 rounded-lg font-semibold bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] hover:bg-[#ffd700]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-          >
-            {isSaving ? (
-              <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
-            ) : (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            )}
-            {isSaving ? 'Activating...' : 'Activate my Page'}
-          </button>
+          <div className="activate-rainbow-wrapper w-full">
+            <div className="activate-rainbow-border" />
+            <div className="activate-rainbow-glow" />
+            <button
+              onClick={handleActivate}
+              disabled={isSaving}
+              className="relative z-[1] w-full py-3 px-4 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              style={{
+                background: 'linear-gradient(180deg, rgb(14, 14, 14) 0%, rgb(10, 10, 10) 100%)',
+                color: '#e5e4dd',
+                fontFamily: 'var(--font-taskor, sans-serif)',
+              }}
+            >
+              {isSaving ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              )}
+              {isSaving ? 'Activating...' : 'Activate Page'}
+            </button>
+          </div>
         )}
 
         {/* Save Changes Button - Always visible when page is activated, greyed out until changes made */}
@@ -13441,19 +13843,28 @@ function AgentPagesSection({
                 </div>
 
                 {/* Name with subtle depth effect - no glow */}
-                <span
-                  className="text-lg text-center leading-tight font-bold mt-1.5 mb-2"
-                  style={{
-                    color: isAccentDark ? '#e5e4dd' : linksSettings.accentColor,
-                    fontFamily: 'var(--font-taskor, sans-serif)',
-                    fontFeatureSettings: '"ss01" 1',
-                    transform: 'perspective(800px) rotateX(12deg)',
-                    textShadow: '0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f',
-                    filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7))',
-                  }}
-                >
-                  {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
-                </span>
+                {(() => {
+                  const name = `${formData.display_first_name || 'Your'} ${formData.display_last_name || 'Name'}`;
+                  const len = name.length;
+                  // Scale font: short names bigger, long names smaller (preview phone is ~200px wide)
+                  const fontSize = len <= 10 ? '22px' : len <= 14 ? '19px' : len <= 18 ? '17px' : len <= 22 ? '15px' : '13px';
+                  return (
+                    <span
+                      className="text-center leading-tight font-bold mt-1.5 mb-2"
+                      style={{
+                        fontSize,
+                        color: isAccentDark ? '#e5e4dd' : linksSettings.accentColor,
+                        fontFamily: 'var(--font-taskor, sans-serif)',
+                        fontFeatureSettings: '"ss01" 1',
+                        transform: 'perspective(800px) rotateX(12deg)',
+                        textShadow: '0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f',
+                        filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7))',
+                      }}
+                    >
+                      {name}
+                    </span>
+                  );
+                })()}
 
                 {/* Social Links Circles - includes built-in + custom social links */}
                 {(() => {
@@ -14327,27 +14738,30 @@ return (
       if (!saveSlot) return null;
       return createPortal(
         !pageData?.activated ? (
-          <button
-            onClick={handleActivate}
-            disabled={isSaving}
-            className="py-1.5 px-5 rounded-full font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
-            style={{
-              fontFamily: 'var(--font-taskor, sans-serif)',
-              backgroundColor: '#ffd700',
-              color: '#000',
-              opacity: isSaving ? 0.5 : 1,
-              width: '178px',
-            }}
-          >
-            {isSaving ? (
-              <div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-            ) : (
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            )}
-            {isSaving ? 'Activating...' : 'Activate'}
-          </button>
+          <div className="activate-rainbow-wrapper-pill" style={{ width: '178px' }}>
+            <div className="activate-rainbow-border" />
+            <div className="activate-rainbow-glow" />
+            <button
+              onClick={handleActivate}
+              disabled={isSaving}
+              className="relative z-[1] py-1.5 px-5 rounded-full font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors w-full"
+              style={{
+                fontFamily: 'var(--font-taskor, sans-serif)',
+                background: 'linear-gradient(180deg, rgb(14, 14, 14) 0%, rgb(10, 10, 10) 100%)',
+                color: '#e5e4dd',
+                opacity: isSaving ? 0.5 : 1,
+              }}
+            >
+              {isSaving ? (
+                <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              )}
+              {isSaving ? 'Activating...' : 'Activate Page'}
+            </button>
+          </div>
         ) : (
           <button
             onClick={hasUnsavedChanges ? handleSave : undefined}
@@ -14520,21 +14934,29 @@ return (
       <div className="hidden min-[1024px]:flex min-[1650px]:hidden fixed bottom-6 right-6 z-[100] items-end gap-2">
         {/* Activate / Save Button - 45px height (matches pixel help), 215px fixed width */}
         {!pageData?.activated ? (
-          <button
-            onClick={handleActivate}
-            disabled={isSaving}
-            className="rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg"
-            style={{ fontFamily: 'var(--font-taskor, sans-serif)', height: '45px', width: '215px' }}
-          >
-            {isSaving ? (
-              <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-            ) : (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            )}
-            {isSaving ? 'Activating...' : 'Activate My Page'}
-          </button>
+          <div className="activate-rainbow-wrapper" style={{ width: '215px', height: '45px' }}>
+            <div className="activate-rainbow-border" />
+            <div className="activate-rainbow-glow" />
+            <button
+              onClick={handleActivate}
+              disabled={isSaving}
+              className="relative z-[1] rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg w-full h-full"
+              style={{
+                fontFamily: 'var(--font-taskor, sans-serif)',
+                background: 'linear-gradient(180deg, rgb(14, 14, 14) 0%, rgb(10, 10, 10) 100%)',
+                color: '#e5e4dd',
+              }}
+            >
+              {isSaving ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              )}
+              {isSaving ? 'Activating...' : 'Activate Page'}
+            </button>
+          </div>
         ) : (
           <button
             onClick={hasUnsavedChanges ? handleSave : undefined}

@@ -183,7 +183,7 @@ export default function OurExpTeam() {
             <div className="text-center mb-12">
               <H2>5 More Tiers in Your Corner</H2>
               <p className="text-body mt-4">
-                Your extended upline. Access to their resources, training, and a community of 3,700+ agents across 24+ countries.
+                Your extended upline. Access to their resources, training, and a community of 4,000+ agents across 24+ countries.
               </p>
             </div>
 

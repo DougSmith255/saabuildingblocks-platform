@@ -147,14 +147,43 @@ export default function DisclaimerPage() {
               <li>Other factors unique to your situation</li>
             </ul>
 
-            <h2>8. Changes to This Disclaimer</h2>
+            <h2>8. Affiliate Relationships</h2>
+            <p>
+              Smart Agent Alliance participates in affiliate and referral programs for products and
+              services we use and recommend. This means we may earn a commission when you click an
+              affiliate link on our site and make a purchase or sign up for a service, at no additional
+              cost to you.
+            </p>
+            <p>
+              <strong>Our affiliate relationships include but are not limited to:</strong>
+            </p>
+            <ul>
+              <li>GoHighLevel (CRM and marketing platform)</li>
+              <li>Hostinger (web hosting)</li>
+              <li>Rank Math SEO (WordPress SEO plugin)</li>
+              <li>Namecheap (domain registration)</li>
+              <li>WordPress.com (website and blog hosting)</li>
+            </ul>
+            <p>
+              <strong>Our commitment:</strong> We only recommend products and services that we personally
+              use or have thoroughly evaluated. Affiliate compensation does not influence our recommendations.
+              We recommend many tools for which we receive no compensation at all.
+            </p>
+            <p>
+              Affiliate links are clearly identified on our{' '}
+              <a href="/sites-and-software/">Recommended Tools</a> page and elsewhere on the site.
+              In accordance with FTC guidelines, we disclose all material connections between our site
+              and the companies whose products or services we recommend.
+            </p>
+
+            <h2>9. Changes to This Disclaimer</h2>
             <p>
               We may update this Disclaimer from time to time. Changes will be posted on this page
               with an updated effective date. Your continued use of the website after changes are
               posted constitutes acceptance of the revised Disclaimer.
             </p>
 
-            <h2>9. Contact Us</h2>
+            <h2>10. Contact Us</h2>
             <p>
               If you have any questions about this Disclaimer, please contact us at:
             </p>

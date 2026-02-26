@@ -989,7 +989,7 @@ function WhatsAppChat() {
             Referrals - Texas
           </div>
           <div style={{ fontSize: 'clamp(7px, 0.8vw, 11px)', color: 'rgba(255,255,255,0.4)' }}>
-            3700+ members
+            4000+ members
           </div>
         </div>
       </div>
@@ -1867,6 +1867,7 @@ function Section3() {
 
   const sendVideoBeacon = useCallback((eventType: string) => {
     try {
+      if (typeof window !== 'undefined' && localStorage.getItem('saa_no_track')) return;
       const payload = {
         video_id: WALKTHROUGH_VIDEO_ID,
         session_id: analyticsSessionId.current,

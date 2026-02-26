@@ -123,7 +123,7 @@ export function ProvenAtScale() {
               <NeonCard padding="lg">
                 <Icon3D><Globe className="w-14 h-14 mx-auto mb-3" /></Icon3D>
                 <p className="font-heading text-3xl md:text-4xl font-bold text-heading">
-                  <StaticCounterNeon value="3700" suffix="+" />
+                  <StaticCounterNeon value="4000" suffix="+" />
                 </p>
                 <p className="text-body text-base mt-2">Agents in Sponsor Network</p>
               </NeonCard>

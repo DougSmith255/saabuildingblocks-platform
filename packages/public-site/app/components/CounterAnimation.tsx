@@ -13,7 +13,7 @@ import { useEffect, useRef } from 'react';
  *
  * Animation:
  * - Scrambles numbers periodically for visual interest
- * - Always returns to "3700" final value
+ * - Always returns to "4000" final value
  * - Uses requestAnimationFrame for smooth animation
  */
 export function CounterAnimation() {
@@ -51,7 +51,7 @@ export function CounterAnimation() {
       const digitElements = findDigitElements();
       if (!digitElements) return;
 
-      const target = 3700;
+      const target = 4000;
       const duration = 2000; // 2 seconds
       const startTime = performance.now();
 

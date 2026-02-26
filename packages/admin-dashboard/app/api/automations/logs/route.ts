@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
-import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
+import { verifySessionAdminAuth } from '@/app/api/middleware/adminAuth';
 
 // Allowed log files (whitelist for security)
 const ALLOWED_LOGS: Record<string, string> = {
-  'everwebinar-sync.log': '/var/log/everwebinar-sync.log',
   'email-automation.log': '/var/log/email-automation.log',
   'dependency-updates.log': '/var/log/dependency-updates.log',
+  'auto-updates/cron.log': '/var/log/auto-updates/cron.log',
 };
 
 export async function GET(request: NextRequest) {

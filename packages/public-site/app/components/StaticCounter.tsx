@@ -5,7 +5,7 @@ import './StaticCounter.css';
  *
  * PERFORMANCE OPTIMIZATION:
  * - Renders as pure HTML on server (no 'use client')
- * - Counter shows "3700" immediately in HTML
+ * - Counter shows "4000" immediately in HTML
  * - CSS animation triggers automatically (no JS needed)
  * - No React hydration delay (eliminates 1,750ms LCP delay)
  *

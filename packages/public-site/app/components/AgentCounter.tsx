@@ -36,7 +36,7 @@ export function AgentCounter() {
     drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
   `;
 
-  // Desktop: Corner counter - "3700+ AGENTS" format (no parentheses, Taskor font, 1.75x size)
+  // Desktop: Corner counter - "4000+ AGENTS" format (no parentheses, Taskor font, 1.75x size)
   if (isCounterDesktop) {
     return (
       <div
