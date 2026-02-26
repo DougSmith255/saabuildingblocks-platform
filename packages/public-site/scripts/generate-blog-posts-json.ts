@@ -29,6 +29,15 @@ interface SlugToCloudflareEntry {
   matchType: string;
 }
 
+// Normalize WordPress author usernames to display names
+const AUTHOR_NAME_MAP: Record<string, string> = {
+  'karriehill': 'Karrie Hill',
+  'dougsmart1': 'Doug Smart',
+};
+function normalizeAuthorName(name: string): string {
+  return AUTHOR_NAME_MAP[name.toLowerCase()] || name;
+}
+
 // Map: lowercase filename -> Cloudflare URL (for content images)
 let imageMapping: Map<string, string> = new Map();
 // Map: post slug -> Cloudflare URL (for featured images)
@@ -548,7 +557,7 @@ function transformPost(wpPost: any): BlogPost {
   if (wpPost._embedded?.author?.[0]) {
     const wpAuthor = wpPost._embedded.author[0];
     author = {
-      name: wpAuthor.name,
+      name: normalizeAuthorName(wpAuthor.name),
       avatar: wpAuthor.avatar_urls?.['96'] || wpAuthor.avatar_urls?.['48'],
     };
   }

@@ -6,6 +6,19 @@ import type { BlogPost } from '@/lib/wordpress/types';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
+// Normalize WordPress author usernames to proper display names
+const AUTHOR_NAME_MAP: Record<string, string> = {
+  'karriehill': 'Karrie Hill',
+  'dougsmart1': 'Doug Smart',
+};
+function normalizeAuthorName(post: BlogPost): BlogPost {
+  const mapped = AUTHOR_NAME_MAP[post.author.name.toLowerCase()];
+  if (mapped) {
+    return { ...post, author: { ...post.author, name: mapped } };
+  }
+  return post;
+}
+
 /**
  * Load all blog posts from chunked JSON files.
  * Uses fs.readFileSync for reliable build-time loading.
@@ -29,8 +42,8 @@ export function getAllBlogPosts(): BlogPost[] {
     const chunkPath = join(publicDir, `blog-posts-chunk-${i}.json`);
     try {
       if (existsSync(chunkPath)) {
-        const data = JSON.parse(readFileSync(chunkPath, 'utf-8'));
-        allPosts.push(...data);
+        const data: BlogPost[] = JSON.parse(readFileSync(chunkPath, 'utf-8'));
+        allPosts.push(...data.map(normalizeAuthorName));
       }
     } catch (error) {
       console.warn(`Failed to load blog-posts-chunk-${i}.json:`, error);
