@@ -1261,7 +1261,7 @@ function AgentPortal() {
   const [eliteCoursesIntroDismissed, setEliteCoursesIntroDismissed] = useState(false);
   const [linkPageBannerDismissed, setLinkPageBannerDismissed] = useState(() => {
     if (typeof window === 'undefined') return false;
-    return localStorage.getItem('agent_portal_link_banner_dismissed') === 'true';
+    return sessionStorage.getItem('agent_portal_link_banner_dismissed') === 'true';
   });
   const [linkPageBannerVisible, setLinkPageBannerVisible] = useState(false);
   const [linkPageBannerDismissing, setLinkPageBannerDismissing] = useState(false);
@@ -1276,7 +1276,7 @@ function AgentPortal() {
     if (localStorage.getItem('agent_portal_preview_banner') === 'true') {
       setForceShowBanner(true);
       setActiveSectionRaw('dashboard');
-      localStorage.removeItem('agent_portal_link_banner_dismissed');
+      sessionStorage.removeItem('agent_portal_link_banner_dismissed');
       setLinkPageBannerDismissed(false);
       // Directly show the banner after 4s - don't rely on the timer effect
       // which can get cancelled by other state changes
@@ -4368,7 +4368,7 @@ function AgentPortal() {
                     setTimeout(() => {
                       setLinkPageBannerVisible(false);
                       setLinkPageBannerDismissed(true);
-                      localStorage.setItem('agent_portal_link_banner_dismissed', 'true');
+                      sessionStorage.setItem('agent_portal_link_banner_dismissed', 'true');
                     }, 500);
                   }}
                   className="shrink-0 p-1.5 rounded-lg text-[#e5e4dd]/40 hover:text-white hover:bg-white/10 transition-colors"
