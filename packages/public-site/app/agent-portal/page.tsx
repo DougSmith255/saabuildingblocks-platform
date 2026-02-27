@@ -3314,14 +3314,14 @@ function AgentPortal() {
       `}</style>
 
       {/* Floating Pixel Help Button + Link Page Pills - Top Right (Mobile only) */}
-      {/* Stays visible behind overlay when slide panels open, hidden only for mobile menu */}
+      {/* Stays visible behind overlay when slide panels open, hidden only for mobile menu or active banner */}
       <div
         className="min-[1024px]:hidden flex items-center gap-2 fixed z-[10005] transition-opacity duration-300"
         style={{
           top: '16px',
           right: '16px',
-          opacity: isMobileMenuOpen ? 0 : 1,
-          pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
+          opacity: (isMobileMenuOpen || linkPageBannerVisible) ? 0 : 1,
+          pointerEvents: (isMobileMenuOpen || linkPageBannerVisible) ? 'none' : 'auto',
           filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
         }}
       >
@@ -4971,7 +4971,8 @@ function AgentPortal() {
       </SmoothScrollContainer>
 
       {/* ========== Floating Help Buttons - Desktop/Tablet only (hidden on mobile where header has help button) ========== */}
-      <div className="hidden min-[1024px]:block">
+      {/* Hidden when link page banner notification is active to avoid overlap */}
+      <div className="hidden min-[1024px]:block" style={{ opacity: linkPageBannerVisible ? 0 : 1, pointerEvents: linkPageBannerVisible ? 'none' : 'auto', transition: 'opacity 0.3s' }}>
         {/* Analytics Help Button */}
         {activeSection === 'dashboard' && (
           <PixelHelpButton onClick={() => setShowAnalyticsHelpModal(true)} color="gold" ariaLabel="Analytics Help" />
