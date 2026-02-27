@@ -38,8 +38,8 @@ export function StaticCounter() {
         <div className="counter-numbers-wrapper">
           <div className="counter-numbers counter-animate">
             {/* Removed fontVariantNumeric - using fixed-width containers instead for performance */}
-            <span className="counter-digit">3</span>
-            <span className="counter-digit">7</span>
+            <span className="counter-digit">4</span>
+            <span className="counter-digit">0</span>
             <span className="counter-digit">0</span>
             <span className="counter-digit">0</span>
           </div>

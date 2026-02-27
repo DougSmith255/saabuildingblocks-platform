@@ -63,8 +63,8 @@ export function AgentCounter() {
               textShadow: 'none',
             }}
           >
-            <span className="counter-digit">3</span>
-            <span className="counter-digit">7</span>
+            <span className="counter-digit">4</span>
+            <span className="counter-digit">0</span>
             <span className="counter-digit">0</span>
             <span className="counter-digit">0</span>
             <span>+</span>

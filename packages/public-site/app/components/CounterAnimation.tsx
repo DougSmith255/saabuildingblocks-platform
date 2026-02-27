@@ -65,8 +65,8 @@ export function CounterAnimation() {
 
         if (progress >= 1) {
           // End animation - show final value
-          digitElements[0].textContent = '3';
-          digitElements[1].textContent = '7';
+          digitElements[0].textContent = '4';
+          digitElements[1].textContent = '0';
           digitElements[2].textContent = '0';
           digitElements[3].textContent = '0';
           animationRef.current = null;
@@ -80,8 +80,8 @@ export function CounterAnimation() {
             // Randomly scramble digits based on intensity
             if (Math.random() < scrambleIntensity * 0.3) {
               // Exclude "1" to prevent width changes (use 2-9)
-              // First digit stays 3 to keep 3xxx range
-              if (index === 0) return '3';
+              // First digit stays 4 to keep 4xxx range
+              if (index === 0) return '4';
               return (Math.floor(Math.random() * 8) + 2).toString(); // 2-9
             }
             return digit;
