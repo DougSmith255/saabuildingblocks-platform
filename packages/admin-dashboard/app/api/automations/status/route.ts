@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import fs from 'fs/promises';
+import { createClient } from '@supabase/supabase-js';
 import { verifySessionAdminAuth } from '@/app/api/middleware/adminAuth';
 
 const execAsync = promisify(exec);
@@ -577,6 +578,115 @@ async function checkEmailSystem(): Promise<Automation[]> {
   ];
 }
 
+// ─── Check: Notification Automations ─────────────────────────────────────────
+
+async function checkNotificationAutomations(): Promise<Automation[]> {
+  const automations: Automation[] = [];
+
+  // Check if notification cron job exists
+  const cronExists = await cronJobExists('notifications/cron');
+  const isEnabled = process.env.NOTIFICATIONS_ENABLED === 'true';
+
+  // Check notification endpoint
+  const endpointCurl = await run(
+    'curl -so /dev/null -w "%{http_code}" http://127.0.0.1:3002/api/notifications/cron 2>/dev/null'
+  );
+  const endpointReachable = endpointCurl === '200' || endpointCurl === '401' || endpointCurl === '405';
+
+  // Check recent notification_log entries from Supabase
+  let lastSendTime: string | undefined;
+  let totalSent = 0;
+  let pendingActivations = 0;
+  let recentDetail: string | undefined;
+
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    // Last successful send
+    const { data: lastSend } = await supabase
+      .from('notification_log')
+      .select('created_at, notification_type')
+      .eq('status', 'sent')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (lastSend) {
+      lastSendTime = lastSend.created_at;
+    }
+
+    // Total sent count
+    const { count } = await supabase
+      .from('notification_log')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'sent');
+    totalSent = count || 0;
+
+    // Pending activations
+    const { count: pending } = await supabase
+      .from('users')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'invited');
+    pendingActivations = pending || 0;
+
+    recentDetail = `${totalSent} emails sent total, ${pendingActivations} pending activations`;
+  } catch {
+    // Supabase check failed, still report cron status
+  }
+
+  // Overall status: broken if cron missing, endpoint unreachable, or not enabled
+  const cronStatus: 'active' | 'broken' = (cronExists && endpointReachable && isEnabled) ? 'active' : 'broken';
+  let cronStatusDetail: string | undefined;
+  if (!cronExists) cronStatusDetail = 'Cron job not found in crontab';
+  else if (!endpointReachable) cronStatusDetail = 'API endpoint unreachable';
+  else if (!isEnabled) cronStatusDetail = 'NOTIFICATIONS_ENABLED is false (dry-run mode)';
+  else cronStatusDetail = recentDetail;
+
+  automations.push({
+    id: 'notification-activation-cron',
+    name: 'Account Activation Reminders',
+    description: 'Sends activation emails every 2 days to unactivated agents (timezone-aware, 9 AM local)',
+    category: 'Notification Automations',
+    schedule: 'Hourly cron (sends at 9 AM per timezone)',
+    status: cronStatus,
+    lastRun: lastSendTime,
+    logFile: 'saa-notifications.log',
+    statusDetail: cronStatusDetail,
+  });
+
+  // Check link page nudge separately
+  let nudgeSent = 0;
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+    const { count } = await supabase
+      .from('notification_log')
+      .select('id', { count: 'exact', head: true })
+      .eq('notification_type', 'link_page_nudge')
+      .eq('status', 'sent');
+    nudgeSent = count || 0;
+  } catch { /* ignore */ }
+
+  automations.push({
+    id: 'notification-link-page-nudge',
+    name: 'Link Page Activation Nudges',
+    description: 'Reminds active agents to set up their link page (max 4 emails, every 2 days)',
+    category: 'Notification Automations',
+    schedule: 'Hourly cron (sends at 9 AM per timezone)',
+    status: cronStatus, // Same cron job
+    lastRun: lastSendTime,
+    logFile: 'saa-notifications.log',
+    statusDetail: nudgeSent > 0 ? `${nudgeSent} nudge emails sent` : (cronStatus === 'active' ? 'Active, no nudges sent yet' : undefined),
+  });
+
+  return automations;
+}
+
 // ─── Check: Build Pipelines ──────────────────────────────────────────────────
 
 async function checkBuildPipelines(): Promise<Automation[]> {
@@ -637,6 +747,7 @@ export async function GET(request: NextRequest) {
       cloudflareFunctions,
       analytics,
       email,
+      notifications,
       buildPipelines,
     ] = await Promise.all([
       checkAutoUpdate(),
@@ -686,6 +797,7 @@ export async function GET(request: NextRequest) {
       checkCloudflareFunctions(),
       checkAnalyticsPipelines(),
       checkEmailSystem(),
+      checkNotificationAutomations(),
       checkBuildPipelines(),
     ]);
 
@@ -713,6 +825,8 @@ export async function GET(request: NextRequest) {
       ...analytics,
       // Email
       ...email,
+      // Notification Automations
+      ...notifications,
       // Build Pipelines
       ...buildPipelines,
     ];

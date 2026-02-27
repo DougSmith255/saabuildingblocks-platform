@@ -8,11 +8,12 @@ const ALLOWED_LOGS: Record<string, string> = {
   'email-automation.log': '/var/log/email-automation.log',
   'dependency-updates.log': '/var/log/dependency-updates.log',
   'auto-updates/cron.log': '/var/log/auto-updates/cron.log',
+  'saa-notifications.log': '/var/log/saa-notifications.log',
 };
 
 export async function GET(request: NextRequest) {
   try {
-    const auth = await verifyAdminAuth(request);
+    const auth = await verifySessionAdminAuth();
     if (!auth.authorized) {
       return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
     }

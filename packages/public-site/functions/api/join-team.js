@@ -35,7 +35,7 @@ const RESEND_API_BASE = 'https://api.resend.com';
  * Send welcome/instructions email via Resend
  */
 async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
-  const fromEmail = 'Smart Agent Alliance <noreply@smartagentalliance.com>';
+  const fromEmail = 'Smart Agent Alliance <team@smartagentalliance.com>';
   const sponsorDisplay = sponsorName || 'the Smart Agent Alliance team';
 
   // Email template v3 - Matches ApplyInstructionsEmail design (2026-02-17)

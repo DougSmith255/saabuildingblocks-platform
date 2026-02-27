@@ -52,7 +52,7 @@ export async function getResendApiKey(): Promise<string> {
 }
 
 export async function getEmailFrom(): Promise<string> {
-  return (await getSecretWithFallback('EMAIL_FROM', '/email')) || 'Agent Portal <noreply@smartagentalliance.com>';
+  return (await getSecretWithFallback('EMAIL_FROM', '/email')) || 'Smart Agent Alliance <team@smartagentalliance.com>';
 }
 
 export async function getEmailReplyTo(): Promise<string> {

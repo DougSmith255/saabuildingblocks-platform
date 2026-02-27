@@ -42,19 +42,25 @@ export function AgentActivationEmail({
       <EmailHeading>Introducing Your New Agent Portal</EmailHeading>
 
       <EmailParagraph>
-        We&apos;re excited to roll out something brand new - the Smart Agent Alliance
-        Agent Portal. This is your new hub for everything SAA and Wolf Pack: your
-        personal link page, Agent Attraction Page, Elite Courses, marketing templates,
-        team call schedules, analytics, and more - all in one place.
+        We&apos;ve built something new for the team - the Smart Agent Alliance
+        Agent Portal. Your personal link page, Agent Attraction Page, Elite Courses,
+        marketing templates, team calls, analytics, and more - all in one place.
       </EmailParagraph>
 
+      <EmailButton href={activationLink}>Activate My Account</EmailButton>
+
+      <EmailAlert type="warning">
+        This link expires in <strong>{expiresInHours} hours</strong>. A new one will be sent if it expires.
+      </EmailAlert>
+
+      <EmailDivider />
+
       <EmailParagraph>
-        Before you activate your account, watch this quick walkthrough to see
-        what&apos;s inside:
+        Watch this quick walkthrough to see what&apos;s inside:
       </EmailParagraph>
 
       {/* Video Thumbnail */}
-      <table cellPadding="0" cellSpacing="0" style={{ width: '100%', margin: '20px 0' }}>
+      <table cellPadding="0" cellSpacing="0" style={{ width: '100%', margin: '16px 0' }}>
         <tr>
           <td align="center">
             <Link href={WALKTHROUGH_VIDEO_URL} style={{ textDecoration: 'none' }}>
@@ -87,33 +93,6 @@ export function AgentActivationEmail({
           </td>
         </tr>
       </table>
-
-      <EmailDivider />
-
-      <EmailButton href={activationLink}>Activate My Account</EmailButton>
-
-      <EmailAlert type="warning">
-        This activation link will expire in <strong>{expiresInHours} hours</strong> for security reasons.
-      </EmailAlert>
-
-      <EmailDivider />
-
-      <EmailParagraph style={{ fontWeight: 600, marginBottom: '12px' }}>
-        Here&apos;s how to get started:
-      </EmailParagraph>
-
-      <EmailNumberedStep number={1}>
-        Watch the portal walkthrough video above
-      </EmailNumberedStep>
-      <EmailNumberedStep number={2}>
-        Click &ldquo;Activate My Account&rdquo; to set up your login
-      </EmailNumberedStep>
-      <EmailNumberedStep number={3}>
-        Create your password
-      </EmailNumberedStep>
-      <EmailNumberedStep number={4}>
-        Explore your Agent Portal - customize your link page, set up your Agent Attraction Page, access Elite Courses, and more
-      </EmailNumberedStep>
 
       <EmailDivider />
 

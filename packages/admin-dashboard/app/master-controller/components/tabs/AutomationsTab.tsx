@@ -31,6 +31,7 @@ import {
   Cloud,
   BarChart3,
   Mail,
+  Bell,
   Wrench,
   ChevronDown,
   ChevronRight,
@@ -64,7 +65,8 @@ const CATEGORY_CONFIG: Record<string, { icon: typeof Clock; label: string; order
   'Cloudflare Functions': { icon: Cloud, label: 'Cloudflare Functions', order: 5 },
   'Analytics': { icon: BarChart3, label: 'Analytics & Tracking', order: 6 },
   'Email': { icon: Mail, label: 'Email System', order: 7 },
-  'Build Pipelines': { icon: Wrench, label: 'Build Pipelines', order: 8 },
+  'Notification Automations': { icon: Bell, label: 'Notification Automations', order: 8 },
+  'Build Pipelines': { icon: Wrench, label: 'Build Pipelines', order: 9 },
 };
 
 function formatRelativeTime(isoString: string): string {

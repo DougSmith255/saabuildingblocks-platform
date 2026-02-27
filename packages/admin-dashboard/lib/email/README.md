@@ -83,8 +83,8 @@ curl -X POST https://saabuildingblocks.com/api/email/send-invitation \
 RESEND_API_KEY=re_xxxxxxxxxxxxx
 
 # Email sender configuration
-EMAIL_FROM="Agent Portal <noreply@smartagentalliance.com>"
-EMAIL_REPLY_TO="support@smartagentalliance.com"
+EMAIL_FROM="Smart Agent Alliance <team@smartagentalliance.com>"
+EMAIL_REPLY_TO="team@smartagentalliance.com"
 
 # App URL for links
 NEXT_PUBLIC_APP_URL=https://saabuildingblocks.com

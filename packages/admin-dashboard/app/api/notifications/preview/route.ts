@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { render } from '@react-email/render';
 import { LinkPageNudgeEmail } from '@/lib/email/templates/LinkPageNudgeEmail';
 import { WelcomeEmail } from '@/lib/email/templates/WelcomeEmail';
+import { AgentActivationEmail } from '@/lib/email/templates/AgentActivationEmail';
 
 function verifyAuth(request: NextRequest): boolean {
   const secret = request.headers.get('x-automation-secret');
@@ -36,8 +37,8 @@ export async function GET(request: NextRequest) {
 
   if (!template) {
     return NextResponse.json({
-      available_templates: ['welcome', 'link_page_nudge'],
-      usage: 'GET /api/notifications/preview?template=link_page_nudge',
+      available_templates: ['welcome', 'agent_activation', 'link_page_nudge'],
+      usage: 'GET /api/notifications/preview?template=agent_activation',
     });
   }
 
@@ -54,6 +55,16 @@ export async function GET(request: NextRequest) {
       );
       break;
 
+    case 'agent_activation':
+      html = await render(
+        AgentActivationEmail({
+          firstName: 'Doug',
+          activationLink: 'https://saabuildingblocks.com/activate-account?token=preview-test-token',
+          expiresInHours: 48,
+        })
+      );
+      break;
+
     case 'link_page_nudge':
       html = await render(
         LinkPageNudgeEmail({
@@ -65,7 +76,7 @@ export async function GET(request: NextRequest) {
 
     default:
       return NextResponse.json(
-        { error: `Unknown template: ${template}`, available: ['welcome', 'link_page_nudge'] },
+        { error: `Unknown template: ${template}`, available: ['welcome', 'agent_activation', 'link_page_nudge'] },
         { status: 400 }
       );
   }
