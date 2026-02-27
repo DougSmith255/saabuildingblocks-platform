@@ -202,6 +202,8 @@ npx wrangler pages deploy out --project-name=saabuildingblocks
 **What deploys:** Homepage, about pages, blog, calculators, freebies, Agent Portal UI, link pages, Cloudflare Functions
 **What does NOT deploy:** API routes, Master Controller UI, authentication backend, admin RBAC
 
+**Redirects:** Do NOT use a `_redirects` file. All redirects are managed through the 404 Watch tab in Master Controller, which deploys to Cloudflare KV at the edge via `/api/404-paths/deploy-redirect`. This is the single source of truth for all redirects.
+
 ### Admin Dashboard - VPS PM2
 
 **URL:** https://saabuildingblocks.com (admin paths proxied by Apache to port 3002)

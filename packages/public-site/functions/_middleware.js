@@ -190,6 +190,9 @@ const STATIC_REDIRECTS = new Map([
   ['/low-fees', '/'],
   ['/more-benefits', '/'],
   ['/blender', '/'],
+  // Old WordPress icon paths (Google has these cached from old site)
+  ['/wp-content/uploads/2024/12/cropped-apple-touch-icon.png', '/apple-touch-icon.png'],
+  ['/wp-content/uploads/2024/12/apple-touch-icon.png', '/apple-touch-icon.png'],
   // Old WordPress image/attachment slugs
   ['/aceable-agent-logo', '/'],
   ['/corcoran-image', '/'],

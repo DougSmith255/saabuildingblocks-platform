@@ -100,7 +100,7 @@ export function EmailLayout({
           {/* Logo uses Cloudflare Images CDN for reliable display in email clients */}
           <Section style={header}>
             <Img
-              src="https://smartagentalliance.com/images/saa-logo-gold.png"
+              src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-logo-gold/public"
               alt="Smart Agent Alliance"
               width={180}
               height={64}
@@ -632,7 +632,8 @@ export const EmailNumberedStep = ({
 );
 
 /**
- * Email Signature - Standardized closing signature block
+ * Email Signature - Team signature card (futuristic space theme)
+ * Matches the standalone team-signature.html design
  */
 export const EmailSignature = () => (
   <Section style={{ marginTop: '32px' }}>
@@ -641,32 +642,99 @@ export const EmailSignature = () => (
         color: BRAND_COLORS.textPrimary,
         fontSize: '16px',
         lineHeight: '24px',
-        margin: '0 0 8px',
+        margin: '0 0 14px',
       }}
     >
       Best regards,
     </Text>
-    <Text
+    {/* Signature Card */}
+    <table
+      cellPadding="0"
+      cellSpacing="0"
       style={{
-        color: BRAND_COLORS.gold,
-        fontSize: '16px',
-        fontWeight: 600,
-        lineHeight: '24px',
-        margin: '0 0 4px',
+        width: '100%',
+        maxWidth: '460px',
+        border: '2.5px solid #666',
+        borderRadius: '12px',
+        overflow: 'hidden',
+        borderCollapse: 'collapse' as const,
+        fontFamily: "'Century Gothic', Futura, 'Trebuchet MS', Arial, sans-serif",
       }}
     >
-      Smart Agent Alliance
-    </Text>
-    <Link
-      href="mailto:team@smartagentalliance.com"
-      style={{
-        color: BRAND_COLORS.gold,
-        fontSize: '14px',
-        textDecoration: 'underline',
-      }}
-    >
-      team@smartagentalliance.com
-    </Link>
+      {/* Gold accent beam - top */}
+      <tr>
+        <td style={{ height: '4px', backgroundColor: '#ffcc00', fontSize: '1px', lineHeight: '1px' }}>&nbsp;</td>
+      </tr>
+      {/* Main content */}
+      <tr>
+        <td style={{ backgroundColor: '#0d0d0d', padding: '20px 22px 16px' }}>
+          <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
+            <tr>
+              {/* SAA Logo */}
+              <td style={{ width: '140px', verticalAlign: 'middle', paddingRight: '18px' }}>
+                <Link href="https://smartagentalliance.com" style={{ textDecoration: 'none' }}>
+                  <Img
+                    src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-logo-gold/public"
+                    width={120}
+                    alt="Smart Agent Alliance"
+                    style={{ display: 'block', border: '0' }}
+                  />
+                </Link>
+              </td>
+              {/* Company info */}
+              <td style={{ verticalAlign: 'top' }}>
+                <table cellPadding="0" cellSpacing="0">
+                  <tr>
+                    <td style={{ fontSize: '15px', fontWeight: 'bold', color: '#ffffff', letterSpacing: '2px', textTransform: 'uppercase' as const, paddingBottom: '3px' }}>
+                      Smart Agent Alliance
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontSize: '9px', color: '#777', letterSpacing: '1.5px', textTransform: 'uppercase' as const, paddingBottom: '10px' }}>
+                      For Agents Who Want More
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ paddingBottom: '8px' }}>
+                      <Link href="mailto:team@smartagentalliance.com" style={{ fontSize: '11px', color: '#ffd700', textDecoration: 'none', letterSpacing: '0.5px' }}>
+                        team@smartagentalliance.com
+                      </Link>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontSize: '10px' }}>
+                      <Link href="https://smartagentalliance.com" style={{ color: '#888', textDecoration: 'none', letterSpacing: '0.3px' }}>Website</Link>
+                      <span style={{ color: '#444', padding: '0 5px' }}>//</span>
+                      <Link href="https://www.youtube.com/@SmartAgentAlliance" style={{ color: '#888', textDecoration: 'none', letterSpacing: '0.3px' }}>YouTube</Link>
+                      <span style={{ color: '#444', padding: '0 5px' }}>//</span>
+                      <Link href="https://www.linkedin.com/company/smart-agent-alliance" style={{ color: '#888', textDecoration: 'none', letterSpacing: '0.3px' }}>LinkedIn</Link>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      {/* Gold separator beam */}
+      <tr>
+        <td style={{ backgroundColor: '#0d0d0d', padding: '0 22px' }}>
+          <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
+            <tr>
+              <td style={{ height: '1px', backgroundColor: '#ffcc00', fontSize: '1px', lineHeight: '1px' }}>&nbsp;</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      {/* Footer */}
+      <tr>
+        <td style={{ backgroundColor: '#0d0d0d', padding: '12px 22px 16px' }}>
+          <Link href="https://smartagentalliance.com" style={{ fontSize: '10px', color: '#ffd700', letterSpacing: '2.5px', textTransform: 'uppercase' as const, textDecoration: 'none' }}>
+            Smart Agent Alliance
+          </Link>
+        </td>
+      </tr>
+    </table>
   </Section>
 );
 
