@@ -202,7 +202,11 @@ npx wrangler pages deploy out --project-name=saabuildingblocks
 **What deploys:** Homepage, about pages, blog, calculators, freebies, Agent Portal UI, link pages, Cloudflare Functions
 **What does NOT deploy:** API routes, Master Controller UI, authentication backend, admin RBAC
 
-**Redirects:** Do NOT use a `_redirects` file. All redirects are managed through the 404 Watch tab in Master Controller, which deploys to Cloudflare KV at the edge via `/api/404-paths/deploy-redirect`. This is the single source of truth for all redirects.
+**Redirects:** Three layers (evaluated in this order):
+1. **Cloudflare Redirect Rules** (zone-level, runs first) - `wp-content/uploads`, `wp-admin`, `wp-login.php`, `feed`, `www→apex`. Managed via Cloudflare API with `CLOUDFLARE_TOKEN_MGMT` (Bulk Redirect Management token). The middleware does NOT run for paths that don't match a Function route, so these rules are the only option for redirecting static-asset-like paths (`.png`, `.js`, etc.).
+2. **Middleware KV** (`REDIRECT_OVERRIDES`) - Dynamic redirects deployed from 404 Watch via `/api/404-paths/deploy-redirect`. Only works for paths without file extensions.
+3. **Middleware static/wildcard maps** - Hardcoded in `functions/_middleware.js` (STATIC_REDIRECTS + WILDCARD_REDIRECTS).
+Do NOT use a `_redirects` file.
 
 ### Admin Dashboard - VPS PM2
 
