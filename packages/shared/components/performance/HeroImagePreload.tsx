@@ -25,7 +25,7 @@
  * - Fade-in animations still work (just fading in a cached image)
  * - Improves LCP by 30-50% for image-heavy heroes
  *
- * @see /home/claude-flow/📘-PAGE-BUILDER-GUIDE.md for full documentation
+ * @see /home/ubuntu/saabuildingblocks-platform/📘-PAGE-BUILDER-GUIDE.md for full documentation
  */
 
 'use client';

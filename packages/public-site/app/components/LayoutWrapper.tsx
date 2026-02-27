@@ -64,7 +64,7 @@ import { ViewportProvider } from '@/contexts/ViewportContext';
  * - data-defer-priority="high" - Load after hero but before scroll
  * - data-defer-priority="low" - Load when user scrolls near it
  *
- * @see /home/claude-flow/📘-PAGE-BUILDER-GUIDE.md for full documentation
+ * @see /home/ubuntu/saabuildingblocks-platform/📘-PAGE-BUILDER-GUIDE.md for full documentation
  */
 // Check for 404 page BEFORE component mounts (synchronous, no flash)
 // This runs once at module load time on the client

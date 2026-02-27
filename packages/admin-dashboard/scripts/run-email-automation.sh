@@ -5,7 +5,7 @@
 #
 
 # Change to script directory
-cd /home/claude-flow/packages/admin-dashboard
+cd /home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard
 
 # Manually set required environment variables
 export NEXT_PUBLIC_SUPABASE_URL="https://edpsaqcsoeccioapglhi.supabase.co"

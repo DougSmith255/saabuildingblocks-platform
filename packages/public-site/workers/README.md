@@ -43,7 +43,7 @@ The Worker selects variants based on requested width:
 ### Deploy Worker
 
 ```bash
-cd /home/claude-flow/packages/public-site/workers
+cd /home/ubuntu/saabuildingblocks-platform/packages/public-site/workers
 wrangler deploy
 ```
 

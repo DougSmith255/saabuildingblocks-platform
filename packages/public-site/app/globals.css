@@ -401,8 +401,8 @@ main#main-content > section:not(:first-child) {
  * - Optimized WOFF2 files from /public/fonts/
  * - CSS variables: --font-taskor, --font-amulya, --font-synonym
  *
- * @see /home/claude-flow/nextjs-frontend/app/layout.tsx (lines 17-50)
- * @see /home/claude-flow/nextjs-frontend/FONT_LOADING_QUICK_REFERENCE.md
+ * @see /home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard/app/layout.tsx (lines 17-50)
+ * @see /home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard/FONT_LOADING_QUICK_REFERENCE.md
  */
 
 /* Star background support with radial gradient behind stars */

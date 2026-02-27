@@ -4,20 +4,20 @@ module.exports = {
       name: 'admin-dashboard',
       script: 'npm',
       args: 'start',
-      cwd: '/home/claude-flow/packages/admin-dashboard',
+      cwd: '/home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard',
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,
       watch: false,
       max_memory_restart: '2G',
-      env_file: '/home/claude-flow/packages/admin-dashboard/.env.local',
+      env_file: '/home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard/.env.local',
       env: {
         NODE_ENV: 'production',
         PORT: 3002,
         HOSTNAME: '127.0.0.1'
       },
-      error_file: '/home/claude-flow/.pm2/logs/admin-dashboard-error.log',
-      out_file: '/home/claude-flow/.pm2/logs/admin-dashboard-out.log',
+      error_file: '/home/ubuntu/saabuildingblocks-platform/.pm2/logs/admin-dashboard-error.log',
+      out_file: '/home/ubuntu/saabuildingblocks-platform/.pm2/logs/admin-dashboard-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
 
@@ -34,13 +34,13 @@ module.exports = {
 
   deploy: {
     production: {
-      user: 'claude-flow',
+      user: 'ubuntu',
       host: 'localhost',
       ref: 'origin/main',
       repo: 'git@github.com:saabuildingblocks/saabuildingblocks.git',
-      path: '/home/claude-flow',
+      path: '/home/ubuntu/saabuildingblocks-platform',
       'pre-deploy-local': '',
-      'post-deploy': 'cd packages/admin-dashboard && npm ci && npm run build && pm2 reload ecosystem.config.js --env production && /home/claude-flow/scripts/run-e2e-tests-with-notify.sh --env production',
+      'post-deploy': 'cd packages/admin-dashboard && npm ci && npm run build && pm2 reload ecosystem.config.js --env production && /home/ubuntu/saabuildingblocks-platform/scripts/run-e2e-tests-with-notify.sh --env production',
       'pre-setup': ''
     }
   }

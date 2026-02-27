@@ -5,7 +5,7 @@
  * file paths, and conversion status tracking.
  *
  * ⚠️ ADDING A NEW COMPONENT? Read this first:
- * 📘 /home/claude-flow/📘-NEW-COMPONENT-GUIDE.md
+ * 📘 /home/ubuntu/saabuildingblocks-platform/📘-NEW-COMPONENT-GUIDE.md
  *
  * Critical reminders:
  * - Use relative paths (../shared/...) NOT package aliases (@saa/shared/...)

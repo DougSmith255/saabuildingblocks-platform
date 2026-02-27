@@ -63,13 +63,14 @@ npm run build:all
 ## 📁 Project Structure
 
 ```
-/home/claude-flow/
+/home/ubuntu/saabuildingblocks-platform/
 ├── packages/
-│   ├── public-site/       # Main public website
-│   └── shared/            # Shared code
-├── package.json           # Root package.json
-├── DEPENDENCY_UPGRADE_CHECKLIST.md  # 👈 CHECK THIS MONTHLY!
-└── README.md             # This file
+│   ├── public-site/        # Static site → Cloudflare Pages
+│   ├── admin-dashboard/    # Dynamic site → VPS PM2
+│   └── shared/             # Shared components and utilities
+├── package.json            # Root package.json
+├── CLAUDE.md               # Project configuration (source of truth)
+└── README.md               # This file
 ```
 
 ## 🔧 Common Commands

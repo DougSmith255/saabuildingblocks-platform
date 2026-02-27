@@ -203,10 +203,10 @@ import type { CategoryConfig } from '@/app/category/types';
 
 ## Related Documentation
 
-- [AI Agent Page Building Protocol](/home/claude-flow/docs/AI-AGENT-PAGE-BUILDING-PROTOCOL.md)
-- [Category Template Types](/home/claude-flow/nextjs-frontend/app/category/types/index.ts)
-- [Category Configs](/home/claude-flow/nextjs-frontend/app/category/configs/category-configs.ts)
-- [Master Controller Guide](/home/claude-flow/nextjs-frontend/app/master-controller/README.md)
+- [AI Agent Page Building Protocol](/home/ubuntu/saabuildingblocks-platform/docs/AI-AGENT-PAGE-BUILDING-PROTOCOL.md)
+- [Category Template Types](/home/ubuntu/saabuildingblocks-platform/nextjs-frontend/app/category/types/index.ts)
+- [Category Configs](/home/ubuntu/saabuildingblocks-platform/nextjs-frontend/app/category/configs/category-configs.ts)
+- [Master Controller Guide](/home/ubuntu/saabuildingblocks-platform/nextjs-frontend/app/master-controller/README.md)
 
 ## Changelog
 

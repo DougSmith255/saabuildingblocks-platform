@@ -19,6 +19,7 @@ export interface GHLContact {
 
 export interface GHLUpdateContactParams {
   contactId: string;
+  email?: string;
   tags?: string[];
   customFields?: Record<string, string>;
   firstName?: string;
@@ -67,6 +68,10 @@ export async function createOrUpdateGHLContact(contact: GHLContact): Promise<{ s
 export async function updateGHLContact(params: GHLUpdateContactParams): Promise<{ success: boolean; error?: string }> {
   try {
     const updateData: Record<string, any> = {};
+
+    if (params.email) {
+      updateData.email = params.email;
+    }
 
     if (params.tags) {
       updateData.tags = params.tags;

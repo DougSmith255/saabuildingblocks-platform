@@ -14,7 +14,7 @@ import {
   createAuditLog,
   getUserById,
 } from '@saa/shared/lib/supabase/invitation-service';
-import { createOrUpdateGHLContact } from '@/lib/gohighlevel';
+import { createOrUpdateGHLContact, getGHLContactByEmail, updateGHLContact } from '@/lib/gohighlevel';
 import { ZodError } from 'zod';
 import bcrypt from 'bcryptjs';
 import { AGENT_PAGE_DEFAULTS } from '@/lib/agent-page-defaults';
@@ -301,24 +301,69 @@ export async function POST(request: NextRequest) {
 
     // Update GoHighLevel contact
     try {
-      const ghlResult = await createOrUpdateGHLContact({
-        email: userEmail,
-        firstName: validatedData.first_name,
-        lastName: validatedData.last_name,
-        tags: ['saa-portal-user', 'invitation-accepted', 'account-active'],
-        customFields: {
-          'portal_user_id': user.id,
-          'account_status': 'active',
-          'activation_date': new Date().toISOString(),
-        },
-      });
+      let ghlContactId = user.gohighlevel_contact_id;
 
-      if (ghlResult.success && !user.gohighlevel_contact_id) {
-        // Update user with GoHighLevel contact ID
-        await supabase
-          .from('users')
-          .update({ gohighlevel_contact_id: ghlResult.contactId })
-          .eq('id', user.id);
+      // If we already have a GHL contact ID, update that contact directly
+      if (ghlContactId) {
+        await updateGHLContact({
+          contactId: ghlContactId,
+          firstName: validatedData.first_name,
+          lastName: validatedData.last_name,
+          tags: ['saa-portal-user', 'invitation-accepted', 'account-active'],
+          customFields: {
+            'portal_user_id': user.id,
+            'account_status': 'active',
+            'activation_date': new Date().toISOString(),
+          },
+        });
+        // If email changed, update email on the existing GHL contact
+        if (userEmail !== user.email) {
+          await updateGHLContact({
+            contactId: ghlContactId,
+            email: userEmail,
+          });
+        }
+      } else {
+        // No stored GHL contact ID - look up by original email first
+        const existingContact = await getGHLContactByEmail(user.email);
+        if (existingContact.success && existingContact.contact?.id) {
+          ghlContactId = existingContact.contact.id;
+          await updateGHLContact({
+            contactId: ghlContactId,
+            firstName: validatedData.first_name,
+            lastName: validatedData.last_name,
+            tags: ['saa-portal-user', 'invitation-accepted', 'account-active'],
+            customFields: {
+              'portal_user_id': user.id,
+              'account_status': 'active',
+              'activation_date': new Date().toISOString(),
+            },
+          });
+        } else {
+          // No existing contact found - create new
+          const ghlResult = await createOrUpdateGHLContact({
+            email: userEmail,
+            firstName: validatedData.first_name,
+            lastName: validatedData.last_name,
+            tags: ['saa-portal-user', 'invitation-accepted', 'account-active'],
+            customFields: {
+              'portal_user_id': user.id,
+              'account_status': 'active',
+              'activation_date': new Date().toISOString(),
+            },
+          });
+          if (ghlResult.success) {
+            ghlContactId = ghlResult.contactId;
+          }
+        }
+
+        // Store GHL contact ID if we found/created one
+        if (ghlContactId) {
+          await supabase
+            .from('users')
+            .update({ gohighlevel_contact_id: ghlContactId })
+            .eq('id', user.id);
+        }
       }
     } catch (ghlError) {
       // Don't fail activation if GHL fails

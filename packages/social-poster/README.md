@@ -39,7 +39,7 @@ npm start
 
 ```bash
 # Build the application
-cd /home/claude-flow/packages/social-poster
+cd /home/ubuntu/saabuildingblocks-platform/packages/social-poster
 npm run build
 
 # Start with PM2

@@ -14,7 +14,7 @@ This WordPress API client fetches blog posts from the WordPress site (`https://w
 
 ### 1. Environment Variables
 
-Add to `/home/claude-flow/nextjs-frontend/.env.local`:
+Add to `/home/ubuntu/saabuildingblocks-platform/nextjs-frontend/.env.local`:
 
 ```env
 # WordPress REST API Configuration

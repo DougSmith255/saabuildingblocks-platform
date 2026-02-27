@@ -377,7 +377,7 @@ async function sendAlertEmail(automation: string, errorMessage: string): Promise
   return new Promise((resolve) => {
     const { spawn } = require('child_process');
     const alertScript = spawn('node', [
-      '/home/claude-flow/send-alert-email.js',
+      '/home/ubuntu/saabuildingblocks-platform/send-alert-email.js',
       '--automation', automation,
       '--error', errorMessage
     ]);

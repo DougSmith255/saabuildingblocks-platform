@@ -20,7 +20,7 @@ import { useEffect, useState, useRef, type ReactNode } from 'react';
  * </DeferredContent>
  * ```
  *
- * @see /home/claude-flow/📘-PAGE-BUILDER-GUIDE.md for full documentation
+ * @see /home/ubuntu/saabuildingblocks-platform/📘-PAGE-BUILDER-GUIDE.md for full documentation
  */
 
 export type DeferStrategy = 'viewport' | 'time' | 'idle';

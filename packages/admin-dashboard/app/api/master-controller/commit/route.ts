@@ -64,7 +64,7 @@ const BLOCKED_PATTERNS = [
  * Performs git operations: stage specific patterns, commit, and push
  *
  * Security: Protected by middleware (HTTP Basic Auth)
- * Working directory: /home/claude-flow
+ * Working directory: /home/ubuntu/saabuildingblocks-platform
  */
 export async function POST(request: NextRequest) {
   const startTime = Date.now();

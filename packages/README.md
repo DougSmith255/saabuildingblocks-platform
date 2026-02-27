@@ -289,7 +289,7 @@ npx wrangler pages deploy out --project-name=saabuildingblocks --branch=main
 ssh user@saabuildingblocks.com
 
 # Navigate to admin-dashboard
-cd /home/claude-flow/packages/admin-dashboard
+cd /home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard
 
 # Pull latest changes
 git pull
@@ -314,7 +314,7 @@ curl -I https://saabuildingblocks.com
   "name": "admin-dashboard",
   "script": "npm",
   "args": "start",
-  "cwd": "/home/claude-flow/packages/admin-dashboard",
+  "cwd": "/home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard",
   "env": {
     "NODE_ENV": "production",
     "PORT": "3000"
@@ -462,11 +462,11 @@ PORT=3001 npm run dev -w @saa/public-site
 
 ## 📚 Additional Documentation
 
-- **Dual Deployment Architecture**: `/home/claude-flow/docs/DUAL-DEPLOYMENT-ARCHITECTURE.md`
-- **Production Safety Rules**: `/home/claude-flow/docs/PRODUCTION-SAFETY-RULES.md`
-- **GitHub Actions Update**: `/home/claude-flow/GITHUB-ACTIONS-MONOREPO-UPDATE.md`
-- **Cloudflare Test Plan**: `/home/claude-flow/CLOUDFLARE-DEPLOYMENT-TEST-PLAN.md`
-- **Coding Standards**: `/home/claude-flow/docs/CODING-STANDARDS.md`
+- **Dual Deployment Architecture**: `/home/ubuntu/saabuildingblocks-platform/docs/DUAL-DEPLOYMENT-ARCHITECTURE.md`
+- **Production Safety Rules**: `/home/ubuntu/saabuildingblocks-platform/docs/PRODUCTION-SAFETY-RULES.md`
+- **GitHub Actions Update**: `/home/ubuntu/saabuildingblocks-platform/GITHUB-ACTIONS-MONOREPO-UPDATE.md`
+- **Cloudflare Test Plan**: `/home/ubuntu/saabuildingblocks-platform/CLOUDFLARE-DEPLOYMENT-TEST-PLAN.md`
+- **Coding Standards**: `/home/ubuntu/saabuildingblocks-platform/docs/CODING-STANDARDS.md`
 
 ---
 
@@ -489,7 +489,7 @@ PORT=3001 npm run dev -w @saa/public-site
 
 ## 📞 Support
 
-- **Documentation**: See `/home/claude-flow/docs/` directory
+- **Documentation**: See `/home/ubuntu/saabuildingblocks-platform/docs/` directory
 - **Issues**: Check CLAUDE.md for session context
 - **Build Errors**: Review package-specific README files
 
