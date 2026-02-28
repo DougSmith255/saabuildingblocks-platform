@@ -3346,7 +3346,7 @@ export default function ExpRealtySponsor() {
           <div className="max-w-[2500px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>Smart Agent Alliance</H1>
-              <Tagline className="mt-4" style={{ maxWidth: '1400px', marginLeft: 'auto', marginRight: 'auto' }} counterSuffix={<TaglineCounterSuffix />}>Premium Systems & Support - at Zero Cost to You.</Tagline>
+              <Tagline className="mt-4" style={{ maxWidth: '90%', marginLeft: 'auto', marginRight: 'auto' }} counterSuffix={<TaglineCounterSuffix />}>Premium Systems & Support - Zero Cost to You.</Tagline>
             </div>
           </div>
 
