@@ -99,7 +99,7 @@ export default function H2({
         marginLeft: style.textAlign === 'left' ? '0' : 'auto',
         marginRight: style.textAlign === 'right' ? '0' : 'auto',
         marginBottom: '2.5rem',
-        maxWidth: style.maxWidth || '1400px',
+        maxWidth: style.maxWidth || '95%',
         color: textColor,
         textShadow,
         transform: 'perspective(800px) rotateX(8deg)',
