@@ -27,12 +27,9 @@ export default function Header() {
   // JS-driven responsive nav: null = CSS handles it, true = desktop fits, false = mobile
   const [desktopNavFits, setDesktopNavFits] = useState<boolean | null>(null);
   // Compact logo: switch from full SAA to S icon when in mobile mode
-  // Default to compact (S icon) during SSR/static build to prevent flash of SAA on mobile
-  // Desktop JS will quickly switch to full logo after hydration
-  const [compactLogo, setCompactLogo] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    return window.innerWidth < 1024;
-  });
+  // Default to null during SSR — CSS media queries handle the initial state,
+  // then JS measurement takes over after hydration for the exact breakpoint.
+  const [compactLogo, setCompactLogo] = useState<boolean | null>(null);
   const headerContainerRef = useRef<HTMLDivElement>(null);
 
   // Track pathname for route change detection
@@ -123,7 +120,9 @@ export default function Header() {
       const navItems = desktopWrapper.querySelectorAll('.nav-item');
       let navWidth = 0;
       navItems.forEach(item => { navWidth += (item as HTMLElement).getBoundingClientRect().width; });
-      const logoWidth = logo.getBoundingClientRect().width;
+      // Use full SAA logo width (126px) — DOM measurement is unreliable during
+      // hydration when the logo may still be in compact/CSS-default state
+      const logoWidth = 126;
       const ctaEl = desktopWrapper.querySelector('.header-btn') as HTMLElement;
       const ctaWidth = ctaEl?.getBoundingClientRect().width || 0;
 
@@ -379,15 +378,17 @@ export default function Header() {
             {/* Shows full SAA logo normally, compact S icon when mobile layout is tight */}
             <Link
               href="/"
-              className={`logo-container${compactLogo ? ' logo-compact' : ''} ${hasMounted ? 'transition-opacity duration-300' : ''}`}
+              className={`logo-container${compactLogo === true ? ' logo-compact' : compactLogo === false ? '' : ' logo-css-default'} ${hasMounted ? 'transition-opacity duration-300' : ''}`}
               aria-label="Smart Agent Alliance Home"
               style={{
-                width: compactLogo ? '40px' : '126px',
-                height: compactLogo ? '40px' : '45px',
+                ...(compactLogo !== null ? {
+                  width: compactLogo ? '40px' : '126px',
+                  height: compactLogo ? '40px' : '45px',
+                  maxWidth: compactLogo ? '40px' : '126px',
+                  maxHeight: compactLogo ? '40px' : '45px',
+                } : {}),
                 minWidth: '0',
                 minHeight: '0',
-                maxWidth: compactLogo ? '40px' : '126px',
-                maxHeight: compactLogo ? '40px' : '45px',
                 borderRadius: 0,
                 display: 'flex',
                 alignItems: 'center',
@@ -401,14 +402,14 @@ export default function Header() {
                 transition: 'width 0.3s ease, height 0.3s ease, max-width 0.3s ease, max-height 0.3s ease, opacity 0.3s ease',
               }}
             >
-              {/* Full SAA logo */}
+              {/* Full SAA logo - visible by default via CSS, JS toggles after measurement */}
               <svg
                 width="126px" height="45px" viewBox="0 0 201.96256 75.736626" version="1.1"
                 style={{
                   width: '100%', height: '100%', objectFit: 'contain',
-                  display: compactLogo ? 'none' : 'block',
+                  ...(compactLogo !== null ? { display: compactLogo ? 'none' : 'block' } : {}),
                 }}
-                className="hover:scale-110 transition-transform duration-300"
+                className={`hover:scale-110 transition-transform duration-300${compactLogo === null ? ' logo-svg-default' : ''}`}
                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation"
               >
                 <defs>
@@ -429,9 +430,9 @@ export default function Header() {
                 alt="SAA"
                 style={{
                   width: '100%', height: '100%', objectFit: 'contain',
-                  display: compactLogo ? 'block' : 'none',
+                  ...(compactLogo !== null ? { display: compactLogo ? 'block' : 'none' } : {}),
                 }}
-                className="hover:scale-110 transition-transform duration-300"
+                className={`hover:scale-110 transition-transform duration-300${compactLogo === null ? ' logo-img-default' : ''}`}
               />
             </Link>
 

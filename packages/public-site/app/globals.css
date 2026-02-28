@@ -4167,6 +4167,43 @@ input[type="range"]:focus::-moz-range-thumb {
 }
 
 /* ========================================
+   HEADER LOGO CSS DEFAULTS
+   Before JS measures the exact nav breakpoint, CSS media queries
+   show the correct logo (SAA on desktop, S icon on mobile).
+   Once JS sets compactLogo to true/false, these classes are removed.
+   ======================================== */
+
+/* Mobile default: show S icon, hide SAA SVG, compact container */
+.logo-css-default {
+  width: 40px;
+  height: 40px;
+  max-width: 40px;
+  max-height: 40px;
+}
+.logo-svg-default {
+  display: none;
+}
+.logo-img-default {
+  display: block;
+}
+
+/* Desktop default (≥1440px): show SAA SVG, hide S icon, full container */
+@media (min-width: 1440px) {
+  .logo-css-default {
+    width: 126px;
+    height: 45px;
+    max-width: 126px;
+    max-height: 45px;
+  }
+  .logo-svg-default {
+    display: block;
+  }
+  .logo-img-default {
+    display: none;
+  }
+}
+
+/* ========================================
    H1 NEON GLOW STYLES
    Moved from inline <style> tags in H1.tsx to eliminate
    per-instance style recalculation during hydration.
