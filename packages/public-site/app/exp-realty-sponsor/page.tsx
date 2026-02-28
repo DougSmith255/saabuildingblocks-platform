@@ -2,7 +2,10 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { H1, H2, Tagline, CTAButton, GlassPanel, GenericCard } from '@saa/shared/components/saa';
+import { GlassPanel } from '@saa/shared/components/saa/backgrounds';
+import { CTAButton } from '@saa/shared/components/saa/buttons';
+import { GenericCard } from '@saa/shared/components/saa/cards';
+import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { MeetTheFounders } from '@/app/components/sections/MeetTheFounders';
 import { SuccessStories } from '@/app/components/sections/SuccessStories';
 import { GrainCard } from '@saa/shared/components/saa/cards';
@@ -3343,7 +3346,7 @@ export default function ExpRealtySponsor() {
           <div className="max-w-[2500px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>Smart Agent Alliance</H1>
-              <Tagline className="mt-4" style={{ maxWidth: '1400px', marginLeft: 'auto', marginRight: 'auto' }} counterSuffix={<TaglineCounterSuffix />}>Built for your business. Paid for by eXp.</Tagline>
+              <Tagline className="mt-4" style={{ maxWidth: '1400px', marginLeft: 'auto', marginRight: 'auto' }} counterSuffix={<TaglineCounterSuffix />}>Premium Systems & Support - at Zero Cost to You.</Tagline>
               <p className="text-body mt-4" style={{ maxWidth: '75%', marginLeft: 'auto', marginRight: 'auto' }}>
                 Systems, training, and support that never come out of your pocket.
               </p>
