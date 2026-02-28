@@ -4151,6 +4151,12 @@ input[type="range"]:focus::-moz-range-thumb {
   display: none;  /* Chrome, Safari and Opera */
 }
 
+/* Performance: defer rendering of off-screen sections */
+.content-defer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
 /* Safe area insets for mobile app-like experience */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0);
