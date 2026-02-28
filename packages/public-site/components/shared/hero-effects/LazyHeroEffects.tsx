@@ -18,8 +18,7 @@ function ImmediateLoader({
   const [Component, setComponent] = useState<ComponentType<any> | null>(null);
 
   useEffect(() => {
-    // Load immediately on mount
-    const loadComponent = async () => {
+    const load = async () => {
       try {
         const mod = await importFn();
         setComponent(() => mod.default);
@@ -28,7 +27,14 @@ function ImmediateLoader({
       }
     };
 
-    loadComponent();
+    // Defer to idle time so the browser paints H1/LCP first
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(load);
+      return () => cancelIdleCallback(id);
+    } else {
+      const id = setTimeout(load, 1);
+      return () => clearTimeout(id);
+    }
   }, [importFn]);
 
   if (!Component) return null;

@@ -21,7 +21,7 @@ export interface PreloadResult {
  */
 const CRITICAL_IMAGES = [
   '/images/saa-logo-gold.png',
-  '/icons/s-logo-1000.png', // SAA Support (transparent S logo)
+  '/icons/s-logo-80.webp', // SAA Support (transparent S logo, 80x80 WebP)
   // Cloudflare Images - preload to prevent slow loading in Support & Team Calls sections
   'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public', // eXp Support
   'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wolf-pack-logo-icon/public', // Wolf Pack Support + Elite Courses

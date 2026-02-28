@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { H2 } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa/headings';
 import { ProfileCyberFrame } from '@saa/shared/components/saa/media/ProfileCyberFrame';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 
@@ -29,17 +29,7 @@ export function MeetTheFounders() {
 
   return (
     <GlassPanel variant="marigoldCrosshatch" noBlur className="py-[50px]">
-      {/* H1-style glow animation for founder names */}
-      <style>{`
-        @keyframes h1GlowBreathe {
-          0%, 100% {
-            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
-          }
-          50% {
-            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45));
-          }
-        }
-      `}</style>
+      {/* h1GlowBreathe keyframes now in globals.css */}
       <section ref={ref} className="px-6 relative">
         <div className="mx-auto relative z-10" style={{ maxWidth: '1500px' }}>
         {/* H2 - always visible, no animation */}

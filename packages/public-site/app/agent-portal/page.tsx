@@ -3,7 +3,11 @@
 import { useState, useEffect, useLayoutEffect, useRef, useMemo, Suspense, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D, GrainCard } from '@saa/shared/components/saa';
+import { CTAButton } from '@saa/shared/components/saa/buttons';
+import { GenericCard, GrainCard } from '@saa/shared/components/saa/cards';
+import { H1, H2 } from '@saa/shared/components/saa/headings';
+import { Icon3D } from '@saa/shared/components/saa/icons';
+import { FAQ } from '@saa/shared/components/saa/interactive';
 import { API_URL, SITE_URL } from '@/lib/api-config';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
 import { SlidePanel } from '@/components/shared/SlidePanel';
@@ -3453,7 +3457,7 @@ function AgentPortal() {
               title="Go to Dashboard"
             >
               <img
-                src="/icons/s-logo-1000.png"
+                src="/icons/s-logo-80.webp"
                 alt="Smart Agent Alliance"
                 className="object-contain"
                 style={{
@@ -4024,7 +4028,7 @@ function AgentPortal() {
                   title="Go to Dashboard"
                 >
                   <img
-                    src="/icons/s-logo-1000.png"
+                    src="/icons/s-logo-80.webp"
                     alt="SAA"
                     className="w-5 h-5 object-contain"
                   />
@@ -8299,7 +8303,7 @@ function SupportSection({ userState, userId, onClearCache }: SupportSectionProps
           <div className="p-5 border-b border-[#ffd700]/20" style={{ background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, transparent 50%)' }}>
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-xl" style={{ background: 'rgba(255, 215, 0, 0.15)', border: '1px solid rgba(255, 215, 0, 0.3)' }}>
-                <img src="/icons/s-logo-1000.png" alt="SAA" className="w-7 h-7 object-contain" />
+                <img src="/icons/s-logo-80.webp" alt="SAA" className="w-7 h-7 object-contain" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#ffd700]">SAA Support</h3>
@@ -12636,7 +12640,7 @@ function AgentPagesSection({
                     </svg>
                     <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Page Preview</span>
                   </div>
-                  {pageUrl && (
+                  {pageUrl && pageData?.activated && (
                     <a
                       href={pageUrl}
                       target="_blank"
@@ -13695,7 +13699,7 @@ function AgentPagesSection({
         {/* View Page - Opens the linktree-style link page */}
         <button
           onClick={() => linktreeUrl && window.open(linktreeUrl, '_blank')}
-          disabled={!linktreeUrl}
+          disabled={!pageData?.activated}
           className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -13708,7 +13712,7 @@ function AgentPagesSection({
         {/* Copy URL - Copies the linktree-style link page URL */}
         <button
           onClick={() => linktreeUrl && navigator.clipboard.writeText(linktreeUrl)}
-          disabled={!pageData?.slug}
+          disabled={!pageData?.activated}
           className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">

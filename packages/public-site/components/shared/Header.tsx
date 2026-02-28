@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import styles from './GlassShimmer.module.css';
 import { usePathname } from 'next/navigation';
-import { SecondaryButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa/buttons';
 import MobileMenu from './MobileMenu';
 import DesktopNav from './DesktopNav';
 
@@ -425,7 +425,7 @@ export default function Header() {
               {/* Compact S logo - shown when mobile layout is tight */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/icons/s-logo-1000.png"
+                src="/icons/s-logo-80.webp"
                 alt="SAA"
                 style={{
                   width: '100%', height: '100%', objectFit: 'contain',
