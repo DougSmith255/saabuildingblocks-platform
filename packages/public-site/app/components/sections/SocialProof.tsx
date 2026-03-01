@@ -1,6 +1,6 @@
 'use client';
 
-import { H2 } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa/headings';
 import { GrainCard } from '@saa/shared/components/saa/cards';
 import { TrendingUp, Users, Award } from 'lucide-react';
 

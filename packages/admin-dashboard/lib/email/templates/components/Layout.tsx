@@ -37,10 +37,10 @@ export const BRAND_COLORS = {
   textSecondary: '#bfbdb0',
   textMuted: '#888888',
   textDark: '#1a1a1a',
-  border: 'rgba(255, 215, 0, 0.2)',
-  borderLight: 'rgba(255, 255, 255, 0.1)',
-  highlight: 'rgba(255, 215, 0, 0.05)',
-  highlightStrong: 'rgba(255, 215, 0, 0.1)',
+  border: '#333333',
+  borderLight: '#333333',
+  highlight: '#1f1f1f',
+  highlightStrong: '#242424',
 };
 
 interface EmailLayoutProps {
@@ -158,7 +158,7 @@ const container: React.CSSProperties = {
   maxWidth: '600px',
   width: '100%', // Ensure container takes full width up to max
   borderRadius: '12px',
-  border: `1px solid ${BRAND_COLORS.border}`,
+  border: '2px solid #888888',
   overflow: 'hidden',
 };
 
@@ -467,26 +467,26 @@ export const EmailAlert = ({
 }) => {
   const alertStyles = {
     info: {
-      bg: 'rgba(59, 130, 246, 0.1)',
-      border: 'rgba(59, 130, 246, 0.3)',
+      bg: '#1d2430',
+      border: '#24395c',
       text: '#93c5fd',
       icon: 'ℹ️',
     },
     warning: {
-      bg: 'rgba(245, 158, 11, 0.1)',
-      border: 'rgba(245, 158, 11, 0.3)',
+      bg: '#302719',
+      border: '#5c4216',
       text: '#fcd34d',
       icon: '⚠️',
     },
     error: {
-      bg: 'rgba(239, 68, 68, 0.1)',
-      border: 'rgba(239, 68, 68, 0.3)',
+      bg: '#2f1e1e',
+      border: '#5a2727',
       text: '#fca5a5',
       icon: '❌',
     },
     success: {
-      bg: 'rgba(16, 185, 129, 0.1)',
-      border: 'rgba(16, 185, 129, 0.3)',
+      bg: '#192a24',
+      border: '#174a39',
       text: '#6ee7b7',
       icon: '✅',
     },
@@ -600,16 +600,15 @@ export const EmailNumberedStep = ({
       <td style={{ width: '32px', verticalAlign: 'top', paddingTop: '2px' }}>
         <div
           style={{
-            color: BRAND_COLORS.gold,
+            color: '#1a1a1a',
             fontSize: '13px',
             fontWeight: 700,
             width: '24px',
             height: '24px',
             borderRadius: '50%',
-            backgroundColor: 'rgba(255, 215, 0, 0.15)',
-            border: '1px solid rgba(255, 215, 0, 0.3)',
+            backgroundColor: BRAND_COLORS.gold,
             textAlign: 'center' as const,
-            lineHeight: '22px',
+            lineHeight: '24px',
             display: 'block',
           }}
         >
@@ -647,35 +646,44 @@ export const EmailSignature = () => (
     >
       Best regards,
     </Text>
-    {/* Signature Card */}
+    {/* Signature Card - bgcolor for dark bg, img tag for gold beam */}
     <table
       cellPadding="0"
       cellSpacing="0"
+      width="500"
       style={{
-        width: '100%',
-        maxWidth: '460px',
-        border: '2.5px solid #666',
-        borderRadius: '12px',
+        borderCollapse: 'separate' as const,
+        borderSpacing: '0',
+        border: '2px solid #888888',
+        borderRadius: '10px',
         overflow: 'hidden',
-        borderCollapse: 'collapse' as const,
         fontFamily: "'Century Gothic', Futura, 'Trebuchet MS', Arial, sans-serif",
       }}
+      bgcolor="#0d0d0d"
     >
-      {/* Gold accent beam - top */}
+      {/* Gold accent beam - img tag so email clients cannot darken it */}
       <tr>
-        <td style={{ height: '4px', backgroundColor: '#ffcc00', fontSize: '1px', lineHeight: '1px' }}>&nbsp;</td>
+        <td bgcolor="#0d0d0d" style={{ backgroundColor: '#0d0d0d', fontSize: '0', lineHeight: '0' }}>
+          <Img
+            src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-gold-bar/public"
+            width={500}
+            height={4}
+            alt=""
+            style={{ display: 'block', border: '0', width: '100%', height: '4px' }}
+          />
+        </td>
       </tr>
       {/* Main content */}
       <tr>
-        <td style={{ backgroundColor: '#0d0d0d', padding: '20px 22px 16px' }}>
+        <td bgcolor="#0d0d0d" style={{ backgroundColor: '#0d0d0d', padding: '24px 28px 20px' }} valign="top">
           <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
             <tr>
               {/* SAA Logo */}
-              <td style={{ width: '140px', verticalAlign: 'middle', paddingRight: '18px' }}>
+              <td style={{ width: '160px', verticalAlign: 'middle', paddingRight: '22px' }}>
                 <Link href="https://smartagentalliance.com" style={{ textDecoration: 'none' }}>
                   <Img
                     src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-logo-gold/public"
-                    width={120}
+                    width={140}
                     alt="Smart Agent Alliance"
                     style={{ display: 'block', border: '0' }}
                   />
@@ -685,29 +693,29 @@ export const EmailSignature = () => (
               <td style={{ verticalAlign: 'top' }}>
                 <table cellPadding="0" cellSpacing="0">
                   <tr>
-                    <td style={{ fontSize: '15px', fontWeight: 'bold', color: '#ffffff', letterSpacing: '2px', textTransform: 'uppercase' as const, paddingBottom: '3px' }}>
+                    <td style={{ fontSize: '17px', fontWeight: 'bold', color: '#ffffff', letterSpacing: '2px', textTransform: 'uppercase' as const, paddingBottom: '4px' }}>
                       Smart Agent Alliance
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ fontSize: '9px', color: '#777', letterSpacing: '1.5px', textTransform: 'uppercase' as const, paddingBottom: '10px' }}>
+                    <td style={{ fontSize: '10px', color: '#777777', letterSpacing: '2px', textTransform: 'uppercase' as const, paddingBottom: '14px' }}>
                       For Agents Who Want More
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ paddingBottom: '8px' }}>
-                      <Link href="mailto:team@smartagentalliance.com" style={{ fontSize: '11px', color: '#ffd700', textDecoration: 'none', letterSpacing: '0.5px' }}>
+                    <td style={{ paddingBottom: '10px' }}>
+                      <Link href="mailto:team@smartagentalliance.com" style={{ fontSize: '12px', color: '#ffd700', textDecoration: 'none' }}>
                         team@smartagentalliance.com
                       </Link>
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ fontSize: '10px' }}>
-                      <Link href="https://smartagentalliance.com" style={{ color: '#888', textDecoration: 'none', letterSpacing: '0.3px' }}>Website</Link>
-                      <span style={{ color: '#444', padding: '0 5px' }}>//</span>
-                      <Link href="https://www.youtube.com/@SmartAgentAlliance" style={{ color: '#888', textDecoration: 'none', letterSpacing: '0.3px' }}>YouTube</Link>
-                      <span style={{ color: '#444', padding: '0 5px' }}>//</span>
-                      <Link href="https://www.linkedin.com/company/smart-agent-alliance" style={{ color: '#888', textDecoration: 'none', letterSpacing: '0.3px' }}>LinkedIn</Link>
+                    <td style={{ fontSize: '11px' }}>
+                      <Link href="https://smartagentalliance.com" style={{ color: '#888888', textDecoration: 'none' }}>Website</Link>
+                      <span style={{ color: '#444444', padding: '0 6px' }}>//</span>
+                      <Link href="https://www.youtube.com/@SmartAgentAlliance" style={{ color: '#888888', textDecoration: 'none' }}>YouTube</Link>
+                      <span style={{ color: '#444444', padding: '0 6px' }}>//</span>
+                      <Link href="https://www.linkedin.com/company/smart-agent-alliance" style={{ color: '#888888', textDecoration: 'none' }}>LinkedIn</Link>
                     </td>
                   </tr>
                 </table>
@@ -716,20 +724,20 @@ export const EmailSignature = () => (
           </table>
         </td>
       </tr>
-      {/* Gold separator beam */}
+      {/* Grey separator */}
       <tr>
-        <td style={{ backgroundColor: '#0d0d0d', padding: '0 22px' }}>
+        <td bgcolor="#0d0d0d" style={{ backgroundColor: '#0d0d0d', padding: '0 28px' }}>
           <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
             <tr>
-              <td style={{ height: '1px', backgroundColor: '#ffcc00', fontSize: '1px', lineHeight: '1px' }}>&nbsp;</td>
+              <td height="1" bgcolor="#888888" style={{ backgroundColor: '#888888', fontSize: '1px', lineHeight: '1px' }}>&nbsp;</td>
             </tr>
           </table>
         </td>
       </tr>
       {/* Footer */}
       <tr>
-        <td style={{ backgroundColor: '#0d0d0d', padding: '12px 22px 16px' }}>
-          <Link href="https://smartagentalliance.com" style={{ fontSize: '10px', color: '#ffd700', letterSpacing: '2.5px', textTransform: 'uppercase' as const, textDecoration: 'none' }}>
+        <td bgcolor="#0d0d0d" style={{ backgroundColor: '#0d0d0d', padding: '16px 28px 20px' }}>
+          <Link href="https://smartagentalliance.com" style={{ fontSize: '11px', color: '#ffd700', letterSpacing: '3px', textTransform: 'uppercase' as const, textDecoration: 'none' }}>
             Smart Agent Alliance
           </Link>
         </td>

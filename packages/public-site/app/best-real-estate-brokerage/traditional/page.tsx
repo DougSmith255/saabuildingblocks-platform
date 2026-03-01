@@ -1,6 +1,8 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { CTAButton } from '@saa/shared/components/saa/buttons';
+import { GenericCard } from '@saa/shared/components/saa/cards';
+import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { GrainCard } from '@saa/shared/components/saa/cards';
 import { LazySection } from '@/components/shared/LazySection';
 import { AuroraNetworkEffect } from '@/components/shared/hero-effects/AuroraNetworkEffect';

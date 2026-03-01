@@ -134,7 +134,7 @@ export function PortalPromoEmail({
       <table cellPadding="0" cellSpacing="0" width="100%" style={{ margin: '8px 0 20px' }}>
         <tr>
           <td style={{
-            backgroundColor: 'rgba(255, 215, 0, 0.06)',
+            backgroundColor: '#1f1f1f',
             border: `1px solid ${BRAND_COLORS.border}`,
             borderRadius: '10px',
             padding: '20px 24px',

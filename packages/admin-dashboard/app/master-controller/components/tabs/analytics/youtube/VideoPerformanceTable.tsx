@@ -67,7 +67,7 @@ export function VideoPerformanceTable({ onEditVideo, onEditThumbnail }: VideoPer
   // Combined sort state to avoid the broken nested-setState issue
   const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({ key: 'publishedAt', dir: 'desc' });
   const [page, setPage] = useState(1);
-  const [privacyFilter, setPrivacyFilter] = useState<PrivacyStatus | 'all'>('all');
+  const [privacyFilter, setPrivacyFilter] = useState<PrivacyStatus | 'all'>('public');
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {

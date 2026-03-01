@@ -18,7 +18,7 @@ import {
   Hr,
   Img,
 } from '@react-email/components';
-import { EmailNumberedStep } from './components/Layout';
+import { EmailNumberedStep, EmailSignature } from './components/Layout';
 
 interface ApplyInstructionsEmailProps {
   recipientFirstName: string;
@@ -39,7 +39,7 @@ export function ApplyInstructionsEmail({
           {/* Header */}
           <Section style={headerStyle}>
             <Img
-              src="https://smartagentalliance.com/images/saa-logo-gold.png"
+              src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-logo-gold/public"
               alt="Smart Agent Alliance"
               width={180}
               height={64}
@@ -102,15 +102,7 @@ export function ApplyInstructionsEmail({
 
             <Hr style={dividerStyle} />
 
-            <Text style={closingStyle}>
-              Best regards,
-            </Text>
-            <Text style={{...goldTextStyle, marginTop: '8px'}}>
-              Smart Agent Alliance
-            </Text>
-            <Link href="mailto:team@smartagentalliance.com" style={linkStyle}>
-              team@smartagentalliance.com
-            </Link>
+            <EmailSignature />
           </Section>
 
           {/* Footer */}
@@ -147,7 +139,7 @@ const containerStyle: React.CSSProperties = {
   margin: '0 auto',
   backgroundColor: '#1a1a1a',
   borderRadius: '12px',
-  border: '1px solid rgba(255, 215, 0, 0.2)',
+  border: '2px solid #888888',
   overflow: 'hidden',
 };
 
@@ -155,7 +147,7 @@ const headerStyle: React.CSSProperties = {
   padding: '20px 24px 16px',
   backgroundColor: '#0a0a0a',
   textAlign: 'center',
-  borderBottom: '1px solid rgba(255, 215, 0, 0.2)',
+  borderBottom: '1px solid #333333',
 };
 
 const headerBrandTextStyle: React.CSSProperties = {
@@ -236,8 +228,8 @@ const subTextStyle: React.CSSProperties = {
 };
 
 const highlightBoxStyle: React.CSSProperties = {
-  backgroundColor: 'rgba(255, 215, 0, 0.05)',
-  border: '1px solid rgba(255, 215, 0, 0.2)',
+  backgroundColor: '#1f1f1f',
+  border: '1px solid #333333',
   borderRadius: '8px',
   padding: '16px 18px',
   margin: '18px 0',
@@ -274,7 +266,7 @@ const linkStyle: React.CSSProperties = {
 };
 
 const dividerStyle: React.CSSProperties = {
-  borderColor: 'rgba(255, 255, 255, 0.1)',
+  borderColor: '#333333',
   margin: '18px 0',
 };
 

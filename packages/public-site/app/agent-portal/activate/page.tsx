@@ -2,7 +2,15 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { H1, FormCard, FormGroup, FormInput, FormButton, FormMessage, ModalTitle } from '@saa/shared/components/saa';
+import {
+  FormButton,
+  FormCard,
+  FormGroup,
+  FormInput,
+  FormMessage,
+  ModalTitle,
+} from '@saa/shared/components/saa/forms';
+import { H1 } from '@saa/shared/components/saa/headings';
 import { API_URL } from '@/lib/api-config';
 
 // Initial progress values for the data stream effect

@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { H1, H2, Tagline, CTAButton } from '@saa/shared/components/saa';
+import { CTAButton } from '@saa/shared/components/saa/buttons';
+import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { GoldenRainEffect } from '@/components/shared/hero-effects/GoldenRainEffect';

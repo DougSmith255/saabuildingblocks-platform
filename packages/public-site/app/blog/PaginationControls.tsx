@@ -1,6 +1,6 @@
 'use client';
 
-import { SecondaryButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa/buttons';
 
 interface PaginationControlsProps {
   currentPage: number;
@@ -108,7 +108,7 @@ export default function PaginationControls({
   return (
     <div className="mt-12 mb-8 pb-8 flex flex-col items-center gap-8">
       {/* Navigation Buttons */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center justify-center gap-4 sm:gap-6 w-full px-4 sm:px-0">
         {/* Previous Button */}
         <SecondaryButton
             as="button"
@@ -119,7 +119,7 @@ export default function PaginationControls({
               }
               goToPage(currentPage - 1);
             }}
-            className={`min-w-[180px] ${isFirstPage ? 'opacity-40' : ''}`}
+            className={`min-w-[140px] sm:min-w-[180px] ${isFirstPage ? 'opacity-40' : ''}`}
           >
             Previous
           </SecondaryButton>
@@ -211,7 +211,7 @@ export default function PaginationControls({
               }
               goToPage(currentPage + 1);
             }}
-            className={`min-w-[180px] ${isLastPage ? 'opacity-40' : ''}`}
+            className={`min-w-[140px] sm:min-w-[180px] ${isLastPage ? 'opacity-40' : ''}`}
           >
             Next
           </SecondaryButton>

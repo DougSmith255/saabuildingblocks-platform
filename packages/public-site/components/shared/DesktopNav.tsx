@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { SecondaryButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa/buttons';
 
 interface NavItem {
   label: string;

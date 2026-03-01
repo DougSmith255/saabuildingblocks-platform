@@ -9,7 +9,7 @@
  * - Max width container for readability
  */
 
-import { H1 } from '@saa/shared/components/saa';
+import { H1 } from '@saa/shared/components/saa/headings';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 

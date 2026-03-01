@@ -1,6 +1,8 @@
 'use client';
 
-import { CTAButton, SecondaryButton, NeonCard, NeonGoldText } from '@saa/shared/components/saa';
+import { CTAButton, SecondaryButton } from '@saa/shared/components/saa/buttons';
+import { NeonCard } from '@saa/shared/components/saa/cards';
+import { NeonGoldText } from '@saa/shared/components/saa/text';
 
 export function FinalCTA() {
   return (

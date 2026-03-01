@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { H2, GenericButton, CTAButton } from '@saa/shared/components/saa';
+import { CTAButton, GenericButton } from '@saa/shared/components/saa/buttons';
+import { H2 } from '@saa/shared/components/saa/headings';
 import { UserPlus, Briefcase, Users, Crown } from 'lucide-react';
 
 type PathType = 'new-agent' | 'seasoned-agent' | 'team-leader' | 'empire-builder' | null;

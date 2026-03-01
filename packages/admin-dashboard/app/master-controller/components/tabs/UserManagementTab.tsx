@@ -12,7 +12,7 @@ interface User {
   email: string;
   username?: string;
   role: 'admin' | 'user';
-  status: 'active' | 'pending' | 'suspended';
+  status: 'active' | 'pending' | 'invited' | 'suspended';
   ghl_contact_id?: string;
   created_at: string;
   exp_email?: string; // Agent's eXp Realty email
@@ -134,6 +134,9 @@ export function UserManagementTab() {
   // Delete confirmation state
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
+
+  // Resend invitation state
+  const [resendingUserId, setResendingUserId] = useState<string | null>(null);
 
   // Fetch users and stats
   const fetchData = async () => {
@@ -358,6 +361,41 @@ export function UserManagementTab() {
     }
   };
 
+  // Handle resend invitation
+  const handleResendInvitation = async (user: User) => {
+    setResendingUserId(user.id);
+    try {
+      // Look up the user's invitation
+      const invResponse = await fetch(`/api/invitations?email=${encodeURIComponent(user.email)}&status=pending`);
+      const invData = await invResponse.json();
+      const invitation = invData.data?.[0];
+
+      if (!invitation) {
+        alert('No pending invitation found for this user. You may need to create a new one.');
+        return;
+      }
+
+      // Resend the invitation
+      const resendResponse = await fetch(`/api/invitations/${invitation.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'resend' }),
+      });
+
+      const resendData = await resendResponse.json();
+
+      if (!resendResponse.ok) {
+        throw new Error(resendData.error || 'Failed to resend invitation');
+      }
+
+      alert(`Activation email resent to ${user.email}`);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to resend invitation');
+    } finally {
+      setResendingUserId(null);
+    }
+  };
+
   // Handle edit user - open modal with pre-filled data
   const handleEditUser = (user: User) => {
     setEditingUser(user);
@@ -524,6 +562,8 @@ export function UserManagementTab() {
         return 'bg-[#00ff88]/10 text-[#00ff88]';
       case 'pending':
         return 'bg-[#ffd700]/10 text-[#ffd700]';
+      case 'invited':
+        return 'bg-[#dcdbd5]/10 text-[#dcdbd5]';
       case 'suspended':
         return 'bg-red-500/10 text-red-400';
       default:
@@ -655,9 +695,22 @@ export function UserManagementTab() {
                       </span>
                     </td>
                     <td className="py-4 px-4">
-                      <span className={`px-3 py-1 text-sm font-medium rounded-full capitalize ${getStatusColor(user.status)}`}>
-                        {user.status}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-3 py-1 text-sm font-medium rounded-full capitalize ${getStatusColor(user.status)}`}>
+                          {user.status}
+                        </span>
+                        {(user.status === 'pending' || user.status === 'invited') && (
+                          <button
+                            onClick={() => handleResendInvitation(user)}
+                            disabled={resendingUserId === user.id}
+                            className="inline-flex items-center gap-1 px-2 py-1 text-xs text-[#00ff88] hover:bg-[#00ff88]/10 rounded transition-colors disabled:opacity-50"
+                            title="Resend activation email"
+                          >
+                            <Mail className="w-3 h-3" />
+                            {resendingUserId === user.id ? 'Sending...' : 'Resend'}
+                          </button>
+                        )}
+                      </div>
                     </td>
                     <td className="py-4 px-4 text-right">
                       <div className="flex items-center justify-end gap-2">

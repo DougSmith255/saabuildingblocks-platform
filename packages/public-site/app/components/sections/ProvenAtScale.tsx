@@ -1,6 +1,7 @@
 'use client';
 
-import { H2, Icon3D } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa/headings';
+import { Icon3D } from '@saa/shared/components/saa/icons';
 import { NeonCard } from '@saa/shared/components/saa/cards';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 import { Globe, TrendingUp, Check, ArrowRight } from 'lucide-react';

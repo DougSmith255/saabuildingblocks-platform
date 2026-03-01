@@ -6,7 +6,7 @@
 
 'use client';
 
-import { SecondaryButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa/buttons';
 import type { PaginationState } from './types/filters';
 
 interface PaginationControlsProps {

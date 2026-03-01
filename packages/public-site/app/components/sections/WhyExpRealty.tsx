@@ -1,6 +1,6 @@
 'use client';
 
-import { H2 } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa/headings';
 import { IconCard } from '@saa/shared/components/saa/cards';
 import { DollarSign, Building, GraduationCap, Globe, TrendingUp, Wallet } from 'lucide-react';
 

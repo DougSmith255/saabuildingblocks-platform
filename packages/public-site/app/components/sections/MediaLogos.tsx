@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { H2, SecondaryButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa/buttons';
+import { H2 } from '@saa/shared/components/saa/headings';
 import { IconCard } from '@saa/shared/components/saa/cards';
 import { TrendingUp, Cloud, Users, Percent, Award } from 'lucide-react';
 

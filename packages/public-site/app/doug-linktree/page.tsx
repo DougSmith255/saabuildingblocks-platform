@@ -1,6 +1,7 @@
 'use client';
 
-import { GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
+import { GenericCard } from '@saa/shared/components/saa/cards';
+import { ProfileCyberFrame } from '@saa/shared/components/saa/media';
 import Image from 'next/image';
 
 // Cloudflare Images CDN URL

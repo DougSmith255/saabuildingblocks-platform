@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { CyberCard } from '@saa/shared/components/saa';
+import { CyberCard } from '@saa/shared/components/saa/cards';
 import H2 from '@saa/shared/components/saa/headings/H2';
 
 /**

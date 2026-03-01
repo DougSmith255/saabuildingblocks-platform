@@ -99,8 +99,8 @@ export default function LoginForm({ onClearCache }: { onClearCache?: () => void 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Error Alert */}
         {error && (
-          <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300">
-            <AlertDescription className="flex items-center justify-between">
+          <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300 !text-red-400 !border-red-400/50">
+            <AlertDescription className="flex items-center justify-between !text-red-400">
               <span>{error}</span>
               <button
                 type="button"
@@ -223,7 +223,7 @@ export default function LoginForm({ onClearCache }: { onClearCache?: () => void 
         {/* Get Help & Clear Cache */}
         <div className="flex items-center justify-between mt-4 pb-5">
           <a
-            href="mailto:team@smartagentalliance.com"
+            href="mailto:doug@smartagentalliance.com"
             className="text-sm text-[#ffd700] hover:opacity-80 transition-opacity"
           >
             Get Help

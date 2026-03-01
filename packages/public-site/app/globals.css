@@ -1990,6 +1990,7 @@ body:has(main[data-is-404="true"]) .scroll-progress-bar {
     0.12em 0.12em 0 #080808;
   /* Drop shadow for depth - matches H2.tsx */
   filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
+  overflow-wrap: break-word;
 }
 
 /* H3 - Master Controller Typography */
@@ -2007,6 +2008,7 @@ div.blog-content.prose.prose-invert h3 {
   color: var(--text-color-h3, #e5e4dd);
   margin-top: 2.5rem;
   margin-bottom: 1.25rem;
+  overflow-wrap: break-word;
 }
 
 /* H4 - Master Controller Typography */
@@ -2021,6 +2023,7 @@ div.blog-content.prose.prose-invert h3 {
   color: var(--text-color-h4, #e5e4dd);
   margin-top: 2rem;
   margin-bottom: 1rem;
+  overflow-wrap: break-word;
 }
 
 /* H5 - Master Controller Typography */
@@ -2035,6 +2038,7 @@ div.blog-content.prose.prose-invert h3 {
   color: var(--text-color-h5, #e5e4dd);
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
+  overflow-wrap: break-word;
 }
 
 /* H6 - Master Controller Typography */
@@ -2049,6 +2053,7 @@ div.blog-content.prose.prose-invert h3 {
   color: var(--text-color-h6, #e5e4dd);
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
+  overflow-wrap: break-word;
 }
 
 /* Paragraphs - Master Controller Body Typography */

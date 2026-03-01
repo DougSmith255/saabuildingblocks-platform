@@ -1,6 +1,7 @@
 'use client';
 
-import { H2, FAQ as FAQComponent } from '@saa/shared/components/saa';
+import { FAQ as FAQComponent } from '@saa/shared/components/saa/interactive';
+import { H2 } from '@saa/shared/components/saa/headings';
 
 const faqs = [
   {

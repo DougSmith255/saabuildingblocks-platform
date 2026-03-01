@@ -11,7 +11,7 @@
 
 import { CategoryChips } from './CategoryChips';
 import { SortControl } from './SortControl';
-import { SecondaryButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa/buttons';
 import { useFilters } from './hooks/useFilters';
 import type { CategoryInfo } from './types/filters';
 

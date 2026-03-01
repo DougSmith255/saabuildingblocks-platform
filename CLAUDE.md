@@ -127,7 +127,7 @@ mcp__context7__query-docs { "libraryId": "...", "query": "..." }
 | 22 | SSH | Running | Remote access (only externally open port via UFW) |
 | 80 | Apache | Running | HTTP (behind Cloudflare Tunnel) |
 | 443 | Apache | Running | HTTPS + reverse proxy (behind Cloudflare Tunnel) |
-| 3002 | admin-dashboard | Running | PM2: `nextjs-saa`, proxied via Apache |
+| 3002 | admin-dashboard | Running | PM2: `nextjs-saa` (2 cluster workers), proxied via Apache |
 | 3306 | MariaDB | Running | MySQL database (WordPress) |
 | 7000 | rembg | Running | Docker, AI background removal |
 | 8000 | Plausible CE | Running | Docker, analytics dashboard |
@@ -170,12 +170,14 @@ PM2 runs under the `ubuntu` user.
 
 **Note:** The running process is named `nextjs-saa` (not `admin-dashboard` as ecosystem.config.js defines). Use `nextjs-saa` for all pm2 commands.
 
+**Cluster mode:** Runs 2 workers via Next.js standalone output + PM2 cluster mode. `pm2 reload` does a rolling restart (zero downtime) - it starts new workers, waits for them to listen, then kills old ones. Always use `reload` instead of `restart`.
+
 ```bash
 # Check status
 pm2 list
 
-# Restart admin dashboard
-pm2 restart nextjs-saa
+# Zero-downtime reload (rolling restart)
+pm2 reload nextjs-saa
 
 # View logs
 pm2 logs nextjs-saa --lines 50 --nostream
@@ -214,10 +216,10 @@ Do NOT use a `_redirects` file.
 **Apache proxied paths:** `/api/`, `/master-controller/`, `/login/`, `/activate-account/`, `/reset-password/`, `/agent-portal/`, `/category/`, `/download/`
 
 ```bash
-# Build and restart admin dashboard
+# Build and deploy admin dashboard (zero-downtime)
 cd /home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard
 npm run build
-pm2 restart nextjs-saa
+pm2 reload nextjs-saa
 ```
 
 **What runs here:** 114 API routes, Master Controller, admin RBAC portal, auth system, Supabase connections
@@ -366,8 +368,8 @@ Tracks video play events from Cloudflare Stream players across the site.
 | Script | Command |
 |---|---|
 | `dev` | `next dev -p 3002` |
-| `build` | `next build` |
-| `start` | `next start -p 3002 --hostname 127.0.0.1` |
+| `build` | `next build` + copies `public/` and `.next/static/` into standalone dir |
+| `start` | `next start -p 3002 --hostname 127.0.0.1` (dev only - production uses standalone via PM2) |
 | `lint` | `next lint` |
 | `type-check` | `tsc --noEmit` |
 
@@ -457,6 +459,26 @@ pw-status
 
 # Timer status
 systemctl status playwright-chrome-cleanup.timer
+```
+
+---
+
+## Temporary Files Directory
+
+All screenshots, debug images, and other throwaway files go in `~/tmp/`. Auto-cleaned every 24 hours (files older than 24h are deleted).
+
+- **Directory:** `/home/ubuntu/tmp/`
+- **Cleanup script:** `/home/ubuntu/scripts/cleanup-tmp.sh`
+- **Timer:** `cleanup-tmp.timer` (systemd, every 24h + 5 min after boot)
+
+**When generating screenshots or temp files** (Playwright, debug output, image processing), always save to `~/tmp/` - never to `~/`, the repo root, or `/tmp/`.
+
+```bash
+# Check timer status
+systemctl status cleanup-tmp.timer
+
+# Manual cleanup
+/home/ubuntu/scripts/cleanup-tmp.sh
 ```
 
 ---

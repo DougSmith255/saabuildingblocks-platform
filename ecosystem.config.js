@@ -2,11 +2,11 @@ module.exports = {
   apps: [
     {
       name: 'admin-dashboard',
-      script: 'npm',
-      args: 'start',
+      script: '.next/standalone/saabuildingblocks-platform/packages/admin-dashboard/server.js',
       cwd: '/home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard',
-      instances: 1,
-      exec_mode: 'fork',
+      instances: 2,
+      exec_mode: 'cluster',
+      wait_ready: true,
       autorestart: true,
       watch: false,
       max_memory_restart: '2G',
@@ -40,7 +40,7 @@ module.exports = {
       repo: 'git@github.com:saabuildingblocks/saabuildingblocks.git',
       path: '/home/ubuntu/saabuildingblocks-platform',
       'pre-deploy-local': '',
-      'post-deploy': 'cd packages/admin-dashboard && npm ci && npm run build && pm2 reload ecosystem.config.js --env production && /home/ubuntu/saabuildingblocks-platform/scripts/run-e2e-tests-with-notify.sh --env production',
+      'post-deploy': 'cd packages/admin-dashboard && npm ci && npm run build && pm2 reload nextjs-saa && /home/ubuntu/saabuildingblocks-platform/scripts/run-e2e-tests-with-notify.sh --env production',
       'pre-setup': ''
     }
   }

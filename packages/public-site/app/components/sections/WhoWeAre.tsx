@@ -2,7 +2,10 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { H2, ProfileCyberFrame, GenericCard, SecondaryButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa/buttons';
+import { GenericCard } from '@saa/shared/components/saa/cards';
+import { H2 } from '@saa/shared/components/saa/headings';
+import { ProfileCyberFrame } from '@saa/shared/components/saa/media';
 
 const teamMembers = [
   {

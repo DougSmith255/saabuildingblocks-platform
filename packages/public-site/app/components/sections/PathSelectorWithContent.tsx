@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { H2, GenericButton, GenericCard } from '@saa/shared/components/saa';
+import { GenericButton } from '@saa/shared/components/saa/buttons';
+import { GenericCard } from '@saa/shared/components/saa/cards';
+import { H2 } from '@saa/shared/components/saa/headings';
 import { UserPlus, Briefcase, Users, Crown } from 'lucide-react';
 import { BuiltForFuture } from './BuiltForFuture';
 import { FAQ } from './FAQ';

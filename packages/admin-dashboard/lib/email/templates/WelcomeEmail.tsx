@@ -14,7 +14,7 @@ import {
   EmailButton,
   EmailAlert,
   EmailDivider,
-  EmailNumberedStep,
+  EmailListItem,
   EmailLink,
   EmailSignature,
   BRAND_COLORS,
@@ -32,36 +32,33 @@ export function WelcomeEmail({
   expiresInHours = 48,
 }: WelcomeEmailProps) {
   return (
-    <EmailLayout preview="Welcome to Smart Agent Alliance - Activate your account">
+    <EmailLayout preview="Welcome to Smart Agent Alliance - activate your portal to get started">
       <EmailGreeting>Hi {firstName},</EmailGreeting>
 
-      <EmailHeading>Activate Your Account</EmailHeading>
+      <EmailHeading>Welcome to the Team</EmailHeading>
 
       <EmailParagraph>
-        Congratulations on joining the Smart Agent Alliance! We&apos;re excited to have you
-        as part of our community of elite real estate professionals.
+        Your Smart Agent Alliance Agent Portal is ready. Inside you&apos;ll find a step-by-step
+        onboarding checklist that walks you through everything you need to do - faster
+        and easier than figuring it out on your own.
       </EmailParagraph>
 
-      <EmailParagraph>
-        Click the button below to activate your account and set up your login credentials.
-      </EmailParagraph>
-
-      <EmailButton href={activationLink}>Activate My Account</EmailButton>
+      <EmailButton href={activationLink}>Activate My Portal</EmailButton>
 
       <EmailAlert type="warning">
-        This activation link will expire in <strong>{expiresInHours} hours</strong> for security reasons.
+        This link expires in <strong>{expiresInHours} hours</strong>. A new one will be sent if it expires.
       </EmailAlert>
 
       <EmailDivider />
 
-      <EmailParagraph style={{ fontWeight: 600, marginBottom: '12px' }}>
-        What happens next:
+      <EmailParagraph style={{ fontWeight: 600, marginBottom: '12px', color: BRAND_COLORS.textPrimary }}>
+        What you get inside:
       </EmailParagraph>
 
-      <EmailNumberedStep number={1}>Click the activation button above</EmailNumberedStep>
-      <EmailNumberedStep number={2}>Create your email and password</EmailNumberedStep>
-      <EmailNumberedStep number={3}>Complete your profile setup</EmailNumberedStep>
-      <EmailNumberedStep number={4}>Start exploring your Agent Portal!</EmailNumberedStep>
+      <EmailListItem bullet="✓">Onboarding checklist - every setup step in order, check them off as you go</EmailListItem>
+      <EmailListItem bullet="✓">Your personal Link Page and Agent Attraction Page</EmailListItem>
+      <EmailListItem bullet="✓">Marketing templates, team call schedule, and elite courses</EmailListItem>
+      <EmailListItem bullet="✓">Production tracking and analytics</EmailListItem>
 
       <EmailDivider />
 

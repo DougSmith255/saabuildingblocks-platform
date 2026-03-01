@@ -55,6 +55,7 @@ const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
 const CLOUDFLARE_IMAGES_HASH = process.env.CLOUDFLARE_IMAGES_HASH; // Account hash for delivery URLs
 
 const OUT_DIR = path.join(process.cwd(), 'out');
+const PUBLIC_DIR = path.join(process.cwd(), 'public');
 const MAPPING_FILE = path.join(process.cwd(), 'cloudflare-images-mapping.json');
 
 
@@ -94,7 +95,24 @@ async function findUsedImages(): Promise<Set<string>> {
     }
   }
 
-  await walkDir(OUT_DIR);
+  // Scan out/ for HTML files and JSON chunks (available after build)
+  try {
+    await walkDir(OUT_DIR);
+  } catch {}
+
+  // Also scan public/ for JSON chunks (available at prebuild, before out/ exists)
+  try {
+    const publicEntries = await fs.readdir(PUBLIC_DIR, { withFileTypes: true });
+    for (const entry of publicEntries) {
+      if (!entry.isDirectory() && entry.name.endsWith('.json') && entry.name.startsWith('blog-posts-chunk-')) {
+        const fullPath = path.join(PUBLIC_DIR, entry.name);
+        if (!jsonFiles.includes(fullPath)) {
+          jsonFiles.push(fullPath);
+        }
+      }
+    }
+  } catch {}
+
   console.log(`  ✅ Found ${htmlFiles.length} HTML files`);
   console.log(`  ✅ Found ${jsonFiles.length} blog post JSON files\n`);
 
@@ -171,6 +189,24 @@ async function findUsedImages(): Promise<Set<string>> {
           allImageUrls.add(cleanUrl);
           // Track base image (without size suffix) for upload
           baseImageUrls.add(getBaseImageUrl(cleanUrl));
+        }
+      }
+
+      // Also scan post content HTML for WordPress image URLs
+      if (post.content) {
+        const contentImgRegex = /(src|srcset|data-src|href)=["']([^"']+)["']/gi;
+        let contentMatch;
+        while ((contentMatch = contentImgRegex.exec(post.content)) !== null) {
+          const attrValue = contentMatch[2];
+          const urls = attrValue.split(',').map((part: string) => part.trim().split(/\s+/)[0]);
+          for (const url of urls) {
+            if (wpDomains.some(domain => url.includes(domain)) &&
+                /\.(jpg|jpeg|png|webp|gif|svg)(\?|$)/i.test(url)) {
+              const cleanUrl = url.split('?')[0].replace(/^http:/, 'https:');
+              allImageUrls.add(cleanUrl);
+              baseImageUrls.add(getBaseImageUrl(cleanUrl));
+            }
+          }
         }
       }
     }
@@ -403,6 +439,39 @@ async function syncImages() {
     'utf-8'
   );
   console.log(`  ✅ Saved to: ${MAPPING_FILE}\n`);
+
+  // Also merge into the rebuilt mapping (keyed by filename)
+  // This is the file that generate-blog-posts-json.ts actually reads
+  const REBUILT_MAPPING_FILE = path.join(process.cwd(), 'cloudflare-images-mapping-rebuilt.json');
+  try {
+    let rebuiltMapping: Record<string, any> = {};
+    try {
+      const existing = await fs.readFile(REBUILT_MAPPING_FILE, 'utf-8');
+      rebuiltMapping = JSON.parse(existing);
+    } catch {}
+
+    let mergedCount = 0;
+    for (const m of mappings) {
+      const filename = m.wordpressUrl.split('/').pop() || '';
+      if (filename && !rebuiltMapping[filename]) {
+        rebuiltMapping[filename] = {
+          cloudflareId: m.cloudflareId,
+          cloudflareUrl: m.cloudflareUrl,
+          hash: m.hash,
+          uploadedAt: m.uploadedAt,
+          filename,
+        };
+        mergedCount++;
+      }
+    }
+
+    if (mergedCount > 0) {
+      await fs.writeFile(REBUILT_MAPPING_FILE, JSON.stringify(rebuiltMapping, null, 2), 'utf-8');
+      console.log(`  ✅ Merged ${mergedCount} new entries into ${REBUILT_MAPPING_FILE.split('/').pop()}\n`);
+    }
+  } catch (error) {
+    console.warn('  ⚠️  Could not merge into rebuilt mapping:', error);
+  }
 
   console.log('='.repeat(60));
   console.log('\n✅ SYNC COMPLETE - GLOBAL DOMINANCE ACHIEVED!\n');

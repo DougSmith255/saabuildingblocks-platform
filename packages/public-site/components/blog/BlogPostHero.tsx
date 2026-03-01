@@ -2,7 +2,9 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { H1, CyberFrame, YouTubeFacade, Icon3D } from '@saa/shared/components/saa';
+import { H1 } from '@saa/shared/components/saa/headings';
+import { Icon3D } from '@saa/shared/components/saa/icons';
+import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { Clock, Calendar, User } from 'lucide-react';
 import { CategoryBadge } from './CategoryBadge';
 import { ThemeSwitch } from './ThemeSwitch';

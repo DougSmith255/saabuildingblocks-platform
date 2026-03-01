@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { CTAButton } from '@saa/shared/components/saa/buttons';
+import { GenericCard } from '@saa/shared/components/saa/cards';
+import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { ParticleStormEffect } from '@/components/shared/hero-effects/ParticleStormEffect';

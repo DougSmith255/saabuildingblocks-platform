@@ -12,8 +12,8 @@ import type { NextConfig } from 'next';
  */
 
 const nextConfig: NextConfig = {
-  // Dynamic mode - DO NOT set output: 'export'
-  // This allows API routes and server features
+  // Standalone mode for PM2 cluster zero-downtime deploys
+  output: 'standalone',
 
   // Image optimization enabled (VPS has runtime)
   images: {

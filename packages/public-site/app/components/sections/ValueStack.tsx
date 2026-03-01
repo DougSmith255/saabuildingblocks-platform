@@ -1,6 +1,8 @@
 'use client';
 
-import { H2, GenericCard, NeonCard, NeonGoldText } from '@saa/shared/components/saa';
+import { GenericCard, NeonCard } from '@saa/shared/components/saa/cards';
+import { H2 } from '@saa/shared/components/saa/headings';
+import { NeonGoldText } from '@saa/shared/components/saa/text';
 import { DollarSign, Users, Brain, Zap, Globe } from 'lucide-react';
 
 const valueItems = [

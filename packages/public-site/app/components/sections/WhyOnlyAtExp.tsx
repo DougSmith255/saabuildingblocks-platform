@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { H2 } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa/headings';
 
 /**
  * "Why This Only Works at eXp Realty" Section

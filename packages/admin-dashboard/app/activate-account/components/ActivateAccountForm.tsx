@@ -248,15 +248,15 @@ export default function ActivateAccountForm({ initialToken = '' }: ActivateAccou
   if (step === 'validating' && error) {
     return (
       <div className="space-y-6">
-        <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300">
-          <AlertDescription>{error}</AlertDescription>
+        <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300 !text-red-400 !border-red-400/50">
+          <AlertDescription className="!text-red-400">{error}</AlertDescription>
         </Alert>
         <p className="text-center text-sm text-[#dcdbd5]">
-          <Link href="/login" className="text-[#ffd700] hover:opacity-80 transition-opacity">
+          <Link href="https://smartagentalliance.com/agent-portal/login" className="text-[#ffd700] hover:opacity-80 transition-opacity">
             Go to Login
           </Link>
           {' · '}
-          <a href="mailto:team@smartagentalliance.com" className="text-[#ffd700] hover:opacity-80 transition-opacity">
+          <a href="mailto:doug@smartagentalliance.com" className="text-[#ffd700] hover:opacity-80 transition-opacity">
             Contact Support
           </a>
         </p>
@@ -270,8 +270,8 @@ export default function ActivateAccountForm({ initialToken = '' }: ActivateAccou
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Error Alert */}
         {error && (
-          <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300">
-            <AlertDescription className="flex items-center justify-between">
+          <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300 !text-red-400 !border-red-400/50">
+            <AlertDescription className="flex items-center justify-between !text-red-400">
               <span>{error}</span>
               <button
                 type="button"
@@ -358,6 +358,9 @@ export default function ActivateAccountForm({ initialToken = '' }: ActivateAccou
                 </div>
               </FormControl>
               <FormMessage className="text-red-400" />
+              <p className="text-xs text-[#dcdbd5]/40 mt-1">
+                Changing your email will update your login and where we send team communications.
+              </p>
             </FormItem>
           )}
         />
@@ -449,7 +452,7 @@ export default function ActivateAccountForm({ initialToken = '' }: ActivateAccou
         {/* Get Help — centered */}
         <div className="text-center mt-4 pb-5">
           <a
-            href="mailto:team@smartagentalliance.com"
+            href="mailto:doug@smartagentalliance.com"
             className="text-sm text-[#dcdbd5]/50 hover:text-[#ffd700] transition-colors"
           >
             Get Help

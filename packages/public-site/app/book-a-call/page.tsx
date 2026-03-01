@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import { H1, Tagline } from '@saa/shared/components/saa';
+import { H1, Tagline } from '@saa/shared/components/saa/headings';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
 import CustomBookingWidget from './components/CustomBookingWidget';

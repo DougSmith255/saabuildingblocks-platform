@@ -27,12 +27,16 @@ if (fs.existsSync(envPath)) {
 module.exports = {
   apps: [{
     name: 'nextjs-saa',
-    script: 'npm',
-    args: 'start',
+    script: '.next/standalone/saabuildingblocks-platform/packages/admin-dashboard/server.js',
     cwd: '/home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard',
+    instances: 2,
+    exec_mode: 'cluster',
+    wait_ready: true,
+    listen_timeout: 10000,
     env: {
       ...envVars,
       PORT: 3002,
+      HOSTNAME: '127.0.0.1',
       NODE_ENV: 'production',
     }
   }]

@@ -1,6 +1,6 @@
 'use client';
 
-import { SecondaryButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa/buttons';
 
 /**
  * 404 Not Found Page

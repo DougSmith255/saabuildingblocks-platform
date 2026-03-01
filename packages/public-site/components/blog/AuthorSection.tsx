@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ProfileCyberFrame } from '@saa/shared/components/saa/media/ProfileCyberFrame';
-import { Icon3D } from '@saa/shared/components/saa';
+import { Icon3D } from '@saa/shared/components/saa/icons';
 
 /**
  * Author data mapping - maps WordPress author names to full author info

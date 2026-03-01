@@ -22,7 +22,7 @@
  * - Neon: #00ff88 (for interactive elements)
  */
 
-import { H1, Tagline } from '@saa/shared/components/saa';
+import { H1, Tagline } from '@saa/shared/components/saa/headings';
 import type { BlogPost } from '@/lib/wordpress/types';
 import BlogPageClient from './BlogPageClient';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';

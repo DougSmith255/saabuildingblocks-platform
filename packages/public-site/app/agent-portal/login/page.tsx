@@ -3,7 +3,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import { H1, SlidePanel, FormCard, FormButton, FormInput, FormGroup, ModalTitle, FormMessage } from '@saa/shared/components/saa';
+import {
+  FormButton,
+  FormCard,
+  FormGroup,
+  FormInput,
+  FormMessage,
+  ModalTitle,
+} from '@saa/shared/components/saa/forms';
+import { H1 } from '@saa/shared/components/saa/headings';
+import { SlidePanel } from '@saa/shared/components/saa/interactive';
 import { Mail, Key, User } from 'lucide-react';
 import { API_URL } from '@/lib/api-config';
 
@@ -542,7 +551,7 @@ function AgentPortalLoginContent() {
             {/* Get Help Link */}
             <div style={{ marginTop: '1.5rem', textAlign: 'left' }}>
               <a
-                href="mailto:team@smartagentalliance.com"
+                href="mailto:doug@smartagentalliance.com"
                 className="get-help-link"
               >
                 Get Help
@@ -594,7 +603,7 @@ function AgentPortalLoginContent() {
               {/* Get Help Link */}
               <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
                 <a
-                  href="mailto:team@smartagentalliance.com"
+                  href="mailto:doug@smartagentalliance.com"
                   style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', textDecoration: 'none' }}
                 >
                   Need help? Contact support
@@ -769,7 +778,7 @@ function AgentPortalLoginContent() {
               {/* Get Help Link */}
               <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
                 <a
-                  href="mailto:team@smartagentalliance.com"
+                  href="mailto:doug@smartagentalliance.com"
                   style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', textDecoration: 'none' }}
                 >
                   Need help? Contact support

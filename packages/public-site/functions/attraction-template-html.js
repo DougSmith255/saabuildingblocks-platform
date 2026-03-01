@@ -108,8 +108,12 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       scroll-behavior: smooth;
-      background: transparent;
+      background: rgb(12, 12, 12);
       overscroll-behavior: none;
+    }
+
+    *, *::before, *::after {
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { H2, GenericButton } from '@saa/shared/components/saa';
+import { GenericButton } from '@saa/shared/components/saa/buttons';
+import { H2 } from '@saa/shared/components/saa/headings';
 import { ChevronDown, Check } from 'lucide-react';
 
 /**

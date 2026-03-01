@@ -142,8 +142,8 @@ export default function ResetPasswordForm({ initialToken = '' }: ResetPasswordFo
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Error Alert */}
         {error && (
-          <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300">
-            <AlertDescription className="flex items-center justify-between">
+          <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300 !text-red-400 !border-red-400/50">
+            <AlertDescription className="flex items-center justify-between !text-red-400">
               <span>{error}</span>
               <button
                 type="button"
@@ -256,7 +256,7 @@ export default function ResetPasswordForm({ initialToken = '' }: ResetPasswordFo
         {/* Support Link */}
         <p className="text-center text-sm text-[#dcdbd5] mt-4 pb-5">
           Need help?{' '}
-          <a href="mailto:team@smartagentalliance.com" className="text-[#ffd700] hover:opacity-80 transition-opacity">
+          <a href="mailto:doug@smartagentalliance.com" className="text-[#ffd700] hover:opacity-80 transition-opacity">
             Contact Support
           </a>
         </p>

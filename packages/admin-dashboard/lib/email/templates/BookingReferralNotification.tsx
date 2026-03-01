@@ -53,54 +53,61 @@ export function BookingReferralNotification({
       </EmailParagraph>
 
       {(visitorName || visitorEmail || bookingTime) && (
-        <div style={{
-          backgroundColor: BRAND_COLORS.highlightStrong,
-          border: `1px solid ${BRAND_COLORS.border}`,
-          borderRadius: '8px',
-          padding: '16px 20px',
-          marginBottom: '24px',
-        }}>
-          {appointmentTitle && (
-            <EmailParagraph style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: 600, color: BRAND_COLORS.gold }}>
-              {appointmentTitle}
-            </EmailParagraph>
-          )}
-          {visitorName && (
-            <EmailParagraph style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
-              <strong style={{ color: BRAND_COLORS.gold }}>Name:</strong>{' '}
-              {visitorName}
-            </EmailParagraph>
-          )}
-          {visitorEmail && (
-            <EmailParagraph style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
-              <strong style={{ color: BRAND_COLORS.gold }}>Email:</strong>{' '}
-              {visitorEmail}
-            </EmailParagraph>
-          )}
-          {visitorPhone && (
-            <EmailParagraph style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
-              <strong style={{ color: BRAND_COLORS.gold }}>Phone:</strong>{' '}
-              {visitorPhone}
-            </EmailParagraph>
-          )}
-          {bookingTime && (
-            <EmailParagraph style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
-              <strong style={{ color: BRAND_COLORS.gold }}>Scheduled:</strong>{' '}
-              {bookingTime}
-            </EmailParagraph>
-          )}
-          {meetingLink && (
-            <EmailParagraph style={{ margin: '0', fontSize: '14px' }}>
-              <strong style={{ color: BRAND_COLORS.gold }}>Meeting Link:</strong>{' '}
-              <EmailLink href={meetingLink}>{meetingLink}</EmailLink>
-            </EmailParagraph>
-          )}
-        </div>
+        <table cellPadding="0" cellSpacing="0" width="100%" style={{ marginBottom: '24px' }}>
+          <tr>
+            <td style={{
+              backgroundColor: BRAND_COLORS.highlightStrong,
+              border: `1px solid ${BRAND_COLORS.border}`,
+              borderRadius: '8px',
+              padding: '16px 20px',
+            }}>
+              {appointmentTitle && (
+                <EmailParagraph style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: 600, color: BRAND_COLORS.gold }}>
+                  {appointmentTitle}
+                </EmailParagraph>
+              )}
+              {visitorName && (
+                <EmailParagraph style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
+                  <strong style={{ color: BRAND_COLORS.gold }}>Name:</strong>{' '}
+                  {visitorName}
+                </EmailParagraph>
+              )}
+              {visitorEmail && (
+                <EmailParagraph style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
+                  <strong style={{ color: BRAND_COLORS.gold }}>Email:</strong>{' '}
+                  {visitorEmail}
+                </EmailParagraph>
+              )}
+              {visitorPhone && (
+                <EmailParagraph style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
+                  <strong style={{ color: BRAND_COLORS.gold }}>Phone:</strong>{' '}
+                  {visitorPhone}
+                </EmailParagraph>
+              )}
+              {bookingTime && (
+                <EmailParagraph style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
+                  <strong style={{ color: BRAND_COLORS.gold }}>Scheduled:</strong>{' '}
+                  {bookingTime}
+                </EmailParagraph>
+              )}
+              {meetingLink && (
+                <EmailParagraph style={{ margin: '0', fontSize: '14px' }}>
+                  <strong style={{ color: BRAND_COLORS.gold }}>Meeting Link:</strong>{' '}
+                  <EmailLink href={meetingLink}>{meetingLink}</EmailLink>
+                </EmailParagraph>
+              )}
+            </td>
+          </tr>
+        </table>
       )}
 
-      <div style={{ marginBottom: '24px', textAlign: 'center' }}>
-        <EmailButton href={portalUrl}>View in Agent Portal</EmailButton>
-      </div>
+      <table cellPadding="0" cellSpacing="0" width="100%" style={{ marginBottom: '24px' }}>
+        <tr>
+          <td align="center">
+            <EmailButton href={portalUrl}>View in Agent Portal</EmailButton>
+          </td>
+        </tr>
+      </table>
 
       <EmailParagraph style={{ fontSize: '13px', color: BRAND_COLORS.textMuted, textAlign: 'center' }}>
         This link will sign you in automatically.

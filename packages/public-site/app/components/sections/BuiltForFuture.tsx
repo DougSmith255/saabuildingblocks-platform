@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import { H2 } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa/headings';
 
 const BRAND_YELLOW = '#ffd700';
 

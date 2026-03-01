@@ -1,9 +1,15 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Suspense, useCallback, useEffect, useRef } from 'react';
-import { H1, Tagline, CommissionCalculator } from '@saa/shared/components/saa';
+import { H1, Tagline } from '@saa/shared/components/saa/headings';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
+
+const CommissionCalculator = dynamic(
+  () => import('@saa/shared/components/saa/interactive').then(m => ({ default: m.CommissionCalculator })),
+  { ssr: false }
+);
 import { GoldenRainEffect } from '@/components/shared/hero-effects/GoldenRainEffect';
 
 declare global {

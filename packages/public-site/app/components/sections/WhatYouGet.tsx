@@ -1,6 +1,7 @@
 'use client';
 
-import { H2, SecondaryButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa/buttons';
+import { H2 } from '@saa/shared/components/saa/headings';
 import { IconCard } from '@saa/shared/components/saa/cards/IconCard';
 import { Rocket, BarChart3, GraduationCap, TrendingUp, LifeBuoy } from 'lucide-react';
 

@@ -1,7 +1,8 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { CTAButton, Tagline, H1, SecondaryButton } from '@saa/shared/components/saa';
+import { CTAButton, SecondaryButton } from '@saa/shared/components/saa/buttons';
+import { H1, Tagline } from '@saa/shared/components/saa/headings';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';

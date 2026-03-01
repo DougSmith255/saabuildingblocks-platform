@@ -1,6 +1,9 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, FAQ, GenericCard } from '@saa/shared/components/saa';
+import { CTAButton } from '@saa/shared/components/saa/buttons';
+import { GenericCard } from '@saa/shared/components/saa/cards';
+import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
+import { FAQ } from '@saa/shared/components/saa/interactive';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { DataStreamEffect } from '@/components/shared/hero-effects/DataStreamEffect';

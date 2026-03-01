@@ -1,6 +1,6 @@
 'use client';
 
-import { SecondaryButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa/buttons';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export interface PaginationProps {

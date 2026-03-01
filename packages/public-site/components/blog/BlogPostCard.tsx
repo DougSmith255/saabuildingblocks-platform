@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { BlogPost } from '@/lib/wordpress/types';
-import { SecondaryButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa/buttons';
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
 import { getPostUrl } from '@/lib/blog-post-urls';
 

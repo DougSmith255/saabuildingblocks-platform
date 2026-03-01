@@ -16,8 +16,10 @@ import {
   deleteInvitation,
   createAuditLog,
   getUserById,
+  generateInvitationToken,
+  hashToken,
 } from '@saa/shared/lib/supabase/invitation-service';
-import { sendWelcomeEmail } from '@/lib/email/send';
+import { sendAgentActivationEmail } from '@/lib/email/send';
 import { ZodError } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -206,12 +208,17 @@ export async function PATCH(
         );
       }
 
-      // Resend invitation email
+      // Generate a new token (DB stores hashed tokens, so we can't reuse the stored one)
+      const newRawToken = generateInvitationToken();
+      const newTokenHash = hashToken(newRawToken);
+      const newExpiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
+
+      // Resend invitation email with the new raw token
       try {
-        const emailResult = await sendWelcomeEmail(
+        const emailResult = await sendAgentActivationEmail(
           invitation.email,
           (user as any).first_name || user.full_name?.split(' ')[0] || 'Agent',
-          invitation.token,
+          newRawToken,
           48 // 48 hours
         );
 
@@ -222,12 +229,16 @@ export async function PATCH(
           );
         }
 
-        // Update sent_at timestamp
+        // Update token, expiry, and sent_at timestamp
         const { data: updatedInvitation } = await updateInvitationStatus(
           supabase,
           id,
           'pending',
-          { sent_at: new Date().toISOString() }
+          {
+            token: newTokenHash,
+            expires_at: newExpiresAt,
+            sent_at: new Date().toISOString(),
+          }
         );
 
         // Create audit log

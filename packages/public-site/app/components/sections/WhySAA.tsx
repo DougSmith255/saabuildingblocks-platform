@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { H2 } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa/headings';
 import { Check } from 'lucide-react';
 
 // Shared content

@@ -20,7 +20,7 @@
 import { memo, useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { GenericCard } from '@saa/shared/components/saa';
+import { GenericCard } from '@saa/shared/components/saa/cards';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
 import { useSharedVisibility } from './useSharedVisibility';

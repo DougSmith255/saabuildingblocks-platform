@@ -20,7 +20,7 @@ export function ThumbnailAudit() {
   const { videos } = useYouTubeStore();
 
   // Exclude shorts — thumbnail audit is only relevant for long-form videos
-  const longFormVideos = useMemo(() => videos.filter(v => !v.isShort), [videos]);
+  const longFormVideos = useMemo(() => videos.filter(v => !v.isShort && v.privacyStatus === 'public'), [videos]);
 
   // Sort videos by view count (as proxy for impressions since we don't have impression data per-video from Data API)
   const sortedVideos = useMemo(() => {

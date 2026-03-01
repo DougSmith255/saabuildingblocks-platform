@@ -78,10 +78,11 @@ export function ContentDiagnostics() {
     }
   }, [selectedVideoId, fetchRetention]);
 
-  // Auto-select first video
+  // Auto-select first public long-form video
   useEffect(() => {
     if (videos.length > 0 && !selectedVideoId) {
-      setSelectedVideoId(videos[0].id);
+      const firstPublic = videos.find(v => !v.isShort && v.privacyStatus === 'public');
+      if (firstPublic) setSelectedVideoId(firstPublic.id);
     }
   }, [videos, selectedVideoId]);
 
@@ -122,7 +123,7 @@ export function ContentDiagnostics() {
           }}
         >
           <option value="">Select a video...</option>
-          {videos.map((v) => (
+          {videos.filter(v => !v.isShort && v.privacyStatus === 'public').map((v) => (
             <option key={v.id} value={v.id} style={{ background: '#1a1a1a' }}>
               {v.title}
             </option>

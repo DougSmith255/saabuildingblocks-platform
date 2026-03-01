@@ -1,6 +1,6 @@
 'use client';
 
-import { Icon3D } from '@saa/shared/components/saa';
+import { Icon3D } from '@saa/shared/components/saa/icons';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 // Number style - H2 3D styling (larger than text)
 const pillarNumberStyle: React.CSSProperties = {

@@ -1,6 +1,6 @@
 'use client';
 
-import { H2 } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa/headings';
 import { ProfileCyberFrame } from '@saa/shared/components/saa/media/ProfileCyberFrame';
 import { CheckCircle } from 'lucide-react';
 

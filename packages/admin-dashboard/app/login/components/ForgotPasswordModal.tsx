@@ -127,8 +127,8 @@ export default function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordM
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {error && (
-                <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300">
-                  <AlertDescription className="flex items-center justify-between">
+                <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300 !text-red-400 !border-red-400/50">
+                  <AlertDescription className="flex items-center justify-between !text-red-400">
                     <span>{error}</span>
                     <button
                       type="button"
@@ -187,7 +187,7 @@ export default function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordM
               {/* Get Help Link */}
               <div className="flex justify-start mt-4">
                 <a
-                  href="mailto:team@smartagentalliance.com"
+                  href="mailto:doug@smartagentalliance.com"
                   className="text-sm text-[#ffd700] hover:opacity-80 transition-opacity"
                 >
                   Get Help

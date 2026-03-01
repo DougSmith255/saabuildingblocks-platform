@@ -252,6 +252,16 @@ export async function onRequest(context) {
     }
   }
 
+  // --- STEP 3b: Strip trailing pagination/null suffixes from content paths ---
+  // Bots append /1, /2, /null etc. to blog and category pages
+  const paginationMatch = path.match(/^(\/(?:blog\/[a-z-]+\/[a-z0-9-]+|about-exp-realty\/[a-z0-9-]+|exp-realty-sponsor\/[a-z0-9-]+))\/(\d+|null)\/?$/);
+  if (paginationMatch) {
+    return new Response(null, {
+      status: 301,
+      headers: { 'Location': paginationMatch[1] + '/' },
+    });
+  }
+
   // --- STEP 4: Normal request pipeline ---
   const response = await context.next();
 
