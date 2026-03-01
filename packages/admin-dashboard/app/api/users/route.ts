@@ -230,7 +230,7 @@ export async function POST(request: NextRequest) {
         full_name: fullName, // Store for backward compatibility
         token: invitationTokenHash,
         status: 'pending',
-        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
+        expires_at: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(), // 48 hours
         created_at: new Date().toISOString(),
       });
 

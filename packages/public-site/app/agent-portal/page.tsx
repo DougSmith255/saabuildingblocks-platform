@@ -1972,6 +1972,17 @@ function AgentPortal() {
     }
   }, [activeSection, forceShowOnboarding]);
   // Show one-time intro modals when navigating to Link Page or Elite Courses for the first time
+  useEffect(() => {
+    if (
+      activeSection === 'linktree' &&
+      !linkPageIntroDismissed &&
+      isOnboardingComplete &&
+      isOnboardingLoaded &&
+      !preloadedAgentPageData?.page?.activated
+    ) {
+      setShowLinkPageIntroModal(true);
+    }
+  }, [activeSection, linkPageIntroDismissed, isOnboardingComplete, isOnboardingLoaded, preloadedAgentPageData?.page?.activated]);
 
   // Disable body scroll and hide scrollbar when modal is open
   useEffect(() => {

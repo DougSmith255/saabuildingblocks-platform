@@ -551,11 +551,6 @@ async function checkEmailSystem(): Promise<Automation[]> {
   // Check if Resend API key is configured
   const hasResendKey = !!process.env.RESEND_API_KEY;
 
-  // Check if email automation script exists
-  const scriptExists = await fileModifiedTime(
-    '/home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard/scripts/email-automation.ts'
-  );
-
   return [
     {
       id: 'email-transactional',
@@ -565,15 +560,6 @@ async function checkEmailSystem(): Promise<Automation[]> {
       schedule: 'On-demand (triggered by user actions)',
       status: hasResendKey ? 'active' : 'broken',
       statusDetail: !hasResendKey ? 'RESEND_API_KEY not configured' : undefined,
-    },
-    {
-      id: 'email-holiday-campaigns',
-      name: 'Holiday Email Campaigns',
-      description: 'Scheduled holiday-themed emails to downline with timezone-aware delivery',
-      category: 'Email',
-      schedule: 'Holiday schedule (Supabase config)',
-      status: scriptExists ? 'active' : 'broken',
-      statusDetail: !scriptExists ? 'Automation script not found' : 'Configured but requires cron/manual trigger',
     },
   ];
 }
@@ -687,6 +673,54 @@ async function checkNotificationAutomations(): Promise<Automation[]> {
   return automations;
 }
 
+// ─── Check: WordPress Auto-Rebuild ───────────────────────────────────────────
+
+async function checkWordPressAutoRebuild(): Promise<Automation> {
+  // Check if the mu-plugin file exists
+  const pluginPath = '/var/www/wordpress/wp-content/mu-plugins/saa-auto-rebuild.php';
+  const pluginExists = await fileModifiedTime(pluginPath);
+
+  let lastRun: string | undefined;
+  let statusDetail: string | undefined;
+
+  // Query Supabase for last blog-triggered deployment
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    const { data } = await supabase
+      .from('deployment_logs')
+      .select('created_at, metadata')
+      .eq('trigger_type', 'blog')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (data) {
+      lastRun = data.created_at;
+      const meta = data.metadata as { post_title?: string; event_type?: string } | null;
+      if (meta?.post_title) {
+        statusDetail = `Last: "${meta.post_title}" (${meta.event_type || 'publish'})`;
+      }
+    }
+  } catch {
+    // No deployment logs yet - that's fine
+  }
+
+  return {
+    id: 'wordpress-auto-rebuild',
+    name: 'WordPress Publish Hook',
+    description: 'Fires webhook to trigger Cloudflare rebuild when blog posts are published/updated',
+    category: 'Webhooks',
+    schedule: 'On post publish/update',
+    status: pluginExists ? 'active' : 'broken',
+    lastRun,
+    statusDetail: !pluginExists ? 'mu-plugin file not found' : statusDetail,
+  };
+}
+
 // ─── Check: Build Pipelines ──────────────────────────────────────────────────
 
 async function checkBuildPipelines(): Promise<Automation[]> {
@@ -744,6 +778,7 @@ export async function GET(request: NextRequest) {
       ghlDownline,
       bookingWebhook,
       wordpressWebhook,
+      wordpressAutoRebuild,
       cloudflareFunctions,
       analytics,
       email,
@@ -794,6 +829,7 @@ export async function GET(request: NextRequest) {
         'Triggers GitHub Actions Cloudflare deployment when blog post is published/updated',
         '/api/webhooks/wordpress'
       ),
+      checkWordPressAutoRebuild(),
       checkCloudflareFunctions(),
       checkAnalyticsPipelines(),
       checkEmailSystem(),
@@ -819,6 +855,7 @@ export async function GET(request: NextRequest) {
       ghlDownline,
       bookingWebhook,
       wordpressWebhook,
+      wordpressAutoRebuild,
       // Cloudflare Functions
       ...cloudflareFunctions,
       // Analytics

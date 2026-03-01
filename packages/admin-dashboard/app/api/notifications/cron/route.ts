@@ -28,7 +28,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { randomBytes } from 'crypto';
+import { randomBytes, createHash } from 'crypto';
 import { sendWelcomeEmail, sendAgentActivationEmail } from '@/lib/email/send';
 import { sendEmail } from '@/lib/email/client';
 import { LinkPageNudgeEmail } from '@/lib/email/templates/LinkPageNudgeEmail';
@@ -190,30 +190,31 @@ async function sweepActivationReminders(
       continue;
     }
 
-    // Generate fresh token
+    // Generate fresh token - store hash in DB, send plaintext in email
     const newToken = randomBytes(32).toString('hex');
+    const newTokenHash = createHash('sha256').update(newToken).digest('hex');
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 48);
 
-    // Update or create invitation
+    // Update or create invitation (match 'sent' or 'pending' status)
     const { data: existingInvite } = await supabase
       .from('user_invitations')
       .select('id')
       .eq('user_id', user.id)
-      .eq('status', 'pending')
+      .in('status', ['pending', 'sent'])
       .limit(1)
       .single();
 
     if (existingInvite) {
       await supabase.from('user_invitations')
-        .update({ token: newToken, expires_at: expiresAt.toISOString() })
+        .update({ token: newTokenHash, expires_at: expiresAt.toISOString(), status: 'sent' })
         .eq('id', existingInvite.id);
     } else {
       await supabase.from('user_invitations').insert({
         user_id: user.id,
         email: user.email,
-        token: newToken,
-        status: 'pending',
+        token: newTokenHash,
+        status: 'sent',
         expires_at: expiresAt.toISOString(),
       });
     }
@@ -324,28 +325,31 @@ async function sweepWelcomeReminders(
       continue;
     }
 
+    // Generate fresh token - store hash in DB, send plaintext in email
     const newToken = randomBytes(32).toString('hex');
+    const newTokenHash = createHash('sha256').update(newToken).digest('hex');
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 48);
 
+    // Update or create invitation (match 'sent' or 'pending' status)
     const { data: existingInvite } = await supabase
       .from('user_invitations')
       .select('id')
       .eq('user_id', user.id)
-      .eq('status', 'pending')
+      .in('status', ['pending', 'sent'])
       .limit(1)
       .single();
 
     if (existingInvite) {
       await supabase.from('user_invitations')
-        .update({ token: newToken, expires_at: expiresAt.toISOString() })
+        .update({ token: newTokenHash, expires_at: expiresAt.toISOString(), status: 'sent' })
         .eq('id', existingInvite.id);
     } else {
       await supabase.from('user_invitations').insert({
         user_id: user.id,
         email: user.email,
-        token: newToken,
-        status: 'pending',
+        token: newTokenHash,
+        status: 'sent',
         expires_at: expiresAt.toISOString(),
       });
     }

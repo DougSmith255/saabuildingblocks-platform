@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@saa/shared/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 import bcrypt from 'bcryptjs';
 
 // Password validation regex
@@ -20,15 +20,6 @@ const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 interface ActivationRequest {
   token: string;
   password: string;
-}
-
-interface UserInvitation {
-  id: string;
-  email: string;
-  name: string;
-  status: string;
-  created_at: string;
-  ghl_contact_id?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -69,8 +60,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create Supabase client
-    const supabase = await createClient();
+    // Use service role client to bypass RLS (user has no auth session yet)
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { persistSession: false, autoRefreshToken: false } }
+    );
 
     // Hash the provided token to compare with stored hash
     const crypto = await import('crypto');
@@ -80,11 +75,12 @@ export async function POST(request: NextRequest) {
       .digest('hex');
 
     // Query user_invitations table for the token hash
+    // Token hash is stored in the 'token' column; accept 'sent' or 'pending' status
     const { data: invitation, error: invitationError } = await supabase
       .from('user_invitations')
       .select('*')
-      .eq('token_hash', tokenHash)
-      .eq('status', 'pending')
+      .eq('token', tokenHash)
+      .in('status', ['pending', 'sent'])
       .single();
 
     if (invitationError || !invitation) {
@@ -94,11 +90,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const invitationData = invitation as UserInvitation;
-
-    // Check token expiration (24 hours)
-    const invitationDate = new Date(invitationData.created_at);
-    const expirationDate = new Date(invitationDate.getTime() + 24 * 60 * 60 * 1000);
+    // Check token expiration using the expires_at field
+    const expirationDate = new Date(invitation.expires_at);
     const now = new Date();
 
     if (now > expirationDate) {
@@ -111,21 +104,22 @@ export async function POST(request: NextRequest) {
     // Hash password with bcrypt (cost factor 12)
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // Create user in Supabase Auth
+    // Create Supabase Auth account with the same ID as the existing users row
+    // This avoids having to update the primary key and break FK references
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-      email: invitationData.email,
+      id: invitation.user_id,
+      email: invitation.email,
       password: password,
-      email_confirm: true, // Auto-confirm email since they're using invitation
+      email_confirm: true,
       user_metadata: {
-        full_name: invitationData.name,
-        ghl_contact_id: invitationData.ghl_contact_id,
+        full_name: invitation.full_name,
+        ghl_contact_id: invitation.gohighlevel_contact_id,
       }
     });
 
     if (authError) {
-      console.error('Error creating user:', authError);
+      console.error('Error creating auth user:', authError);
 
-      // Check if user already exists
       if (authError.message?.includes('already registered')) {
         return NextResponse.json(
           { error: 'An account with this email already exists' },
@@ -146,40 +140,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create user record in users table
-    const { error: userInsertError } = await supabase
+    // Activate the existing user record
+    const { error: userUpdateError } = await supabase
       .from('users')
-      .insert({
-        id: authData.user.id,
-        email: invitationData.email,
-        username: invitationData.email.split('@')[0], // Generate username from email
+      .update({
         password_hash: passwordHash,
         status: 'active',
         email_verified: true,
-      });
+        activated_at: new Date().toISOString(),
+      })
+      .eq('id', invitation.user_id);
 
-    if (userInsertError) {
-      console.error('Error inserting user record:', userInsertError);
-      // Don't fail the entire operation if this fails
-      // The auth user is created, which is most important
-    }
-
-    // Create user profile
-    const { error: profileError } = await supabase
-      .from('user_profiles')
-      .insert({
-        id: authData.user.id,
-        email: invitationData.email,
-        full_name: invitationData.name,
-        username: invitationData.email.split('@')[0],
-        ghl_contact_id: invitationData.ghl_contact_id,
-        role: 'user',
-        status: 'active',
-      });
-
-    if (profileError) {
-      console.error('Error creating user profile:', profileError);
-      // Don't fail the entire operation
+    if (userUpdateError) {
+      console.error('Error updating user record:', userUpdateError);
     }
 
     // Update invitation status to 'activated'
@@ -189,7 +162,7 @@ export async function POST(request: NextRequest) {
         status: 'activated',
         activated_at: new Date().toISOString(),
       })
-      .eq('id', invitationData.id);
+      .eq('id', invitation.id);
 
     if (updateError) {
       console.error('Error updating invitation status:', updateError);
@@ -207,8 +180,8 @@ export async function POST(request: NextRequest) {
         ip_address: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
         user_agent: request.headers.get('user-agent'),
         metadata: {
-          invitation_id: invitationData.id,
-          email: invitationData.email,
+          invitation_id: invitation.id,
+          email: invitation.email,
         },
       });
 
@@ -225,7 +198,7 @@ export async function POST(request: NextRequest) {
         user: {
           id: authData.user.id,
           email: authData.user.email,
-          name: invitationData.name,
+          name: invitation.full_name,
         },
         redirect: '/login', // Frontend should redirect to login page
       },
