@@ -15,7 +15,7 @@ export interface Invitation {
   user_id: string;
   email: string;
   token: string;
-  status: 'pending' | 'accepted' | 'expired' | 'cancelled';
+  status: 'pending' | 'sent' | 'accepted' | 'expired' | 'cancelled';
   expires_at: string;
   sent_at: string | null;
   accepted_at: string | null;
