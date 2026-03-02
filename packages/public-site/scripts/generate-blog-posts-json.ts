@@ -29,6 +29,28 @@ interface SlugToCloudflareEntry {
   matchType: string;
 }
 
+/**
+ * Decode HTML entities from WordPress REST API responses
+ * WordPress returns encoded text in "rendered" fields (e.g. &#8217; for apostrophe)
+ */
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'",
+  hellip: '\u2026', ndash: '\u2013', mdash: '\u2014',
+  lsquo: '\u2018', rsquo: '\u2019', ldquo: '\u201C', rdquo: '\u201D',
+  nbsp: '\u00A0', copy: '\u00A9', reg: '\u00AE', trade: '\u2122',
+};
+
+function decodeHtmlEntities(text: string): string {
+  if (!text) return text;
+  return text
+    // Numeric entities: &#8217; &#038; etc.
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(parseInt(code, 10)))
+    // Hex entities: &#x2019; etc.
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+    // Named entities: &amp; &hellip; etc.
+    .replace(/&([a-zA-Z]+);/g, (match, name) => NAMED_ENTITIES[name.toLowerCase()] || match);
+}
+
 // Normalize WordPress author usernames to display names
 const AUTHOR_NAME_MAP: Record<string, string> = {
   'karriehill': 'Karrie Hill',
@@ -522,7 +544,7 @@ function transformPost(wpPost: any): BlogPost {
   if (slugBasedUrl) {
     featuredImage = {
       url: slugBasedUrl,
-      alt: wpPost.title?.rendered || '',
+      alt: decodeHtmlEntities(wpPost.title?.rendered || ''),
       width: undefined,
       height: undefined,
     };
@@ -533,7 +555,7 @@ function transformPost(wpPost: any): BlogPost {
     const media = wpPost._embedded['wp:featuredmedia'][0];
     featuredImage = {
       url: transformToCloudflareUrl(media.source_url),
-      alt: media.alt_text || wpPost.title?.rendered || '',
+      alt: decodeHtmlEntities(media.alt_text || wpPost.title?.rendered || ''),
       width: media.media_details?.width,
       height: media.media_details?.height,
     };
@@ -545,7 +567,7 @@ function transformPost(wpPost: any): BlogPost {
     if (contentImage) {
       featuredImage = {
         url: transformToCloudflareUrl(contentImage.url),
-        alt: contentImage.alt || wpPost.title?.rendered || '',
+        alt: decodeHtmlEntities(contentImage.alt || wpPost.title?.rendered || ''),
         width: undefined,
         height: undefined,
       };
@@ -573,27 +595,29 @@ function transformPost(wpPost: any): BlogPost {
     });
   }
 
-  // Extract excerpt - remove HTML tags
+  // Extract excerpt - remove HTML tags and decode entities
   const excerpt = wpPost.excerpt?.rendered
-    ? wpPost.excerpt.rendered.replace(/<[^>]*>/g, '').trim()
+    ? decodeHtmlEntities(wpPost.excerpt.rendered.replace(/<[^>]*>/g, '').trim())
     : '';
 
   // Extract SEO title from Rank Math (used for <title> tag and search results)
   // Falls back to post title if Rank Math title isn't set
-  const metaTitle = wpPost.meta?.rank_math_title || '';
+  const metaTitle = decodeHtmlEntities(wpPost.meta?.rank_math_title || '');
 
   // Extract meta description from Rank Math or Yoast if available
-  const metaDescription = wpPost.meta?.rank_math_description
+  const metaDescription = decodeHtmlEntities(
+    wpPost.meta?.rank_math_description
     || wpPost.yoast_head_json?.description
     || wpPost.rank_math_description
-    || excerpt.slice(0, 160);
+    || excerpt.slice(0, 160)
+  );
 
   // Get custom URI from Permalink Manager (source of truth for URL path)
   const customUri = customUriCache.get(wpPost.id) || '';
 
   return {
     id: wpPost.id,
-    title: wpPost.title?.rendered || '',
+    title: decodeHtmlEntities(wpPost.title?.rendered || ''),
     slug: wpPost.slug,
     customUri,
     excerpt,
