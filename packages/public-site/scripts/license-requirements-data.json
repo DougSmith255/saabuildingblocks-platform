@@ -1,0 +1,325 @@
+{
+  "states": {
+    "california": {
+      "name": "California",
+      "education": {
+        "hours": 135,
+        "courses": "3 courses (45 hrs each): Real Estate Principles, Real Estate Practice, + 1 elective",
+        "provider": "DRE-approved schools"
+      },
+      "exam": {
+        "questions": 150,
+        "time": "3 hours 15 minutes",
+        "passingScore": "70%",
+        "sections": "150 scored questions (single section)",
+        "attempts": "Unlimited (wait 18 days between attempts)",
+        "fee": "$100 per attempt"
+      },
+      "fees": {
+        "application": "$350",
+        "exam": "$100",
+        "fingerprint": "$70-$85",
+        "total": "$450+"
+      },
+      "governingBody": {
+        "name": "Department of Real Estate (DRE)",
+        "url": "dre.ca.gov"
+      },
+      "ageRequirement": "18+",
+      "backgroundCheck": "Yes (LiveScan fingerprinting)"
+    },
+    "florida": {
+      "name": "Florida",
+      "education": {
+        "hours": 63,
+        "courses": "63-hour pre-licensing course (single course)",
+        "provider": "FREC-approved schools"
+      },
+      "exam": {
+        "questions": 100,
+        "time": "3.5 hours",
+        "passingScore": "75%",
+        "sections": "100 scored questions (single section)",
+        "attempts": "Unlimited (must pass within 2 years of course completion)",
+        "fee": "$36.75 per attempt"
+      },
+      "fees": {
+        "application": "$83.75",
+        "exam": "$36.75",
+        "fingerprint": "$36.25",
+        "total": "~$157"
+      },
+      "governingBody": {
+        "name": "DBPR / Florida Real Estate Commission (FREC)",
+        "url": "myfloridalicense.com"
+      },
+      "ageRequirement": "18+",
+      "backgroundCheck": "Yes (electronic fingerprinting)"
+    },
+    "texas": {
+      "name": "Texas",
+      "education": {
+        "hours": 180,
+        "courses": "6 courses (30 hrs each): Principles I & II, Law of Agency, Law of Contracts, Promulgated Forms, Real Estate Finance",
+        "provider": "TREC-approved providers"
+      },
+      "exam": {
+        "questions": 125,
+        "time": "4 hours",
+        "passingScore": "70%",
+        "sections": "85 national + 40 state-specific",
+        "attempts": "Unlimited",
+        "fee": "$54 per attempt"
+      },
+      "fees": {
+        "application": "$205",
+        "exam": "$54",
+        "fingerprint": "$7+",
+        "total": "$266+"
+      },
+      "governingBody": {
+        "name": "Texas Real Estate Commission (TREC)",
+        "url": "trec.texas.gov"
+      },
+      "ageRequirement": "18+",
+      "backgroundCheck": "Yes (fingerprint-based)"
+    },
+    "illinois": {
+      "name": "Illinois",
+      "education": {
+        "hours": 75,
+        "courses": "2 courses: 60 hrs Topics in Real Estate + 15 hrs Applied Real Estate Principles",
+        "provider": "IDFPR-approved providers"
+      },
+      "exam": {
+        "questions": 140,
+        "time": "~4 hours",
+        "passingScore": "75% state portion, 70% national",
+        "sections": "100 national + 40 state-specific",
+        "attempts": "Unlimited",
+        "fee": "$58 per attempt"
+      },
+      "fees": {
+        "application": "$150",
+        "exam": "$58",
+        "fingerprint": "N/A",
+        "total": "$208+"
+      },
+      "governingBody": {
+        "name": "Illinois Department of Financial and Professional Regulation (IDFPR)",
+        "url": "idfpr.illinois.gov"
+      },
+      "ageRequirement": "18+ (21+ to become a managing broker)",
+      "backgroundCheck": "Yes"
+    },
+    "ohio": {
+      "name": "Ohio",
+      "education": {
+        "hours": 100,
+        "courses": "4 courses: 40 hrs Principles & Practices, 40 hrs Ohio Real Estate Law, 10 hrs Real Estate Finance, 10 hrs Real Estate Appraisal",
+        "provider": "Ohio Division of Real Estate-approved"
+      },
+      "exam": {
+        "questions": 120,
+        "time": "3 hours",
+        "passingScore": "70%",
+        "sections": "80 national + 40 state-specific",
+        "attempts": "Unlimited (within 1 year of course completion)",
+        "fee": "$72 per attempt"
+      },
+      "fees": {
+        "application": "$72",
+        "exam": "$72",
+        "fingerprint": "Varies",
+        "total": "$144+"
+      },
+      "governingBody": {
+        "name": "Ohio Division of Real Estate & Professional Licensing",
+        "url": "com.ohio.gov/real-estate"
+      },
+      "ageRequirement": "18+",
+      "backgroundCheck": "Yes (BCI & FBI fingerprint check)"
+    },
+    "michigan": {
+      "name": "Michigan",
+      "education": {
+        "hours": 40,
+        "courses": "40-hour pre-licensing course (Fundamentals of Real Estate)",
+        "provider": "LARA-approved providers"
+      },
+      "exam": {
+        "questions": 115,
+        "time": "3 hours",
+        "passingScore": "70%",
+        "sections": "80 national + 35 state-specific",
+        "attempts": "Unlimited (within 3 years of course completion)",
+        "fee": "$79 per attempt"
+      },
+      "fees": {
+        "application": "$88",
+        "exam": "$79",
+        "fingerprint": "N/A",
+        "total": "$167+"
+      },
+      "governingBody": {
+        "name": "Department of Licensing and Regulatory Affairs (LARA)",
+        "url": "michigan.gov/lara"
+      },
+      "ageRequirement": "18+",
+      "backgroundCheck": "Yes"
+    },
+    "colorado": {
+      "name": "Colorado",
+      "education": {
+        "hours": 168,
+        "courses": "168 hours total: multiple required topics including contracts, closings, trust accounts, practical applications, and more",
+        "provider": "DORA-approved schools"
+      },
+      "exam": {
+        "questions": 154,
+        "time": "~4 hours",
+        "passingScore": "75%",
+        "sections": "80 national + 74 state-specific",
+        "attempts": "Unlimited",
+        "fee": "$44.95 per attempt"
+      },
+      "fees": {
+        "application": "$83",
+        "exam": "$44.95",
+        "fingerprint": "Varies",
+        "total": "$128+"
+      },
+      "governingBody": {
+        "name": "DORA / Division of Real Estate (DRE)",
+        "url": "dora.colorado.gov"
+      },
+      "ageRequirement": "18+",
+      "backgroundCheck": "Yes (fingerprint-based)"
+    },
+    "georgia": {
+      "name": "Georgia",
+      "education": {
+        "hours": 75,
+        "courses": "75 hours: Salesperson Pre-License course",
+        "provider": "GREC-approved schools"
+      },
+      "exam": {
+        "questions": 152,
+        "time": "4 hours",
+        "passingScore": "75% on each section",
+        "sections": "100 national + 52 state-specific",
+        "attempts": "Unlimited (within 1 year of course)",
+        "fee": "$88 per attempt"
+      },
+      "fees": {
+        "application": "$170",
+        "exam": "$88",
+        "fingerprint": "Included",
+        "total": "$170 (application includes fingerprinting)"
+      },
+      "governingBody": {
+        "name": "Georgia Real Estate Commission (GREC)",
+        "url": "grec.state.ga.us"
+      },
+      "ageRequirement": "18+",
+      "backgroundCheck": "Yes (included in application)"
+    },
+    "indiana": {
+      "name": "Indiana",
+      "education": {
+        "hours": 90,
+        "courses": "90 hours total: 54 hrs Real Estate Principles, 36 hrs Real Estate Practice",
+        "provider": "IREC-approved schools"
+      },
+      "exam": {
+        "questions": 130,
+        "time": "4 hours",
+        "passingScore": "75%",
+        "sections": "80 national + 50 state-specific",
+        "attempts": "Unlimited",
+        "fee": "$53 per attempt"
+      },
+      "fees": {
+        "application": "$60",
+        "exam": "$53",
+        "fingerprint": "N/A",
+        "total": "$60+ (application only; exam fee separate)"
+      },
+      "governingBody": {
+        "name": "Indiana Real Estate Commission (IREC)",
+        "url": "in.gov/pla"
+      },
+      "ageRequirement": "18+",
+      "backgroundCheck": "Yes"
+    },
+    "missouri": {
+      "name": "Missouri",
+      "education": {
+        "hours": 72,
+        "courses": "72 hours: 48 hrs Salesperson Pre-License + 24 hrs Missouri Real Estate Practice",
+        "provider": "MREC-approved schools"
+      },
+      "exam": {
+        "questions": 140,
+        "time": "Varies by testing center",
+        "passingScore": "70% national, 75% state",
+        "sections": "100 national + 40 state-specific",
+        "attempts": "Unlimited (within 6 months of application)",
+        "fee": "$62 per attempt"
+      },
+      "fees": {
+        "application": "$90",
+        "exam": "$62",
+        "fingerprint": "N/A",
+        "total": "$90 (application; exam fee separate)"
+      },
+      "governingBody": {
+        "name": "Missouri Real Estate Commission (MREC)",
+        "url": "pr.mo.gov/realestate"
+      },
+      "ageRequirement": "18+",
+      "backgroundCheck": "Yes"
+    },
+    "oklahoma": {
+      "name": "Oklahoma",
+      "education": {
+        "hours": 90,
+        "courses": "90 hours: 45 hrs Real Estate Principles + 45 hrs Real Estate Practice",
+        "provider": "OREC-approved schools"
+      },
+      "exam": {
+        "questions": 120,
+        "time": "Varies by testing center",
+        "passingScore": "70%",
+        "sections": "80 national + 40 state-specific",
+        "attempts": "Unlimited",
+        "fee": "$60 per attempt"
+      },
+      "fees": {
+        "application": "$210",
+        "exam": "$60",
+        "fingerprint": "Varies",
+        "total": "$270+"
+      },
+      "governingBody": {
+        "name": "Oklahoma Real Estate Commission (OREC)",
+        "url": "oklahoma.gov/orec"
+      },
+      "ageRequirement": "18+",
+      "backgroundCheck": "Yes"
+    }
+  },
+  "stateNameMap": {
+    "california": "California",
+    "florida": "Florida",
+    "texas": "Texas",
+    "illinois": "Illinois",
+    "ohio": "Ohio",
+    "michigan": "Michigan",
+    "colorado": "Colorado",
+    "georgia": "Georgia",
+    "indiana": "Indiana",
+    "missouri": "Missouri",
+    "oklahoma": "Oklahoma"
+  }
+}

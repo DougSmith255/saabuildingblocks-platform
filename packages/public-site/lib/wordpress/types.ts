@@ -38,6 +38,12 @@ export interface BlogPost {
   categories: string[];
   /** YouTube video URL from ACF field (optional) */
   youtubeVideoUrl?: string;
+  /** License requirements summary image (for become-an-agent posts) */
+  licenseImage?: {
+    url: string;
+    alt: string;
+    title: string;
+  } | null;
 }
 
 export interface WordPressPost {

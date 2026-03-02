@@ -69,6 +69,10 @@ interface ComparisonImageEntry {
 
 let comparisonImageMapping: Map<string, ComparisonImageEntry> = new Map();
 
+// License image mapping (state slug -> { cloudflareUrl, alt, title })
+// Reuses ComparisonImageEntry since the shape is identical
+let licenseImageMapping: Map<string, ComparisonImageEntry> = new Map();
+
 // Map: lowercase filename -> Cloudflare URL (for content images)
 let imageMapping: Map<string, string> = new Map();
 // Map: post slug -> Cloudflare URL (for featured images)
@@ -133,6 +137,26 @@ function loadComparisonImageMapping(): void {
     }
   } else {
     console.warn('⚠️  No comparison-images-mapping.json found (comparison charts will be empty)');
+  }
+}
+
+/**
+ * Load license summary image mapping (state slug -> Cloudflare URL + metadata)
+ */
+function loadLicenseImageMapping(): void {
+  const mappingPath = join(process.cwd(), 'license-images-mapping.json');
+  if (existsSync(mappingPath)) {
+    try {
+      const data: Record<string, ComparisonImageEntry> = JSON.parse(readFileSync(mappingPath, 'utf-8'));
+      Object.entries(data).forEach(([slug, entry]) => {
+        licenseImageMapping.set(slug, entry);
+      });
+      console.log(`✅ Loaded ${licenseImageMapping.size} license image mappings`);
+    } catch (error) {
+      console.warn(`⚠️  Could not load license images mapping:`, error);
+    }
+  } else {
+    console.warn('⚠️  No license-images-mapping.json found (license images will be empty)');
   }
 }
 
@@ -672,6 +696,17 @@ function transformPost(wpPost: any): BlogPost {
         }
       }
       return [];
+    })(),
+    // License requirements summary image for become-an-agent posts
+    licenseImage: (() => {
+      if (customUri && customUri.startsWith('become-an-agent/')) {
+        const stateSlug = customUri.replace('become-an-agent/', '');
+        const entry = licenseImageMapping.get(stateSlug);
+        if (entry) {
+          return { url: entry.cloudflareUrl, alt: entry.alt, title: entry.title };
+        }
+      }
+      return null;
     })()
   };
 }
@@ -686,6 +721,9 @@ async function generateBlogPostsJson() {
 
     // Load comparison chart image mapping
     loadComparisonImageMapping();
+
+    // Load license summary image mapping
+    loadLicenseImageMapping();
 
     // Load Permalink Manager custom URIs (source of truth for blog paths)
     await loadCustomUris();

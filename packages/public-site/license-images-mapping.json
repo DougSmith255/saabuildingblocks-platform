@@ -1,0 +1,57 @@
+{
+  "california": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-california/public",
+    "alt": "California real estate license requirements - 135 hours education, 150 exam questions, $450+ total fees",
+    "title": "California Real Estate License Requirements at a Glance"
+  },
+  "colorado": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-colorado/public",
+    "alt": "Colorado real estate license requirements - 168 hours education, 154 exam questions, $128+ total fees",
+    "title": "Colorado Real Estate License Requirements at a Glance"
+  },
+  "florida": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-florida/public",
+    "alt": "Florida real estate license requirements - 63 hours education, 100 exam questions, ~$157 total fees",
+    "title": "Florida Real Estate License Requirements at a Glance"
+  },
+  "georgia": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-georgia/public",
+    "alt": "Georgia real estate license requirements - 75 hours education, 152 exam questions, $170 (application includes fingerprinting) total fees",
+    "title": "Georgia Real Estate License Requirements at a Glance"
+  },
+  "illinois": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-illinois/public",
+    "alt": "Illinois real estate license requirements - 75 hours education, 140 exam questions, $208+ total fees",
+    "title": "Illinois Real Estate License Requirements at a Glance"
+  },
+  "indiana": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-indiana/public",
+    "alt": "Indiana real estate license requirements - 90 hours education, 130 exam questions, $60+ (application only; exam fee separate) total fees",
+    "title": "Indiana Real Estate License Requirements at a Glance"
+  },
+  "michigan": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-michigan/public",
+    "alt": "Michigan real estate license requirements - 40 hours education, 115 exam questions, $167+ total fees",
+    "title": "Michigan Real Estate License Requirements at a Glance"
+  },
+  "missouri": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-missouri/public",
+    "alt": "Missouri real estate license requirements - 72 hours education, 140 exam questions, $90 (application; exam fee separate) total fees",
+    "title": "Missouri Real Estate License Requirements at a Glance"
+  },
+  "ohio": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-ohio/public",
+    "alt": "Ohio real estate license requirements - 100 hours education, 120 exam questions, $144+ total fees",
+    "title": "Ohio Real Estate License Requirements at a Glance"
+  },
+  "oklahoma": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-oklahoma/public",
+    "alt": "Oklahoma real estate license requirements - 90 hours education, 120 exam questions, $270+ total fees",
+    "title": "Oklahoma Real Estate License Requirements at a Glance"
+  },
+  "texas": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-texas/public",
+    "alt": "Texas real estate license requirements - 180 hours education, 125 exam questions, $266+ total fees",
+    "title": "Texas Real Estate License Requirements at a Glance"
+  }
+}
