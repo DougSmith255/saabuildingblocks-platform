@@ -659,11 +659,10 @@ export const EmailSignature = () => (
         overflow: 'hidden',
         fontFamily: "'Century Gothic', Futura, 'Trebuchet MS', Arial, sans-serif",
       }}
-      bgcolor="#0d0d0d"
     >
       {/* Gold accent beam - img tag so email clients cannot darken it */}
       <tr>
-        <td bgcolor="#0d0d0d" style={{ backgroundColor: '#0d0d0d', fontSize: '0', lineHeight: '0' }}>
+        <td style={{ backgroundColor: '#0d0d0d', fontSize: '0', lineHeight: '0' }}>
           <Img
             src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-gold-bar/public"
             width={500}
@@ -675,7 +674,7 @@ export const EmailSignature = () => (
       </tr>
       {/* Main content */}
       <tr>
-        <td bgcolor="#0d0d0d" style={{ backgroundColor: '#0d0d0d', padding: '24px 28px 20px' }} valign="top">
+        <td style={{ backgroundColor: '#0d0d0d', padding: '24px 28px 20px', verticalAlign: 'top' }}>
           <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
             <tr>
               {/* SAA Logo */}
@@ -726,17 +725,17 @@ export const EmailSignature = () => (
       </tr>
       {/* Grey separator */}
       <tr>
-        <td bgcolor="#0d0d0d" style={{ backgroundColor: '#0d0d0d', padding: '0 28px' }}>
+        <td style={{ backgroundColor: '#0d0d0d', padding: '0 28px' }}>
           <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
             <tr>
-              <td height="1" bgcolor="#888888" style={{ backgroundColor: '#888888', fontSize: '1px', lineHeight: '1px' }}>&nbsp;</td>
+              <td style={{ height: '1px', backgroundColor: '#888888', fontSize: '1px', lineHeight: '1px' }}>&nbsp;</td>
             </tr>
           </table>
         </td>
       </tr>
       {/* Footer */}
       <tr>
-        <td bgcolor="#0d0d0d" style={{ backgroundColor: '#0d0d0d', padding: '16px 28px 20px' }}>
+        <td style={{ backgroundColor: '#0d0d0d', padding: '16px 28px 20px' }}>
           <Link href="https://smartagentalliance.com" style={{ fontSize: '11px', color: '#ffd700', letterSpacing: '3px', textTransform: 'uppercase' as const, textDecoration: 'none' }}>
             Smart Agent Alliance
           </Link>

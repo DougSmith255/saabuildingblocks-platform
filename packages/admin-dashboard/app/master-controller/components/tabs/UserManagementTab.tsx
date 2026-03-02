@@ -122,7 +122,7 @@ export function UserManagementTab() {
     username: '',
     password: '',
     role: 'user' as 'admin' | 'user',
-    status: 'active' as 'active' | 'pending' | 'suspended',
+    status: 'active' as 'active' | 'pending' | 'invited' | 'suspended',
     exp_email: '',
     legal_name: '',
     state: ''
@@ -1048,7 +1048,7 @@ export function UserManagementTab() {
                 </label>
                 <select
                   value={editUserForm.status}
-                  onChange={(e) => setEditUserForm({ ...editUserForm, status: e.target.value as 'active' | 'pending' | 'suspended' })}
+                  onChange={(e) => setEditUserForm({ ...editUserForm, status: e.target.value as 'active' | 'pending' | 'invited' | 'suspended' })}
                   className="w-full px-4 py-2 bg-[#404040]/30 border border-[#404040] rounded-lg text-[#dcdbd5] focus:border-[#ffd700] focus:outline-none"
                   disabled={editUserLoading}
                 >
