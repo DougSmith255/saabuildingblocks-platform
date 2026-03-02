@@ -167,15 +167,16 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
       stickyRef.current.style.top = `${HEADER_OFFSET}px`;
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => {
-      // Reset to header offset on resize so bounds recalculate naturally
+    const onResize = () => {
       scrollState.current.top = HEADER_OFFSET;
       if (stickyRef.current) stickyRef.current.style.top = `${HEADER_OFFSET}px`;
-    });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
     return () => {
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('resize', onResize);
     };
   }, []);
 

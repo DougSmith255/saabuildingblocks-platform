@@ -354,22 +354,22 @@ export function CategoryBlogPostTemplate({
         <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
             <div className="max-w-[1400px] mx-auto relative">
-              <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-10 lg:items-start">
+              <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-10 relative">
+                {/* Feathered backdrop at grid level so sidebar aligns with it (dark mode only) */}
+                {isDarkMode && (
+                  <div className="absolute pointer-events-none" style={{
+                    inset: '-2rem',
+                    zIndex: -1,
+                    background: 'rgba(8, 8, 12, 0.55)',
+                    maskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%)',
+                    WebkitMaskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    borderRadius: '32px',
+                  }} />
+                )}
                 {/* Main content column */}
                 <div className="relative min-w-0">
-                  {/* Feathered backdrop to improve text readability over star background (dark mode only) */}
-                  {isDarkMode && (
-                    <div className="absolute pointer-events-none" style={{
-                      inset: '-2rem',
-                      zIndex: -1,
-                      background: 'rgba(8, 8, 12, 0.55)',
-                      maskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%)',
-                      WebkitMaskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%)',
-                      backdropFilter: 'blur(8px)',
-                      WebkitBackdropFilter: 'blur(8px)',
-                      borderRadius: '32px',
-                    }} />
-                  )}
                   <div className="blog-content max-w-none">
                     {/* Featured Image - only shown in hero for real-estate-schools category */}
                     {/* For other categories, show featured image floated right in content */}
