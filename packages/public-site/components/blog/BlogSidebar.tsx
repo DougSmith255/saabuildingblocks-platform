@@ -338,38 +338,199 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
             </nav>
           </div>
 
-          {/* Widget 4: Team Promo */}
-          <div className="p-5" style={getCardStyle(true)}>
-            <div className="mb-3 overflow-hidden" style={{ borderRadius: '8px' }}>
+          {/* Widget 4: SAA Team Promo */}
+          <div style={{
+            background: isDarkMode
+              ? 'linear-gradient(135deg, rgba(20,20,20,0.95), rgba(12,12,12,0.98))'
+              : 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(245,245,240,0.98))',
+            border: `1px solid ${isDarkMode ? 'rgba(255,215,0,0.2)' : 'rgba(180,150,0,0.25)'}`,
+            borderRadius: '12px',
+            overflow: 'hidden',
+            boxShadow: isDarkMode
+              ? '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)'
+              : '0 4px 16px rgba(0,0,0,0.08)',
+          }}>
+            {/* Founders image with gradient overlay */}
+            <div style={{ position: 'relative' }}>
               <img
                 src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop"
-                alt="Doug & Karrie - Smart Agent Alliance co-founders"
+                alt="Doug Smart & Karrie Hill - Smart Agent Alliance co-founders"
                 width={320}
                 height={200}
                 loading="lazy"
-                style={{ width: '100%', height: 'auto', display: 'block' }}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  display: 'block',
+                  borderBottom: '1px solid rgba(255,215,0,0.15)',
+                }}
               />
+              {/* Bottom fade into card */}
+              <div style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '50%',
+                background: isDarkMode
+                  ? 'linear-gradient(to top, rgba(12,12,12,0.98) 0%, rgba(12,12,12,0.6) 40%, transparent 100%)'
+                  : 'linear-gradient(to top, rgba(245,245,240,0.98) 0%, rgba(245,245,240,0.6) 40%, transparent 100%)',
+                pointerEvents: 'none',
+              }} />
+              {/* "Zero Cost" badge */}
+              <div style={{
+                position: 'absolute',
+                top: '8px',
+                right: '8px',
+                background: isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.85)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,215,0,0.3)',
+                borderRadius: '6px',
+                padding: '3px 8px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffd700" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span style={{
+                  fontFamily: 'var(--font-taskor)',
+                  fontSize: '9px',
+                  color: '#ffd700',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  fontWeight: 600,
+                }}>Zero Cost</span>
+              </div>
+              {/* Founders label overlaid at bottom */}
+              <div style={{
+                position: 'absolute',
+                bottom: '4px',
+                left: '16px',
+                right: '16px',
+              }}>
+                <div style={{
+                  fontFamily: 'var(--font-taskor)',
+                  fontSize: '11px',
+                  color: '#ffd700',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  fontWeight: 600,
+                  textShadow: isDarkMode ? '0 0 12px rgba(255,215,0,0.4)' : 'none',
+                }}>
+                  Meet the Founders
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-amulya)',
+                  fontSize: '11px',
+                  color: isDarkMode ? '#ccc' : '#444',
+                  marginTop: '1px',
+                }}>
+                  Doug Smart & Karrie Hill, JD
+                </div>
+              </div>
             </div>
-            <p className="text-xs mb-4" style={{
-              fontFamily: 'var(--font-amulya)',
-              color: isDarkMode ? '#999' : '#666',
-              lineHeight: 1.6,
-            }}>
-              Join Doug & Karrie and 4,000+ agents building their business with Smart Agent Alliance at eXp Realty.
-            </p>
-            <button
-              onClick={() => window.dispatchEvent(new Event('open-join-modal'))}
-              className="block w-full text-center py-2.5 px-4 text-sm font-semibold rounded-lg transition-all duration-200 hover:brightness-110 cursor-pointer"
-              style={{
-                fontFamily: 'var(--font-taskor)',
-                background: 'linear-gradient(135deg, #ffd700, #ffaa00)',
-                color: '#0a0a0a',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-              }}
-            >
-              Join The Alliance
-            </button>
+
+            {/* Card body */}
+            <div className="px-4 pt-3 pb-4">
+              {/* Tagline */}
+              <p className="mb-3" style={{
+                fontFamily: 'var(--font-amulya)',
+                fontSize: '12px',
+                color: isDarkMode ? '#bbb' : '#555',
+                lineHeight: 1.55,
+              }}>
+                Premium systems and support for eXp agents - built by operators, not figureheads.
+              </p>
+
+              {/* Value stack highlights */}
+              <div className="mb-3" style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px',
+              }}>
+                {[
+                  'Guided onboarding & 1-on-1 strategy',
+                  'Elite training courses (7 included)',
+                  'Done-for-you marketing & templates',
+                  'Agent attraction infrastructure',
+                  'Private referral network',
+                  'Weekly live masterminds',
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-2">
+                    <span className="flex-shrink-0 mt-[5px]" style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      background: '#ffd700',
+                      boxShadow: '0 0 6px rgba(255,215,0,0.3)',
+                    }} />
+                    <span style={{
+                      fontFamily: 'var(--font-amulya)',
+                      fontSize: '11px',
+                      color: isDarkMode ? '#aaa' : '#555',
+                      lineHeight: 1.4,
+                    }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Agent count */}
+              <div className="text-center mb-3" style={{
+                padding: '6px 0',
+                borderTop: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+                borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+              }}>
+                <span style={{
+                  fontFamily: 'var(--font-taskor)',
+                  fontSize: '20px',
+                  fontWeight: 700,
+                  color: '#ffd700',
+                  textShadow: isDarkMode ? '0 0 15px rgba(255,215,0,0.25)' : 'none',
+                }}>4,000+</span>
+                <span style={{
+                  fontFamily: 'var(--font-amulya)',
+                  fontSize: '11px',
+                  color: isDarkMode ? '#777' : '#888',
+                  marginLeft: '6px',
+                }}>agents strong</span>
+              </div>
+
+              {/* CTA */}
+              <button
+                onClick={() => window.dispatchEvent(new Event('open-join-modal'))}
+                className="block w-full text-center py-2.5 px-4 text-sm font-semibold rounded-lg transition-all duration-200 hover:brightness-110 cursor-pointer"
+                style={{
+                  fontFamily: 'var(--font-taskor)',
+                  background: 'linear-gradient(135deg, #ffd700, #ffaa00)',
+                  color: '#0a0a0a',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  boxShadow: isDarkMode ? '0 0 20px rgba(255,215,0,0.15)' : '0 2px 8px rgba(255,200,0,0.3)',
+                }}
+              >
+                Join The Alliance
+              </button>
+
+              {/* Learn more link */}
+              <a
+                href="/exp-realty-sponsor/"
+                className="block text-center mt-2"
+                style={{
+                  fontFamily: 'var(--font-amulya)',
+                  fontSize: '10px',
+                  color: isDarkMode ? '#777' : '#888',
+                  textDecoration: 'none',
+                  letterSpacing: '0.02em',
+                  transition: 'color 0.15s ease',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#ffd700')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = isDarkMode ? '#777' : '#888')}
+              >
+                See everything included
+              </a>
+            </div>
           </div>
 
         </div>
