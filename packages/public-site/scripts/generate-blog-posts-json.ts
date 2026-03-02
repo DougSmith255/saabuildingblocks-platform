@@ -60,6 +60,15 @@ function normalizeAuthorName(name: string): string {
   return AUTHOR_NAME_MAP[name.toLowerCase()] || name;
 }
 
+// Comparison image mapping (slug -> { cloudflareUrl, alt, title })
+interface ComparisonImageEntry {
+  cloudflareUrl: string;
+  alt: string;
+  title: string;
+}
+
+let comparisonImageMapping: Map<string, ComparisonImageEntry> = new Map();
+
 // Map: lowercase filename -> Cloudflare URL (for content images)
 let imageMapping: Map<string, string> = new Map();
 // Map: post slug -> Cloudflare URL (for featured images)
@@ -104,6 +113,26 @@ function loadImageMapping(): void {
 
   if (imageMapping.size === 0) {
     console.warn('⚠️  No Cloudflare Images mapping file found');
+  }
+}
+
+/**
+ * Load comparison chart image mapping (slug -> Cloudflare URL + metadata)
+ */
+function loadComparisonImageMapping(): void {
+  const mappingPath = join(process.cwd(), 'comparison-images-mapping.json');
+  if (existsSync(mappingPath)) {
+    try {
+      const data: Record<string, ComparisonImageEntry> = JSON.parse(readFileSync(mappingPath, 'utf-8'));
+      Object.entries(data).forEach(([slug, entry]) => {
+        comparisonImageMapping.set(slug, entry);
+      });
+      console.log(`✅ Loaded ${comparisonImageMapping.size} comparison image mappings`);
+    } catch (error) {
+      console.warn(`⚠️  Could not load comparison images mapping:`, error);
+    }
+  } else {
+    console.warn('⚠️  No comparison-images-mapping.json found (comparison charts will be empty)');
   }
 }
 
@@ -567,7 +596,7 @@ function transformPost(wpPost: any): BlogPost {
     if (contentImage) {
       featuredImage = {
         url: transformToCloudflareUrl(contentImage.url),
-        alt: decodeHtmlEntities(contentImage.alt || wpPost.title?.rendered || ''),
+        alt: decodeHtmlEntities(wpPost.title?.rendered || contentImage.alt || ''),
         width: undefined,
         height: undefined,
       };
@@ -632,8 +661,18 @@ function transformPost(wpPost: any): BlogPost {
     metaDescription,
     // YouTube video URL from ACF (exposed via registered meta)
     youtubeVideoUrl: wpPost.meta?.youtube_video_url || undefined,
-    // Additional fields that might be expected
-    comparisonImages: [], // Standard WP API doesn't have this, but keep for compatibility
+    // Comparison chart image for brokerage comparison posts
+    comparisonImages: (() => {
+      // Extract comparison slug from customUri (e.g. "brokerage-comparison/exp-kw" -> "exp-kw")
+      if (customUri && customUri.startsWith('brokerage-comparison/')) {
+        const compSlug = customUri.replace('brokerage-comparison/', '');
+        const entry = comparisonImageMapping.get(compSlug);
+        if (entry) {
+          return [{ url: entry.cloudflareUrl, alt: entry.alt, title: entry.title }];
+        }
+      }
+      return [];
+    })()
   };
 }
 
@@ -644,6 +683,9 @@ async function generateBlogPostsJson() {
   try {
     // Load Cloudflare Images mapping for URL transformation
     loadImageMapping();
+
+    // Load comparison chart image mapping
+    loadComparisonImageMapping();
 
     // Load Permalink Manager custom URIs (source of truth for blog paths)
     await loadCustomUris();

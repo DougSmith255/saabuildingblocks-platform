@@ -2143,7 +2143,7 @@ function AgentPortal() {
 
     try {
       // Check if all required (non-optional) steps are complete
-      const optionalSteps: (keyof typeof onboardingProgress)[] = ['step6_karrie_session'];
+      const optionalSteps: (keyof typeof onboardingProgress)[] = ['step7_link_page', 'step6_karrie_session'];
       const allRequiredComplete = Object.entries(onboardingProgress).every(
         ([key, value]) => optionalSteps.includes(key as keyof typeof onboardingProgress) || value === true
       );
@@ -7609,7 +7609,8 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       number: 6,
       title: 'Set Up Your Link Page',
       description: 'Automatically sets up your Agent Attraction Funnel Page',
-      badge: 'Highly Recommended',
+      isOptional: true,
+      showOptionalBadge: false,
       content: (
         <div className="space-y-4">
           {/* Value Proposition */}
@@ -7779,7 +7780,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
 
   const completedCount = Object.values(progress).filter(Boolean).length;
   const progressPercentage = (completedCount / steps.length) * 100;
-  const optionalKeys: (keyof OnboardingProgress)[] = ['step6_karrie_session'];
+  const optionalKeys: (keyof OnboardingProgress)[] = ['step7_link_page', 'step6_karrie_session'];
   const allRequiredComplete = Object.entries(progress).every(
     ([key, value]) => optionalKeys.includes(key as keyof OnboardingProgress) || value === true
   );
@@ -7948,7 +7949,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                     >
                       {step.title}
                     </h3>
-                    {(step as { isOptional?: boolean }).isOptional && (
+                    {(step as { isOptional?: boolean; showOptionalBadge?: boolean }).isOptional && (step as { showOptionalBadge?: boolean }).showOptionalBadge !== false && (
                       <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-[#e5e4dd]/50">
                         Optional
                       </span>

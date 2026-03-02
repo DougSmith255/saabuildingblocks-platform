@@ -1,24 +1,16 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'eXp Realty Global Presence',
+  title: 'eXp Realty Locations',
   description:
-    '29+ countries. 84,000+ agents. 10+ languages. See where eXp operates and how one platform powers global referrals, stock awards, and zero franchise fees.',
+    'eXp Realty operates in 29+ countries with 84,000+ agents worldwide. Explore the global presence and find eXp near you.',
   openGraph: {
-    title: 'eXp Realty Global Presence',
+    title: 'eXp Realty Locations | Smart Agent Alliance',
     description:
-      '29+ countries, 84,000+ agents. One platform, global referrals, zero franchise fees.',
-    type: 'website',
-  },
-  alternates: {
-    canonical: 'https://smartagentalliance.com/locations',
+      'eXp Realty operates in 29+ countries with 84,000+ agents worldwide. Explore the global presence.',
   },
 };
 
-export default function LocationsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

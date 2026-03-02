@@ -26,6 +26,8 @@ export async function onRequestGet(context) {
     'buyer-checklist.pdf',
     'listing-checklist.pdf',
     'home-tour-notes.pdf',
+    'prospecting-scripts-playbook.pdf',
+    'new-agent-90-day-plan.pdf',
     'all-freebies-bundle.zip',
   ];
 

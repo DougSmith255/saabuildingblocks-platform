@@ -12,6 +12,7 @@ import { WelcomeEmail } from './templates/WelcomeEmail';
 import { AccountLockedEmail } from './templates/AccountLockedEmail';
 import { ApplyInstructionsEmail } from './templates/ApplyInstructionsEmail';
 import { AgentActivationEmail } from './templates/AgentActivationEmail';
+import { ActivationApologyEmail } from './templates/ActivationApologyEmail';
 
 /**
  * Send password reset email with token link
@@ -156,6 +157,41 @@ export async function sendAgentActivationEmail(
       }),
       tags: [
         { name: 'category', value: 'agent_activation' },
+      ],
+    });
+
+    return result;
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
+ * Send apology activation email to agents who received broken links
+ */
+export async function sendApologyActivationEmail(
+  email: string,
+  firstName: string,
+  activationToken: string,
+  expiresInHours: number = 48
+): Promise<EmailResult> {
+  const activationBaseUrl = process.env.ACTIVATION_BASE_URL || 'https://saabuildingblocks.com';
+  const activationLink = `${activationBaseUrl}/activate-account?token=${activationToken}`;
+
+  try {
+    const result = await sendEmail({
+      to: email,
+      subject: "Your Activation - We've Got It Right This Time",
+      react: ActivationApologyEmail({
+        firstName,
+        activationLink,
+        expiresInHours,
+      }),
+      tags: [
+        { name: 'category', value: 'activation_apology' },
       ],
     });
 

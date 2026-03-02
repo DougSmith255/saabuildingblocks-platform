@@ -8,7 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
-import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
+import { verifySessionAdminAuth } from '@/app/api/middleware/adminAuth';
 import { updateInvitationSchema } from '@/lib/validation/invitation';
 import {
   getInvitationById,
@@ -19,7 +19,7 @@ import {
   generateInvitationToken,
   hashToken,
 } from '@saa/shared/lib/supabase/invitation-service';
-import { sendAgentActivationEmail } from '@/lib/email/send';
+import { sendAgentActivationEmail, sendWelcomeEmail } from '@/lib/email/send';
 import { ZodError } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -39,8 +39,8 @@ export async function GET(
   try {
     const { id } = await params;
 
-    // Verify admin authentication
-    const authResult = await verifyAdminAuth(request);
+    // Verify admin authentication (session cookies from Master Controller)
+    const authResult = await verifySessionAdminAuth();
     if (!authResult.authorized) {
       return NextResponse.json(
         { error: authResult.error },
@@ -97,8 +97,8 @@ export async function PATCH(
   try {
     const { id } = await params;
 
-    // Verify admin authentication
-    const authResult = await verifyAdminAuth(request);
+    // Verify admin authentication (session cookies from Master Controller)
+    const authResult = await verifySessionAdminAuth();
     if (!authResult.authorized) {
       return NextResponse.json(
         { error: authResult.error },
@@ -179,21 +179,10 @@ export async function PATCH(
         message: 'Invitation cancelled successfully',
       });
     } else if (validatedData.action === 'resend') {
-      // Verify invitation is still pending
-      if (invitation.status !== 'pending') {
+      // Verify invitation is resendable (pending or sent by cron)
+      if (invitation.status !== 'pending' && invitation.status !== 'sent') {
         return NextResponse.json(
           { error: `Cannot resend invitation with status: ${invitation.status}` },
-          { status: 400 }
-        );
-      }
-
-      // Check if invitation has expired
-      const now = new Date();
-      const expiresAt = new Date(invitation.expires_at);
-
-      if (now > expiresAt) {
-        return NextResponse.json(
-          { error: 'Invitation has expired. Please create a new invitation.' },
           { status: 400 }
         );
       }
@@ -213,14 +202,19 @@ export async function PATCH(
       const newTokenHash = hashToken(newRawToken);
       const newExpiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
 
+      // Choose email template based on when the user was created
+      // Existing agents (before portal launch) get AgentActivationEmail
+      // New agents (on or after portal launch) get WelcomeEmail
+      const PORTAL_LAUNCH_DATE = '2026-02-26T00:00:00.000Z';
+      const userCreatedAt = user.created_at || '';
+      const isNewAgent = userCreatedAt >= PORTAL_LAUNCH_DATE;
+      const firstName = user.first_name || user.full_name?.split(' ')[0] || 'Agent';
+
       // Resend invitation email with the new raw token
       try {
-        const emailResult = await sendAgentActivationEmail(
-          invitation.email,
-          (user as any).first_name || user.full_name?.split(' ')[0] || 'Agent',
-          newRawToken,
-          48 // 48 hours
-        );
+        const emailResult = isNewAgent
+          ? await sendWelcomeEmail(invitation.email, firstName, newRawToken, 48)
+          : await sendAgentActivationEmail(invitation.email, firstName, newRawToken, 48);
 
         if (!emailResult.success) {
           return NextResponse.json(
@@ -240,6 +234,18 @@ export async function PATCH(
             sent_at: new Date().toISOString(),
           }
         );
+
+        // Log to notification_log so the cron's 2-day timer resets
+        await supabase.from('notification_log').insert({
+          user_id: invitation.user_id,
+          user_email: invitation.email,
+          notification_type: 'manual_resend',
+          channel: 'email',
+          status: 'sent',
+          email_message_id: emailResult.messageId || null,
+          trigger_reason: 'Manual resend from Master Controller',
+          metadata: { resent_by: authResult.userId },
+        });
 
         // Create audit log
         await createAuditLog(supabase, {
@@ -290,8 +296,8 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // Verify admin authentication
-    const authResult = await verifyAdminAuth(request);
+    // Verify admin authentication (session cookies from Master Controller)
+    const authResult = await verifySessionAdminAuth();
     if (!authResult.authorized) {
       return NextResponse.json(
         { error: authResult.error },

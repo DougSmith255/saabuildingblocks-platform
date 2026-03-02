@@ -8,24 +8,28 @@ import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 const BRAND_YELLOW = '#ffd700';
 
 const SECTION_INTRO = 'Smart Agent Alliance is led by operators, not figureheads. The leadership team is responsible for designing, maintaining, and improving the systems agents rely on every day.';
+const SECTION_INTRO_COMPACT = 'Built by operators, not figureheads.';
 
 const FOUNDERS = [
   {
     name: "Doug Smart",
     title: "Co-Founder | Systems & Infrastructure",
-    bio: "Doug built SAA\u2019s systems from the ground up \u2014 this website, the agent portal, every automation and workflow agents use daily. He believes agents deserve better tools than what most sponsors offer, so he builds them. His focus is on creating systems that actually work and showing agents what\u2019s possible when the right infrastructure is behind them.",
+    bio: "Doug built SAA\u2019s systems from the ground up \u2014 this website, the agent portal, every automation and workflow agents use daily. As a top 1% eXp team builder, he believes agents deserve better tools than what most sponsors offer, so he builds them. His focus is on creating systems that actually work and showing agents what\u2019s possible when the right infrastructure is behind them.",
+    bioCompact: "Full-stack developer and top 1% eXp team builder. Designed and built every system agents use - the portal, automations, marketing tools, and this website.",
     image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public",
   },
   {
     name: "Karrie Hill, JD",
     title: "Co-Founder | Training & Agent Advocacy",
     bio: "UC Berkeley Law graduate and experienced agent who built a six-figure real estate business in her first full year without cold calling or door knocking. Karrie focuses on training design, mentorship standards, and onboarding pathways \u2014 making sure agents have clear structure from day one. Her background as an attorney informs a focus on durability and getting things right.",
+    bioCompact: "UC Berkeley Law graduate and eXp Certified Mentor. Built a six-figure real estate business in year one - no cold calls, no door knocking. Leads training and onboarding.",
     image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public",
   },
 ];
 
-export function MeetTheFounders() {
+export function MeetTheFounders({ variant = 'default' }: { variant?: 'default' | 'compact' }) {
   const ref = useRef<HTMLDivElement>(null);
+  const isCompact = variant === 'compact';
 
   return (
     <GlassPanel variant="marigoldCrosshatch" noBlur className="py-[50px]">
@@ -36,7 +40,7 @@ export function MeetTheFounders() {
         <div className="text-center mb-12">
           <H2>Meet SAA's Founders</H2>
           <p className="text-body mt-4 max-w-[800px] mx-auto opacity-80">
-            {SECTION_INTRO}
+            {isCompact ? SECTION_INTRO_COMPACT : SECTION_INTRO}
           </p>
         </div>
 
@@ -88,7 +92,7 @@ export function MeetTheFounders() {
                 {FOUNDERS[0].name}
               </h3>
               <p className="text-body text-sm opacity-60 mb-3">{FOUNDERS[0].title}</p>
-              <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[0].bio}</p>
+              <p className="text-body text-sm md:text-base leading-relaxed flex-1">{isCompact ? FOUNDERS[0].bioCompact : FOUNDERS[0].bio}</p>
             </div>
           </div>
 
@@ -138,7 +142,7 @@ export function MeetTheFounders() {
                 {FOUNDERS[1].name}
               </h3>
               <p className="text-body text-sm opacity-60 mb-3">{FOUNDERS[1].title}</p>
-              <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[1].bio}</p>
+              <p className="text-body text-sm md:text-base leading-relaxed flex-1">{isCompact ? FOUNDERS[1].bioCompact : FOUNDERS[1].bio}</p>
             </div>
           </div>
         </div>

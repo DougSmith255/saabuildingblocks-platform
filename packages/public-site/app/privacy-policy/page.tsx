@@ -13,8 +13,12 @@ import { H1 } from '@saa/shared/components/saa/headings';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Smart Agent Alliance',
+  title: 'Privacy Policy',
   description: 'Learn how Smart Agent Alliance collects, uses, and protects your personal information.',
+  openGraph: {
+    title: 'Privacy Policy | Smart Agent Alliance',
+    description: 'Learn how Smart Agent Alliance collects, uses, and protects your personal information.',
+  },
 };
 
 export default function PrivacyPolicyPage() {

@@ -7,7 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
-import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
+import { verifySessionAdminAuth } from '@/app/api/middleware/adminAuth';
 import {
   createInvitationSchema,
   listInvitationsSchema,
@@ -30,8 +30,8 @@ export const dynamic = 'force-dynamic';
  */
 export async function POST(request: NextRequest) {
   try {
-    // Verify admin authentication
-    const authResult = await verifyAdminAuth(request);
+    // Verify admin authentication (session cookies from Master Controller)
+    const authResult = await verifySessionAdminAuth();
     if (!authResult.authorized) {
       return NextResponse.json(
         { error: authResult.error },
@@ -211,8 +211,8 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
-    // Verify admin authentication
-    const authResult = await verifyAdminAuth(request);
+    // Verify admin authentication (session cookies from Master Controller)
+    const authResult = await verifySessionAdminAuth();
     if (!authResult.authorized) {
       return NextResponse.json(
         { error: authResult.error },

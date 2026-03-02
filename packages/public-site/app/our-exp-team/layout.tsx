@@ -1,24 +1,16 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Your Upline — 7 Tiers Deep',
+  title: 'Our Team',
   description:
-    'Meet the producers in your corner — Doug Smart, Karrie Hill, Mike Sherrard, Connor Steinbrook, and more. 7 tiers of proven eXp expertise backing your business.',
+    'Meet the Smart Agent Alliance founders and partners. Doug Smart, Karrie Hill, and a team dedicated to helping eXp agents succeed.',
   openGraph: {
-    title: 'Your Upline — 7 Tiers Deep',
+    title: 'Our Team | Smart Agent Alliance',
     description:
-      'Doug Smart, Karrie Hill, Mike Sherrard, Connor Steinbrook — 7 tiers in your corner.',
-    type: 'website',
-  },
-  alternates: {
-    canonical: 'https://smartagentalliance.com/our-exp-team',
+      'Meet the Smart Agent Alliance founders and partners. A team dedicated to helping eXp agents succeed.',
   },
 };
 
-export default function OurExpTeamLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

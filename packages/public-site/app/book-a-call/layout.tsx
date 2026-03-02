@@ -1,19 +1,16 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Book a Call | Smart Agent Alliance',
-  description: 'Schedule a one-on-one call with the Smart Agent Alliance team to learn about joining eXp Realty with SAA.',
+  title: 'Book a Call',
+  description:
+    'Schedule a free consultation with the Smart Agent Alliance team. Learn how eXp Realty and our tools can accelerate your real estate career.',
   openGraph: {
     title: 'Book a Call | Smart Agent Alliance',
-    description: 'Schedule a call with SAA to see if we\'re the right fit for you.',
-    type: 'website',
+    description:
+      'Schedule a free consultation with the Smart Agent Alliance team about joining eXp Realty.',
   },
 };
 
-export default function BookACallLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

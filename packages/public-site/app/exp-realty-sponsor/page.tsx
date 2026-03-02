@@ -608,13 +608,13 @@ const TRAINING_PROGRAMS = [
     colSpan: 1,
   },
   {
-    title: 'Investor Agent',
+    title: 'Investor Army',
     description: 'Structure investor conversations correctly and avoid mistakes that slow or derail deals.',
     icon: Handshake,
     featured: false,
     colSpan: 1,
     image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-investor-army-course/public',
-    imageAlt: 'Investor Agent Army Course',
+    imageAlt: 'Investor Army Course',
   },
   {
     title: 'AI Accelerator',
@@ -712,14 +712,14 @@ function ValueSection3_Training() {
 
             // Icon cards
             // Check if this card sits next to a featured card (stretched tall)
-            const isAdjacentToFeatured = program.title === 'Personal Branding' || program.title === 'Investor Agent';
+            const isAdjacentToFeatured = program.title === 'Personal Branding' || program.title === 'Investor Army';
 
             // Image card variant: image fills card with text overlay
             if (program.image) {
               return (
                 <div
                   key={i}
-                  className="relative rounded-xl overflow-hidden aspect-square sm:aspect-[3/4]"
+                  className="relative rounded-xl overflow-hidden aspect-square md:aspect-auto"
                   style={{
                     background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
                     border: '1px solid rgba(255,215,0,0.15)',

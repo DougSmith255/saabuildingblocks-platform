@@ -127,7 +127,7 @@ export function YouTubeFacade({
       {/* Thumbnail */}
       <img
         src={thumbnailUrl}
-        alt=""
+        alt={`Video thumbnail: ${title}`}
         loading="lazy"
         onError={() => setThumbnailError(true)}
         style={{

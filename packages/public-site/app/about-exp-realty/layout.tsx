@@ -3,22 +3,14 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'About eXp Realty',
   description:
-    'See what SAA members actually get — agent portal, onboarding, weekly calls, templates, and real support. Not just a sponsor name, a full organization.',
+    "Learn about eXp Realty's cloud-based model, commission structure, stock awards, and global reach. See why 84,000+ agents chose eXp.",
   openGraph: {
-    title: 'About eXp Realty',
+    title: 'About eXp Realty | Smart Agent Alliance',
     description:
-      'See what SAA members get — portal, onboarding, calls, templates, and real support.',
-    type: 'website',
-  },
-  alternates: {
-    canonical: 'https://smartagentalliance.com/about-exp-realty',
+      "Learn about eXp Realty's cloud-based model, commission structure, stock awards, and global reach.",
   },
 };
 
-export default function AboutExpRealtyLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

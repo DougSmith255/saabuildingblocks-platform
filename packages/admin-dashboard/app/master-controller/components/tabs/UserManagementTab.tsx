@@ -366,12 +366,13 @@ export function UserManagementTab() {
     setResendingUserId(user.id);
     try {
       // Look up the user's invitation
-      const invResponse = await fetch(`/api/invitations?email=${encodeURIComponent(user.email)}&status=pending`);
+      const invResponse = await fetch(`/api/invitations?email=${encodeURIComponent(user.email)}`);
       const invData = await invResponse.json();
-      const invitation = invData.data?.[0];
+      // Find the first resendable invitation (pending or sent by cron)
+      const invitation = invData.data?.find((inv: any) => inv.status === 'pending' || inv.status === 'sent');
 
       if (!invitation) {
-        alert('No pending invitation found for this user. You may need to create a new one.');
+        alert('No active invitation found for this user. You may need to create a new one.');
         return;
       }
 

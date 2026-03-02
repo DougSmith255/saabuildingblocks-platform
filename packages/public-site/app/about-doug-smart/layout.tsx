@@ -1,24 +1,16 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Doug Smart',
+  title: 'Doug Smart',
   description:
-    'Top 1% eXp team builder and SAA co-founder. See the 6 systems he built to scale agent businesses — attraction pages, automations, funnels, and more.',
+    'Meet Doug Smart, co-founder of the Smart Agent Alliance. Builder of agent systems, tools, and technology at eXp Realty.',
   openGraph: {
-    title: 'About Doug Smart',
+    title: 'Doug Smart | Smart Agent Alliance',
     description:
-      'Top 1% eXp team builder. See the 6 systems he built to scale agent businesses.',
-    type: 'profile',
-  },
-  alternates: {
-    canonical: 'https://smartagentalliance.com/about-doug-smart',
+      'Meet Doug Smart, co-founder of the Smart Agent Alliance. Builder of agent systems, tools, and technology at eXp Realty.',
   },
 };
 
-export default function AboutDougSmartLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

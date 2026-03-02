@@ -14,8 +14,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Terms of Use | Smart Agent Alliance',
+  title: 'Terms of Use',
   description: 'Read the terms and conditions governing the use of Smart Agent Alliance website and services.',
+  openGraph: {
+    title: 'Terms of Use | Smart Agent Alliance',
+    description: 'Read the terms and conditions governing the use of Smart Agent Alliance website and services.',
+  },
 };
 
 export default function TermsOfUsePage() {

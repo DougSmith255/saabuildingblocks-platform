@@ -13,8 +13,12 @@ import { H1 } from '@saa/shared/components/saa/headings';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Cookie Policy | Smart Agent Alliance',
+  title: 'Cookie Policy',
   description: 'Learn about how Smart Agent Alliance uses cookies and similar tracking technologies.',
+  openGraph: {
+    title: 'Cookie Policy | Smart Agent Alliance',
+    description: 'Learn about how Smart Agent Alliance uses cookies and similar tracking technologies.',
+  },
 };
 
 export default function CookiePolicyPage() {

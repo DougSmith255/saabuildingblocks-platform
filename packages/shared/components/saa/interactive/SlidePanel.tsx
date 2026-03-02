@@ -75,16 +75,11 @@ const KEYFRAMES_CSS = `
   from { opacity: 1; }
   to { opacity: 0; }
 }
-/* Hide scrollbar completely when slide panel is open */
-.slide-panel-open {
-  overflow: hidden !important;
-}
-.slide-panel-open,
+/* Hide scrollbar when slide panel is open (body is position:fixed) */
 .slide-panel-open body {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
-.slide-panel-open::-webkit-scrollbar,
 .slide-panel-open body::-webkit-scrollbar {
   display: none !important;
   width: 0 !important;
@@ -258,18 +253,29 @@ export function SlidePanel({
   // Lock body scroll and hide scrollbar when open (reference-counted).
   // Multiple SlidePanels can be open simultaneously (e.g., JoinModal + InstructionsModal).
   // The class and scroll lock only remove when the LAST panel closes.
+  // Uses position:fixed instead of overflow:hidden to avoid breaking sticky elements.
   useEffect(() => {
     if (isOpen) {
       slidePanelOpenCount++;
-      document.documentElement.classList.add('slide-panel-open');
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
+      if (slidePanelOpenCount === 1) {
+        const scrollY = window.scrollY;
+        document.body.dataset.slidePanelScrollY = String(scrollY);
+        document.documentElement.classList.add('slide-panel-open');
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+      }
       return () => {
         slidePanelOpenCount = Math.max(0, slidePanelOpenCount - 1);
         if (slidePanelOpenCount === 0) {
+          const scrollY = parseInt(document.body.dataset.slidePanelScrollY || '0');
           document.documentElement.classList.remove('slide-panel-open');
-          document.documentElement.style.overflow = '';
-          document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.top = '';
+          document.body.style.left = '';
+          document.body.style.right = '';
+          window.scrollTo(0, scrollY);
         }
       };
     }

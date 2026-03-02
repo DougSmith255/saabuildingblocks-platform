@@ -82,11 +82,16 @@ export async function POST(request: NextRequest) {
 /**
  * GET /api/portal-heartbeat - Admin checks active agents
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const auth = await verifySessionAdminAuth();
-    if (!auth.authorized) {
-      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+    // Accept session auth or automation secret
+    const secret = request.headers.get('x-automation-secret');
+    const hasAutomationSecret = !!secret && secret === process.env.AUTOMATION_SECRET;
+    if (!hasAutomationSecret) {
+      const auth = await verifySessionAdminAuth();
+      if (!auth.authorized) {
+        return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+      }
     }
 
     pruneStale();

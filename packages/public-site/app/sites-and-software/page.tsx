@@ -70,7 +70,7 @@ const tools: Tool[] = [
     howWeUseIt: 'On our WordPress blog with 243+ articles. Handles meta tags, XML sitemaps, structured data, and content analysis. The Pro version is worth every penny.',
     priceRange: 'Free / $6.99+/mo (Pro)',
     category: 'seo',
-    url: 'https://rankmath.com/', // Replace with affiliate link
+    url: 'https://rankmath.com/?ref=dougsmart',
     isAffiliate: true,
     weUseThis: true,
     icon: '📈',

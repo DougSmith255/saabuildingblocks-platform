@@ -163,7 +163,7 @@ export async function GET(request: NextRequest) {
       if (invitation.status !== 'expired') {
         await supabase
           .from('user_invitations')
-          .update({ status: 'expired', updated_at: now.toISOString() })
+          .update({ status: 'expired' })
           .eq('id', invitation.id);
       }
 

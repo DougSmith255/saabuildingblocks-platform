@@ -195,7 +195,7 @@ export default function Home() {
       <WhatYouGet />
       <WhyOnlyAtExp />
       <MediaLogos />
-      <MeetTheFounders />
+      <MeetTheFounders variant="compact" />
       <BuiltForFuture />
       <GlassPanel variant="champagne" noBlur>
         <WatchAndDecide />

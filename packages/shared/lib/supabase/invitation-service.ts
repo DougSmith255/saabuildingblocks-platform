@@ -31,9 +31,11 @@ export interface InvitationUser {
   id: string;
   email: string;
   full_name: string;
+  first_name?: string | null;
   username: string;
   role: string;
   status: string;
+  created_at?: string;
   gohighlevel_contact_id?: string | null;
 }
 
@@ -220,13 +222,12 @@ export async function listInvitations(
 export async function updateInvitationStatus(
   supabase: SupabaseClient,
   id: string,
-  status: 'pending' | 'accepted' | 'expired' | 'cancelled',
+  status: 'pending' | 'accepted' | 'expired' | 'cancelled' | 'sent',
   additionalData?: Partial<Invitation>
 ): Promise<{ data: Invitation | null; error: Error | null }> {
   try {
     const updateData: any = {
       status,
-      updated_at: new Date().toISOString(),
       ...additionalData,
     };
 
@@ -283,8 +284,8 @@ export function isInvitationValid(invitation: Invitation): {
   valid: boolean;
   reason?: string;
 } {
-  // Check status
-  if (invitation.status !== 'pending') {
+  // Check status - 'pending' is initial, 'sent' is set by cron resends
+  if (invitation.status !== 'pending' && invitation.status !== 'sent') {
     return {
       valid: false,
       reason: `Invitation is ${invitation.status}`,
@@ -315,7 +316,7 @@ export async function getUserById(
   try {
     const { data: user, error } = await supabase
       .from('users')
-      .select('id, email, full_name, username, role, status, gohighlevel_contact_id')
+      .select('id, email, full_name, first_name, username, role, status, created_at, gohighlevel_contact_id')
       .eq('id', userId)
       .single();
 

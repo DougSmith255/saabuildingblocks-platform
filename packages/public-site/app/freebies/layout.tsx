@@ -1,24 +1,16 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Free Agent Resources [7 Tools]',
+  title: 'Free Resources',
   description:
-    'Download 7 free tools — social media templates, open house sign-in sheets, buyer/listing checklists, and business cards. No email required.',
+    'Free downloadable tools for real estate agents. Prospecting scripts, checklists, templates, and action plans to grow your business.',
   openGraph: {
-    title: 'Free Agent Resources',
+    title: 'Free Resources | Smart Agent Alliance',
     description:
-      '7 free tools — social templates, checklists, sign-in sheets, and business cards.',
-    type: 'website',
-  },
-  alternates: {
-    canonical: 'https://smartagentalliance.com/freebies',
+      'Free downloadable tools for real estate agents. Scripts, checklists, templates, and action plans.',
   },
 };
 
-export default function FreebiesLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

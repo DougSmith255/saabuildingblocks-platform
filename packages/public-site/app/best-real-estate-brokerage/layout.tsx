@@ -1,24 +1,16 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Brokerage Comparison [Guide]',
+  title: 'Best Real Estate Brokerage Comparison',
   description:
-    'Facts over feelings. Compare eXp Realty to traditional and online brokerages on commission splits, tech, passive income, and support — side by side.',
+    'Compare real estate brokerages side by side. See how eXp Realty stacks up against online and traditional brokerages on commission, fees, and tools.',
   openGraph: {
-    title: 'Best Real Estate Brokerage Comparison',
+    title: 'Best Real Estate Brokerage Comparison | Smart Agent Alliance',
     description:
-      'Compare eXp vs traditional and online brokerages on splits, tech, income, and support.',
-    type: 'website',
-  },
-  alternates: {
-    canonical: 'https://smartagentalliance.com/best-real-estate-brokerage',
+      'Compare real estate brokerages side by side. Commission splits, fees, tools, and support compared.',
   },
 };
 
-export default function BestRealEstateBrokerageLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

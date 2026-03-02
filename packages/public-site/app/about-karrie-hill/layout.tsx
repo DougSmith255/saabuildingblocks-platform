@@ -1,24 +1,16 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Karrie Hill, JD',
+  title: 'Karrie Hill',
   description:
-    'UC Berkeley Law grad. Six-figure RE business in year one — no cold calls. See her track record and 5 certifications as an eXp Certified Mentor.',
+    'Meet Karrie Hill, co-founder of the Smart Agent Alliance. Licensed REALTOR, certified negotiation expert, and eXp Realty leader.',
   openGraph: {
-    title: 'About Karrie Hill, JD',
+    title: 'Karrie Hill | Smart Agent Alliance',
     description:
-      'Six-figure first year, no cold calls. See her track record and certifications.',
-    type: 'profile',
-  },
-  alternates: {
-    canonical: 'https://smartagentalliance.com/about-karrie-hill',
+      'Meet Karrie Hill, co-founder of the Smart Agent Alliance. Licensed REALTOR, certified negotiation expert, and eXp Realty leader.',
   },
 };
 
-export default function AboutKarrieHillLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

@@ -13,8 +13,12 @@ import { H1 } from '@saa/shared/components/saa/headings';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Disclaimer | Smart Agent Alliance',
+  title: 'Disclaimer',
   description: 'Important disclaimers about the information provided on Smart Agent Alliance website.',
+  openGraph: {
+    title: 'Disclaimer | Smart Agent Alliance',
+    description: 'Important disclaimers about the information provided on Smart Agent Alliance website.',
+  },
 };
 
 export default function DisclaimerPage() {

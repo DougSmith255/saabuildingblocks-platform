@@ -1,24 +1,16 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Agent Success Hub [Blog]',
+  title: 'Blog',
   description:
-    'Brokerage comparisons, marketing plays, and career strategies from top-producing eXp agents. New posts weekly.',
+    'Real estate insights, marketing strategies, brokerage comparisons, and career tips for agents who want to level up.',
   openGraph: {
-    title: 'Agent Success Hub',
+    title: 'Blog | Smart Agent Alliance',
     description:
-      'Brokerage comparisons, marketing plays, and career strategies from top-producing eXp agents.',
-    type: 'website',
-  },
-  alternates: {
-    canonical: 'https://smartagentalliance.com/blog',
+      'Real estate insights, marketing strategies, brokerage comparisons, and career tips for agents.',
   },
 };
 
-export default function BlogLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

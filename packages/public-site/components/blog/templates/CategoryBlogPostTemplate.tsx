@@ -3,7 +3,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { ChevronDown } from 'lucide-react';
 import { BlogPostHero } from '../BlogPostHero';
 import { AuthorSection } from '../AuthorSection';
 import { RelatedPosts } from '../RelatedPosts';
@@ -12,6 +11,7 @@ import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { SchoolCardsSection } from '../SchoolCardsSection';
 import { getTemplateConfig, type CategoryTemplateConfig } from './templateConfig';
 import { LazySection } from '@/components/shared/LazySection';
+import { BlogSidebar } from '../BlogSidebar';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { getPostUrl } from '@/lib/blog-post-urls';
 
@@ -175,7 +175,6 @@ export function CategoryBlogPostTemplate({
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [transitionDirection, setTransitionDirection] = useState<'to-light' | 'to-dark' | null>(null);
-  const [showComparisonCharts, setShowComparisonCharts] = useState(false);
 
   // Get category from prop or post
   const primaryCategory = category || post.categories[0] || 'Uncategorized';
@@ -268,68 +267,36 @@ export function CategoryBlogPostTemplate({
         </LazySection>
       )}
 
-      {/* Comparison Images - Collapsible accordion for brokerage comparison posts ONLY */}
+      {/* Comparison Chart - Always visible for brokerage comparison posts */}
       {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (
-        <LazySection height={100}>
-          <section className="relative py-6 md:py-8 px-4 sm:px-8 md:px-12">
-            <div className="max-w-[1900px] mx-auto">
-              <div className="max-w-[1200px] mx-auto">
-                {/* Accordion Button */}
-                <button
-                  onClick={() => setShowComparisonCharts(!showComparisonCharts)}
-                  className="w-full flex items-center justify-between gap-4 px-6 py-4 rounded-lg transition-all duration-300 group"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(100,100,100,0.3) 0%, rgba(50,50,50,0.5) 100%)',
-                    border: '1px solid rgba(150,150,150,0.3)',
-                    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.4)',
-                  }}
-                  aria-expanded={showComparisonCharts}
-                >
-                  <span
-                    className="text-lg font-semibold tracking-wide"
-                    style={{
-                      fontFamily: 'var(--font-taskor, sans-serif)',
-                      color: '#ffd700',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
-                    }}
-                  >
-                    View Comparison Charts
-                  </span>
-                  <ChevronDown
-                    className={`w-6 h-6 transition-transform duration-300 ${showComparisonCharts ? 'rotate-180' : ''}`}
-                    style={{ color: '#ffd700' }}
-                  />
-                </button>
-
-                {/* Collapsible Content */}
-                <div
-                  className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                    showComparisonCharts ? 'max-h-[2000px] opacity-100 mt-6' : 'max-h-0 opacity-0'
-                  }`}
-                >
-                  <div className={`grid gap-6 ${post.comparisonImages.length === 2 ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
-                    {post.comparisonImages.map((img, idx) => (
-                      <div key={idx} className="flex justify-center">
-                        <CyberFrame>
-                          <Image
-                            src={img.url}
-                            alt={img.alt || img.title || `Comparison chart ${idx + 1}`}
-                            width={580}
-                            height={470}
-                            sizes="(max-width: 1024px) 90vw, 580px"
-                            className="object-contain w-full h-auto"
-                            priority={false}
-                          />
-                        </CyberFrame>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+        <section className="relative py-6 md:py-8 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto">
+            <h2
+              className="text-lg font-semibold tracking-wide text-center mb-6"
+              style={{
+                fontFamily: 'var(--font-taskor, sans-serif)',
+                color: '#ffd700',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+              }}
+            >
+              At-a-Glance Comparison
+            </h2>
+            <div className="flex justify-center">
+              <CyberFrame>
+                <Image
+                  src={post.comparisonImages[0].url}
+                  alt={post.comparisonImages[0].alt || post.comparisonImages[0].title || 'Brokerage comparison chart'}
+                  width={800}
+                  height={900}
+                  sizes="(max-width: 900px) 90vw, 800px"
+                  className="object-contain w-full h-auto"
+                  priority={true}
+                />
+              </CyberFrame>
             </div>
-          </section>
-        </LazySection>
+          </div>
+        </section>
       )}
 
       {/* YouTube Video Embed */}
@@ -354,38 +321,59 @@ export function CategoryBlogPostTemplate({
       <LazySection height={600}>
         <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
-            <div className="max-w-[1200px] mx-auto">
-              <div className="blog-content max-w-none">
-                {/* Featured Image - only shown in hero for real-estate-schools category */}
-                {/* For other categories, show featured image floated right in content */}
-                {post.featuredImage?.url && categorySlug !== 'real-estate-schools' && (
-                  <div className="float-right ml-6 mb-4" style={{ maxHeight: '270px' }}>
-                    <CyberFrame>
-                      <div className="relative" style={{ maxHeight: '270px' }}>
-                        <Image
-                          src={post.featuredImage.url}
-                          alt={post.featuredImage.alt || post.title}
-                          width={480}
-                          height={270}
-                          sizes="(max-width: 768px) 100vw, 480px"
-                          className="object-contain"
-                          style={{ maxHeight: '270px', width: 'auto', height: 'auto' }}
-                        />
+            <div className="max-w-[1400px] mx-auto relative">
+              <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-10">
+                {/* Main content column */}
+                <div className="relative min-w-0">
+                  {/* Feathered backdrop to improve text readability over star background (dark mode only) */}
+                  {isDarkMode && (
+                    <div className="absolute pointer-events-none" style={{
+                      inset: '-2rem',
+                      zIndex: -1,
+                      background: 'rgba(8, 8, 12, 0.55)',
+                      maskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%)',
+                      WebkitMaskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%)',
+                      backdropFilter: 'blur(8px)',
+                      WebkitBackdropFilter: 'blur(8px)',
+                      borderRadius: '32px',
+                    }} />
+                  )}
+                  <div className="blog-content max-w-none">
+                    {/* Featured Image - only shown in hero for real-estate-schools category */}
+                    {/* For other categories, show featured image floated right in content */}
+                    {post.featuredImage?.url && categorySlug !== 'real-estate-schools' && (
+                      <div className="float-right ml-6 mb-4" style={{ maxHeight: '270px' }}>
+                        <CyberFrame>
+                          <div className="relative" style={{ maxHeight: '270px' }}>
+                            <Image
+                              src={post.featuredImage.url}
+                              alt={post.featuredImage.alt || post.title}
+                              width={480}
+                              height={270}
+                              sizes="(max-width: 768px) 100vw, 480px"
+                              className="object-contain"
+                              style={{ maxHeight: '270px', width: 'auto', height: 'auto' }}
+                            />
+                          </div>
+                        </CyberFrame>
                       </div>
-                    </CyberFrame>
+                    )}
+                    <div data-speakable="summary">
+                      <BlogContentRenderer html={post.content} />
+                    </div>
                   </div>
-                )}
-                <div data-speakable="summary">
-                  <BlogContentRenderer html={post.content} />
-                </div>
-              </div>
 
-              {/* Share Buttons */}
-              <ShareButtons
-                url={typeof window !== 'undefined' ? `${window.location.origin}${getPostUrl(post)}` : getPostUrl(post)}
-                title={post.title}
-                excerpt={post.excerpt}
-              />
+                  {/* Share Buttons */}
+                  <ShareButtons
+                    url={typeof window !== 'undefined' ? `${window.location.origin}${getPostUrl(post)}` : getPostUrl(post)}
+                    title={post.title}
+                    excerpt={post.excerpt}
+                  />
+                </div>
+
+                {/* Sidebar column */}
+                <BlogSidebar categorySlug={categorySlug} isDarkMode={isDarkMode} />
+              </div>
             </div>
           </div>
         </section>

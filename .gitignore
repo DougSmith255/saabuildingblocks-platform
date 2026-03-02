@@ -90,3 +90,6 @@ packages/public-site/functions/backups/
 
 # Playwright recordings
 scripts/portal-recordings/recordings/
+
+# Supabase CLI local state
+packages/*/supabase/.temp/
