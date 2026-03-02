@@ -267,6 +267,38 @@ export function CategoryBlogPostTemplate({
         </LazySection>
       )}
 
+      {/* License Requirements at a Glance - Always visible for become-an-agent posts */}
+      {post.licenseImage && categorySlug === 'become-an-agent' && (
+        <section className="relative py-6 md:py-8 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto">
+            <h2
+              className="text-lg font-semibold tracking-wide text-center mb-6"
+              style={{
+                fontFamily: 'var(--font-taskor, sans-serif)',
+                color: '#ffd700',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+              }}
+            >
+              Requirements at a Glance
+            </h2>
+            <div className="flex justify-center">
+              <CyberFrame>
+                <Image
+                  src={post.licenseImage.url}
+                  alt={post.licenseImage.alt || post.licenseImage.title || 'License requirements summary'}
+                  width={800}
+                  height={670}
+                  sizes="(max-width: 900px) 90vw, 800px"
+                  className="object-contain w-full h-auto"
+                  priority={true}
+                />
+              </CyberFrame>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Comparison Chart - Always visible for brokerage comparison posts */}
       {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (
         <section className="relative py-6 md:py-8 px-4 sm:px-8 md:px-12">
@@ -322,7 +354,7 @@ export function CategoryBlogPostTemplate({
         <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
             <div className="max-w-[1400px] mx-auto relative">
-              <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-10">
+              <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-10 lg:items-start">
                 {/* Main content column */}
                 <div className="relative min-w-0">
                   {/* Feathered backdrop to improve text readability over star background (dark mode only) */}

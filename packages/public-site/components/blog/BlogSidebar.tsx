@@ -114,33 +114,69 @@ const cardStyleLight = (gold?: boolean) => ({
   borderRadius: '12px',
 });
 
+// Header height + gap below it (header is 75px on desktop)
+const HEADER_OFFSET = 90;
+const BOTTOM_PADDING = 24;
+
 export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
   const [showModal, setShowModal] = useState(false);
   const [selectedFreebie, setSelectedFreebie] = useState<typeof FREEBIES[keyof typeof FREEBIES] | null>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
-  const [stickyTop, setStickyTop] = useState(96);
+  const scrollState = useRef({ top: HEADER_OFFSET, lastY: 0 });
 
-  // Calculate sticky top so the sidebar bottom aligns with viewport bottom
-  // when the sidebar is taller than the available viewport space
+  // Direction-aware sticky: adjusts top incrementally by scroll delta,
+  // clamped between header offset (top pinned) and bottom pinned.
+  // On scroll direction change the sidebar immediately starts scrolling
+  // with the page toward the opposite boundary.
   useEffect(() => {
-    const update = () => {
-      if (!stickyRef.current) return;
-      const sidebarHeight = stickyRef.current.offsetHeight;
-      const viewportHeight = window.innerHeight;
-      const topPadding = 96; // matches top-24 (24 * 4px)
-      const bottomPadding = 24;
+    scrollState.current.lastY = window.scrollY;
+    let ticking = false;
 
-      if (sidebarHeight + topPadding + bottomPadding > viewportHeight) {
-        // Sidebar taller than viewport - pin bottom to viewport bottom
-        setStickyTop(viewportHeight - sidebarHeight - bottomPadding);
-      } else {
-        setStickyTop(topPadding);
-      }
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const el = stickyRef.current;
+        if (!el) { ticking = false; return; }
+
+        const scrollY = window.scrollY;
+        const delta = scrollY - scrollState.current.lastY;
+        const sidebarH = el.offsetHeight;
+        const vpH = window.innerHeight;
+
+        if (sidebarH + HEADER_OFFSET + BOTTOM_PADDING <= vpH) {
+          // Sidebar fits in viewport - simple pin below header
+          scrollState.current.top = HEADER_OFFSET;
+        } else {
+          const bottomPin = vpH - sidebarH - BOTTOM_PADDING;
+          // Move top by scroll delta, clamped between bottom-pin and header
+          scrollState.current.top = Math.max(
+            bottomPin,
+            Math.min(HEADER_OFFSET, scrollState.current.top - delta)
+          );
+        }
+
+        el.style.top = `${scrollState.current.top}px`;
+        scrollState.current.lastY = scrollY;
+        ticking = false;
+      });
     };
 
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
+    // Set initial position
+    if (stickyRef.current) {
+      stickyRef.current.style.top = `${HEADER_OFFSET}px`;
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => {
+      // Reset to header offset on resize so bounds recalculate naturally
+      scrollState.current.top = HEADER_OFFSET;
+      if (stickyRef.current) stickyRef.current.style.top = `${HEADER_OFFSET}px`;
+    });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
   }, []);
 
   const showCalculator = CALCULATOR_CATEGORIES.has(categorySlug);
@@ -156,7 +192,7 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
   return (
     <>
       <aside className="hidden lg:block">
-        <div ref={stickyRef} className="sticky space-y-4" style={{ height: 'fit-content', top: `${stickyTop}px` }}>
+        <div ref={stickyRef} className="sticky space-y-4" style={{ height: 'fit-content', top: `${HEADER_OFFSET}px` }}>
 
           {/* Widget 1: Calculator CTA (eXp categories only) */}
           {showCalculator && (
