@@ -292,6 +292,13 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
 
           {/* Widget 3: Category Navigation */}
           <div className="p-5" style={getCardStyle()}>
+            <style>{`
+              .sidebar-cat-link:not(.sidebar-cat-active):hover {
+                background: ${isDarkMode ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'};
+                color: ${isDarkMode ? '#ccc' : '#333'};
+                border-radius: 6px;
+              }
+            `}</style>
             <h3 className="text-sm font-semibold mb-3" style={{
               fontFamily: 'var(--font-taskor)',
               color: isDarkMode ? '#e5e4dd' : '#1a1a1a',
@@ -307,7 +314,7 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
                     <li key={cat.slug}>
                       <a
                         href={`/blog#category=${cat.slug}`}
-                        className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs transition-colors duration-150"
+                        className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs sidebar-cat-link${isActive ? ' sidebar-cat-active' : ''}`}
                         style={{
                           fontFamily: 'var(--font-amulya)',
                           color: isActive
@@ -317,6 +324,8 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
                             ? isDarkMode ? 'rgba(255,215,0,0.08)' : 'rgba(255,215,0,0.12)'
                             : 'transparent',
                           fontWeight: isActive ? 600 : 400,
+                          transition: 'background 0.15s ease, color 0.15s ease',
+                          borderRadius: '6px',
                         }}
                       >
                         <span className="text-sm leading-none">{cat.icon}</span>
@@ -329,21 +338,24 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
             </nav>
           </div>
 
-          {/* Widget 4: Join the Alliance */}
-          <div className="p-5 text-center" style={getCardStyle(true)}>
-            <div className="mb-1">
-              <span className="text-3xl font-bold" style={{
-                fontFamily: 'var(--font-taskor)',
-                color: '#ffd700',
-              }}>
-                4,000+
-              </span>
+          {/* Widget 4: Team Promo */}
+          <div className="p-5" style={getCardStyle(true)}>
+            <div className="mb-3 overflow-hidden" style={{ borderRadius: '8px' }}>
+              <img
+                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop"
+                alt="Doug & Karrie - Smart Agent Alliance co-founders"
+                width={320}
+                height={200}
+                loading="lazy"
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+              />
             </div>
             <p className="text-xs mb-4" style={{
               fontFamily: 'var(--font-amulya)',
-              color: isDarkMode ? '#888' : '#666',
+              color: isDarkMode ? '#999' : '#666',
+              lineHeight: 1.6,
             }}>
-              agents in the alliance
+              Join Doug & Karrie and 4,000+ agents building their business with Smart Agent Alliance at eXp Realty.
             </p>
             <button
               onClick={() => window.dispatchEvent(new Event('open-join-modal'))}

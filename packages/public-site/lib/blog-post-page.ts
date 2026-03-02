@@ -74,12 +74,8 @@ export function getRelatedPosts(
 ): BlogPost[] {
   const currentCategory = currentPost.categories[0];
 
-  // Filter out current post and broken content
-  const candidates = posts.filter((p) => {
-    if (p.id === currentPost.id) return false;
-    if (p.content?.includes('[et_pb_')) return false;
-    return true;
-  });
+  // Filter out current post
+  const candidates = posts.filter((p) => p.id !== currentPost.id);
 
   // Prioritize same category
   const sameCategory = candidates.filter((p) =>
