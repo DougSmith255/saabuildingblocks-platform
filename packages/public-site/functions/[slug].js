@@ -571,7 +571,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       scroll-behavior: smooth;
-      background: rgb(8, 8, 8);
+      background: #000;
       overscroll-behavior: none;
     }
 
@@ -2314,9 +2314,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       pointer-events: auto;
       position: relative;
       width: 100%;
-      min-height: 85vh;
       max-height: 85vh;
-      overflow: hidden;
+      overflow-y: auto;
       overscroll-behavior: contain;
       display: flex;
       flex-direction: column;
