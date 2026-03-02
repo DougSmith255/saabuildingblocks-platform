@@ -369,7 +369,7 @@ jobs:
               });
 
               const searchconsole = google.webmasters({ version: "v3", auth });
-              const siteUrl = "sc-domain:smartagentalliance.com";
+              const siteUrl = "https://smartagentalliance.com/";
               const sitemapUrl = "https://smartagentalliance.com/sitemap.xml";
 
               await searchconsole.sitemaps.submit({ siteUrl, feedpath: sitemapUrl });
