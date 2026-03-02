@@ -29,6 +29,10 @@ export async function onRequestGet(context) {
     'prospecting-scripts-playbook.pdf',
     'new-agent-90-day-plan.pdf',
     'all-freebies-bundle.zip',
+    'open-house-checklist.pdf',
+    'final-walkthrough.pdf',
+    'headshot-guide.pdf',
+    'domain-dos-donts.pdf',
   ];
 
   if (!allowedFiles.includes(filename)) {
