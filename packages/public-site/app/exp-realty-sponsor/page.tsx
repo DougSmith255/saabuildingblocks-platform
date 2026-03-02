@@ -583,6 +583,8 @@ const TRAINING_PROGRAMS = [
     icon: UserCircle,
     featured: false,
     colSpan: 1,
+    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-personal-branding/public',
+    imageAlt: 'Personal Branding Course',
   },
   {
     title: 'Paid Ads',
@@ -611,6 +613,8 @@ const TRAINING_PROGRAMS = [
     icon: Handshake,
     featured: false,
     colSpan: 1,
+    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-investor-army-course/public',
+    imageAlt: 'Investor Agent Army Course',
   },
   {
     title: 'AI Accelerator',
@@ -709,6 +713,46 @@ function ValueSection3_Training() {
             // Icon cards
             // Check if this card sits next to a featured card (stretched tall)
             const isAdjacentToFeatured = program.title === 'Personal Branding' || program.title === 'Investor Agent';
+
+            // Image card variant: image fills card with text overlay
+            if (program.image) {
+              return (
+                <div
+                  key={i}
+                  className="relative rounded-xl overflow-hidden aspect-square sm:aspect-[3/4]"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                    border: '1px solid rgba(255,215,0,0.15)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                  }}
+                >
+                  <img
+                    src={program.image}
+                    alt={program.imageAlt || program.title}
+                    width={600}
+                    height={800}
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                    loading="lazy"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 p-4" style={{
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)',
+                  }}>
+                    <h4 style={{
+                      fontFamily: 'var(--font-taskor, sans-serif)',
+                      fontSize: 'clamp(14px, 1.8vw, 18px)',
+                      fontWeight: 600,
+                      color: '#e5e4dd',
+                      marginBottom: '0.25rem',
+                    }}>
+                      {program.title}
+                    </h4>
+                    <p className="text-body" style={{ fontSize: 'clamp(11px, 1.3vw, 13px)', color: '#b0b0a8' }}>
+                      {program.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            }
 
             return (
               <div
