@@ -590,7 +590,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       font-size: var(--font-size-h1);
       line-height: 1.1;
       font-weight: 400;
-      color: var(--color-brandGold);
+      color: var(--color-headingText);
     }
 
     .text-h2 {
@@ -619,51 +619,37 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       font-family: var(--font-taskor), system-ui, sans-serif;
     }
 
-    /* H1 Neon Sign Effect - matching home page glow */
-    .h1-neon {
-      color: #ffd700;
+    /* H1 3D Shaded Text - gold stroke backing + shaded fill extrusion */
+    .h1-shaded {
+      color: #f2f1ec;
       transform: perspective(800px) rotateX(12deg);
       font-feature-settings: "ss01" 1;
-      /* WHITE CORE + GOLD GLOW (without close gold layer on small screens) */
       text-shadow:
-        0 0 0.01em #fff,
-        0 0 0.02em #fff,
-        0 0 0.03em rgba(255,255,255,0.8),
-        0 0 0.09em rgba(255, 215, 0, 0.8),
-        0 0 0.13em rgba(255, 215, 0, 0.55),
-        0 0 0.18em rgba(255, 179, 71, 0.35),
-        0.03em 0.03em 0 #2a2a2a,
-        0.045em 0.045em 0 #1a1a1a,
-        0.06em 0.06em 0 #0f0f0f,
-        0.075em 0.075em 0 #080808;
-      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
-      animation: h1GlowBreathe 4s ease-in-out infinite;
+        /* Subtle gold glow */
+        0 0 0.12em rgba(255, 215, 0, 0.15),
+        /* Shaded fill extrusion (light near face -> dark at depth) */
+        0.010em 0.013em 0 #dddcd5,
+        0.015em 0.025em 0 #d1d0c7,
+        0.019em 0.038em 0 #c2c1b8,
+        0.024em 0.050em 0 #b3b2a8,
+        0.029em 0.063em 0 #a09f94,
+        0.033em 0.075em 0 #8d8c80,
+        0.038em 0.088em 0 #7a7970,
+        /* Gold stroke backing (dark grey -> bright gold) */
+        0.040em 0.095em 0 #191818,
+        0.042em 0.105em 0 #3f3010,
+        0.044em 0.115em 0 #5e4808,
+        0.046em 0.125em 0 #7c6008,
+        0.048em 0.135em 0 #9a7808,
+        0.050em 0.145em 0 #b8900a,
+        0.052em 0.155em 0 #d4a010,
+        0.054em 0.165em 0 #e6ac00,
+        /* Deep shadow */
+        0.056em 0.175em 0.02em rgba(184, 150, 10, 0.5);
+      filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
     }
 
-    /* Add close gold glow on desktop (matching home page H1 component) */
-    @media (min-width: 1200px) {
-      .h1-neon {
-        text-shadow:
-          0 0 0.01em #fff,
-          0 0 0.02em #fff,
-          0 0 0.03em rgba(255,255,255,0.8),
-          0 0 0.05em #ffd700,
-          0 0 0.09em rgba(255, 215, 0, 0.8),
-          0 0 0.13em rgba(255, 215, 0, 0.55),
-          0 0 0.18em rgba(255, 179, 71, 0.35),
-          0.03em 0.03em 0 #2a2a2a,
-          0.045em 0.045em 0 #1a1a1a,
-          0.06em 0.06em 0 #0f0f0f,
-          0.075em 0.075em 0 #080808;
-      }
-    }
-
-    @keyframes h1GlowBreathe {
-      0%, 100% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25)); }
-      50% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45)); }
-    }
-
-    /* H2 3D Text Effect - matches homepage H2 component default theme */
+    /* H2 3D Shaded Text - grey stroke backing + shaded fill extrusion */
     .h2-3d {
       text-align: center;
       font-feature-settings: "ss01" 1;
@@ -673,21 +659,21 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       max-width: 1400px;
       color: #e5e4dd;
       text-shadow:
-        /* WARM CORE GLOW */
-        0 0 0.01em #bfbdb0,
-        0 0 0.02em #bfbdb0,
-        0 0 0.03em rgba(191,189,176,0.8),
-        0 0 0.04em rgba(191,189,176,0.7),
-        0 0 0.08em rgba(191,189,176,0.35),
-        0 0 0.14em rgba(191,189,176,0.15),
-        0 0 0.22em rgba(160,158,148,0.08),
-        /* METAL BACKING (3D depth - thicker) */
-        0.02em 0.02em 0 #2a2a2a,
-        0.04em 0.04em 0 #222222,
-        0.06em 0.06em 0 #1a1a1a,
-        0.08em 0.08em 0 #141414,
-        0.10em 0.10em 0 #0f0f0f,
-        0.12em 0.12em 0 #080808;
+        /* Shaded fill extrusion */
+        0.010em 0.013em 0 #dddcd5,
+        0.015em 0.025em 0 #d1d0c7,
+        0.019em 0.038em 0 #c2c1b8,
+        0.024em 0.050em 0 #b3b2a8,
+        0.029em 0.063em 0 #a09f94,
+        0.033em 0.075em 0 #8d8c80,
+        0.038em 0.088em 0 #7a7970,
+        /* Grey stroke backing */
+        0.040em 0.095em 0 #282828,
+        0.044em 0.110em 0 #333333,
+        0.048em 0.125em 0 #3e3e3e,
+        0.052em 0.140em 0 #4a4a4a,
+        /* Deep shadow */
+        0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5);
       transform: perspective(800px) rotateX(8deg);
       filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
     }
@@ -696,28 +682,27 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       margin-left: 0;
     }
 
-    /* Tagline - 3D Text Effect (matches H2) */
+    /* Tagline - 3D Shaded Text (matches H2) */
     .tagline {
       text-align: center;
       font-feature-settings: "ss01" 1;
-      color: #bfbdb0;
+      color: #e5e4dd;
       text-shadow:
-        /* WHITE CORE */
-        0 0 0.01em #fff,
-        0 0 0.02em #fff,
-        0 0 0.03em rgba(255,255,255,0.8),
-        /* WARM WHITE GLOW - extended and dilute for sharp definition */
-        0 0 0.04em rgba(255,250,240,0.7),
-        0 0 0.08em rgba(255, 255, 255, 0.35),
-        0 0 0.14em rgba(255, 255, 255, 0.15),
-        0 0 0.22em rgba(200, 200, 200, 0.08),
-        /* METAL BACKING (3D depth - thicker) */
-        0.02em 0.02em 0 #2a2a2a,
-        0.04em 0.04em 0 #222222,
-        0.06em 0.06em 0 #1a1a1a,
-        0.08em 0.08em 0 #141414,
-        0.10em 0.10em 0 #0f0f0f,
-        0.12em 0.12em 0 #080808;
+        /* Shaded fill extrusion */
+        0.010em 0.013em 0 #dddcd5,
+        0.015em 0.025em 0 #d1d0c7,
+        0.019em 0.038em 0 #c2c1b8,
+        0.024em 0.050em 0 #b3b2a8,
+        0.029em 0.063em 0 #a09f94,
+        0.033em 0.075em 0 #8d8c80,
+        0.038em 0.088em 0 #7a7970,
+        /* Grey stroke backing */
+        0.040em 0.095em 0 #282828,
+        0.044em 0.110em 0 #333333,
+        0.048em 0.125em 0 #3e3e3e,
+        0.052em 0.140em 0 #4a4a4a,
+        /* Deep shadow */
+        0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5);
       transform: perspective(800px) rotateX(8deg);
       filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
     }
@@ -3771,7 +3756,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
             <!-- Hero Text -->
             <div class="hero-text-wrapper" style="perspective: 1000px;">
-              <h1 id="hero-heading" class="text-h1 h1-neon" style="font-size: clamp(50px, calc(30px + 4vw + 0.3vh), 150px); margin-bottom: 3px;">
+              <h1 id="hero-heading" class="text-h1 h1-shaded" style="font-size: clamp(50px, calc(30px + 4vw + 0.3vh), 150px); margin-bottom: 3px;">
                 SMART AGENT ALLIANCE
               </h1>
               <div class="tagline-backdrop">
@@ -3945,7 +3930,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                       <span class="icon-3d" style="display: inline-flex; margin-bottom: 0.75rem;">
                         <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                       </span>
-                      <p class="font-heading" style="font-size: clamp(1.875rem, 2vw, 2.25rem); font-weight: 700; color: #bfbdb0; text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4); font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">4000+</p>
+                      <p class="font-heading" style="font-size: clamp(1.875rem, 2vw, 2.25rem); font-weight: 700; color: #e5e4dd; text-shadow: 0.010em 0.013em 0 #dddcd5, 0.015em 0.025em 0 #d1d0c7, 0.019em 0.038em 0 #c2c1b8, 0.024em 0.050em 0 #b3b2a8, 0.029em 0.063em 0 #a09f94, 0.033em 0.075em 0 #8d8c80, 0.038em 0.088em 0 #7a7970, 0.040em 0.095em 0 #282828, 0.044em 0.110em 0 #333333, 0.048em 0.125em 0 #3e3e3e, 0.052em 0.140em 0 #4a4a4a, 0.054em 0.150em 0.02em rgba(0,0,0,0.5); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; transform: perspective(800px) rotateX(8deg); filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));">4000+</p>
                       <p class="text-body" style="margin-top: 0.5rem;">Agents in Sponsor Network</p>
                     </div>
                   </div>
@@ -8128,6 +8113,17 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   const lighterRgb = `${Math.min(255, rgb.r + 80)}, ${Math.min(255, rgb.g + 80)}, ${Math.min(255, rgb.b + 80)}`;
   const darkerRgb = `${Math.max(0, rgb.r - 40)}, ${Math.max(0, rgb.g - 40)}, ${Math.max(0, rgb.b - 40)}`;
 
+  // Generate H1 backing gradient from dark to accent color (8 steps)
+  const backingSteps = [0.04, 0.18, 0.32, 0.45, 0.58, 0.70, 0.82, 0.92];
+  const h1Backing = backingSteps.map(t => {
+    const br = Math.round(20 + (rgb.r - 20) * t);
+    const bg = Math.round(20 + (rgb.g - 20) * t);
+    const bb = Math.round(20 + (rgb.b - 20) * t);
+    return `#${br.toString(16).padStart(2, '0')}${bg.toString(16).padStart(2, '0')}${bb.toString(16).padStart(2, '0')}`;
+  });
+  // Deep shadow color at ~50% accent
+  const h1DeepShadow = `rgba(${Math.round(rgb.r * 0.7)}, ${Math.round(rgb.g * 0.7)}, ${Math.round(rgb.b * 0.05 + 10)}, 0.5)`;
+
   // Convert backgroundColor to RGB for gradient (star field background)
   const bgRgb = hexToRgb(backgroundColor);
   // Top of gradient: dark but with subtle color tint (10% of background color)
@@ -8515,35 +8511,42 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       color: ${accentColor};
     }
 
-    /* Neon Sign H1 Effect - adapts based on accent color brightness */
-    /* Dark accents: use off-white text with subtle accent outline */
-    /* Light accents: use accent color with full neon glow */
+    /* H1 3D Shaded Text - dynamic accent backing + glow */
+    /* Dark accents: cream face */
+    /* Light accents: accent color face */
     h1 {
       font-family: 'Taskor', 'Synonym', system-ui, sans-serif;
       font-size: var(--name-font-size, clamp(1.75rem, 5vw, 2.5rem));
       font-weight: ${nameWeight === 'bold' ? '700' : '400'};
       letter-spacing: 0em;
-      color: ${isAccentDark ? '#e5e4dd' : accentColor};
+      color: ${isAccentDark ? '#f2f1ec' : accentColor};
       line-height: 1.1;
       margin-bottom: 0.5rem;
-      /* Enable stylistic set 01 for alternate N, E, M glyphs */
       font-feature-settings: "ss01" 1;
-      /* 3D perspective for neon sign depth effect */
       transform: perspective(800px) rotateX(12deg);
-      /* Subtle depth text-shadow - no glow */
-      text-shadow: 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f;
-      /* GPU-accelerated depth shadow */
-      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7));
-      /* Animation disabled for cleaner appearance */
-    }
-
-    @keyframes h1GlowBreathe {
-      0%, 100% {
-        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(${rgbString}, 0.25));
-      }
-      50% {
-        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(${rgbString}, 0.45));
-      }
+      text-shadow:
+        /* Accent glow */
+        0 0 0.12em rgba(${rgbString}, 0.15),
+        /* Shaded fill extrusion */
+        0.010em 0.013em 0 #dddcd5,
+        0.015em 0.025em 0 #d1d0c7,
+        0.019em 0.038em 0 #c2c1b8,
+        0.024em 0.050em 0 #b3b2a8,
+        0.029em 0.063em 0 #a09f94,
+        0.033em 0.075em 0 #8d8c80,
+        0.038em 0.088em 0 #7a7970,
+        /* Accent stroke backing (dark -> accent color) */
+        0.040em 0.095em 0 ${h1Backing[0]},
+        0.042em 0.105em 0 ${h1Backing[1]},
+        0.044em 0.115em 0 ${h1Backing[2]},
+        0.046em 0.125em 0 ${h1Backing[3]},
+        0.048em 0.135em 0 ${h1Backing[4]},
+        0.050em 0.145em 0 ${h1Backing[5]},
+        0.052em 0.155em 0 ${h1Backing[6]},
+        0.054em 0.165em 0 ${h1Backing[7]},
+        /* Deep shadow */
+        0.056em 0.175em 0.02em ${h1DeepShadow};
+      filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
     }
 
     .bio {

@@ -24,24 +24,23 @@ const WhereSAAFitsVersionA = dynamic(() => import('./components/WhereSAAFits'), 
    HERO COMPONENTS (above-fold, render immediately)
    ═══════════════════════════════════════════════════════════════ */
 
-// Shared tagline 3D styling for hero stat cards
+// Shared 3D shaded text styling for hero stat cards (matches H2/Tagline)
 const heroTaglineStyle: React.CSSProperties = {
   marginBottom: '0.25rem',
-  color: '#bfbdb0',
+  color: '#e5e4dd',
   textShadow: `
-    0 0 0.01em #fff,
-    0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8),
-    0 0 0.04em rgba(255,250,240,0.7),
-    0 0 0.08em rgba(255, 255, 255, 0.35),
-    0 0 0.14em rgba(255, 255, 255, 0.15),
-    0 0 0.22em rgba(200, 200, 200, 0.08),
-    0.02em 0.02em 0 #2a2a2a,
-    0.04em 0.04em 0 #222222,
-    0.06em 0.06em 0 #1a1a1a,
-    0.08em 0.08em 0 #141414,
-    0.10em 0.10em 0 #0f0f0f,
-    0.12em 0.12em 0 #080808
+    0.010em 0.013em 0 #dddcd5,
+    0.015em 0.025em 0 #d1d0c7,
+    0.019em 0.038em 0 #c2c1b8,
+    0.024em 0.050em 0 #b3b2a8,
+    0.029em 0.063em 0 #a09f94,
+    0.033em 0.075em 0 #8d8c80,
+    0.038em 0.088em 0 #7a7970,
+    0.040em 0.095em 0 #282828,
+    0.044em 0.110em 0 #333333,
+    0.048em 0.125em 0 #3e3e3e,
+    0.052em 0.140em 0 #4a4a4a,
+    0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5)
   `,
   transform: 'perspective(800px) rotateX(8deg)',
   filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
@@ -281,24 +280,7 @@ export default function AboutExpRealty() {
           <LazyAuroraNetworkEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10 flex-1 flex flex-col justify-center">
             <div className="relative z-10">
-              <H1
-                style={{
-                  color: '#00bfff',
-                  textShadow: `
-                    0 0 0.01em #fff,
-                    0 0 0.02em #fff,
-                    0 0 0.03em rgba(255,255,255,0.8),
-                    0 0 0.09em rgba(0, 191, 255, 0.8),
-                    0 0 0.13em rgba(0, 191, 255, 0.55),
-                    0 0 0.18em rgba(0, 140, 200, 0.35),
-                    0.03em 0.03em 0 #2a2a2a,
-                    0.045em 0.045em 0 #1a1a1a,
-                    0.06em 0.06em 0 #0f0f0f,
-                    0.075em 0.075em 0 #080808
-                  `,
-                  filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(0, 191, 255, 0.25))',
-                }}
-              >ABOUT EXP REALTY</H1>
+              <H1 theme="cyan">ABOUT EXP REALTY</H1>
               <div className="mt-4 mx-auto" style={{ maxWidth: '1100px' }}>
                 <Tagline style={{ fontSize: 'clamp(17px, 4vw, 37px)' }}>A brokerage built for efficient production and income beyond sales.</Tagline>
               </div>

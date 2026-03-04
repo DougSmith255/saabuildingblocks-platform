@@ -12,74 +12,102 @@ export interface HeadingProps {
   theme?: H2Theme;
 }
 
-// Theme configurations — text color + glow color + metal backing
+// Shared fill extrusion layers (same across all themes)
+const FILL_EXTRUSION = `
+  0.010em 0.013em 0 #dddcd5,
+  0.015em 0.025em 0 #d1d0c7,
+  0.019em 0.038em 0 #c2c1b8,
+  0.024em 0.050em 0 #b3b2a8,
+  0.029em 0.063em 0 #a09f94,
+  0.033em 0.075em 0 #8d8c80,
+  0.038em 0.088em 0 #7a7970`;
+
+// Theme configurations - text color + stroke backing layers
 const THEMES: Record<H2Theme, { textColor: string; textShadow: string }> = {
   default: {
     textColor: '#e5e4dd',
     textShadow: `
-      0 0 0.01em #bfbdb0, 0 0 0.02em #bfbdb0, 0 0 0.03em rgba(191,189,176,0.8),
-      0 0 0.04em rgba(191,189,176,0.7), 0 0 0.08em rgba(191,189,176,0.35),
-      0 0 0.14em rgba(191,189,176,0.15), 0 0 0.22em rgba(160,158,148,0.08),
-      0.02em 0.02em 0 #2a2a2a, 0.04em 0.04em 0 #222222,
-      0.06em 0.06em 0 #1a1a1a, 0.08em 0.08em 0 #141414,
-      0.10em 0.10em 0 #0f0f0f, 0.12em 0.12em 0 #080808`,
+      ${FILL_EXTRUSION},
+      0.040em 0.095em 0 #282828,
+      0.044em 0.110em 0 #333333,
+      0.048em 0.125em 0 #3e3e3e,
+      0.052em 0.140em 0 #4a4a4a,
+      0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5)`,
   },
   blue: {
     textColor: '#b0d4e8',
     textShadow: `
-      0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
-      0 0 0.04em rgba(0,191,255,0.7), 0 0 0.08em rgba(0,191,255,0.35),
-      0 0 0.14em rgba(0,191,255,0.15), 0 0 0.22em rgba(0,150,200,0.08),
-      0.02em 0.02em 0 #1a2a3a, 0.04em 0.04em 0 #152535,
-      0.06em 0.06em 0 #0f1a25, 0.08em 0.08em 0 #0a1520,
-      0.10em 0.10em 0 #081018, 0.12em 0.12em 0 #040810`,
+      0 0 0.12em rgba(0, 191, 255, 0.12),
+      ${FILL_EXTRUSION},
+      0.040em 0.095em 0 #181920,
+      0.042em 0.105em 0 #1a2a38,
+      0.044em 0.115em 0 #0a3a50,
+      0.046em 0.125em 0 #084a68,
+      0.048em 0.135em 0 #086080,
+      0.050em 0.145em 0 #0a7898,
+      0.052em 0.155em 0 #00bfff,
+      0.054em 0.165em 0.02em rgba(0, 150, 200, 0.5)`,
   },
   gold: {
     textColor: '#e8d4a0',
     textShadow: `
-      0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
-      0 0 0.04em rgba(255,215,0,0.7), 0 0 0.08em rgba(255,215,0,0.35),
-      0 0 0.14em rgba(255,215,0,0.15), 0 0 0.22em rgba(200,170,0,0.08),
-      0.02em 0.02em 0 #3a2a1a, 0.04em 0.04em 0 #352515,
-      0.06em 0.06em 0 #251a0f, 0.08em 0.08em 0 #20150a,
-      0.10em 0.10em 0 #181008, 0.12em 0.12em 0 #100804`,
+      0 0 0.12em rgba(255, 215, 0, 0.12),
+      ${FILL_EXTRUSION},
+      0.040em 0.095em 0 #191818,
+      0.042em 0.105em 0 #3f3010,
+      0.044em 0.115em 0 #5e4808,
+      0.046em 0.125em 0 #7c6008,
+      0.048em 0.135em 0 #9a7808,
+      0.050em 0.145em 0 #b8900a,
+      0.052em 0.155em 0 #d4a010,
+      0.054em 0.165em 0 #e6ac00,
+      0.056em 0.175em 0.02em rgba(184, 150, 10, 0.5)`,
   },
   purple: {
     textColor: '#d4b0e8',
     textShadow: `
-      0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
-      0 0 0.04em rgba(168,85,247,0.7), 0 0 0.08em rgba(168,85,247,0.35),
-      0 0 0.14em rgba(168,85,247,0.15), 0 0 0.22em rgba(140,70,200,0.08),
-      0.02em 0.02em 0 #2a1a3a, 0.04em 0.04em 0 #251535,
-      0.06em 0.06em 0 #1a0f25, 0.08em 0.08em 0 #150a20,
-      0.10em 0.10em 0 #100818, 0.12em 0.12em 0 #080410`,
+      0 0 0.12em rgba(168, 85, 247, 0.12),
+      ${FILL_EXTRUSION},
+      0.040em 0.095em 0 #1a1020,
+      0.042em 0.105em 0 #2a1535,
+      0.044em 0.115em 0 #3a1a50,
+      0.046em 0.125em 0 #4a2068,
+      0.048em 0.135em 0 #6030a0,
+      0.050em 0.145em 0 #7845c8,
+      0.052em 0.155em 0 #a855f7,
+      0.054em 0.165em 0.02em rgba(140, 70, 200, 0.5)`,
   },
   emerald: {
     textColor: '#a0e8c4',
     textShadow: `
-      0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
-      0 0 0.04em rgba(16,185,129,0.7), 0 0 0.08em rgba(16,185,129,0.35),
-      0 0 0.14em rgba(16,185,129,0.15), 0 0 0.22em rgba(10,150,100,0.08),
-      0.02em 0.02em 0 #1a3a2a, 0.04em 0.04em 0 #153525,
-      0.06em 0.06em 0 #0f251a, 0.08em 0.08em 0 #0a2015,
-      0.10em 0.10em 0 #081810, 0.12em 0.12em 0 #041008`,
+      0 0 0.12em rgba(16, 185, 129, 0.12),
+      ${FILL_EXTRUSION},
+      0.040em 0.095em 0 #101a18,
+      0.042em 0.105em 0 #152a25,
+      0.044em 0.115em 0 #0f3a2a,
+      0.046em 0.125em 0 #0a4a38,
+      0.048em 0.135em 0 #086048,
+      0.050em 0.145em 0 #0a9868,
+      0.052em 0.155em 0 #10b981,
+      0.054em 0.165em 0.02em rgba(10, 150, 100, 0.5)`,
   },
 };
 
 /**
- * H2 Component - 3D Text Effect (matches H1 style)
+ * H2 Component - 3D Shaded Text Effect
+ *
+ * Adapted from CodePen "Shaded Text" SVG technique, translated to CSS text-shadow.
  *
  * Features:
- * - 3D text effect using layered text-shadows
- * - White core glow with colored outer glow
- * - Metal backing shadow (offset grays for depth)
+ * - 7-layer shaded fill extrusion (cream gradient creating 3D depth)
+ * - Colored stroke backing visible at larger offsets (theme-dependent)
  * - Perspective transform with rotateX
  * - Alt glyphs for N, E, M via font-feature-settings "ss01"
  *
  * @example
  * ```tsx
  * <H2>SECTION TITLE</H2>
- * <H2 theme="purple">PURPLE HEADING</H2>
+ * <H2 theme="blue">BLUE HEADING</H2>
  * ```
  */
 export default function H2({

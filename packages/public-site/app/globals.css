@@ -1953,6 +1953,12 @@ body:has(main[data-is-404="true"]) .scroll-progress-bar {
   margin: 0;
 }
 
+/* Inline images in H2 headings (e.g. 80px icons) - center with text */
+.blog-content h2 img {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
 /* H2 - Blog content typography - matches H2.tsx component styling */
 /* Blog-specific size: 5px smaller than global H2 on both min and max */
 .blog-content h2,
@@ -2236,12 +2242,11 @@ article p a:focus-visible,
 .blog-content figure {
   position: relative;
   display: block;
-  float: right;
-  clear: right;
+  clear: both;
   max-width: 100%;
-  width: auto;
-  /* 8px external spacing on all sides for separation from text */
-  margin: 8px;
+  width: fit-content;
+  /* Centered with vertical spacing */
+  margin: 1.5rem auto;
   overflow: hidden; /* Clip the expanded sheen pseudo-element */
   /* 3D Metal Frame */
   padding: 6px;
@@ -2263,6 +2268,28 @@ article p a:focus-visible,
     inset 0 -1px 0 rgba(0,0,0,0.3),
     0 0 25px rgba(255,215,0,0.2);
   border-color: rgba(255,215,0,0.3);
+}
+
+/* Infographic figures - full width, not floated */
+.blog-content figure.infographic {
+  float: none;
+  width: 100%;
+  margin: 2rem 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.blog-content figure.infographic:hover {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.blog-content figure.infographic::before,
+.blog-content figure.infographic::after {
+  display: none;
 }
 
 /* Light mode: Green glow for internal blog images (figures) */
@@ -2289,26 +2316,27 @@ body.light-mode .blog-content figure:hover {
   border-radius: 6px;
 }
 
-/* Holographic glass overlay - glossy sheen with animated transform */
+/* Holographic glass overlay - vertical slide animation */
 .blog-content figure::before {
   content: "";
   position: absolute;
-  /* Expand beyond bounds for slide animation */
-  inset: -100% -50%;
+  inset: 0;
   z-index: 10;
   pointer-events: none;
-  /* Static gradient - position controlled by transform */
+  /* Horizontal sheen band that slides vertically */
   background: linear-gradient(
-    105deg,
-    transparent 35%,
-    rgba(255,255,255,0.08) 40%,
-    rgba(255,255,255,0.15) 45%,
-    rgba(255,255,255,0.08) 50%,
-    transparent 55%
+    180deg,
+    transparent 0%,
+    transparent 30%,
+    rgba(255,255,255,0.06) 38%,
+    rgba(255,255,255,0.13) 50%,
+    rgba(255,255,255,0.06) 62%,
+    transparent 70%,
+    transparent 100%
   );
-  /* Initial position - left side */
-  transform: translateX(-10%);
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Resting position - centered over image */
+  transform: translateY(0%);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Holographic iridescent overlay */
@@ -2335,9 +2363,9 @@ body.light-mode .blog-content figure:hover {
   transition: all 0.4s ease;
 }
 
-/* Hover - sheen slides across smoothly */
+/* Hover - sheen slides up and off the image */
 .blog-content figure:hover::before {
-  transform: translateX(30%);
+  transform: translateY(-100%);
 }
 
 /* Hover - holographic more visible */
@@ -2587,20 +2615,20 @@ body.light-mode .blog-post .blog-content > .float-right .cyber-frame {
     0 0 25px rgba(255, 215, 0, 0.25) !important;
 }
 
-/* WordPress Media-Text Blocks - inline image with text wrap */
+/* WordPress Media-Text Blocks - flex layout for vertical centering */
 .blog-content .wp-block-media-text {
-  display: block !important;
+  display: flex !important;
+  align-items: center;
+  gap: 5px;
   grid-template-columns: unset !important;
 }
 
 /* Default (dark mode): Yellow/gold glow for internal images */
 .blog-content .wp-block-media-text__media {
   position: relative;
-  float: right;
-  clear: right;
+  flex-shrink: 0;
   max-width: 500px;
   width: 45%;
-  margin: 0.5rem 0 1rem 1.5rem;
   overflow: hidden; /* Clip the expanded sheen pseudo-element */
   /* 3D Metal Frame styling to match figures */
   padding: 6px;
@@ -2674,29 +2702,45 @@ body.light-mode .blog-content .wp-block-media-text__media:hover {
 
 .blog-content .wp-block-media-text__content {
   padding: 0 !important;
+  flex: 1;
+  min-width: 0;
 }
 
-/* Media-text with media on right - float left instead */
+/* Media-text with media on right - reorder via flex */
 .blog-content .wp-block-media-text.has-media-on-the-right .wp-block-media-text__media {
-  float: left;
-  margin: 0.5rem 1.5rem 1rem 0;
+  order: 1;
 }
 
-/* Clear floats after media-text blocks */
-.blog-content .wp-block-media-text::after {
-  content: "";
-  display: table;
-  clear: both;
+.blog-content .wp-block-media-text.has-media-on-the-right .wp-block-media-text__content {
+  order: 0;
+}
+
+/* Blog content dark backdrop - feathered mask */
+/* Desktop: radial ellipse feather (matches sidebar height) */
+.blog-content-backdrop {
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%);
+}
+
+/* Mobile: linear vertical feather - smooth 30px fade at top and bottom */
+@media (max-width: 1023px) {
+  .blog-content-backdrop {
+    mask-image: linear-gradient(to bottom, transparent, black 30px, black calc(100% - 30px), transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 30px, black calc(100% - 30px), transparent);
+  }
 }
 
 /* Mobile: Stack media-text vertically */
 @media (max-width: 768px) {
+  .blog-content .wp-block-media-text {
+    flex-direction: column;
+  }
+
   .blog-content .wp-block-media-text__media,
   .blog-content .wp-block-media-text.has-media-on-the-right .wp-block-media-text__media {
-    float: none;
     width: 100%;
     max-width: 100%;
-    margin: 1rem 0;
+    order: 0;
   }
 
   .blog-content figure {
@@ -4209,49 +4253,60 @@ input[type="range"]:focus::-moz-range-thumb {
 }
 
 /* ========================================
-   H1 NEON GLOW STYLES
-   Moved from inline <style> tags in H1.tsx to eliminate
-   per-instance style recalculation during hydration.
+   H1 3D SHADED TEXT STYLES
+   Adapted from CodePen "Shaded Text" SVG technique.
+   7-layer shaded fill extrusion + 8-layer colored stroke backing.
    ======================================== */
 
-/* Glow breathe animation (used by H1 and MeetTheFounders h3s) */
-@keyframes h1GlowBreathe {
-  0%, 100% {
-    filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
-  }
-  50% {
-    filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45));
-  }
+/* H1 default: gold stroke backing */
+.h1-shaded {
+  text-shadow:
+    /* Subtle gold glow */
+    0 0 0.12em rgba(255, 215, 0, 0.15),
+    /* Shaded fill extrusion (light near face -> dark at depth) */
+    0.010em 0.013em 0 #dddcd5,
+    0.015em 0.025em 0 #d1d0c7,
+    0.019em 0.038em 0 #c2c1b8,
+    0.024em 0.050em 0 #b3b2a8,
+    0.029em 0.063em 0 #a09f94,
+    0.033em 0.075em 0 #8d8c80,
+    0.038em 0.088em 0 #7a7970,
+    /* Gold stroke backing (dark grey -> bright gold) */
+    0.040em 0.095em 0 #191818,
+    0.042em 0.105em 0 #3f3010,
+    0.044em 0.115em 0 #5e4808,
+    0.046em 0.125em 0 #7c6008,
+    0.048em 0.135em 0 #9a7808,
+    0.050em 0.145em 0 #b8900a,
+    0.052em 0.155em 0 #d4a010,
+    0.054em 0.165em 0 #e6ac00,
+    /* Deep shadow */
+    0.056em 0.175em 0.02em rgba(184, 150, 10, 0.5);
 }
 
-/* H1 text-shadow: gold glow with responsive layer-4 on desktop */
-.h1-glow {
+/* H1 cyan variant: cyan stroke backing (about-exp-realty) */
+.h1-shaded-cyan {
   text-shadow:
-    0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
-    0 0 0.09em rgba(255, 215, 0, 0.8), 0 0 0.13em rgba(255, 215, 0, 0.55),
-    0 0 0.18em rgba(255, 179, 71, 0.35),
-    0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a,
-    0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808;
-}
-@media (min-width: 1200px) {
-  .h1-glow {
-    text-shadow:
-      0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
-      0 0 0.05em #ffd700,
-      0 0 0.09em rgba(255, 215, 0, 0.8), 0 0 0.13em rgba(255, 215, 0, 0.55),
-      0 0 0.18em rgba(255, 179, 71, 0.35),
-      0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a,
-      0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808;
-  }
-}
-
-/* H1 text-shadow: layer-4 always disabled (link pages, agent portal) */
-.h1-glow-no-close {
-  text-shadow:
-    0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
-    0 0 0.09em rgba(255, 215, 0, 0.8), 0 0 0.13em rgba(255, 215, 0, 0.55),
-    0 0 0.18em rgba(255, 179, 71, 0.35),
-    0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a,
-    0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808;
+    /* Subtle cyan glow */
+    0 0 0.12em rgba(0, 191, 255, 0.15),
+    /* Shaded fill extrusion (same as default) */
+    0.010em 0.013em 0 #dddcd5,
+    0.015em 0.025em 0 #d1d0c7,
+    0.019em 0.038em 0 #c2c1b8,
+    0.024em 0.050em 0 #b3b2a8,
+    0.029em 0.063em 0 #a09f94,
+    0.033em 0.075em 0 #8d8c80,
+    0.038em 0.088em 0 #7a7970,
+    /* Cyan stroke backing (dark grey -> bright cyan) */
+    0.040em 0.095em 0 #181920,
+    0.042em 0.105em 0 #1a2a38,
+    0.044em 0.115em 0 #0a3a50,
+    0.046em 0.125em 0 #084a68,
+    0.048em 0.135em 0 #086080,
+    0.050em 0.145em 0 #0a7898,
+    0.052em 0.155em 0 #0098c0,
+    0.054em 0.165em 0 #00bfff,
+    /* Deep shadow */
+    0.056em 0.175em 0.02em rgba(0, 150, 200, 0.5);
 }
 

@@ -39,27 +39,22 @@ export default function Tagline({
   style = {},
   counterSuffix,
 }: TaglineProps) {
-  const textColor = '#bfbdb0';
+  const textColor = '#e5e4dd';
 
-  // 3D text-shadow effect (matches H2 style)
-  // Extended and dilute outer glow for sharp letter definition
+  // 3D shaded text-shadow (matches H2 default style)
   const textShadow = `
-    /* WHITE CORE */
-    0 0 0.01em #fff,
-    0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8),
-    /* WARM WHITE GLOW - extended and dilute for sharp definition */
-    0 0 0.04em rgba(255,250,240,0.7),
-    0 0 0.08em rgba(255, 255, 255, 0.35),
-    0 0 0.14em rgba(255, 255, 255, 0.15),
-    0 0 0.22em rgba(200, 200, 200, 0.08),
-    /* METAL BACKING (3D depth - thicker) */
-    0.02em 0.02em 0 #2a2a2a,
-    0.04em 0.04em 0 #222222,
-    0.06em 0.06em 0 #1a1a1a,
-    0.08em 0.08em 0 #141414,
-    0.10em 0.10em 0 #0f0f0f,
-    0.12em 0.12em 0 #080808
+    0.010em 0.013em 0 #dddcd5,
+    0.015em 0.025em 0 #d1d0c7,
+    0.019em 0.038em 0 #c2c1b8,
+    0.024em 0.050em 0 #b3b2a8,
+    0.029em 0.063em 0 #a09f94,
+    0.033em 0.075em 0 #8d8c80,
+    0.038em 0.088em 0 #7a7970,
+    0.040em 0.095em 0 #282828,
+    0.044em 0.110em 0 #333333,
+    0.048em 0.125em 0 #3e3e3e,
+    0.052em 0.140em 0 #4a4a4a,
+    0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5)
   `;
 
   return (

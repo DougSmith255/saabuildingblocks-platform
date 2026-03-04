@@ -13859,23 +13859,29 @@ function AgentPagesSection({
                   )}
                 </div>
 
-                {/* Name with subtle depth effect - no glow */}
+                {/* Name with 3D shaded text - dynamic accent backing + glow */}
                 {(() => {
                   const name = `${formData.display_first_name || 'Your'} ${formData.display_last_name || 'Name'}`;
                   const len = name.length;
                   // Scale font: short names bigger, long names smaller (preview phone is ~200px wide)
                   const fontSize = len <= 10 ? '22px' : len <= 14 ? '19px' : len <= 18 ? '17px' : len <= 22 ? '15px' : '13px';
+                  const ar = hexToRgb(linksSettings.accentColor);
+                  // Generate backing gradient: 8 steps from dark to accent color
+                  const bk = [0.04, 0.18, 0.32, 0.45, 0.58, 0.70, 0.82, 0.92].map(t =>
+                    `rgb(${Math.round(20 + (ar.r - 20) * t)}, ${Math.round(20 + (ar.g - 20) * t)}, ${Math.round(20 + (ar.b - 20) * t)})`
+                  );
+                  const deepShadow = `rgba(${Math.round(ar.r * 0.7)}, ${Math.round(ar.g * 0.7)}, ${Math.round(ar.b * 0.05 + 10)}, 0.5)`;
                   return (
                     <span
                       className="text-center leading-tight font-bold mt-1.5 mb-2"
                       style={{
                         fontSize,
-                        color: isAccentDark ? '#e5e4dd' : linksSettings.accentColor,
+                        color: isAccentDark ? '#f2f1ec' : linksSettings.accentColor,
                         fontFamily: 'var(--font-taskor, sans-serif)',
                         fontFeatureSettings: '"ss01" 1',
                         transform: 'perspective(800px) rotateX(12deg)',
-                        textShadow: '0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f',
-                        filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7))',
+                        textShadow: `0 0 0.12em rgba(${ar.r}, ${ar.g}, ${ar.b}, 0.15), 0.010em 0.013em 0 #dddcd5, 0.015em 0.025em 0 #d1d0c7, 0.019em 0.038em 0 #c2c1b8, 0.024em 0.050em 0 #b3b2a8, 0.029em 0.063em 0 #a09f94, 0.033em 0.075em 0 #8d8c80, 0.038em 0.088em 0 #7a7970, 0.040em 0.095em 0 ${bk[0]}, 0.042em 0.105em 0 ${bk[1]}, 0.044em 0.115em 0 ${bk[2]}, 0.046em 0.125em 0 ${bk[3]}, 0.048em 0.135em 0 ${bk[4]}, 0.050em 0.145em 0 ${bk[5]}, 0.052em 0.155em 0 ${bk[6]}, 0.054em 0.165em 0 ${bk[7]}, 0.056em 0.175em 0.02em ${deepShadow}`,
+                        filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
                       }}
                     >
                       {name}

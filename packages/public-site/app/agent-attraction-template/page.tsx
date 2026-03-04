@@ -275,7 +275,7 @@ function useScrollReveal(threshold = 0.15) {
 }
 
 // =============================================================================
-// SHARED COMPONENT: H1 (Neon Sign Effect)
+// SHARED COMPONENT: H1 (3D Shaded Text - gold stroke backing)
 // =============================================================================
 interface HeadingProps {
   children: React.ReactNode;
@@ -285,40 +285,34 @@ interface HeadingProps {
   noAnimation?: boolean;
 }
 
-function H1({ children, className = '', style = {}, id, noAnimation = false }: HeadingProps) {
+function H1({ children, className = '', style = {}, id }: HeadingProps) {
   const plainText = extractPlainText(children);
   return (
-    <>
-      <h1
-        id={id}
-        className={`text-h1 text-display ${className}`}
-        style={{
-          color: '#ffd700',
-          transform: 'perspective(800px) rotateX(12deg)',
-          fontFeatureSettings: '"ss01" 1',
-          textShadow: `
-            0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
-            0 0 0.05em #ffd700, 0 0 0.09em rgba(255, 215, 0, 0.8),
-            0 0 0.13em rgba(255, 215, 0, 0.55), 0 0 0.18em rgba(255, 179, 71, 0.35),
-            0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a,
-            0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808
-          `,
-          filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25))',
-          animation: noAnimation ? 'none' : 'h1GlowBreathe 4s ease-in-out infinite',
-          ...style,
-        }}
-      >
-        {plainText}
-      </h1>
-      {!noAnimation && (
-        <style>{`
-          @keyframes h1GlowBreathe {
-            0%, 100% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25)); }
-            50% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45)); }
-          }
-        `}</style>
-      )}
-    </>
+    <h1
+      id={id}
+      className={`text-h1 text-display ${className}`}
+      style={{
+        color: '#f2f1ec',
+        transform: 'perspective(800px) rotateX(12deg)',
+        fontFeatureSettings: '"ss01" 1',
+        textShadow: `
+          0 0 0.12em rgba(255, 215, 0, 0.15),
+          0.010em 0.013em 0 #dddcd5, 0.015em 0.025em 0 #d1d0c7,
+          0.019em 0.038em 0 #c2c1b8, 0.024em 0.050em 0 #b3b2a8,
+          0.029em 0.063em 0 #a09f94, 0.033em 0.075em 0 #8d8c80,
+          0.038em 0.088em 0 #7a7970,
+          0.040em 0.095em 0 #191818, 0.042em 0.105em 0 #3f3010,
+          0.044em 0.115em 0 #5e4808, 0.046em 0.125em 0 #7c6008,
+          0.048em 0.135em 0 #9a7808, 0.050em 0.145em 0 #b8900a,
+          0.052em 0.155em 0 #d4a010, 0.054em 0.165em 0 #e6ac00,
+          0.056em 0.175em 0.02em rgba(184, 150, 10, 0.5)
+        `,
+        filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
+        ...style,
+      }}
+    >
+      {plainText}
+    </h1>
   );
 }
 
@@ -1396,24 +1390,33 @@ const PROVEN_STATS = [
   { text: "Active across the U.S., Canada, Mexico, Australia, and beyond", icon: Globe },
 ];
 
-// Static counter with H2 neon text styling (no backing plate)
+// Static counter with H2 3D shaded text styling
 function StaticCounterNeon({ value, suffix = '' }: { value: string; suffix?: string }) {
-  // H2-style white core glow text-shadow (no backing plate)
   const textShadow = `
-    0 0 1px #fff,
-    0 0 2px #fff,
-    0 0 4px rgba(255,255,255,0.8),
-    0 0 8px rgba(255,255,255,0.4)
+    0.010em 0.013em 0 #dddcd5,
+    0.015em 0.025em 0 #d1d0c7,
+    0.019em 0.038em 0 #c2c1b8,
+    0.024em 0.050em 0 #b3b2a8,
+    0.029em 0.063em 0 #a09f94,
+    0.033em 0.075em 0 #8d8c80,
+    0.038em 0.088em 0 #7a7970,
+    0.040em 0.095em 0 #282828,
+    0.044em 0.110em 0 #333333,
+    0.048em 0.125em 0 #3e3e3e,
+    0.052em 0.140em 0 #4a4a4a,
+    0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5)
   `;
 
   return (
     <span
       style={{
         fontVariantNumeric: 'tabular-nums',
-        color: '#bfbdb0',
+        color: '#e5e4dd',
         textShadow: textShadow.trim(),
         display: 'inline-block',
         letterSpacing: '0.02em',
+        transform: 'perspective(800px) rotateX(8deg)',
+        filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
       }}
     >
       {value}{suffix}
@@ -2433,7 +2436,6 @@ function MeetTheFounders() {
 
   return (
     <GlassPanel variant="marigoldCrosshatch">
-      <style>{`@keyframes h1GlowBreathe { 0%, 100% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25)); } 50% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45)); } }`}</style>
       <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
         <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
           <div className="text-center mb-12">
@@ -2445,7 +2447,7 @@ function MeetTheFounders() {
                 <ProfileCyberFrame size="lg" index={0}>
                   <img src={FOUNDERS[0].image} alt={FOUNDERS[0].name} className="w-full h-full object-cover" />
                 </ProfileCyberFrame>
-                <h3 className="font-bold mb-1" style={{ fontFamily: 'var(--font-taskor), sans-serif', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', lineHeight: 1.3, color: BRAND_YELLOW, transform: 'perspective(800px) rotateX(12deg)', fontFeatureSettings: '"ss01" 1', textShadow: `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.05em #ffd700, 0 0 0.09em rgba(255, 215, 0, 0.8), 0 0 0.13em rgba(255, 215, 0, 0.55), 0 0 0.18em rgba(255, 179, 71, 0.35), 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`, filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25))', animation: 'h1GlowBreathe 4s ease-in-out infinite' }}>{FOUNDERS[0].name}</h3>
+                <h3 className="font-bold mb-1" style={{ fontFamily: 'var(--font-taskor), sans-serif', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', lineHeight: 1.3, color: '#f2f1ec', transform: 'perspective(800px) rotateX(12deg)', fontFeatureSettings: '"ss01" 1', textShadow: '0 0 0.12em rgba(255, 215, 0, 0.15), 0.010em 0.013em 0 #dddcd5, 0.015em 0.025em 0 #d1d0c7, 0.019em 0.038em 0 #c2c1b8, 0.024em 0.050em 0 #b3b2a8, 0.029em 0.063em 0 #a09f94, 0.033em 0.075em 0 #8d8c80, 0.038em 0.088em 0 #7a7970, 0.040em 0.095em 0 #191818, 0.042em 0.105em 0 #3f3010, 0.044em 0.115em 0 #5e4808, 0.046em 0.125em 0 #7c6008, 0.048em 0.135em 0 #9a7808, 0.050em 0.145em 0 #b8900a, 0.052em 0.155em 0 #d4a010, 0.054em 0.165em 0 #e6ac00, 0.056em 0.175em 0.02em rgba(184, 150, 10, 0.5)', filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))' }}>{FOUNDERS[0].name}</h3>
                 <p className="text-body text-sm opacity-60 mb-3">{FOUNDERS[0].title}</p>
                 <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[0].bio}</p>
               </div>
@@ -2455,7 +2457,7 @@ function MeetTheFounders() {
                 <ProfileCyberFrame size="lg" index={1}>
                   <img src={FOUNDERS[1].image} alt={FOUNDERS[1].name} className="w-full h-full object-cover" />
                 </ProfileCyberFrame>
-                <h3 className="font-bold mb-1" style={{ fontFamily: 'var(--font-taskor), sans-serif', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', lineHeight: 1.3, color: BRAND_YELLOW, transform: 'perspective(800px) rotateX(12deg)', fontFeatureSettings: '"ss01" 1', textShadow: `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.05em #ffd700, 0 0 0.09em rgba(255, 215, 0, 0.8), 0 0 0.13em rgba(255, 215, 0, 0.55), 0 0 0.18em rgba(255, 179, 71, 0.35), 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`, filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25))', animation: 'h1GlowBreathe 4s ease-in-out infinite' }}>{FOUNDERS[1].name}</h3>
+                <h3 className="font-bold mb-1" style={{ fontFamily: 'var(--font-taskor), sans-serif', fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', lineHeight: 1.3, color: '#f2f1ec', transform: 'perspective(800px) rotateX(12deg)', fontFeatureSettings: '"ss01" 1', textShadow: '0 0 0.12em rgba(255, 215, 0, 0.15), 0.010em 0.013em 0 #dddcd5, 0.015em 0.025em 0 #d1d0c7, 0.019em 0.038em 0 #c2c1b8, 0.024em 0.050em 0 #b3b2a8, 0.029em 0.063em 0 #a09f94, 0.033em 0.075em 0 #8d8c80, 0.038em 0.088em 0 #7a7970, 0.040em 0.095em 0 #191818, 0.042em 0.105em 0 #3f3010, 0.044em 0.115em 0 #5e4808, 0.046em 0.125em 0 #7c6008, 0.048em 0.135em 0 #9a7808, 0.050em 0.145em 0 #b8900a, 0.052em 0.155em 0 #d4a010, 0.054em 0.165em 0 #e6ac00, 0.056em 0.175em 0.02em rgba(184, 150, 10, 0.5)', filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))' }}>{FOUNDERS[1].name}</h3>
                 <p className="text-body text-sm opacity-60 mb-3">{FOUNDERS[1].title}</p>
                 <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[1].bio}</p>
               </div>

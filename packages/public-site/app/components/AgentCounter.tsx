@@ -24,17 +24,22 @@ import './StaticCounter.css';
 export function AgentCounter() {
   const { isCounterDesktop } = useViewport();
 
-  // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
-  // Matches Tagline component exactly
+  // 3D shaded text-shadow (matches Tagline/H2 component)
   const textShadow = `
-    0 0 0.01em #fff,
-    0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8)
+    0.010em 0.013em 0 #dddcd5,
+    0.015em 0.025em 0 #d1d0c7,
+    0.019em 0.038em 0 #c2c1b8,
+    0.024em 0.050em 0 #b3b2a8,
+    0.029em 0.063em 0 #a09f94,
+    0.033em 0.075em 0 #8d8c80,
+    0.038em 0.088em 0 #7a7970,
+    0.040em 0.095em 0 #282828,
+    0.044em 0.110em 0 #333333,
+    0.048em 0.125em 0 #3e3e3e,
+    0.052em 0.140em 0 #4a4a4a,
+    0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5)
   `;
-  const filter = `
-    drop-shadow(0 0 0.04em #bfbdb0)
-    drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
-  `;
+  const filter = 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))';
 
   // Desktop: Corner counter - "4000+ AGENTS" format (no parentheses, Taskor font, 1.75x size)
   if (isCounterDesktop) {
@@ -56,7 +61,7 @@ export function AgentCounter() {
             className="counter-numbers-mobile"
             style={{
               display: 'inline',
-              color: '#bfbdb0',
+              color: '#e5e4dd',
               fontFamily: 'var(--font-synonym), monospace',
               fontWeight: 300,
               fontSize: 'calc(1em + 10px)',
@@ -70,16 +75,16 @@ export function AgentCounter() {
             <span>+</span>
           </span>
 
-          {/* "AGENTS" text - Taskor font with tagline glow effect */}
+          {/* "AGENTS" text - Taskor font with shaded text effect */}
           <span
             style={{
-              color: '#bfbdb0',
+              color: '#e5e4dd',
               fontFamily: 'var(--font-taskor), sans-serif',
               fontFeatureSettings: '"ss01" 1',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
               textShadow: textShadow.trim(),
-              filter: filter.trim(),
+              filter,
             }}
           >
             AGENTS
@@ -113,18 +118,6 @@ export function AgentCounter() {
 export function TaglineCounterSuffix() {
   const { hasMounted, isCounterDesktop } = useViewport();
 
-  // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
-  // Matches Tagline component exactly
-  const textShadow = `
-    0 0 0.01em #fff,
-    0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8)
-  `;
-  const filter = `
-    drop-shadow(0 0 0.04em #bfbdb0)
-    drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
-  `;
-
   // Opacity: visible on mobile after mount, hidden otherwise
   // CSS handles display:none on desktop, so opacity only matters on mobile
   const isVisible = hasMounted && !isCounterDesktop;
@@ -146,7 +139,7 @@ export function TaglineCounterSuffix() {
         className="counter-numbers-mobile"
         style={{
           display: 'inline',
-          color: '#bfbdb0',
+          color: '#e5e4dd',
           fontFamily: 'var(--font-synonym), monospace',
           fontWeight: 300,
           fontSize: '1em',
@@ -161,10 +154,10 @@ export function TaglineCounterSuffix() {
         <span>+ </span>
       </span>
 
-      {/* "Agents)" text - inherits glow from parent Tagline component */}
+      {/* "Agents)" text - inherits styling from parent Tagline component */}
       <span
         style={{
-          color: '#bfbdb0',
+          color: '#e5e4dd',
           fontFamily: 'var(--font-taskor), sans-serif',
           fontFeatureSettings: '"ss01" 1',
           textTransform: 'uppercase',

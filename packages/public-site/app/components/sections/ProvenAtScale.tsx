@@ -31,24 +31,33 @@ function RevealFromRight({ children }: { children: React.ReactNode; delay?: numb
   return <div>{children}</div>;
 }
 
-// Static counter with H2 neon text styling (no backing plate)
+// Static counter with H2 3D shaded text styling
 function StaticCounterNeon({ value, suffix = '' }: { value: string; suffix?: string }) {
-  // H2-style white core glow text-shadow (no backing plate)
   const textShadow = `
-    0 0 1px #fff,
-    0 0 2px #fff,
-    0 0 4px rgba(255,255,255,0.8),
-    0 0 8px rgba(255,255,255,0.4)
+    0.010em 0.013em 0 #dddcd5,
+    0.015em 0.025em 0 #d1d0c7,
+    0.019em 0.038em 0 #c2c1b8,
+    0.024em 0.050em 0 #b3b2a8,
+    0.029em 0.063em 0 #a09f94,
+    0.033em 0.075em 0 #8d8c80,
+    0.038em 0.088em 0 #7a7970,
+    0.040em 0.095em 0 #282828,
+    0.044em 0.110em 0 #333333,
+    0.048em 0.125em 0 #3e3e3e,
+    0.052em 0.140em 0 #4a4a4a,
+    0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5)
   `;
 
   return (
     <span
       style={{
         fontVariantNumeric: 'tabular-nums',
-        color: '#bfbdb0',
+        color: '#e5e4dd',
         textShadow: textShadow.trim(),
         display: 'inline-block',
         letterSpacing: '0.02em',
+        transform: 'perspective(800px) rotateX(8deg)',
+        filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
       }}
     >
       {value}{suffix}
