@@ -1,12 +1,15 @@
-import React from 'react';
+'use client';
+
+import React, { useId } from 'react';
+import { extractPlainText } from '../../../utils/extractPlainText';
 
 export interface TaglineProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  /** @deprecated Animation removed - using page-level settling mask instead */
+  /** @deprecated Animation removed */
   heroAnimate?: boolean;
-  /** @deprecated Animation removed - using page-level settling mask instead */
+  /** @deprecated Animation removed */
   animationDelay?: string;
   /** @deprecated Use counterSuffix prop with a client component instead */
   showAgentCounter?: boolean;
@@ -15,23 +18,10 @@ export interface TaglineProps {
 }
 
 /**
- * Tagline Component - 3D Text Effect (matches H2 style)
+ * Tagline Component - SVG 3D Shaded Text (matches H2 default style)
  *
- * Features:
- * - 3D text effect using layered text-shadows (same as H2)
- * - White core glow with warm white outer glow
- * - Metal backing shadow (offset grays for depth)
- * - Perspective transform with rotateX
- * - Uses H2 sizing from Master Controller
- *
- * SEO/ACCESSIBILITY:
- * - Uses real letters in DOM (Google reads correctly)
- * - Copy/paste gives real letters
- *
- * @example
- * ```tsx
- * <Tagline>For Agents Who Want More</Tagline>
- * ```
+ * Uses the same SVG technique as H2 with default grey stroke backing,
+ * cream fill extrusion, and flat #e5e4dd face.
  */
 export default function Tagline({
   children,
@@ -39,38 +29,66 @@ export default function Tagline({
   style = {},
   counterSuffix,
 }: TaglineProps) {
-  const textColor = '#e5e4dd';
-
-  // 3D shaded text-shadow (matches H2 default style)
-  const textShadow = `
-    0.010em 0.013em 0 #dddcd5,
-    0.015em 0.025em 0 #d1d0c7,
-    0.019em 0.038em 0 #c2c1b8,
-    0.024em 0.050em 0 #b3b2a8,
-    0.029em 0.063em 0 #a09f94,
-    0.033em 0.075em 0 #8d8c80,
-    0.038em 0.088em 0 #7a7970,
-    0.040em 0.095em 0 #282828,
-    0.044em 0.110em 0 #333333,
-    0.048em 0.125em 0 #3e3e3e,
-    0.052em 0.140em 0 #4a4a4a,
-    0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5)
-  `;
+  const plainText = extractPlainText(children);
+  const uid = useId().replace(/:/g, '');
+  const sId = `st${uid}`;
+  const fId = `ft${uid}`;
+  const shId = `sht${uid}`;
 
   return (
     <p
       className={`text-tagline ${className}`}
       style={{
         textAlign: 'center',
-        fontFeatureSettings: '"ss01" 1',
-        color: textColor,
-        textShadow,
-        transform: 'perspective(800px) rotateX(8deg)',
-        filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
-        ...style
+        position: 'relative',
+        ...style,
       }}
     >
-      {children} {counterSuffix}
+      <span style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}>
+        {plainText}
+      </span>
+      <svg
+        aria-hidden="true"
+        overflow="visible"
+        style={{
+          display: 'block',
+          width: '100%',
+          height: '5em',
+          margin: '-1.5em auto -2em',
+          fontFamily: 'inherit',
+          fontFeatureSettings: '"ss01" 1',
+          fontSize: 'inherit',
+        }}
+      >
+        <defs>
+          <filter id={shId}><feGaussianBlur in="SourceAlpha" stdDeviation="10"/></filter>
+          <symbol id={sId} overflow="visible">
+            <text x="50%" y="60%" fill="none" strokeWidth=".10em" paintOrder="stroke fill" textAnchor="middle">{plainText}</text>
+          </symbol>
+          <symbol id={fId} overflow="visible">
+            <text x="50%" y="60%" textAnchor="middle">{plainText}</text>
+          </symbol>
+        </defs>
+        {/* Stroke backing: 5 grey layers (same as H2 default) */}
+        <g strokeDasharray="3.5em 0em" strokeLinecap="butt" strokeLinejoin="miter">
+          <use x="0.167%" y="1.67%" href={`#${sId}`} stroke="#2a2a2a" opacity={0.5} filter={`url(#${shId})`}/>
+          <use x="0.12%" y="1.2%" href={`#${sId}`} stroke="#4a4a4a"/>
+          <use x="0.073%" y="0.73%" href={`#${sId}`} stroke="#3e3e3e"/>
+          <use x="0.033%" y="0.33%" href={`#${sId}`} stroke="#333333"/>
+          <use x="0%" y="0%" href={`#${sId}`} stroke="#282828"/>
+        </g>
+        {/* Fill extrusion: 8 cream-shaded layers */}
+        <use x="0.15%" y="0.4%" href={`#${fId}`} fill="#7a7970"/>
+        <use x="0.124%" y="0.14%" href={`#${fId}`} fill="#8d8c80"/>
+        <use x="0.099%" y="-0.11%" href={`#${fId}`} fill="#a09f94"/>
+        <use x="0.073%" y="-0.37%" href={`#${fId}`} fill="#b3b2a8"/>
+        <use x="0.047%" y="-0.63%" href={`#${fId}`} fill="#c2c1b8"/>
+        <use x="0.021%" y="-0.89%" href={`#${fId}`} fill="#d1d0c7"/>
+        <use x="-0.004%" y="-1.14%" href={`#${fId}`} fill="#dddcd5"/>
+        {/* Face */}
+        <use x="-0.06%" y="-1.4%" href={`#${fId}`} fill="#e5e4dd"/>
+      </svg>
+      {counterSuffix}
     </p>
   );
 }

@@ -516,6 +516,101 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   // Cloudflare Images CDN
   const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
+  // SVG Heading Helpers - exact port of CodePen "Shaded Text" technique
+  let _hid = 0;
+  const svgH1Gold = (text, extraStyle = '') => {
+    const n = ++_hid;
+    return `<h1 class="text-h1 text-display" style="position:relative;text-align:center;${extraStyle}">
+      <span class="sr-only">${text}</span>
+      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:-1.5em auto -2em;font-family:inherit;font-feature-settings:'ss01' 1;font-size:inherit;">
+        <defs>
+          <filter id="hs${n}"><feGaussianBlur in="SourceAlpha" stdDeviation="10"/></filter>
+          <filter id="hg${n}"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <linearGradient id="hgr${n}" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#dddcd5"/><stop offset="35%" stop-color="#f2f1ec"/><stop offset="65%" stop-color="#f2f1ec"/><stop offset="100%" stop-color="#dddcd5"/>
+          </linearGradient>
+          <symbol id="ss${n}" overflow="visible"><text x="50%" y="60%" fill="none" stroke-width=".22em" paint-order="stroke fill" text-anchor="middle">${text}</text></symbol>
+          <symbol id="sf${n}" overflow="visible"><text x="50%" y="60%" text-anchor="middle">${text}</text></symbol>
+        </defs>
+        <g stroke-dasharray="3.5em 0em" stroke-linecap="butt" stroke-linejoin="miter">
+          <use x="0.167%" y="1.67%" href="#ss${n}" stroke="#b8960a" opacity="0.5" filter="url(#hs${n})"/>
+          <use x="0.12%" y="1.2%" href="#ss${n}" stroke="#e6ac00"/>
+          <use x="0.1%" y="1.0%" href="#ss${n}" stroke="#d4a010"/>
+          <use x="0.08%" y="0.8%" href="#ss${n}" stroke="#b8900a"/>
+          <use x="0.06%" y="0.6%" href="#ss${n}" stroke="#9a7808"/>
+          <use x="0.045%" y="0.45%" href="#ss${n}" stroke="#7c6008"/>
+          <use x="0.03%" y="0.3%" href="#ss${n}" stroke="#5e4808"/>
+          <use x="0.015%" y="0.15%" href="#ss${n}" stroke="#3f3010"/>
+          <use x="0%" y="0%" href="#ss${n}" stroke="#191818"/>
+        </g>
+        <use x="0.15%" y="0.4%" href="#sf${n}" fill="#7a7970"/>
+        <use x="0.124%" y="0.14%" href="#sf${n}" fill="#8d8c80"/>
+        <use x="0.099%" y="-0.11%" href="#sf${n}" fill="#a09f94"/>
+        <use x="0.073%" y="-0.37%" href="#sf${n}" fill="#b3b2a8"/>
+        <use x="0.047%" y="-0.63%" href="#sf${n}" fill="#c2c1b8"/>
+        <use x="0.021%" y="-0.89%" href="#sf${n}" fill="#d1d0c7"/>
+        <use x="-0.004%" y="-1.14%" href="#sf${n}" fill="#dddcd5"/>
+        <use x="-0.06%" y="-1.4%" href="#sf${n}" fill="#ffd700" opacity="0.15" filter="url(#hg${n})"/>
+        <use x="-0.06%" y="-1.4%" href="#sf${n}" fill="url(#hgr${n})"/>
+      </svg>
+    </h1>`;
+  };
+  const svgH2 = (text, align = 'center', extraStyle = '') => {
+    const n = ++_hid;
+    const anchor = align === 'left' ? 'start' : 'middle';
+    const tx = align === 'left' ? '0%' : '50%';
+    return `<h2 class="text-h2" style="position:relative;text-align:${align};margin-left:${align === 'left' ? '0' : 'auto'};margin-right:auto;margin-bottom:2.5rem;max-width:1400px;${extraStyle}">
+      <span class="sr-only">${text}</span>
+      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:-1.5em auto -2em;font-family:inherit;font-feature-settings:'ss01' 1;font-size:inherit;">
+        <defs>
+          <filter id="hs${n}"><feGaussianBlur in="SourceAlpha" stdDeviation="10"/></filter>
+          <symbol id="ss${n}" overflow="visible"><text x="${tx}" y="60%" fill="none" stroke-width=".10em" paint-order="stroke fill" text-anchor="${anchor}">${text}</text></symbol>
+          <symbol id="sf${n}" overflow="visible"><text x="${tx}" y="60%" text-anchor="${anchor}">${text}</text></symbol>
+        </defs>
+        <g stroke-dasharray="3.5em 0em" stroke-linecap="butt" stroke-linejoin="miter">
+          <use x="0.167%" y="1.67%" href="#ss${n}" stroke="#2a2a2a" opacity="0.5" filter="url(#hs${n})"/>
+          <use x="0.12%" y="1.2%" href="#ss${n}" stroke="#4a4a4a"/>
+          <use x="0.073%" y="0.73%" href="#ss${n}" stroke="#3e3e3e"/>
+          <use x="0.033%" y="0.33%" href="#ss${n}" stroke="#333333"/>
+          <use x="0%" y="0%" href="#ss${n}" stroke="#282828"/>
+        </g>
+        <use x="0.15%" y="0.4%" href="#sf${n}" fill="#7a7970"/>
+        <use x="0.124%" y="0.14%" href="#sf${n}" fill="#8d8c80"/>
+        <use x="0.099%" y="-0.11%" href="#sf${n}" fill="#a09f94"/>
+        <use x="0.073%" y="-0.37%" href="#sf${n}" fill="#b3b2a8"/>
+        <use x="0.047%" y="-0.63%" href="#sf${n}" fill="#c2c1b8"/>
+        <use x="0.021%" y="-0.89%" href="#sf${n}" fill="#d1d0c7"/>
+        <use x="-0.004%" y="-1.14%" href="#sf${n}" fill="#dddcd5"/>
+        <use x="-0.06%" y="-1.4%" href="#sf${n}" fill="#e5e4dd"/>
+      </svg>
+    </h2>`;
+  };
+  const svgTagline = (text) => {
+    const n = ++_hid;
+    return `<svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:-1.5em auto -2em;font-family:inherit;font-feature-settings:'ss01' 1;font-size:inherit;">
+        <defs>
+          <filter id="hs${n}"><feGaussianBlur in="SourceAlpha" stdDeviation="10"/></filter>
+          <symbol id="ss${n}" overflow="visible"><text x="50%" y="60%" fill="none" stroke-width=".10em" paint-order="stroke fill" text-anchor="middle">${text}</text></symbol>
+          <symbol id="sf${n}" overflow="visible"><text x="50%" y="60%" text-anchor="middle">${text}</text></symbol>
+        </defs>
+        <g stroke-dasharray="3.5em 0em" stroke-linecap="butt" stroke-linejoin="miter">
+          <use x="0.167%" y="1.67%" href="#ss${n}" stroke="#2a2a2a" opacity="0.5" filter="url(#hs${n})"/>
+          <use x="0.12%" y="1.2%" href="#ss${n}" stroke="#4a4a4a"/>
+          <use x="0.073%" y="0.73%" href="#ss${n}" stroke="#3e3e3e"/>
+          <use x="0.033%" y="0.33%" href="#ss${n}" stroke="#333333"/>
+          <use x="0%" y="0%" href="#ss${n}" stroke="#282828"/>
+        </g>
+        <use x="0.15%" y="0.4%" href="#sf${n}" fill="#7a7970"/>
+        <use x="0.124%" y="0.14%" href="#sf${n}" fill="#8d8c80"/>
+        <use x="0.099%" y="-0.11%" href="#sf${n}" fill="#a09f94"/>
+        <use x="0.073%" y="-0.37%" href="#sf${n}" fill="#b3b2a8"/>
+        <use x="0.047%" y="-0.63%" href="#sf${n}" fill="#c2c1b8"/>
+        <use x="0.021%" y="-0.89%" href="#sf${n}" fill="#d1d0c7"/>
+        <use x="-0.004%" y="-1.14%" href="#sf${n}" fill="#dddcd5"/>
+        <use x="-0.06%" y="-1.4%" href="#sf${n}" fill="#e5e4dd"/>
+      </svg>`;
+  };
+
   return `<!DOCTYPE html><html lang="en"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -619,92 +714,20 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       font-family: var(--font-taskor), system-ui, sans-serif;
     }
 
-    /* H1 3D Shaded Text - gold stroke backing + shaded fill extrusion */
-    .h1-shaded {
-      color: #f2f1ec;
-      transform: perspective(800px) rotateX(12deg);
-      font-feature-settings: "ss01" 1;
-      text-shadow:
-        /* Subtle gold glow */
-        0 0 0.12em rgba(255, 215, 0, 0.15),
-        /* Shaded fill extrusion (light near face -> dark at depth) */
-        0.010em 0.013em 0 #dddcd5,
-        0.015em 0.025em 0 #d1d0c7,
-        0.019em 0.038em 0 #c2c1b8,
-        0.024em 0.050em 0 #b3b2a8,
-        0.029em 0.063em 0 #a09f94,
-        0.033em 0.075em 0 #8d8c80,
-        0.038em 0.088em 0 #7a7970,
-        /* Gold stroke backing (dark grey -> bright gold) */
-        0.040em 0.095em 0 #191818,
-        0.042em 0.105em 0 #3f3010,
-        0.044em 0.115em 0 #5e4808,
-        0.046em 0.125em 0 #7c6008,
-        0.048em 0.135em 0 #9a7808,
-        0.050em 0.145em 0 #b8900a,
-        0.052em 0.155em 0 #d4a010,
-        0.054em 0.165em 0 #e6ac00,
-        /* Deep shadow */
-        0.056em 0.175em 0.02em rgba(184, 150, 10, 0.5);
-      filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
+    /* SR-only text for SEO/accessibility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
     }
 
-    /* H2 3D Shaded Text - grey stroke backing + shaded fill extrusion */
-    .h2-3d {
-      text-align: center;
-      font-feature-settings: "ss01" 1;
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 2.5rem;
-      max-width: 1400px;
-      color: #e5e4dd;
-      text-shadow:
-        /* Shaded fill extrusion */
-        0.010em 0.013em 0 #dddcd5,
-        0.015em 0.025em 0 #d1d0c7,
-        0.019em 0.038em 0 #c2c1b8,
-        0.024em 0.050em 0 #b3b2a8,
-        0.029em 0.063em 0 #a09f94,
-        0.033em 0.075em 0 #8d8c80,
-        0.038em 0.088em 0 #7a7970,
-        /* Grey stroke backing */
-        0.040em 0.095em 0 #282828,
-        0.044em 0.110em 0 #333333,
-        0.048em 0.125em 0 #3e3e3e,
-        0.052em 0.140em 0 #4a4a4a,
-        /* Deep shadow */
-        0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5);
-      transform: perspective(800px) rotateX(8deg);
-      filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
-    }
-    .h2-3d.text-left {
-      text-align: left;
-      margin-left: 0;
-    }
-
-    /* Tagline - 3D Shaded Text (matches H2) */
+    /* Tagline layout */
     .tagline {
       text-align: center;
-      font-feature-settings: "ss01" 1;
-      color: #e5e4dd;
-      text-shadow:
-        /* Shaded fill extrusion */
-        0.010em 0.013em 0 #dddcd5,
-        0.015em 0.025em 0 #d1d0c7,
-        0.019em 0.038em 0 #c2c1b8,
-        0.024em 0.050em 0 #b3b2a8,
-        0.029em 0.063em 0 #a09f94,
-        0.033em 0.075em 0 #8d8c80,
-        0.038em 0.088em 0 #7a7970,
-        /* Grey stroke backing */
-        0.040em 0.095em 0 #282828,
-        0.044em 0.110em 0 #333333,
-        0.048em 0.125em 0 #3e3e3e,
-        0.052em 0.140em 0 #4a4a4a,
-        /* Deep shadow */
-        0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5);
-      transform: perspective(800px) rotateX(8deg);
-      filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
+      position: relative;
     }
 
     /* Tagline ellipse gradient background for readability */
@@ -3756,12 +3779,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
             <!-- Hero Text -->
             <div class="hero-text-wrapper" style="perspective: 1000px;">
-              <h1 id="hero-heading" class="text-h1 h1-shaded" style="font-size: clamp(50px, calc(30px + 4vw + 0.3vh), 150px); margin-bottom: 3px;">
-                SMART AGENT ALLIANCE
-              </h1>
+              ${svgH1Gold('SMART AGENT ALLIANCE', 'font-size:clamp(50px,calc(30px + 4vw + 0.3vh),150px);margin-bottom:3px;')}
               <div class="tagline-backdrop">
                 <p class="text-tagline tagline">
-                Join ${escapeHTML(displayName)}'s Team<span class="tagline-counter-suffix"><span style="color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;">(</span><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;" class="counter-numbers-tagline"><span class="counter-digit-tagline">1</span><span class="counter-digit-tagline">6</span><span class="counter-digit-tagline">8</span><span class="counter-digit-tagline">8</span><span>+</span></span><span style="color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;">&nbsp;</span><span style="color: #bfbdb0; font-family: var(--font-taskor), sans-serif; font-feature-settings: 'ss01' 1; text-transform: uppercase; letter-spacing: 0.05em;">Agents)</span></span>
+                <span class="sr-only">Join ${escapeHTML(displayName)}'s Team</span>
+                ${svgTagline(`Join ${escapeHTML(displayName)}&rsquo;s Team`)}
+                <span class="tagline-counter-suffix"><span style="color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;">(</span><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;" class="counter-numbers-tagline"><span class="counter-digit-tagline">1</span><span class="counter-digit-tagline">6</span><span class="counter-digit-tagline">8</span><span class="counter-digit-tagline">8</span><span>+</span></span><span style="color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;">&nbsp;</span><span style="color: #bfbdb0; font-family: var(--font-taskor), sans-serif; font-feature-settings: 'ss01' 1; text-transform: uppercase; letter-spacing: 0.05em;">Agents)</span></span>
               </p>
               </div>
               <div class="flex justify-center items-center" style="margin-top: 14px;">
@@ -3823,7 +3846,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       <div style="max-width: 1500px; margin: 0 auto;">
         <!-- Header - always visible, no animation -->
         <div class="text-center mb-12" style="max-width: 1600px; margin-left: auto; margin-right: auto;">
-          <h2 class="text-h2 h2-3d">Why Smart Agent Alliance (SAA)?</h2>
+          ${svgH2('Why Smart Agent Alliance (SAA)?')}
         </div>
         <div class="why-saa-grid">
           <!-- Left Card - visible immediately -->
@@ -3895,7 +3918,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <!-- Left - Content -->
               <div class="proven-grid-left">
                 <!-- H2 - always visible, no animation -->
-                <h2 class="text-h2 h2-3d" style="text-align: left;">Proven at Scale</h2>
+                ${svgH2('Proven at Scale', 'left')}
 
                 <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
                   <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem;">
@@ -3946,7 +3969,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <section style="padding: var(--section-padding-y) 1.5rem; position: relative;" id="what-you-get-section">
       <div style="max-width: 1500px; margin: 0 auto; position: relative; z-index: 10;">
         <div class="text-center" style="margin-bottom: 2.5rem;">
-          <h2 class="text-h2 h2-3d">What You Get with SAA</h2>
+          ${svgH2('What You Get with SAA')}
           <p class="text-body" style="opacity: 0.6; margin-top: -1.5rem; max-width: 950px; margin-left: auto; margin-right: auto;">As an SAA agent, you are part of both Smart Agent Alliance and the Wolfpack, our larger team network within eXp Realty. Your Agent Portal brings everything together in one place.</p>
         </div>
 
@@ -4121,7 +4144,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div style="max-width: 1600px; margin: 0 auto;">
               <!-- Section Header -->
               <div class="text-center" style="margin-bottom: 2rem;">
-                <h2 class="text-h2 h2-3d" style="max-width: 100%;">Why This Only Works at eXp Realty</h2>
+                ${svgH2('Why This Only Works at eXp Realty', 'center', 'max-width:100%;')}
               </div>
 
               <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: start;" class="why-only-grid-responsive">
@@ -4184,7 +4207,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <!-- Media Logos Section (Why eXp Realty?) - 5-Card Layout -->
     <section class="media-logos-section scroll-reveal" id="media-logos-section">
       <div class="text-center px-4 relative" style="z-index: 10;">
-        <h2 class="text-h2 h2-3d" style="max-width: 100%;">Why eXp Realty?</h2>
+        ${svgH2('Why eXp Realty?', 'center', 'max-width:100%;')}
 
         <!-- Cards Grid: 3 on top, 2 on bottom -->
         <div class="mx-auto mb-8" style="max-width: 1800px;">
@@ -4423,7 +4446,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div style="max-width: 1500px; margin: 0 auto; position: relative; z-index: 10;">
             <!-- Header - always visible, no animation -->
             <div style="text-align: center; margin-bottom: 3rem;">
-              <h2 class="text-h2 h2-3d">Your Support Network</h2>
+              ${svgH2('Your Support Network')}
             </div>
 
             <!-- Three column layout - Agent, Doug, Karrie -->
@@ -4517,7 +4540,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <div id="built-future-content" style="position: relative;">
           <!-- Section Header - extra top padding for H2 metal backing plate -->
           <div style="text-align: center; margin-bottom: 1rem; padding-top: 1rem; padding-left: 1.5rem; padding-right: 1.5rem;">
-            <h2 class="text-h2 h2-3d" style="max-width: 100%;">Built for Where Real Estate Is Going</h2>
+            ${svgH2('Built for Where Real Estate Is Going', 'center', 'max-width:100%;')}
           </div>
           <p class="text-body" style="opacity: 0.7; margin-bottom: 3rem; text-align: center; max-width: 42rem; margin-left: auto; margin-right: auto; padding-left: 1.5rem; padding-right: 1.5rem;">The future of real estate is cloud-based, global, and technology-driven. SAA is already there.</p>
 
@@ -4561,7 +4584,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <section id="watch-and-decide" class="section py-16 md:py-24 px-4">
           <div style="max-width: 1900px; margin: 0 auto;">
             <div class="text-center mb-8 md:mb-12">
-              <h2 class="text-h2 h2-3d">Book a Call</h2>
+              ${svgH2('Book a Call')}
               <p class="text-body mt-4 max-w-2xl mx-auto opacity-80">Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full.</p>
             </div>
             <div class="max-w-4xl mx-auto">
@@ -8511,42 +8534,23 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       color: ${accentColor};
     }
 
-    /* H1 3D Shaded Text - dynamic accent backing + glow */
-    /* Dark accents: cream face */
-    /* Light accents: accent color face */
+    /* H1 layout - SVG handles visual styling */
     h1 {
       font-family: 'Taskor', 'Synonym', system-ui, sans-serif;
       font-size: var(--name-font-size, clamp(1.75rem, 5vw, 2.5rem));
       font-weight: ${nameWeight === 'bold' ? '700' : '400'};
       letter-spacing: 0em;
-      color: ${isAccentDark ? '#f2f1ec' : accentColor};
       line-height: 1.1;
       margin-bottom: 0.5rem;
-      font-feature-settings: "ss01" 1;
-      transform: perspective(800px) rotateX(12deg);
-      text-shadow:
-        /* Accent glow */
-        0 0 0.12em rgba(${rgbString}, 0.15),
-        /* Shaded fill extrusion */
-        0.010em 0.013em 0 #dddcd5,
-        0.015em 0.025em 0 #d1d0c7,
-        0.019em 0.038em 0 #c2c1b8,
-        0.024em 0.050em 0 #b3b2a8,
-        0.029em 0.063em 0 #a09f94,
-        0.033em 0.075em 0 #8d8c80,
-        0.038em 0.088em 0 #7a7970,
-        /* Accent stroke backing (dark -> accent color) */
-        0.040em 0.095em 0 ${h1Backing[0]},
-        0.042em 0.105em 0 ${h1Backing[1]},
-        0.044em 0.115em 0 ${h1Backing[2]},
-        0.046em 0.125em 0 ${h1Backing[3]},
-        0.048em 0.135em 0 ${h1Backing[4]},
-        0.050em 0.145em 0 ${h1Backing[5]},
-        0.052em 0.155em 0 ${h1Backing[6]},
-        0.054em 0.165em 0 ${h1Backing[7]},
-        /* Deep shadow */
-        0.056em 0.175em 0.02em ${h1DeepShadow};
-      filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
+      position: relative;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
     }
 
     .bio {
@@ -8948,7 +8952,40 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   <div class="container">
     ${profileImageHTML}
 
-    <h1 style="--name-font-size: ${nameFontSize}">${escapeHTML(fullName)}</h1>
+    <h1 style="--name-font-size: ${nameFontSize}">
+      <span class="sr-only">${escapeHTML(fullName)}</span>
+      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:-1.5em auto -2em;font-family:inherit;font-feature-settings:'ss01' 1;font-size:inherit;">
+        <defs>
+          <filter id="lsh"><feGaussianBlur in="SourceAlpha" stdDeviation="10"/></filter>
+          <filter id="lgl"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <linearGradient id="lfg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#dddcd5"/><stop offset="35%" stop-color="${isAccentDark ? '#f2f1ec' : accentColor}"/><stop offset="65%" stop-color="${isAccentDark ? '#f2f1ec' : accentColor}"/><stop offset="100%" stop-color="#dddcd5"/>
+          </linearGradient>
+          <symbol id="lss" overflow="visible"><text x="50%" y="60%" fill="none" stroke-width=".22em" paint-order="stroke fill" text-anchor="middle">${escapeHTML(fullName)}</text></symbol>
+          <symbol id="lsf" overflow="visible"><text x="50%" y="60%" text-anchor="middle">${escapeHTML(fullName)}</text></symbol>
+        </defs>
+        <g stroke-dasharray="3.5em 0em" stroke-linecap="butt" stroke-linejoin="miter">
+          <use x="0.167%" y="1.67%" href="#lss" stroke="${h1Backing[0]}" opacity="0.5" filter="url(#lsh)"/>
+          <use x="0.12%" y="1.2%" href="#lss" stroke="${h1Backing[7]}"/>
+          <use x="0.1%" y="1.0%" href="#lss" stroke="${h1Backing[6]}"/>
+          <use x="0.08%" y="0.8%" href="#lss" stroke="${h1Backing[5]}"/>
+          <use x="0.06%" y="0.6%" href="#lss" stroke="${h1Backing[4]}"/>
+          <use x="0.045%" y="0.45%" href="#lss" stroke="${h1Backing[3]}"/>
+          <use x="0.03%" y="0.3%" href="#lss" stroke="${h1Backing[2]}"/>
+          <use x="0.015%" y="0.15%" href="#lss" stroke="${h1Backing[1]}"/>
+          <use x="0%" y="0%" href="#lss" stroke="${h1Backing[0]}"/>
+        </g>
+        <use x="0.15%" y="0.4%" href="#lsf" fill="#7a7970"/>
+        <use x="0.124%" y="0.14%" href="#lsf" fill="#8d8c80"/>
+        <use x="0.099%" y="-0.11%" href="#lsf" fill="#a09f94"/>
+        <use x="0.073%" y="-0.37%" href="#lsf" fill="#b3b2a8"/>
+        <use x="0.047%" y="-0.63%" href="#lsf" fill="#c2c1b8"/>
+        <use x="0.021%" y="-0.89%" href="#lsf" fill="#d1d0c7"/>
+        <use x="-0.004%" y="-1.14%" href="#lsf" fill="#dddcd5"/>
+        <use x="-0.06%" y="-1.4%" href="#lsf" fill="${accentColor}" opacity="0.15" filter="url(#lgl)"/>
+        <use x="-0.06%" y="-1.4%" href="#lsf" fill="url(#lfg)"/>
+      </svg>
+    </h1>
 
     ${socialLinks.length > 0 ? `
     <div class="social-links">

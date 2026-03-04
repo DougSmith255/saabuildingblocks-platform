@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useId } from 'react';
+import { extractPlainText } from '../../../utils/extractPlainText';
 
 export type H2Theme = 'default' | 'blue' | 'gold' | 'purple' | 'emerald';
 
@@ -12,103 +13,49 @@ export interface HeadingProps {
   theme?: H2Theme;
 }
 
-// Shared fill extrusion layers (same across all themes)
-const FILL_EXTRUSION = `
-  0.010em 0.013em 0 #dddcd5,
-  0.015em 0.025em 0 #d1d0c7,
-  0.019em 0.038em 0 #c2c1b8,
-  0.024em 0.050em 0 #b3b2a8,
-  0.029em 0.063em 0 #a09f94,
-  0.033em 0.075em 0 #8d8c80,
-  0.038em 0.088em 0 #7a7970`;
-
-// Theme configurations - text color + stroke backing layers
-const THEMES: Record<H2Theme, { textColor: string; textShadow: string }> = {
+/**
+ * Stroke backing colors per theme.
+ * 5 layers: 1 shadow (blurred) + 4 visible.
+ * stroke-width .10em (thinner than H1's .22em).
+ */
+const STROKE_THEMES: Record<H2Theme, { shadow: string; layers: string[]; faceColor: string }> = {
   default: {
-    textColor: '#e5e4dd',
-    textShadow: `
-      ${FILL_EXTRUSION},
-      0.040em 0.095em 0 #282828,
-      0.044em 0.110em 0 #333333,
-      0.048em 0.125em 0 #3e3e3e,
-      0.052em 0.140em 0 #4a4a4a,
-      0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5)`,
+    shadow: '#2a2a2a',
+    layers: ['#4a4a4a', '#3e3e3e', '#333333', '#282828'],
+    faceColor: '#e5e4dd',
   },
   blue: {
-    textColor: '#b0d4e8',
-    textShadow: `
-      0 0 0.12em rgba(0, 191, 255, 0.12),
-      ${FILL_EXTRUSION},
-      0.040em 0.095em 0 #181920,
-      0.042em 0.105em 0 #1a2a38,
-      0.044em 0.115em 0 #0a3a50,
-      0.046em 0.125em 0 #084a68,
-      0.048em 0.135em 0 #086080,
-      0.050em 0.145em 0 #0a7898,
-      0.052em 0.155em 0 #00bfff,
-      0.054em 0.165em 0.02em rgba(0, 150, 200, 0.5)`,
+    shadow: '#0a3060',
+    layers: ['#00bfff', '#0a7898', '#084a68', '#0a3a50'],
+    faceColor: '#b0d4e8',
   },
   gold: {
-    textColor: '#e8d4a0',
-    textShadow: `
-      0 0 0.12em rgba(255, 215, 0, 0.12),
-      ${FILL_EXTRUSION},
-      0.040em 0.095em 0 #191818,
-      0.042em 0.105em 0 #3f3010,
-      0.044em 0.115em 0 #5e4808,
-      0.046em 0.125em 0 #7c6008,
-      0.048em 0.135em 0 #9a7808,
-      0.050em 0.145em 0 #b8900a,
-      0.052em 0.155em 0 #d4a010,
-      0.054em 0.165em 0 #e6ac00,
-      0.056em 0.175em 0.02em rgba(184, 150, 10, 0.5)`,
+    shadow: '#5e4808',
+    layers: ['#e6ac00', '#b8900a', '#7c6008', '#3f3010'],
+    faceColor: '#e8d4a0',
   },
   purple: {
-    textColor: '#d4b0e8',
-    textShadow: `
-      0 0 0.12em rgba(168, 85, 247, 0.12),
-      ${FILL_EXTRUSION},
-      0.040em 0.095em 0 #1a1020,
-      0.042em 0.105em 0 #2a1535,
-      0.044em 0.115em 0 #3a1a50,
-      0.046em 0.125em 0 #4a2068,
-      0.048em 0.135em 0 #6030a0,
-      0.050em 0.145em 0 #7845c8,
-      0.052em 0.155em 0 #a855f7,
-      0.054em 0.165em 0.02em rgba(140, 70, 200, 0.5)`,
+    shadow: '#2a1535',
+    layers: ['#a855f7', '#6030a0', '#3a1a50', '#1a1020'],
+    faceColor: '#d4b0e8',
   },
   emerald: {
-    textColor: '#a0e8c4',
-    textShadow: `
-      0 0 0.12em rgba(16, 185, 129, 0.12),
-      ${FILL_EXTRUSION},
-      0.040em 0.095em 0 #101a18,
-      0.042em 0.105em 0 #152a25,
-      0.044em 0.115em 0 #0f3a2a,
-      0.046em 0.125em 0 #0a4a38,
-      0.048em 0.135em 0 #086048,
-      0.050em 0.145em 0 #0a9868,
-      0.052em 0.155em 0 #10b981,
-      0.054em 0.165em 0.02em rgba(10, 150, 100, 0.5)`,
+    shadow: '#0f3a2a',
+    layers: ['#10b981', '#086048', '#0a4a38', '#101a18'],
+    faceColor: '#a0e8c4',
   },
 };
 
 /**
- * H2 Component - 3D Shaded Text Effect
+ * H2 Component - SVG 3D Shaded Text
  *
- * Adapted from CodePen "Shaded Text" SVG technique, translated to CSS text-shadow.
+ * Exact port of the CodePen "Shaded Text" H2 technique using inline SVG.
+ * Uses <text> elements with stroke-width .10em to create visible colored outlines.
  *
- * Features:
- * - 7-layer shaded fill extrusion (cream gradient creating 3D depth)
- * - Colored stroke backing visible at larger offsets (theme-dependent)
- * - Perspective transform with rotateX
- * - Alt glyphs for N, E, M via font-feature-settings "ss01"
- *
- * @example
- * ```tsx
- * <H2>SECTION TITLE</H2>
- * <H2 theme="blue">BLUE HEADING</H2>
- * ```
+ * Structure (back to front):
+ * 1. Stroke backing: 5 layers with stroke-width .10em (themed colored outlines)
+ * 2. Fill extrusion: 8 layers creating 3D depth (cream gradient)
+ * 3. Face: flat themed color (no gradient, unlike H1)
  */
 export default function H2({
   children,
@@ -116,26 +63,74 @@ export default function H2({
   style = {},
   theme = 'default'
 }: HeadingProps) {
-  const { textColor, textShadow } = THEMES[theme];
+  const plainText = extractPlainText(children);
+  const uid = useId().replace(/:/g, '');
+  const sId = `s2${uid}`;
+  const fId = `f2${uid}`;
+  const shId = `sh2${uid}`;
+
+  const strokes = STROKE_THEMES[theme];
+  const align = (style.textAlign as string) || 'center';
+  const anchor = align === 'left' ? 'start' : align === 'right' ? 'end' : 'middle';
+  const tx = align === 'left' ? '0%' : align === 'right' ? '100%' : '50%';
 
   return (
     <h2
       className={`text-h2 ${className}`}
       style={{
-        textAlign: style.textAlign || 'center',
-        fontFeatureSettings: '"ss01" 1',
-        marginLeft: style.textAlign === 'left' ? '0' : 'auto',
-        marginRight: style.textAlign === 'right' ? '0' : 'auto',
+        textAlign: align as React.CSSProperties['textAlign'],
+        marginLeft: align === 'left' ? '0' : 'auto',
+        marginRight: align === 'right' ? '0' : 'auto',
         marginBottom: '2.5rem',
         maxWidth: style.maxWidth || '95%',
-        color: textColor,
-        textShadow,
-        transform: 'perspective(800px) rotateX(8deg)',
-        filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
-        ...style
+        position: 'relative',
+        ...style,
       }}
     >
-      {children}
+      <span style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}>
+        {plainText}
+      </span>
+      <svg
+        aria-hidden="true"
+        overflow="visible"
+        style={{
+          display: 'block',
+          width: '100%',
+          height: '5em',
+          margin: '-1.5em auto -2em',
+          fontFamily: 'inherit',
+          fontFeatureSettings: '"ss01" 1',
+          fontSize: 'inherit',
+        }}
+      >
+        <defs>
+          <filter id={shId}><feGaussianBlur in="SourceAlpha" stdDeviation="10"/></filter>
+          <symbol id={sId} overflow="visible">
+            <text x={tx} y="60%" fill="none" strokeWidth=".10em" paintOrder="stroke fill" textAnchor={anchor}>{plainText}</text>
+          </symbol>
+          <symbol id={fId} overflow="visible">
+            <text x={tx} y="60%" textAnchor={anchor}>{plainText}</text>
+          </symbol>
+        </defs>
+        {/* Stroke backing: 5 themed layers */}
+        <g strokeDasharray="3.5em 0em" strokeLinecap="butt" strokeLinejoin="miter">
+          <use x="0.167%" y="1.67%" href={`#${sId}`} stroke={strokes.shadow} opacity={0.5} filter={`url(#${shId})`}/>
+          <use x="0.12%" y="1.2%" href={`#${sId}`} stroke={strokes.layers[0]}/>
+          <use x="0.073%" y="0.73%" href={`#${sId}`} stroke={strokes.layers[1]}/>
+          <use x="0.033%" y="0.33%" href={`#${sId}`} stroke={strokes.layers[2]}/>
+          <use x="0%" y="0%" href={`#${sId}`} stroke={strokes.layers[3]}/>
+        </g>
+        {/* Fill extrusion: 8 cream-shaded layers (face is last) */}
+        <use x="0.15%" y="0.4%" href={`#${fId}`} fill="#7a7970"/>
+        <use x="0.124%" y="0.14%" href={`#${fId}`} fill="#8d8c80"/>
+        <use x="0.099%" y="-0.11%" href={`#${fId}`} fill="#a09f94"/>
+        <use x="0.073%" y="-0.37%" href={`#${fId}`} fill="#b3b2a8"/>
+        <use x="0.047%" y="-0.63%" href={`#${fId}`} fill="#c2c1b8"/>
+        <use x="0.021%" y="-0.89%" href={`#${fId}`} fill="#d1d0c7"/>
+        <use x="-0.004%" y="-1.14%" href={`#${fId}`} fill="#dddcd5"/>
+        {/* Face: flat themed color */}
+        <use x="-0.06%" y="-1.4%" href={`#${fId}`} fill={strokes.faceColor}/>
+      </svg>
     </h2>
   );
 }
