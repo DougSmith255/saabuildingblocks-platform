@@ -3747,10 +3747,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
   </style>
 
-  <!-- GSAP and Lenis for scroll animations -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/lenis@1.3.15/dist/lenis.min.js"></script>
+  <!-- GSAP and Lenis for scroll animations (defer to avoid render blocking) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://unpkg.com/lenis@1.3.15/dist/lenis.min.js" defer></script>
 </head>
 <body>
   <!-- Star Field Background -->
