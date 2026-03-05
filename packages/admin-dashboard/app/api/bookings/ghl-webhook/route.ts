@@ -16,6 +16,7 @@ import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseCl
 import { sendEmail } from '@/lib/email/client';
 import { BookingReferralNotification } from '@/lib/email/templates/BookingReferralNotification';
 import React from 'react';
+import { logPlatformError } from '@/lib/error-logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -219,6 +220,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, action: 'created' });
   } catch (error) {
     console.error('[ghl-webhook] Error:', error);
+    logPlatformError({
+      source: '/api/bookings/ghl-webhook',
+      severity: 'error',
+      error_code: 'BOOKING_WEBHOOK_FAILED',
+      error_message: error instanceof Error ? error.message : 'Unknown error',
+      stack_trace: error instanceof Error ? error.stack : undefined,
+      request,
+    });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

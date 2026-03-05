@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { useContinuousAnimation } from './useContinuousAnimation';
 
 /**
@@ -7,7 +8,8 @@ import { useContinuousAnimation } from './useContinuousAnimation';
  * Rotating galaxy with spiral arms - great for celebratory/achievement themes
  */
 export function SpiralGalaxyEffect() {
-  const { time, progress } = useContinuousAnimation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { time, progress } = useContinuousAnimation(containerRef);
 
   const arms = 4;
   const dotsPerArm = 30;
@@ -15,7 +17,7 @@ export function SpiralGalaxyEffect() {
   return (
     <>
       {/* Animation container - has overflow-hidden for performance */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center hero-effect-layer">
+      <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center hero-effect-layer">
         {/* Spiral arms */}
         {[...Array(arms)].map((_, armIndex) => (
           <div key={armIndex} className="absolute inset-0">

@@ -206,9 +206,11 @@ jobs:
       - name: Build Static Export
         env:
           NODE_ENV: production
-          # Use properly formatted placeholder values (API routes excluded from export)
-          NEXT_PUBLIC_SUPABASE_URL: "https://placeholder.supabase.co"
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzUyNjUyMDAsImV4cCI6MTk5MDg0MTIwMH0.cXVhY2toIHdvcmthcm91bmQ"
+          # Real Supabase URL + anon key needed for client-side verifyOtp in activation page
+          # (anon key is public by design - safe to bake into static build, RLS protects data)
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # Service role key placeholder (not used in static export, but needed for TS compilation)
           SUPABASE_SERVICE_ROLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY3NTI2NTIwMCwiZXhwIjoxOTkwODQxMjAwfQ.c2VydmljZSByb2xlIGtleQ"
           # WordPress API for blog content
           WORDPRESS_API_URL: ${{ secrets.WORDPRESS_API_URL }}

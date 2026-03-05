@@ -1,6 +1,7 @@
 'use client';
 
 import { SecondaryButton } from '@saa/shared/components/saa/buttons';
+import { useStrokeBackLayers, H1_GOLD_CONFIG } from '@saa/shared/components/saa/headings/useStrokeBackLayers';
 
 /**
  * 404 Not Found Page
@@ -10,11 +11,12 @@ import { SecondaryButton } from '@saa/shared/components/saa/buttons';
  * Header/Footer are hidden via CSS targeting the data-is-404 attribute.
  *
  * Uses 'use client' with Tailwind classes for immediate CSS (no CLS).
- * Animations are defined in globals.css (float-404, glowBreathe-404).
+ * Float animation defined in globals.css (float-404).
  * 404 tracking is handled server-side by the Cloudflare Pages middleware
  * which logs to Supabase (see functions/_middleware.js).
  */
 export default function NotFound() {
+  const wrapperRef = useStrokeBackLayers(H1_GOLD_CONFIG);
   return (
     <main
       id="main-content"
@@ -39,31 +41,22 @@ export default function NotFound() {
         🛸
       </div>
 
-      {/* 404 Neon Sign */}
-      <h1
-        className="font-taskor text-[clamp(6rem,20vw,12rem)] leading-none mb-4"
-        style={{
-          color: '#ffd700',
-          transform: 'perspective(800px) rotateX(12deg)',
-          textShadow: `
-            0 0 0.01em #fff,
-            0 0 0.02em #fff,
-            0 0 0.03em rgba(255,255,255,0.8),
-            0 0 0.07em #ffd700,
-            0 0 0.11em rgba(255, 215, 0, 0.9),
-            0 0 0.16em rgba(255, 215, 0, 0.7),
-            0 0 0.22em rgba(255, 215, 0, 0.5),
-            0.03em 0.03em 0 #2a2a2a,
-            0.045em 0.045em 0 #1a1a1a,
-            0.06em 0.06em 0 #0f0f0f,
-            0.075em 0.075em 0 #080808
-          `,
-          filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.1em rgba(255, 215, 0, 0.3))',
-          animation: 'glowBreathe-404 4s ease-in-out infinite',
-        }}
-      >
-        404
-      </h1>
+      {/* 404 - H1 styling with SVG backing */}
+      <div ref={wrapperRef} style={{ position: 'relative', overflow: 'visible' }}>
+        <h1
+          className="text-[clamp(6rem,20vw,12rem)] leading-none mb-4"
+          style={{
+            fontFamily: 'var(--font-taskor), serif',
+            fontFeatureSettings: '"ss01" 1',
+            color: H1_GOLD_CONFIG.faceColor,
+            transform: `perspective(800px) rotateX(${H1_GOLD_CONFIG.rotateX})`,
+            textShadow: H1_GOLD_CONFIG.faceTextShadow,
+            position: 'relative',
+          }}
+        >
+          404
+        </h1>
+      </div>
 
       {/* Message */}
       <p

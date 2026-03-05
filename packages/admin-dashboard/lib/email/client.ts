@@ -102,7 +102,8 @@ export const EMAIL_CONFIG = {
 export interface EmailOptions {
   to: string | string[];
   subject: string;
-  react: React.ReactElement;
+  react?: React.ReactElement;
+  html?: string;
   replyTo?: string;
   tags?: { name: string; value: string }[];
 }
@@ -163,14 +164,17 @@ export async function sendEmail(
       value: tag.value.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100) || 'unknown',
     }));
 
-    const result = await resend.emails.send({
+    const sendPayload: Record<string, unknown> = {
       from: EMAIL_CONFIG.from,
       to: Array.isArray(options.to) ? options.to : [options.to],
       subject: options.subject,
-      react: options.react,
       replyTo: options.replyTo || EMAIL_CONFIG.replyTo,
       tags: sanitizedTags,
-    });
+    };
+    if (options.react) sendPayload.react = options.react;
+    if (options.html) sendPayload.html = options.html;
+
+    const result = await resend.emails.send(sendPayload as any);
 
     if (result.error) {
       throw new Error(result.error.message);

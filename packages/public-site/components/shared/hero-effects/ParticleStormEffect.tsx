@@ -1,14 +1,15 @@
 'use client';
 
 import { useContinuousAnimation } from './useContinuousAnimation';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 
 /**
  * Particle Storm Effect
  * Scattered golden particles - great for gift/download themes
  */
 export function ParticleStormEffect() {
-  const { time, progress } = useContinuousAnimation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { time, progress } = useContinuousAnimation(containerRef);
 
   // Memoize particles to prevent regeneration on each render
   const particles = useMemo(() => [...Array(60)].map((_, i) => ({
@@ -22,7 +23,7 @@ export function ParticleStormEffect() {
   return (
     <>
       {/* Animation container - has overflow-hidden for performance */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
+      <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
         {/* Main particles */}
         {particles.map((p, i) => {
           const moveX = Math.cos(p.angle * Math.PI / 180) * progress * 50;

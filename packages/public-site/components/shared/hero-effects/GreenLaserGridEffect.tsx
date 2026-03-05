@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { useContinuousAnimation } from './useContinuousAnimation';
 
 /**
@@ -12,7 +13,8 @@ import { useContinuousAnimation } from './useContinuousAnimation';
  * - Beams grow outward from 15% to 100%
  */
 export function GreenLaserGridEffect() {
-  const { time, progress } = useContinuousAnimation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { time, progress } = useContinuousAnimation(containerRef);
 
   const horizontalBeams = [...Array(6)].map((_, i) => ({
     y: 15 + i * 14,
@@ -29,7 +31,7 @@ export function GreenLaserGridEffect() {
   return (
     <>
       {/* Animation container - has overflow-hidden for performance */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
+      <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
         {/* Horizontal laser beams - grow from 15% to 100% using scaleX */}
         {horizontalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));

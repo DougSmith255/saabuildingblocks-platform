@@ -11,228 +11,181 @@ import {
   ModalTitle,
 } from '@saa/shared/components/saa/forms';
 import { H1 } from '@saa/shared/components/saa/headings';
+import { supabase } from '@/lib/supabase-client';
 import { API_URL } from '@/lib/api-config';
 
 // Initial progress values for the data stream effect
 const INITIAL_PROGRESS_START = 0.05;
 const INITIAL_PROGRESS_END = 0.5;
 
-// Auth API URL - uses centralized config
-const AUTH_API_URL = API_URL;
-
+type ActivationState =
+  | 'loading'
+  | 'verifying'
+  | 'password-form'
+  | 'submitting'
+  | 'success'
+  | 'error';
 
 /**
  * Agent Portal Activation Page
- * For new users to set their password after receiving an invitation
- * Auto-logs in and redirects to agent portal after successful activation
+ *
+ * New flow using Supabase native auth:
+ * 1. Read token_hash + type from URL params
+ * 2. Call supabase.auth.verifyOtp() client-side (no VPS call needed)
+ * 3. On success, show password form
+ * 4. Submit password + Supabase access token to /api/invitations/complete-activation
+ * 5. Store JWT, redirect to portal
  */
 function ActivatePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get('token');
+  const tokenHash = searchParams.get('token_hash');
+  const type = searchParams.get('type');
 
+  const [state, setState] = useState<ActivationState>('loading');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isValidating, setIsValidating] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [tokenValid, setTokenValid] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
-  const [userName, setUserName] = useState('');
-  const [userFirstName, setUserFirstName] = useState('');
-  const [userLastName, setUserLastName] = useState('');
+  const [supabaseToken, setSupabaseToken] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
-  // Editable email for login (separate from exp_email which is the official one)
-  const [loginEmail, setLoginEmail] = useState('');
-
-  // Validate token on mount
+  // Verify OTP on mount
   useEffect(() => {
-    if (!token) {
-      setError('Invalid invitation link. Please check your email for the correct link.');
-      setIsValidating(false);
+    if (!tokenHash || !type) {
+      setError('Invalid activation link. Please check your email for the correct link.');
+      setState('error');
       return;
     }
 
-    const validateToken = async () => {
+    const verifyToken = async () => {
+      setState('verifying');
+
       try {
-        const response = await fetch(`${AUTH_API_URL}/api/invitations/validate?token=${encodeURIComponent(token)}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+        const { data, error: otpError } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type: type as 'invite',
         });
 
-        const data = await response.json();
+        if (otpError || !data.session) {
+          console.error('verifyOtp error:', otpError);
 
-        if (!response.ok || !data.valid) {
-          setError(data.error || data.message || 'This invitation link is invalid or has expired. Please request a new invitation.');
-          setTokenValid(false);
-        } else {
-          setTokenValid(true);
-          setUserEmail(data.email || '');
-          setLoginEmail(data.email || ''); // Initialize editable login email
-          setUserFirstName(data.first_name || data.firstName || '');
-          setUserLastName(data.last_name || data.lastName || '');
-          setUserName(data.first_name || data.firstName || data.full_name || '');
+          // Provide clear error messages for common cases
+          const message = otpError?.message || '';
+          if (message.includes('expired') || message.includes('Token has expired')) {
+            setError('This invitation link has expired. Please request a new invitation from your team admin.');
+          } else if (message.includes('invalid') || message.includes('not found')) {
+            setError('This invitation link is invalid. It may have already been used or replaced by a newer invitation.');
+          } else {
+            setError('Unable to verify your invitation. The link may be expired or invalid. Please request a new invitation.');
+          }
+          setState('error');
+          return;
         }
+
+        // Token verified - store the Supabase access token
+        setSupabaseToken(data.session.access_token);
+        setUserEmail(data.session.user?.email || null);
+        setState('password-form');
       } catch (err) {
-        console.error('Token validation error:', err);
-        setError('Unable to validate invitation. Please try again later.');
-      } finally {
-        setIsValidating(false);
+        console.error('Token verification error:', err);
+        setError('Unable to verify invitation. Please check your connection and try again.');
+        setState('error');
       }
     };
 
-    validateToken();
-  }, [token]);
+    verifyToken();
+  }, [tokenHash, type]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError(null);
 
     // Validate passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
-      setIsLoading(false);
       return;
     }
 
     // Validate password strength
     if (password.length < 8) {
       setError('Password must be at least 8 characters long.');
-      setIsLoading(false);
       return;
     }
-
     if (!/[A-Z]/.test(password)) {
       setError('Password must contain at least one uppercase letter.');
-      setIsLoading(false);
       return;
     }
-
     if (!/[a-z]/.test(password)) {
       setError('Password must contain at least one lowercase letter.');
-      setIsLoading(false);
       return;
     }
-
     if (!/[0-9]/.test(password)) {
       setError('Password must contain at least one number.');
-      setIsLoading(false);
       return;
     }
-
     if (!/[^A-Za-z0-9]/.test(password)) {
       setError('Password must contain at least one special character.');
-      setIsLoading(false);
       return;
     }
 
-    // Validate email
-    if (!loginEmail || !loginEmail.includes('@')) {
-      setError('Please enter a valid email address.');
-      setIsLoading(false);
-      return;
-    }
+    setState('submitting');
 
     try {
-      // Activate the account via invitation accept endpoint
-      // Include loginEmail which becomes the user's email for login (separate from exp_email)
-      const response = await fetch(`${AUTH_API_URL}/api/invitations/accept`, {
+      // Single API call to complete activation
+      const response = await fetch(`${API_URL}/api/invitations/complete-activation`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          token,
           password,
-          email: loginEmail, // User's login email (can be different from exp_email)
-          first_name: userFirstName || 'User',
-          last_name: userLastName || 'Agent',
+          supabaseAccessToken: supabaseToken,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || 'Failed to activate account. Please try again.');
-        setIsLoading(false);
+        setError(data.error || data.message || 'Failed to activate account. Please try again.');
+        setState('password-form');
         return;
       }
 
-      // If activation returns tokens, use them for auto-login
-      if (data.data?.accessToken) {
+      // Store JWT and user data for Agent Portal
+      if (data.access_token && data.user) {
         const userData = {
-          id: data.data.user.id,
-          email: data.data.user.email,
-          username: data.data.user.username,
-          firstName: data.data.user.first_name || '',
-          lastName: data.data.user.last_name || '',
-          fullName: data.data.user.full_name || `${data.data.user.first_name || ''} ${data.data.user.last_name || ''}`.trim(),
-          role: data.data.user.role,
-          profilePictureUrl: data.data.user.profile_picture_url || null,
-          gender: data.data.user.gender || 'male',
-          isLeader: data.data.user.is_leader || false,
-          state: data.data.user.state || null,
+          id: data.user.id,
+          email: data.user.email,
+          username: data.user.username || data.user.email,
+          firstName: data.user.first_name || '',
+          lastName: data.user.last_name || '',
+          fullName: data.user.full_name || data.user.fullName || `${data.user.first_name || ''} ${data.user.last_name || ''}`.trim(),
+          role: data.user.role,
+          profilePictureUrl: data.user.profile_picture_url || null,
+          gender: data.user.gender || 'male',
+          isLeader: data.user.is_leader || false,
+          state: data.user.state || null,
         };
 
         localStorage.setItem('agent_portal_user', JSON.stringify(userData));
-        localStorage.setItem('agent_portal_token', data.data.accessToken);
+        localStorage.setItem('agent_portal_token', data.access_token);
 
-        // Go directly to agent portal (onboarding is now in the portal itself)
+        setState('success');
         router.push('/agent-portal');
       } else {
-        // Fallback: auto-login after activation
-        const loginResponse = await fetch(`${AUTH_API_URL}/api/auth/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            identifier: userEmail,
-            password,
-          }),
-        });
-
-        const loginData = await loginResponse.json();
-
-        if (loginResponse.ok && loginData.data?.accessToken) {
-          const userData = {
-            id: loginData.data.user.id,
-            email: loginData.data.user.email,
-            username: loginData.data.user.username,
-            firstName: loginData.data.user.first_name || '',
-            lastName: loginData.data.user.last_name || '',
-            fullName: loginData.data.user.full_name || `${loginData.data.user.first_name || ''} ${loginData.data.user.last_name || ''}`.trim(),
-            role: loginData.data.user.role,
-            profilePictureUrl: loginData.data.user.profile_picture_url || null,
-            gender: loginData.data.user.gender || 'male',
-            isLeader: loginData.data.user.is_leader || false,
-            state: loginData.data.user.state || null,
-          };
-
-          localStorage.setItem('agent_portal_user', JSON.stringify(userData));
-          localStorage.setItem('agent_portal_token', loginData.data.accessToken);
-
-          // Go directly to agent portal (onboarding is now in the portal itself)
-          router.push('/agent-portal');
-        } else {
-          // If auto-login fails, redirect to login page
-          router.push('/agent-portal/login?activated=true');
-        }
+        // Activation succeeded but no token returned - redirect to login
+        setState('success');
+        router.push('/agent-portal/login?activated=true');
       }
     } catch (err) {
       console.error('Activation error:', err);
       setError('Network error. Please check your connection and try again.');
-      setIsLoading(false);
+      setState('password-form');
     }
   };
 
-  // Show loading state while validating token
-  if (isValidating) {
+  // Loading state
+  if (state === 'loading' || state === 'verifying') {
     return (
       <main id="main-content" className="relative h-screen flex flex-col overflow-hidden">
         <DataStreamEffect />
@@ -240,7 +193,9 @@ function ActivatePageContent() {
           <div className="flex flex-col items-center pt-[15vh]">
             <div className="text-center">
               <div className="w-12 h-12 border-4 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-body text-[#ffd700]/80">Validating invitation...</p>
+              <p className="text-body text-[#ffd700]/80">
+                {state === 'loading' ? 'Loading...' : 'Verifying your invitation...'}
+              </p>
             </div>
           </div>
         </div>
@@ -248,8 +203,8 @@ function ActivatePageContent() {
     );
   }
 
-  // Show error state if token is invalid
-  if (!tokenValid) {
+  // Error state
+  if (state === 'error') {
     return (
       <main id="main-content" className="relative h-screen flex flex-col overflow-hidden">
         <DataStreamEffect />
@@ -260,13 +215,15 @@ function ActivatePageContent() {
             </div>
             <FormCard maxWidth="md">
               <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚠️</div>
+                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>&#9888;&#65039;</div>
                 <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '1.5rem' }}>
                   {error}
                 </p>
-                <FormButton onClick={() => router.push('/agent-portal/login')}>
-                  Go to Login
-                </FormButton>
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <FormButton onClick={() => router.push('/agent-portal/login')}>
+                    Go to Login
+                  </FormButton>
+                </div>
               </div>
             </FormCard>
           </div>
@@ -275,6 +232,24 @@ function ActivatePageContent() {
     );
   }
 
+  // Submitting state
+  if (state === 'submitting') {
+    return (
+      <main id="main-content" className="relative h-screen flex flex-col overflow-hidden">
+        <DataStreamEffect />
+        <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
+          <div className="flex flex-col items-center pt-[15vh]">
+            <div className="text-center">
+              <div className="w-12 h-12 border-4 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-body text-[#ffd700]/80">Activating your account...</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Password form
   return (
     <main id="main-content" className="relative min-h-screen flex flex-col overflow-x-hidden">
       <DataStreamEffect />
@@ -282,9 +257,9 @@ function ActivatePageContent() {
       <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
         <div className="flex flex-col items-center pt-[15vh]">
           <div className="text-center mb-8 px-4">
-            <H1 className="mb-2" disableCloseGlow>WELCOME TO THE ALLIANCE</H1>
+            <H1 style={{ marginBottom: '30px' }} disableCloseGlow>ACTIVATE</H1>
             <p className="text-body" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-              {userName ? `Hello ${userName}! ` : ''}Set your password to get started
+              {userEmail ? `Welcome! ` : ''}Set your password to get started
             </p>
           </div>
 
@@ -297,22 +272,6 @@ function ActivatePageContent() {
               {error && (
                 <FormMessage type="error">{error}</FormMessage>
               )}
-
-              {/* Editable Email Field */}
-              <FormGroup label="Email Address" htmlFor="login-email" required>
-                <FormInput
-                  type="email"
-                  id="login-email"
-                  name="email"
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  required
-                />
-                <p style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '0.25rem' }}>
-                  This will be your login email and where we send you notifications.
-                </p>
-              </FormGroup>
 
               {/* Password Field with visibility toggle */}
               <FormGroup label="Create Password" htmlFor="password" required>
@@ -357,19 +316,19 @@ function ActivatePageContent() {
                 {/* Password requirements */}
                 <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '0.5rem' }}>
                   <p style={{ color: password.length >= 8 ? '#4ade80' : undefined }}>
-                    {password.length >= 8 ? '✓' : '○'} At least 8 characters
+                    {password.length >= 8 ? '\u2713' : '\u25CB'} At least 8 characters
                   </p>
                   <p style={{ color: /[A-Z]/.test(password) ? '#4ade80' : undefined }}>
-                    {/[A-Z]/.test(password) ? '✓' : '○'} One uppercase letter
+                    {/[A-Z]/.test(password) ? '\u2713' : '\u25CB'} One uppercase letter
                   </p>
                   <p style={{ color: /[a-z]/.test(password) ? '#4ade80' : undefined }}>
-                    {/[a-z]/.test(password) ? '✓' : '○'} One lowercase letter
+                    {/[a-z]/.test(password) ? '\u2713' : '\u25CB'} One lowercase letter
                   </p>
                   <p style={{ color: /[0-9]/.test(password) ? '#4ade80' : undefined }}>
-                    {/[0-9]/.test(password) ? '✓' : '○'} One number
+                    {/[0-9]/.test(password) ? '\u2713' : '\u25CB'} One number
                   </p>
                   <p style={{ color: /[^A-Za-z0-9]/.test(password) ? '#4ade80' : undefined }}>
-                    {/[^A-Za-z0-9]/.test(password) ? '✓' : '○'} One special character
+                    {/[^A-Za-z0-9]/.test(password) ? '\u2713' : '\u25CB'} One special character
                   </p>
                 </div>
               </FormGroup>
@@ -417,15 +376,15 @@ function ActivatePageContent() {
                 {/* Password match indicator */}
                 {confirmPassword && (
                   <p style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: password === confirmPassword ? '#4ade80' : '#f87171' }}>
-                    {password === confirmPassword ? '✓ Passwords match' : '✗ Passwords do not match'}
+                    {password === confirmPassword ? '\u2713 Passwords match' : '\u2717 Passwords do not match'}
                   </p>
                 )}
               </FormGroup>
 
               {/* Submit Button */}
               <div style={{ marginTop: '1.5rem' }}>
-                <FormButton isLoading={isLoading} loadingText="Activating...">
-                  Join The Alliance
+                <FormButton isLoading={false} loadingText="Activating...">
+                  Enter Agent Portal
                 </FormButton>
               </div>
             </form>
@@ -471,8 +430,8 @@ function DataStreamEffect() {
     const SCROLL_VELOCITY_MULTIPLIER = 0.0003;
     const VELOCITY_DECAY = 0.995;
     const TRANSITION_DURATION = 2000;
-    const MAX_PROGRESS = 1.5; // Upper bound for ping-pong
-    const MIN_PROGRESS = 0.1; // Lower bound for ping-pong
+    const MAX_PROGRESS = 1.5;
+    const MIN_PROGRESS = 0.1;
     let lastTimestamp = 0;
     let introEndTime: number | null = null;
 
@@ -519,7 +478,6 @@ function DataStreamEffect() {
         scrollVelocityRef.current *= VELOCITY_DECAY;
       }
 
-      // Ping-pong: reverse direction at bounds instead of resetting
       if (currentRef.current > MAX_PROGRESS) {
         currentRef.current = MAX_PROGRESS;
         directionRef.current = -1;

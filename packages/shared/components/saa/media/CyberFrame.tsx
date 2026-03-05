@@ -127,27 +127,27 @@ export function CyberFrame({
           background: #0a0a0a;
         }
 
-        /* Holographic glass overlay - uses translate for smooth animation */
+        /* Holographic glass overlay - vertical slide animation */
         .cyber-frame-inner::before {
           content: "";
           position: absolute;
-          inset: -100% -50%;
+          inset: 0;
           z-index: 10;
           pointer-events: none;
-          /* Glossy sheen gradient - wider to allow smooth sliding */
+          /* Horizontal sheen band that slides vertically */
           background: linear-gradient(
-            var(--sheen-angle, 25deg),
+            180deg,
             transparent 0%,
-            transparent 35%,
-            rgba(255,255,255,0.08) 42%,
-            rgba(255,255,255,0.15) 50%,
-            rgba(255,255,255,0.08) 58%,
-            transparent 65%,
+            transparent 30%,
+            rgba(255,255,255,0.06) 38%,
+            rgba(255,255,255,0.13) 50%,
+            rgba(255,255,255,0.06) 62%,
+            transparent 70%,
             transparent 100%
           );
-          /* Start position based on random value */
-          transform: translateX(calc(var(--sheen-pos, 40%) - 50%));
-          transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+          /* Resting position - centered over image */
+          transform: translateY(0%);
+          transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         /* Holographic iridescent overlay */
@@ -173,9 +173,9 @@ export function CyberFrame({
           transition: filter 0.6s ease, opacity 0.4s ease;
         }
 
-        /* Hover effect - sheen smoothly slides across */
+        /* Hover - sheen slides up and off the image */
         .cyber-frame:hover .cyber-frame-inner::before {
-          transform: translateX(calc(var(--sheen-pos, 40%) + 30%));
+          transform: translateY(-100%);
         }
 
         /* Hover - holographic becomes slightly more visible and shifts hue */
@@ -279,7 +279,6 @@ export function CyberFrame({
         className={`${frameClass} ${className}`}
         style={{
           '--sheen-angle': `${randomValues.sheenAngle}deg`,
-          '--sheen-pos': `${randomValues.sheenPosition}%`,
           '--hue-rotate': `${randomValues.hueRotate}deg`,
           '--holo-opacity': randomValues.holoOpacity,
           '--cf-glow': colors.glow,

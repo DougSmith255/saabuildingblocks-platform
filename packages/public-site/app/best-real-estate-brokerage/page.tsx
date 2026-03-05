@@ -1,10 +1,9 @@
-'use client';
-
 import { CTAButton } from '@saa/shared/components/saa/buttons';
 import { GenericCard } from '@saa/shared/components/saa/cards';
 import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { GrainCard } from '@saa/shared/components/saa/cards';
 import { LazySection } from '@/components/shared/LazySection';
+import { JoinAllianceCTA } from '@/components/shared/JoinAllianceCTA';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { AsteroidBeltEffect } from '@/components/shared/hero-effects/AsteroidBeltEffect';
 
@@ -159,9 +158,7 @@ export default function BestRealEstateBrokerage() {
               Stop leaving money on the table. Join the Alliance.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-                Join The Alliance
-              </CTAButton>
+              <JoinAllianceCTA />
               <CTAButton href="/about-exp-realty/">
                 Learn About eXp
               </CTAButton>

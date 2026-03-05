@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       // Generate fresh token
       const rawToken = generateInvitationToken();
       const tokenHash = hashToken(rawToken);
-      const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
 
       // Update invitation in DB
       const { error: updateErr } = await supabase

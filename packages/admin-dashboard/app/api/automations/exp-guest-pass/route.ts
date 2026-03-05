@@ -11,6 +11,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { logPlatformError } from '@/lib/error-logger';
 
 // Use direct Supabase client (no cookie context needed — this is a machine-to-machine call)
 function getSupabase() {
@@ -126,6 +127,14 @@ export async function POST(request: NextRequest) {
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       console.error(`[exp-guest-pass] Unhandled error for ${email}: ${message}`);
+      logPlatformError({
+        source: '/api/automations/exp-guest-pass',
+        severity: 'error',
+        error_code: 'GUEST_PASS_FAILED',
+        error_message: message,
+        stack_trace: err instanceof Error ? err.stack : undefined,
+        metadata: { guest_email: email },
+      });
       await logToSupabase({
         guest_email: email,
         guest_first_name: firstName,

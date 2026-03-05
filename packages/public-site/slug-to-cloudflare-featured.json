@@ -1,4 +1,9 @@
 {
+  "new-homes": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-new-homes-division-featured/public",
+    "source": "post",
+    "matchType": "exact"
+  },
   "just-a-number": {
     "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/56880f823e065375-being-valued-at-your-brokerage-featured.webp/public",
     "source": "post",
@@ -290,8 +295,8 @@
     "matchType": "exact"
   },
   "teams": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/7532fc79-88f6-43b8-47da-edc3e9359600/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/teams-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "canva-pro-free": {
@@ -320,8 +325,8 @@
     "matchType": "exact"
   },
   "referral-form": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/3c41c799-d395-4a24-78d6-4862331e5800/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/referral-form-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "idx-website-for-realtors": {
@@ -340,8 +345,8 @@
     "matchType": "exact"
   },
   "success-lending": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/2c398b92-1a28-41c3-c88b-6643930ea900/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/success-lending-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "exp-commercial": {
@@ -360,8 +365,8 @@
     "matchType": "exact"
   },
   "offices": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/0462f86c-d818-4ffe-a6d1-929b00c68a00/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/offices-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "100-commission-real-estate-brokerage": {
@@ -590,8 +595,8 @@
     "matchType": "exact"
   },
   "my-link-my-lead": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/730617ee-37d5-4a92-2b63-09b1ac448d00/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/my-link-my-lead-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "tv-shows": {
@@ -770,8 +775,8 @@
     "matchType": "exact"
   },
   "revenos-leads": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/9f6976d0-28f6-44f1-b238-27fa13217800/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/revenos-leads-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "real-vs-kw": {
@@ -1165,8 +1170,8 @@
     "matchType": "exact"
   },
   "renting-vs-owning-leads": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/f9c026dc-ad30-4511-28b5-b28d707d4500/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/renting-vs-owning-leads-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "smart-agent-alliance-burnout": {
@@ -1180,8 +1185,8 @@
     "matchType": "exact"
   },
   "support": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/24fcb07e-c3f6-40de-4849-22c2cb2cb300/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/support-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "mentoring-rewards": {
@@ -1195,8 +1200,8 @@
     "matchType": "variant-2"
   },
   "support-top-realtors": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/3d9e673a-8e10-4a81-f0f2-6d1a37a8ac00/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/support-top-realtors-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "brokerage-culture-growth": {
@@ -1310,8 +1315,8 @@
     "matchType": "fuzzy"
   },
   "divisions": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/d3c5b002-39ed-4e6a-5de9-74d70305cc00/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/divisions-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "georgia": {
@@ -1430,68 +1435,173 @@
     "matchType": "exact"
   },
   "boldtrail-leads": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/e3ebc733-4cdb-42ec-57fc-4b08fa5e8500/public",
-    "source": "uploaded_2026-01-21",
-    "matchType": "direct"
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/boldtrail-leads-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
   },
   "zoocasa": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/a94df014-7c8d-46df-7823-f5713e200400/public",
-    "source": "uploaded_2026-01-21",
-    "matchType": "direct"
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/zoocasa-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
   },
   "renting-vs-owning-real-estate-leads": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/3feb6fd7-502f-4f5b-4693-23882a08a500/public",
-    "source": "uploaded_2026-01-21",
-    "matchType": "direct"
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/renting-vs-owning-real-estate-leads-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
   },
   "smart-agent-alliance-growth": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/563bd2c7-bde2-4ea2-1bf2-0f7b61649400/public",
-    "source": "uploaded_2026-01-21",
-    "matchType": "direct"
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/smart-agent-alliance-growth-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
   },
   "technology": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/67e84b4d-c146-4dda-79d0-102031e98000/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/technology-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "income": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/07bd2c59-738a-4911-26c1-daf16d6d5000/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/income-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "fit": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6b2d721b-2a45-4d69-5484-2429c7506b00/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fit-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "community": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/080c6685-3773-43a3-1488-ccea7b093700/public",
-    "source": "old_site_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/community-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "agent-exceptions": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bc6224b5-179b-4fbe-7482-d95c7c040500/public",
-    "source": "scheduled_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/agent-exceptions-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "exp-hub": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/e7d44ff0-4c1e-434d-856d-b78072b2e900/public",
-    "source": "scheduled_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-hub-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "onboarding-exceptions": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/3ca2e600-e3e4-49a9-95de-d582db439100/public",
-    "source": "scheduled_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/onboarding-exceptions-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "agent-help": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/e9da62bf-61b2-40e7-f230-e818efd71e00/public",
-    "source": "scheduled_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/agent-help-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   },
   "sports-and-entertainment": {
-    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/9992ea8d-e8e1-4143-c450-936f0af42500/public",
-    "source": "scheduled_sync",
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/sports-and-entertainment-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "good-vs-popular": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/good-vs-popular-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "questions-to-ask": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/questions-to-ask-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "what-they-provide": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/what-they-provide-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "big-vs-small-team": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/big-vs-small-team-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "cosponsor-mistakes": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cosponsor-mistakes-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "teams-2026-structure": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/teams-2026-structure-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "red-flags": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/red-flags-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "wrong-sponsor": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wrong-sponsor-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "choice": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/choice-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "support-for-top-realtors": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/support-for-top-realtors-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "experienced-agents": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/experienced-agents-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "pyramid-scheme": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/pyramid-scheme-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "exp-realty-teams": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-teams-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "referral-agent": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/referral-agent-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "success-lending-exp": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/success-lending-exp-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "exp-realty-offices": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-offices-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "free-real-estate-courses": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/free-real-estate-courses-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "exp-realty-my-link-my-lead": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-my-link-my-lead-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "quality-leads": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/quality-leads-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "license": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/license-featured.png/public",
+    "source": "post",
+    "matchType": "exact"
+  },
+  "exp-sponsor-program": {
+    "cloudflareUrl": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-sponsor-program-featured.png/public",
+    "source": "post",
     "matchType": "exact"
   }
 }

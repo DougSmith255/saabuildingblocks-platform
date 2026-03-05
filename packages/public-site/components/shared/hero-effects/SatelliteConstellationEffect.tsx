@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { useContinuousAnimation } from './useContinuousAnimation';
 
 /**
@@ -7,7 +8,8 @@ import { useContinuousAnimation } from './useContinuousAnimation';
  * Earth with orbiting satellites - great for global/tech themes
  */
 export function SatelliteConstellationEffect() {
-  const { time, progress } = useContinuousAnimation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { time, progress } = useContinuousAnimation(containerRef);
 
   const orbits = [
     { satellites: 4, radius: 35, speed: 1, tilt: 20 },
@@ -18,7 +20,7 @@ export function SatelliteConstellationEffect() {
   return (
     <>
       {/* Animation container - has overflow-hidden for performance */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
+      <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
         {/* Subtle blue radiating gradient background */}
         <div
           className="absolute inset-0"

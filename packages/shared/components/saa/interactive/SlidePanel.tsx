@@ -275,7 +275,7 @@ export function SlidePanel({
           document.body.style.top = '';
           document.body.style.left = '';
           document.body.style.right = '';
-          window.scrollTo(0, scrollY);
+          window.scrollTo({ top: scrollY, left: 0, behavior: 'instant' });
         }
       };
     }

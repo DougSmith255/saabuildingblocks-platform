@@ -1,7 +1,7 @@
 'use client';
 
 import { useContinuousAnimation } from './useContinuousAnimation';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 
 /**
  * Asteroid Belt Effect
@@ -9,7 +9,8 @@ import { useMemo, useState, useEffect } from 'react';
  * Mobile: 35% fewer asteroids for performance
  */
 export function AsteroidBeltEffect() {
-  const { time, progress } = useContinuousAnimation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { time, progress } = useContinuousAnimation(containerRef);
   const [isMobile, setIsMobile] = useState(false);
 
   // Check for mobile on mount
@@ -35,7 +36,7 @@ export function AsteroidBeltEffect() {
   return (
     <>
       {/* Animation container - has overflow-hidden for performance */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
+      <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
         <div
           className="absolute inset-0"
           style={{

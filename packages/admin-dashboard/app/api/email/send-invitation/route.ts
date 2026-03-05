@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send invitation email
-    const expiresInHours = body.expiresInDays ? body.expiresInDays * 24 : 48;
+    const expiresInHours = body.expiresInDays ? body.expiresInDays * 24 : 168;
     const result = await sendWelcomeEmail(
       body.to,
       body.firstName,

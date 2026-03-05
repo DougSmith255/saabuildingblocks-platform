@@ -18,6 +18,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { logPlatformError } from '@/lib/error-logger';
 // TODO: Create sendInvitationEmail function when invitation system is implemented
 // import { sendInvitationEmail } from '@/lib/email/send';
 
@@ -390,6 +391,14 @@ export async function POST(request: NextRequest) {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       console.error(`❌ Error processing webhook:`, error);
+      logPlatformError({
+        source: '/api/webhooks/gohighlevel',
+        severity: 'error',
+        error_code: 'GHL_WEBHOOK_PROCESSING_FAILED',
+        error_message: errorMessage,
+        stack_trace: error instanceof Error ? error.stack : undefined,
+        metadata: { event_type: event.type, contact_id: event.contact?.id },
+      });
 
       // Log failure
       await logWebhookEvent(event, 'failed', errorMessage);
@@ -401,6 +410,13 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error('❌ Webhook handler error:', error);
+    logPlatformError({
+      source: '/api/webhooks/gohighlevel',
+      severity: 'error',
+      error_code: 'GHL_WEBHOOK_HANDLER_ERROR',
+      error_message: error instanceof Error ? error.message : 'Unknown error',
+      stack_trace: error instanceof Error ? error.stack : undefined,
+    });
     return NextResponse.json(
       { error: 'Invalid request' },
       { status: 400 }

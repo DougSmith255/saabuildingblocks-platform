@@ -14,11 +14,13 @@ import { useEffect, useRef, useState, useMemo } from 'react';
  * Same as login page DataStreamEffect.
  */
 export function DataStreamEffect() {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [time, setTime] = useState(0);
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
   const lastScrollY = useRef(0);
   const scrollBoostRef = useRef(0);
+  const isVisibleRef = useRef(true);
 
   useEffect(() => {
     // Speed settings
@@ -41,6 +43,11 @@ export function DataStreamEffect() {
     };
 
     const animate = (timestamp: number) => {
+      if (!isVisibleRef.current) {
+        rafRef.current = 0;
+        return;
+      }
+
       const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
       lastTimestamp = timestamp;
 
@@ -53,6 +60,23 @@ export function DataStreamEffect() {
       rafRef.current = requestAnimationFrame(animate);
     };
 
+    // Pause when off-screen
+    let observer: IntersectionObserver | undefined;
+    if (containerRef.current) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          const wasVisible = isVisibleRef.current;
+          isVisibleRef.current = entry.isIntersecting;
+          if (!wasVisible && entry.isIntersecting && !rafRef.current) {
+            lastTimestamp = 0;
+            rafRef.current = requestAnimationFrame(animate);
+          }
+        },
+        { threshold: 0 }
+      );
+      observer.observe(containerRef.current);
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     lastScrollY.current = window.scrollY;
     rafRef.current = requestAnimationFrame(animate);
@@ -60,6 +84,7 @@ export function DataStreamEffect() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(rafRef.current);
+      observer?.disconnect();
     };
   }, []);
 
@@ -81,7 +106,7 @@ export function DataStreamEffect() {
   return (
     <>
       {/* Animation container - has overflow-hidden for performance */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer" lang="en" translate="no">
+      <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer" lang="en" translate="no">
         {/* Green data columns */}
         {columnConfigs.map((col, i) => {
           // Each column moves at its own speed, offset creates stagger

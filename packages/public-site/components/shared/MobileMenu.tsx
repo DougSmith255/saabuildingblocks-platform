@@ -259,8 +259,6 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
                 ) : item.label === 'Agent Portal' ? (
                   <Link
                     href={item.href!}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     onClick={() => {
                       handlePortalClick();
                       setIsMobileMenuOpen(false);

@@ -1,0 +1,139 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import H1 from '@saa/shared/components/saa/headings/H1';
+import H2 from '@saa/shared/components/saa/headings/H2';
+import Tagline from '@saa/shared/components/saa/headings/Tagline';
+import { GenericCard } from '@saa/shared/components/saa/cards/GenericCard';
+import { GrainCard } from '@saa/shared/components/saa/cards/GrainCard';
+import { ProfileCyberFrame } from '@saa/shared/components/saa/media/ProfileCyberFrame';
+import { CTAButton } from '../../components/react/CTAButton';
+import { JoinAllianceCTA } from '../../components/react/JoinAllianceCTA';
+
+const DOUG_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public';
+
+const highlights = [
+  { label: 'Role', value: 'Co-Founder, Smart Agent Alliance' },
+  { label: 'Specialty', value: 'Full-Stack Developer' },
+  { label: 'Ranking', value: 'Top 1% eXp Team Builders' },
+  { label: 'Base', value: 'Tiburon, California' },
+];
+
+const systemsBuilt = [
+  { name: 'Agent Attraction Pages', desc: 'Custom websites that recruit agents to your team' },
+  { name: 'Marketing Automations', desc: 'Email sequences that nurture leads 24/7' },
+  { name: 'Lead Funnels', desc: 'Capture systems that work while you sleep' },
+  { name: 'Brand Identity', desc: 'Stand out in a sea of generic agents' },
+  { name: 'Social Media Templates', desc: 'Ready-to-post content that builds your brand' },
+  { name: 'Revenue Systems', desc: 'Passive income infrastructure' },
+];
+---
+
+<BaseLayout
+  title="About Doug Smart"
+  description="Meet Doug Smart - Co-Founder of Smart Agent Alliance, full-stack developer, and top 1% eXp team builder."
+  ogTitle="About Doug Smart | Smart Agent Alliance"
+>
+  <main id="main-content">
+    <!-- Hero Section -->
+    <div class="relative">
+      <section class="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+        <div class="max-w-[1900px] mx-auto w-full text-center relative z-10">
+          <div class="relative z-10">
+            <H1 client:load>DOUG SMART</H1>
+            <Tagline client:load className="mt-4">
+              Your unfair advantage, engineered
+            </Tagline>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Profile Section -->
+    <section class="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+      <div class="max-w-[1900px] mx-auto">
+        <div class="flex flex-col lg:flex-row gap-12 items-center">
+          <div class="lg:w-1/3 flex justify-center">
+            <ProfileCyberFrame client:visible size="xl">
+              <img
+                src={DOUG_PROFILE_IMAGE}
+                alt="Doug Smart"
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </ProfileCyberFrame>
+          </div>
+
+          <div class="lg:w-2/3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {highlights.map((item) => (
+                <GenericCard padding="sm">
+                  <p class="text-[#dcdbd5]/60" style={{ fontSize: 'var(--font-size-caption)' }}>{item.label}</p>
+                  <p class="text-[#e5e4dd] font-medium" style={{ fontSize: 'var(--font-size-body)' }}>{item.value}</p>
+                </GenericCard>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bio Section -->
+    <section class="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+      <div class="max-w-[1900px] mx-auto">
+        <div class="text-center mb-12">
+          <H2 client:visible>The Builder</H2>
+        </div>
+
+        <div class="space-y-6 text-body">
+          <p>
+            Top 1% eXp team builder. Designed and built this website, the agent portal, and the systems and
+            automations powering production workflows and attraction tools across the organization.
+          </p>
+          <p>
+            With a Bachelor's degree in Industrial Design and a business minor, Doug spent four years building
+            multi-million dollar homes during college. That experience forged the work ethic and attention to
+            detail he now applies to building systems for agents.
+          </p>
+          <p>
+            His specialty: transforming complex technology into competitive advantages. Passive revenue systems,
+            branding, marketing automation - if it's digital and it helps agents win, Doug probably built it.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Systems Section -->
+    <section class="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+      <div class="max-w-[1900px] mx-auto">
+        <div class="text-center mb-12">
+          <H2 client:visible>Systems That Scale Your Business</H2>
+          <p class="text-body mt-4">What you get access to when you join Smart Agent Alliance</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {systemsBuilt.map((system) => (
+            <GrainCard padding="md" className="h-full">
+              <h3 class="text-h6 mb-2">{system.name}</h3>
+              <p class="text-body opacity-80">{system.desc}</p>
+            </GrainCard>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+      <div class="max-w-[1900px] mx-auto text-center">
+        <H2 client:visible>Ready to Level Up?</H2>
+        <p class="text-body mt-4 mb-8">
+          Join The Alliance and get access to the digital infrastructure that powers top-producing agents.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <JoinAllianceCTA client:idle />
+          <CTAButton client:visible href="/our-exp-team/">
+            Meet The Team
+          </CTAButton>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

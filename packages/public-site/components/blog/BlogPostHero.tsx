@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { H1 } from '@saa/shared/components/saa/headings';
 import { Icon3D } from '@saa/shared/components/saa/icons';
-import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
+import { CyberFrame } from '@saa/shared/components/saa/media';
 import { Clock, Calendar, User } from 'lucide-react';
 import { CategoryBadge } from './CategoryBadge';
 import { ThemeSwitch } from './ThemeSwitch';
@@ -12,22 +12,6 @@ import { Breadcrumbs } from './Breadcrumbs';
 import { calculateReadingTime } from '@/utils/readingTime';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 
-/**
- * Extracts YouTube video ID from various URL formats
- * Supports: youtu.be/ID, youtube.com/watch?v=ID, youtube.com/embed/ID
- */
-function extractYouTubeId(url: string): string | null {
-  const patterns = [
-    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([a-zA-Z0-9_-]{11})/,
-    /^([a-zA-Z0-9_-]{11})$/, // Just the ID
-  ];
-
-  for (const pattern of patterns) {
-    const match = url.match(pattern);
-    if (match) return match[1];
-  }
-  return null;
-}
 
 export interface BlogPostHeroProps {
   /** Post title */
@@ -46,8 +30,6 @@ export interface BlogPostHeroProps {
   content: string;
   /** Optional category hero image URL (leave blank for star background) */
   heroImage?: string;
-  /** Optional YouTube video URL */
-  youtubeVideoUrl?: string;
   /** Featured image URL to display in hero section */
   featuredImage?: string;
   /** Max height for featured image (e.g., '140px') */
@@ -88,13 +70,11 @@ export function BlogPostHero({
   date,
   content,
   heroImage,
-  youtubeVideoUrl,
   featuredImage,
   featuredImageMaxHeight,
   onThemeChange,
 }: BlogPostHeroProps) {
   const readingTime = calculateReadingTime(content);
-  const youtubeId = youtubeVideoUrl ? extractYouTubeId(youtubeVideoUrl) : null;
 
   // Build category slug if not provided
   const resolvedCategorySlug = categorySlug || category.toLowerCase().replace(/\s+/g, '-');
@@ -103,7 +83,7 @@ export function BlogPostHero({
 
   return (
     <StickyHeroWrapper fadeSpeed={1.33}>
-      <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32 blog-hero-section">
+      <section className="relative flex flex-col items-center px-4 sm:px-8 md:px-12 pt-48 pb-40 md:pt-72 md:pb-44 blog-hero-section">
       {/* Breadcrumbs - inside section so they fade with scroll, 85px mobile / 100px desktop */}
       <div className="absolute left-4 sm:left-8 md:left-12 z-20 top-[85px] md:top-[100px]">
         <div className="max-w-[1900px]">
@@ -145,7 +125,7 @@ export function BlogPostHero({
 
         {/* Title - H1 with Master Controller effects, blog-specific sizing */}
         {/* minHeight prevents CLS when Taskor font loads with alt glyphs */}
-        <div className="mb-8" style={{ minHeight: 'clamp(50px, 6vw + 20px, 120px)' }}>
+        <div style={{ minHeight: 'clamp(50px, 6vw + 20px, 120px)', marginBottom: '60px' }}>
           <H1
             data-speakable="headline"
             style={{
@@ -162,6 +142,7 @@ export function BlogPostHero({
           className="flex items-center justify-center gap-4 md:gap-6 flex-wrap px-4"
           style={{
             minHeight: 'clamp(30px, calc(24px + 0.5vw), 40px)',
+            marginBottom: '75px',
           }}
         >
           {/* Author */}
@@ -190,7 +171,7 @@ export function BlogPostHero({
         </div>
 
         {/* Featured Image - displayed centered below icons */}
-        {featuredImage && !youtubeId && (
+        {featuredImage && (
           <div className="mt-10 max-w-3xl mx-auto">
             <CyberFrame>
               <div style={featuredImageMaxHeight ? { maxHeight: featuredImageMaxHeight, overflow: 'hidden' } : undefined}>
@@ -209,18 +190,6 @@ export function BlogPostHero({
           </div>
         )}
 
-        {/* YouTube Video - displayed if present */}
-        {/* Uses YouTubeFacade for performance - iframe only loads on user click */}
-        {youtubeId && (
-          <div className="mt-12 max-w-4xl mx-auto">
-            <CyberFrame isVideo aspectRatio="16/9">
-              <YouTubeFacade
-                videoId={youtubeId}
-                title={title}
-              />
-            </CyberFrame>
-          </div>
-        )}
       </div>
       </section>
     </StickyHeroWrapper>

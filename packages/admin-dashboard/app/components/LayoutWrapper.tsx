@@ -13,7 +13,6 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     '/master-controller',
     '/login',
     '/activate',
-    '/activate-account',
     '/reset-password',
     '/sign-up',
     '/_not-found', // 404 page

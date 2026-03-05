@@ -23,8 +23,8 @@ const templates = [
     subject: '[TEST] Agent Activation Email',
     react: AgentActivationEmail({
       firstName: 'Doug',
-      activationLink: 'https://saabuildingblocks.com/activate-account?token=test-token-123',
-      expiresInHours: 48,
+      activationLink: 'https://smartagentalliance.com/agent-portal/activate?token_hash=test-token&type=invite',
+      expiresInHours: 168,
     }),
   },
   {
@@ -32,8 +32,8 @@ const templates = [
     subject: '[TEST] Welcome Email',
     react: WelcomeEmail({
       firstName: 'Doug',
-      activationLink: 'https://saabuildingblocks.com/activate-account?token=test-token-123',
-      expiresInHours: 48,
+      activationLink: 'https://smartagentalliance.com/agent-portal/activate?token_hash=test-token&type=invite',
+      expiresInHours: 168,
     }),
   },
   {

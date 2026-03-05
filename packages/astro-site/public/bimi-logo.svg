@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Smart Agent Alliance</title>
+  <!-- Dark background -->
+  <rect x="0" y="0" width="512" height="512" fill="#0f0f0f"/>
+  <!-- SAA S Logo - centered and scaled -->
+  <g transform="translate(100, 40) scale(0.62)">
+    <!-- Top swoosh element (parallelogram) -->
+    <polygon fill="#ffd700" points="140,40 420,40 360,120 80,120"/>
+    <!-- Main S body with cutout -->
+    <path fill="#ffd700" d="
+      M 80,120
+      C 20,140 0,220 0,300
+      C 0,420 80,520 200,560
+      C 280,590 400,600 480,560
+      C 560,520 600,440 600,340
+      C 600,240 520,180 400,160
+      L 180,160
+      C 120,160 80,200 80,260
+      C 80,320 140,360 220,360
+      L 440,360
+      L 440,440
+      L 180,440
+      C 60,440 0,360 0,280
+      C 0,200 60,140 80,120
+      Z
+    "/>
+    <!-- Inner cutout (negative space) -->
+    <path fill="#0f0f0f" d="
+      M 260,220
+      L 420,220
+      C 500,220 540,260 540,320
+      C 540,380 500,420 420,420
+      L 340,420
+      L 340,300
+      L 420,300
+      C 460,300 480,280 480,260
+      C 480,240 460,220 420,220
+      Z
+    "/>
+  </g>
+</svg>

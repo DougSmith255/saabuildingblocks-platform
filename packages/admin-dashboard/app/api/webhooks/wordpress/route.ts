@@ -1,9 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { exec } from 'child_process';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
+
+/**
+ * Generate a short title (2-5 words) from a full blog title for featured image overlay.
+ * Strips common prefixes like "eXp Realty", "How to", etc.
+ */
+function generateShortTitle(title: string): string {
+  // Remove common suffixes after colons/dashes
+  let short = title.split(':')[0].split(' - ')[0].split(' | ')[0].trim();
+
+  // Remove common prefixes
+  const prefixes = [
+    /^(everything you need to know about|what you need to know about|what agents need to know about)\s+/i,
+    /^(a complete guide to|the complete guide to|the ultimate guide to|guide to)\s+/i,
+    /^(how to|why you should|what is|what are|is)\s+/i,
+  ];
+  for (const prefix of prefixes) {
+    short = short.replace(prefix, '');
+  }
+
+  // Truncate to ~5 words max
+  const words = short.split(/\s+/);
+  if (words.length > 5) {
+    short = words.slice(0, 5).join(' ');
+  }
+
+  return short.toUpperCase();
+}
+
+/**
+ * Generate a Pexels search query from a blog title.
+ */
+function generateSearchQuery(title: string, category: string): string {
+  // Category-specific base queries
+  const categoryQueries: Record<string, string> = {
+    'About eXp Realty': 'modern office technology business',
+    'eXp Realty Sponsor': 'mentorship business meeting professional',
+    'Brokerage Comparison': 'real estate office comparison business',
+    'Marketing Mastery': 'digital marketing strategy creative',
+    'Agent Career Info': 'career success professional growth',
+    'Winning Clients': 'client handshake real estate deal',
+    'Become an Agent': 'real estate license studying professional',
+    'Real Estate Schools': 'education classroom learning professional',
+    'Fun for Agents': 'team celebration success fun',
+    'Industry Trends': 'modern cityscape real estate market',
+  };
+
+  // Extract key nouns from title
+  const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'shall', 'how', 'what', 'why', 'when', 'where', 'who', 'which', 'that', 'this', 'these', 'those', 'your', 'you', 'we', 'our', 'their', 'its', 'about', 'need', 'know', 'every', 'new', 'best', 'top', 'most']);
+  const titleWords = title.toLowerCase().replace(/[^a-z\s]/g, '').split(/\s+/).filter(w => !stopWords.has(w) && w.length > 2);
+  const titleKeywords = titleWords.slice(0, 3).join(' ');
+
+  const base = categoryQueries[category] || 'real estate professional business';
+  return `${titleKeywords} ${base}`.trim();
+}
 
 /**
  * POST /api/webhooks/wordpress
@@ -63,6 +118,41 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       );
+    }
+
+    // Generate featured image for new posts (fire-and-forget)
+    if (payload.event_type === 'publish') {
+      const shortTitle = generateShortTitle(payload.post_title || '');
+      const category = payload.category || 'Uncategorized';
+      const searchQuery = generateSearchQuery(payload.post_title || '', category);
+
+      console.log('[WordPress Webhook] Generating featured image:', {
+        post_id: payload.post_id,
+        shortTitle,
+        category,
+        searchQuery,
+      });
+
+      // Run Python script in background - don't block the webhook response
+      const scriptPath = '/home/ubuntu/saabuildingblocks-platform/packages/public-site/scripts/generate-featured-image.py';
+      const cmd = [
+        'python3', scriptPath,
+        '--post-id', String(payload.post_id),
+        '--title', JSON.stringify(payload.post_title || ''),
+        '--short-title', JSON.stringify(shortTitle),
+        '--category', JSON.stringify(category),
+        '--query', JSON.stringify(searchQuery),
+        '--upload',
+      ].join(' ');
+
+      exec(cmd, { timeout: 120000 }, (error, stdout, stderr) => {
+        if (error) {
+          console.error('[WordPress Webhook] Featured image generation failed:', error.message);
+          if (stderr) console.error('[WordPress Webhook] stderr:', stderr);
+        } else {
+          console.log('[WordPress Webhook] Featured image generated:', stdout.trim());
+        }
+      });
     }
 
     // Get GitHub credentials from environment
@@ -214,6 +304,12 @@ export async function GET() {
       post_slug: 'string (required)',
       post_title: 'string (optional)',
       event_type: 'string (optional, e.g., "publish" or "update")',
+      category: 'string (optional, primary category name)',
     },
+    automations: [
+      'Generate branded featured image (on new publish)',
+      'Trigger GitHub Actions deploy-cloudflare workflow',
+      'Log to Supabase deployment_logs',
+    ],
   });
 }

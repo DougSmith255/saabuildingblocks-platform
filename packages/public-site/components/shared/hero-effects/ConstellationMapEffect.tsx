@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { useContinuousAnimation } from './useContinuousAnimation';
 
 /**
@@ -7,7 +8,8 @@ import { useContinuousAnimation } from './useContinuousAnimation';
  * Connected stars forming patterns - great for network/connection themes
  */
 export function ConstellationMapEffect() {
-  const { time, progress } = useContinuousAnimation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { time, progress } = useContinuousAnimation(containerRef);
 
   const stars = [
     { x: 15, y: 20 }, { x: 25, y: 35 }, { x: 40, y: 25 }, { x: 35, y: 45 },
@@ -35,7 +37,7 @@ export function ConstellationMapEffect() {
   return (
     <>
       {/* Animation container - has overflow-hidden for performance */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
+      <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
         {/* Connection lines */}
         <svg className="absolute inset-0 w-full h-full">
           {connections.map(([from, to], i) => {

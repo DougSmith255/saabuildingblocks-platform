@@ -33,7 +33,7 @@ interface AgentActivationEmailProps {
 export function AgentActivationEmail({
   firstName,
   activationLink,
-  expiresInHours = 48,
+  expiresInHours = 168,
 }: AgentActivationEmailProps) {
   return (
     <EmailLayout preview="Your Smart Agent Alliance Portal is Ready!">
@@ -50,7 +50,7 @@ export function AgentActivationEmail({
       <EmailButton href={activationLink}>Activate My Account</EmailButton>
 
       <EmailAlert type="warning">
-        This link expires in <strong>{expiresInHours} hours</strong>. A new one will be sent if it expires.
+        This link expires in <strong>{expiresInHours >= 24 && expiresInHours % 24 === 0 ? `${expiresInHours / 24} days` : `${expiresInHours} hours`}</strong>. A new one will be sent if it expires.
       </EmailAlert>
 
       <EmailDivider />

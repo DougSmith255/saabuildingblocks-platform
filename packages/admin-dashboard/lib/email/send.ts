@@ -99,13 +99,12 @@ export async function sendUsernameReminderEmail(
 export async function sendWelcomeEmail(
   email: string,
   firstName: string,
-  activationToken: string,
-  expiresInHours: number = 48
+  tokenHash: string,
+  expiresInHours: number = 168
 ): Promise<EmailResult> {
-  // Activation links must use saabuildingblocks.com (proxied to VPS admin dashboard on port 3002)
-  // smartagentalliance.com is a Cloudflare Pages custom domain with no route to the VPS
-  const activationBaseUrl = process.env.ACTIVATION_BASE_URL || 'https://saabuildingblocks.com';
-  const activationLink = `${activationBaseUrl}/activate-account?token=${activationToken}`;
+  // Activation links now point to static site (Supabase verifyOtp is client-side, no VPS needed)
+  const activationBaseUrl = 'https://smartagentalliance.com';
+  const activationLink = `${activationBaseUrl}/agent-portal/activate?token_hash=${encodeURIComponent(tokenHash)}&type=invite`;
 
   try {
     const result = await sendEmail({
@@ -140,11 +139,11 @@ export async function sendWelcomeEmail(
 export async function sendAgentActivationEmail(
   email: string,
   firstName: string,
-  activationToken: string,
-  expiresInHours: number = 48
+  tokenHash: string,
+  expiresInHours: number = 168
 ): Promise<EmailResult> {
-  const activationBaseUrl = process.env.ACTIVATION_BASE_URL || 'https://saabuildingblocks.com';
-  const activationLink = `${activationBaseUrl}/activate-account?token=${activationToken}`;
+  const activationBaseUrl = 'https://smartagentalliance.com';
+  const activationLink = `${activationBaseUrl}/agent-portal/activate?token_hash=${encodeURIComponent(tokenHash)}&type=invite`;
 
   try {
     const result = await sendEmail({
@@ -175,11 +174,11 @@ export async function sendAgentActivationEmail(
 export async function sendApologyActivationEmail(
   email: string,
   firstName: string,
-  activationToken: string,
-  expiresInHours: number = 48
+  tokenHash: string,
+  expiresInHours: number = 168
 ): Promise<EmailResult> {
-  const activationBaseUrl = process.env.ACTIVATION_BASE_URL || 'https://saabuildingblocks.com';
-  const activationLink = `${activationBaseUrl}/activate-account?token=${activationToken}`;
+  const activationBaseUrl = 'https://smartagentalliance.com';
+  const activationLink = `${activationBaseUrl}/agent-portal/activate?token_hash=${encodeURIComponent(tokenHash)}&type=invite`;
 
   try {
     const result = await sendEmail({

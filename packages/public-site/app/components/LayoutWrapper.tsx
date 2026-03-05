@@ -80,13 +80,20 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   // This prevents the header from ever being added to the DOM on 404 pages
   const is404PageRef = useRef(getInitialIs404());
 
+  // Detect PWA standalone mode (installed app - hide header/footer)
+  const [isPWA, setIsPWA] = useState(false);
+  useEffect(() => {
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (navigator as any).standalone === true;
+    setIsPWA(isStandalone);
+  }, []);
+
   // List of routes where header/footer should NOT render at all
   const noHeaderFooterRoutes = useMemo(() => [
     '/master-controller',
     '/login',
-    '/agent-portal/login',
     '/activate',
-    '/activate-account',
     '/reset-password',
     '/sign-up',
   ], []);
@@ -160,6 +167,17 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       setIsEmbedMode(params.get('embed') === 'true');
+
+      // Auto-open Join the Alliance modal if ?join=true is in the URL
+      if (params.get('join') === 'true') {
+        // Small delay to ensure the modal listener is ready
+        setTimeout(() => {
+          window.dispatchEvent(new Event('open-join-modal'));
+          // Clean up URL without triggering a reload
+          const cleanUrl = window.location.pathname;
+          window.history.replaceState({}, '', cleanUrl);
+        }, 300);
+      }
     }
   }, [pathname]);
 
@@ -215,6 +233,9 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     // Embed mode hides everything
     if (isEmbedMode) return true;
 
+    // PWA standalone mode - hide header/footer (app has its own nav)
+    if (isPWA) return true;
+
     // 404 pages detected via data attribute (checked synchronously before render)
     if (is404PageRef.current) return true;
 
@@ -232,7 +253,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     }
 
     return false;
-  }, [pathname, noHeaderFooterRoutes, exactNoHeaderFooterRoutes, isEmbedMode]);
+  }, [pathname, noHeaderFooterRoutes, exactNoHeaderFooterRoutes, isEmbedMode, isPWA]);
 
   // Check if footer should be hidden (but header stays)
   const shouldHideFooterOnly = useMemo(() => {
@@ -278,20 +299,34 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     );
   }, [pathname, noFloatingButtonPrefixes]);
 
-  // Check if VIP Guest Pass popup should be hidden (agent portal, admin pages, most blog categories)
+  // Blog category path prefixes - used to hide VIP popup on blog posts
+  // (sidebar guest pass card replaces the popup on blogs)
+  const blogCategoryPrefixes = useMemo(() => [
+    '/about-exp-realty',
+    '/agent-career-info',
+    '/become-an-agent',
+    '/brokerage-comparison',
+    '/exp-realty-sponsor',
+    '/fun-for-agents',
+    '/industry-trends',
+    '/marketing-mastery',
+    '/real-estate-schools',
+    '/winning-clients',
+  ], []);
+
+  // Hide VIP popup on all blog posts (sidebar has guest pass card instead)
   const shouldHideVipPopup = useMemo(() => {
     if (!pathname) return false;
     const normalizedPath = pathname.replace(/\/$/, '');
 
-    // Show popup on about-exp-realty posts (now at /about-exp-realty/*)
-    if (normalizedPath.startsWith('/about-exp-realty/')) return false;
-    // Hide popup on all other blog pages
-    if (normalizedPath.startsWith('/blog/')) return true;
+    // Hide on blog listing and all blog category posts
+    if (normalizedPath.startsWith('/blog')) return true;
+    if (blogCategoryPrefixes.some(prefix => normalizedPath.startsWith(prefix + '/'))) return true;
 
     return noVipPopupPrefixes.some(prefix =>
       normalizedPath === prefix || normalizedPath.startsWith(prefix)
     );
-  }, [pathname, noVipPopupPrefixes]);
+  }, [pathname, noVipPopupPrefixes, blogCategoryPrefixes]);
 
   // Embed mode: minimal wrapper, just the content
   if (isEmbedMode) {
@@ -308,7 +343,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       <ViewportHeightLock />
       {!shouldHideHeaderFooter && <Header />}
       {!shouldHideHeaderFooter && !shouldHideFloatingButton && <FloatingVideoButton />}
-      {!shouldHideHeaderFooter && !shouldHideVipPopup && <VIPGuestPassPopup forceOpen={forceVipOpen} onForceClose={() => setForceVipOpen(false)} />}
+      {!shouldHideHeaderFooter && <VIPGuestPassPopup forceOpen={forceVipOpen} onForceClose={() => setForceVipOpen(false)} disableAutoPopup={shouldHideVipPopup} />}
       {/* Global "Join the Alliance" modal — triggered via window.dispatchEvent(new Event('open-join-modal')) */}
       {joinPortalRoot && joinPanel !== null && createPortal(
         <>

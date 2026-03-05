@@ -7,7 +7,7 @@
  * Creates a user record and sends activation email.
  *
  * When the user activates their account, the agent_pages record will be created
- * by the /api/invitations/accept endpoint.
+ * by the /api/invitations/complete-activation endpoint.
  *
  * GHL Webhook Payload (example):
  * {
@@ -27,7 +27,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
-import { createInvitation } from '@saa/shared/lib/supabase/invitation-service';
 import { sendWelcomeEmail } from '@/lib/email/send';
 import { AGENT_PAGE_DEFAULTS } from '@/lib/agent-page-defaults';
 
@@ -222,26 +221,60 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ [GHL WEBHOOK] Created user:', newUser.id);
 
-    // Create invitation
-    const { data: invitation, error: invitationError } = await createInvitation(
-      supabase,
-      {
+    // Generate Supabase native invite link
+    const activationBaseUrl = 'https://smartagentalliance.com';
+    const redirectTo = `${activationBaseUrl}/agent-portal/activate`;
+
+    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+      type: 'invite',
+      email,
+      options: { redirectTo },
+    });
+
+    if (linkError || !linkData?.properties?.hashed_token) {
+      console.error('❌ [GHL WEBHOOK] Error generating invite link:', linkError);
+      return NextResponse.json({
+        success: true,
+        message: 'User created but invitation link generation failed.',
         userId: newUser.id,
+        error: linkError?.message,
+      });
+    }
+
+    const hashedToken = linkData.properties.hashed_token;
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+
+    // Create invitation record
+    const { data: invitation, error: invitationError } = await supabase
+      .from('user_invitations')
+      .insert({
+        user_id: newUser.id,
         email,
-        expiresInHours: 7 * 24, // 7 days
-        createdBy: newUser.id, // Self-created via webhook
-      }
-    );
+        token_hash: hashedToken,
+        status: 'pending',
+        expires_at: expiresAt,
+        invited_by: newUser.id,
+        sent_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
 
     if (invitationError || !invitation) {
       console.error('❌ [GHL WEBHOOK] Error creating invitation:', invitationError);
-      // Don't fail completely - user is created, they can request new invitation
       return NextResponse.json({
         success: true,
-        message: 'User created but invitation failed. They can request a new invitation.',
+        message: 'User created but invitation record failed.',
         userId: newUser.id,
         invitationError: invitationError?.message,
       });
+    }
+
+    // Link Supabase auth user
+    if (linkData.user?.id) {
+      await supabase
+        .from('users')
+        .update({ auth_user_id: linkData.user.id })
+        .eq('id', newUser.id);
     }
 
     console.log('✅ [GHL WEBHOOK] Created invitation:', invitation.id);
@@ -251,18 +284,12 @@ export async function POST(request: NextRequest) {
       const emailResult = await sendWelcomeEmail(
         email,
         firstName,
-        invitation.token,
+        hashedToken,
         168 // 7 days in hours
       );
 
       if (emailResult.success) {
         console.log('✅ [GHL WEBHOOK] Activation email sent:', emailResult.messageId);
-
-        // Update invitation to mark as sent
-        await supabase
-          .from('user_invitations')
-          .update({ sent_at: new Date().toISOString() })
-          .eq('id', invitation.id);
       } else {
         console.error('❌ [GHL WEBHOOK] Failed to send activation email:', emailResult.error);
       }

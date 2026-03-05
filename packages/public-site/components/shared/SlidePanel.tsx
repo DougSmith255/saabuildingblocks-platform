@@ -132,19 +132,27 @@ export function SlidePanel({
     }
   }, [isOpen, hasBeenOpened]);
 
-  // Lock body scroll and hide scrollbar when open
+  // Lock body scroll and hide scrollbar when open.
+  // Uses position:fixed to preserve scroll position (overflow:hidden loses it).
   useEffect(() => {
     if (isOpen) {
-      // Add class to html element to completely hide scrollbar
+      const scrollY = window.scrollY;
       document.documentElement.classList.add('slide-panel-body-lock');
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.documentElement.classList.remove('slide-panel-body-lock');
-      document.body.style.overflow = '';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
     }
     return () => {
-      document.documentElement.classList.remove('slide-panel-body-lock');
-      document.body.style.overflow = '';
+      if (document.documentElement.classList.contains('slide-panel-body-lock')) {
+        const scrollY = Math.abs(parseInt(document.body.style.top || '0'));
+        document.documentElement.classList.remove('slide-panel-body-lock');
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        window.scrollTo(0, scrollY);
+      }
     };
   }, [isOpen]);
 
@@ -294,16 +302,11 @@ export function SlidePanel({
           backdrop-filter: none !important;
         }
 
-        /* Hide scrollbar completely when slide panel is open */
-        .slide-panel-body-lock {
-          overflow: hidden !important;
-        }
-        .slide-panel-body-lock,
+        /* Hide scrollbar completely when slide panel is open (body is position:fixed) */
         .slide-panel-body-lock body {
           scrollbar-width: none !important;
           -ms-overflow-style: none !important;
         }
-        .slide-panel-body-lock::-webkit-scrollbar,
         .slide-panel-body-lock body::-webkit-scrollbar {
           display: none !important;
           width: 0 !important;

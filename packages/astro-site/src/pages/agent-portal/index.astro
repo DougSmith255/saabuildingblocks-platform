@@ -1,0 +1,22 @@
+---
+/**
+ * Agent Portal - Full React SPA (client:only="react")
+ *
+ * The agent portal is an 813KB single-page app with complex state management.
+ * It renders entirely client-side - no SSR benefit since it requires auth.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AgentPortal from '@public-site/app/agent-portal/page';
+---
+
+<BaseLayout
+  title="Agent Portal | Smart Agent Alliance"
+  description="Access your Smart Agent Alliance agent portal - tools, templates, courses, and team resources."
+  noHeader
+  noFooter
+  noScrollIndicator
+  noScrollProgress
+  noStarBackground
+>
+  <AgentPortal client:only="react" />
+</BaseLayout>

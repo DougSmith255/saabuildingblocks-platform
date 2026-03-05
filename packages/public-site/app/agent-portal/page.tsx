@@ -3979,7 +3979,7 @@ function AgentPortal() {
               {/* Spacer to push title after sidebar width - larger on 1024-1300px since logo is hidden */}
               <div className="w-[205px] min-[1300px]:w-[160px] flex-shrink-0" />
               {/* Title */}
-              <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(24px, calc(18px + 1.2vw), 42px)' }}>
+              <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(24px, calc(18px + 1.2vw), 42px)', marginTop: '-13px' }}>
                 AGENT PORTAL
               </H1>
               {/* Spacer */}
@@ -11055,6 +11055,75 @@ function NewAgentsSection() {
 // My Agent Pages Section
 // ============================================================================
 
+// Phone mockup name with inline SVG - matches the actual link page [slug].js rendering exactly
+// Uses same stroke backing layers + face fill gradient approach
+function LinkPageNamePreview({ name, fontSize, accentColor, isAccentDark }: {
+  name: string; fontSize: string; accentColor: string; isAccentDark: boolean;
+}) {
+  // Generate backing colors: 8 steps from dark (#141414) to accent
+  const backing = useMemo(() => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(accentColor);
+    const rgb = result
+      ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) }
+      : { r: 255, g: 215, b: 0 };
+    const steps = [0.04, 0.18, 0.32, 0.45, 0.58, 0.70, 0.82, 0.92];
+    return steps.map(t => {
+      const r = Math.round(20 + (rgb.r - 20) * t);
+      const g = Math.round(20 + (rgb.g - 20) * t);
+      const b = Math.round(20 + (rgb.b - 20) * t);
+      return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    });
+  }, [accentColor]);
+
+  // Unique IDs for SVG defs (avoid conflicts if multiple instances)
+  const uid = useMemo(() => `lp${Math.random().toString(36).slice(2, 6)}`, []);
+  const faceColor = '#f2f1ec';
+
+  return (
+    <svg
+      aria-hidden="true"
+      overflow="visible"
+      style={{
+        display: 'block',
+        width: '100%',
+        height: '5em',
+        margin: '-1.5em auto -2em',
+        fontFamily: 'var(--font-taskor, sans-serif)',
+        fontFeatureSettings: '"ss01" 1',
+        fontSize,
+        fontWeight: 700,
+      }}
+    >
+      <defs>
+        <linearGradient id={`${uid}fg`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#dddcd5"/><stop offset="35%" stopColor={faceColor}/><stop offset="65%" stopColor={faceColor}/><stop offset="100%" stopColor="#dddcd5"/>
+        </linearGradient>
+        <symbol id={`${uid}ss`} overflow="visible"><text x="50%" y="60%" fill="none" strokeWidth=".22em" paintOrder="stroke fill" textAnchor="middle">{name}</text></symbol>
+        <symbol id={`${uid}sf`} overflow="visible"><text x="50%" y="60%" textAnchor="middle">{name}</text></symbol>
+      </defs>
+      <g strokeDasharray="3.5em 0em" strokeLinecap="butt" strokeLinejoin="miter">
+        <use x="0.167%" y="1.67%" href={`#${uid}ss`} stroke={backing[0]} opacity="0.5"/>
+        <use x="0.12%" y="1.2%" href={`#${uid}ss`} stroke={backing[7]}/>
+        <use x="0.1%" y="1.0%" href={`#${uid}ss`} stroke={backing[6]}/>
+        <use x="0.08%" y="0.8%" href={`#${uid}ss`} stroke={backing[5]}/>
+        <use x="0.06%" y="0.6%" href={`#${uid}ss`} stroke={backing[4]}/>
+        <use x="0.045%" y="0.45%" href={`#${uid}ss`} stroke={backing[3]}/>
+        <use x="0.03%" y="0.3%" href={`#${uid}ss`} stroke={backing[2]}/>
+        <use x="0.015%" y="0.15%" href={`#${uid}ss`} stroke={backing[1]}/>
+        <use x="0%" y="0%" href={`#${uid}ss`} stroke={backing[0]}/>
+      </g>
+      <use x="0.15%" y="0.4%" href={`#${uid}sf`} fill="#7a7970"/>
+      <use x="0.124%" y="0.14%" href={`#${uid}sf`} fill="#8d8c80"/>
+      <use x="0.099%" y="-0.11%" href={`#${uid}sf`} fill="#a09f94"/>
+      <use x="0.073%" y="-0.37%" href={`#${uid}sf`} fill="#b3b2a8"/>
+      <use x="0.047%" y="-0.63%" href={`#${uid}sf`} fill="#c2c1b8"/>
+      <use x="0.021%" y="-0.89%" href={`#${uid}sf`} fill="#d1d0c7"/>
+      <use x="-0.004%" y="-1.14%" href={`#${uid}sf`} fill="#dddcd5"/>
+      <use x="-0.06%" y="-1.4%" href={`#${uid}sf`} fill={`url(#${uid}fg)`}/>
+    </svg>
+  );
+}
+
 // Curated icon set for link buttons (Lucide icon names)
 const LINK_ICONS = [
   { name: 'Home', label: 'Home', path: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10' },
@@ -11113,58 +11182,6 @@ const DEFAULT_LINKS_SETTINGS: LinksSettings = {
 
 // Helper function to ensure social icon color is visible on dark backgrounds
 // If the accent color is too dark, clamp it at a minimum lightness threshold (doesn't brighten, just stops getting darker)
-function getVisibleSocialIconColor(hexColor: string): string {
-  // Parse hex to RGB
-  const hex = hexColor.replace('#', '');
-  const r = parseInt(hex.substring(0, 2), 16) / 255;
-  const g = parseInt(hex.substring(2, 4), 16) / 255;
-  const b = parseInt(hex.substring(4, 6), 16) / 255;
-
-  // Convert to HSL
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  let h = 0, s = 0, l = (max + min) / 2;
-
-  if (max !== min) {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
-      case g: h = ((b - r) / d + 2) / 6; break;
-      case b: h = ((r - g) / d + 4) / 6; break;
-    }
-  }
-
-  // Minimum lightness threshold (0.35 = ~35% lightness, visible on dark backgrounds)
-  const MIN_LIGHTNESS = 0.35;
-
-  // If lightness is above threshold, use the original color
-  if (l >= MIN_LIGHTNESS) {
-    return hexColor;
-  }
-
-  // Clamp lightness at minimum threshold (don't brighten beyond threshold, just stop getting darker)
-  const clampedL = MIN_LIGHTNESS;
-
-  // Convert back to RGB with clamped lightness
-  const hue2rgb = (p: number, q: number, t: number) => {
-    if (t < 0) t += 1;
-    if (t > 1) t -= 1;
-    if (t < 1/6) return p + (q - p) * 6 * t;
-    if (t < 1/2) return q;
-    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-    return p;
-  };
-
-  const q = clampedL < 0.5 ? clampedL * (1 + s) : clampedL + s - clampedL * s;
-  const p = 2 * clampedL - q;
-  const newR = Math.round(hue2rgb(p, q, h + 1/3) * 255);
-  const newG = Math.round(hue2rgb(p, q, h) * 255);
-  const newB = Math.round(hue2rgb(p, q, h - 1/3) * 255);
-
-  return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
-}
-
 // Default button definitions
 const DEFAULT_BUTTONS = [
   { id: 'learn-about', label: 'About My eXp Team', type: 'default' as const },
@@ -11599,19 +11616,8 @@ function AgentPagesSection({
   // BOTTOM: Visible color glow (40% of background color) - matches slug.js
   const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.4)}, ${Math.round(bgRgb.g * 0.4)}, ${Math.round(bgRgb.b * 0.4)})`;
 
-  // FIX-008: Unified threshold for button icons - matches isColorDark threshold (140/255 = ~0.549)
-  // All elements (button text, S icon, contact icons) now use the same luminance threshold
-  const getButtonIconColor = (hex: string): string => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    if (!result) return '#ffffff';
-    const r = parseInt(result[1], 16);
-    const g = parseInt(result[2], 16);
-    const b = parseInt(result[3], 16);
-    // Use same luminance calculation and threshold as isColorDark (140 out of 255)
-    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-    return luminance < 140 ? '#ffffff' : '#1a1a1a';
-  };
-  const buttonIconColor = getButtonIconColor(linksSettings.accentColor);
+  // Button text and icon color: warm white on dark accents, near-black on light accents
+  const buttonIconColor = isAccentDark ? '#e5e4dd' : '#191818';
 
   // Debug: Log hasColorImage changes
   useEffect(() => {
@@ -12953,7 +12959,7 @@ function AgentPagesSection({
           <div
             className="w-[100px] h-[100px] rounded-full bg-black/40 border-[3px] flex items-center justify-center overflow-hidden flex-shrink-0 relative"
             style={{
-              borderColor: getVisibleSocialIconColor(linksSettings.accentColor),
+              borderColor: linksSettings.accentColor,
             }}
           >
             {/* Image with B&W filter - border stays colored */}
@@ -13829,7 +13835,7 @@ function AgentPagesSection({
                 <div
                   className="w-20 h-20 rounded-full border-3 flex items-center justify-center overflow-hidden relative"
                   style={{
-                    borderColor: getVisibleSocialIconColor(linksSettings.accentColor),
+                    borderColor: linksSettings.accentColor,
                     borderWidth: '3px',
                     backgroundColor: 'rgba(40,40,40,0.8)',
                   }}
@@ -13859,33 +13865,20 @@ function AgentPagesSection({
                   )}
                 </div>
 
-                {/* Name with 3D shaded text - dynamic accent backing + glow */}
+                {/* Name with real SVG stroke backing - accent color gradient */}
                 {(() => {
                   const name = `${formData.display_first_name || 'Your'} ${formData.display_last_name || 'Name'}`;
                   const len = name.length;
-                  // Scale font: short names bigger, long names smaller (preview phone is ~200px wide)
                   const fontSize = len <= 10 ? '22px' : len <= 14 ? '19px' : len <= 18 ? '17px' : len <= 22 ? '15px' : '13px';
-                  const ar = hexToRgb(linksSettings.accentColor);
-                  // Generate backing gradient: 8 steps from dark to accent color
-                  const bk = [0.04, 0.18, 0.32, 0.45, 0.58, 0.70, 0.82, 0.92].map(t =>
-                    `rgb(${Math.round(20 + (ar.r - 20) * t)}, ${Math.round(20 + (ar.g - 20) * t)}, ${Math.round(20 + (ar.b - 20) * t)})`
-                  );
-                  const deepShadow = `rgba(${Math.round(ar.r * 0.7)}, ${Math.round(ar.g * 0.7)}, ${Math.round(ar.b * 0.05 + 10)}, 0.5)`;
                   return (
-                    <span
-                      className="text-center leading-tight font-bold mt-1.5 mb-2"
-                      style={{
-                        fontSize,
-                        color: isAccentDark ? '#f2f1ec' : linksSettings.accentColor,
-                        fontFamily: 'var(--font-taskor, sans-serif)',
-                        fontFeatureSettings: '"ss01" 1',
-                        transform: 'perspective(800px) rotateX(12deg)',
-                        textShadow: `0 0 0.12em rgba(${ar.r}, ${ar.g}, ${ar.b}, 0.15), 0.010em 0.013em 0 #dddcd5, 0.015em 0.025em 0 #d1d0c7, 0.019em 0.038em 0 #c2c1b8, 0.024em 0.050em 0 #b3b2a8, 0.029em 0.063em 0 #a09f94, 0.033em 0.075em 0 #8d8c80, 0.038em 0.088em 0 #7a7970, 0.040em 0.095em 0 ${bk[0]}, 0.042em 0.105em 0 ${bk[1]}, 0.044em 0.115em 0 ${bk[2]}, 0.046em 0.125em 0 ${bk[3]}, 0.048em 0.135em 0 ${bk[4]}, 0.050em 0.145em 0 ${bk[5]}, 0.052em 0.155em 0 ${bk[6]}, 0.054em 0.165em 0 ${bk[7]}, 0.056em 0.175em 0.02em ${deepShadow}`,
-                        filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
-                      }}
-                    >
-                      {name}
-                    </span>
+                    <div className="mt-1.5 mb-2 w-full">
+                      <LinkPageNamePreview
+                        name={name}
+                        fontSize={fontSize}
+                        accentColor={linksSettings.accentColor}
+                        isAccentDark={isAccentDark}
+                      />
+                    </div>
                   );
                 })()}
 
@@ -13913,8 +13906,8 @@ function AgentPagesSection({
 
                   if (socialIcons.length === 0) return null;
 
-                  // FIX-022: Use lightened color for social icons when accent is dark
-                  const socialIconColor = getVisibleSocialIconColor(linksSettings.accentColor);
+                  // Social circle icons: warm white on dark accents, accent color on light accents
+                  const socialCircleIconColor = isAccentDark ? '#e5e4dd' : linksSettings.accentColor;
 
                   return (
                     <div className="flex justify-center gap-2 mt-1">
@@ -13925,14 +13918,14 @@ function AgentPagesSection({
                           <div
                             key={idx}
                             className="w-8 h-8 rounded-full flex items-center justify-center transition-transform hover:scale-110"
-                            style={{ backgroundColor: `${socialIconColor}20`, border: `1px solid ${socialIconColor}40` }}
+                            style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}
                           >
                             {isBuiltIn ? (
-                              <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24">
+                              <svg className="w-4 h-4" fill={socialCircleIconColor} viewBox="0 0 24 24">
                                 <path d={social.icon} />
                               </svg>
                             ) : (
-                              <svg className="w-4 h-4" fill="none" stroke={socialIconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4" fill="none" stroke={socialCircleIconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                                 <path d={social.icon} />
                               </svg>
                             )}
@@ -13975,7 +13968,7 @@ function AgentPagesSection({
                         className="flex-1 py-2.5 text-sm relative"
                         style={{
                           backgroundColor: linksSettings.accentColor,
-                          color: isAccentDark ? '#ffffff' : '#1a1a1a',
+                          color: isAccentDark ? '#e5e4dd' : '#191818',
                           fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                           fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                           borderRadius: buttonCount === 1 ? '0.5rem' : idx === 0 ? '0.5rem 0.375rem 0.375rem 0.5rem' : idx === buttonCount - 1 ? '0.375rem 0.5rem 0.5rem 0.375rem' : '0.375rem',
@@ -14260,7 +14253,7 @@ function AgentPagesSection({
                       className="py-2.5 px-3 rounded-lg relative z-10"
                       style={{
                         backgroundColor: linksSettings.accentColor,
-                        color: isAccentDark ? '#ffffff' : '#1a1a1a',
+                        color: isAccentDark ? '#e5e4dd' : '#191818',
                         fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                         fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                         fontSize: `${linksSettings.buttonTextSize ?? 14}px`,

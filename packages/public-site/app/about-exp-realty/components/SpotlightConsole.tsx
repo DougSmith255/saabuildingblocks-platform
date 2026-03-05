@@ -327,123 +327,6 @@ function DetailPanel({ feature, transitionKey }: { feature: typeof FEATURES[numb
   );
 }
 
-function TypewriterLines() {
-  const PROBLEM = 'Most brokerages trade your future for today\u2019s commission.';
-  const ANSWER = 'eXp was built around what comes after the last sale.';
-  const CHAR_DELAY = 30;
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [problemText, setProblemText] = useState('');
-  const [answerText, setAnswerText] = useState('');
-  const [phase, setPhase] = useState<'idle' | 'problem' | 'gap' | 'answer' | 'done'>('idle');
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setPhase('problem');
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (phase !== 'problem') return;
-    let i = 0;
-    timerRef.current = setInterval(() => {
-      i++;
-      setProblemText(PROBLEM.slice(0, i));
-      if (i >= PROBLEM.length) {
-        clearInterval(timerRef.current!);
-        timerRef.current = null;
-        setPhase('gap');
-      }
-    }, CHAR_DELAY);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [phase]);
-
-  useEffect(() => {
-    if (phase !== 'gap') return;
-    const t = setTimeout(() => setPhase('answer'), 350);
-    return () => clearTimeout(t);
-  }, [phase]);
-
-  useEffect(() => {
-    if (phase !== 'answer') return;
-    let j = 0;
-    timerRef.current = setInterval(() => {
-      j++;
-      setAnswerText(ANSWER.slice(0, j));
-      if (j >= ANSWER.length) {
-        clearInterval(timerRef.current!);
-        timerRef.current = null;
-        setPhase('done');
-      }
-    }, CHAR_DELAY);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [phase]);
-
-  const cursor = <span className="inline-block w-[2px] h-[1em] align-text-bottom ml-[1px]" style={{ background: 'currentColor', animation: 'cursorBlink 0.6s steps(1) infinite' }} />;
-
-  return (
-    <div ref={containerRef} className="mt-6 max-w-[900px] mx-auto text-center" style={{ paddingBottom: '20px' }}>
-      <style>{`@keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
-
-      <div className="mb-3">
-        <p
-          className="font-bold uppercase tracking-wider"
-          style={{ color: '#c0513f', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1', fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6 }}
-        >
-          <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{ display: 'inline', verticalAlign: '-0.15em', marginRight: '0.3em' }}>
-            <circle cx="12" cy="12" r="10" />
-            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-          </svg>
-          The Problem
-        </p>
-        <p className="text-body" style={{ fontSize: 'clamp(15px, calc(13.73px + 0.51vw), 20px)', lineHeight: 1.6 }}>
-          <span style={{ position: 'relative', display: 'inline-block' }}>
-            <span style={{ visibility: 'hidden' }}>{PROBLEM}</span>
-            <span style={{ position: 'absolute', left: 0, top: 0, whiteSpace: 'nowrap' }}>
-              {problemText}
-              {(phase === 'problem') && cursor}
-            </span>
-          </span>
-        </p>
-      </div>
-
-      <div>
-        <p
-          className="font-bold uppercase tracking-wider"
-          style={{ color: '#00bfff', fontFamily: 'var(--font-taskor)', fontFeatureSettings: '"ss01" 1', fontSize: 'clamp(16px, calc(14.73px + 0.51vw), 22px)', lineHeight: 1.6 }}
-        >
-          <img
-            src={`${CLOUDFLARE_BASE}/exp-x-logo-icon/public`}
-            alt="eXp"
-            style={{ display: 'inline', width: '1em', height: '1em', objectFit: 'contain', verticalAlign: '-0.15em', marginRight: '0.3em' }}
-          />
-          The Answer
-        </p>
-        <p className="text-body" style={{ fontSize: 'clamp(15px, calc(13.73px + 0.51vw), 20px)', lineHeight: 1.6 }}>
-          <span style={{ position: 'relative', display: 'inline-block' }}>
-            <span style={{ visibility: 'hidden' }}>{ANSWER}</span>
-            <span style={{ position: 'absolute', left: 0, top: 0, whiteSpace: 'nowrap' }}>
-              {answerText}
-              {(phase === 'answer') && cursor}
-            </span>
-          </span>
-        </p>
-      </div>
-    </div>
-  );
-}
-
 export default function SpotlightConsole() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isStopped, setIsStopped] = useState(false);
@@ -614,8 +497,6 @@ export default function SpotlightConsole() {
         <div className="mt-10">
           <ValidationRibbon />
         </div>
-
-        <TypewriterLines />
 
       </div>
     </section>

@@ -274,22 +274,19 @@ export default function WhatExpProvidesVersionB() {
                           <panel.icon size={22} />
                         </Icon3D>
                       </div>
-                      <H2
-                        theme={panel.h2Theme}
-                        style={{
-                          position: 'absolute',
-                          left: '56px',
-                          top: '8px',
-                          marginBottom: 0,
-                          transform: isExpanded ? 'rotate(0deg)' : 'rotate(90deg)',
-                          transformOrigin: '0 0',
-                          transition: 'transform 0.7s ease',
-                          whiteSpace: 'nowrap',
-                          textAlign: 'left',
-                        }}
-                      >
-                        {panel.label}
-                      </H2>
+                      <div style={{
+                        position: 'absolute',
+                        left: '56px',
+                        top: '8px',
+                        transform: isExpanded ? 'rotate(0deg)' : 'rotate(90deg)',
+                        transformOrigin: '0 0',
+                        transition: 'transform 0.7s ease',
+                        whiteSpace: 'nowrap',
+                      }}>
+                        <H2 theme={panel.h2Theme} style={{ marginBottom: 0, textAlign: 'left' }}>
+                          {panel.label}
+                        </H2>
+                      </div>
                     </div>
 
                     <ul

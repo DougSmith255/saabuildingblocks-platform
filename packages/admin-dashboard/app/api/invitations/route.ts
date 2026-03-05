@@ -14,7 +14,6 @@ import {
   CreateInvitationInput,
 } from '@/lib/validation/invitation';
 import {
-  createInvitation,
   listInvitations,
   createAuditLog,
 } from '@saa/shared/lib/supabase/invitation-service';
@@ -119,25 +118,65 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create invitation
-    const { data: invitation, error: invitationError } = await createInvitation(
-      supabase,
-      {
-        userId: newUser.id,
-        email: validatedData.email,
-        expiresInHours: validatedData.expiresInHours,
-        createdBy: authResult.userId!,
-      }
-    );
+    // Generate Supabase native invite link
+    const activationBaseUrl = 'https://smartagentalliance.com';
+    const redirectTo = `${activationBaseUrl}/agent-portal/activate`;
 
-    if (invitationError || !invitation) {
+    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+      type: 'invite',
+      email: validatedData.email,
+      options: { redirectTo },
+    });
+
+    if (linkError || !linkData) {
       // Rollback user creation
       await supabase.from('users').delete().eq('id', newUser.id);
+      return NextResponse.json(
+        { error: 'Failed to generate invitation link', details: linkError?.message },
+        { status: 500 }
+      );
+    }
 
+    // Extract hashed_token from the generated link properties
+    const hashedToken = linkData.properties?.hashed_token;
+    if (!hashedToken) {
+      await supabase.from('users').delete().eq('id', newUser.id);
+      return NextResponse.json(
+        { error: 'Failed to extract token from invitation link' },
+        { status: 500 }
+      );
+    }
+
+    // Create invitation record with token_hash
+    const expiresAt = new Date(Date.now() + (validatedData.expiresInHours || 168) * 60 * 60 * 1000).toISOString();
+    const { data: invitation, error: invitationError } = await supabase
+      .from('user_invitations')
+      .insert({
+        user_id: newUser.id,
+        email: validatedData.email,
+        token_hash: hashedToken,
+        status: 'pending',
+        expires_at: expiresAt,
+        invited_by: authResult.userId!,
+        sent_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (invitationError || !invitation) {
+      await supabase.from('users').delete().eq('id', newUser.id);
       return NextResponse.json(
         { error: 'Failed to create invitation', details: invitationError?.message },
         { status: 500 }
       );
+    }
+
+    // Link the Supabase auth user to our users table
+    if (linkData.user?.id) {
+      await supabase
+        .from('users')
+        .update({ auth_user_id: linkData.user.id })
+        .eq('id', newUser.id);
     }
 
     // Send invitation email
@@ -146,12 +185,11 @@ export async function POST(request: NextRequest) {
       const emailResult = await sendWelcomeEmail(
         validatedData.email,
         firstName,
-        invitation.token,
-        48 // 48 hours
+        hashedToken,
+        168 // 7 days
       );
 
       if (!emailResult.success) {
-        // Update invitation status to indicate email failed
         await supabase
           .from('user_invitations')
           .update({

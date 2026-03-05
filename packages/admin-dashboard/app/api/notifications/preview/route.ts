@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
       html = await render(
         WelcomeEmail({
           firstName: 'Doug',
-          activationLink: 'https://saabuildingblocks.com/activate-account?token=preview-test-token',
+          activationLink: 'https://smartagentalliance.com/agent-portal/activate?token_hash=preview-test&type=invite',
           expiresInHours: 168,
         })
       );
@@ -59,8 +59,8 @@ export async function GET(request: NextRequest) {
       html = await render(
         AgentActivationEmail({
           firstName: 'Doug',
-          activationLink: 'https://saabuildingblocks.com/activate-account?token=preview-test-token',
-          expiresInHours: 48,
+          activationLink: 'https://smartagentalliance.com/agent-portal/activate?token_hash=preview-test&type=invite',
+          expiresInHours: 168,
         })
       );
       break;

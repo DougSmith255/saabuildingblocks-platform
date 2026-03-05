@@ -230,7 +230,7 @@ export async function POST(request: NextRequest) {
         full_name: fullName, // Store for backward compatibility
         token: invitationTokenHash,
         status: 'pending',
-        expires_at: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(), // 48 hours
+        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days
         created_at: new Date().toISOString(),
       });
 
@@ -258,7 +258,7 @@ export async function POST(request: NextRequest) {
         email,
         firstName,
         invitationToken,
-        48 // 48 hours
+        168 // 7 days
       );
 
       // Track email status for response

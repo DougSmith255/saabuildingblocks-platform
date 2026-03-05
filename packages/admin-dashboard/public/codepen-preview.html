@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@font-face {
+  font-family: 'Taskor';
+  src: url('/fonts/taskor-regular-webfont.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #1a8a1a;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 6vh 1rem;
+  gap: 6vh;
+}
+
+.text-block {
+  text-align: center;
+  width: 100%;
+  max-width: 900px;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+h1, h2 {
+  overflow: visible;
+}
+
+.preview-label {
+  color: #fff;
+  font-family: sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 1.5rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgba(255,255,255,0.3);
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.divider {
+  width: 100%;
+  max-width: 900px;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+/* ========================================
+   SVG stroke-linejoin:miter approach
+   Back layers = SVG <text> with miter joins (sharp corners)
+   Front layer = HTML <h1>/<h2> (wraps, SEO-friendly)
+   JS detects line breaks and creates matching SVG tspans
+   ======================================== */
+.heading-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  overflow: visible;
+  padding-bottom: 0.5em;
+  margin-bottom: -0.5em;
+}
+
+/* SVG back layers - absolutely positioned over the heading */
+.stroke-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Front layer - face with fill extrusion */
+.heading-front {
+  font-family: 'Taskor', serif;
+  font-feature-settings: 'ss01' 1;
+  line-height: 1.1;
+  font-weight: 400;
+  text-align: center;
+  position: relative;
+  color: #f2f1ec;
+  /* Base transform only - face offset applied by JS after SVG layer measurement */
+  transform: perspective(800px) rotateX(12deg);
+  text-shadow:
+    0 0 0.08em rgba(255, 215, 0, 0.4),
+    0 0 0.2em rgba(255, 215, 0, 0.25),
+    0.003em 0.004em 0 #e2e1da,
+    0.006em 0.008em 0 #dddcd5,
+    0.010em 0.013em 0 #d8d7d0,
+    0.013em 0.019em 0 #d1d0c7,
+    0.016em 0.025em 0 #cac9c0,
+    0.019em 0.032em 0 #c2c1b8,
+    0.022em 0.038em 0 #bbbab0,
+    0.025em 0.044em 0 #b3b2a8,
+    0.028em 0.050em 0 #abaa9f,
+    0.031em 0.057em 0 #a09f94,
+    0.034em 0.063em 0 #96958a,
+    0.037em 0.070em 0 #8d8c80,
+    0.040em 0.076em 0 #838278,
+    0.043em 0.082em 0 #7a7970;
+}
+
+/* H1 sizes */
+.heading-front.h1-hero-size {
+  font-size: clamp(60px, 13vw, 120px);
+}
+
+.heading-front.h1-size {
+  font-size: clamp(36px, 8vw, 64px);
+}
+
+.heading-front.h2-size {
+  font-size: clamp(24px, 5vw, 42px);
+  font-weight: 700;
+}
+
+.heading-front.h2-front {
+  color: #e5e4dd;
+  /* Base transform only - face offset applied by JS after SVG layer measurement */
+  transform: perspective(800px) rotateX(8deg);
+  text-shadow:
+    0.005em 0.007em 0 #dddcd5,
+    0.010em 0.015em 0 #d5d4cb,
+    0.015em 0.025em 0 #cccbc2,
+    0.019em 0.035em 0 #c2c1b8,
+    0.023em 0.045em 0 #b8b7ae,
+    0.027em 0.055em 0 #abaa9f,
+    0.031em 0.065em 0 #a09f94,
+    0.034em 0.073em 0 #96958a,
+    0.037em 0.080em 0 #8d8c80,
+    0.040em 0.088em 0 #7a7970;
+}
+
+/* SVG reference */
+.svg-text {
+  font-family: 'Taskor', serif;
+  font-feature-settings: 'ss01' 1;
+  display: block;
+  margin: -1.5em auto -2em;
+}
+
+.svg-text__stroke {
+  stroke-linejoin: miter;
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- HERO H1: Big tagline                                         -->
+<!-- ============================================================ -->
+<div class="text-block" style="max-width: 100%; display: flex; flex-direction: column; gap: 1.5rem;">
+  <div class="heading-wrapper" data-type="h1">
+    <h1 class="heading-front h1-hero-size" style="white-space: nowrap;">Premium Tools.</h1>
+  </div>
+  <div class="heading-wrapper" data-type="h1">
+    <h1 class="heading-front h1-hero-size" style="white-space: nowrap;">Real Training.</h1>
+  </div>
+  <div class="heading-wrapper" data-type="h1">
+    <h1 class="heading-front h1-hero-size" style="white-space: nowrap;">Zero Cost.</h1>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ============================================================ -->
+<!-- H1: SVG miter stroke layers + HTML face                      -->
+<!-- ============================================================ -->
+<div class="text-block">
+  <p class="preview-label">SVG miter stroke H1 (sharp corners + wraps)</p>
+  <div class="heading-wrapper" data-type="h1">
+    <h1 class="heading-front h1-size">Smart Agent Alliance</h1>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- H2: SVG miter stroke layers + HTML face                      -->
+<!-- ============================================================ -->
+<div class="text-block">
+  <p class="preview-label">SVG miter stroke H2 (sharp corners)</p>
+  <div class="heading-wrapper" data-type="h2">
+    <h2 class="heading-front h2-size h2-front">Why Smart Agent Alliance (SAA)?</h2>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ============================================================ -->
+<!-- ORIGINAL SVG (reference) -->
+<!-- ============================================================ -->
+<div class="text-block">
+  <p class="preview-label">Original SVG (reference - does not wrap)</p>
+  <svg class="svg-text" width="100%" height="5em" overflow="visible" style="font-size:clamp(36px, 8vw, 64px)" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="drop-stroke-shadow">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      </filter>
+      <filter id="gold-glow">
+        <feGaussianBlur stdDeviation="5" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <linearGradient id="face-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#dddcd5"/>
+        <stop offset="35%" stop-color="#f2f1ec"/>
+        <stop offset="65%" stop-color="#f2f1ec"/>
+        <stop offset="100%" stop-color="#dddcd5"/>
+      </linearGradient>
+      <symbol id="s1" overflow="visible"><text x="50%" y="60%" fill="none" stroke-width=".22em" paint-order="stroke fill" text-anchor="middle">Smart Agent Alliance</text></symbol>
+      <symbol id="f1" overflow="visible"><text x="50%" y="60%" text-anchor="middle">Smart Agent Alliance</text></symbol>
+    </defs>
+    <g class="svg-text__stroke">
+      <use x="0.167%" y="1.67%" href="#s1" stroke="#b8960a" opacity="0.5" filter="url(#drop-stroke-shadow)"/>
+      <use x="0.12%" y="1.2%" href="#s1" stroke="#e6ac00"/>
+      <use x="0.1%" y="1.0%" href="#s1" stroke="#d4a010"/>
+      <use x="0.08%" y="0.8%" href="#s1" stroke="#b8900a"/>
+      <use x="0.06%" y="0.6%" href="#s1" stroke="#9a7808"/>
+      <use x="0.045%" y="0.45%" href="#s1" stroke="#7c6008"/>
+      <use x="0.03%" y="0.3%" href="#s1" stroke="#5e4808"/>
+      <use x="0.015%" y="0.15%" href="#s1" stroke="#3f3010"/>
+      <use x="0%" y="0%" href="#s1" stroke="#191818"/>
+    </g>
+    <use x="0.15%" y="0.4%" href="#f1" fill="#7a7970"/>
+    <use x="0.124%" y="0.14%" href="#f1" fill="#8d8c80"/>
+    <use x="0.099%" y="-0.11%" href="#f1" fill="#a09f94"/>
+    <use x="0.073%" y="-0.37%" href="#f1" fill="#b3b2a8"/>
+    <use x="0.047%" y="-0.63%" href="#f1" fill="#c2c1b8"/>
+    <use x="0.021%" y="-0.89%" href="#f1" fill="#d1d0c7"/>
+    <use x="-0.004%" y="-1.14%" href="#f1" fill="#dddcd5"/>
+    <use x="-0.06%" y="-1.4%" href="#f1" fill="#ffd700" opacity="0.15" filter="url(#gold-glow)"/>
+    <use x="-0.06%" y="-1.4%" href="#f1" fill="url(#face-gradient)"/>
+  </svg>
+</div>
+
+<hr class="divider">
+
+<!-- ============================================================ -->
+<!-- WRAPPING TEST -->
+<!-- ============================================================ -->
+<div class="text-block" style="max-width: 400px; border: 1px dashed rgba(255,255,255,0.3); padding: 2rem 1rem; border-radius: 8px;">
+  <p class="preview-label">Wrapping test (400px container)</p>
+  <div class="heading-wrapper" data-type="h1" style="margin-bottom: 2rem;">
+    <h1 class="heading-front h1-size">Smart Agent Alliance</h1>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   Generate SVG stroke back layers with stroke-linejoin: miter
+   (sharp corners). Reads line breaks from the HTML heading text
+   and creates matching SVG <tspan> elements per line.
+   ================================================================ */
+const H1_LAYERS = [
+  // Gold layers - wide offset so bright gold peeks prominently behind dark
+  { color: '#b8960a', tx: '0.06em', ty: '0.18em', filter: 'blur(10px)', opacity: '0.5' },
+  { color: '#e6ac00', tx: '0.05em', ty: '0.155em' },
+  { color: '#d4a010', tx: '0.042em', ty: '0.13em' },
+  { color: '#b8900a', tx: '0.035em', ty: '0.11em' },
+  // Transition gold-to-dark
+  { color: '#9a7808', tx: '0.025em', ty: '0.08em' },
+  { color: '#7c6008', tx: '0.016em', ty: '0.052em' },
+  // Dark layers - tight cluster near base
+  { color: '#5e4808', tx: '0.008em', ty: '0.026em' },
+  { color: '#3f3010', tx: '0.004em', ty: '0.013em' },
+  { color: '#191818', tx: '0', ty: '0' },
+];
+
+const H2_LAYERS = [
+  // Light grey layers - wide offset so they peek from behind the dark
+  { color: '#404040', tx: '0.04em', ty: '0.12em', filter: 'blur(6px)', opacity: '0.4' },
+  { color: '#404040', tx: '0.035em', ty: '0.105em' },
+  { color: '#3c3c3c', tx: '0.030em', ty: '0.09em' },
+  { color: '#383838', tx: '0.025em', ty: '0.075em' },
+  // Transition to dark
+  { color: '#343434', tx: '0.018em', ty: '0.055em' },
+  { color: '#303030', tx: '0.012em', ty: '0.038em' },
+  // Dark layers - tight cluster near base
+  { color: '#2c2c2c', tx: '0.006em', ty: '0.020em' },
+  { color: '#282828', tx: '0.003em', ty: '0.010em' },
+  { color: '#222222', tx: '0', ty: '0' },
+];
+
+// Face text offset (applied AFTER SVG layers are measured, so face shifts relative to back)
+const FACE_OFFSET = {
+  h1: { x: '-0.025em', y: '0.13em' },
+  h2: { x: '-0.018em', y: '0.15em' },
+};
+
+/**
+ * Detect line breaks by checking each character's vertical position.
+ * Uses first line's measurement + consistent line-height for subsequent lines
+ * to prevent cumulative offset errors across multiple wrapped lines.
+ */
+function getTextLines(heading, wrapperRect) {
+  const text = heading.textContent.trim();
+  const textNode = heading.childNodes[0];
+  if (!textNode || textNode.nodeType !== 3) return [{ text, bottom: 0 }];
+
+  const rawLines = [];
+  let lastTop = -Infinity;
+  let currentLine = '';
+  let lineRect = null;
+
+  for (let i = 0; i < text.length; i++) {
+    const range = document.createRange();
+    range.setStart(textNode, i);
+    range.setEnd(textNode, i + 1);
+    const rect = range.getBoundingClientRect();
+    range.detach();
+
+    if (rect.height === 0) continue;
+
+    if (rect.top > lastTop + 2 && currentLine) {
+      rawLines.push({ text: currentLine, bottom: lineRect.bottom - wrapperRect.top });
+      currentLine = text[i];
+      lineRect = rect;
+    } else {
+      currentLine += text[i];
+      if (!lineRect || rect.top > lastTop + 2) lineRect = rect;
+    }
+    lastTop = rect.top;
+  }
+  if (currentLine) {
+    rawLines.push({ text: currentLine.trimEnd(), bottom: lineRect ? lineRect.bottom - wrapperRect.top : 0 });
+  }
+
+  if (rawLines.length <= 1) return rawLines;
+
+  // Use first line's bottom as anchor, then compute subsequent lines
+  // from CSS line-height for perfectly consistent spacing
+  const styles = getComputedStyle(heading);
+  const lineHeight = parseFloat(styles.lineHeight) || parseFloat(styles.fontSize) * 1.1;
+  const firstBottom = rawLines[0].bottom;
+
+  return rawLines.map((line, i) => ({
+    text: line.text,
+    bottom: firstBottom + i * lineHeight
+  }));
+}
+
+function createBackLayers(wrapper) {
+  const heading = wrapper.querySelector('.heading-front');
+  if (!heading) return;
+
+  const type = wrapper.dataset.type;
+  const layers = type === 'h1' ? H1_LAYERS : H2_LAYERS;
+  const strokeWidth = type === 'h1' ? '0.22em' : '0.18em';
+  const rotateX = type === 'h1' ? '12deg' : '8deg';
+
+  const styles = getComputedStyle(heading);
+  const fontSizePx = parseFloat(styles.fontSize);
+  const fontWeight = styles.fontWeight;
+
+  // Remove transform before measuring so we get untransformed coordinates
+  // (otherwise perspective double-applies: once in measurement, once in SVG transform)
+  const origTransform = heading.style.transform;
+  heading.style.transform = 'none';
+  heading.offsetHeight; // force reflow
+  const wrapperRect = wrapper.getBoundingClientRect();
+
+  // Get line breaks from the HTML heading (in untransformed space)
+  const lines = getTextLines(heading, wrapperRect);
+
+  // Restore base transform (face offset applied later)
+  heading.style.transform = origTransform;
+  if (!lines.length) return;
+
+  const NS = 'http://www.w3.org/2000/svg';
+
+  // Morphological opening filter (erode+dilate) to round miter spike tips
+  // Aggressive radius: user prefers slightly cut N/M points over any visible spikes
+  const useOpening = true;
+  const openingRadius = Math.max(0.8, fontSizePx * 0.03);
+
+  layers.forEach((layer, i) => {
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('overflow', 'visible');
+    svg.style.cssText =
+      'position:absolute;top:0;left:0;width:100%;height:calc(100% + 1em);' +
+      'overflow:visible;pointer-events:none;user-select:none;' +
+      'transform:perspective(800px) rotateX(' + rotateX + ') translate(' + (layer.tx || '0') + ',' + (layer.ty || '0') + ')';
+    if (layer.filter) svg.style.filter = layer.filter;
+    if (layer.opacity) svg.style.opacity = layer.opacity;
+
+    // Add SVG filter for morphological opening on H1
+    if (useOpening && !layer.filter) {
+      const defs = document.createElementNS(NS, 'defs');
+      const filterId = 'open-' + i;
+      const filter = document.createElementNS(NS, 'filter');
+      filter.setAttribute('id', filterId);
+      filter.setAttribute('x', '-30%');
+      filter.setAttribute('y', '-30%');
+      filter.setAttribute('width', '160%');
+      filter.setAttribute('height', '160%');
+      const erode = document.createElementNS(NS, 'feMorphology');
+      erode.setAttribute('operator', 'erode');
+      erode.setAttribute('radius', openingRadius);
+      erode.setAttribute('in', 'SourceGraphic');
+      erode.setAttribute('result', 'eroded');
+      const dilate = document.createElementNS(NS, 'feMorphology');
+      dilate.setAttribute('operator', 'dilate');
+      dilate.setAttribute('radius', openingRadius);
+      dilate.setAttribute('in', 'eroded');
+      filter.appendChild(erode);
+      filter.appendChild(dilate);
+      defs.appendChild(filter);
+      svg.appendChild(defs);
+    }
+
+    // Use fill on the innermost (darkest) layer to close glyph interior gaps (e.g. N bottom)
+    const isInnermostLayer = (i === layers.length - 1);
+
+    lines.forEach(line => {
+      const textEl = document.createElementNS(NS, 'text');
+      textEl.setAttribute('x', '50%');
+      textEl.setAttribute('y', (line.bottom - fontSizePx * 0.05) + 'px');
+      textEl.setAttribute('text-anchor', 'middle');
+      textEl.setAttribute('fill', isInnermostLayer ? layer.color : 'none');
+      textEl.setAttribute('stroke', layer.color);
+      textEl.setAttribute('stroke-width', strokeWidth);
+      textEl.setAttribute('stroke-linejoin', 'miter');
+      textEl.setAttribute('stroke-miterlimit', '4');
+      textEl.setAttribute('paint-order', 'stroke fill');
+      if (useOpening && !layer.filter) {
+        textEl.setAttribute('filter', 'url(#open-' + i + ')');
+      }
+      textEl.style.fontFamily = "'Taskor', serif";
+      textEl.style.fontSize = fontSizePx + 'px';
+      textEl.style.fontWeight = fontWeight;
+      textEl.style.fontFeatureSettings = "'ss01' 1";
+      textEl.textContent = line.text;
+      svg.appendChild(textEl);
+    });
+
+    wrapper.insertBefore(svg, heading);
+  });
+
+  // Apply face offset AFTER layers are created so face shifts relative to back
+  const offset = FACE_OFFSET[type];
+  if (offset) {
+    heading.style.transform = 'perspective(800px) rotateX(' + rotateX + ') translate(' + offset.x + ',' + offset.y + ')';
+  }
+}
+
+// Wait for fonts to load, then generate stroke layers
+function initAllHeadings() {
+  document.querySelectorAll('.heading-wrapper[data-type]').forEach(wrapper => {
+    // Clear existing SVG layers
+    wrapper.querySelectorAll('svg[aria-hidden]').forEach(svg => svg.remove());
+    // Reset face transform so measurement is clean
+    const heading = wrapper.querySelector('.heading-front');
+    const type = wrapper.dataset.type;
+    const rotateX = type === 'h1' ? '12deg' : '8deg';
+    if (heading) heading.style.transform = 'perspective(800px) rotateX(' + rotateX + ')';
+    createBackLayers(wrapper);
+  });
+}
+
+document.fonts.ready.then(initAllHeadings);
+
+// Regenerate on resize/zoom so SVG layers stay in sync with HTML text
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(initAllHeadings, 150);
+});
+</script>
+
+</body>
+</html>

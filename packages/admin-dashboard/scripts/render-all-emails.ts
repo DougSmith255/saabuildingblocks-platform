@@ -20,8 +20,8 @@ import { PortalPromoEmail } from '../lib/email/templates/PortalPromoEmail';
 const outDir = '/tmp/email-previews';
 
 const templates = [
-  { name: '01-agent-activation', el: AgentActivationEmail({ firstName: 'Doug', activationLink: 'https://saabuildingblocks.com/activate-account?token=test', expiresInHours: 48 }) },
-  { name: '02-welcome', el: WelcomeEmail({ firstName: 'Doug', activationLink: 'https://saabuildingblocks.com/activate-account?token=test', expiresInHours: 48 }) },
+  { name: '01-agent-activation', el: AgentActivationEmail({ firstName: 'Doug', activationLink: 'https://smartagentalliance.com/agent-portal/activate?token_hash=test&type=invite', expiresInHours: 168 }) },
+  { name: '02-welcome', el: WelcomeEmail({ firstName: 'Doug', activationLink: 'https://smartagentalliance.com/agent-portal/activate?token_hash=test&type=invite', expiresInHours: 168 }) },
   { name: '03-password-reset', el: PasswordResetEmail({ username: 'doug.smart', resetLink: 'https://smartagentalliance.com/agent-portal/login?reset_token=test', expiresInMinutes: 15 }) },
   { name: '04-account-locked', el: AccountLockedEmail({ username: 'doug.smart', unlockTime: new Date(Date.now() + 30 * 60 * 1000), reason: 'Too many failed login attempts', supportUrl: 'https://smartagentalliance.com/contact' }) },
   { name: '05-username-reminder', el: UsernameReminderEmail({ username: 'doug.smart', email: 'doug@smartagentalliance.com' }) },

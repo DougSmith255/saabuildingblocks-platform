@@ -576,6 +576,30 @@ export async function onRequestPost(context) {
 
   } catch (error) {
     console.error('Join team API error:', error);
+
+    // Report error to centralized error log (fire-and-forget)
+    try {
+      const vpsUrl = env.VPS_API_URL || 'https://saabuildingblocks.com';
+      if (context && context.waitUntil) {
+        context.waitUntil(
+          fetch(`${vpsUrl}/api/errors/log`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              source: 'cf:join-team',
+              severity: 'error',
+              error_code: 'JOIN_TEAM_FAILED',
+              error_message: error.message || String(error),
+              stack_trace: error.stack || null,
+              request_path: '/api/join-team',
+              request_method: 'POST',
+              user_agent: request.headers.get('user-agent') || null,
+            }),
+          }).catch(() => {})
+        );
+      }
+    } catch { /* never block response */ }
+
     return new Response(
       JSON.stringify({
         success: false,

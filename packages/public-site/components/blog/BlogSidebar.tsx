@@ -87,6 +87,13 @@ const CALCULATOR_CATEGORIES = new Set([
   'brokerage-comparison',
 ]);
 
+// Categories that show the eXp World Guest Pass card
+const GUEST_PASS_CATEGORIES = new Set([
+  'about-exp-realty',
+  'exp-realty-sponsor',
+  'brokerage-comparison',
+]);
+
 // All 10 blog categories with emoji icons
 const CATEGORIES: { slug: CategorySlug; name: string; icon: string }[] = [
   { slug: 'about-exp-realty', name: 'About eXp Realty', icon: '🏢' },
@@ -105,12 +112,6 @@ const CATEGORIES: { slug: CategorySlug; name: string; icon: string }[] = [
 const cardStyle = (gold?: boolean) => ({
   background: 'linear-gradient(135deg, rgba(20,20,20,0.95), rgba(12,12,12,0.98))',
   border: `1px solid ${gold ? 'rgba(255,215,0,0.15)' : 'rgba(255,255,255,0.06)'}`,
-  borderRadius: '12px',
-});
-
-const cardStyleLight = (gold?: boolean) => ({
-  background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(245,245,240,0.98))',
-  border: `1px solid ${gold ? 'rgba(180,150,0,0.25)' : 'rgba(0,0,0,0.08)'}`,
   borderRadius: '12px',
 });
 
@@ -181,9 +182,10 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
   }, []);
 
   const showCalculator = CALCULATOR_CATEGORIES.has(categorySlug);
+  const showGuestPass = GUEST_PASS_CATEGORIES.has(categorySlug);
   const freebieKey = CATEGORY_FREEBIE_MAP[categorySlug] || 'brokerageQuestions';
   const freebie = FREEBIES[freebieKey];
-  const getCardStyle = isDarkMode ? cardStyle : cardStyleLight;
+  const getCardStyle = cardStyle; // Always use dark style regardless of theme mode
 
   const handleFreebieClick = () => {
     setSelectedFreebie(freebie);
@@ -192,10 +194,154 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
 
   return (
     <>
-      <aside className="hidden lg:block">
+      <aside className="blog-sidebar hidden lg:block">
         <div ref={stickyRef} className="sticky space-y-4" style={{ height: 'fit-content', top: `${HEADER_OFFSET}px` }}>
 
-          {/* Widget 1: Calculator CTA (eXp categories only) */}
+          {/* Widget 1: Contextual Freebie */}
+          <div className="p-5" style={getCardStyle(true)}>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs font-medium px-2 py-0.5 rounded" style={{
+                background: 'rgba(0,255,136,0.1)',
+                color: '#00ff88',
+                fontFamily: 'var(--font-taskor)',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+              }}>
+                Free
+              </span>
+            </div>
+            <h3 className="text-sm font-semibold mt-2 mb-1" style={{
+              fontFamily: 'var(--font-taskor)',
+              color: '#e5e4dd',
+              letterSpacing: '0.02em',
+            }}>
+              {freebie.label}
+            </h3>
+            <p className="text-xs mb-4" style={{
+              fontFamily: 'var(--font-amulya)',
+              color: '#888',
+              lineHeight: 1.5,
+            }}>
+              {freebie.description}
+            </p>
+            <button
+              onClick={handleFreebieClick}
+              className="block w-full text-center py-2.5 px-4 text-sm font-semibold rounded-lg transition-all duration-200 hover:brightness-110 cursor-pointer"
+              style={{
+                fontFamily: 'var(--font-taskor)',
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
+                color: '#e5e4dd',
+                border: '1px solid rgba(255,255,255,0.1)',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+              }}
+            >
+              {freebie.type === 'canva' ? 'Get Template' : 'Download Free'}
+            </button>
+          </div>
+
+          {/* Widget 2: eXp World Guest Pass (eXp categories only) */}
+          {showGuestPass && (
+            <div className="p-5" style={getCardStyle(true)}>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{
+                  background: 'linear-gradient(135deg, rgba(0,191,255,0.15), rgba(0,191,255,0.05))',
+                  border: '1px solid rgba(0,191,255,0.2)',
+                }}>
+                  <img
+                    src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public"
+                    alt="eXp"
+                    width={20}
+                    height={20}
+                    style={{ objectFit: 'contain' }}
+                  />
+                </div>
+                <h3 className="text-sm font-semibold" style={{
+                  fontFamily: 'var(--font-taskor)',
+                  color: '#e5e4dd',
+                  letterSpacing: '0.02em',
+                }}>
+                  eXp World Guest Pass
+                </h3>
+              </div>
+              <p className="text-xs mb-1" style={{
+                fontFamily: 'var(--font-amulya)',
+                color: '#bbb',
+                lineHeight: 1.5,
+              }}>
+                Step inside the world&apos;s largest virtual real estate campus.
+              </p>
+              <p className="text-xs mb-4" style={{
+                fontFamily: 'var(--font-amulya)',
+                color: '#777',
+                lineHeight: 1.5,
+              }}>
+                84,000+ agents. 29 countries. Live training, on-demand support, and direct access to leadership.
+              </p>
+              <button
+                onClick={() => window.dispatchEvent(new Event('open-vip-guest-pass'))}
+                className="block w-full text-center py-2.5 px-4 text-sm font-semibold rounded-lg transition-all duration-200 hover:brightness-110 cursor-pointer"
+                style={{
+                  fontFamily: 'var(--font-taskor)',
+                  background: 'linear-gradient(135deg, #00bfff, #0099cc)',
+                  color: '#fff',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  boxShadow: '0 0 15px rgba(0,191,255,0.15)',
+                }}
+              >
+                Get Free Access
+              </button>
+            </div>
+          )}
+
+          {/* Widget 3: Category Navigation */}
+          <div className="p-5" style={getCardStyle()}>
+            <style>{`
+              .sidebar-cat-link:not(.sidebar-cat-active) {
+                cursor: pointer;
+              }
+              .sidebar-cat-link:not(.sidebar-cat-active):hover {
+                background: rgba(255,215,0,0.06);
+                color: #e5e4dd !important;
+              }
+            `}</style>
+            <h3 className="text-sm font-semibold mb-3" style={{
+              fontFamily: 'var(--font-taskor)',
+              color: '#e5e4dd',
+              letterSpacing: '0.02em',
+            }}>
+              Explore Topics
+            </h3>
+            <nav>
+              <ul className="space-y-1">
+                {CATEGORIES.map((cat) => {
+                  const isActive = cat.slug === categorySlug;
+                  return (
+                    <li key={cat.slug}>
+                      <a
+                        href={`/blog#category=${cat.slug}`}
+                        className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs sidebar-cat-link${isActive ? ' sidebar-cat-active' : ''}`}
+                        style={{
+                          fontFamily: 'var(--font-amulya)',
+                          color: isActive ? '#ffd700' : '#999',
+                          background: isActive ? 'rgba(255,215,0,0.08)' : 'transparent',
+                          fontWeight: isActive ? 600 : 400,
+                          transition: 'background 0.15s ease, color 0.15s ease',
+                          borderRadius: '6px',
+                        }}
+                      >
+                        <span className="text-sm leading-none">{cat.icon}</span>
+                        <span>{cat.name}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </div>
+
+          {/* Widget 4: Calculator CTA (eXp categories only) */}
           {showCalculator && (
             <div className="p-5" style={getCardStyle(true)}>
               <div className="flex items-center gap-3 mb-3">
@@ -216,7 +362,7 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
                 </div>
                 <h3 className="text-sm font-semibold" style={{
                   fontFamily: 'var(--font-taskor)',
-                  color: isDarkMode ? '#e5e4dd' : '#1a1a1a',
+                  color: '#e5e4dd',
                   letterSpacing: '0.02em',
                 }}>
                   Commission Calculator
@@ -224,7 +370,7 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
               </div>
               <p className="text-xs mb-4" style={{
                 fontFamily: 'var(--font-amulya)',
-                color: isDarkMode ? '#888' : '#666',
+                color: '#888',
                 lineHeight: 1.5,
               }}>
                 What would your commission look like at eXp?
@@ -245,110 +391,13 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
             </div>
           )}
 
-          {/* Widget 2: Contextual Freebie */}
-          <div className="p-5" style={getCardStyle(true)}>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-medium px-2 py-0.5 rounded" style={{
-                background: isDarkMode ? 'rgba(0,255,136,0.1)' : 'rgba(0,180,80,0.1)',
-                color: isDarkMode ? '#00ff88' : '#008844',
-                fontFamily: 'var(--font-taskor)',
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-              }}>
-                Free
-              </span>
-            </div>
-            <h3 className="text-sm font-semibold mt-2 mb-1" style={{
-              fontFamily: 'var(--font-taskor)',
-              color: isDarkMode ? '#e5e4dd' : '#1a1a1a',
-              letterSpacing: '0.02em',
-            }}>
-              {freebie.label}
-            </h3>
-            <p className="text-xs mb-4" style={{
-              fontFamily: 'var(--font-amulya)',
-              color: isDarkMode ? '#888' : '#666',
-              lineHeight: 1.5,
-            }}>
-              {freebie.description}
-            </p>
-            <button
-              onClick={handleFreebieClick}
-              className="block w-full text-center py-2.5 px-4 text-sm font-semibold rounded-lg transition-all duration-200 hover:brightness-110 cursor-pointer"
-              style={{
-                fontFamily: 'var(--font-taskor)',
-                background: isDarkMode
-                  ? 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))'
-                  : 'linear-gradient(135deg, rgba(0,0,0,0.08), rgba(0,0,0,0.04))',
-                color: isDarkMode ? '#e5e4dd' : '#1a1a1a',
-                border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-              }}
-            >
-              {freebie.type === 'canva' ? 'Get Template' : 'Download Free'}
-            </button>
-          </div>
-
-          {/* Widget 3: Category Navigation */}
-          <div className="p-5" style={getCardStyle()}>
-            <style>{`
-              .sidebar-cat-link:not(.sidebar-cat-active):hover {
-                background: ${isDarkMode ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'};
-                color: ${isDarkMode ? '#ccc' : '#333'};
-                border-radius: 6px;
-              }
-            `}</style>
-            <h3 className="text-sm font-semibold mb-3" style={{
-              fontFamily: 'var(--font-taskor)',
-              color: isDarkMode ? '#e5e4dd' : '#1a1a1a',
-              letterSpacing: '0.02em',
-            }}>
-              Explore Topics
-            </h3>
-            <nav>
-              <ul className="space-y-1">
-                {CATEGORIES.map((cat) => {
-                  const isActive = cat.slug === categorySlug;
-                  return (
-                    <li key={cat.slug}>
-                      <a
-                        href={`/blog#category=${cat.slug}`}
-                        className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs sidebar-cat-link${isActive ? ' sidebar-cat-active' : ''}`}
-                        style={{
-                          fontFamily: 'var(--font-amulya)',
-                          color: isActive
-                            ? '#ffd700'
-                            : isDarkMode ? '#999' : '#555',
-                          background: isActive
-                            ? isDarkMode ? 'rgba(255,215,0,0.08)' : 'rgba(255,215,0,0.12)'
-                            : 'transparent',
-                          fontWeight: isActive ? 600 : 400,
-                          transition: 'background 0.15s ease, color 0.15s ease',
-                          borderRadius: '6px',
-                        }}
-                      >
-                        <span className="text-sm leading-none">{cat.icon}</span>
-                        <span>{cat.name}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
-          </div>
-
-          {/* Widget 4: SAA Team Promo */}
+          {/* Widget 5: SAA Team Promo */}
           <div style={{
-            background: isDarkMode
-              ? 'linear-gradient(135deg, rgba(20,20,20,0.95), rgba(12,12,12,0.98))'
-              : 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(245,245,240,0.98))',
-            border: `1px solid ${isDarkMode ? 'rgba(255,215,0,0.2)' : 'rgba(180,150,0,0.25)'}`,
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.95), rgba(12,12,12,0.98))',
+            border: '1px solid rgba(255,215,0,0.2)',
             borderRadius: '12px',
             overflow: 'hidden',
-            boxShadow: isDarkMode
-              ? '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)'
-              : '0 4px 16px rgba(0,0,0,0.08)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
           }}>
             {/* Founders image with gradient overlay */}
             <div style={{ position: 'relative' }}>
@@ -372,9 +421,7 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
                 left: 0,
                 right: 0,
                 height: '50%',
-                background: isDarkMode
-                  ? 'linear-gradient(to top, rgba(12,12,12,0.98) 0%, rgba(12,12,12,0.6) 40%, transparent 100%)'
-                  : 'linear-gradient(to top, rgba(245,245,240,0.98) 0%, rgba(245,245,240,0.6) 40%, transparent 100%)',
+                background: 'linear-gradient(to top, rgba(12,12,12,0.98) 0%, rgba(12,12,12,0.6) 40%, transparent 100%)',
                 pointerEvents: 'none',
               }} />
               {/* "Zero Cost" badge */}
@@ -382,7 +429,7 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
                 position: 'absolute',
                 top: '8px',
                 right: '8px',
-                background: isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.85)',
+                background: 'rgba(0,0,0,0.7)',
                 backdropFilter: 'blur(8px)',
                 border: '1px solid rgba(255,215,0,0.3)',
                 borderRadius: '6px',
@@ -417,14 +464,14 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
                   fontWeight: 600,
-                  textShadow: isDarkMode ? '0 0 12px rgba(255,215,0,0.4)' : 'none',
+                  textShadow: '0 0 12px rgba(255,215,0,0.4)',
                 }}>
                   Meet the Founders
                 </div>
                 <div style={{
                   fontFamily: 'var(--font-amulya)',
                   fontSize: '11px',
-                  color: isDarkMode ? '#ccc' : '#444',
+                  color: '#ccc',
                   marginTop: '1px',
                 }}>
                   Doug Smart & Karrie Hill, JD
@@ -438,7 +485,7 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
               <p className="mb-3" style={{
                 fontFamily: 'var(--font-amulya)',
                 fontSize: '12px',
-                color: isDarkMode ? '#bbb' : '#555',
+                color: '#bbb',
                 lineHeight: 1.55,
               }}>
                 Premium systems and support for eXp agents - built by operators, not figureheads.
@@ -469,7 +516,7 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
                     <span style={{
                       fontFamily: 'var(--font-amulya)',
                       fontSize: '11px',
-                      color: isDarkMode ? '#aaa' : '#555',
+                      color: '#aaa',
                       lineHeight: 1.4,
                     }}>{item}</span>
                   </div>
@@ -479,20 +526,20 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
               {/* Agent count */}
               <div className="text-center mb-3" style={{
                 padding: '6px 0',
-                borderTop: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
-                borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+                borderTop: '1px solid rgba(255,255,255,0.06)',
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
               }}>
                 <span style={{
                   fontFamily: 'var(--font-taskor)',
                   fontSize: '20px',
                   fontWeight: 700,
                   color: '#ffd700',
-                  textShadow: isDarkMode ? '0 0 15px rgba(255,215,0,0.25)' : 'none',
+                  textShadow: '0 0 15px rgba(255,215,0,0.25)',
                 }}>4,000+</span>
                 <span style={{
                   fontFamily: 'var(--font-amulya)',
                   fontSize: '11px',
-                  color: isDarkMode ? '#777' : '#888',
+                  color: '#777',
                   marginLeft: '6px',
                 }}>agents strong</span>
               </div>
@@ -507,7 +554,7 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
                   color: '#0a0a0a',
                   letterSpacing: '0.04em',
                   textTransform: 'uppercase',
-                  boxShadow: isDarkMode ? '0 0 20px rgba(255,215,0,0.15)' : '0 2px 8px rgba(255,200,0,0.3)',
+                  boxShadow: '0 0 20px rgba(255,215,0,0.15)',
                 }}
               >
                 Join The Alliance
@@ -520,13 +567,13 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
                 style={{
                   fontFamily: 'var(--font-amulya)',
                   fontSize: '10px',
-                  color: isDarkMode ? '#777' : '#888',
+                  color: '#777',
                   textDecoration: 'none',
                   letterSpacing: '0.02em',
                   transition: 'color 0.15s ease',
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = '#ffd700')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = isDarkMode ? '#777' : '#888')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#777')}
               >
                 See everything included
               </a>

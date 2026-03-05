@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { useContinuousAnimation } from './useContinuousAnimation';
 
 /**
@@ -7,14 +8,15 @@ import { useContinuousAnimation } from './useContinuousAnimation';
  * Perspective grid stretching to horizon - great for tech/futuristic themes
  */
 export function QuantumGridEffect() {
-  const { time, progress } = useContinuousAnimation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { time, progress } = useContinuousAnimation(containerRef);
 
   const gridLines = 24;
 
   return (
     <>
       {/* Animation container - has overflow-hidden for performance */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
+      <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
         {/* Perspective grid at TOP extending to 95% */}
         <div
           className="absolute inset-0"

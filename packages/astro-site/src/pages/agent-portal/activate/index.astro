@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ActivatePage from '@public-site/app/agent-portal/activate/page';
+---
+
+<BaseLayout
+  title="Activate Account | Smart Agent Alliance"
+  description="Activate your Smart Agent Alliance agent portal account."
+  noScrollIndicator
+  noScrollProgress
+  noStarBackground
+>
+  <ActivatePage client:only="react" />
+</BaseLayout>

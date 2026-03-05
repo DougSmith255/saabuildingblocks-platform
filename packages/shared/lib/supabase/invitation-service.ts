@@ -15,10 +15,12 @@ export interface Invitation {
   user_id: string;
   email: string;
   token: string;
+  token_hash?: string | null;
   status: 'pending' | 'sent' | 'accepted' | 'expired' | 'cancelled';
   expires_at: string;
   sent_at: string | null;
   accepted_at: string | null;
+  activated_at: string | null;
   created_at: string;
   updated_at: string;
   created_by: string;

@@ -1,0 +1,52 @@
+# Smart Agent Alliance
+
+> Real estate coaching and training platform helping agents build sustainable businesses through proven systems, lead generation strategies, and community support.
+
+## About
+
+Smart Agent Alliance provides comprehensive training and resources for real estate professionals. Founded by Doug and Karrie Smart, the platform offers coaching programs, business building strategies, and a supportive community for agents at all experience levels.
+
+## Key Topics
+
+- Real Estate Agent Training
+- Lead Generation Systems
+- Business Building Strategies
+- eXp Realty Partnership
+- Agent Coaching Programs
+- Revenue Share Education
+- Marketing Strategies
+- Client Acquisition
+
+## Primary Content
+
+### Blog Categories
+- Business Growth: Strategies for scaling your real estate business
+- Lead Generation: Proven systems for consistent lead flow
+- Marketing: Digital and traditional marketing techniques
+- Agent Success: Mindset, productivity, and career development
+- eXp Realty: Information about the eXp model and partnership
+
+### Core Pages
+- Homepage: Overview of Smart Agent Alliance mission and offerings
+- Blog: Educational articles and industry insights
+- About: Team information and company background
+
+## Contact
+
+- Website: https://smartagentalliance.com
+- Email: info@smartagentalliance.com
+
+## Technical Details
+
+- Built with: Next.js 16, React 19, TypeScript
+- Hosting: Cloudflare Pages
+- CMS: WordPress (headless)
+- Images: Cloudflare Images CDN
+
+## Sitemap
+
+https://smartagentalliance.com/sitemap.xml
+
+## Robots
+
+https://smartagentalliance.com/robots.txt

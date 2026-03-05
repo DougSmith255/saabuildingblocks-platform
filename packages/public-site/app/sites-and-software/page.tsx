@@ -5,6 +5,7 @@ import { CTAButton } from '@saa/shared/components/saa/buttons';
 import { GenericCard } from '@saa/shared/components/saa/cards';
 import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { LazySection } from '@/components/shared/LazySection';
+import { JoinAllianceCTA } from '@/components/shared/JoinAllianceCTA';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { ParticleStormEffect } from '@/components/shared/hero-effects/ParticleStormEffect';
 import Link from 'next/link';
@@ -285,9 +286,7 @@ export default function SitesAndSoftware() {
               Tools are just the start. Join the Alliance and get the strategy behind them.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="#" onClick={(e: React.MouseEvent) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-                Join The Alliance
-              </CTAButton>
+              <JoinAllianceCTA>Join The Alliance</JoinAllianceCTA>
               <CTAButton href="/exp-realty-sponsor/">
                 See Team Benefits
               </CTAButton>

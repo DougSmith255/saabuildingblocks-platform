@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { useContinuousAnimation } from './useContinuousAnimation';
 
 /**
@@ -11,7 +12,8 @@ import { useContinuousAnimation } from './useContinuousAnimation';
  * - All beams render at full size, transforms handle visual scaling
  */
 export function LaserGridEffect() {
-  const { time, progress } = useContinuousAnimation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { time, progress } = useContinuousAnimation(containerRef);
 
   const horizontalBeams = [...Array(6)].map((_, i) => ({
     y: 15 + i * 14,
@@ -28,7 +30,7 @@ export function LaserGridEffect() {
   return (
     <>
       {/* Animation container - has overflow-hidden for performance */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
+      <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
         {/* Horizontal laser beams - grow from 0 to full (reversed animation) */}
         {horizontalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));

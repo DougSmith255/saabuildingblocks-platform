@@ -18,6 +18,7 @@ import { createGHLClient } from '@/lib/gohighlevel-client';
 import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
 import bcrypt from 'bcryptjs';
 import { verifyAuth } from '@/app/api/middleware/adminAuth';
+import { logPlatformError } from '@/lib/error-logger';
 
 /**
  * Get Supabase Admin client for managing auth users
@@ -354,6 +355,14 @@ export async function PATCH(request: NextRequest) {
     });
   } catch (error) {
     console.error('[Profile Update API] Error:', error);
+    logPlatformError({
+      source: '/api/users/profile',
+      severity: 'error',
+      error_code: 'PROFILE_UPDATE_FAILED',
+      error_message: error instanceof Error ? error.message : 'Unknown error',
+      stack_trace: error instanceof Error ? error.stack : undefined,
+      request,
+    });
 
     return corsResponse(
       {

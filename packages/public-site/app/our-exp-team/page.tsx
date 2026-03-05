@@ -1,11 +1,10 @@
-'use client';
-
 import { CTAButton } from '@saa/shared/components/saa/buttons';
 import { GenericCard } from '@saa/shared/components/saa/cards';
 import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { Icon3D } from '@saa/shared/components/saa/icons';
 import { ProfileCyberFrame } from '@saa/shared/components/saa/media';
 import { LazySection } from '@/components/shared/LazySection';
+import { JoinAllianceCTA } from '@/components/shared/JoinAllianceCTA';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import Image from 'next/image';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
@@ -238,9 +237,7 @@ export default function OurExpTeam() {
               Get 7 layers of support above you, plus access to all our systems, training, and community.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-                Join The Alliance
-              </CTAButton>
+              <JoinAllianceCTA />
               <CTAButton href="/exp-realty-sponsor/">
                 See Our Value
               </CTAButton>

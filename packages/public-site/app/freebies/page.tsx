@@ -6,6 +6,7 @@ import { CTAButton } from '@saa/shared/components/saa/buttons';
 import { GenericCard } from '@saa/shared/components/saa/cards';
 import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { LazySection } from '@/components/shared/LazySection';
+import { JoinAllianceCTA } from '@/components/shared/JoinAllianceCTA';
 
 const FreebieDownloadModal = dynamic(
   () => import('@saa/shared/components/saa/interactive').then(m => ({ default: m.FreebieDownloadModal })),
@@ -261,9 +262,7 @@ export default function Freebies() {
               These downloads are just a preview. Join the Alliance for the complete library.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-                Join The Alliance
-              </CTAButton>
+              <JoinAllianceCTA>Join The Alliance</JoinAllianceCTA>
               <CTAButton href="/exp-realty-sponsor/">
                 See Team Benefits
               </CTAButton>

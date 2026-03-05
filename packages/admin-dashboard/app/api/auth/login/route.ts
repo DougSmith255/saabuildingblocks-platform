@@ -20,6 +20,7 @@ import {
   resetRateLimit,
 } from '@/lib/auth/jwt';
 import { loginSchema, formatZodErrors } from '@/lib/auth/schemas';
+import { logPlatformError } from '@/lib/error-logger';
 
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const RATE_LIMIT_MAX_ATTEMPTS = 5;
@@ -308,6 +309,14 @@ export async function POST(request: NextRequest) {
     return response;
   } catch (error) {
     console.error('[Login API] Error:', error);
+    logPlatformError({
+      source: '/api/auth/login',
+      severity: 'error',
+      error_code: 'LOGIN_ERROR',
+      error_message: error instanceof Error ? error.message : 'Unknown error',
+      stack_trace: error instanceof Error ? error.stack : undefined,
+      request,
+    });
 
     return jsonResponse({
       success: false,

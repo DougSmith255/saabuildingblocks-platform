@@ -26,6 +26,7 @@ export function RevealMaskEffect() {
   const rafRef = useRef<number>(0);
   const lastScrollY = useRef(0);
   const scrollBoostRef = useRef(0);
+  const isVisibleRef = useRef(true);
 
   useEffect(() => {
     // Speed settings
@@ -48,6 +49,11 @@ export function RevealMaskEffect() {
     };
 
     const animate = (timestamp: number) => {
+      if (!isVisibleRef.current) {
+        rafRef.current = 0;
+        return;
+      }
+
       const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
       lastTimestamp = timestamp;
 
@@ -60,6 +66,23 @@ export function RevealMaskEffect() {
       rafRef.current = requestAnimationFrame(animate);
     };
 
+    // Pause when off-screen
+    let observer: IntersectionObserver | undefined;
+    if (containerRef.current) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          const wasVisible = isVisibleRef.current;
+          isVisibleRef.current = entry.isIntersecting;
+          if (!wasVisible && entry.isIntersecting && !rafRef.current) {
+            lastTimestamp = 0;
+            rafRef.current = requestAnimationFrame(animate);
+          }
+        },
+        { threshold: 0 }
+      );
+      observer.observe(containerRef.current);
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     lastScrollY.current = window.scrollY;
     rafRef.current = requestAnimationFrame(animate);
@@ -67,6 +90,7 @@ export function RevealMaskEffect() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(rafRef.current);
+      observer?.disconnect();
     };
   }, []);
 

@@ -75,6 +75,12 @@ const CUSTOM_ICON_PATHS = {
   'MessageCircle': 'M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z',
   'TrendingUp': 'M23 6l-9.5 9.5-5-5L1 18 M17 6h6v6',
   'Award': 'M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14z M8.21 13.89L7 23l5-3 5 3-1.21-9.12',
+  'Camera': 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z M12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+  'Clock': 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 6v6l4 2',
+  'DollarSign': 'M12 1v22 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6',
+  'Key': 'M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4',
+  'Search': 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.35-4.35',
+  'Send': 'M22 2L11 13 M22 2l-7 20-4-9-9-4 20-7z',
 };
 
 /**
@@ -112,7 +118,7 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
   const analyticsDomain = 'smartagentalliance.com';
 
   // Build social links array (filter out "Example" placeholder values)
-  const isRealUrl = (url) => url && url !== 'Example' && url.includes('.');
+  const isRealUrl = (url) => url && url.trim() !== '' && url !== 'Example';
   const socialLinks = [];
   if (isRealUrl(agent.facebook_url)) socialLinks.push({ platform: 'facebook', url: agent.facebook_url, icon: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' });
   if (isRealUrl(agent.instagram_url)) socialLinks.push({ platform: 'instagram', url: agent.instagram_url, icon: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z' });
@@ -129,14 +135,13 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
     });
   }
 
-  const socialLinksHTML = socialLinks.map(link => `
-    <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer"
-       class="social-link" title="${link.platform}">
-      <svg viewBox="0 0 24 24" ${link.isStroke ? 'fill="none" stroke="currentColor" stroke-width="2"' : 'fill="currentColor"'} width="24" height="24">
-        <path d="${link.icon}"/>
-      </svg>
-    </a>
-  `).join('');
+  const isClickableUrl = (url) => url && (url.includes('.') || url.startsWith('http'));
+  const socialLinksHTML = socialLinks.map(link => {
+    const svgMarkup = `<svg viewBox="0 0 24 24" ${link.isStroke ? 'fill="none" stroke="currentColor" stroke-width="2"' : 'fill="currentColor"'} width="24" height="24"><path d="${link.icon}"/></svg>`;
+    return isClickableUrl(link.url)
+      ? `<a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer" class="social-link" title="${link.platform}">${svgMarkup}</a>`
+      : `<span class="social-link" title="${link.platform}">${svgMarkup}</span>`;
+  }).join('');
 
   // Phone display
   const phoneHTML = agent.show_phone && agent.phone ? `
@@ -516,99 +521,15 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   // Cloudflare Images CDN
   const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
-  // SVG Heading Helpers - exact port of CodePen "Shaded Text" technique
-  let _hid = 0;
-  const svgH1Gold = (text, extraStyle = '') => {
-    const n = ++_hid;
-    return `<h1 class="text-h1 text-display" style="position:relative;text-align:center;${extraStyle}">
-      <span class="sr-only">${text}</span>
-      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:-1.5em auto -2em;font-family:inherit;font-feature-settings:'ss01' 1;font-size:inherit;">
-        <defs>
-          <filter id="hs${n}"><feGaussianBlur in="SourceAlpha" stdDeviation="10"/></filter>
-          <filter id="hg${n}"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          <linearGradient id="hgr${n}" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#dddcd5"/><stop offset="35%" stop-color="#f2f1ec"/><stop offset="65%" stop-color="#f2f1ec"/><stop offset="100%" stop-color="#dddcd5"/>
-          </linearGradient>
-          <symbol id="ss${n}" overflow="visible"><text x="50%" y="60%" fill="none" stroke-width=".22em" paint-order="stroke fill" text-anchor="middle">${text}</text></symbol>
-          <symbol id="sf${n}" overflow="visible"><text x="50%" y="60%" text-anchor="middle">${text}</text></symbol>
-        </defs>
-        <g stroke-dasharray="3.5em 0em" stroke-linecap="butt" stroke-linejoin="miter">
-          <use x="0.167%" y="1.67%" href="#ss${n}" stroke="#b8960a" opacity="0.5" filter="url(#hs${n})"/>
-          <use x="0.12%" y="1.2%" href="#ss${n}" stroke="#e6ac00"/>
-          <use x="0.1%" y="1.0%" href="#ss${n}" stroke="#d4a010"/>
-          <use x="0.08%" y="0.8%" href="#ss${n}" stroke="#b8900a"/>
-          <use x="0.06%" y="0.6%" href="#ss${n}" stroke="#9a7808"/>
-          <use x="0.045%" y="0.45%" href="#ss${n}" stroke="#7c6008"/>
-          <use x="0.03%" y="0.3%" href="#ss${n}" stroke="#5e4808"/>
-          <use x="0.015%" y="0.15%" href="#ss${n}" stroke="#3f3010"/>
-          <use x="0%" y="0%" href="#ss${n}" stroke="#191818"/>
-        </g>
-        <use x="0.15%" y="0.4%" href="#sf${n}" fill="#7a7970"/>
-        <use x="0.124%" y="0.14%" href="#sf${n}" fill="#8d8c80"/>
-        <use x="0.099%" y="-0.11%" href="#sf${n}" fill="#a09f94"/>
-        <use x="0.073%" y="-0.37%" href="#sf${n}" fill="#b3b2a8"/>
-        <use x="0.047%" y="-0.63%" href="#sf${n}" fill="#c2c1b8"/>
-        <use x="0.021%" y="-0.89%" href="#sf${n}" fill="#d1d0c7"/>
-        <use x="-0.004%" y="-1.14%" href="#sf${n}" fill="#dddcd5"/>
-        <use x="-0.06%" y="-1.4%" href="#sf${n}" fill="#ffd700" opacity="0.15" filter="url(#hg${n})"/>
-        <use x="-0.06%" y="-1.4%" href="#sf${n}" fill="url(#hgr${n})"/>
-      </svg>
-    </h1>`;
+  // CSS Heading Helpers - SVG stroke back layers + face text-shadow
+  const cssH1Gold = (text, extraStyle = '') => {
+    return `<div class="heading-wrapper" data-type="h1"><h1 class="heading-front h1-front text-h1 text-display" style="${extraStyle}">${text}</h1></div>`;
   };
-  const svgH2 = (text, align = 'center', extraStyle = '') => {
-    const n = ++_hid;
-    const anchor = align === 'left' ? 'start' : 'middle';
-    const tx = align === 'left' ? '0%' : '50%';
-    return `<h2 class="text-h2" style="position:relative;text-align:${align};margin-left:${align === 'left' ? '0' : 'auto'};margin-right:auto;margin-bottom:2.5rem;max-width:1400px;${extraStyle}">
-      <span class="sr-only">${text}</span>
-      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:-1.5em auto -2em;font-family:inherit;font-feature-settings:'ss01' 1;font-size:inherit;">
-        <defs>
-          <filter id="hs${n}"><feGaussianBlur in="SourceAlpha" stdDeviation="10"/></filter>
-          <symbol id="ss${n}" overflow="visible"><text x="${tx}" y="60%" fill="none" stroke-width=".10em" paint-order="stroke fill" text-anchor="${anchor}">${text}</text></symbol>
-          <symbol id="sf${n}" overflow="visible"><text x="${tx}" y="60%" text-anchor="${anchor}">${text}</text></symbol>
-        </defs>
-        <g stroke-dasharray="3.5em 0em" stroke-linecap="butt" stroke-linejoin="miter">
-          <use x="0.167%" y="1.67%" href="#ss${n}" stroke="#2a2a2a" opacity="0.5" filter="url(#hs${n})"/>
-          <use x="0.12%" y="1.2%" href="#ss${n}" stroke="#4a4a4a"/>
-          <use x="0.073%" y="0.73%" href="#ss${n}" stroke="#3e3e3e"/>
-          <use x="0.033%" y="0.33%" href="#ss${n}" stroke="#333333"/>
-          <use x="0%" y="0%" href="#ss${n}" stroke="#282828"/>
-        </g>
-        <use x="0.15%" y="0.4%" href="#sf${n}" fill="#7a7970"/>
-        <use x="0.124%" y="0.14%" href="#sf${n}" fill="#8d8c80"/>
-        <use x="0.099%" y="-0.11%" href="#sf${n}" fill="#a09f94"/>
-        <use x="0.073%" y="-0.37%" href="#sf${n}" fill="#b3b2a8"/>
-        <use x="0.047%" y="-0.63%" href="#sf${n}" fill="#c2c1b8"/>
-        <use x="0.021%" y="-0.89%" href="#sf${n}" fill="#d1d0c7"/>
-        <use x="-0.004%" y="-1.14%" href="#sf${n}" fill="#dddcd5"/>
-        <use x="-0.06%" y="-1.4%" href="#sf${n}" fill="#e5e4dd"/>
-      </svg>
-    </h2>`;
+  const cssH2 = (text, align = 'center', extraStyle = '') => {
+    return `<div class="heading-wrapper${align === 'left' ? ' text-left' : ''}" data-type="h2"><h2 class="heading-front h2-front text-h2" style="${extraStyle}">${text}</h2></div>`;
   };
-  const svgTagline = (text) => {
-    const n = ++_hid;
-    return `<svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:-1.5em auto -2em;font-family:inherit;font-feature-settings:'ss01' 1;font-size:inherit;">
-        <defs>
-          <filter id="hs${n}"><feGaussianBlur in="SourceAlpha" stdDeviation="10"/></filter>
-          <symbol id="ss${n}" overflow="visible"><text x="50%" y="60%" fill="none" stroke-width=".10em" paint-order="stroke fill" text-anchor="middle">${text}</text></symbol>
-          <symbol id="sf${n}" overflow="visible"><text x="50%" y="60%" text-anchor="middle">${text}</text></symbol>
-        </defs>
-        <g stroke-dasharray="3.5em 0em" stroke-linecap="butt" stroke-linejoin="miter">
-          <use x="0.167%" y="1.67%" href="#ss${n}" stroke="#2a2a2a" opacity="0.5" filter="url(#hs${n})"/>
-          <use x="0.12%" y="1.2%" href="#ss${n}" stroke="#4a4a4a"/>
-          <use x="0.073%" y="0.73%" href="#ss${n}" stroke="#3e3e3e"/>
-          <use x="0.033%" y="0.33%" href="#ss${n}" stroke="#333333"/>
-          <use x="0%" y="0%" href="#ss${n}" stroke="#282828"/>
-        </g>
-        <use x="0.15%" y="0.4%" href="#sf${n}" fill="#7a7970"/>
-        <use x="0.124%" y="0.14%" href="#sf${n}" fill="#8d8c80"/>
-        <use x="0.099%" y="-0.11%" href="#sf${n}" fill="#a09f94"/>
-        <use x="0.073%" y="-0.37%" href="#sf${n}" fill="#b3b2a8"/>
-        <use x="0.047%" y="-0.63%" href="#sf${n}" fill="#c2c1b8"/>
-        <use x="0.021%" y="-0.89%" href="#sf${n}" fill="#d1d0c7"/>
-        <use x="-0.004%" y="-1.14%" href="#sf${n}" fill="#dddcd5"/>
-        <use x="-0.06%" y="-1.4%" href="#sf${n}" fill="#e5e4dd"/>
-      </svg>`;
+  const cssTagline = (text) => {
+    return `<div class="heading-wrapper" data-type="h2"><p class="heading-front h2-front text-h2" style="text-align:center;">${text}</p></div>`;
   };
 
   return `<!DOCTYPE html><html lang="en"><head>
@@ -712,6 +633,82 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     .font-heading {
       font-family: var(--font-taskor), system-ui, sans-serif;
+    }
+
+    /* SVG stroke heading wrapper */
+    .heading-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      overflow: visible;
+      text-align: center;
+    }
+    .heading-wrapper[data-type="h2"] {
+      margin-bottom: 2.5rem;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .heading-wrapper svg[aria-hidden] {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      overflow: visible;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Heading front face - shared */
+    .heading-front {
+      font-family: var(--font-taskor), serif;
+      font-feature-settings: "ss01" 1;
+      line-height: 1.1;
+      position: relative;
+      overflow: visible;
+    }
+
+    /* H1 face - gold glow + cream fill extrusion */
+    .h1-front {
+      color: #f2f1ec;
+      transform: perspective(800px) rotateX(12deg);
+      text-shadow:
+        0 0 0.08em rgba(255, 215, 0, 0.4),
+        0 0 0.2em rgba(255, 215, 0, 0.25),
+        0.003em 0.004em 0 #e2e1da,
+        0.006em 0.008em 0 #dddcd5,
+        0.010em 0.013em 0 #d8d7d0,
+        0.013em 0.019em 0 #d1d0c7,
+        0.016em 0.025em 0 #cac9c0,
+        0.019em 0.032em 0 #c2c1b8,
+        0.022em 0.038em 0 #bbbab0,
+        0.025em 0.044em 0 #b3b2a8,
+        0.028em 0.050em 0 #abaa9f,
+        0.031em 0.057em 0 #a09f94,
+        0.034em 0.063em 0 #96958a,
+        0.037em 0.070em 0 #8d8c80,
+        0.040em 0.076em 0 #838278,
+        0.043em 0.082em 0 #7a7970;
+    }
+
+    /* H2 face - cream fill extrusion */
+    .h2-front {
+      color: #e5e4dd;
+      transform: perspective(800px) rotateX(8deg);
+      text-shadow:
+        0.005em 0.007em 0 #dddcd5,
+        0.010em 0.015em 0 #d5d4cb,
+        0.015em 0.025em 0 #cccbc2,
+        0.019em 0.035em 0 #c2c1b8,
+        0.023em 0.045em 0 #b8b7ae,
+        0.027em 0.055em 0 #abaa9f,
+        0.031em 0.065em 0 #a09f94,
+        0.034em 0.073em 0 #96958a,
+        0.037em 0.080em 0 #8d8c80,
+        0.040em 0.088em 0 #7a7970;
+    }
+    .heading-wrapper.text-left {
+      text-align: left;
+      margin-left: 0;
     }
 
     /* SR-only text for SEO/accessibility */
@@ -1011,7 +1008,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       pointer-events: none;
     }
 
-    .counter-digit-tagline {
+    .counter-digit {
       display: inline-block;
       width: 0.65em;
       text-align: center;
@@ -3271,32 +3268,44 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       object-fit: cover;
     }
 
-    /* Founder Name - gold glow style */
-    /* Founder name - H1-style glow with H3 sizing */
+    .founder-name-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      overflow: visible;
+      padding-bottom: 0.4em;
+      margin-bottom: -0.15em;
+      text-align: center;
+    }
     .founder-name {
-      font-family: var(--font-taskor), sans-serif;
-      font-size: clamp(27px, calc(25.36px + 0.65vw), 45px);
-      line-height: 1.3;
-      font-weight: 700;
-      color: #ffd700;
-      transform: perspective(800px) rotateX(12deg);
+      font-family: var(--font-taskor), serif;
       font-feature-settings: "ss01" 1;
+      font-size: clamp(27px, calc(25.36px + 0.65vw), 45px);
+      line-height: 1.1;
+      font-weight: 700;
+      color: #f2f1ec;
+      transform: perspective(800px) rotateX(12deg);
       text-shadow:
-        0 0 0.01em #fff,
-        0 0 0.02em #fff,
-        0 0 0.03em rgba(255,255,255,0.8),
-        0 0 0.05em #ffd700,
-        0 0 0.09em rgba(255, 215, 0, 0.8),
-        0 0 0.13em rgba(255, 215, 0, 0.55),
-        0 0 0.18em rgba(255, 179, 71, 0.35),
-        0.03em 0.03em 0 #2a2a2a,
-        0.045em 0.045em 0 #1a1a1a,
-        0.06em 0.06em 0 #0f0f0f,
-        0.075em 0.075em 0 #080808;
-      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
-      animation: h1GlowBreathe 4s ease-in-out infinite;
+        0 0 0.08em rgba(255, 215, 0, 0.4),
+        0 0 0.2em rgba(255, 215, 0, 0.25),
+        0.003em 0.004em 0 #e2e1da,
+        0.006em 0.008em 0 #dddcd5,
+        0.010em 0.013em 0 #d8d7d0,
+        0.013em 0.019em 0 #d1d0c7,
+        0.016em 0.025em 0 #cac9c0,
+        0.019em 0.032em 0 #c2c1b8,
+        0.022em 0.038em 0 #bbbab0,
+        0.025em 0.044em 0 #b3b2a8,
+        0.028em 0.050em 0 #abaa9f,
+        0.031em 0.057em 0 #a09f94,
+        0.034em 0.063em 0 #96958a,
+        0.037em 0.070em 0 #8d8c80,
+        0.040em 0.076em 0 #838278,
+        0.043em 0.082em 0 #7a7970;
       margin-bottom: 0.25rem;
       text-align: center;
+      position: relative;
+      overflow: visible;
     }
     .founder-title {
       font-family: 'Synonym', system-ui, sans-serif;
@@ -3375,14 +3384,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       .leadership-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 2rem;
-      }
-    }
-    @keyframes h1GlowBreathe {
-      0%, 100% {
-        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
-      }
-      50% {
-        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45));
       }
     }
 
@@ -3779,13 +3780,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
             <!-- Hero Text -->
             <div class="hero-text-wrapper" style="perspective: 1000px;">
-              ${svgH1Gold('SMART AGENT ALLIANCE', 'font-size:clamp(50px,calc(30px + 4vw + 0.3vh),150px);margin-bottom:3px;')}
-              <div class="tagline-backdrop">
-                <p class="text-tagline tagline">
-                <span class="sr-only">Join ${escapeHTML(displayName)}'s Team</span>
-                ${svgTagline(`Join ${escapeHTML(displayName)}&rsquo;s Team`)}
-                <span class="tagline-counter-suffix"><span style="color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;">(</span><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;" class="counter-numbers-tagline"><span class="counter-digit-tagline">1</span><span class="counter-digit-tagline">6</span><span class="counter-digit-tagline">8</span><span class="counter-digit-tagline">8</span><span>+</span></span><span style="color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;">&nbsp;</span><span style="color: #bfbdb0; font-family: var(--font-taskor), sans-serif; font-feature-settings: 'ss01' 1; text-transform: uppercase; letter-spacing: 0.05em;">Agents)</span></span>
-              </p>
+              ${cssH1Gold('SMART AGENT ALLIANCE', 'font-size:clamp(50px,calc(30px + 4vw + 0.3vh),150px);margin-bottom:3px;')}
+              <div class="tagline-backdrop" style="margin-top:30px;margin-bottom:30px;text-align:center;">
+                <div class="heading-wrapper" data-type="h2" style="display:inline-block;margin-bottom:0;">
+                  <p class="heading-front h2-front text-h2" style="text-align:center;">Join ${escapeHTML(displayName)}&rsquo;s Team</p>
+                </div>
+                <div class="tagline-counter-suffix" style="display:flex;justify-content:center;align-items:center;gap:0.25em;margin-top:12px;font-size:clamp(1.375rem, 2.25vw, 1.8125rem);"><span style="color:#e5e4dd;font-family:var(--font-synonym),monospace;font-weight:300;font-size:calc(1em + 10px);">(</span><span class="counter-numbers-mobile" style="display:inline;color:#e5e4dd;font-family:var(--font-synonym),monospace;font-weight:300;font-size:calc(1em + 10px);text-shadow:none;"><span class="counter-digit">4</span><span class="counter-digit">0</span><span class="counter-digit">0</span><span class="counter-digit">0</span><span>+</span></span><span class="heading-front h2-front" style="display:inline-block;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;">&nbsp;Agents)</span></div>
               </div>
               <div class="flex justify-center items-center" style="margin-top: 14px;">
                 <div class="cta-button-wrapper">
@@ -3846,7 +3846,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       <div style="max-width: 1500px; margin: 0 auto;">
         <!-- Header - always visible, no animation -->
         <div class="text-center mb-12" style="max-width: 1600px; margin-left: auto; margin-right: auto;">
-          ${svgH2('Why Smart Agent Alliance (SAA)?')}
+          ${cssH2('Why Smart Agent Alliance (SAA)?')}
         </div>
         <div class="why-saa-grid">
           <!-- Left Card - visible immediately -->
@@ -3918,7 +3918,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <!-- Left - Content -->
               <div class="proven-grid-left">
                 <!-- H2 - always visible, no animation -->
-                ${svgH2('Proven at Scale', 'left')}
+                ${cssH2('Proven at Scale', 'left')}
 
                 <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
                   <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem;">
@@ -3953,7 +3953,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                       <span class="icon-3d" style="display: inline-flex; margin-bottom: 0.75rem;">
                         <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                       </span>
-                      <p class="font-heading" style="font-size: clamp(1.875rem, 2vw, 2.25rem); font-weight: 700; color: #e5e4dd; text-shadow: 0.010em 0.013em 0 #dddcd5, 0.015em 0.025em 0 #d1d0c7, 0.019em 0.038em 0 #c2c1b8, 0.024em 0.050em 0 #b3b2a8, 0.029em 0.063em 0 #a09f94, 0.033em 0.075em 0 #8d8c80, 0.038em 0.088em 0 #7a7970, 0.040em 0.095em 0 #282828, 0.044em 0.110em 0 #333333, 0.048em 0.125em 0 #3e3e3e, 0.052em 0.140em 0 #4a4a4a, 0.054em 0.150em 0.02em rgba(0,0,0,0.5); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; transform: perspective(800px) rotateX(8deg); filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));">4000+</p>
+                      <div class="heading-wrapper" data-type="h2"><p class="heading-front h2-front text-h2" style="font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">4000+</p></div>
                       <p class="text-body" style="margin-top: 0.5rem;">Agents in Sponsor Network</p>
                     </div>
                   </div>
@@ -3969,7 +3969,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <section style="padding: var(--section-padding-y) 1.5rem; position: relative;" id="what-you-get-section">
       <div style="max-width: 1500px; margin: 0 auto; position: relative; z-index: 10;">
         <div class="text-center" style="margin-bottom: 2.5rem;">
-          ${svgH2('What You Get with SAA')}
+          ${cssH2('What You Get with SAA')}
           <p class="text-body" style="opacity: 0.6; margin-top: -1.5rem; max-width: 950px; margin-left: auto; margin-right: auto;">As an SAA agent, you are part of both Smart Agent Alliance and the Wolfpack, our larger team network within eXp Realty. Your Agent Portal brings everything together in one place.</p>
         </div>
 
@@ -4144,7 +4144,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div style="max-width: 1600px; margin: 0 auto;">
               <!-- Section Header -->
               <div class="text-center" style="margin-bottom: 2rem;">
-                ${svgH2('Why This Only Works at eXp Realty', 'center', 'max-width:100%;')}
+                ${cssH2('Why This Only Works at eXp Realty', 'center', 'max-width:100%;')}
               </div>
 
               <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: start;" class="why-only-grid-responsive">
@@ -4207,7 +4207,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <!-- Media Logos Section (Why eXp Realty?) - 5-Card Layout -->
     <section class="media-logos-section scroll-reveal" id="media-logos-section">
       <div class="text-center px-4 relative" style="z-index: 10;">
-        ${svgH2('Why eXp Realty?', 'center', 'max-width:100%;')}
+        ${cssH2('Why eXp Realty?', 'center', 'max-width:100%;')}
 
         <!-- Cards Grid: 3 on top, 2 on bottom -->
         <div class="mx-auto mb-8" style="max-width: 1800px;">
@@ -4446,7 +4446,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div style="max-width: 1500px; margin: 0 auto; position: relative; z-index: 10;">
             <!-- Header - always visible, no animation -->
             <div style="text-align: center; margin-bottom: 3rem;">
-              ${svgH2('Your Support Network')}
+              ${cssH2('Your Support Network')}
             </div>
 
             <!-- Three column layout - Agent, Doug, Karrie -->
@@ -4463,7 +4463,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
                   </div>
-                  <h3 class="founder-name">${escapeHTML(displayName)}</h3>
+                  <div class="founder-name-wrapper" data-type="founder"><h3 class="heading-front founder-name">${escapeHTML(displayName)}</h3></div>
                   <p class="founder-title">SAA Team Member</p>
                 </div>
               </div>
@@ -4480,7 +4480,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
                   </div>
-                  <h3 class="founder-name">Doug Smart</h3>
+                  <div class="founder-name-wrapper" data-type="founder"><h3 class="heading-front founder-name">Doug Smart</h3></div>
                   <p class="founder-title">Co-Founder &amp; Full-Stack Developer</p>
                   <button class="founder-bio-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
                     <span>About Doug</span>
@@ -4504,7 +4504,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
                   </div>
-                  <h3 class="founder-name">Karrie Hill</h3>
+                  <div class="founder-name-wrapper" data-type="founder"><h3 class="heading-front founder-name">Karrie Hill</h3></div>
                   <p class="founder-title">Co-Founder &amp; California Lawyer</p>
                   <button class="founder-bio-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
                     <span>About Karrie</span>
@@ -4540,7 +4540,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <div id="built-future-content" style="position: relative;">
           <!-- Section Header - extra top padding for H2 metal backing plate -->
           <div style="text-align: center; margin-bottom: 1rem; padding-top: 1rem; padding-left: 1.5rem; padding-right: 1.5rem;">
-            ${svgH2('Built for Where Real Estate Is Going', 'center', 'max-width:100%;')}
+            ${cssH2('Built for Where Real Estate Is Going', 'center', 'max-width:100%;')}
           </div>
           <p class="text-body" style="opacity: 0.7; margin-bottom: 3rem; text-align: center; max-width: 42rem; margin-left: auto; margin-right: auto; padding-left: 1.5rem; padding-right: 1.5rem;">The future of real estate is cloud-based, global, and technology-driven. SAA is already there.</p>
 
@@ -4584,7 +4584,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <section id="watch-and-decide" class="section py-16 md:py-24 px-4">
           <div style="max-width: 1900px; margin: 0 auto;">
             <div class="text-center mb-8 md:mb-12">
-              ${svgH2('Book a Call')}
+              ${cssH2('Book a Call')}
               <p class="text-body mt-4 max-w-2xl mx-auto opacity-80">Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full.</p>
             </div>
             <div class="max-w-4xl mx-auto">
@@ -6828,7 +6828,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
       // Counter scramble animation (matches homepage)
       function setupCounterAnimation() {
-        const taglineDigits = document.querySelectorAll('.counter-digit-tagline');
+        const taglineDigits = document.querySelectorAll('.counter-digit');
         if (taglineDigits.length !== 4) return;
 
         let animationId = null;
@@ -6847,8 +6847,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             const progress = Math.min(elapsed / duration, 1);
 
             if (progress >= 1) {
-              taglineDigits[0].textContent = '3';
-              taglineDigits[1].textContent = '7';
+              taglineDigits[0].textContent = '4';
+              taglineDigits[1].textContent = '0';
               taglineDigits[2].textContent = '0';
               taglineDigits[3].textContent = '0';
               animationId = null;
@@ -6859,7 +6859,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               const digits = currentValue.toString().padStart(4, '0').split('');
               const scrambled = digits.map(function(digit, index) {
                 if (Math.random() < scrambleIntensity * 0.3) {
-                  if (index === 0) return '3';
+                  if (index === 0) return '4';
                   return (Math.floor(Math.random() * 8) + 2).toString();
                 }
                 return digit;
@@ -8059,6 +8059,171 @@ ${agent.slug === 'jane-smith' ? `
 })();
 </script>
 ` : ''}
+<script>
+/* SVG stroke back layers - sharp miter-joined depth behind H1/H2/tagline headings */
+(function(){
+  var H1_LAYERS = [
+    { color: '#b8960a', tx: '0.06em', ty: '0.18em', filter: 'blur(10px)', opacity: '0.5' },
+    { color: '#e6ac00', tx: '0.05em', ty: '0.155em' },
+    { color: '#d4a010', tx: '0.042em', ty: '0.13em' },
+    { color: '#b8900a', tx: '0.035em', ty: '0.11em' },
+    { color: '#9a7808', tx: '0.025em', ty: '0.08em' },
+    { color: '#7c6008', tx: '0.016em', ty: '0.052em' },
+    { color: '#5e4808', tx: '0.008em', ty: '0.026em' },
+    { color: '#3f3010', tx: '0.004em', ty: '0.013em' },
+    { color: '#191818', tx: '0', ty: '0' }
+  ];
+  var H2_LAYERS = [
+    { color: '#404040', tx: '0.04em', ty: '0.12em', filter: 'blur(6px)', opacity: '0.4' },
+    { color: '#404040', tx: '0.035em', ty: '0.105em' },
+    { color: '#3c3c3c', tx: '0.030em', ty: '0.09em' },
+    { color: '#383838', tx: '0.025em', ty: '0.075em' },
+    { color: '#343434', tx: '0.018em', ty: '0.055em' },
+    { color: '#303030', tx: '0.012em', ty: '0.038em' },
+    { color: '#2c2c2c', tx: '0.006em', ty: '0.020em' },
+    { color: '#282828', tx: '0.003em', ty: '0.010em' },
+    { color: '#222222', tx: '0', ty: '0' }
+  ];
+  var FOUNDER_LAYERS = [
+    { color: '#b8960a', tx: '0.04em', ty: '0.12em', filter: 'blur(6px)', opacity: '0.4' },
+    { color: '#e6ac00', tx: '0.035em', ty: '0.105em' },
+    { color: '#d4a010', tx: '0.030em', ty: '0.09em' },
+    { color: '#b8900a', tx: '0.025em', ty: '0.075em' },
+    { color: '#9a7808', tx: '0.018em', ty: '0.055em' },
+    { color: '#7c6008', tx: '0.012em', ty: '0.038em' },
+    { color: '#5e4808', tx: '0.006em', ty: '0.020em' },
+    { color: '#3f3010', tx: '0.003em', ty: '0.010em' },
+    { color: '#191818', tx: '0', ty: '0' }
+  ];
+  var CONFIGS = {
+    h1: { layers: H1_LAYERS, strokeWidth: '0.22em', rotateX: '12deg', faceOffset: { x: '-0.025em', y: '0.13em' } },
+    h2: { layers: H2_LAYERS, strokeWidth: '0.18em', rotateX: '8deg', faceOffset: { x: '-0.018em', y: '0.15em' } },
+    founder: { layers: FOUNDER_LAYERS, strokeWidth: '0.16em', rotateX: '12deg', faceOffset: { x: '-0.015em', y: '0.10em' } }
+  };
+  var NS = 'http://www.w3.org/2000/svg';
+
+  function getTextLines(heading, wrapperRect) {
+    var fullText = heading.textContent.trim();
+    var textNode = heading.childNodes[0];
+    if (!textNode || textNode.nodeType !== 3 || heading.childNodes.length > 1) {
+      var hRect = heading.getBoundingClientRect();
+      var cx = (hRect.left + hRect.right) / 2 - wrapperRect.left;
+      return [{ text: fullText, bottom: hRect.bottom - wrapperRect.top, centerX: cx, width: hRect.width }];
+    }
+    var text = textNode.data;
+    var rawLines = [], lastTop = -Infinity, currentLine = '', lineRect = null, lineMinX = Infinity, lineMaxX = -Infinity;
+    for (var i = 0; i < text.length; i++) {
+      var range = document.createRange();
+      range.setStart(textNode, i);
+      range.setEnd(textNode, i + 1);
+      var rect = range.getBoundingClientRect();
+      range.detach();
+      if (rect.height === 0) continue;
+      if (rect.top > lastTop + 2 && currentLine) {
+        rawLines.push({ text: currentLine, bottom: lineRect.bottom - wrapperRect.top, minX: lineMinX - wrapperRect.left, maxX: lineMaxX - wrapperRect.left });
+        currentLine = text[i]; lineRect = rect; lineMinX = rect.left; lineMaxX = rect.right;
+      } else {
+        currentLine += text[i];
+        if (!lineRect || rect.top > lastTop + 2) lineRect = rect;
+        lineMinX = Math.min(lineMinX, rect.left); lineMaxX = Math.max(lineMaxX, rect.right);
+      }
+      lastTop = rect.top;
+    }
+    if (currentLine) rawLines.push({ text: currentLine.trimEnd(), bottom: lineRect ? lineRect.bottom - wrapperRect.top : 0, minX: lineMinX - wrapperRect.left, maxX: lineMaxX - wrapperRect.left });
+    if (rawLines.length <= 1) return rawLines.map(function(l) { return { text: l.text, bottom: l.bottom, centerX: (l.minX + l.maxX) / 2, width: l.maxX - l.minX }; });
+    var styles = getComputedStyle(heading);
+    var lineHeight = parseFloat(styles.lineHeight) || parseFloat(styles.fontSize) * 1.1;
+    var firstBottom = rawLines[0].bottom;
+    return rawLines.map(function(line, i) { return { text: line.text, bottom: firstBottom + i * lineHeight, centerX: (line.minX + line.maxX) / 2, width: line.maxX - line.minX }; });
+  }
+
+  function createBackLayers(wrapper) {
+    var heading = wrapper.querySelector('.heading-front');
+    if (!heading) return;
+    var type = wrapper.dataset.type;
+    var cfg = CONFIGS[type];
+    if (!cfg) return;
+    var layers = cfg.layers, strokeWidth = cfg.strokeWidth, rotateX = cfg.rotateX;
+    var styles = getComputedStyle(heading);
+    var fontSizePx = parseFloat(styles.fontSize);
+    var fontWeight = styles.fontWeight;
+    var origTransform = heading.style.transform;
+    heading.style.transform = 'none';
+    heading.offsetHeight;
+    var wrapperRect = wrapper.getBoundingClientRect();
+    var lines = getTextLines(heading, wrapperRect);
+    heading.style.transform = origTransform;
+    if (!lines.length) return;
+    var openingRadius = Math.max(0.8, fontSizePx * 0.03);
+    layers.forEach(function(layer, i) {
+      var svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('overflow', 'visible');
+      svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:calc(100% + 1em);overflow:visible;pointer-events:none;user-select:none;transform:perspective(800px) rotateX(' + rotateX + ') translate(' + (layer.tx||'0') + ',' + (layer.ty||'0') + ')';
+      if (layer.filter) svg.style.filter = layer.filter;
+      if (layer.opacity) svg.style.opacity = layer.opacity;
+      if (!layer.filter) {
+        var defs = document.createElementNS(NS, 'defs');
+        var filterId = 'so-' + type[0] + '-' + i;
+        var filter = document.createElementNS(NS, 'filter');
+        filter.setAttribute('id', filterId);
+        filter.setAttribute('x', '-30%'); filter.setAttribute('y', '-30%');
+        filter.setAttribute('width', '160%'); filter.setAttribute('height', '160%');
+        var erode = document.createElementNS(NS, 'feMorphology');
+        erode.setAttribute('operator', 'erode'); erode.setAttribute('radius', openingRadius);
+        erode.setAttribute('in', 'SourceGraphic'); erode.setAttribute('result', 'eroded');
+        var dilate = document.createElementNS(NS, 'feMorphology');
+        dilate.setAttribute('operator', 'dilate'); dilate.setAttribute('radius', openingRadius);
+        dilate.setAttribute('in', 'eroded');
+        filter.appendChild(erode); filter.appendChild(dilate);
+        defs.appendChild(filter); svg.appendChild(defs);
+      }
+      var isInnermost = (i === layers.length - 1);
+      lines.forEach(function(line) {
+        var t = document.createElementNS(NS, 'text');
+        t.setAttribute('x', line.centerX + 'px');
+        t.setAttribute('y', (line.bottom - fontSizePx * 0.05) + 'px');
+        t.setAttribute('text-anchor', 'middle');
+        t.setAttribute('fill', isInnermost ? layer.color : 'none');
+        t.setAttribute('stroke', layer.color);
+        t.setAttribute('stroke-width', strokeWidth);
+        t.setAttribute('stroke-linejoin', 'miter');
+        t.setAttribute('stroke-miterlimit', '4');
+        t.setAttribute('paint-order', 'stroke fill');
+        if (!layer.filter) t.setAttribute('filter', 'url(#so-' + type[0] + '-' + i + ')');
+        t.style.fontFamily = "'Taskor', serif";
+        t.style.fontSize = fontSizePx + 'px';
+        t.style.fontWeight = fontWeight;
+        t.style.fontFeatureSettings = "'ss01' 1";
+        t.textContent = line.text;
+        if (line.width > 0) {
+          t.setAttribute('textLength', line.width + 'px');
+          t.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+        }
+        svg.appendChild(t);
+      });
+      wrapper.insertBefore(svg, heading);
+    });
+    var offset = cfg.faceOffset;
+    if (offset) heading.style.transform = 'perspective(800px) rotateX(' + rotateX + ') translate(' + offset.x + ',' + offset.y + ')';
+  }
+
+  function initAll() {
+    document.querySelectorAll('.heading-wrapper[data-type],.founder-name-wrapper[data-type]').forEach(function(w) {
+      w.querySelectorAll('svg[aria-hidden]').forEach(function(s) { s.remove(); });
+      var h = w.querySelector('.heading-front');
+      var type = w.dataset.type;
+      var rotateX = CONFIGS[type] ? CONFIGS[type].rotateX : '8deg';
+      if (h) h.style.transform = 'perspective(800px) rotateX(' + rotateX + ')';
+      createBackLayers(w);
+    });
+  }
+
+  document.fonts.ready.then(initAll);
+  var resizeTimer;
+  window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initAll, 150); });
+})();
+</script>
 </body></html>`;
 }
 
@@ -8082,11 +8247,11 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   // Dynamic font size for name based on character count
   // Short names get bigger, long names get smaller
   const nameLen = fullName.length;
-  const nameFontSize = nameLen <= 10 ? 'clamp(2.2rem, 7vw, 3rem)'
-    : nameLen <= 14 ? 'clamp(1.9rem, 6vw, 2.7rem)'
-    : nameLen <= 18 ? 'clamp(1.75rem, 5vw, 2.5rem)'
-    : nameLen <= 22 ? 'clamp(1.5rem, 4.5vw, 2.2rem)'
-    : 'clamp(1.25rem, 4vw, 1.9rem)';
+  const nameFontSize = nameLen <= 10 ? 'clamp(1.5rem, 5vw, 2.1rem)'
+    : nameLen <= 14 ? 'clamp(1.35rem, 4.2vw, 1.85rem)'
+    : nameLen <= 18 ? 'clamp(1.2rem, 3.7vw, 1.65rem)'
+    : nameLen <= 22 ? 'clamp(1.05rem, 3.2vw, 1.45rem)'
+    : 'clamp(0.9rem, 2.7vw, 1.25rem)';
 
   // Get customization settings with defaults
   const settings = agent.links_settings || {
@@ -8116,8 +8281,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
   const isAccentDark = isColorDark(accentColor);
 
-  // Icon/text color based on accent brightness (white on dark, dark on light)
-  const iconColor = isAccentDark ? '#ffffff' : '#1a1a1a';
+  // Icon/text color based on accent brightness (warm white on dark, near-black on light)
+  const iconColor = isAccentDark ? '#e5e4dd' : '#191818';
   
   // Convert hex color to RGB for rgba variants
   const hexToRgb = (hex) => {
@@ -8153,18 +8318,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   const bgGradientTop = `rgb(${Math.round(18 + bgRgb.r * 0.05)}, ${Math.round(18 + bgRgb.g * 0.05)}, ${Math.round(18 + bgRgb.b * 0.05)})`;
   // Bottom of gradient: visible color glow (40% of background color for noticeable tint)
   const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.4)}, ${Math.round(bgRgb.g * 0.4)}, ${Math.round(bgRgb.b * 0.4)})`;
-  // Higher threshold version for button link icons (more likely to be white)
-  // Uses 0.6 luminance threshold instead of 0.5
-  const getButtonIconColor = (hexColor) => {
-    const hex = hexColor.replace('#', '');
-    const r = parseInt(hex.substring(0, 2), 16) / 255;
-    const g = parseInt(hex.substring(2, 4), 16) / 255;
-    const b = parseInt(hex.substring(4, 6), 16) / 255;
-    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-    // Higher threshold (0.6) means icons switch to white earlier
-    return luminance < 0.6 ? '#ffffff' : '#1a1a1a';
-  };
-  const buttonIconColor = getButtonIconColor(accentColor);
+  // Button icons use same color as button text
+  const buttonIconColor = iconColor;
 
   // Clamp dark accent colors at minimum lightness threshold for visibility
   // Instead of brightening, just stops getting darker at the threshold
@@ -8219,7 +8374,9 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
   };
 
-  const socialIconColor = getVisibleSocialIconColor(accentColor);
+  const socialIconColor = accentColor;
+  // Social circle inner icons: warm white on dark accents, accent color on light accents
+  const socialCircleIconColor = isAccentDark ? '#e5e4dd' : accentColor;
 
   // Auto-brighten logo color if accent is too dark (same logic as social icons)
   const visibleLogoColor = getVisibleSocialIconColor(accentColor);
@@ -8261,7 +8418,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   };
 
   // Build social links array (filter out "Example" placeholder values)
-  const isRealUrl = (url) => url && url !== 'Example' && url.includes('.');
+  const isRealUrl = (url) => url && url.trim() !== '' && url !== 'Example';
   const socialLinks = [];
   if (isRealUrl(agent.facebook_url)) socialLinks.push({ platform: 'facebook', url: agent.facebook_url, icon: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' });
   if (isRealUrl(agent.instagram_url)) socialLinks.push({ platform: 'instagram', url: agent.instagram_url, icon: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z' });
@@ -8278,14 +8435,13 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     });
   }
 
-  const socialLinksHTML = socialLinks.map(link => `
-    <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer"
-       class="social-link" title="${link.platform}">
-      <svg viewBox="0 0 24 24" ${link.isStroke ? 'fill="none" stroke="currentColor" stroke-width="2"' : 'fill="currentColor"'} width="24" height="24">
-        <path d="${link.icon}"/>
-      </svg>
-    </a>
-  `).join('');
+  const isClickableUrl = (url) => url && (url.includes('.') || url.startsWith('http'));
+  const socialLinksHTML = socialLinks.map(link => {
+    const svgMarkup = `<svg viewBox="0 0 24 24" ${link.isStroke ? 'fill="none" stroke="currentColor" stroke-width="2"' : 'fill="currentColor"'} width="24" height="24"><path d="${link.icon}"/></svg>`;
+    return isClickableUrl(link.url)
+      ? `<a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer" class="social-link" title="${link.platform}">${svgMarkup}</a>`
+      : `<span class="social-link" title="${link.platform}">${svgMarkup}</span>`;
+  }).join('');
 
   // Contact buttons (Email, Phone, Text) - segmented button style
   // show_call_button and show_text_button are stored in links_settings (default true)
@@ -8494,7 +8650,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem 1rem;
+      padding: 1.5rem 1rem;
     }
 
     .container {
@@ -8509,7 +8665,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     .profile-image-container {
       width: 120px;
       height: 120px;
-      margin-bottom: 1rem;
+      margin-bottom: 0.375rem;
       position: relative;
     }
 
@@ -8541,7 +8697,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       font-weight: ${nameWeight === 'bold' ? '700' : '400'};
       letter-spacing: 0em;
       line-height: 1.1;
-      margin-bottom: 0.5rem;
+      margin-top: 5px;
+      margin-bottom: calc(0.5rem + 15px);
       position: relative;
     }
     .sr-only {
@@ -8554,10 +8711,10 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     }
 
     .bio {
-      font-size: 0.75rem;
+      font-size: calc(0.75rem + 3px);
       color: rgba(220, 219, 213, 0.5);
       margin-top: 0.375rem;
-      margin-bottom: 0.75rem;
+      margin-bottom: calc(0.75rem + 5px);
       max-width: 220px;
       line-height: 1.3;
       font-family: ${fontFamily};
@@ -8590,7 +8747,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       display: flex;
       align-items: center;
       justify-content: center;
-      color: ${socialIconColor};
+      color: ${socialCircleIconColor};
       text-decoration: none;
       transition: all 0.2s ease;
     }
@@ -8954,18 +9111,16 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
     <h1 style="--name-font-size: ${nameFontSize}">
       <span class="sr-only">${escapeHTML(fullName)}</span>
-      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:-1.5em auto -2em;font-family:inherit;font-feature-settings:'ss01' 1;font-size:inherit;">
+      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:calc(-1.5em - 20px) auto -2em;font-family:inherit;font-feature-settings:'ss01' 1;font-size:inherit;pointer-events:none;">
         <defs>
-          <filter id="lsh"><feGaussianBlur in="SourceAlpha" stdDeviation="10"/></filter>
-          <filter id="lgl"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           <linearGradient id="lfg" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#dddcd5"/><stop offset="35%" stop-color="${isAccentDark ? '#f2f1ec' : accentColor}"/><stop offset="65%" stop-color="${isAccentDark ? '#f2f1ec' : accentColor}"/><stop offset="100%" stop-color="#dddcd5"/>
+            <stop offset="0%" stop-color="#dddcd5"/><stop offset="35%" stop-color="#f2f1ec"/><stop offset="65%" stop-color="#f2f1ec"/><stop offset="100%" stop-color="#dddcd5"/>
           </linearGradient>
           <symbol id="lss" overflow="visible"><text x="50%" y="60%" fill="none" stroke-width=".22em" paint-order="stroke fill" text-anchor="middle">${escapeHTML(fullName)}</text></symbol>
           <symbol id="lsf" overflow="visible"><text x="50%" y="60%" text-anchor="middle">${escapeHTML(fullName)}</text></symbol>
         </defs>
         <g stroke-dasharray="3.5em 0em" stroke-linecap="butt" stroke-linejoin="miter">
-          <use x="0.167%" y="1.67%" href="#lss" stroke="${h1Backing[0]}" opacity="0.5" filter="url(#lsh)"/>
+          <use x="0.167%" y="1.67%" href="#lss" stroke="${h1Backing[0]}" opacity="0.5"/>
           <use x="0.12%" y="1.2%" href="#lss" stroke="${h1Backing[7]}"/>
           <use x="0.1%" y="1.0%" href="#lss" stroke="${h1Backing[6]}"/>
           <use x="0.08%" y="0.8%" href="#lss" stroke="${h1Backing[5]}"/>
@@ -8982,7 +9137,6 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
         <use x="0.047%" y="-0.63%" href="#lsf" fill="#c2c1b8"/>
         <use x="0.021%" y="-0.89%" href="#lsf" fill="#d1d0c7"/>
         <use x="-0.004%" y="-1.14%" href="#lsf" fill="#dddcd5"/>
-        <use x="-0.06%" y="-1.4%" href="#lsf" fill="${accentColor}" opacity="0.15" filter="url(#lgl)"/>
         <use x="-0.06%" y="-1.4%" href="#lsf" fill="url(#lfg)"/>
       </svg>
     </h1>

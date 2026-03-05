@@ -18,7 +18,7 @@
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import dynamicImport from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Settings, Zap, Users, BarChart3, AlertTriangle, Lightbulb } from 'lucide-react';
+import { Settings, Zap, Users, BarChart3, AlertTriangle, Lightbulb, Bug } from 'lucide-react';
 import { useUserRole, RoleBadge } from '@/lib/rbac';
 
 // Tab components - dynamically imported to prevent SSR
@@ -52,7 +52,12 @@ const SuggestionsTab = dynamicImport(() => import('./components/tabs/Suggestions
   loading: () => <div className="p-6 text-[#dcdbd5]">Loading Suggestions tab...</div>
 });
 
-type TabId = 'web-settings' | 'automations' | 'users' | 'analytics' | 'triage' | 'suggestions';
+const ErrorLogTab = dynamicImport(() => import('./components/tabs/ErrorLogTab').then(mod => ({ default: mod.ErrorLogTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Error Log tab...</div>
+});
+
+type TabId = 'web-settings' | 'automations' | 'users' | 'analytics' | 'triage' | 'suggestions' | 'errors';
 
 // Legacy tab IDs that should redirect to web-settings with the appropriate sub-tab
 const legacyTabMap: Record<string, string> = {
@@ -70,7 +75,7 @@ function MasterControllerContent() {
   // Initialize tab from URL or default to 'web-settings'
   const [activeTab, setActiveTab] = useState<TabId>(() => {
     const tabParam = searchParams.get('tab');
-    const validTabs: TabId[] = ['web-settings', 'automations', 'users', 'analytics', 'triage', 'suggestions'];
+    const validTabs: TabId[] = ['web-settings', 'automations', 'users', 'analytics', 'triage', 'suggestions', 'errors'];
     if (tabParam && validTabs.includes(tabParam as TabId)) return tabParam as TabId;
     // Backwards compatibility: redirect legacy tab IDs to web-settings
     if (tabParam && tabParam in legacyTabMap) return 'web-settings';
@@ -125,6 +130,7 @@ function MasterControllerContent() {
     { id: 'analytics' as TabId, label: 'Analytics', icon: BarChart3 },
     { id: 'triage' as TabId, label: '404 Watch', icon: AlertTriangle },
     { id: 'suggestions' as TabId, label: 'Suggestions', icon: Lightbulb },
+    { id: 'errors' as TabId, label: 'Error Log', icon: Bug },
   ];
 
   return (
@@ -222,6 +228,8 @@ function MasterControllerContent() {
         {activeTab === 'triage' && <TriageTab />}
 
         {activeTab === 'suggestions' && <SuggestionsTab />}
+
+        {activeTab === 'errors' && <ErrorLogTab />}
       </div>
 
       {/* Footer Info */}

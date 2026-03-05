@@ -137,8 +137,6 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick }: Deskt
             ) : item.label === 'Agent Portal' ? (
               <Link
                 href={item.href!}
-                target="_blank"
-                rel="noopener noreferrer"
                 onClick={handlePortalClick}
                 className={`nav-link agent-portal flex items-center px-2 py-3 rounded-md mx-[2px] bg-transparent text-white whitespace-nowrap ${isPortalClicked ? 'clicked' : ''}`}
                 style={{

@@ -68,13 +68,41 @@ This is the admin-dashboard's agent-portal route. It has its own pages for roles
 | React | 19.2.4 | Server Components, Server Actions |
 | Tailwind CSS | 4.1.x | CSS-first config, `@import` syntax |
 | TypeScript | 5.9.3 | Strict mode |
-| Supabase | Latest | Auth, Database, Storage, Realtime |
+| Supabase | Latest | Auth, Database, Storage, Realtime (see SQL access below) |
 | WordPress | 6.9.1 | Blog CMS at wp.saabuildingblocks.com |
 
 **Before writing code, check latest docs:**
 ```
 mcp__context7__resolve-library-id { "libraryName": "nextjs" }
 mcp__context7__query-docs { "libraryId": "...", "query": "..." }
+```
+
+---
+
+## Supabase SQL Access (Migrations & Queries)
+
+**Management API token** (`SUPABASE_ACCESS_TOKEN`) is stored in `packages/admin-dashboard/.env.local`. This is a personal access token (PAT) that never expires.
+
+To run SQL migrations or ad-hoc queries against the Supabase database:
+
+```bash
+cd /home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard
+SUPABASE_ACCESS_TOKEN=$(grep '^SUPABASE_ACCESS_TOKEN=' .env.local | cut -d= -f2)
+
+# Execute SQL via Management API
+curl -s -X POST "https://api.supabase.com/v1/projects/edpsaqcsoeccioapglhi/database/query" \
+  -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "SELECT 1 AS test;"}'
+```
+
+For applying migration files:
+```bash
+SQL=$(cat supabase/migrations/FILENAME.sql)
+curl -s -X POST "https://api.supabase.com/v1/projects/edpsaqcsoeccioapglhi/database/query" \
+  -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{\"query\": $(echo "$SQL" | jq -Rs .)}"
 ```
 
 ---

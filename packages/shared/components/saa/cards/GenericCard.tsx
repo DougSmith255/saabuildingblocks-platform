@@ -28,6 +28,8 @@
  * </GenericCard>
  */
 
+'use client';
+
 import React from 'react';
 
 export interface GenericCardProps {

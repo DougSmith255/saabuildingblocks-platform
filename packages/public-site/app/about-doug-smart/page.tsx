@@ -1,11 +1,10 @@
-'use client';
-
 import { CTAButton } from '@saa/shared/components/saa/buttons';
 import { GenericCard } from '@saa/shared/components/saa/cards';
 import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { ProfileCyberFrame } from '@saa/shared/components/saa/media';
 import { GrainCard } from '@saa/shared/components/saa/cards';
 import { LazySection } from '@/components/shared/LazySection';
+import { JoinAllianceCTA } from '@/components/shared/JoinAllianceCTA';
 import Image from 'next/image';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
@@ -142,9 +141,7 @@ export default function AboutDougSmart() {
               Join The Alliance and get access to the digital infrastructure that powers top-producing agents.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-                Join The Alliance
-              </CTAButton>
+              <JoinAllianceCTA />
               <CTAButton href="/our-exp-team/">
                 Meet The Team
               </CTAButton>

@@ -137,7 +137,7 @@ export function YouTubeFacade({
           height: '100%',
           objectFit: 'cover',
           transition: 'transform 0.3s ease',
-          transform: isHovered ? 'scale(1.03)' : 'scale(1)',
+          transform: isHovered ? 'scale(1.08)' : 'scale(1.05)',
         }}
       />
 

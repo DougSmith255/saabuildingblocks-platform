@@ -16,8 +16,6 @@ import {
   deleteInvitation,
   createAuditLog,
   getUserById,
-  generateInvitationToken,
-  hashToken,
 } from '@saa/shared/lib/supabase/invitation-service';
 import { sendAgentActivationEmail, sendWelcomeEmail } from '@/lib/email/send';
 import { ZodError } from 'zod';
@@ -197,24 +195,37 @@ export async function PATCH(
         );
       }
 
-      // Generate a new token (DB stores hashed tokens, so we can't reuse the stored one)
-      const newRawToken = generateInvitationToken();
-      const newTokenHash = hashToken(newRawToken);
-      const newExpiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
+      // Generate a fresh Supabase invite link
+      const activationBaseUrl = 'https://smartagentalliance.com';
+      const redirectTo = `${activationBaseUrl}/agent-portal/activate`;
+
+      const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+        type: 'invite',
+        email: invitation.email,
+        options: { redirectTo },
+      });
+
+      if (linkError || !linkData?.properties?.hashed_token) {
+        return NextResponse.json(
+          { error: 'Failed to generate new invitation link', details: linkError?.message },
+          { status: 500 }
+        );
+      }
+
+      const newHashedToken = linkData.properties.hashed_token;
+      const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
 
       // Choose email template based on when the user was created
-      // Existing agents (before portal launch) get AgentActivationEmail
-      // New agents (on or after portal launch) get WelcomeEmail
       const PORTAL_LAUNCH_DATE = '2026-02-26T00:00:00.000Z';
       const userCreatedAt = user.created_at || '';
       const isNewAgent = userCreatedAt >= PORTAL_LAUNCH_DATE;
       const firstName = user.first_name || user.full_name?.split(' ')[0] || 'Agent';
 
-      // Resend invitation email with the new raw token
+      // Send invitation email with the hashed token
       try {
         const emailResult = isNewAgent
-          ? await sendWelcomeEmail(invitation.email, firstName, newRawToken, 48)
-          : await sendAgentActivationEmail(invitation.email, firstName, newRawToken, 48);
+          ? await sendWelcomeEmail(invitation.email, firstName, newHashedToken, 168)
+          : await sendAgentActivationEmail(invitation.email, firstName, newHashedToken, 168);
 
         if (!emailResult.success) {
           return NextResponse.json(
@@ -223,13 +234,13 @@ export async function PATCH(
           );
         }
 
-        // Update token, expiry, and sent_at timestamp
+        // Update token_hash, expiry, and sent_at timestamp
         const { data: updatedInvitation } = await updateInvitationStatus(
           supabase,
           id,
           'pending',
           {
-            token: newTokenHash,
+            token_hash: newHashedToken,
             expires_at: newExpiresAt,
             sent_at: new Date().toISOString(),
           }

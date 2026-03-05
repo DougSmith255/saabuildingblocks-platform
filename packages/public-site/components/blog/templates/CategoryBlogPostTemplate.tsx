@@ -14,6 +14,7 @@ import { LazySection } from '@/components/shared/LazySection';
 import { BlogSidebar } from '../BlogSidebar';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { getPostUrl } from '@/lib/blog-post-urls';
+import { createBackLayers, H2_DEFAULT_CONFIG } from '@saa/shared/components/saa/headings/useStrokeBackLayers';
 
 // Lazy load CloudBackground - only loaded when user switches to light mode
 const CloudBackground = dynamic(
@@ -191,6 +192,45 @@ export function CategoryBlogPostTemplate({
     };
   }, []);
 
+  // Apply SVG stroke backing to blog content H2 elements after render
+  useEffect(() => {
+    const applyH2Stroke = () => {
+      // Inject h2 into Rank Math TOC blocks that lack one (some posts have it, some don't)
+      document.querySelectorAll<HTMLElement>('.blog-content .wp-block-rank-math-toc-block, .blog-content #rank-math-toc').forEach((toc) => {
+        if (!toc.querySelector(':scope > h2')) {
+          const h2 = document.createElement('h2');
+          h2.textContent = 'Table of Contents';
+          toc.insertBefore(h2, toc.firstChild);
+        }
+      });
+
+      const h2s = document.querySelectorAll<HTMLElement>('.blog-content h2');
+      const config = H2_DEFAULT_CONFIG;
+      h2s.forEach((h2) => {
+        if (h2.closest('.heading-wrapper')) return;
+        const wrapper = document.createElement('div');
+        // Move margins from H2 to wrapper so wrapper is tight around text.
+        // This ensures SVG and H2 share the same transform-origin for rotateX.
+        const computed = getComputedStyle(h2);
+        wrapper.style.cssText = 'position:relative;display:inline-block;width:100%;overflow:visible;text-align:inherit;'
+          + `margin-top:${computed.marginTop};margin-bottom:${computed.marginBottom};`;
+        h2.parentNode?.insertBefore(wrapper, h2);
+        wrapper.appendChild(h2);
+        h2.classList.add('heading-front');
+        h2.style.marginTop = '0';
+        h2.style.marginBottom = '0';
+        h2.style.color = config.faceColor;
+        h2.style.textShadow = config.faceTextShadow;
+        h2.style.position = 'relative';
+        h2.style.overflow = 'visible';
+        h2.style.transform = `perspective(800px) rotateX(${config.rotateX})`;
+        h2.style.filter = 'none';
+        createBackLayers(wrapper, h2, config);
+      });
+    };
+    document.fonts.ready.then(applyH2Stroke);
+  }, [post.content]);
+
   // Format date for display
   const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -219,9 +259,8 @@ export function CategoryBlogPostTemplate({
   // Build category slug
   const categorySlug = primaryCategory.toLowerCase().replace(/\s+/g, '-');
 
-  // Check if video should be emphasized
+  // Extract YouTube video ID if present
   const hasVideo = post.youtubeVideoUrl && extractYouTubeVideoId(post.youtubeVideoUrl);
-  const showVideoSection = hasVideo && (templateConfig.emphasizeVideo || true);
 
   return (
     <article
@@ -249,167 +288,121 @@ export function CategoryBlogPostTemplate({
           author={post.author.name}
           date={formattedDate}
           content={post.content}
-          youtubeVideoUrl={post.youtubeVideoUrl}
-          featuredImage={categorySlug === 'real-estate-schools' ? post.featuredImage?.url : undefined}
+          featuredImage={!hasVideo ? post.featuredImage?.url : undefined}
           featuredImageMaxHeight={templateConfig.heroImageMaxHeight}
           onThemeChange={handleThemeChange}
         />
       </div>
 
-      {/* School Cards Section - Only for Real Estate Schools category */}
-      {categorySlug === 'real-estate-schools' && (
-        <LazySection height={400}>
-          <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
-            <div className="max-w-[1900px] mx-auto">
-              <SchoolCardsSection postSlug={post.slug} />
-            </div>
-          </section>
-        </LazySection>
-      )}
-
-      {/* License Requirements at a Glance - Always visible for become-an-agent posts */}
-      {post.licenseImage && categorySlug === 'become-an-agent' && (
-        <section className="relative py-6 md:py-8 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
-            <h2
-              className="text-lg font-semibold tracking-wide text-center mb-6"
-              style={{
-                fontFamily: 'var(--font-taskor, sans-serif)',
-                color: '#ffd700',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-              }}
-            >
-              Requirements at a Glance
-            </h2>
-            <div className="flex justify-center">
-              <CyberFrame>
-                <Image
-                  src={post.licenseImage.url}
-                  alt={post.licenseImage.alt || post.licenseImage.title || 'License requirements summary'}
-                  width={800}
-                  height={670}
-                  sizes="(max-width: 900px) 90vw, 800px"
-                  className="object-contain w-full h-auto"
-                  priority={true}
-                />
-              </CyberFrame>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Comparison Chart - Always visible for brokerage comparison posts */}
-      {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (
-        <section className="relative py-6 md:py-8 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
-            <h2
-              className="text-lg font-semibold tracking-wide text-center mb-6"
-              style={{
-                fontFamily: 'var(--font-taskor, sans-serif)',
-                color: '#ffd700',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-              }}
-            >
-              At-a-Glance Comparison
-            </h2>
-            <div className="flex justify-center">
-              <CyberFrame>
-                <Image
-                  src={post.comparisonImages[0].url}
-                  alt={post.comparisonImages[0].alt || post.comparisonImages[0].title || 'Brokerage comparison chart'}
-                  width={800}
-                  height={900}
-                  sizes="(max-width: 900px) 90vw, 800px"
-                  className="object-contain w-full h-auto"
-                  priority={true}
-                />
-              </CyberFrame>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* YouTube Video Embed */}
-      {showVideoSection && hasVideo && (
-        <LazySection height={400}>
-          <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
-            <div className="max-w-[1900px] mx-auto">
-              <div className="max-w-[1200px] mx-auto">
-                <CyberFrame isVideo aspectRatio="16/9" className="w-full">
-                  <YouTubeFacade
-                    videoId={hasVideo}
-                    title={`Video: ${post.title}`}
-                  />
-                </CyberFrame>
-              </div>
-            </div>
-          </section>
-        </LazySection>
-      )}
-
       {/* Main Content */}
-      <LazySection height={600}>
-        <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
-            <div className="max-w-[1400px] mx-auto relative">
-              <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-10 relative">
-                {/* Feathered backdrop at grid level so sidebar aligns with it (dark mode only) */}
-                {isDarkMode && (
-                  <div className="absolute pointer-events-none" style={{
-                    inset: '-2rem',
-                    zIndex: -1,
-                    background: 'rgba(8, 8, 12, 0.55)',
-                    maskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%)',
-                    WebkitMaskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                    borderRadius: '32px',
-                  }} />
-                )}
-                {/* Main content column */}
-                <div className="relative min-w-0">
-                  <div className="blog-content max-w-none">
-                    {/* Featured Image - only shown in hero for real-estate-schools category */}
-                    {/* For other categories, show featured image floated right in content */}
-                    {post.featuredImage?.url && categorySlug !== 'real-estate-schools' && (
-                      <div className="float-right ml-6 mb-4" style={{ maxHeight: '270px' }}>
-                        <CyberFrame>
-                          <div className="relative" style={{ maxHeight: '270px' }}>
-                            <Image
-                              src={post.featuredImage.url}
-                              alt={post.featuredImage.alt || post.title}
-                              width={480}
-                              height={270}
-                              sizes="(max-width: 768px) 100vw, 480px"
-                              className="object-contain"
-                              style={{ maxHeight: '270px', width: 'auto', height: 'auto' }}
-                            />
-                          </div>
-                        </CyberFrame>
-                      </div>
-                    )}
-                    <div data-speakable="summary">
-                      <BlogContentRenderer html={post.content} />
-                    </div>
+      <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
+        <div className="max-w-[1900px] mx-auto">
+          <div className="max-w-[1400px] mx-auto relative">
+            <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-10 relative">
+              {/* Feathered backdrop at grid level so sidebar aligns with it (dark mode only) */}
+              {isDarkMode && (
+                <div className="absolute pointer-events-none blog-content-backdrop" style={{
+                  inset: '-2rem',
+                  zIndex: -1,
+                  background: 'rgba(8, 8, 12, 0.55)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  borderRadius: '32px',
+                }} />
+              )}
+              {/* Main content column */}
+              <div className="relative min-w-0">
+                {/* School Cards - inline in content column for real-estate-schools */}
+                {categorySlug === 'real-estate-schools' && (
+                  <div className="mb-8">
+                    <SchoolCardsSection postSlug={post.slug} />
                   </div>
+                )}
 
-                  {/* Share Buttons */}
-                  <ShareButtons
-                    url={typeof window !== 'undefined' ? `${window.location.origin}${getPostUrl(post)}` : getPostUrl(post)}
-                    title={post.title}
-                    excerpt={post.excerpt}
-                  />
+                {/* License Requirements at a Glance - inline for become-an-agent */}
+                {post.licenseImage && categorySlug === 'become-an-agent' && (
+                  <div className="mb-8 text-center">
+                    <h2
+                      className="text-lg font-semibold tracking-wide mb-2"
+                      style={{
+                        fontFamily: 'var(--font-taskor, sans-serif)',
+                        color: '#ffd700',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                      }}
+                    >
+                      Requirements at a Glance
+                    </h2>
+                    <CyberFrame className="w-full">
+                      <Image
+                        src={post.licenseImage.url}
+                        alt={post.licenseImage.alt || post.licenseImage.title || 'License requirements summary'}
+                        width={800}
+                        height={670}
+                        sizes="(max-width: 1024px) 90vw, 900px"
+                        className="object-contain w-full h-auto"
+                        priority={true}
+                      />
+                    </CyberFrame>
+                  </div>
+                )}
+
+                {/* Comparison Chart - inline for brokerage-comparison */}
+                {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (
+                  <div className="mb-8 text-center">
+                    <h2
+                      className="text-lg font-semibold tracking-wide mb-2"
+                      style={{
+                        fontFamily: 'var(--font-taskor, sans-serif)',
+                        color: '#ffd700',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                      }}
+                    >
+                      At-a-Glance Comparison
+                    </h2>
+                    <CyberFrame className="w-full">
+                      <Image
+                        src={post.comparisonImages[0].url}
+                        alt={post.comparisonImages[0].alt || post.comparisonImages[0].title || 'Brokerage comparison chart'}
+                        width={800}
+                        height={900}
+                        sizes="(max-width: 1024px) 90vw, 900px"
+                        className="object-contain w-full h-auto"
+                        priority={true}
+                      />
+                    </CyberFrame>
+                  </div>
+                )}
+
+                {/* Inline YouTube video */}
+                {hasVideo && (
+                  <div className="mb-8">
+                    <CyberFrame isVideo aspectRatio="16/9" className="w-full">
+                      <YouTubeFacade videoId={hasVideo} title={`Video: ${post.title}`} />
+                    </CyberFrame>
+                  </div>
+                )}
+                <div className="blog-content max-w-none">
+                  <div data-speakable="summary">
+                    <BlogContentRenderer html={post.content} />
+                  </div>
                 </div>
 
-                {/* Sidebar column */}
-                <BlogSidebar categorySlug={categorySlug} isDarkMode={isDarkMode} />
+                {/* Share Buttons */}
+                <ShareButtons
+                  url={typeof window !== 'undefined' ? `${window.location.origin}${getPostUrl(post)}` : getPostUrl(post)}
+                  title={post.title}
+                  excerpt={post.excerpt}
+                />
               </div>
+
+              {/* Sidebar column */}
+              <BlogSidebar categorySlug={categorySlug} isDarkMode={isDarkMode} />
             </div>
           </div>
-        </section>
-      </LazySection>
+        </div>
+      </section>
 
       {/* Author Section - shows author bio based on WordPress author name */}
       <LazySection height={300}>

@@ -1,13 +1,19 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { SlidePanel } from '@saa/shared/components/saa/interactive/SlidePanel';
 import { FormInput } from '@saa/shared/components/saa/forms/FormInput';
 import { FormGroup } from '@saa/shared/components/saa/forms/FormGroup';
 import { FormRow } from '@saa/shared/components/saa/forms/FormRow';
 import { FormButton } from '@saa/shared/components/saa/forms/FormButton';
 import { ConsentCheckbox } from '@saa/shared/components/saa/forms/ConsentCheckbox';
-import { HolographicGlobe } from './HolographicGlobe';
+
+// Lazy-load HolographicGlobe (imports three.js ~738KB) - only loaded when popup opens
+const HolographicGlobe = dynamic(
+  () => import('./HolographicGlobe').then(mod => ({ default: mod.HolographicGlobe })),
+  { ssr: false }
+);
 
 const STORAGE_KEY = 'saa_vip_pass_shown';
 const SCROLL_THRESHOLD = 0.70; // 70% scroll fallback
@@ -18,7 +24,7 @@ const EXP_X_LOGO = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-
 // VIPGuestPassPopup
 // ═══════════════════════════════════════════════════════════════
 
-export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boolean; onForceClose?: () => void } = {}) {
+export function VIPGuestPassPopup({ forceOpen, onForceClose, disableAutoPopup }: { forceOpen?: boolean; onForceClose?: () => void; disableAutoPopup?: boolean } = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', consent: false });
@@ -48,6 +54,10 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
   useEffect(() => {
     // Migration: clear permanent localStorage key so existing devices aren't blocked forever
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
+
+    // When auto-popup is disabled (e.g. blog pages with sidebar guest pass card),
+    // skip all automatic triggers. The popup can still be opened via forceOpen.
+    if (disableAutoPopup) return;
 
     try {
       if (sessionStorage.getItem(STORAGE_KEY)) {
@@ -134,34 +144,8 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose }: { forceOpen?: boo
     }
   }, [forceOpen, isPanelOpen, onForceClose]);
 
-  // Pre-warm Three.js modules during browser idle time so the globe
-  // is ready instantly when the panel opens (no flash-in).
-  // Uses requestIdleCallback to avoid impacting initial page load (LCP/FCP).
-  useEffect(() => {
-    if (hasTriggered) return;
-    let warmed = false;
-    const preWarm = () => {
-      if (warmed) return;
-      warmed = true;
-      import('three').catch(() => {});
-      import('three/examples/jsm/postprocessing/EffectComposer.js').catch(() => {});
-      import('three/examples/jsm/postprocessing/RenderPass.js').catch(() => {});
-      import('three/examples/jsm/postprocessing/UnrealBloomPass.js').catch(() => {});
-    };
-    // Load during idle time (typically 1-5s after page load).
-    // Falls back to a 5s timeout for browsers without requestIdleCallback.
-    let idleHandle: number | undefined;
-    let fallbackTimer: ReturnType<typeof setTimeout> | undefined;
-    if (typeof requestIdleCallback === 'function') {
-      idleHandle = requestIdleCallback(preWarm, { timeout: 8000 });
-    } else {
-      fallbackTimer = setTimeout(preWarm, 5000);
-    }
-    return () => {
-      if (idleHandle !== undefined && typeof cancelIdleCallback === 'function') cancelIdleCallback(idleHandle);
-      if (fallbackTimer) clearTimeout(fallbackTimer);
-    };
-  }, [hasTriggered]);
+  // Three.js is lazy-loaded via dynamic import of HolographicGlobe.
+  // It only loads when the popup actually opens - no pre-warming needed.
 
   const handleClose = useCallback(() => {
     setIsOpen(false);

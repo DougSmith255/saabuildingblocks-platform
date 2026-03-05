@@ -127,20 +127,36 @@ export function Modal({
 }: ModalProps) {
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
-  // Prevent body scroll when modal is open and notify header to hide
+  // Prevent body scroll when modal is open and notify header to hide.
+  // Uses position:fixed to preserve scroll position (overflow:hidden loses it).
   useEffect(() => {
     if (isOpen) {
-      document.documentElement.style.overflow = 'hidden';
+      const scrollY = window.scrollY;
+      document.body.dataset.modalScrollY = String(scrollY);
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
       document.body.style.overflow = 'hidden';
       window.dispatchEvent(new CustomEvent('saa-modal-open'));
     } else {
-      document.documentElement.style.overflow = '';
+      const scrollY = parseInt(document.body.dataset.modalScrollY || '0');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
       document.body.style.overflow = '';
+      window.scrollTo(0, scrollY);
       window.dispatchEvent(new CustomEvent('saa-modal-close'));
     }
     return () => {
-      document.documentElement.style.overflow = '';
+      const scrollY = parseInt(document.body.dataset.modalScrollY || '0');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
       document.body.style.overflow = '';
+      window.scrollTo(0, scrollY);
     };
   }, [isOpen]);
 

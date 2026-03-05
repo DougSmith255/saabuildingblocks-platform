@@ -26,28 +26,30 @@ interface ActivationApologyEmailProps {
 export function ActivationApologyEmail({
   firstName,
   activationLink,
-  expiresInHours = 48,
+  expiresInHours = 168,
 }: ActivationApologyEmailProps) {
   return (
     <EmailLayout preview={`${firstName}, your fresh activation link is here - sorry for the trouble`}>
       <EmailGreeting>Hi {firstName},</EmailGreeting>
 
       <EmailParagraph>
-        I want to thank you for your patience. We had a technical issue with our activation
-        links, and I know that's frustrating. It's been resolved, and this fresh link below
-        will work smoothly.
+        I owe you an apology. Over the past week, some of the activation links I sent out
+        weren't working properly. That's on me, and I'm sorry for the hassle.
+      </EmailParagraph>
+
+      <EmailParagraph>
+        I've since upgraded our login system to a more reliable setup, and this
+        fresh link below is good to go.
       </EmailParagraph>
 
       <EmailButton href={activationLink}>Activate My Account</EmailButton>
 
-      <EmailParagraph>
-        Once you're in, everything will be ready to go - your onboarding checklist, marketing
-        templates, team call schedule, and all the tools inside the portal.
+      <EmailParagraph style={{ fontSize: '14px', color: BRAND_COLORS.textMuted }}>
+        This link is valid for <strong>7 days</strong>. A new one will be sent automatically if it expires.
       </EmailParagraph>
 
       <EmailParagraph>
-        If you have any questions at all, just reply to this email. I'm here to help
-        get you fully onboarded.
+        If you run into anything at all, just reply to this email. I'm here to help.
       </EmailParagraph>
 
       <EmailDivider />
@@ -64,11 +66,6 @@ export function ActivationApologyEmail({
         borderRadius: '6px',
       }}>
         {activationLink}
-      </EmailParagraph>
-
-      <EmailParagraph style={{ fontSize: '14px', color: BRAND_COLORS.textMuted }}>
-        This link expires in <strong>{expiresInHours} hours</strong>. If it expires, just
-        let me know and I'll send another.
       </EmailParagraph>
 
       {/* Personal sign-off from Doug */}

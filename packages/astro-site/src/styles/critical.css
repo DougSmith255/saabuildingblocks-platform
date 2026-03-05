@@ -1,0 +1,355 @@
+/* Critical Above-the-Fold CSS
+ * This CSS is inlined in the document head for instant rendering
+ * Contains only essential styles needed for First Contentful Paint
+ */
+
+/* Typography Variables - Required for immediate text rendering */
+:root {
+  /* Font variables - defined here for global availability */
+  /* Note: Next.js localFont() also sets these on HTML element via className */
+  --font-taskor: taskor, taskor Fallback, system-ui, -apple-system, sans-serif;
+  --font-amulya: amulya, amulya Fallback, Georgia, serif;
+  --font-synonym: synonym, synonym Fallback, Courier New, monospace;
+
+  /* Brand Colors */
+  --color-gold: #ffd700;
+  --color-green: #00ff88;
+  --color-text-primary: #e5e4dd;
+  --color-text-secondary: #dcdbd5;
+  --color-background-dark: rgb(12, 12, 12);
+
+  /* Master Controller Color Variables (fallback defaults) */
+  --color-accentGreen: #00ff88;
+  --color-brandGold: #ffd700;
+  --color-headingText: #e5e4dd;
+  --color-bodyText: #dcdbd5;
+  --color-body-text: #dcdbd5; /* Alias for consistency */
+  --color-darkGray: #2a2a2a;
+  --color-mediumGray: #5a5a5a;
+
+  /* Header Menu Typography - Prevents FOUC on menu items */
+  --font-size-menuMainItem: clamp(23px, calc(22.82px + 0.07vw), 25px);
+  --line-height-menuMainItem: 1.4;
+  --letter-spacing-menuMainItem: 0em;
+  --font-weight-menuMainItem: 500;
+  --font-family-menuMainItem: var(--font-synonym), sans-serif;
+  --text-color-menuMainItem: #e5e4dd;
+}
+
+/* Base Layout - Prevents FOUC */
+html {
+  background: radial-gradient(at center bottom, rgb(30, 30, 30) 0%, rgb(8, 8, 8) 100%);
+  background-color: rgb(8, 8, 8);
+  background-attachment: fixed;
+  scroll-behavior: smooth;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(at center bottom, rgb(30, 30, 30) 0%, rgb(8, 8, 8) 100%);
+  background-color: rgb(8, 8, 8);
+  background-attachment: fixed;
+  min-height: 100svh; /* Use svh (small viewport) to prevent layout shift when mobile address bar hides */
+  color: var(--color-text-secondary);
+  font-family: var(--font-synonym), 'Courier New', monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Safari fix: use clip instead of hidden to prevent left offset issue */
+  overflow-x: clip;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Mobile: Disable fixed background to prevent scroll glitch with browser address bar */
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  html,
+  body {
+    background-attachment: scroll;
+  }
+
+  /* Use locked viewport height on mobile to prevent layout shifts */
+  /* --vh-locked is set by ViewportHeightLock.tsx and only changes on true resize, not address bar */
+  /* --vh-locked-full is the full viewport height (--vh-locked * 100) for use in calc() */
+  body {
+    min-height: calc(var(--vh-locked, 1svh) * 100);
+  }
+
+  :root {
+    /* Full viewport height for mobile - used in calc() expressions */
+    /* This is set dynamically by ViewportHeightLock.tsx */
+    --vh-locked-full: calc(var(--vh-locked, 1svh) * 100);
+  }
+
+  /* Wolf pack hero background - disable fixed attachment on mobile */
+  .wolf-pack-bg {
+    background-attachment: scroll !important;
+  }
+}
+
+/* Critical Typography - H1 Hero Headlines */
+h1 {
+  font-family: var(--font-taskor), system-ui, sans-serif;
+  color: var(--color-text-primary);
+  font-weight: 400;
+  line-height: var(--line-height-h1, 1.2); /* Use Master Controller value, fallback 1.2 */
+  margin: 0;
+}
+
+/* H2 Section Titles */
+h2 {
+  font-family: var(--font-taskor), system-ui, sans-serif;
+  color: var(--color-text-primary);
+  font-weight: 400;
+  line-height: var(--line-height-h2, 1.2); /* Use Master Controller value, fallback 1.2 */
+  margin: 0;
+}
+
+/* Critical Layout Components */
+main {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+/* Page content wrapper — no animation (removed) */
+
+/* Container for centering content */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Hero Section - Above the fold */
+.hero-section {
+  min-height: 100svh; /* Use svh (small viewport) to prevent layout shift when mobile address bar hides */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Mobile: Use locked viewport height for hero sections */
+/* This prevents layout shifts when address bar hides/shows */
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  .hero-section,
+  .min-h-\[100dvh\] {
+    min-height: calc(var(--vh-locked, 1svh) * 100) !important;
+  }
+
+  /* For elements using percentage of viewport (e.g., 80dvh) */
+  .h-\[80dvh\] {
+    height: calc(var(--vh-locked, 1svh) * 80) !important;
+  }
+}
+
+/* Critical Button Styles - Prevents flash */
+button {
+  font-family: var(--font-taskor), system-ui, sans-serif;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* Link Styles - Only apply to paragraph links, not headings or buttons */
+p a {
+  color: var(--color-green);
+  text-decoration: none;
+}
+
+/* Prevent Flash of Invisible Text (FOIT) */
+.font-taskor {
+  font-family: var(--font-taskor), system-ui, -apple-system, sans-serif;
+}
+
+.font-amulya {
+  font-family: var(--font-amulya), Georgia, serif;
+}
+
+.font-synonym {
+  font-family: var(--font-synonym), 'Courier New', monospace;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .hero-entrance-animate {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Hero Content Container Animation - Simple fade-in for H1, Tagline, Buttons */
+/* Applied to the container wrapping all hero text content */
+/* Single animation for entire group - minimal performance impact */
+/* NOTE: Uses opacity only (no transform) to avoid conflicting with Tailwind's -translate-x-1/2 */
+@keyframes heroContentFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-content-animate {
+  opacity: 0;
+  animation: heroContentFadeIn 0.5s ease-out 0.2s forwards;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .hero-content-animate {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+/* Profile Image - no animation, visible immediately */
+.profile-image {
+  opacity: 1;
+}
+
+/* Hero Effect Vignette - Ensure dark vignette renders immediately without pop-in */
+/* This matches the inline style in RevealMaskEffect and QuantumGridEffect */
+.hero-effect-layer {
+  opacity: 1;
+}
+
+/* Hero Vignette - simple bottom fade overlay for hero sections */
+/* No radial gradient / tunnel effect - just fades out at bottom */
+.hero-vignette {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  background: transparent;
+  pointer-events: none;
+  /* Mask to fade out toward bottom - prevents hard line when scrolling */
+  mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+}
+
+/* RevealMaskEffect initial state - prevents pop-in by providing immediate CSS */
+/* These styles render before React hydration, then React takes over */
+.reveal-mask-effect {
+  opacity: 1;
+}
+
+/* Golden glow initial state - 72% size (INITIAL_MASK_SIZE) */
+.reveal-mask-effect > div:first-child {
+  background: radial-gradient(ellipse 72% 50.4% at 50% 50%,
+    rgba(255,215,0,0.2) 0%,
+    rgba(255,180,0,0.12) 35%,
+    rgba(255,150,0,0.06) 55%,
+    transparent 80%);
+}
+
+/* Master Controller Variables - Injected by useLiveCSS */
+/* Placeholder for dynamic CSS variables */
+#master-controller-vars {
+  /* CSS variables injected here by Master Controller */
+}
+
+/* Critical Responsive Breakpoints - Prevents FOUC on navigation */
+/* xlg breakpoint: 1440px (90rem) - Controls desktop nav vs mobile burger menu */
+@media (min-width: 90rem) {
+  .xlg\:hidden {
+    display: none !important;
+  }
+
+  .xlg\:flex {
+    display: flex !important;
+  }
+
+  .xlg\:block {
+    display: block !important;
+  }
+
+  .xlg\:left-auto {
+    left: auto !important;
+  }
+
+  .xlg\:translate-x-0 {
+    --tw-translate-x: 0 !important;
+    transform: translate(var(--tw-translate-x, 0), var(--tw-translate-y, 0)) !important;
+  }
+
+  .xlg\:right-8 {
+    right: 2rem !important;
+  }
+}
+
+/* Hamburger Menu - Prevent FOUC by providing base styles immediately */
+/* Position is static (flows inside header flex container) */
+.hamburger {
+  position: static;
+  width: 65px;
+  height: 65px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+
+.hamburger-svg {
+  width: 65px;
+  height: 65px;
+}
+
+.line {
+  fill: none;
+  stroke: #ffd700;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+/* Header & logo sizing now controlled entirely by Header.tsx */
+
+/* Removed conflicting mobile padding - Header.tsx has correct symmetric padding */
+
+/* Dark mode scrollbar for entire page - Chrome/Edge/Safari */
+body::-webkit-scrollbar {
+  width: 12px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}
+
+/* Dark mode scrollbar for mobile menu overlay - matches body scrollbar exactly */
+#mobile-menu {
+  scroll-behavior: smooth !important;
+}
+
+#mobile-menu::-webkit-scrollbar {
+  width: 12px;
+}
+
+#mobile-menu::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+#mobile-menu::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 4px;
+}
+
+#mobile-menu::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}

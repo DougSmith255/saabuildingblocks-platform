@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 
 /**
  * Shared hook for continuous hero animations
@@ -9,17 +9,22 @@ import { useEffect, useRef, useState } from 'react';
  * - Starts immediately at idle speed on both mobile and desktop
  * - No waiting for mouse movement or timers
  * - Scroll adds a speed boost for interactivity
+ * - Pauses RAF loop when element is off-screen (IntersectionObserver)
  *
  * Returns a time value that continuously increments. Use sine waves
- * on this time value to create smooth, organic oscillations.
+ * on this time value to create smooth, continuous oscillations.
+ *
+ * @param containerRef - Optional ref to the container element. When provided,
+ *   the animation pauses when the element is not visible in the viewport.
  */
 
-export function useContinuousAnimation() {
+export function useContinuousAnimation(containerRef?: RefObject<HTMLElement | null>) {
   const [time, setTime] = useState(0);
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
   const lastScrollY = useRef(0);
   const scrollBoostRef = useRef(0);
+  const isVisibleRef = useRef(true);
 
   useEffect(() => {
     // Speed settings
@@ -42,6 +47,12 @@ export function useContinuousAnimation() {
     };
 
     const animate = (timestamp: number) => {
+      if (!isVisibleRef.current) {
+        // Paused - don't schedule next frame, will restart when visible
+        rafRef.current = 0;
+        return;
+      }
+
       const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
       lastTimestamp = timestamp;
 
@@ -54,6 +65,24 @@ export function useContinuousAnimation() {
       rafRef.current = requestAnimationFrame(animate);
     };
 
+    // IntersectionObserver to pause when off-screen
+    let observer: IntersectionObserver | undefined;
+    if (containerRef?.current) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          const wasVisible = isVisibleRef.current;
+          isVisibleRef.current = entry.isIntersecting;
+          // Resume animation when becoming visible
+          if (!wasVisible && entry.isIntersecting && !rafRef.current) {
+            lastTimestamp = 0;
+            rafRef.current = requestAnimationFrame(animate);
+          }
+        },
+        { threshold: 0 }
+      );
+      observer.observe(containerRef.current);
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     lastScrollY.current = window.scrollY;
     rafRef.current = requestAnimationFrame(animate);
@@ -61,8 +90,9 @@ export function useContinuousAnimation() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(rafRef.current);
+      observer?.disconnect();
     };
-  }, []);
+  }, [containerRef]);
 
   // Use sine waves for smooth, continuous oscillation
   const wave1 = Math.sin(time * Math.PI * 2);

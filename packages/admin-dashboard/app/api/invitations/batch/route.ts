@@ -12,7 +12,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { verifyAdminAuth } from '@/app/api/middleware/adminAuth';
 import {
-  createInvitation,
   createAuditLog,
 } from '@saa/shared/lib/supabase/invitation-service';
 import { sendAgentActivationEmail } from '@/lib/email/send';
@@ -239,21 +238,47 @@ export async function POST(request: NextRequest) {
           continue;
         }
 
-        // Create invitation
-        const { data: invitation, error: invitationError } = await createInvitation(
-          supabase,
-          {
-            userId: newUser.id,
+        // Generate Supabase native invite link
+        const activationBaseUrl = 'https://smartagentalliance.com';
+        const redirectTo = `${activationBaseUrl}/agent-portal/activate`;
+
+        const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+          type: 'invite',
+          email,
+          options: { redirectTo },
+        });
+
+        if (linkError || !linkData?.properties?.hashed_token) {
+          await supabase.from('users').delete().eq('id', newUser.id);
+          results.push({
             email,
-            expiresInHours: 48,
-            createdBy: authResult.userId!,
-          }
-        );
+            name,
+            status: 'failed',
+            reason: `Failed to generate invite link: ${linkError?.message || 'No token returned'}`,
+          });
+          continue;
+        }
+
+        const hashedToken = linkData.properties.hashed_token;
+        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+
+        // Create invitation record
+        const { data: invitation, error: invitationError } = await supabase
+          .from('user_invitations')
+          .insert({
+            user_id: newUser.id,
+            email,
+            token_hash: hashedToken,
+            status: 'pending',
+            expires_at: expiresAt,
+            invited_by: authResult.userId!,
+            sent_at: new Date().toISOString(),
+          })
+          .select()
+          .single();
 
         if (invitationError || !invitation) {
-          // Rollback user creation
           await supabase.from('users').delete().eq('id', newUser.id);
-
           results.push({
             email,
             name,
@@ -263,9 +288,17 @@ export async function POST(request: NextRequest) {
           continue;
         }
 
+        // Link Supabase auth user
+        if (linkData.user?.id) {
+          await supabase
+            .from('users')
+            .update({ auth_user_id: linkData.user.id })
+            .eq('id', newUser.id);
+        }
+
         // Send activation email via rate-limited queue
         const emailResult = await emailQueue.add(() =>
-          sendAgentActivationEmail(email, firstName, invitation.token, 48)
+          sendAgentActivationEmail(email, firstName, hashedToken, 48)
         );
 
         if (!emailResult.success) {

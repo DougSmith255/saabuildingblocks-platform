@@ -27,14 +27,7 @@ function ImmediateLoader({
       }
     };
 
-    // Defer to idle time so the browser paints H1/LCP first
-    if ('requestIdleCallback' in window) {
-      const id = requestIdleCallback(load);
-      return () => cancelIdleCallback(id);
-    } else {
-      const id = setTimeout(load, 1);
-      return () => clearTimeout(id);
-    }
+    load();
   }, [importFn]);
 
   if (!Component) return null;

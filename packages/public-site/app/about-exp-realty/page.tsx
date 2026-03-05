@@ -309,17 +309,6 @@ export default function AboutExpRealty() {
         <WhereSAAFitsVersionA />
       </div>
 
-      {/* Blue H1 glow — must render AFTER H1 component so this keyframe wins */}
-      <style>{`
-        @keyframes h1GlowBreathe {
-          0%, 100% {
-            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(0, 191, 255, 0.25));
-          }
-          50% {
-            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(0, 191, 255, 0.45));
-          }
-        }
-      `}</style>
     </main>
   );
 }

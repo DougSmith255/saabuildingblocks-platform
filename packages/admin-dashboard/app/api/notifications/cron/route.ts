@@ -8,11 +8,11 @@ export const dynamic = 'force-dynamic';
  * Called hourly by system cron. Checks timezone windows and sends:
  *
  * 1. Activation reminders (existing agents, invited before Feb 25 2026):
- *    - AgentActivationEmail every 2 days until they activate
+ *    - AgentActivationEmail every 7 days until they activate
  *    - Fresh token generated each time
  *
  * 2. Welcome reminders (new agents, invited Feb 25 2026 or later):
- *    - WelcomeEmail every 2 days until they activate
+ *    - WelcomeEmail every 7 days until they activate
  *    - Fresh token generated each time
  *
  * 3. Link page nudges (active users, onboarding complete):
@@ -28,18 +28,18 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { randomBytes, createHash } from 'crypto';
 import { sendWelcomeEmail, sendAgentActivationEmail } from '@/lib/email/send';
 import { sendEmail } from '@/lib/email/client';
 import { LinkPageNudgeEmail } from '@/lib/email/templates/LinkPageNudgeEmail';
+import { logPlatformError } from '@/lib/error-logger';
 
 // Portal launch cutoff - agents invited before this are "existing" (get AgentActivationEmail)
 // Agents invited on or after this date are "new" (get WelcomeEmail)
 // Set to Feb 26 to include the Feb 25 batch as existing agents
 const PORTAL_LAUNCH_DATE = '2026-02-26T00:00:00.000Z';
 
-// How many days between repeat sends
-const REPEAT_INTERVAL_DAYS = 2;
+// How many days between repeat sends (matches 7-day token expiry)
+const REPEAT_INTERVAL_DAYS = 7;
 
 // Max link page nudge emails
 const MAX_LINK_PAGE_NUDGES = 4;
@@ -156,12 +156,12 @@ async function sweepActivationReminders(
       continue;
     }
 
-    // Check last send date - only send if >= 2 days since last send
+    // Check last send date - only send if >= 7 days since last send
     const { data: lastSend } = await supabase
       .from('notification_log')
       .select('created_at')
       .eq('user_id', user.id)
-      .in('notification_type', ['activation_reminder', 'activation_blast', 'manual_resend'])
+      .in('notification_type', ['activation_reminder', 'activation_blast', 'manual_resend', 'activation_apology'])
       .eq('channel', 'email')
       .in('status', ['sent', 'dry_run'])
       .order('created_at', { ascending: false })
@@ -190,9 +190,23 @@ async function sweepActivationReminders(
       continue;
     }
 
-    // Generate fresh token - store hash in DB, send plaintext in email
-    const newToken = randomBytes(32).toString('hex');
-    const newTokenHash = createHash('sha256').update(newToken).digest('hex');
+    // Generate fresh Supabase invite link
+    const activationBaseUrl = 'https://smartagentalliance.com';
+    const redirectTo = `${activationBaseUrl}/agent-portal/activate`;
+
+    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+      type: 'invite',
+      email: user.email,
+      options: { redirectTo },
+    });
+
+    if (linkError || !linkData?.properties?.hashed_token) {
+      results.push({ email: user.email, name, status: 'failed', reason: `generateLink failed: ${linkError?.message || 'No token'}` });
+      await new Promise(resolve => setTimeout(resolve, 200));
+      continue;
+    }
+
+    const hashedToken = linkData.properties.hashed_token;
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 48);
 
@@ -207,13 +221,13 @@ async function sweepActivationReminders(
 
     if (existingInvite) {
       await supabase.from('user_invitations')
-        .update({ token: newTokenHash, expires_at: expiresAt.toISOString(), status: 'sent' })
+        .update({ token_hash: hashedToken, expires_at: expiresAt.toISOString(), status: 'sent' })
         .eq('id', existingInvite.id);
     } else {
       await supabase.from('user_invitations').insert({
         user_id: user.id,
         email: user.email,
-        token: newTokenHash,
+        token_hash: hashedToken,
         status: 'sent',
         expires_at: expiresAt.toISOString(),
       });
@@ -222,7 +236,7 @@ async function sweepActivationReminders(
     const emailResult = await sendAgentActivationEmail(
       user.email,
       user.first_name || 'there',
-      newToken,
+      hashedToken,
       48
     );
 
@@ -239,6 +253,16 @@ async function sweepActivationReminders(
     });
 
     if (emailResult.success) sentCount++;
+    if (!emailResult.success) {
+      logPlatformError({
+        source: '/api/notifications/cron',
+        severity: 'warning',
+        error_code: 'ACTIVATION_EMAIL_FAILED',
+        error_message: emailResult.error || 'Failed to send activation reminder',
+        user_id: user.id,
+        metadata: { notification_type: 'activation_reminder', email: user.email },
+      });
+    }
     results.push({
       email: user.email,
       name,
@@ -289,7 +313,7 @@ async function sweepWelcomeReminders(
       .from('notification_log')
       .select('created_at')
       .eq('user_id', user.id)
-      .in('notification_type', ['welcome_reminder', 'welcome', 'manual_resend'])
+      .in('notification_type', ['welcome_reminder', 'welcome', 'manual_resend', 'activation_apology'])
       .eq('channel', 'email')
       .in('status', ['sent', 'dry_run'])
       .order('created_at', { ascending: false })
@@ -325,9 +349,23 @@ async function sweepWelcomeReminders(
       continue;
     }
 
-    // Generate fresh token - store hash in DB, send plaintext in email
-    const newToken = randomBytes(32).toString('hex');
-    const newTokenHash = createHash('sha256').update(newToken).digest('hex');
+    // Generate fresh Supabase invite link
+    const activationBaseUrl = 'https://smartagentalliance.com';
+    const redirectTo = `${activationBaseUrl}/agent-portal/activate`;
+
+    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+      type: 'invite',
+      email: user.email,
+      options: { redirectTo },
+    });
+
+    if (linkError || !linkData?.properties?.hashed_token) {
+      results.push({ email: user.email, name, status: 'failed', reason: `generateLink failed: ${linkError?.message || 'No token'}` });
+      await new Promise(resolve => setTimeout(resolve, 200));
+      continue;
+    }
+
+    const hashedToken = linkData.properties.hashed_token;
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 48);
 
@@ -342,13 +380,13 @@ async function sweepWelcomeReminders(
 
     if (existingInvite) {
       await supabase.from('user_invitations')
-        .update({ token: newTokenHash, expires_at: expiresAt.toISOString(), status: 'sent' })
+        .update({ token_hash: hashedToken, expires_at: expiresAt.toISOString(), status: 'sent' })
         .eq('id', existingInvite.id);
     } else {
       await supabase.from('user_invitations').insert({
         user_id: user.id,
         email: user.email,
-        token: newTokenHash,
+        token_hash: hashedToken,
         status: 'sent',
         expires_at: expiresAt.toISOString(),
       });
@@ -357,7 +395,7 @@ async function sweepWelcomeReminders(
     const emailResult = await sendWelcomeEmail(
       user.email,
       user.first_name || 'there',
-      newToken,
+      hashedToken,
       48
     );
 
@@ -554,7 +592,7 @@ async function sendSummaryEmail(
     await sendEmail({
       to: 'doug@smartagentalliance.com',
       subject: `[SAA Cron] ${totalSent} notification${totalSent === 1 ? '' : 's'} sent`,
-      react: null as any, // Will use html fallback
+      html: summaryHtml,
       tags: [{ name: 'category', value: 'cron_summary' }],
     });
   } catch {

@@ -1,10 +1,9 @@
-'use client';
-
 import { CTAButton } from '@saa/shared/components/saa/buttons';
 import { GenericCard } from '@saa/shared/components/saa/cards';
 import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { FAQ } from '@saa/shared/components/saa/interactive';
 import { LazySection } from '@/components/shared/LazySection';
+import { JoinAllianceCTA } from '@/components/shared/JoinAllianceCTA';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { DataStreamEffect } from '@/components/shared/hero-effects/DataStreamEffect';
 
@@ -303,9 +302,7 @@ export default function OnlineBrokerageComparison() {
               <CTAButton href="/about-exp-realty/">
                 More About eXp
               </CTAButton>
-              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-                Join The Alliance
-              </CTAButton>
+              <JoinAllianceCTA />
             </div>
           </div>
         </section>
@@ -357,9 +354,7 @@ export default function OnlineBrokerageComparison() {
               Stop leaving money on the table. Join the Alliance at eXp.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-                Join The Alliance
-              </CTAButton>
+              <JoinAllianceCTA />
               <CTAButton href="/exp-realty-sponsor/">
                 Learn About Our Value
               </CTAButton>
