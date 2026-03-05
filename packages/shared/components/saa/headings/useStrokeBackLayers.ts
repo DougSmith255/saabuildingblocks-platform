@@ -461,57 +461,7 @@ export function createBackLayers(
   heading.style.transform = `perspective(800px) rotateX(${rotateX}) translate(${faceOffset.x},${faceOffset.y})`;
 }
 
-// ── CSS text-shadow backing (server-renderable, no JS needed) ────────
-
-function hexToRgba(hex: string, opacity: number): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-}
-
-function roundEm(val: number): string {
-  return val.toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
-}
-
-/**
- * Convert SVG stroke layer config to CSS text-shadow string.
- * Computes shadow offsets relative to faceOffset so the backing
- * appears behind the face text in the same visual position as the SVGs.
- * Combines backing + face text-shadow into a single string.
- */
-export function computeCombinedTextShadow(config: StrokeConfig): string {
-  const fx = parseFloat(config.faceOffset.x);
-  const fy = parseFloat(config.faceOffset.y);
-
-  // Backing layers: reversed so innermost (closest to face) renders on top
-  const backingShadows = [...config.layers].reverse().map((layer) => {
-    const tx = parseFloat(layer.tx);
-    const ty = parseFloat(layer.ty);
-    const dx = tx - fx;
-    const dy = ty - fy;
-    const blur = layer.filter?.includes('blur') ? '0.15em' : '0';
-    const color = layer.opacity
-      ? hexToRgba(layer.color, parseFloat(layer.opacity))
-      : layer.color;
-    return `${roundEm(dx)}em ${roundEm(dy)}em ${blur} ${color}`;
-  });
-
-  // Face text-shadow first (on top), then backing layers behind
-  return config.faceTextShadow + ', ' + backingShadows.join(', ');
-}
-
-// Pre-compute combined text-shadows for all configs
-export const H1_GOLD_TEXT_SHADOW = computeCombinedTextShadow(H1_GOLD_CONFIG);
-export const H1_CYAN_TEXT_SHADOW = computeCombinedTextShadow(H1_CYAN_CONFIG);
-export const H2_DEFAULT_TEXT_SHADOW = computeCombinedTextShadow(H2_DEFAULT_CONFIG);
-export const H2_GOLD_TEXT_SHADOW = computeCombinedTextShadow(H2_GOLD_CONFIG);
-export const H2_BLUE_TEXT_SHADOW = computeCombinedTextShadow(H2_BLUE_CONFIG);
-export const H2_PURPLE_TEXT_SHADOW = computeCombinedTextShadow(H2_PURPLE_CONFIG);
-export const H2_EMERALD_TEXT_SHADOW = computeCombinedTextShadow(H2_EMERALD_CONFIG);
-export const FOUNDER_GOLD_TEXT_SHADOW = computeCombinedTextShadow(FOUNDER_GOLD_CONFIG);
-
-// ── React hook (kept for direct usage, e.g. agent-attraction-template) ──
+// ── React hook ───────────────────────────────────────────────────────
 
 export function useStrokeBackLayers(config: StrokeConfig) {
   const wrapperRef = useRef<HTMLDivElement>(null);

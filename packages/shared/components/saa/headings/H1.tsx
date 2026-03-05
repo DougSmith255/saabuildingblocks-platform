@@ -2,12 +2,7 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
-import {
-  H1_GOLD_CONFIG,
-  H1_CYAN_CONFIG,
-  H1_GOLD_TEXT_SHADOW,
-  H1_CYAN_TEXT_SHADOW,
-} from './useStrokeBackLayers';
+import { useStrokeBackLayers, H1_GOLD_CONFIG, H1_CYAN_CONFIG } from './useStrokeBackLayers';
 import type { StrokeConfig } from './useStrokeBackLayers';
 
 export type H1Theme = 'default' | 'cyan';
@@ -25,21 +20,16 @@ export interface HeadingProps {
   theme?: H1Theme;
 }
 
-interface ThemeData {
-  config: StrokeConfig;
-  textShadow: string;
-}
-
-const THEMES: Record<H1Theme, ThemeData> = {
-  default: { config: H1_GOLD_CONFIG, textShadow: H1_GOLD_TEXT_SHADOW },
-  cyan: { config: H1_CYAN_CONFIG, textShadow: H1_CYAN_TEXT_SHADOW },
+const THEME_CONFIGS: Record<H1Theme, StrokeConfig> = {
+  default: H1_GOLD_CONFIG,
+  cyan: H1_CYAN_CONFIG,
 };
 
 /**
- * H1 Component - 3D Text Effect via CSS text-shadow
+ * H1 Component - 3D SVG Stroke Heading Effect
  *
- * Renders entirely server-side for fast LCP.
- * Uses combined text-shadow (face extrusion + backing depth layers).
+ * Uses SVG stroke layers for sharp miter-joined backing depth,
+ * with CSS text-shadow on the face for fill extrusion.
  *
  * THEMES:
  * - default: gold backing (main site)
@@ -53,10 +43,12 @@ export default function H1({
   theme = 'default',
 }: HeadingProps) {
   const plainText = extractPlainText(children);
-  const { config, textShadow } = THEMES[theme];
+  const config = THEME_CONFIGS[theme];
+  const wrapperRef = useStrokeBackLayers(config);
 
   return (
     <div
+      ref={wrapperRef}
       style={{
         position: 'relative',
         display: 'inline-block',
@@ -69,9 +61,9 @@ export default function H1({
         className={`heading-front text-h1 text-display ${className}`}
         style={{
           color: config.faceColor,
-          transform: `perspective(800px) rotateX(${config.rotateX}) translate(${config.faceOffset.x},${config.faceOffset.y})`,
+          transform: `perspective(800px) rotateX(${config.rotateX})`,
           fontFeatureSettings: '"ss01" 1',
-          textShadow,
+          textShadow: config.faceTextShadow,
           lineHeight: 1.1,
           position: 'relative',
           overflow: 'visible',

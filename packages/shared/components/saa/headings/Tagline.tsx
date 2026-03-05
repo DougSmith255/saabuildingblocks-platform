@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
-import { H2_DEFAULT_CONFIG, H2_DEFAULT_TEXT_SHADOW } from './useStrokeBackLayers';
+import { useStrokeBackLayers, H2_DEFAULT_CONFIG } from './useStrokeBackLayers';
 
 export interface TaglineProps {
   children: React.ReactNode;
@@ -19,10 +19,10 @@ export interface TaglineProps {
 }
 
 /**
- * Tagline Component - 3D Text Effect via CSS text-shadow (matches H2 default style)
+ * Tagline Component - 3D SVG Stroke Effect (matches H2 default style)
  *
- * Renders entirely server-side for fast LCP.
- * Uses combined text-shadow (face extrusion + backing depth layers).
+ * Uses SVG stroke layers for sharp miter-joined backing depth,
+ * with CSS text-shadow on the face for fill extrusion.
  */
 export default function Tagline({
   children,
@@ -32,9 +32,11 @@ export default function Tagline({
 }: TaglineProps) {
   const plainText = extractPlainText(children);
   const config = H2_DEFAULT_CONFIG;
+  const wrapperRef = useStrokeBackLayers(config);
 
   return (
     <div
+      ref={wrapperRef}
       style={{
         position: 'relative',
         display: 'inline-block',
@@ -51,8 +53,8 @@ export default function Tagline({
           textAlign: 'center',
           fontFeatureSettings: '"ss01" 1',
           color: config.faceColor,
-          textShadow: H2_DEFAULT_TEXT_SHADOW,
-          transform: `perspective(800px) rotateX(${config.rotateX}) translate(${config.faceOffset.x},${config.faceOffset.y})`,
+          textShadow: config.faceTextShadow,
+          transform: `perspective(800px) rotateX(${config.rotateX})`,
           lineHeight: 1.1,
           position: 'relative',
           overflow: 'visible',
