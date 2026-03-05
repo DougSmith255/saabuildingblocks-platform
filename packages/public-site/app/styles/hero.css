@@ -1,0 +1,227 @@
+/* Homepage Hero & Counter Styles
+   Extracted from globals.css for per-page CSS splitting.
+   Loaded only on homepage and agent-attraction-template.
+*/
+
+/* Counter numbers ONLY use Synonym font - targeted override */
+/* Counter numbers ONLY use Synonym font - targeted override */
+.counter-numbers {
+  font-family: var(--font-synonym), monospace !important;
+}
+
+/* Fixed width for each digit to prevent horizontal movement during animation */
+.counter-digit {
+  display: inline-block;
+  width: 0.6em; /* Fixed width - works with any font, no OpenType features needed */
+  text-align: center;
+}
+
+/* Hide alt text for profile image while loading - prevent filename flash on hard refresh */
+.profile-image {
+  color: transparent; /* Make alt text invisible */
+  font-size: 0; /* Collapse alt text completely */
+  text-indent: -9999px; /* Move alt text off-screen */
+}
+
+/* SlotCounter Vertical Positioning Fix - Prevent bottom cutoff */
+/* Target internal SlotCounter classes to shift numbers DOWN */
+.agent-counter-wrapper [class*="slot__"],
+.agent-counter-wrapper [class*="numbers__"],
+.agent-counter-wrapper [class*="num__"] {
+  /* Override internal vertical-align: middle */
+  vertical-align: baseline !important;
+  /* Add bottom padding to prevent cutoff */
+  padding-bottom: 0.2em !important;
+  /* Adjust line-height for better spacing */
+  line-height: 1.2 !important;
+}
+
+/* Ensure container provides enough space */
+.agent-counter-wrapper {
+  /* Add internal padding to accommodate shifted numbers */
+  padding-top: 0.1em !important;
+  padding-bottom: 0.3em !important;
+  /* Ensure overflow is visible */
+  overflow: visible !important;
+}
+
+/* Counter containers - separate font control */
+.counter-numbers-wrapper {
+  /* Container inherits default font - child .counter-numbers gets Synonym via !important rule */
+}
+
+.counter-glow-container {
+  /* + and AGENTS use Taskor with neon glow - isolated container */
+  font-family: var(--font-taskor), sans-serif;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 0.75rem, 1rem);
+}
+
+/* Desktop sizes */
+.counter-numbers {
+  font-size: 64px;
+  font-weight: 400;
+  color: var(--color-heading-text);
+}
+
+.counter-plus {
+  font-family: var(--font-taskor), sans-serif !important;
+  font-size: 72px;
+  font-weight: 400;
+  color: var(--color-heading-text);
+  position: relative;
+  top: -5px;
+}
+
+.counter-text {
+  font-family: var(--font-taskor), sans-serif !important;
+  font-size: 40px;
+  font-weight: 400;
+  color: var(--color-heading-text);
+}
+
+/* Counter responsive sizing - mobile overrides */
+@media (max-width: 1600px) {
+  .counter-numbers {
+    font-size: 40px;
+    font-weight: 400;
+  }
+  .counter-plus {
+    font-size: 36px;
+    font-weight: 400;
+    position: relative;
+    top: -5px;
+  }
+  .counter-text {
+    font-size: 20px;
+    font-weight: 400;
+  }
+}
+
+/* Neon glow effect - shared by Tagline and Counter */
+.neon-glow {
+  display: inline-block;
+  color: #bfbdb0;
+  /* Using em units so glow scales with font size (matches H1/H2/Tagline) */
+  text-shadow:
+    -0.02em -0.02em 0 rgba(255,255,255, 0.4),
+    0.02em -0.02em 0 rgba(255,255,255, 0.4),
+    -0.02em 0.02em 0 rgba(255,255,255, 0.4),
+    0.02em 0.02em 0 rgba(255,255,255, 0.4),
+    0 -0.03em 0.1em #bfbdb0,
+    0 0 0.03em #bfbdb0,
+    0 0 0.07em #bfbdb0,
+    0 0 0.12em #9a9888,
+    0 0.03em 0.05em #000;
+}
+
+/* Safari-specific neon glow fix - Safari needs explicit webkit prefix and stronger values */
+@supports (-webkit-touch-callout: none) {
+  .neon-glow {
+    /* Stronger glow values for Safari which renders text-shadow more subtly */
+    text-shadow:
+      -0.02em -0.02em 0 rgba(255,255,255, 0.5),
+      0.02em -0.02em 0 rgba(255,255,255, 0.5),
+      -0.02em 0.02em 0 rgba(255,255,255, 0.5),
+      0.02em 0.02em 0 rgba(255,255,255, 0.5),
+      0 -0.03em 0.12em #bfbdb0,
+      0 0 0.05em #bfbdb0,
+      0 0 0.1em #bfbdb0,
+      0 0 0.15em #9a9888,
+      0 0.03em 0.05em #000;
+    /* GPU acceleration for smoother rendering */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* Wrapper for glow characters */
+.counter-glow-wrapper {
+  display: inline-flex;
+}
+
+/* Agent Counter - Responsive visibility */
+/* Small screens (<500px): show inline in tagline, hide floating counter */
+/* Larger screens (500px+): show floating counter, hide tagline suffix */
+.tagline-counter-suffix {
+  display: inline-flex;
+  gap: 0.5em;
+}
+
+@media (min-width: 500px) {
+  .tagline-counter-suffix {
+    display: none;
+  }
+}
+
+@media (max-width: 499px) {
+  .agent-counter-wrapper {
+    display: none !important;
+  }
+}
+
+
+/* ========================================
+   HERO TAGLINE SPACING - ALL SCREEN SIZES
+   Adds spacing between H1 and Tagline on homepage
+   ======================================== */
+.hero-tagline-mobile-spacing {
+  margin-top: 20px;
+}
+
+/* ========================================
+   HERO ROTATING TEXT - Fixed height to prevent layout shift
+   Mobile: taller to accommodate text wrapping
+   ======================================== */
+.hero-rotating-text-container {
+  min-height: 72px; /* Mobile: ~3 lines for longest text */
+}
+
+@media (min-width: 768px) {
+  .hero-rotating-text-container {
+    min-height: 48px; /* Desktop: ~2 lines */
+  }
+}
+
+/* ========================================
+   3D TRANSFORMS - DESKTOP ONLY (fixes mobile scroll jumping)
+   ======================================== */
+/* NOTE: hero-3d-backdrop intentionally has NO 3D transform because
+   combining transform + filter: blur() causes the blur to clip at element bounds.
+   The backdrop is just a blurred gradient - no 3D depth needed. */
+.hero-3d-backdrop {
+  transform-style: flat;
+  transform: none;
+}
+
+.hero-3d-image {
+  transform-style: flat;
+  transform: translate3d(0, 0, 0); /* Create rendering layer for animations on all screen sizes */
+  will-change: opacity; /* Hint browser to optimize for opacity changes */
+}
+
+@media (min-width: 768px) {
+  /* Only apply 3D transform to the image, NOT the backdrop */
+  .hero-3d-image {
+    transform-style: preserve-3d;
+    transform: translateZ(-50px) rotateX(5deg);
+  }
+}
+
+/* ========================================
+   HERO CONTENT WRAPPER - Scroll Fade Support
+   Ensures all hero content fades smoothly on scroll
+   ======================================== */
+
+/* Hero content wrapper needs will-change for smooth GPU-accelerated transitions */
+.hero-content-wrapper {
+  will-change: transform, opacity, filter;
+}
+
+/* Ensure backdrop-blur elements inherit opacity correctly from the wrapper */
+/* This fixes the issue where button faces with backdrop-blur disappear instantly */
+/* EXCLUDES hero-3d-image: backface-visibility: hidden clips its drop-shadow */
+.hero-content-wrapper *:not(.hero-3d-image) {
+  backface-visibility: hidden;
+}

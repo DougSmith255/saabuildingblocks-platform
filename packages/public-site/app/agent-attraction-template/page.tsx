@@ -15,8 +15,11 @@
  */
 
 import React, { useEffect, useRef, useState, useMemo, useId, ReactNode, createContext, useContext, useCallback, useLayoutEffect } from 'react';
+import '../styles/hero.css';
 import Link from 'next/link';
 import { Globe, Users, TrendingUp, Check, DollarSign, Bot, GraduationCap, Cloud, Percent, Award, X } from 'lucide-react';
+import { H1 as SharedH1, H2 as SharedH2, Tagline as SharedTagline, useStrokeBackLayers } from '@saa/shared/components/saa/headings';
+import { H2_DEFAULT_CONFIG } from '@saa/shared/components/saa/headings/useStrokeBackLayers';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -275,7 +278,7 @@ function useScrollReveal(threshold = 0.15) {
 }
 
 // =============================================================================
-// SHARED COMPONENT: H1 (3D Shaded Text - gold stroke backing)
+// SHARED COMPONENT: H1 (SVG stroke back layers - imported from shared package)
 // =============================================================================
 interface HeadingProps {
   children: React.ReactNode;
@@ -285,132 +288,17 @@ interface HeadingProps {
   noAnimation?: boolean;
 }
 
-function H1({ children, className = '', style = {}, id }: HeadingProps) {
-  const plainText = extractPlainText(children);
-  const uid = useId().replace(/:/g, '');
-  const sId = `hs${uid}`;
-  const fId = `hf${uid}`;
-  const shId = `hd${uid}`;
-  const glId = `hg${uid}`;
-  const grId = `hr${uid}`;
-  return (
-    <h1 id={id} className={`text-h1 text-display ${className}`} style={{ position: 'relative', textAlign: 'center', ...style }}>
-      <span style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}>{plainText}</span>
-      <svg aria-hidden="true" overflow="visible" style={{ display: 'block', width: '100%', height: '5em', margin: '-1.5em auto -2em', fontFamily: 'inherit', fontFeatureSettings: '"ss01" 1', fontSize: 'inherit' }}>
-        <defs>
-          <filter id={shId}><feGaussianBlur in="SourceAlpha" stdDeviation="10"/></filter>
-          <filter id={glId}><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          <linearGradient id={grId} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#dddcd5"/><stop offset="35%" stopColor="#f2f1ec"/><stop offset="65%" stopColor="#f2f1ec"/><stop offset="100%" stopColor="#dddcd5"/>
-          </linearGradient>
-          <symbol id={sId} overflow="visible"><text x="50%" y="60%" fill="none" strokeWidth=".22em" paintOrder="stroke fill" textAnchor="middle">{plainText}</text></symbol>
-          <symbol id={fId} overflow="visible"><text x="50%" y="60%" textAnchor="middle">{plainText}</text></symbol>
-        </defs>
-        <g strokeDasharray="3.5em 0em" strokeLinecap="butt" strokeLinejoin="miter">
-          <use x="0.167%" y="1.67%" href={`#${sId}`} stroke="#b8960a" opacity={0.5} filter={`url(#${shId})`}/>
-          <use x="0.12%" y="1.2%" href={`#${sId}`} stroke="#e6ac00"/>
-          <use x="0.1%" y="1.0%" href={`#${sId}`} stroke="#d4a010"/>
-          <use x="0.08%" y="0.8%" href={`#${sId}`} stroke="#b8900a"/>
-          <use x="0.06%" y="0.6%" href={`#${sId}`} stroke="#9a7808"/>
-          <use x="0.045%" y="0.45%" href={`#${sId}`} stroke="#7c6008"/>
-          <use x="0.03%" y="0.3%" href={`#${sId}`} stroke="#5e4808"/>
-          <use x="0.015%" y="0.15%" href={`#${sId}`} stroke="#3f3010"/>
-          <use x="0%" y="0%" href={`#${sId}`} stroke="#191818"/>
-        </g>
-        <use x="0.15%" y="0.4%" href={`#${fId}`} fill="#7a7970"/>
-        <use x="0.124%" y="0.14%" href={`#${fId}`} fill="#8d8c80"/>
-        <use x="0.099%" y="-0.11%" href={`#${fId}`} fill="#a09f94"/>
-        <use x="0.073%" y="-0.37%" href={`#${fId}`} fill="#b3b2a8"/>
-        <use x="0.047%" y="-0.63%" href={`#${fId}`} fill="#c2c1b8"/>
-        <use x="0.021%" y="-0.89%" href={`#${fId}`} fill="#d1d0c7"/>
-        <use x="-0.004%" y="-1.14%" href={`#${fId}`} fill="#dddcd5"/>
-        <use x="-0.06%" y="-1.4%" href={`#${fId}`} fill="#ffd700" opacity={0.15} filter={`url(#${glId})`}/>
-        <use x="-0.06%" y="-1.4%" href={`#${fId}`} fill={`url(#${grId})`}/>
-      </svg>
-    </h1>
-  );
-}
+const H1 = SharedH1;
 
 // =============================================================================
-// SHARED COMPONENT: H2 (Metal Backing Effect)
+// SHARED COMPONENT: H2 (SVG stroke back layers - imported from shared package)
 // =============================================================================
-function H2({ children, className = '', style = {} }: HeadingProps) {
-  const text = React.Children.toArray(children).join('');
-  const words = text.split(' ');
-  const textShadow = `0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4)`;
-
-  return (
-    <>
-      <style>{`
-        .h2-word::before {
-          content: ""; position: absolute; top: -0.25em; left: -0.3em; right: -0.3em; bottom: -0.25em;
-          background: linear-gradient(180deg, #3d3d3d 0%, #2f2f2f 40%, #252525 100%);
-          border-radius: 0.15em; z-index: -1;
-          border-top: 2px solid rgba(180,180,180,0.45); border-left: 1px solid rgba(130,130,130,0.35);
-          border-right: 1px solid rgba(60,60,60,0.6); border-bottom: 2px solid rgba(0,0,0,0.7);
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 2px rgba(0,0,0,0.25),
-            0 4px 8px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
-        }
-        .h2-word::after {
-          content: ""; position: absolute; top: -0.25em; left: -0.3em; right: -0.3em; height: 50%;
-          background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 50%, transparent 100%);
-          border-radius: 0.15em 0.15em 0 0; z-index: -1; pointer-events: none;
-        }
-      `}</style>
-      <h2
-        className={`text-h2 ${className}`}
-        style={{
-          display: 'flex', justifyContent: 'center', gap: '0.5em', flexWrap: 'wrap',
-          position: 'relative', paddingLeft: '0.35em', paddingRight: '0.35em',
-          fontFeatureSettings: '"ss01" 1', maxWidth: '1400px',
-          marginLeft: 'auto', marginRight: 'auto', marginBottom: '2.5rem', ...style
-        }}
-      >
-        {words.map((word, i) => (
-          <React.Fragment key={i}>
-            {i > 0 && ' '}
-            <span className="h2-word" style={{ display: 'inline-block', position: 'relative', color: '#bfbdb0', textShadow }}>
-              {word}
-            </span>
-          </React.Fragment>
-        ))}
-      </h2>
-    </>
-  );
-}
+const H2 = SharedH2;
 
 // =============================================================================
-// SHARED COMPONENT: Tagline
+// SHARED COMPONENT: Tagline (SVG stroke back layers - imported from shared package)
 // =============================================================================
-interface TaglineProps {
-  children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-  counterSuffix?: React.ReactNode;
-}
-
-function Tagline({ children, className = '', style = {}, counterSuffix }: TaglineProps) {
-  // H2-style glow: text-shadow only, no filter (softer, more diffused appearance)
-  const textShadow = `
-    0 0 1px #fff,
-    0 0 2px #fff,
-    0 0 8px rgba(255,255,255,0.4),
-    0 0 16px rgba(255,255,255,0.2),
-    0 0 28px rgba(255,255,255,0.1),
-    0 0 40px rgba(255,255,255,0.05)
-  `;
-  return (
-    <p
-      className={`text-tagline ${className}`}
-      style={{
-        textAlign: 'center', transform: 'rotateX(15deg)', position: 'relative',
-        color: '#bfbdb0', fontFeatureSettings: '"ss01" 1', textShadow: textShadow.trim(), ...style
-      }}
-    >
-      {children} {counterSuffix}
-    </p>
-  );
-}
+const Tagline = SharedTagline;
 
 // =============================================================================
 // SHARED COMPONENT: CTAButton
@@ -866,15 +754,8 @@ function RevealMaskEffect() {
 // =============================================================================
 function AgentCounter() {
   const { isCounterDesktop } = useViewport();
-  // H2-style glow: text-shadow only, no filter (softer, more diffused appearance)
-  const textShadow = `
-    0 0 1px #fff,
-    0 0 2px #fff,
-    0 0 8px rgba(255,255,255,0.4),
-    0 0 16px rgba(255,255,255,0.2),
-    0 0 28px rgba(255,255,255,0.1),
-    0 0 40px rgba(255,255,255,0.05)
-  `;
+  const config = H2_DEFAULT_CONFIG;
+  const agentsRef = useStrokeBackLayers(config);
 
   if (isCounterDesktop) {
     return (
@@ -883,7 +764,9 @@ function AgentCounter() {
           <span style={{ display: 'inline', color: '#bfbdb0', fontFamily: 'var(--font-synonym), monospace', fontWeight: 300, fontSize: 'calc(1em + 10px)', textShadow: 'none' }}>
             <span className="counter-digit">3</span><span className="counter-digit">7</span><span className="counter-digit">0</span><span className="counter-digit">0</span><span>+</span>
           </span>
-          <span style={{ color: '#bfbdb0', fontFamily: 'var(--font-taskor), sans-serif', fontFeatureSettings: '"ss01" 1', textTransform: 'uppercase', letterSpacing: '0.05em', textShadow: textShadow.trim() }}>AGENTS</span>
+          <div ref={agentsRef} style={{ position: 'relative', display: 'inline-block', overflow: 'visible' }}>
+            <span className="heading-front" style={{ color: config.faceColor, fontFamily: 'var(--font-taskor), sans-serif', fontFeatureSettings: '"ss01" 1', textTransform: 'uppercase', letterSpacing: '0.05em', textShadow: config.faceTextShadow, transform: `perspective(800px) rotateX(${config.rotateX})`, display: 'inline-block', position: 'relative', fontWeight: 700 }}>AGENTS</span>
+          </div>
         </span>
       </div>
     );
@@ -911,7 +794,6 @@ const pillarTextStyle: React.CSSProperties = {
   color: PILLAR_GLOW_COLOR,
   fontWeight: 500,
   textShadow: `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.05em ${PILLAR_GLOW_COLOR}, 0 0 0.09em rgba(188, 162, 74, 0.8), 0 0 0.13em rgba(188, 162, 74, 0.55), 0 0 0.18em rgba(188, 162, 74, 0.35), 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`,
-  filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25))`,
 };
 
 function ValuePillarsTab() {
@@ -920,8 +802,7 @@ function ValuePillarsTab() {
       <div className="absolute left-8 right-8" style={{ bottom: '-12px', height: '35px', background: 'radial-gradient(ellipse 60% 100% at center, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 80%)', filter: 'blur(12px)', zIndex: -1, borderRadius: '50%' }} />
       <div className="absolute inset-0 rounded-3xl" style={{ background: 'linear-gradient(180deg, rgba(22, 22, 22, 0.94) 0%, rgba(15, 15, 15, 0.97) 100%)', pointerEvents: 'none' }} />
       <style>{`@keyframes whiteVignetteGlow { 0%, 100% { box-shadow: inset 0 20px 30px -15px rgba(255, 255, 255, 0.12), inset 0 -20px 30px -15px rgba(255, 255, 255, 0.12), inset 20px 0 30px -15px rgba(255, 255, 255, 0.12), inset -20px 0 30px -15px rgba(255, 255, 255, 0.12); } 50% { box-shadow: inset 0 35px 45px -20px rgba(255, 255, 255, 0.22), inset 0 -35px 45px -20px rgba(255, 255, 255, 0.22), inset 35px 0 45px -20px rgba(255, 255, 255, 0.22), inset -35px 0 45px -20px rgba(255, 255, 255, 0.22); } }
-        @keyframes pillarGlowBreathe { 0%, 100% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25)); } 50% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(188, 162, 74, 0.45)); } }
-        .pillar-text { animation: pillarGlowBreathe 4s ease-in-out infinite; }`}</style>
+        `}</style>
       <div className="absolute inset-0 pointer-events-none z-[3] rounded-3xl" style={{ animation: 'whiteVignetteGlow 4s ease-in-out infinite' }} />
       <GlassPanel variant="champagne">
         <section className="px-6" style={{ paddingTop: 'calc(1.5rem + 15px)', paddingBottom: 'calc(1.5rem + 15px)' }}>

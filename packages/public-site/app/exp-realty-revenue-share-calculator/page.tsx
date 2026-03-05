@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
+import '../styles/calculator.css';
 import { CTAButton } from '@saa/shared/components/saa/buttons';
 import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { LazySection } from '@/components/shared/LazySection';

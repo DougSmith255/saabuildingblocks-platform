@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import '../styles/blog.css';
 
 export const metadata: Metadata = {
   title: 'Blog',

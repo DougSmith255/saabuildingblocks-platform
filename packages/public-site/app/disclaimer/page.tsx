@@ -11,6 +11,8 @@
 
 import { H1 } from '@saa/shared/components/saa/headings';
 import type { Metadata } from 'next';
+import '../styles/blog.css';
+import '../styles/legal.css';
 
 export const metadata: Metadata = {
   title: 'Disclaimer',

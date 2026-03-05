@@ -1,0 +1,2076 @@
+/* Blog & WordPress Content Styles
+   Extracted from globals.css for per-page CSS splitting.
+   Loaded only on blog pages and legal pages that use blog-content class.
+*/
+
+/* ========================================
+   WORDPRESS CONTENT STYLING
+   AI Agent Page Building Protocol Compliant
+   ======================================== */
+
+/**
+ * WordPress Blog Content Renderer
+ *
+ * Styles WordPress-generated HTML content following the AI Agent Page Building Protocol:
+ * - H2 auto-applies display font (Taskor via Master Controller)
+ * - H3-H6 use font-[var(--font-taskor)] via CSS
+ * - Paragraphs use font-[var(--font-amulya)]
+ * - Quotes ALWAYS use font-amulya italic
+ * - Code ALWAYS uses font-synonym
+ * - Links use brand colors (#00ff88 → #ffd700 on hover)
+ *
+ * @see /docs/AI-AGENT-PAGE-BUILDING-PROTOCOL.md
+ * @see /docs/PHASE1_BLOG_TEMPLATE_ARCHITECTURE.md
+ */
+
+/* Blog Content - Uses Master Controller CSS Variables */
+.blog-content {
+  color: var(--text-color-body, #bfbdb0);
+  font-family: var(--font-family-body, var(--font-synonym), sans-serif);
+  font-size: var(--font-size-body, clamp(16px, calc(15.09px + 0.36vw), 26px));
+  line-height: var(--line-height-body, 1.4);
+  letter-spacing: var(--letter-spacing-body, 0em);
+}
+
+/* RankMath Table of Contents - Fix spacing issues from malformed HTML */
+/* WordPress/RankMath sometimes generates empty divs and stray </p> tags */
+.blog-content .wp-block-rank-math-toc-block,
+.blog-content #rank-math-toc {
+  margin: 1.5rem 0;
+}
+
+/* Remove all default margins/padding from TOC container divs */
+.blog-content .wp-block-rank-math-toc-block nav,
+.blog-content .wp-block-rank-math-toc-block nav > div,
+.blog-content .wp-block-rank-math-toc-block nav div {
+  margin: 0;
+  padding: 0;
+}
+
+/* Hide empty divs and empty p tags that create blank lines */
+.blog-content .wp-block-rank-math-toc-block div:empty,
+.blog-content .wp-block-rank-math-toc-block p:empty,
+.blog-content .wp-block-rank-math-toc-block nav p {
+  display: none;
+  margin: 0;
+  padding: 0;
+  height: 0;
+  line-height: 0;
+}
+
+/* Consistent spacing for TOC link items */
+.blog-content .wp-block-rank-math-toc-block div:has(> a) {
+  margin: 0;
+  padding: 0.25rem 0;
+  line-height: 1.4;
+}
+
+/* Hide H3+ entries in TOC - only show H2s for cleaner navigation */
+.blog-content .wp-block-rank-math-toc-block li li {
+  display: none;
+}
+
+/* TOC links styling - DARK MODE: yellow, glow only on hover */
+.blog-content .wp-block-rank-math-toc-block a {
+  color: #ffd700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  padding: 0.15rem 0.3rem;
+  border-radius: 4px;
+}
+
+.blog-content .wp-block-rank-math-toc-block a:hover {
+  color: #ffd700;
+  background: rgba(42, 42, 42, 0.8);
+  text-shadow: 0 0 8px rgba(204, 163, 0, 0.8), 0 0 16px rgba(204, 163, 0, 0.5);
+}
+
+/* TOC links styling - LIGHT MODE: green, glow only on hover */
+.light-mode .blog-content .wp-block-rank-math-toc-block a {
+  color: #00aa66;
+}
+
+.light-mode .blog-content .wp-block-rank-math-toc-block a:hover {
+  color: #00aa66;
+  background: rgba(200, 200, 200, 0.5);
+  text-shadow: 0 0 8px rgba(0, 136, 82, 0.8), 0 0 16px rgba(0, 136, 82, 0.5);
+}
+
+/* Rank Math TOC heading - styled by JS (3D metal plate effect via createBackLayers) */
+/* No ::before replacement needed - the actual h2 gets the 3D treatment */
+
+/* ===========================================
+   FAQ COMPONENT STYLING
+   CSS Variables for unified FAQ appearance
+   Used by: RankMath FAQ blocks, SAA FAQ component
+   =========================================== */
+
+/* FAQ CSS Variables - Master Controller compatible */
+:root {
+  --faq-bg: rgba(255, 255, 255, 0.05);
+  --faq-border: rgba(255, 255, 255, 0.1);
+  --faq-border-hover: rgba(255, 215, 0, 0.3);
+  --faq-question-color: #e5e4dd;
+  --faq-answer-color: #dcdbd5;
+  --faq-icon-color: #ffd700;
+  --faq-radius: 0.75rem;
+}
+
+/* Light mode FAQ variables */
+.light-mode {
+  --faq-bg: rgba(0, 0, 0, 0.03);
+  --faq-border: rgba(0, 0, 0, 0.1);
+  --faq-border-hover: rgba(0, 170, 102, 0.4);
+  --faq-question-color: #2a2a2a;
+  --faq-answer-color: #4a4a4a;
+  --faq-icon-color: #00aa66;
+}
+
+/* ========================================
+   LIGHT MODE - Blog Post Hero Elements
+   Keep gold colors, but disable H1 breathing animation
+   (prevents bright yellow glow on light background)
+   ======================================== */
+
+/* Light mode H1 - Disable breathing animation, keep SVG stroke backing from component */
+.light-mode .text-h1,
+.light-mode h1.text-h1 {
+  animation: none !important;
+  filter: none !important;
+}
+
+/* RankMath FAQ Block Styling - Accordion style matching homepage */
+.blog-content .wp-block-rank-math-faq-block {
+  margin: 2rem 0;
+}
+
+.blog-content .wp-block-rank-math-faq-block .rank-math-faq-item {
+  background-color: var(--faq-bg);
+  border: 1px solid var(--faq-border);
+  border-radius: var(--faq-radius);
+  margin-bottom: 1rem;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.blog-content .wp-block-rank-math-faq-block .rank-math-faq-item:hover {
+  border-color: var(--faq-border-hover);
+}
+
+/* FAQ Question styling */
+.blog-content .wp-block-rank-math-faq-block .rank-math-question {
+  color: var(--faq-question-color);
+  font-family: var(--font-synonym), sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  padding: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Reset H3 styling from blog content */
+  transform: none;
+  text-shadow: none;
+  background: none;
+  gap: 0;
+  flex-wrap: nowrap;
+}
+
+/* Add chevron indicator via CSS */
+.blog-content .wp-block-rank-math-faq-block .rank-math-question::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--faq-icon-color);
+  border-bottom: 2px solid var(--faq-icon-color);
+  transform: rotate(45deg);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+/* Rotate chevron when item is expanded (via JS class) */
+.blog-content .wp-block-rank-math-faq-block .rank-math-faq-item.is-open .rank-math-question::after {
+  transform: rotate(-135deg);
+}
+
+/* FAQ Answer styling - hidden by default (collapsed accordion) */
+.blog-content .wp-block-rank-math-faq-block .rank-math-answer {
+  color: var(--faq-answer-color);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  /* Collapsed state - hidden */
+  max-height: 0;
+  padding: 0 1.25rem;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+/* Expanded state - show answer */
+.blog-content .wp-block-rank-math-faq-block .rank-math-faq-item.is-open .rank-math-answer {
+  max-height: 1000px;
+  padding: 0 1.25rem 1.25rem 1.25rem;
+}
+
+.blog-content .wp-block-rank-math-faq-block .rank-math-answer p {
+  margin: 0;
+}
+
+/* Inline images in H2 headings (e.g. 80px icons) - center with text */
+.blog-content h2 img {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+/* H2 - Blog content typography - matches H2.tsx component styling */
+/* Blog-specific size: 5px smaller than global H2 on both min and max */
+.blog-content h2,
+.blog-content.prose h2,
+.blog-content.prose-invert h2 {
+  font-family: var(--font-family-h2, var(--font-taskor), sans-serif);
+  font-size: clamp(23px, calc(19.36px + 1.45vw), 63px);
+  line-height: var(--line-height-h2, 1.1);
+  letter-spacing: var(--letter-spacing-h2, -0.01em);
+  font-weight: var(--font-weight-h2, 700);
+  color: var(--text-color-h2, #e5e4dd);
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  /* Font feature for alt glyphs */
+  font-feature-settings: "ss01" 1;
+  /* 3D transform - matches H2.tsx */
+  transform: perspective(800px) rotateX(8deg);
+  /* H2 component text-shadow: white core + warm white glow + metal backing */
+  text-shadow:
+    /* WHITE CORE */
+    0 0 0.01em #fff,
+    0 0 0.02em #fff,
+    0 0 0.03em rgba(255,255,255,0.8),
+    /* WARM WHITE GLOW - extended and dilute for sharp definition */
+    0 0 0.04em rgba(255,250,240,0.7),
+    0 0 0.08em rgba(255, 255, 255, 0.35),
+    0 0 0.14em rgba(255, 255, 255, 0.15),
+    0 0 0.22em rgba(200, 200, 200, 0.08),
+    /* METAL BACKING (3D depth) */
+    0.02em 0.02em 0 #2a2a2a,
+    0.04em 0.04em 0 #222222,
+    0.06em 0.06em 0 #1a1a1a,
+    0.08em 0.08em 0 #141414,
+    0.10em 0.10em 0 #0f0f0f,
+    0.12em 0.12em 0 #080808;
+  /* Drop shadow for depth - matches H2.tsx */
+  filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
+  overflow-wrap: break-word;
+}
+
+/* H3 - Master Controller Typography */
+.blog-content h3,
+.blog-content.prose h3,
+.blog-content.prose-invert h3,
+.prose .blog-content h3,
+.prose-invert .blog-content h3,
+div.blog-content.prose.prose-invert h3 {
+  font-family: var(--font-family-h3, var(--font-amulya), sans-serif);
+  font-size: var(--font-size-h3, clamp(27px, calc(25.36px + 0.65vw), 45px));
+  line-height: var(--line-height-h3, 1.3);
+  letter-spacing: var(--letter-spacing-h3, 0em);
+  font-weight: var(--font-weight-h3, 700);
+  color: var(--text-color-h3, #e5e4dd);
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  overflow-wrap: break-word;
+}
+
+/* H4 - Master Controller Typography */
+.blog-content h4,
+.blog-content.prose h4,
+.blog-content.prose-invert h4 {
+  font-family: var(--font-family-h4, var(--font-amulya), sans-serif);
+  font-size: var(--font-size-h4, clamp(24px, calc(22.55px + 0.58vw), 40px));
+  line-height: var(--line-height-h4, 1.3);
+  letter-spacing: var(--letter-spacing-h4, 0em);
+  font-weight: var(--font-weight-h4, 700);
+  color: var(--text-color-h4, #e5e4dd);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  overflow-wrap: break-word;
+}
+
+/* H5 - Master Controller Typography */
+.blog-content h5,
+.blog-content.prose h5,
+.blog-content.prose-invert h5 {
+  font-family: var(--font-family-h5, var(--font-amulya), sans-serif);
+  font-size: var(--font-size-h5, clamp(22px, calc(20.82px + 0.47vw), 35px));
+  line-height: var(--line-height-h5, 1.3);
+  letter-spacing: var(--letter-spacing-h5, 0em);
+  font-weight: var(--font-weight-h5, 700);
+  color: var(--text-color-h5, #e5e4dd);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  overflow-wrap: break-word;
+}
+
+/* H6 - Master Controller Typography */
+.blog-content h6,
+.blog-content.prose h6,
+.blog-content.prose-invert h6 {
+  font-family: var(--font-family-h6, var(--font-amulya), sans-serif);
+  font-size: var(--font-size-h6, clamp(18px, calc(16.91px + 0.44vw), 30px));
+  line-height: var(--line-height-h6, 1.3);
+  letter-spacing: var(--letter-spacing-h6, 0em);
+  font-weight: var(--font-weight-h6, 700);
+  color: var(--text-color-h6, #e5e4dd);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  overflow-wrap: break-word;
+}
+
+/* Paragraphs - Master Controller Body Typography */
+.blog-content p,
+.blog-content.prose p,
+.blog-content.prose-invert p {
+  font-family: var(--font-family-body, var(--font-synonym), sans-serif);
+  font-size: var(--font-size-body, clamp(16px, calc(15.09px + 0.36vw), 26px));
+  line-height: var(--line-height-body, 1.4);
+  letter-spacing: var(--letter-spacing-body, 0em);
+  color: var(--text-color-body, #bfbdb0);
+  margin-bottom: 1.25rem;
+}
+
+/* Links - Master Controller Link Typography */
+.blog-content a,
+.blog-content.prose a,
+.blog-content.prose-invert a {
+  color: var(--text-color-link, #ffd700);
+  font-family: var(--font-family-link, var(--font-synonym), sans-serif);
+  font-weight: var(--font-weight-link, 400);
+  text-decoration: none;
+  /* Padding and border-radius for the background box effect */
+  /* Reduced top padding (0.05em) to match bottom padding visually */
+  padding: 0.05em 0.35em 0.125em 0.35em;
+  margin: -0.05em -0.35em -0.125em -0.35em;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.blog-content a:hover {
+  /* Rounded corner secondary background box on hover - similar to header menu */
+  text-decoration: none;
+  background-color: rgba(42, 42, 42, 0.8);
+  /* Darker yellow glow for dark mode links on hover */
+  text-shadow: 0 0 8px rgba(204, 163, 0, 0.8), 0 0 16px rgba(204, 163, 0, 0.5);
+}
+
+.blog-content a:focus-visible {
+  outline: 2px solid var(--text-color-link, #ffd700);
+  outline-offset: 2px;
+  border-radius: 0.375rem;
+}
+
+/* Additional selectors for comprehensive coverage - Only apply to paragraph links */
+.blog-post-content p a,
+article p a,
+[role="article"] p a {
+  color: var(--text-color-link, #ffd700);
+  text-decoration: none;
+  /* Reduced top padding (0.05em) to match bottom padding visually */
+  padding: 0.05em 0.35em 0.125em 0.35em;
+  margin: -0.05em -0.35em -0.125em -0.35em;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.blog-post-content p a:hover,
+article p a:hover,
+[role="article"] p a:hover {
+  /* Rounded corner secondary background box on hover */
+  text-decoration: none;
+  background-color: rgba(42, 42, 42, 0.8);
+  /* Darker yellow glow for dark mode links on hover */
+  text-shadow: 0 0 8px rgba(204, 163, 0, 0.8), 0 0 16px rgba(204, 163, 0, 0.5);
+}
+
+.blog-post-content p a:focus-visible,
+article p a:focus-visible,
+[role="article"] p a:focus-visible {
+  outline: 2px solid var(--text-color-link, #ffd700);
+  outline-offset: 2px;
+  border-radius: 0.375rem;
+}
+
+/* Lists - Master Controller Body Typography */
+.blog-content ul {
+  font-family: var(--font-family-body, var(--font-synonym), sans-serif);
+  font-size: var(--font-size-body, clamp(16px, calc(14.91px + 0.44vw), 28px));
+  line-height: var(--line-height-body, 1.4);
+  list-style-type: disc;
+  margin-left: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--text-color-body, #bfbdb0);
+}
+
+.blog-content ul li {
+  margin-bottom: 0.5rem;
+  color: var(--text-color-body, #bfbdb0);
+}
+
+.blog-content ol {
+  font-family: var(--font-family-body, var(--font-synonym), sans-serif);
+  font-size: var(--font-size-body, clamp(16px, calc(14.91px + 0.44vw), 28px));
+  line-height: var(--line-height-body, 1.4);
+  list-style-type: decimal;
+  margin-left: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--text-color-body, #bfbdb0);
+}
+
+.blog-content ol li {
+  margin-bottom: 0.5rem;
+  color: var(--text-color-body, #bfbdb0);
+}
+
+/* Nested lists */
+.blog-content ul ul,
+.blog-content ol ol,
+.blog-content ul ol,
+.blog-content ol ul {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Blockquotes - ALWAYS Amulya italic with gold border */
+.blog-content blockquote {
+  font-family: var(--font-amulya);
+  font-style: italic;
+  color: #dcdbd5;
+  border-left: 4px solid #ffd700;
+  padding-left: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: rgba(255, 215, 0, 0.05);
+}
+
+.blog-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code - ALWAYS Synonym monospace */
+.blog-content code {
+  font-family: var(--font-synonym);
+  font-size: 0.875em;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  background: rgba(255, 215, 0, 0.1);
+  color: #00ff88;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.blog-content pre {
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: #0a0a0a;
+  border: 1px solid rgba(229, 228, 221, 0.2);
+}
+
+.blog-content pre code {
+  background: transparent;
+  padding: 0;
+  border: none;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+/* Images - CyberFrame styling (holographic glass with metal frame) */
+/* Matches CyberFrame component from @saa/shared/components/saa/media */
+/* No max dimensions - allow images to display at natural size */
+.blog-content img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  margin: 0;
+  object-fit: contain;
+}
+
+/* WordPress figure wrapper - receives the CyberFrame styling */
+/* Float right with text wrapping, auto width based on image size */
+/* Default (dark mode): Yellow/gold glow for internal images */
+.blog-content figure {
+  position: relative;
+  display: block;
+  clear: both;
+  max-width: 100%;
+  width: fit-content;
+  /* Centered with vertical spacing */
+  margin: 1.5rem auto;
+  overflow: hidden; /* Clip the expanded sheen pseudo-element */
+  /* 3D Metal Frame */
+  padding: 6px;
+  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(150,150,150,0.4);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 15px rgba(255,215,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.blog-content figure:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(255,215,0,0.2);
+  border-color: rgba(255,215,0,0.3);
+}
+
+/* Infographic figures - full width, not floated */
+.blog-content figure.infographic {
+  float: none;
+  width: 100%;
+  margin: 2rem 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.blog-content figure.infographic:hover {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.blog-content figure.infographic::before,
+.blog-content figure.infographic::after {
+  display: none;
+}
+
+/* Light mode: Green glow for internal blog images (figures) */
+body.light-mode .blog-content figure {
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
+    0 0 15px rgba(0,255,136,0.1);
+}
+
+body.light-mode .blog-content figure:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
+    0 0 25px rgba(0,255,136,0.2);
+  border-color: rgba(0,255,136,0.3);
+}
+
+/* Inner container for holographic overlay */
+.blog-content figure img {
+  position: relative;
+  border-radius: 6px;
+}
+
+/* Holographic glass overlay - vertical slide animation */
+.blog-content figure::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  /* Horizontal sheen band that slides vertically */
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 30%,
+    rgba(255,255,255,0.06) 38%,
+    rgba(255,255,255,0.13) 50%,
+    rgba(255,255,255,0.06) 62%,
+    transparent 70%,
+    transparent 100%
+  );
+  /* Resting position - centered over image */
+  transform: translateY(0%);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Holographic iridescent overlay */
+.blog-content figure::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  z-index: 11;
+  pointer-events: none;
+  border-radius: 6px;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 0, 128, 0.03) 0%,
+    rgba(128, 0, 255, 0.03) 20%,
+    rgba(0, 128, 255, 0.03) 40%,
+    rgba(0, 255, 128, 0.03) 60%,
+    rgba(255, 255, 0, 0.03) 80%,
+    rgba(255, 128, 0, 0.03) 100%
+  );
+  mix-blend-mode: overlay;
+  transition: all 0.4s ease;
+}
+
+/* Hover - sheen slides up and off the image */
+.blog-content figure:hover::before {
+  transform: translateY(-100%);
+}
+
+/* Hover - holographic more visible */
+.blog-content figure:hover::after {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 0, 128, 0.05) 0%,
+    rgba(128, 0, 255, 0.05) 20%,
+    rgba(0, 128, 255, 0.05) 40%,
+    rgba(0, 255, 128, 0.05) 60%,
+    rgba(255, 255, 0, 0.05) 80%,
+    rgba(255, 128, 0, 0.05) 100%
+  );
+}
+
+/* Standalone images (not in figure) - also get CyberFrame */
+.blog-content > p > img,
+.blog-content > img {
+  position: relative;
+  /* 8px external spacing on all sides for separation from text */
+  margin: 8px;
+  padding: 6px;
+  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(150,150,150,0.4);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 15px rgba(0,255,136,0.1);
+  transition: all 0.3s ease;
+}
+
+.blog-content > p > img:hover,
+.blog-content > img:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(0,255,136,0.2);
+  border-color: rgba(0,255,136,0.3);
+}
+
+.blog-content figcaption {
+  font-family: var(--font-amulya);
+  font-size: 0.875rem;
+  color: #808080;
+  margin-top: 0.75rem;
+  text-align: center;
+  font-style: italic;
+  position: relative;
+  z-index: 12;
+}
+
+/* WordPress aligned images (aligncenter, alignright, alignleft) - CyberFrame styling */
+/* These are raw <img> tags with WordPress alignment classes inside <p> tags */
+/* Default (dark mode): Yellow/gold glow for internal images */
+.blog-content p > img.aligncenter,
+.blog-content p > img.alignright,
+.blog-content p > img.alignleft,
+.blog-content img.aligncenter,
+.blog-content img.alignright,
+.blog-content img.alignleft {
+  position: relative;
+  padding: 6px;
+  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(150,150,150,0.4);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 15px rgba(255,215,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.blog-content p > img.aligncenter:hover,
+.blog-content p > img.alignright:hover,
+.blog-content p > img.alignleft:hover,
+.blog-content img.aligncenter:hover,
+.blog-content img.alignright:hover,
+.blog-content img.alignleft:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(255,215,0,0.2);
+  border-color: rgba(255,215,0,0.3);
+}
+
+/* Center aligned images */
+.blog-content img.aligncenter,
+.blog-content p > img.aligncenter {
+  display: block;
+  margin: 1rem auto;
+}
+
+/* Right aligned images - float right with text wrap */
+.blog-content img.alignright,
+.blog-content p > img.alignright {
+  float: right;
+  margin: 0.5rem 0 1rem 1.5rem;
+  max-width: 50%;
+}
+
+/* Left aligned images - float left with text wrap */
+.blog-content img.alignleft,
+.blog-content p > img.alignleft {
+  float: left;
+  margin: 0.5rem 1.5rem 1rem 0;
+  max-width: 50%;
+}
+
+/* Light mode adjustments for aligned images */
+.light-mode .blog-content p > img.aligncenter,
+.light-mode .blog-content p > img.alignright,
+.light-mode .blog-content p > img.alignleft,
+.light-mode .blog-content img.aligncenter,
+.light-mode .blog-content img.alignright,
+.light-mode .blog-content img.alignleft {
+  background: linear-gradient(145deg, rgba(220,220,220,0.8) 0%, rgba(180,180,180,0.9) 50%, rgba(200,200,200,0.8) 100%);
+  border-color: rgba(100,100,100,0.3);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
+    0 0 15px rgba(0,170,102,0.1);
+}
+
+.light-mode .blog-content p > img.aligncenter:hover,
+.light-mode .blog-content p > img.alignright:hover,
+.light-mode .blog-content p > img.alignleft:hover,
+.light-mode .blog-content img.aligncenter:hover,
+.light-mode .blog-content img.alignright:hover,
+.light-mode .blog-content img.alignleft:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
+    0 0 25px rgba(0,170,102,0.2);
+  border-color: rgba(0,170,102,0.4);
+}
+
+/* CyberFrame component in blog content - must fill container width */
+/* Fixes issue where inline-block collapses with Next.js Image fill */
+.blog-content .cyber-frame {
+  display: block !important;
+  width: 100% !important;
+  max-width: 500px;
+}
+
+.blog-content .cyber-frame-inner {
+  width: 100% !important;
+}
+
+/* ========================================
+   BLOG IMAGE COLOR OVERRIDES
+   Featured images: Green in light mode (brand green)
+   Internal images: Yellow/gold in dark mode, green in light mode
+   ======================================== */
+
+/* Featured image CyberFrame - Light Mode: Use brand green instead of gold */
+body.light-mode .blog-post > section .float-right .cyber-frame,
+body.light-mode .blog-post .blog-content > .float-right .cyber-frame {
+  --cf-glow: rgba(0, 255, 136, 0.15) !important;
+  --cf-glow-hover: rgba(0, 255, 136, 0.25) !important;
+  --cf-border: rgba(0, 255, 136, 0.4) !important;
+  --cf-corner-top: rgba(0, 255, 136, 0.6) !important;
+  --cf-corner-bottom: rgba(0, 255, 136, 0.4) !important;
+  --cf-corner-hover-top: rgba(0, 255, 136, 0.9) !important;
+  --cf-corner-hover-bottom: rgba(0, 255, 136, 0.6) !important;
+  --cf-corner-glow-top: rgba(0, 255, 136, 0.5) !important;
+  --cf-corner-glow-bottom: rgba(0, 255, 136, 0.4) !important;
+}
+
+/* Internal blog images (inside blog-content, figures, media-text) - Dark Mode: Yellow/gold */
+.blog-post.dark-mode .blog-content figure .cyber-frame,
+.blog-post.dark-mode .blog-content .wp-block-media-text .cyber-frame,
+.blog-post:not(.light-mode) .blog-content figure .cyber-frame,
+.blog-post:not(.light-mode) .blog-content .wp-block-media-text .cyber-frame {
+  --cf-glow: rgba(255, 215, 0, 0.15) !important;
+  --cf-glow-hover: rgba(255, 215, 0, 0.25) !important;
+  --cf-border: rgba(255, 215, 0, 0.4) !important;
+  --cf-corner-top: rgba(255, 215, 0, 0.6) !important;
+  --cf-corner-bottom: rgba(255, 215, 0, 0.4) !important;
+  --cf-corner-hover-top: rgba(255, 215, 0, 0.9) !important;
+  --cf-corner-hover-bottom: rgba(255, 215, 0, 0.6) !important;
+  --cf-corner-glow-top: rgba(255, 215, 0, 0.5) !important;
+  --cf-corner-glow-bottom: rgba(255, 215, 0, 0.4) !important;
+}
+
+/* WordPress native inline images - Dark Mode: Yellow glow effect */
+.blog-post.dark-mode .blog-content p > img.aligncenter,
+.blog-post.dark-mode .blog-content p > img.alignright,
+.blog-post.dark-mode .blog-content p > img.alignleft,
+.blog-post.dark-mode .blog-content img.aligncenter,
+.blog-post.dark-mode .blog-content img.alignright,
+.blog-post.dark-mode .blog-content img.alignleft,
+.blog-post:not(.light-mode) .blog-content p > img.aligncenter,
+.blog-post:not(.light-mode) .blog-content p > img.alignright,
+.blog-post:not(.light-mode) .blog-content p > img.alignleft,
+.blog-post:not(.light-mode) .blog-content img.aligncenter,
+.blog-post:not(.light-mode) .blog-content img.alignright,
+.blog-post:not(.light-mode) .blog-content img.alignleft {
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(255, 215, 0, 0.15) !important;
+}
+
+.blog-post.dark-mode .blog-content p > img.aligncenter:hover,
+.blog-post.dark-mode .blog-content p > img.alignright:hover,
+.blog-post.dark-mode .blog-content p > img.alignleft:hover,
+.blog-post.dark-mode .blog-content img.aligncenter:hover,
+.blog-post.dark-mode .blog-content img.alignright:hover,
+.blog-post.dark-mode .blog-content img.alignleft:hover,
+.blog-post:not(.light-mode) .blog-content p > img.aligncenter:hover,
+.blog-post:not(.light-mode) .blog-content p > img.alignright:hover,
+.blog-post:not(.light-mode) .blog-content p > img.alignleft:hover,
+.blog-post:not(.light-mode) .blog-content img.aligncenter:hover,
+.blog-post:not(.light-mode) .blog-content img.alignright:hover,
+.blog-post:not(.light-mode) .blog-content img.alignleft:hover {
+  box-shadow:
+    0 4px 25px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(255, 215, 0, 0.25) !important;
+}
+
+/* WordPress Media-Text Blocks - Dark Mode: Yellow glow effect */
+.blog-post.dark-mode .blog-content .wp-block-media-text__media,
+.blog-post:not(.light-mode) .blog-content .wp-block-media-text__media {
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(255, 215, 0, 0.15) !important;
+}
+
+.blog-post.dark-mode .blog-content .wp-block-media-text__media:hover,
+.blog-post:not(.light-mode) .blog-content .wp-block-media-text__media:hover {
+  box-shadow:
+    0 4px 25px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(255, 215, 0, 0.25) !important;
+}
+
+/* WordPress Media-Text Blocks - flex layout for vertical centering */
+.blog-content .wp-block-media-text {
+  display: flex !important;
+  align-items: center;
+  gap: 5px;
+  grid-template-columns: unset !important;
+}
+
+/* Default (dark mode): Yellow/gold glow for internal images */
+.blog-content .wp-block-media-text__media {
+  position: relative;
+  flex-shrink: 0;
+  max-width: 500px;
+  width: 45%;
+  overflow: hidden; /* Clip the expanded sheen pseudo-element */
+  /* 3D Metal Frame styling to match figures */
+  padding: 6px;
+  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(150,150,150,0.4);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 15px rgba(255,215,0,0.1);
+  transition: all 0.3s ease;
+}
+
+/* Animated sheen for wp-block-media-text */
+.blog-content .wp-block-media-text__media::before {
+  content: "";
+  position: absolute;
+  inset: -100% -50%;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255,255,255,0.08) 40%,
+    rgba(255,255,255,0.15) 45%,
+    rgba(255,255,255,0.08) 50%,
+    transparent 55%
+  );
+  transform: translateX(-10%);
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.blog-content .wp-block-media-text__media:hover::before {
+  transform: translateX(30%);
+}
+
+/* Dark mode hover: Yellow/gold */
+.blog-content .wp-block-media-text__media:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(255,215,0,0.2);
+  border-color: rgba(255,215,0,0.3);
+}
+
+/* Light mode: Green glow for internal blog images (media-text) */
+body.light-mode .blog-content .wp-block-media-text__media {
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
+    0 0 15px rgba(0,255,136,0.1);
+}
+
+body.light-mode .blog-content .wp-block-media-text__media:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
+    0 0 25px rgba(0,255,136,0.2);
+  border-color: rgba(0,255,136,0.3);
+}
+
+.blog-content .wp-block-media-text__media img {
+  border-radius: 6px;
+  width: 100%;
+  height: auto;
+}
+
+.blog-content .wp-block-media-text__content {
+  padding: 0 !important;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Media-text with media on right - reorder via flex */
+.blog-content .wp-block-media-text.has-media-on-the-right .wp-block-media-text__media {
+  order: 1;
+}
+
+.blog-content .wp-block-media-text.has-media-on-the-right .wp-block-media-text__content {
+  order: 0;
+}
+
+/* Blog content dark backdrop - feathered mask */
+/* Desktop: radial ellipse feather (matches sidebar height) */
+.blog-content-backdrop {
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 60%, transparent 100%);
+}
+
+/* Mobile: linear vertical feather - smooth 30px fade at top and bottom */
+@media (max-width: 1023px) {
+  .blog-content-backdrop {
+    mask-image: linear-gradient(to bottom, transparent, black 30px, black calc(100% - 30px), transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 30px, black calc(100% - 30px), transparent);
+  }
+}
+
+/* Mobile: Stack media-text vertically */
+@media (max-width: 768px) {
+  .blog-content .wp-block-media-text {
+    flex-direction: column;
+  }
+
+  .blog-content .wp-block-media-text__media,
+  .blog-content .wp-block-media-text.has-media-on-the-right .wp-block-media-text__media {
+    width: 100%;
+    max-width: 100%;
+    order: 0;
+  }
+
+  .blog-content figure {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 1rem 0;
+  }
+}
+
+/* Tables */
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(229, 228, 221, 0.2);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.blog-content th {
+  font-family: var(--font-taskor);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+  color: #e5e4dd;
+}
+
+.blog-content td {
+  font-family: var(--font-amulya);
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(229, 228, 221, 0.1);
+  color: #dcdbd5;
+}
+
+.blog-content tr:last-child td {
+  border-bottom: none;
+}
+
+.blog-content tr:hover {
+  background: rgba(255, 215, 0, 0.03);
+}
+
+/* Horizontal Rule */
+.blog-content hr {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  border: none;
+  border-top: 1px solid rgba(229, 228, 221, 0.2);
+}
+
+/* Strong/Bold */
+.blog-content strong,
+.blog-content b {
+  color: #e5e4dd;
+  font-weight: 700;
+}
+
+/* Emphasis/Italic */
+.blog-content em,
+.blog-content i {
+  /* Match body text color #bfbdb0 in dark mode */
+  color: #bfbdb0;
+  font-style: italic;
+}
+
+/* Emphasis/Italic inside links should inherit link color */
+.blog-content a em,
+.blog-content a i {
+  color: inherit;
+}
+
+/* Strikethrough */
+.blog-content del,
+.blog-content s {
+  color: #808080;
+  text-decoration: line-through;
+}
+
+/* Mark/Highlight */
+.blog-content mark {
+  background: rgba(255, 215, 0, 0.2);
+  color: #e5e4dd;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.125rem;
+}
+
+/* Keyboard */
+.blog-content kbd {
+  font-family: var(--font-synonym);
+  font-size: 0.875em;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  background: #191818;
+  color: #dcdbd5;
+  border: 1px solid rgba(229, 228, 221, 0.2);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Subscript and Superscript */
+.blog-content sub,
+.blog-content sup {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.blog-content sup {
+  top: -0.5em;
+}
+
+.blog-content sub {
+  bottom: -0.25em;
+}
+
+/* WordPress Alignment Classes */
+.blog-content .alignleft {
+  float: left;
+  margin-right: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.blog-content .alignright {
+  float: right;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.blog-content .aligncenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* WordPress Gutenberg Blocks */
+.blog-content .wp-block-quote {
+  font-family: var(--font-amulya);
+  font-style: italic;
+  border-left: 4px solid #ffd700;
+  padding-left: 1.5rem;
+  color: #dcdbd5;
+}
+
+.blog-content .wp-block-pullquote {
+  font-family: var(--font-amulya);
+  font-size: 1.25em;
+  font-style: italic;
+  border-top: 4px solid #ffd700;
+  border-bottom: 4px solid #ffd700;
+  padding: 2rem 0;
+  text-align: center;
+  color: #e5e4dd;
+}
+
+.blog-content .wp-block-code {
+  font-family: var(--font-synonym);
+  background: #0a0a0a;
+  border: 1px solid rgba(229, 228, 221, 0.2);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+/* Responsive Typography Adjustments */
+@media (max-width: 768px) {
+  .blog-content h2 {
+    margin-top: 2rem;
+  }
+
+  .blog-content h3 {
+    margin-top: 1.75rem;
+  }
+
+  .blog-content h4 {
+    margin-top: 1.5rem;
+  }
+
+  .blog-content pre {
+    padding: 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .blog-content table {
+    font-size: 0.875rem;
+  }
+
+  .blog-content th,
+  .blog-content td {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* ========================================
+   LIGHT MODE - Daylight Sky Theme Override
+   Applied when body has .light-mode class
+   Background: Blue sky with animated clouds
+   Text: Dark colors for contrast, yellow H1/H2 for sunlight effect
+   Unchanged: share buttons (green), related posts styling
+   ======================================== */
+
+body.light-mode .blog-content {
+  /* Body text - medium gray (lighter than headings) */
+  color: #4a4a4a;
+}
+
+body.light-mode .blog-content h3,
+body.light-mode .blog-content h4,
+body.light-mode .blog-content h5,
+body.light-mode .blog-content h6 {
+  /* Headings H3-H6 - dark gray (same as Share This Post) */
+  color: #3a3a3a;
+}
+
+body.light-mode .blog-content p {
+  /* Paragraphs - medium gray (lighter than headings) */
+  color: #4a4a4a;
+}
+
+body.light-mode .blog-content ul li,
+body.light-mode .blog-content ol li {
+  /* List items - medium gray (lighter than headings) */
+  color: #4a4a4a;
+}
+
+body.light-mode .blog-content ul li::marker,
+body.light-mode .blog-content ol li::marker {
+  /* Bullet/number markers - dark gray */
+  color: #3a3a3a;
+}
+
+body.light-mode .blog-content em,
+body.light-mode .blog-content i {
+  /* Italic text - same as body text in light mode */
+  color: #4a4a4a;
+}
+
+body.light-mode .blog-content blockquote {
+  /* Blockquotes - medium gray with gold accent border */
+  color: #4a4a4a;
+  border-left-color: #ffd700;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .blog-content blockquote p {
+  color: #4a4a4a;
+}
+
+body.light-mode .blog-content code {
+  /* Inline code - dark gray on light background */
+  color: #3a3a3a;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .blog-content pre {
+  /* Code blocks - dark text on slightly darker off-white */
+  color: #3a3a3a;
+  background-color: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .blog-content pre code {
+  color: #3a3a3a;
+  background-color: transparent;
+}
+
+body.light-mode .blog-content table {
+  /* Tables - medium gray text */
+  color: #4a4a4a;
+}
+
+body.light-mode .blog-content th {
+  /* Table headers - dark gray on light background */
+  color: #3a3a3a;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .blog-content td {
+  color: #4a4a4a;
+  border-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+body.light-mode .blog-content hr {
+  /* Horizontal rule - grey to match dark mode (NOT gold) */
+  border-color: rgba(58, 58, 58, 0.3);
+}
+
+body.light-mode .blog-content strong,
+body.light-mode .blog-content b {
+  /* Bold text - dark gray */
+  color: #3a3a3a;
+}
+
+body.light-mode .blog-content figcaption {
+  /* Image captions - medium gray */
+  color: #4a4a4a;
+}
+
+/* Hide default StarBackground COMPLETELY in light mode - CloudBackground takes over */
+/* Use multiple selectors for maximum specificity */
+body.light-mode .starfieldContainer,
+body.light-mode [class*="starfield"],
+body.light-mode [class*="Starfield"],
+body.light-mode [class*="star_"],
+body.light-mode [class*="Star_"],
+body.light-mode .star-canvas,
+.light-mode .starfieldContainer,
+.light-mode .star-canvas {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Override body background in light mode - off-white (primary heading text color) */
+body.light-mode {
+  background: #e5e4dd !important;
+  background-color: #e5e4dd !important;
+}
+
+/* Light mode link colors - brand green with background box on hover */
+/* Exclude school-cta-button to prevent border distortion */
+body.light-mode .blog-content a:not(.share-button):not(.school-cta-button) {
+  color: #009955; /* Darker green for better readability in light mode */
+  text-shadow: none;
+  /* Padding and border-radius for the background box effect */
+  /* Reduced top padding (0.05em) to match bottom padding visually */
+  padding: 0.05em 0.35em 0.125em 0.35em;
+  margin: -0.05em -0.35em -0.125em -0.35em;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+}
+
+body.light-mode .blog-content a:not(.share-button):not(.school-cta-button):hover {
+  /* Rounded corner secondary background box on hover - lighter for light mode */
+  background-color: rgba(200, 200, 200, 0.5); /* Light gray background for light mode */
+  /* Brighter green glow for light mode links on hover */
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.7), 0 0 16px rgba(0, 255, 136, 0.4);
+}
+
+/* Light mode breadcrumb links - bright gold for visibility on blue sky background */
+body.light-mode .breadcrumb-link {
+  color: #ffd700 !important; /* Bright gold - visible on blue, matches theme */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
+}
+
+body.light-mode .breadcrumb-link:hover {
+  color: #ffd700 !important; /* Same bright gold on hover */
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+/* Light mode breadcrumb text (non-link parts) - off-black for readability */
+body.light-mode nav[aria-label="Breadcrumb navigation"] ol {
+  color: #2a2a2a;
+}
+
+body.light-mode nav[aria-label="Breadcrumb navigation"] ol li:last-child {
+  color: #2a2a2a;
+}
+
+body.light-mode nav[aria-label="Breadcrumb navigation"] svg {
+  color: rgba(42, 42, 42, 0.5);
+}
+
+/* ========================================
+   BLOG HERO META TEXT (Author, Date, Read Time)
+   Dark mode: heading color #e5e4dd
+   Light mode: off-black #2a2a2a
+   ======================================== */
+.blog-hero-meta-text {
+  color: #e5e4dd;
+}
+
+body.light-mode .blog-hero-meta-text {
+  color: #2a2a2a;
+}
+
+/* ========================================
+   LIGHT MODE - Share Buttons Section
+   "Share This Post" heading - slightly lighter than black
+   ======================================== */
+body.light-mode .blog-post h3 {
+  color: #3a3a3a !important;
+}
+/* Sidebar stays dark mode - override light mode h3 color */
+body.light-mode .blog-post .blog-sidebar h3 {
+  color: #e5e4dd !important;
+}
+
+body.light-mode .blog-post .flex.flex-wrap.gap-3 button {
+  background-color: rgba(229, 228, 221, 0.8) !important;
+  border-color: rgba(58, 58, 58, 0.3) !important;
+  color: #3a3a3a !important;
+}
+
+body.light-mode .blog-post .flex.flex-wrap.gap-3 button:hover {
+  background-color: rgba(229, 228, 221, 1) !important;
+  border-color: #00ff88 !important;
+  color: #00ff88 !important;
+}
+
+body.light-mode .blog-post .flex.flex-wrap.gap-3 button span {
+  color: inherit !important;
+}
+
+/* ========================================
+   LIGHT MODE - Related Posts Section
+   Title "Related Posts" - slightly lighter than black
+   Cards should keep ORIGINAL dark mode styling (off-white text, yellow hover)
+   ======================================== */
+body.light-mode .blog-post section.mt-16 h2 {
+  color: #3a3a3a !important;
+}
+
+body.light-mode .blog-post section.mt-16 {
+  border-top-color: rgba(58, 58, 58, 0.2) !important;
+}
+
+/* IMPORTANT: Related Posts cards should NOT change from dark mode styling */
+/* Reset any color overrides for related post cards */
+body.light-mode .blog-post section.mt-16 .grid a,
+body.light-mode .blog-post section.mt-16 .grid h3,
+body.light-mode .blog-post section.mt-16 .grid span,
+body.light-mode .blog-post section.mt-16 .grid p {
+  color: inherit !important;
+}
+
+/* Border dividers in light mode */
+body.light-mode .blog-post .border-t {
+  border-top-color: rgba(58, 58, 58, 0.2) !important;
+}
+
+/* ========================================
+   LIGHT MODE - H2 Metal Plate
+   Dark gray text (#191818) with medium gray (#404040) outline
+   Uses brand colors from Master Controller
+   ======================================== */
+body.light-mode .blog-content h2,
+body.light-mode .blog-content.prose h2,
+body.light-mode .blog-content.prose-invert h2 {
+  color: #191818;
+  text-shadow:
+    /* LIGHT GREY OUTLINE - subtle definition on light background */
+    0 0 0.01em #404040,
+    0 0 0.02em #404040,
+    0 0 0.03em rgba(64, 64, 64, 0.6),
+    /* SOFT GREY GLOW */
+    0 0 0.04em rgba(64, 64, 64, 0.4),
+    0 0 0.08em rgba(64, 64, 64, 0.2),
+    0 0 0.14em rgba(64, 64, 64, 0.1),
+    /* METAL BACKING (3D depth) - lighter for light mode */
+    0.02em 0.02em 0 #9a9a9a,
+    0.04em 0.04em 0 #8a8a8a,
+    0.06em 0.06em 0 #7a7a7a,
+    0.08em 0.08em 0 #6a6a6a,
+    0.10em 0.10em 0 #5a5a5a,
+    0.12em 0.12em 0 #4a4a4a;
+  filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.25));
+}
+
+/* ========================================
+   LIGHT MODE - Font Inheritance Notice
+   Fonts should NOT change between themes.
+   All fonts inherit from existing rules:
+   - H1, H2: .text-display -> var(--font-taskor)
+   - H3-H6: var(--font-amulya)
+   - Body: var(--font-synonym)
+
+   DO NOT override fonts in light mode - they should stay identical.
+   ======================================== */
+
+/* Blog content images: hidden until IntersectionObserver + load event triggers fade-in */
+.blog-content img.blog-img-lazy {
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.blog-content img.blog-img-loaded {
+  opacity: 1;
+}
+
+/* Respect user motion preferences for blog images */
+@media (prefers-reduced-motion: reduce) {
+  .blog-content img.blog-img-lazy {
+    opacity: 1;
+    transition: none;
+  }
+}
+
+/* ========================================
+   REAL ESTATE SCHOOLS CONTENT STYLES
+   Special styling for Divi-converted real estate school content
+   Handles checkmarks, X marks, school cards, pricing, etc.
+   ======================================== */
+
+/* Checkmarks (green) and X marks (red) for pros/cons lists */
+.blog-content .school-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  color: #00ff88;
+  font-weight: bold;
+  font-size: 1.2em;
+  border: 2px solid #00ff88;
+  border-radius: 50%;
+  margin-right: 0.5em;
+  flex-shrink: 0;
+}
+
+.blog-content .school-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  color: #ff4444;
+  font-weight: bold;
+  font-size: 1.2em;
+  border: 2px solid #ff4444;
+  border-radius: 50%;
+  margin-right: 0.5em;
+  flex-shrink: 0;
+}
+
+/* School name headings - h2 with school names */
+.blog-content h2.school-name {
+  color: #ffd700;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+/* SmartAgentAlliance Score styling */
+.blog-content p.school-score {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 136, 0.05));
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #ffd700;
+  margin: 1.5rem 0;
+}
+
+/* Pros and Cons list styling for real estate schools */
+.blog-content ul[style*="list-style: none"] {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 1rem 0;
+}
+
+.blog-content ul[style*="list-style: none"] li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background: rgba(30, 30, 30, 0.5);
+  border-radius: 6px;
+}
+
+/* Pricing section headers (h4) */
+.blog-content h4[style*="font-weight: bold"],
+.blog-content h4 {
+  color: #00d9ff;
+  font-size: clamp(20px, calc(18px + 0.5vw), 28px) !important;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Pros & Cons section headers (h3) */
+.blog-content h3[style*="font-size: 18px"],
+.blog-content div h3 {
+  font-size: clamp(20px, calc(18px + 0.5vw), 26px) !important;
+  color: #bfbdb0;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Override any remaining font-family styles from Divi */
+.blog-content [style*="font-family: 'Open Sans'"],
+.blog-content [style*="font-family: Open Sans"] {
+  font-family: var(--font-synonym), sans-serif !important;
+}
+
+/* Table styling for pricing tables - use !important to override WordPress inline styles */
+.blog-content table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 1.5rem 0 !important;
+  background: rgba(20, 20, 20, 0.6) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255, 215, 0, 0.2) !important;
+}
+
+.blog-content th {
+  background: rgba(255, 215, 0, 0.15) !important;
+  color: #ffd700 !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  padding: 1rem !important;
+  border-bottom: 2px solid rgba(255, 215, 0, 0.3) !important;
+  border-color: rgba(255, 215, 0, 0.3) !important;
+}
+
+.blog-content td {
+  padding: 1rem !important;
+  border-bottom: 1px solid rgba(100, 100, 100, 0.3) !important;
+  border-color: rgba(100, 100, 100, 0.3) !important;
+  vertical-align: top !important;
+  color: #e5e4dd !important;
+  background: transparent !important;
+}
+
+.blog-content tr {
+  background: transparent !important;
+}
+
+.blog-content tr:last-child td {
+  border-bottom: none !important;
+}
+
+.blog-content tr:hover td {
+  background: rgba(255, 215, 0, 0.05) !important;
+}
+
+/* Override any WordPress text color inline styles on table elements */
+.blog-content table *[style*="color"] {
+  color: inherit !important;
+}
+
+.blog-content th *[style*="color"],
+.blog-content th[style*="color"] {
+  color: #ffd700 !important;
+}
+
+.blog-content td *[style*="color"],
+.blog-content td[style*="color"] {
+  color: #e5e4dd !important;
+}
+
+/* Remove font-size from strong tags that had inline styling */
+.blog-content strong[style*="font-size"] {
+  font-size: inherit !important;
+}
+
+/* Light mode adjustments for real estate school content */
+.light-mode .blog-content .school-check {
+  color: #00aa55;
+  border-color: #00aa55;
+}
+
+.light-mode .blog-content .school-x {
+  color: #cc3333;
+  border-color: #cc3333;
+}
+
+.light-mode .blog-content h2.school-name {
+  color: #b38f00;
+  border-top-color: rgba(179, 143, 0, 0.3);
+}
+
+.light-mode .blog-content p.school-score {
+  background: linear-gradient(135deg, rgba(179, 143, 0, 0.1), rgba(0, 170, 85, 0.05));
+  border-left-color: #b38f00;
+}
+
+.light-mode .blog-content ul[style*="list-style: none"] li {
+  background: rgba(200, 200, 200, 0.3);
+}
+
+.light-mode .blog-content table {
+  background: rgba(240, 240, 240, 0.6) !important;
+  border-color: rgba(179, 143, 0, 0.3) !important;
+}
+
+.light-mode .blog-content th {
+  background: rgba(179, 143, 0, 0.15) !important;
+  color: #8b6914 !important;
+  border-bottom-color: rgba(179, 143, 0, 0.3) !important;
+}
+
+.light-mode .blog-content td {
+  color: #3a3a3a !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.light-mode .blog-content tr:hover td {
+  background: rgba(179, 143, 0, 0.05) !important;
+}
+
+.light-mode .blog-content th *[style*="color"],
+.light-mode .blog-content th[style*="color"] {
+  color: #8b6914 !important;
+}
+
+.light-mode .blog-content td *[style*="color"],
+.light-mode .blog-content td[style*="color"] {
+  color: #3a3a3a !important;
+}
+
+/* School Cards Grid - displays school logos, names, and CTA buttons */
+/* ALWAYS dark mode styling - no light/dark mode difference */
+.blog-content .school-cards-grid,
+.light-mode .blog-content .school-cards-grid {
+  display: grid;
+  /* 3 columns on desktop, responsive down to 1 column on mobile */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  background: rgba(20, 20, 20, 0.9) !important;
+  border-radius: 12px;
+  border: 1px solid rgba(150, 150, 150, 0.5) !important; /* Light grey border */
+}
+
+/* Responsive grid - 2 columns on tablet, 1 on mobile */
+@media (max-width: 900px) {
+  .blog-content .school-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .blog-content .school-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Individual school cards - ALWAYS same styling in light/dark mode */
+.blog-content .school-card,
+.light-mode .blog-content .school-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(45, 45, 45, 0.95) !important; /* Lighter grey than parent container */
+  border-radius: 10px;
+  border: 1px solid rgba(100, 100, 100, 0.3) !important;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  /* Equal height cards for alignment */
+  height: 100%;
+  color: #dcdbd5 !important;
+}
+
+.blog-content .school-card:hover,
+.light-mode .blog-content .school-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 215, 0, 0.4) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+.blog-content .school-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* School logo - ALWAYS same styling */
+.blog-content .school-logo,
+.light-mode .blog-content .school-logo {
+  width: 120px;
+  height: 80px; /* Fixed height for vertical alignment */
+  object-fit: contain;
+  border-radius: 8px;
+  background: white !important;
+  padding: 8px;
+  border: 2px solid rgba(255, 215, 0, 0.5) !important;
+}
+
+/* School card name - ALWAYS yellow */
+.blog-content .school-card-name,
+.light-mode .blog-content .school-card-name {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  color: #ffd700 !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+}
+
+/* School CTA wrapper - contains button */
+.blog-content .school-cta {
+  margin-top: auto;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Wrapper div - simple inline-block */
+.blog-content .school-cta-wrapper {
+  display: inline-block;
+}
+
+/* ============================================
+   School CTA Button - Exact GenericButton Match
+   ALWAYS same styling in light/dark mode
+   ============================================ */
+.blog-content .school-cta-button,
+.light-mode .blog-content .school-cta-button {
+  /* Outer container - gradient border effect */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 131px;
+  height: 51px;
+  border-radius: 15px;
+  padding: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none !important;
+  font-size: 0 !important;
+  color: transparent !important;
+
+  /* Gold gradient border (inactive state) */
+  background: linear-gradient(to bottom right, #ffd700 0%, rgba(255, 215, 0, 0) 30%) !important;
+  background-color: rgba(255, 215, 0, 0.5) !important;
+}
+
+/* Inner button content area - ALWAYS dark with white text */
+.blog-content .school-cta-button::before,
+.light-mode .blog-content .school-cta-button::before {
+  content: 'View Courses';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 47px;
+  border-radius: 13px;
+  background-color: #1a1a1a !important;
+  padding: 0 20px;
+  color: #fff !important;
+  font-family: var(--font-amulya), Georgia, serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+/* Hover state - gold glow - ALWAYS same */
+.blog-content .school-cta-button:hover,
+.light-mode .blog-content .school-cta-button:hover {
+  background-color: rgba(255, 215, 0, 0.7) !important;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6) !important;
+  text-decoration: none !important;
+}
+
+/* All school cards light-mode overrides now combined with main selectors above */
+/* ========================================
+   THEME SWITCH - SUN/MOON TOGGLE
+   Based on: https://uiverse.io/Galahhad/strong-squid-82
+   ======================================== */
+
+.theme-switch {
+  --toggle-size: 20px; /* Reduced from 30px to ~2/3 size */
+  --container-width: 5.625em;
+  --container-height: 2.5em;
+  --container-radius: 6.25em;
+  --container-light-bg: #5aa3c8; /* Sky blue - darker for toggle switch */
+  --container-night-bg: rgb(12, 12, 12); /* SAA primary background - no blue tint */
+  --circle-container-diameter: 3.375em;
+  --sun-moon-diameter: 2.125em;
+  --sun-bg: #ffd700;
+  --moon-bg: #dcdbd5; /* SAA body text color for moon */
+  --spot-color: #5a5a5a; /* SAA medium gray for moon spots */
+  --circle-container-offset: calc((var(--circle-container-diameter) - var(--container-height)) / 2 * -1);
+  --stars-color: #e5e4dd; /* SAA heading text color for stars */
+  --clouds-color: #f5f5f0; /* Light cream clouds - similar to main background */
+  --back-clouds-color: #e5e4dd; /* Slightly darker cream for back clouds */
+  --transition: .5s cubic-bezier(0, -0.02, 0.4, 1.25);
+  --circle-transition: .3s cubic-bezier(0, -0.02, 0.35, 1.17);
+  font-size: var(--toggle-size);
+}
+
+.theme-switch,
+.theme-switch *,
+.theme-switch *::before,
+.theme-switch *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.theme-switch__container {
+  width: var(--container-width);
+  height: var(--container-height);
+  background-color: var(--container-light-bg);
+  border-radius: var(--container-radius);
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0em -0.062em 0.062em rgba(0, 0, 0, 0.25), 0em 0.062em 0.125em rgba(255, 255, 255, 0.94);
+  transition: var(--transition);
+  position: relative;
+}
+
+.theme-switch__checkbox {
+  display: none;
+}
+
+.theme-switch__circle-container {
+  width: var(--circle-container-diameter);
+  height: var(--circle-container-diameter);
+  background-color: rgba(255, 255, 255, 0.1);
+  position: absolute;
+  left: var(--circle-container-offset);
+  top: var(--circle-container-offset);
+  border-radius: var(--container-radius);
+  /* Safari-compatible box-shadow: using hsla instead of rgba for better Safari rendering */
+  box-shadow: inset 0 0 0 3.375em hsla(0, 0%, 100%, 0.08), inset 0 0 0 3.375em hsla(0, 0%, 100%, 0.08), 0 0 0 0.625em hsla(0, 0%, 100%, 0.12), 0 0 0 1.25em hsla(0, 0%, 100%, 0.08);
+  display: flex;
+  transition: var(--circle-transition);
+  pointer-events: none;
+}
+
+/* Safari-specific fix for sun ring - Safari renders rgba white differently */
+@supports (-webkit-touch-callout: none) {
+  .theme-switch__circle-container {
+    /* Use slightly tinted color instead of pure white for Safari */
+    box-shadow: inset 0 0 0 3.375em rgba(255, 250, 240, 0.1), inset 0 0 0 3.375em rgba(255, 250, 240, 0.1), 0 0 0 0.625em rgba(255, 250, 240, 0.15), 0 0 0 1.25em rgba(255, 250, 240, 0.1);
+  }
+}
+
+.theme-switch__sun-moon-container {
+  pointer-events: auto;
+  position: relative;
+  z-index: 2;
+  width: var(--sun-moon-diameter);
+  height: var(--sun-moon-diameter);
+  margin: auto;
+  border-radius: var(--container-radius);
+  background-color: var(--sun-bg);
+  box-shadow: 0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset, 0em -0.062em 0.062em 0em #a1872a inset;
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+.theme-switch__moon {
+  transform: translateX(100%);
+  width: 100%;
+  height: 100%;
+  background-color: var(--moon-bg);
+  border-radius: inherit;
+  box-shadow: 0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset, 0em -0.062em 0.062em 0em #969696 inset;
+  transition: var(--transition);
+  position: relative;
+}
+
+.theme-switch__spot {
+  position: absolute;
+  top: 0.75em;
+  left: 0.312em;
+  width: 0.75em;
+  height: 0.75em;
+  border-radius: var(--container-radius);
+  background-color: var(--spot-color);
+  box-shadow: 0em 0.0312em 0.062em rgba(0, 0, 0, 0.25) inset;
+}
+
+.theme-switch__spot:nth-of-type(2) {
+  width: 0.375em;
+  height: 0.375em;
+  top: 0.937em;
+  left: 1.375em;
+}
+
+.theme-switch__spot:nth-of-type(3) {
+  width: 0.25em;
+  height: 0.25em;
+  top: 0.312em;
+  left: 0.812em;
+}
+
+.theme-switch__clouds {
+  width: 1.25em;
+  height: 1.25em;
+  background-color: var(--clouds-color);
+  border-radius: var(--container-radius);
+  position: absolute;
+  bottom: -0.625em;
+  left: 0.312em;
+  box-shadow: 0.937em 0.312em var(--clouds-color), -0.312em -0.312em var(--back-clouds-color), 1.437em 0.375em var(--clouds-color), 0.5em -0.125em var(--back-clouds-color), 2.187em 0 var(--clouds-color), 1.25em -0.062em var(--back-clouds-color), 2.937em 0.312em var(--clouds-color), 2em -0.312em var(--back-clouds-color), 3.625em -0.062em var(--clouds-color), 2.625em 0em var(--back-clouds-color), 4.5em -0.312em var(--clouds-color), 3.375em -0.437em var(--back-clouds-color), 4.625em -1.75em 0 0.437em var(--clouds-color), 4em -0.625em var(--back-clouds-color), 4.125em -2.125em 0 0.437em var(--back-clouds-color);
+  transition: 0.5s cubic-bezier(0, -0.02, 0.4, 1.25);
+}
+
+.theme-switch__stars-container {
+  position: absolute;
+  color: var(--stars-color);
+  top: -100%;
+  left: 0.312em;
+  width: 2.75em;
+  height: auto;
+  transition: var(--transition);
+}
+
+/* NIGHT MODE - Checked State */
+.theme-switch__checkbox:checked + .theme-switch__container {
+  background-color: var(--container-night-bg);
+}
+
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__circle-container {
+  left: calc(100% - var(--circle-container-offset) - var(--circle-container-diameter));
+}
+
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__circle-container:hover {
+  left: calc(100% - var(--circle-container-offset) - var(--circle-container-diameter) - 0.187em)
+}
+
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__moon {
+  transform: translate(0);
+}
+
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__clouds {
+  bottom: -4.062em;
+}
+
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* DAY MODE - Unchecked State Hover */
+.theme-switch__circle-container:hover {
+  left: calc(var(--circle-container-offset) + 0.187em);
+}
+
+/* ========================================
+   THEME TRANSITION BLUR OVERLAY
+   Full-page blur effect during light/dark mode switch
+   Creates smooth, dreamlike transition between themes
+   ======================================== */
+
+.theme-transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  pointer-events: none;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  background-color: transparent;
+  opacity: 0;
+  transition:
+    backdrop-filter 0.3s ease-in-out,
+    -webkit-backdrop-filter 0.3s ease-in-out,
+    opacity 0.3s ease-in-out,
+    background-color 0.3s ease-in-out;
+}
+
+/* Transitioning TO light mode - use dark blur */
+.theme-transition-overlay.active.to-light {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(20, 20, 30, 0.4);
+  opacity: 1;
+}
+
+/* Transitioning TO dark mode - use light blur */
+.theme-transition-overlay.active.to-dark {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(200, 210, 230, 0.35);
+  opacity: 1;
+}

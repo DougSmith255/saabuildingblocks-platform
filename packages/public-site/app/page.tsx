@@ -1,60 +1,11 @@
-'use client';
-
 import dynamic from 'next/dynamic';
-import { CTAButton, SecondaryButton } from '@saa/shared/components/saa/buttons';
 import { H1, Tagline } from '@saa/shared/components/saa/headings';
-import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
+import './styles/hero.css';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
 import { RevealMaskEffect } from '@/components/shared/RevealMaskEffect';
-
-// PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
-// ssr: false + loading: null prevents ANY rendering during SSR (no height = no CLS)
-// Sections load client-side only when JS hydrates
-const ValuePillarsTab = dynamic(
-  () => import('./components/sections/ValuePillarsTab').then(mod => ({ default: mod.ValuePillarsTab })),
-  { ssr: false }
-);
-
-const MediaLogos = dynamic(
-  () => import('./components/sections/MediaLogos').then(mod => ({ default: mod.MediaLogos })),
-  { ssr: false }
-);
-
-const WatchAndDecide = dynamic(
-  () => import('./components/sections/WatchAndDecide').then(mod => ({ default: mod.WatchAndDecide })),
-  { ssr: false }
-);
-
-const WhySAA = dynamic(
-  () => import('./components/sections/WhySAA').then(mod => ({ default: mod.WhySAA })),
-  { ssr: false }
-);
-
-const WhyOnlyAtExp = dynamic(
-  () => import('./components/sections/WhyOnlyAtExp').then(mod => ({ default: mod.WhyOnlyAtExp })),
-  { ssr: false }
-);
-
-const ProvenAtScale = dynamic(
-  () => import('./components/sections/ProvenAtScale').then(mod => ({ default: mod.ProvenAtScale })),
-  { ssr: false }
-);
-
-const WhatYouGet = dynamic(
-  () => import('./components/sections/WhatYouGet').then(mod => ({ default: mod.WhatYouGet })),
-  { ssr: false }
-);
-
-const BuiltForFuture = dynamic(
-  () => import('./components/sections/BuiltForFuture').then(mod => ({ default: mod.BuiltForFuture })),
-  { ssr: false }
-);
-
-const MeetTheFounders = dynamic(
-  () => import('./components/sections/MeetTheFounders').then(mod => ({ default: mod.MeetTheFounders })),
-  { ssr: false }
-);
+import { JoinAllianceCTA } from '@/components/shared/JoinAllianceCTA';
+import { HomepageSections } from './components/HomepageSections';
 
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
@@ -68,6 +19,9 @@ const CounterAnimation = dynamic(
  * - Flexbox centers the whole content block vertically
  * - Image and H1 overlap using negative margin
  * - Equal space above image and below buttons
+ *
+ * Below-fold sections are in HomepageSections (client component)
+ * to allow ssr: false dynamic imports.
  */
 export default function Home() {
   return (
@@ -175,9 +129,7 @@ export default function Home() {
 
             {/* CTA Button */}
             <div className="hero-cta-buttons flex justify-center items-center" style={{ marginTop: '14px' }}>
-              <CTAButton href="#" onClick={(e: React.MouseEvent) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-                JOIN THE ALLIANCE
-              </CTAButton>
+              <JoinAllianceCTA>JOIN THE ALLIANCE</JoinAllianceCTA>
             </div>
           </div>
         </div>
@@ -188,28 +140,8 @@ export default function Home() {
       </section>
       </FixedHeroWrapper>
 
-      {/* Homepage Sections */}
-      <ValuePillarsTab />
-      <WhySAA />
-      <ProvenAtScale />
-      <WhatYouGet />
-      <WhyOnlyAtExp />
-      <MediaLogos />
-      <MeetTheFounders variant="compact" />
-      <BuiltForFuture />
-      <GlassPanel variant="champagne" noBlur>
-        <WatchAndDecide />
-      </GlassPanel>
-
-      {/* Bottom CTA Section - Outside glass panel */}
-      <section className="py-16 md:py-20 px-6 text-center">
-        <p className="text-body mx-auto mb-8" style={{ maxWidth: '700px' }}>
-          If you want to understand exactly how sponsorship works, what you keep, and what you never give up, see how Smart Agent Alliance fits inside eXp Realty.
-        </p>
-        <SecondaryButton href="/exp-realty-sponsor">
-          See SAA's Full Value Stack
-        </SecondaryButton>
-      </section>
+      {/* Below-fold sections (client component for ssr: false dynamic imports) */}
+      <HomepageSections />
 
     </main>
   );

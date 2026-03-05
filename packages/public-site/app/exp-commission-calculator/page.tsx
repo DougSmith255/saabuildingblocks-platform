@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import '../styles/calculator.css';
 import { Suspense, useCallback, useEffect, useRef } from 'react';
 import { H1, Tagline } from '@saa/shared/components/saa/headings';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';

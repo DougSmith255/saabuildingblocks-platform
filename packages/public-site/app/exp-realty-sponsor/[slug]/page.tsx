@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { CategoryBlogPostTemplate } from '@/components/blog';
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
+import '../../styles/blog.css';
 import { extractFAQs, generateFAQSchema, transformFAQToRankMathMarkup } from '@/lib/faq-utils';
 import { getCachedBlogPosts, findPostBySlug, getRelatedPosts } from '@/lib/blog-post-page';
 import { buildBlogPostingSchema, buildVideoSchema } from '@/lib/blog-schema';

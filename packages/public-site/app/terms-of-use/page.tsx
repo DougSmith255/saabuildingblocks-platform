@@ -12,6 +12,8 @@
 import { H1 } from '@saa/shared/components/saa/headings';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import '../styles/blog.css';
+import '../styles/legal.css';
 
 export const metadata: Metadata = {
   title: 'Terms of Use',
