@@ -428,7 +428,7 @@ Tracks video play events from Cloudflare Stream players across the site.
 gh workflow run deploy-cloudflare.yml
 ```
 
-**VPS fallback deploy (when GitHub Actions is down):**
+**NEVER run `wrangler pages deploy` manually from the VPS.** Always commit + push and let GitHub Actions deploy. Manual deploys race with GitHub Actions and can overwrite the correct build with stale code. If GitHub Actions is down, cancel any queued runs first, then:
 ```bash
 cd /home/ubuntu/saabuildingblocks-platform/packages/public-site
 npm run build && npx wrangler pages deploy out --project-name=saabuildingblocks
@@ -553,7 +553,7 @@ Manual override: `className="text-display"`
 2. **Never run build scripts without permission** - read the script first, ask user before running
 3. **Never move files during builds** - Next.js `output: 'export'` naturally excludes API routes
 4. **Always push to GitHub after VPS changes** - keep repo as single source of truth
-5. **VPS builds and GitHub Actions must stay in sync** - push before deploying to avoid stale code overwrites
+5. **Never run `wrangler pages deploy` manually** - always commit + push and let GitHub Actions deploy. Manual deploys race with auto-deploys and cause stale code overwrites
 6. **Never expose dev server ports** - Only ports 22 are open via UFW. Never run `ufw allow 3002/3003`
 
 ### Deploy Verification Checklist
