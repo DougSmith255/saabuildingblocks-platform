@@ -124,7 +124,7 @@ export async function PATCH(request: NextRequest) {
 
   const updates: Record<string, unknown> = {
     status: newStatus,
-    reviewed_by: auth.username || auth.userId || 'admin',
+    reviewed_by: auth.userId || 'admin',
   };
   if (newStatus === 'resolved') {
     updates.resolved_at = new Date().toISOString();

@@ -80,7 +80,7 @@ export function logPlatformError(opts: LogErrorOptions): void {
         row.user_agent = opts.user_agent || null;
       }
 
-      const { error } = await client.from('platform_errors').insert(row);
+      const { error } = await client.from('platform_errors' as never).insert(row as never);
       if (error) {
         console.error(`[ErrorLogger] Failed to insert:`, error.message);
       }
