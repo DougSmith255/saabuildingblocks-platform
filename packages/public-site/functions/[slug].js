@@ -5298,6 +5298,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               try { wygPlayer.pause(); } catch(e) {}
               return;
             }
+            // Ensure audio is on after playback starts (browser autoplay
+            // policy may have forced muted start despite our earlier setting)
+            if (wygPlayer.muted) {
+              wygPlayer.muted = false;
+              wygPlayer.volume = 1;
+            }
             isPlaying = true;
             videoEnded = false;
             hideSpinner();
@@ -5924,6 +5930,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         player = window.Stream(videoIframe);
 
         player.addEventListener('play', () => {
+          if (player.muted) { player.muted = false; player.volume = 1; }
           isPlaying = true;
           updatePlayButton();
           videoOverlay.classList.add('is-playing');

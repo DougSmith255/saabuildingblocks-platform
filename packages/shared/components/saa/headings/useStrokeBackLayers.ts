@@ -475,6 +475,25 @@ export function useStrokeBackLayers(config: StrokeConfig) {
     // Clear existing SVG layers
     wrapper.querySelectorAll('svg[aria-hidden]').forEach((svg) => svg.remove());
 
+    // Skip if wrapper is invisible (zero dimensions or hidden)
+    const rect = wrapper.getBoundingClientRect();
+    if (rect.width < 1 || rect.height < 1) return;
+
+    // Skip if an ancestor applies a non-identity rotation (SVG positioning
+    // uses the wrapper's local coordinate system, but getBoundingClientRect
+    // returns axis-aligned bounding boxes, so measurements are wrong when
+    // the wrapper or a parent is rotated).
+    let el: HTMLElement | null = wrapper.parentElement;
+    while (el) {
+      const t = getComputedStyle(el).transform;
+      if (t && t !== 'none') {
+        const m = new DOMMatrix(t);
+        // Check for any significant rotation (skew in the matrix)
+        if (Math.abs(m.b) > 0.01 || Math.abs(m.c) > 0.01) return;
+      }
+      el = el.parentElement;
+    }
+
     // Reset face transform for clean measurement
     heading.style.transform = `perspective(800px) rotateX(${config.rotateX})`;
 
@@ -491,9 +510,39 @@ export function useStrokeBackLayers(config: StrokeConfig) {
       timer = setTimeout(rebuild, 150);
     };
     window.addEventListener('resize', onResize);
+
+    const wrapper = wrapperRef.current;
+
+    // ResizeObserver: rebuild when wrapper dimensions change
+    // (catches accordion open/close, visibility changes, etc.)
+    let ro: ResizeObserver | undefined;
+    if (wrapper) {
+      ro = new ResizeObserver(() => {
+        clearTimeout(timer);
+        timer = setTimeout(rebuild, 100);
+      });
+      ro.observe(wrapper);
+    }
+
+    // Listen for transform transitions ending on ancestors.
+    // When a parent accordion panel rotates, we skip SVG layer creation.
+    // Once the rotation transition ends, we rebuild so layers render correctly.
+    const onTransitionEnd = (e: Event) => {
+      const prop = (e as TransitionEvent).propertyName;
+      if (prop === 'transform' || prop === 'flex') {
+        clearTimeout(timer);
+        timer = setTimeout(rebuild, 50);
+      }
+    };
+    // Attach to the wrapper's nearest positioned ancestor (captures bubbled events)
+    const listenTarget = wrapper?.closest('section') || wrapper?.parentElement?.parentElement;
+    listenTarget?.addEventListener('transitionend', onTransitionEnd);
+
     return () => {
       clearTimeout(timer);
       window.removeEventListener('resize', onResize);
+      ro?.disconnect();
+      listenTarget?.removeEventListener('transitionend', onTransitionEnd);
     };
   }, [rebuild]);
 

@@ -1937,6 +1937,12 @@ function Section3() {
         try { player.pause(); } catch(e) { /* ignore */ }
         return;
       }
+      // Ensure audio is on after playback starts (browser autoplay
+      // policy may have forced muted start despite our earlier setting)
+      if (player.muted) {
+        player.muted = false;
+        player.volume = 1;
+      }
       setIsPlaying(true); setHasPlayed(true); setVideoEnded(false); setShowSpinner(false);
       // Analytics: start new session
       analyticsSessionId.current = `${WALKTHROUGH_VIDEO_ID}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
@@ -2036,6 +2042,7 @@ function Section3() {
       const player = window.Stream(iframeRef.current);
       playerRef.current = player;
       player.addEventListener('play', () => {
+        if (player.muted) { player.muted = false; player.volume = 1; }
         setIsPlaying(true); setHasPlayed(true); setVideoEnded(false); setShowSpinner(false);
         // Analytics: start new session on quality switch play
         analyticsSessionId.current = `${WALKTHROUGH_VIDEO_ID}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
