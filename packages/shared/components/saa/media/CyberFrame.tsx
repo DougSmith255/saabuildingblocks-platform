@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 export interface CyberFrameProps {
   /** Content to wrap (image, video, iframe, etc.) */
@@ -23,9 +23,7 @@ export interface CyberFrameProps {
  *
  * Features:
  * - 3D metal frame (gradient, inset shadows, border glow)
- * - Holographic glass overlay (glossy sheen + iridescent rainbow)
- * - Randomized sheen position per instance
- * - Subtle hover effect (sheen shifts like tilting glass)
+ * - Corner tech accents with hover glow
  * - Works with images, videos, iframes
  * - Two color variants: gold (default) and green
  *
@@ -54,23 +52,6 @@ export function CyberFrame({
   isVideo = false,
   variant = 'gold',
 }: CyberFrameProps) {
-  // Use fixed initial values to avoid hydration mismatch, randomize after mount
-  const [randomValues, setRandomValues] = useState({
-    sheenAngle: 30,
-    sheenPosition: 50,
-    hueRotate: 180,
-    holoOpacity: '0.035',
-  });
-
-  useEffect(() => {
-    // Randomize values only on client after hydration
-    setRandomValues({
-      sheenAngle: Math.floor(Math.random() * 30) + 15,
-      sheenPosition: Math.floor(Math.random() * 60) + 20,
-      hueRotate: Math.floor(Math.random() * 360),
-      holoOpacity: (Math.random() * 0.03 + 0.02).toFixed(3),
-    });
-  }, []);
 
   // Color values based on variant
   const colors = variant === 'green'
@@ -125,63 +106,6 @@ export function CyberFrame({
           overflow: hidden;
           border-radius: 8px;
           background: #0a0a0a;
-        }
-
-        /* Holographic glass overlay - vertical slide animation */
-        .cyber-frame-inner::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: 10;
-          pointer-events: none;
-          /* Horizontal sheen band that slides vertically */
-          background: linear-gradient(
-            180deg,
-            transparent 0%,
-            transparent 30%,
-            rgba(255,255,255,0.06) 38%,
-            rgba(255,255,255,0.13) 50%,
-            rgba(255,255,255,0.06) 62%,
-            transparent 70%,
-            transparent 100%
-          );
-          /* Resting position - centered over image */
-          transform: translateY(0%);
-          transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        /* Holographic iridescent overlay */
-        .cyber-frame-inner::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: 11;
-          pointer-events: none;
-          /* Rainbow gradient for holographic effect */
-          background: linear-gradient(
-            calc(var(--sheen-angle, 25deg) + 90deg),
-            rgba(255, 0, 128, 0.03) 0%,
-            rgba(128, 0, 255, 0.03) 20%,
-            rgba(0, 128, 255, 0.03) 40%,
-            rgba(0, 255, 128, 0.03) 60%,
-            rgba(255, 255, 0, 0.03) 80%,
-            rgba(255, 128, 0, 0.03) 100%
-          );
-          mix-blend-mode: overlay;
-          filter: hue-rotate(var(--hue-rotate, 0deg));
-          opacity: var(--holo-opacity, 0.8);
-          transition: filter 0.6s ease, opacity 0.4s ease;
-        }
-
-        /* Hover - sheen slides up and off the image */
-        .cyber-frame:hover .cyber-frame-inner::before {
-          transform: translateY(-100%);
-        }
-
-        /* Hover - holographic becomes slightly more visible and shifts hue */
-        .cyber-frame:hover .cyber-frame-inner::after {
-          filter: hue-rotate(calc(var(--hue-rotate, 0deg) + 30deg));
-          opacity: 1;
         }
 
         /* Hover - frame glows more */
@@ -278,9 +202,6 @@ export function CyberFrame({
       <div
         className={`${frameClass} ${className}`}
         style={{
-          '--sheen-angle': `${randomValues.sheenAngle}deg`,
-          '--hue-rotate': `${randomValues.hueRotate}deg`,
-          '--holo-opacity': randomValues.holoOpacity,
           '--cf-glow': colors.glow,
           '--cf-glow-hover': colors.glowHover,
           '--cf-border': colors.border,

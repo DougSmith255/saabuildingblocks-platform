@@ -9,6 +9,7 @@ import { RelatedPosts } from '../RelatedPosts';
 import { ShareButtons, FAQ } from '@saa/shared/components/saa/interactive';
 import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { SchoolCardsSection } from '../SchoolCardsSection';
+import H2 from '@saa/shared/components/saa/headings/H2';
 import { getTemplateConfig, type CategoryTemplateConfig } from './templateConfig';
 import { LazySection } from '@/components/shared/LazySection';
 import { BlogSidebar } from '../BlogSidebar';
@@ -297,52 +298,14 @@ export function CategoryBlogPostTemplate({
 
                 {/* License Requirements at a Glance - inline for become-an-agent */}
                 {post.licenseImage && categorySlug === 'become-an-agent' && (
-                  <div className="mb-8 text-center">
-                    <h2
-                      className="text-lg font-semibold tracking-wide mb-2"
-                      style={{
-                        fontFamily: 'var(--font-taskor, sans-serif)',
-                        color: '#ffd700',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                      }}
-                    >
-                      Requirements at a Glance
-                    </h2>
+                  <div className="mb-8 text-center" id="requirements-at-a-glance">
+                    <H2>Requirements at a Glance</H2>
                     <CyberFrame className="w-full">
                       <Image
                         src={post.licenseImage.url}
                         alt={post.licenseImage.alt || post.licenseImage.title || 'License requirements summary'}
                         width={800}
                         height={670}
-                        sizes="(max-width: 1024px) 90vw, 900px"
-                        className="object-contain w-full h-auto"
-                        priority={true}
-                      />
-                    </CyberFrame>
-                  </div>
-                )}
-
-                {/* Comparison Chart - inline for brokerage-comparison */}
-                {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (
-                  <div className="mb-8 text-center">
-                    <h2
-                      className="text-lg font-semibold tracking-wide mb-2"
-                      style={{
-                        fontFamily: 'var(--font-taskor, sans-serif)',
-                        color: '#ffd700',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                      }}
-                    >
-                      At-a-Glance Comparison
-                    </h2>
-                    <CyberFrame className="w-full">
-                      <Image
-                        src={post.comparisonImages[0].url}
-                        alt={post.comparisonImages[0].alt || post.comparisonImages[0].title || 'Brokerage comparison chart'}
-                        width={800}
-                        height={900}
                         sizes="(max-width: 1024px) 90vw, 900px"
                         className="object-contain w-full h-auto"
                         priority={true}
@@ -360,6 +323,23 @@ export function CategoryBlogPostTemplate({
                   </div>
                 )}
                 <div className="blog-content max-w-none">
+                  {/* Comparison Chart - inline for brokerage-comparison */}
+                  {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (
+                    <div className="mb-8 text-center" id="at-a-glance-comparison">
+                      <h2 id="at-a-glance-comparison-heading">At-a-Glance Comparison</h2>
+                      <CyberFrame className="w-full">
+                        <Image
+                          src={post.comparisonImages[0].url}
+                          alt={post.comparisonImages[0].alt || post.comparisonImages[0].title || 'Brokerage comparison chart'}
+                          width={800}
+                          height={900}
+                          sizes="(max-width: 1024px) 90vw, 900px"
+                          className="object-contain w-full h-auto"
+                          priority={true}
+                        />
+                      </CyberFrame>
+                    </div>
+                  )}
                   <div data-speakable="summary">
                     <BlogContentRenderer html={post.content} />
                   </div>
@@ -368,13 +348,9 @@ export function CategoryBlogPostTemplate({
                 {/* FAQ Accordion */}
                 {faqs && faqs.length > 0 && (
                   <div className="mt-12">
-                    <h2
-                      className="wp-block-heading text-2xl mb-6"
-                      style={{ color: '#e5e4dd' }}
-                      id="frequently-asked-questions"
-                    >
-                      <strong>Frequently Asked Questions</strong>
-                    </h2>
+                    <div id="frequently-asked-questions">
+                      <H2>Frequently Asked Questions</H2>
+                    </div>
                     <FAQ items={faqs} />
                   </div>
                 )}
