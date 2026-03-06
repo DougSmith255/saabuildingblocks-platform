@@ -89,7 +89,7 @@ export default function Tagline({
       <div aria-hidden="true" style={{ userSelect: 'none' }}>
         {/* Shadow */}
         <div
-          className="text-h2 text-display"
+          className={`text-h2 ${className}`}
           style={{
             position: 'absolute',
             top: 0,
@@ -106,12 +106,11 @@ export default function Tagline({
         >
           {plainText}
         </div>
-
-        {/* Color gradient layers */}
+        {/* Color layers */}
         {LAYERS.map((layer, i) => (
           <div
             key={i}
-            className="text-h2 text-display"
+            className={`text-h2 ${className}`}
             style={{
               position: 'absolute',
               top: 0,
@@ -122,12 +121,12 @@ export default function Tagline({
               lineHeight: 1.1,
               fontFeatureSettings: '"ss01" 1',
               color: layer.color,
-              WebkitTextStroke: `${STROKE} currentColor`,
-              WebkitTextFillColor: 'currentColor',
+              WebkitTextStroke: `${STROKE} ${layer.color}`,
+              WebkitTextFillColor: layer.color,
               paintOrder: 'stroke fill',
               filter: 'url(#saa-sharp-h2)',
               transform: persp(layer.tx, layer.ty),
-            } as React.CSSProperties}
+            }}
           >
             {plainText}
           </div>
@@ -140,6 +139,7 @@ export default function Tagline({
         style={{
           textAlign: 'center',
           fontFeatureSettings: '"ss01" 1',
+          margin: 0,
           color: '#e5e4dd',
           textShadow: FACE_SHADOW,
           transform: persp('-0.025em', '-0.035em'),

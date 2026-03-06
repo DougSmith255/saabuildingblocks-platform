@@ -169,7 +169,7 @@ export default function H2({
       <div aria-hidden="true" style={{ userSelect: 'none' }}>
         {/* Shadow */}
         <div
-          className="text-h2 text-display"
+          className={`text-h2 ${className}`}
           style={{
             ...layerBase,
             color: config.shadow.color,
@@ -179,21 +179,20 @@ export default function H2({
         >
           {plainText}
         </div>
-
-        {/* Color gradient layers */}
+        {/* Color layers */}
         {config.layers.map((layer, i) => (
           <div
             key={i}
-            className="text-h2 text-display"
+            className={`text-h2 ${className}`}
             style={{
               ...layerBase,
               color: layer.color,
-              WebkitTextStroke: `${config.strokeWidth} currentColor`,
-              WebkitTextFillColor: 'currentColor',
+              WebkitTextStroke: `${config.strokeWidth} ${layer.color}`,
+              WebkitTextFillColor: layer.color,
               paintOrder: 'stroke fill',
               filter: 'url(#saa-sharp-h2)',
               transform: persp(layer.tx, layer.ty),
-            } as React.CSSProperties}
+            }}
           >
             {plainText}
           </div>
@@ -206,6 +205,7 @@ export default function H2({
         style={{
           textAlign,
           fontFeatureSettings: '"ss01" 1',
+          marginTop: 0,
           marginLeft: textAlign === 'left' ? '0' : 'auto',
           marginRight: textAlign === 'right' ? '0' : 'auto',
           marginBottom: '2.5rem',

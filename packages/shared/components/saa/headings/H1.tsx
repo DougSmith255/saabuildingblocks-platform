@@ -148,11 +148,11 @@ export default function H1({
         </defs>
       </svg>
 
-      {/* Backing layers (decorative) */}
+      {/* Backing layers */}
       <div aria-hidden="true" style={{ userSelect: 'none' }}>
         {/* Shadow */}
         <div
-          className="text-h1 text-display"
+          className={`text-h1 text-display ${className}`}
           style={{
             position: 'absolute',
             top: 0,
@@ -168,12 +168,11 @@ export default function H1({
         >
           {plainText}
         </div>
-
-        {/* Color gradient layers */}
+        {/* Color layers */}
         {config.layers.map((layer, i) => (
           <div
             key={i}
-            className="text-h1 text-display"
+            className={`text-h1 text-display ${className}`}
             style={{
               position: 'absolute',
               top: 0,
@@ -183,12 +182,12 @@ export default function H1({
               lineHeight: 1.1,
               fontFeatureSettings: '"ss01" 1',
               color: layer.color,
-              WebkitTextStroke: `${config.strokeWidth} currentColor`,
-              WebkitTextFillColor: 'currentColor',
+              WebkitTextStroke: `${config.strokeWidth} ${layer.color}`,
+              WebkitTextFillColor: layer.color,
               paintOrder: 'stroke fill',
               filter: 'url(#saa-sharp-h1)',
               transform: persp(layer.tx, layer.ty),
-            } as React.CSSProperties}
+            }}
           >
             {plainText}
           </div>
@@ -200,6 +199,7 @@ export default function H1({
         id={id}
         className={`text-h1 text-display ${className}`}
         style={{
+          margin: 0,
           color: config.face.color,
           textShadow: config.face.textShadow,
           transform: persp(config.face.tx, config.face.ty),
