@@ -3,6 +3,7 @@
 import React from 'react';
 import { ProfileCyberFrame } from '@saa/shared/components/saa/media/ProfileCyberFrame';
 import { Icon3D } from '@saa/shared/components/saa/icons';
+import { H2 } from '@saa/shared/components/saa/headings';
 
 /**
  * Author data mapping - maps WordPress author names to full author info
@@ -57,7 +58,7 @@ export interface AuthorSectionProps {
  * AuthorSection - Blog post author bio section
  *
  * Design 3: Compact 3D Metal Plate style
- * - Tagline styling on names (H2-style glow) - fixed color for light/dark mode
+ * - Uses actual H2 component for names (SVG stroke 3D effect)
  * - Body font styling on bio
  * - ProfileCyberFrame for photo (size="md" = 144px)
  * - Social links under profile image
@@ -87,26 +88,6 @@ export function AuthorSection({ authorName, index = 0 }: AuthorSectionProps) {
     console.warn(`AuthorSection: Unknown author "${authorName}"`);
     return null;
   }
-
-  // H2-style 3D text-shadow effect (matches H2 component exactly)
-  const h2TextShadow = `
-    /* WHITE CORE */
-    0 0 0.01em #fff,
-    0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8),
-    /* WARM WHITE GLOW - extended and dilute for sharp definition */
-    0 0 0.04em rgba(255,250,240,0.7),
-    0 0 0.08em rgba(255, 255, 255, 0.35),
-    0 0 0.14em rgba(255, 255, 255, 0.15),
-    0 0 0.22em rgba(200, 200, 200, 0.08),
-    /* METAL BACKING (3D depth - thicker) */
-    0.02em 0.02em 0 #2a2a2a,
-    0.04em 0.04em 0 #222222,
-    0.06em 0.06em 0 #1a1a1a,
-    0.08em 0.08em 0 #141414,
-    0.10em 0.10em 0 #0f0f0f,
-    0.12em 0.12em 0 #080808
-  `;
 
   // Social icon color - gold to match theme
   const socialIconColor = '#ffd700';
@@ -183,24 +164,10 @@ export function AuthorSection({ authorName, index = 0 }: AuthorSectionProps) {
 
         {/* Content */}
         <div className="flex-1 text-center sm:text-left">
-          {/* Name with H2-style 3D glow effect - matches H2 component exactly */}
-          <h3
-            style={{
-              fontFamily: 'var(--font-taskor, sans-serif)',
-              fontSize: 'var(--font-size-h2, clamp(28px, calc(24.36px + 1.45vw), 68px))',
-              lineHeight: 'var(--line-height-h2, 1.1)',
-              fontWeight: 'var(--font-weight-h2, 700)',
-              fontFeatureSettings: '"ss01" 1',
-              color: 'var(--text-color-h2, #e5e4dd)',
-              textShadow: h2TextShadow,
-              textTransform: 'uppercase',
-              marginBottom: '0.5rem',
-              transform: 'perspective(800px) rotateX(8deg)',
-              filter: 'drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6))',
-            }}
-          >
+          {/* Name with actual H2 3D SVG stroke effect */}
+          <H2 style={{ textAlign: 'left', marginBottom: '0.5rem', maxWidth: '100%' }}>
             {author.name}
-          </h3>
+          </H2>
 
           {/* Role */}
           <p
