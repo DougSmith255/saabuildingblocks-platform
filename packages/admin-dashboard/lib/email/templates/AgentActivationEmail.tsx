@@ -22,7 +22,7 @@ import {
   BRAND_COLORS,
 } from './components/Layout';
 
-const WALKTHROUGH_VIDEO_URL = 'https://customer-2twfsluc6inah5at.cloudflarestream.com/14ba82ce03943a64ef90e3c9771a0d56/watch';
+const WALKTHROUGH_VIDEO_URL = 'https://customer-2twfsluc6inah5at.cloudflarestream.com/cd4d22b4fd6f33dfac69b0e1546d1c40/watch';
 
 interface AgentActivationEmailProps {
   firstName: string;

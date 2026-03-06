@@ -7,12 +7,12 @@ const API_TOKEN = process.env.CLOUDFLARE_API_TOKEN!;
 
 const VIDEO_IDS = [
   'f8c3f1bd9c2db2409ed0e90f60fd4d5b',  // The Inside Look
-  '14ba82ce03943a64ef90e3c9771a0d56',   // Portal Walkthrough
+  'cd4d22b4fd6f33dfac69b0e1546d1c40',   // SAA Team Value 6.0
 ];
 
 const VIDEO_NAMES: Record<string, string> = {
   'f8c3f1bd9c2db2409ed0e90f60fd4d5b': 'The Inside Look (DISABLED)',
-  '14ba82ce03943a64ef90e3c9771a0d56': 'Portal Walkthrough',
+  'cd4d22b4fd6f33dfac69b0e1546d1c40': 'SAA Team Value 6.0',
 };
 
 async function fetchRaw(startDate: string, endDate: string) {

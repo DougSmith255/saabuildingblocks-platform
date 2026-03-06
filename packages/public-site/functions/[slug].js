@@ -3986,9 +3986,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <!-- Float placeholder (hidden until floating) -->
           <div id="wyg-float-placeholder" style="display: none;"></div>
 
-          <div id="wyg-video-container" class="wyg-video-container" style="position: relative; aspect-ratio: 2228/1080; background: #000; overflow: hidden;">
+          <div id="wyg-video-container" class="wyg-video-container" style="position: relative; aspect-ratio: 16/9; background: #000; overflow: hidden;">
             <!-- Poster image (removed on first play) -->
-            <img id="wyg-video-poster" src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/agent-portal-walkthrough-thumbnail/desktop" alt="Agent Portal Walkthrough" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2;" loading="lazy" />
+            <img id="wyg-video-poster" src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-team-value-thumbnail/desktop" alt="SAA Team Value" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2;" loading="lazy" />
 
             <!-- Play button overlay (before first play) -->
             <div id="wyg-play-btn" style="position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center; cursor: pointer;">
@@ -5174,10 +5174,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         initWygVideo();
       }
 
-      // Walkthrough video in "What You Get" section - Full custom player
+      // Team value video in "What You Get" section - Full custom player
       function initWygVideo() {
-        var VIDEO_ID = '14ba82ce03943a64ef90e3c9771a0d56';
-        var VIDEO_AR = 2228 / 1080;
+        var VIDEO_ID = 'cd4d22b4fd6f33dfac69b0e1546d1c40';
+        var VIDEO_AR = 16 / 9;
         var STREAM_BASE = 'https://customer-2twfsluc6inah5at.cloudflarestream.com/';
 
         // DOM elements
@@ -5855,7 +5855,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               }
               // Reset to inline flow — restore ALL original inline styles
               if (floatPlaceholder) { floatPlaceholder.style.height = '0'; floatPlaceholder.style.display = 'none'; }
-              container.style.cssText = 'position: relative; aspect-ratio: 2228/1080; background: #000; overflow: hidden;';
+              container.style.cssText = 'position: relative; aspect-ratio: 16/9; background: #000; overflow: hidden;';
               if (floatDismiss) floatDismiss.style.display = 'none';
               floatState = 'inline';
               // Restore playback/audio after DOM move back
@@ -6016,7 +6016,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               showControlsBar();
             } else {
               // Inline: restore ALL original container styles
-              container.style.cssText = 'position: relative; aspect-ratio: 2228/1080; background: #000; overflow: hidden;';
+              container.style.cssText = 'position: relative; aspect-ratio: 16/9; background: #000; overflow: hidden;';
             }
           }
         }

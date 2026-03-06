@@ -1817,25 +1817,15 @@ function Section2() {
 }
 
 // ============================================================================
-// SECTION 3 — "What You Get Inside SAA" (Agent Portal Walkthrough Video)
+// SECTION 3 — "What You Get Inside SAA" (Team Value Video)
 // ============================================================================
 
-const WALKTHROUGH_VIDEO_ID = '14ba82ce03943a64ef90e3c9771a0d56';
-const WALKTHROUGH_POSTER = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/agent-portal-walkthrough-thumbnail/desktop';
+const WALKTHROUGH_VIDEO_ID = 'cd4d22b4fd6f33dfac69b0e1546d1c40';
+const WALKTHROUGH_POSTER = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-team-value-thumbnail/desktop';
 
-// Timestamp-based text strip for the walkthrough video
+// Timestamp-based text strip for the team value video
 const VIDEO_TIMESTAMPS = [
-  { time: 0,     title: 'BUILT FOR AGENT GROWTH',   subtitle: 'Clarity. Efficiency. Scale' },
-  { time: 14,    title: 'TRANSITION SEAMLESSLY',     subtitle: 'Whether you\'re starting or moving' },
-  { time: 37,    title: 'TOTAL AGENT VISIBILITY',    subtitle: 'Your entire business in one link' },
-  { time: 59,    title: 'REVENUE SHARE GROWTH',      subtitle: 'Agents find you organically' },
-  { time: 89,    title: 'NO MORE GUESSING',          subtitle: 'See what actually converts' },
-  { time: 107,   title: 'WINNING STRATEGIES',         subtitle: 'What\'s working, shared openly' },
-  { time: 138,   title: 'FASTER ANSWERS',             subtitle: 'Zero hunting for help' },
-  { time: 183,   title: 'EXECUTE FASTER',             subtitle: 'Professional marketing, done' },
-  { time: 202,   title: 'CAPTURE YOUR TRAFFIC',       subtitle: 'Turn visibility into leads' },
-  { time: 212,   title: 'NEW AGENT SUPPORT',          subtitle: 'Quick lessons for a faster start' },
-  { time: 223,   title: 'HIGH-LEVEL TRAINING',        subtitle: 'Courses easy to find and access' },
+  { time: 0,     title: 'THE SAA ADVANTAGE',         subtitle: 'What sets this team apart' },
 ];
 
 // Cloudflare Stream SDK typings
@@ -2715,14 +2705,14 @@ function Section3() {
             className="relative w-full overflow-hidden s3-video-container"
             style={{
               background: '#000',
-              aspectRatio: '2228/1080',
+              aspectRatio: '16/9',
             }}
           >
             {/* Poster image — removed from DOM once play is clicked */}
             {!hasPlayed && (
               <img
                 src={WALKTHROUGH_POSTER}
-                alt="Agent Portal Walkthrough"
+                alt="SAA Team Value"
                 className="absolute inset-0 w-full h-full"
                 style={{
                   objectFit: 'cover',

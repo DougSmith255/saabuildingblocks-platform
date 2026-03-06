@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 // Per-video config. startAfter excludes test/pre-launch data before that date.
 const VIDEO_CONFIG: Record<string, { name: string; startAfter?: string }> = {
   'f8c3f1bd9c2db2409ed0e90f60fd4d5b': { name: 'The Inside Look', startAfter: '2026-02-19' },
-  '14ba82ce03943a64ef90e3c9771a0d56': { name: 'Portal Walkthrough', startAfter: '2026-02-19' },
+  'cd4d22b4fd6f33dfac69b0e1546d1c40': { name: 'SAA Team Value 6.0', startAfter: '2026-03-06' },
 };
 
 const VIDEO_IDS = Object.keys(VIDEO_CONFIG);

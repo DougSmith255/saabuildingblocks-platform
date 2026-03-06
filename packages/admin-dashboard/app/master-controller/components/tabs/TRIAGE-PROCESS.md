@@ -64,6 +64,22 @@ Environment variables are in `/home/ubuntu/saabuildingblocks-platform/packages/a
 
 For every unreviewed path, determine its category:
 
+### Check if the Page Actually Works Now (before classifying)
+
+Before marking ANY path as redirect or junk, **verify the URL returns 404 right now**:
+
+```bash
+curl -sIL "https://smartagentalliance.com/THE_PATH" 2>&1 | grep -E "^(HTTP|location)"
+```
+
+If it returns **200**, the 404 was transient - likely logged during development, testing, deploys, or while a feature was being built. Mark as **junk** with a note like "Returns 200 now; transient 404 during testing". No redirect needed.
+
+This is especially common for:
+- Agent attraction pages (`/{slug}`) and link pages (`/{slug}-links`) that were being set up
+- Pages that temporarily 404'd during a deploy or build cycle
+- Test URLs tried from the Agent Portal during development
+- Paths that a Cloudflare Function serves dynamically (the function may have been updated since the 404 was logged)
+
 ### Immediate Junk (no research needed)
 
 Mark as **junk** without further investigation if the path matches any of these:
