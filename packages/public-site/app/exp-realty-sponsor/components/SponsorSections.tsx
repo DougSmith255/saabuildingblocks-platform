@@ -1823,11 +1823,6 @@ function Section2() {
 const WALKTHROUGH_VIDEO_ID = 'cd4d22b4fd6f33dfac69b0e1546d1c40';
 const WALKTHROUGH_POSTER = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-team-value-thumbnail/desktop';
 
-// Timestamp-based text strip for the team value video
-const VIDEO_TIMESTAMPS = [
-  { time: 0,     title: 'THE SAA ADVANTAGE',         subtitle: 'What sets this team apart' },
-];
-
 // Cloudflare Stream SDK typings
 interface StreamPlayer {
   play: () => void;
@@ -1867,7 +1862,6 @@ function Section3() {
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
-  const [activeTimestampIdx, setActiveTimestampIdx] = useState(0);
   const [showControls, setShowControls] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [videoQuality, setVideoQuality] = useState<'auto' | '360p' | '720p' | '1080p'>('1080p');
@@ -2080,19 +2074,6 @@ function Section3() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoQuality]);
 
-  // Update active timestamp index based on currentTime
-  useEffect(() => {
-    if (!hasPlayed) return;
-    let idx = 0;
-    for (let i = VIDEO_TIMESTAMPS.length - 1; i >= 0; i--) {
-      if (currentTime >= VIDEO_TIMESTAMPS[i].time) {
-        idx = i;
-        break;
-      }
-    }
-    setActiveTimestampIdx(idx);
-  }, [currentTime, hasPlayed]);
-
   const togglePlay = useCallback(() => {
     // First click: show spinner, hide poster, trigger playback
     if (!hasPlayed) {
@@ -2168,7 +2149,7 @@ function Section3() {
       frame.style.zIndex = '';
       frame.style.borderRadius = '';
       frame.style.boxShadow = '';
-      frame.style.aspectRatio = '2228 / 1080';
+      frame.style.aspectRatio = '16 / 9';
       frame.style.overflow = 'hidden';
       floatStateRef.current = 'inline';
       setFloatState('inline');
@@ -2180,7 +2161,7 @@ function Section3() {
 
   // Track fullscreen state — clear/restore float inline styles on the container
   useEffect(() => {
-    const VIDEO_AR_FS = 2228 / 1080;
+    const VIDEO_AR_FS = 16 / 9;
     const onFsChange = () => {
       const fs = !!document.fullscreenElement;
       setIsFullscreen(fs);
@@ -2268,7 +2249,7 @@ function Section3() {
             frame.style.flex = '';
             frame.style.minHeight = '';
             frame.style.maxHeight = '';
-            frame.style.aspectRatio = '2228 / 1080';
+            frame.style.aspectRatio = '16 / 9';
             frame.style.overflow = '';
             frame.style.left = '';
             frame.style.top = '';
@@ -2348,7 +2329,7 @@ function Section3() {
   }, [dismissed, floatState]);
 
   // Native video aspect ratio
-  const VIDEO_AR = 2228 / 1080;
+  const VIDEO_AR = 16 / 9;
 
   // Animate float TO corner
   useEffect(() => {
@@ -2433,10 +2414,8 @@ function Section3() {
       // Recalculate target every frame (wrap moves with scroll)
       // Account for timestamp strip height — video lands below it
       const wrapRect = wrap!.getBoundingClientRect();
-      const tsStrip = wrap!.querySelector('.s3-timestamp-strip') as HTMLElement | null;
-      const stripH = tsStrip ? tsStrip.offsetHeight : 0;
       const targetX = wrapRect.left;
-      const targetY = wrapRect.top + stripH;
+      const targetY = wrapRect.top;
       const targetW = wrapRect.width;
       const targetH = targetW / VIDEO_AR;
 
@@ -2462,7 +2441,7 @@ function Section3() {
         frame!.style.top = '';
         frame!.style.width = '';
         frame!.style.height = '';
-        frame!.style.aspectRatio = '2228/1080';
+        frame!.style.aspectRatio = '16/9';
         frame!.style.transform = '';
         frame!.style.transition = '';
         frame!.style.borderRadius = '';
@@ -2518,20 +2497,6 @@ function Section3() {
           flex-direction: column !important;
           align-items: stretch !important;
           justify-content: flex-start !important;
-        }
-        .s3-video-wrap:fullscreen .s3-timestamp-strip,
-        .s3-video-wrap:-webkit-full-screen .s3-timestamp-strip,
-        .s3-video-wrap.s3-fs-active .s3-timestamp-strip {
-          display: block !important;
-          max-height: none !important;
-          height: auto !important;
-          min-height: 40px !important;
-          width: 100% !important;
-          flex-shrink: 0 !important;
-          overflow: visible !important;
-          transition: none !important;
-          visibility: visible !important;
-          opacity: 1 !important;
         }
         .s3-video-wrap:fullscreen .s3-video-container,
         .s3-video-wrap:-webkit-full-screen .s3-video-container {
@@ -2624,77 +2589,6 @@ function Section3() {
             overflow: 'hidden',
           }}
         >
-          {/* Timestamp text strip — slides down from top when video starts */}
-          <div
-            className="s3-timestamp-strip"
-            style={isFullscreen ? {
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              zIndex: 20,
-              background: 'linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)',
-            } : {
-              maxHeight: hasPlayed && !videoEnded ? '60px' : '0px',
-              overflow: 'hidden',
-              transition: 'max-height 0.5s ease',
-              background: 'rgba(0, 0, 0, 0.85)',
-              borderBottom: hasPlayed && !videoEnded ? '1px solid rgba(255, 215, 0, 0.2)' : 'none',
-            }}
-          >
-            <div
-              key={activeTimestampIdx}
-              style={{
-                padding: '8px 16px',
-                textAlign: 'center',
-                animation: 'tsFadeInDown 0.5s ease both',
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: 'var(--font-taskor, sans-serif)',
-                  fontSize: isFullscreen ? 'clamp(18px, 2.5vw, 28px)' : 'clamp(13px, 1.5vw, 16px)',
-                  fontWeight: 700,
-                  color: '#ffd700',
-                  letterSpacing: '0.08em',
-                  textShadow: '0 0 12px rgba(255, 215, 0, 0.4)',
-                }}
-              >
-                {VIDEO_TIMESTAMPS[activeTimestampIdx].title}
-              </span>
-              <span
-                style={{
-                  display: 'block',
-                  fontFamily: 'var(--font-amulya, sans-serif)',
-                  fontSize: isFullscreen ? 'clamp(14px, 1.8vw, 20px)' : 'clamp(12px, 1.3vw, 14px)',
-                  color: '#a8a7a0',
-                  marginTop: '2px',
-                  paddingBottom: '4px',
-                }}
-              >
-                {VIDEO_TIMESTAMPS[activeTimestampIdx].subtitle}
-              </span>
-            </div>
-          </div>
-          <style>{`
-            @keyframes tsFadeInDown {
-              0% { opacity: 0; transform: translateY(-12px); }
-              50% { opacity: 0.6; transform: translateY(2px); }
-              100% { opacity: 1; transform: translateY(0); }
-            }
-            .s3-video-wrap.s3-fs-active .s3-timestamp-strip,
-            .s3-video-wrap:fullscreen .s3-timestamp-strip,
-            .s3-video-wrap:-webkit-full-screen .s3-timestamp-strip {
-              display: block !important;
-              max-height: none !important;
-              height: auto !important;
-              overflow: visible !important;
-              transition: none !important;
-              visibility: visible !important;
-              opacity: 1 !important;
-            }
-          `}</style>
-
           {/* Placeholder for floating state */}
           {floatState !== 'inline' && (
             <div data-float-placeholder style={{ height: placeholderHeight.current || 'auto' }} />

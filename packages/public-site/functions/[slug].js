@@ -1574,22 +1574,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     #wyg-video-wrap:fullscreen .wyg-video-container iframe,
     #wyg-video-wrap:-webkit-full-screen .wyg-video-container iframe { width: 100% !important; height: 100% !important; object-fit: contain; }
-    #wyg-video-wrap:fullscreen #wyg-timestamp-strip,
-    #wyg-video-wrap:-webkit-full-screen #wyg-timestamp-strip,
-    #wyg-video-wrap.wyg-fs-active #wyg-timestamp-strip {
-      display: block !important; max-height: none !important; height: auto !important;
-      width: 100% !important; overflow: visible !important; transition: none !important;
-      visibility: visible !important; opacity: 1 !important;
-      position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
-      z-index: 20 !important;
-      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%) !important;
-    }
-    #wyg-video-wrap.wyg-fs-active #wyg-ts-title {
-      font-size: clamp(18px, 2.5vw, 28px) !important;
-    }
-    #wyg-video-wrap.wyg-fs-active #wyg-ts-subtitle {
-      font-size: clamp(14px, 1.8vw, 20px) !important;
-    }
     #wyg-video-wrap:fullscreen #wyg-float-placeholder,
     #wyg-video-wrap:-webkit-full-screen #wyg-float-placeholder { display: none !important; }
     /* Spinner removed — not needed */
@@ -2245,12 +2229,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     @keyframes spinnerRotate {
       to { transform: rotate(360deg); }
     }
-    @keyframes wygTsFadeInDown {
-      0% { opacity: 0; transform: translateY(-12px); }
-      50% { opacity: 0.6; transform: translateY(2px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
     /* Slide Panel Container */
     .slide-panel-container {
       position: fixed;
@@ -3975,14 +3953,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
         <!-- Walkthrough Video - Custom Player -->
         <div id="wyg-video-wrap" style="max-width: 900px; margin: 0 auto 3rem; border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 12px; overflow: hidden; position: relative;">
-          <!-- Timestamp strip (above video) -->
-          <div id="wyg-timestamp-strip" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease; background: rgba(0, 0, 0, 0.85);">
-            <div style="padding: 8px 16px; text-align: center; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">
-              <span id="wyg-ts-title" style="font-family: var(--font-taskor, 'Taskor', sans-serif); font-size: clamp(13px, 1.5vw, 16px); font-weight: 700; color: #ffd700; letter-spacing: 0.08em; text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);">BUILT FOR AGENT GROWTH</span>
-              <span id="wyg-ts-subtitle" style="display: block; font-family: var(--font-amulya, 'Amulya', sans-serif); font-size: clamp(12px, 1.3vw, 14px); color: #a8a7a0; margin-top: 2px; padding-bottom: 9px;">Clarity. Efficiency. Scale</span>
-            </div>
-          </div>
-
           <!-- Float placeholder (hidden until floating) -->
           <div id="wyg-float-placeholder" style="display: none;"></div>
 
@@ -5202,10 +5172,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         var endRewatch = document.getElementById('wyg-end-rewatch');
         var floatPlaceholder = document.getElementById('wyg-float-placeholder');
         var floatDismiss = document.getElementById('wyg-float-dismiss');
-        var tsTitle = document.getElementById('wyg-ts-title');
-        var tsSubtitle = document.getElementById('wyg-ts-subtitle');
-        var stripEl = document.getElementById('wyg-timestamp-strip');
-
         if (!wrap || !container) return;
 
         // State
@@ -5223,8 +5189,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         var showControls = false;
         var isDragging = false;
         var hideTimer = null;
-        var tsInterval = null;
-        var tsPrevIdx = 0;
         var floatState = 'inline'; // inline | floating | returning
         var dismissed = false;
         var inlineRect = null;
@@ -5265,20 +5229,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             navigator.sendBeacon('https://saabuildingblocks.com/api/video/events', new Blob([JSON.stringify(payload)], {type:'text/plain'}));
           } catch(e) {}
         }
-
-        var wygTimestamps = [
-          { time: 0,   title: 'BUILT FOR AGENT GROWTH', subtitle: 'Clarity. Efficiency. Scale' },
-          { time: 14,  title: 'TRANSITION SEAMLESSLY',   subtitle: 'Whether you are starting or moving' },
-          { time: 37,  title: 'TOTAL AGENT VISIBILITY',  subtitle: 'Your entire business in one link' },
-          { time: 59,  title: 'REVENUE SHARE GROWTH',    subtitle: 'Agents find you organically' },
-          { time: 89,  title: 'NO MORE GUESSING',        subtitle: 'See what actually converts' },
-          { time: 107, title: 'WINNING STRATEGIES',       subtitle: 'What is working, shared openly' },
-          { time: 138, title: 'FASTER ANSWERS',           subtitle: 'Zero hunting for help' },
-          { time: 183, title: 'EXECUTE FASTER',           subtitle: 'Professional marketing, done' },
-          { time: 202, title: 'CAPTURE YOUR TRAFFIC',     subtitle: 'Turn visibility into leads' },
-          { time: 212, title: 'NEW AGENT SUPPORT',        subtitle: 'Quick lessons for a faster start' },
-          { time: 223, title: 'HIGH-LEVEL TRAINING',      subtitle: 'Courses easy to find and access' }
-        ];
 
         // SVG icons
         var PLAY_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1.5v13l11-6.5L3 1.5z" /></svg>';
@@ -5332,27 +5282,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           }
         }
 
-        // Update timestamp strip
-        function updateTimestamp() {
-          if (!wygPlayer) return;
-          var ct = wygPlayer.currentTime || 0;
-          var idx = 0;
-          for (var i = wygTimestamps.length - 1; i >= 0; i--) {
-            if (ct >= wygTimestamps[i].time) { idx = i; break; }
-          }
-          if (idx !== tsPrevIdx) {
-            tsPrevIdx = idx;
-            var inner = stripEl ? stripEl.querySelector('div') : null;
-            if (inner) {
-              inner.style.animation = 'none';
-              inner.offsetHeight;
-              inner.style.animation = 'wygTsFadeInDown 0.5s ease both';
-            }
-            if (tsTitle) tsTitle.textContent = wygTimestamps[idx].title;
-            if (tsSubtitle) tsSubtitle.textContent = wygTimestamps[idx].subtitle;
-          }
-        }
-
         // Build iframe src
         function buildIframeSrc(quality) {
           return STREAM_BASE + VIDEO_ID + '/iframe?preload=metadata&autoplay=false&muted=false&controls=false&pip=false&defaultQuality=' + quality;
@@ -5380,8 +5309,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             }
             updatePlayPauseIcon();
             if (endOverlay) endOverlay.style.display = 'none';
-            if (stripEl && !isFullscreen) stripEl.style.maxHeight = '60px';
-            if (!tsInterval) tsInterval = setInterval(updateTimestamp, 500);
             scheduleHide();
             // Analytics: start new session
             wygAnalyticsSessionId = VIDEO_ID + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
@@ -5401,11 +5328,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             isPlaying = false;
             videoEnded = true;
             updatePlayPauseIcon();
-            if (tsInterval) { clearInterval(tsInterval); tsInterval = null; }
-            if (stripEl && !isFullscreen) stripEl.style.maxHeight = '0';
-            if (tsTitle) tsTitle.textContent = wygTimestamps[0].title;
-            if (tsSubtitle) tsSubtitle.textContent = wygTimestamps[0].subtitle;
-            tsPrevIdx = 0;
             if (endOverlay) endOverlay.style.display = 'flex';
             hideControlsBar();
             if (wygAnalyticsSessionId) sendWygBeacon('ended');
@@ -5530,8 +5452,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             showSpinner();
             waitForSdkAndInit();
           }
-          // Show timestamp strip immediately
-          if (stripEl) stripEl.style.maxHeight = '60px';
         }
 
         // Toggle play/pause after first play
@@ -5679,7 +5599,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               container.style.zIndex = '';
               container.style.borderRadius = '';
               container.style.boxShadow = '';
-              container.style.aspectRatio = '2228/1080';
+              container.style.aspectRatio = '16/9';
               container.style.overflow = 'hidden';
               if (floatPlaceholder) floatPlaceholder.style.display = 'none';
               if (floatDismiss) floatDismiss.style.display = 'none';
@@ -5835,9 +5755,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             var t = ease(progress);
 
             var wrapRect = wrap.getBoundingClientRect();
-            var stripH = stripEl ? stripEl.offsetHeight : 0;
             var targetX = wrapRect.left;
-            var targetY = wrapRect.top + stripH;
+            var targetY = wrapRect.top;
             var targetW = wrapRect.width;
             var targetH = targetW / VIDEO_AR;
 
@@ -5929,23 +5848,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             container.style.borderRadius = '0';
             container.style.boxShadow = 'none';
 
-            // Force strip visible as overlay on top of video
-            if (stripEl) {
-              stripEl.style.maxHeight = 'none';
-              stripEl.style.overflow = 'visible';
-              stripEl.style.transition = 'none';
-              stripEl.style.display = 'block';
-              stripEl.style.height = 'auto';
-              stripEl.style.visibility = 'visible';
-              stripEl.style.width = '100%';
-              stripEl.style.position = 'absolute';
-              stripEl.style.top = '0';
-              stripEl.style.left = '0';
-              stripEl.style.right = '0';
-              stripEl.style.zIndex = '20';
-              stripEl.style.background = 'linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)';
-            }
-
             // Ensure iframe is visible
             var iframeEl = container.querySelector('iframe');
             if (iframeEl) { iframeEl.style.zIndex = '1'; }
@@ -5962,29 +5864,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             wrap.style.flexDirection = '';
             wrap.style.alignItems = '';
             wrap.style.justifyContent = '';
-
-            // Restore strip (clear fullscreen overlay positioning)
-            if (stripEl) {
-              stripEl.style.display = '';
-              stripEl.style.height = '';
-              stripEl.style.visibility = '';
-              stripEl.style.width = '';
-              stripEl.style.position = '';
-              stripEl.style.top = '';
-              stripEl.style.left = '';
-              stripEl.style.right = '';
-              stripEl.style.zIndex = '';
-              stripEl.style.background = 'rgba(0, 0, 0, 0.85)';
-              if (hasPlayed && !videoEnded) {
-                stripEl.style.maxHeight = '60px';
-                stripEl.style.overflow = 'hidden';
-                stripEl.style.transition = 'max-height 0.5s ease';
-              } else {
-                stripEl.style.maxHeight = '0';
-                stripEl.style.overflow = 'hidden';
-                stripEl.style.transition = 'max-height 0.5s ease';
-              }
-            }
 
             // Clear iframe z-index override
             var iframeEl = container.querySelector('iframe');
