@@ -64,12 +64,12 @@ export default function ScrollProgress() {
           top: 0,
           left: 0,
           height: '100%',
+          width: '100%',
           backgroundColor: '#ffd700',
-          width: `${scrollProgress}%`,
           boxShadow: '0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3)',
-          willChange: 'width',
-          transform: 'translateZ(0)',
-          backfaceVisibility: 'hidden',
+          transform: `scaleX(${scrollProgress / 100})`,
+          transformOrigin: 'left',
+          willChange: 'transform',
         }}
       />
     </div>

@@ -5,11 +5,11 @@ import { useState, useRef, useEffect, ReactNode } from 'react';
 /**
  * LazySection - Defers rendering of section content until near viewport
  *
- * CLS-OPTIMIZED: Renders nothing during SSR to prevent page height issues.
- * Content only renders after client-side hydration when section is in/near viewport.
+ * CLS-OPTIMIZED: Renders children hidden during SSR so they reserve layout space.
+ * Content fades in after client-side hydration when section is in/near viewport.
  *
  * Features:
- * - Renders nothing during SSR (no skeleton = no CLS from page height)
+ * - SSR renders children with visibility:hidden (reserves space, prevents CLS)
  * - Uses IntersectionObserver to detect when section is near viewport
  * - Smooth fade-in when content renders
  * - Content loads when 200px before entering viewport
@@ -84,9 +84,14 @@ export function LazySection({
     }
   }, [isVisible]);
 
-  // During SSR or before mount, render nothing (no height contribution)
+  // During SSR: render children hidden so they reserve layout space (prevents CLS)
+  // After hydration: use IntersectionObserver to fade in when near viewport
   if (!isMounted) {
-    return null;
+    return (
+      <div className={className} aria-hidden="true" style={{ visibility: 'hidden' }}>
+        {children}
+      </div>
+    );
   }
 
   return (
@@ -100,7 +105,11 @@ export function LazySection({
         >
           {children}
         </div>
-      ) : null}
+      ) : (
+        <div style={{ visibility: 'hidden' }}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
