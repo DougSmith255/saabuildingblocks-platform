@@ -325,15 +325,15 @@ export function CategoryBlogPostTemplate({
                 <div className="blog-content max-w-none">
                   {/* Comparison Chart - inline for brokerage-comparison */}
                   {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (
-                    <div className="mb-8 text-center" id="at-a-glance-comparison">
-                      <h2 id="at-a-glance-comparison-heading">At-a-Glance Comparison</h2>
-                      <CyberFrame className="w-full">
+                    <div className="mb-8 mx-auto" style={{ maxWidth: 900 }} id="at-a-glance-comparison">
+                      <h2 id="at-a-glance-comparison-heading" style={{ textAlign: 'center' }}>At-a-Glance Comparison</h2>
+                      <CyberFrame className="!block w-full">
                         <Image
                           src={post.comparisonImages[0].url}
                           alt={post.comparisonImages[0].alt || post.comparisonImages[0].title || 'Brokerage comparison chart'}
-                          width={800}
-                          height={900}
-                          sizes="(max-width: 1024px) 90vw, 900px"
+                          width={900}
+                          height={1013}
+                          sizes="(max-width: 900px) 100vw, 900px"
                           className="object-contain w-full h-auto"
                           priority={true}
                         />
