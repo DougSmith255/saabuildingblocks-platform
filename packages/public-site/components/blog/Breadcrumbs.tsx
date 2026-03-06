@@ -76,6 +76,47 @@ export interface BreadcrumbsProps {
  * />
  * ```
  */
+/**
+ * Generate BreadcrumbList JSON-LD schema for use in server components.
+ * Call this in page.tsx and render the script tag there to avoid hydration issues.
+ */
+export function generateBreadcrumbSchema(category: string | undefined, postTitle: string) {
+  const resolvedSlug = category ? getCategorySlug(category) : '';
+
+  const items = [
+    { label: 'Home', href: '/', position: 1 },
+    { label: 'Blog', href: '/blog', position: 2 },
+  ];
+
+  if (category && resolvedSlug) {
+    items.push({
+      label: category,
+      href: `/blog/#category=${resolvedSlug}`,
+      position: 3
+    });
+  }
+
+  const currentPosition = items.length + 1;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      ...items.map(item => ({
+        '@type': 'ListItem',
+        position: item.position,
+        name: item.label,
+        item: `https://smartagentalliance.com${item.href}`
+      })),
+      {
+        '@type': 'ListItem',
+        position: currentPosition,
+        name: postTitle,
+      }
+    ]
+  };
+}
+
 export function Breadcrumbs({
   category,
   categorySlug,
@@ -101,33 +142,8 @@ export function Breadcrumbs({
   // Current page (not clickable)
   const currentPosition = items.length + 1;
 
-  // Build JSON-LD schema
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      ...items.map(item => ({
-        '@type': 'ListItem',
-        position: item.position,
-        name: item.label,
-        item: `https://smartagentalliance.com${item.href}`
-      })),
-      {
-        '@type': 'ListItem',
-        position: currentPosition,
-        name: postTitle,
-      }
-    ]
-  };
-
   return (
     <>
-      {/* JSON-LD Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-
       {/* Visual Breadcrumbs */}
       <nav
         aria-label="Breadcrumb navigation"

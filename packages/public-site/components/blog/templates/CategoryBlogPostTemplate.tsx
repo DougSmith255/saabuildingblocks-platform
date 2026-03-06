@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { BlogPostHero } from '../BlogPostHero';
 import { AuthorSection } from '../AuthorSection';
 import { RelatedPosts } from '../RelatedPosts';
-import { ShareButtons } from '@saa/shared/components/saa/interactive';
+import { ShareButtons, FAQ } from '@saa/shared/components/saa/interactive';
 import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { SchoolCardsSection } from '../SchoolCardsSection';
 import { getTemplateConfig, type CategoryTemplateConfig } from './templateConfig';
@@ -111,42 +111,15 @@ function BlogContentRenderer({ html }: { html: string }) {
     };
   }, [html]);
 
-  // Add FAQ accordion toggle functionality
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const faqQuestions = container.querySelectorAll('.rank-math-question');
-
-    const handleClick = (e: Event) => {
-      const question = e.currentTarget as HTMLElement;
-      const faqItem = question.closest('.rank-math-faq-item');
-      if (faqItem) {
-        const isCurrentlyOpen = faqItem.classList.contains('is-open');
-        // Close all other FAQ items first
-        container.querySelectorAll('.rank-math-faq-item.is-open').forEach((item) => {
-          item.classList.remove('is-open');
-        });
-        // Toggle current item (open if it was closed)
-        if (!isCurrentlyOpen) {
-          faqItem.classList.add('is-open');
-        }
-      }
-    };
-
-    faqQuestions.forEach((question) => {
-      question.addEventListener('click', handleClick);
-    });
-
-    // Cleanup
-    return () => {
-      faqQuestions.forEach((question) => {
-        question.removeEventListener('click', handleClick);
-      });
-    };
-  }, [html]);
+  // Note: FAQ accordion is now handled by the shared FAQ React component,
+  // not by DOM manipulation of rank-math classes.
 
   return <div ref={containerRef} dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
+export interface FAQItem {
+  question: string;
+  answer: string;
 }
 
 export interface CategoryBlogPostTemplateProps {
@@ -156,6 +129,8 @@ export interface CategoryBlogPostTemplateProps {
   category?: string;
   /** Pre-filtered related posts for internal linking (passed from server component) */
   relatedPosts?: BlogPost[];
+  /** Extracted FAQ items to render with the shared FAQ accordion */
+  faqs?: FAQItem[];
 }
 
 /**
@@ -172,6 +147,7 @@ export function CategoryBlogPostTemplate({
   post,
   category,
   relatedPosts,
+  faqs,
 }: CategoryBlogPostTemplateProps) {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -388,6 +364,20 @@ export function CategoryBlogPostTemplate({
                     <BlogContentRenderer html={post.content} />
                   </div>
                 </div>
+
+                {/* FAQ Accordion */}
+                {faqs && faqs.length > 0 && (
+                  <div className="mt-12">
+                    <h2
+                      className="wp-block-heading text-2xl mb-6"
+                      style={{ color: '#e5e4dd' }}
+                      id="frequently-asked-questions"
+                    >
+                      <strong>Frequently Asked Questions</strong>
+                    </h2>
+                    <FAQ items={faqs} />
+                  </div>
+                )}
 
                 {/* Share Buttons */}
                 <ShareButtons

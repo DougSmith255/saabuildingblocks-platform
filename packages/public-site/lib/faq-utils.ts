@@ -64,13 +64,17 @@ function extractRankMathFAQ(content: string): FAQItem[] {
 
 /**
  * Extract FAQ items from non-RankMath FAQ sections
- * These have structure: <h2>Frequently Asked Questions</h2> followed by <h3>Question?</h3><p>Answer</p>
+ * Handles two formats:
+ * 1. H3 questions: <h2>FAQ</h2> <h3>Question?</h3> <p>Answer</p>
+ * 2. Bold-paragraph: <h2>FAQ</h2> <p><strong>Question?</strong><br/>Answer</p>
+ *    or: <h2>FAQ</h2> <p>Question?<br/>Answer</p>
  */
 function extractPlainFAQ(content: string): FAQItem[] {
   const faqs: FAQItem[] = [];
 
-  // Find the FAQ heading
-  const faqHeadingMatch = content.match(/<h2[^>]*>[^<]*Frequently Asked Questions[^<]*<\/h2>/i);
+  // Find the FAQ heading (supports both <h2> tags and <p><strong>...FAQ...</strong></p>)
+  const faqHeadingMatch = content.match(/<h2[^>]*>[^<]*Frequently Asked Questions[^<]*<\/h2>/i)
+    || content.match(/<h2[^>]*><strong>[^<]*Frequently Asked Questions[^<]*<\/strong><\/h2>/i);
   if (!faqHeadingMatch) {
     return faqs;
   }
@@ -85,15 +89,13 @@ function extractPlainFAQ(content: string): FAQItem[] {
     ? afterFAQ.substring(0, afterFAQ.indexOf(nextH2Match[0]))
     : afterFAQ;
 
-  // Extract H3 questions followed by their answers
-  // Pattern: <h3...>Question?</h3> followed by <p>Answer</p> (possibly multiple paragraphs)
+  // Try H3-based extraction first
   const h3Pattern = /<h3[^>]*>([^<]+\??)<\/h3>/gi;
   let h3Match;
   const questions: { question: string; index: number }[] = [];
 
   while ((h3Match = h3Pattern.exec(faqSection)) !== null) {
     const questionText = decodeHTMLEntities(stripHTML(h3Match[1]));
-    // Only include if it looks like a question (ends with ? or is interrogative)
     if (questionText.endsWith('?') || /^(what|why|how|when|where|who|is|are|can|do|does|will|should)/i.test(questionText)) {
       questions.push({
         question: questionText,
@@ -102,33 +104,50 @@ function extractPlainFAQ(content: string): FAQItem[] {
     }
   }
 
-  // For each question, extract the answer (content until next H3 or end of FAQ section)
-  for (let i = 0; i < questions.length; i++) {
-    const startIndex = questions[i].index;
-    const endIndex = i + 1 < questions.length
-      ? faqSection.indexOf('<h3', startIndex)
-      : faqSection.length;
+  if (questions.length > 0) {
+    // H3-based extraction
+    for (let i = 0; i < questions.length; i++) {
+      const startIndex = questions[i].index;
+      const endIndex = i + 1 < questions.length
+        ? faqSection.indexOf('<h3', startIndex)
+        : faqSection.length;
 
-    const answerHTML = faqSection.substring(startIndex, endIndex);
+      const answerHTML = faqSection.substring(startIndex, endIndex);
+      const paragraphs: string[] = [];
+      const pPattern = /<p[^>]*>([\s\S]*?)<\/p>/gi;
+      let pMatch;
+      while ((pMatch = pPattern.exec(answerHTML)) !== null) {
+        const text = decodeHTMLEntities(stripHTML(pMatch[1]));
+        if (text) paragraphs.push(text);
+      }
 
-    // Extract text from paragraphs in the answer
-    const paragraphs: string[] = [];
-    const pPattern = /<p[^>]*>([\s\S]*?)<\/p>/gi;
-    let pMatch;
-    while ((pMatch = pPattern.exec(answerHTML)) !== null) {
-      const text = decodeHTMLEntities(stripHTML(pMatch[1]));
-      if (text) {
-        paragraphs.push(text);
+      const answer = paragraphs.join(' ').trim();
+      if (answer) {
+        faqs.push({ question: questions[i].question, answer });
       }
     }
+    return faqs;
+  }
 
-    const answer = paragraphs.join(' ').trim();
+  // Bold-paragraph extraction: <p><strong>Q?</strong><br/>A</p> or <p>Q?<br/>A</p>
+  const pPattern = /<p[^>]*>([\s\S]*?)<\/p>/gi;
+  let pMatch;
+  while ((pMatch = pPattern.exec(faqSection)) !== null) {
+    const inner = pMatch[1].trim();
+    if (!inner) continue;
 
-    if (answer) {
-      faqs.push({
-        question: questions[i].question,
-        answer
-      });
+    // Split on <br /> or <br> to separate question from answer
+    const brSplit = inner.split(/<br\s*\/?>/i);
+    if (brSplit.length < 2) continue;
+
+    const questionRaw = decodeHTMLEntities(stripHTML(brSplit[0])).trim();
+    const answerRaw = decodeHTMLEntities(stripHTML(brSplit.slice(1).join(' '))).trim();
+
+    if (!questionRaw || !answerRaw) continue;
+
+    // Only include if it looks like a question
+    if (questionRaw.endsWith('?') || /^(what|why|how|when|where|who|is|are|can|do|does|will|should)/i.test(questionRaw)) {
+      faqs.push({ question: questionRaw, answer: answerRaw });
     }
   }
 
@@ -175,56 +194,43 @@ export function generateFAQSchema(faqs: FAQItem[]): object | null {
 }
 
 /**
- * Transform non-RankMath FAQ HTML to RankMath-style markup
- * This allows the existing FAQ accordion styling to work
+ * Strip the FAQ section from blog content HTML.
+ * Removes everything from the "Frequently Asked Questions" heading to the next H2.
+ * Used when FAQ is rendered separately via the shared FAQ component.
  */
-export function transformFAQToRankMathMarkup(content: string): string {
-  // If already has RankMath FAQ block, return unchanged
-  if (/wp-block-rank-math-faq-block|rank-math-faq-item/i.test(content)) {
-    return content;
-  }
-
-  // Find the FAQ heading
-  const faqHeadingMatch = content.match(/<h2[^>]*>([^<]*Frequently Asked Questions[^<]*)<\/h2>/i);
+export function stripFAQSection(content: string): string {
+  // Match FAQ heading in various formats
+  const faqHeadingMatch = content.match(/<h2[^>]*>[^<]*Frequently Asked Questions[^<]*<\/h2>/i)
+    || content.match(/<h2[^>]*><strong>[^<]*Frequently Asked Questions[^<]*<\/strong><\/h2>/i);
   if (!faqHeadingMatch) {
     return content;
   }
 
   const faqStartIndex = content.indexOf(faqHeadingMatch[0]);
-  const faqHeadingEndIndex = faqStartIndex + faqHeadingMatch[0].length;
-  const afterFAQ = content.substring(faqHeadingEndIndex);
 
-  // Find the next major section (another H2) or end of content
-  const nextH2Match = afterFAQ.match(/<h2[^>]*>/i);
-  const faqSectionEnd = nextH2Match
-    ? faqHeadingEndIndex + afterFAQ.indexOf(nextH2Match[0])
-    : content.length;
+  // Also remove the WP block comment before the heading
+  const beforeHeading = content.substring(0, faqStartIndex);
+  const blockCommentStart = beforeHeading.lastIndexOf('<!-- wp:heading');
+  const actualStart = blockCommentStart >= 0 && blockCommentStart > faqStartIndex - 100
+    ? blockCommentStart
+    : faqStartIndex;
 
-  const faqSection = content.substring(faqHeadingEndIndex, faqSectionEnd);
+  // Find end: next H2 heading or end of content
+  const afterHeading = content.substring(faqStartIndex + faqHeadingMatch[0].length);
+  const nextH2Match = afterHeading.match(/<h2[^>]*>/i);
 
-  // Extract and transform H3 Q&A pairs
-  const faqs = extractPlainFAQ(content);
-  if (faqs.length === 0) {
-    return content;
+  let faqEndIndex: number;
+  if (nextH2Match) {
+    const nextH2Pos = faqStartIndex + faqHeadingMatch[0].length + afterHeading.indexOf(nextH2Match[0]);
+    // Also capture the WP block comment before the next heading
+    const between = content.substring(actualStart, nextH2Pos);
+    const lastBlockComment = between.lastIndexOf('<!-- wp:heading');
+    faqEndIndex = lastBlockComment >= 0 && lastBlockComment > between.length - 100
+      ? actualStart + lastBlockComment
+      : nextH2Pos;
+  } else {
+    faqEndIndex = content.length;
   }
 
-  // Build RankMath-style markup (matching wp-block-rank-math-faq-block structure)
-  let rankMathFAQ = `<div class="wp-block-rank-math-faq-block">`;
-
-  faqs.forEach((faq) => {
-    rankMathFAQ += `
-<div class="rank-math-faq-item">
-<h3 class="rank-math-question">${faq.question}</h3>
-<div class="rank-math-answer">${faq.answer}</div>
-</div>`;
-  });
-
-  rankMathFAQ += `
-</div>`;
-
-  // Replace the original FAQ section with RankMath markup
-  const beforeFAQ = content.substring(0, faqHeadingEndIndex);
-  const afterFAQSection = content.substring(faqSectionEnd);
-
-  return beforeFAQ + rankMathFAQ + afterFAQSection;
+  return content.substring(0, actualStart) + content.substring(faqEndIndex);
 }

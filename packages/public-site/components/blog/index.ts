@@ -10,7 +10,7 @@ export { CategoryBadge, type CategoryBadgeProps } from './CategoryBadge';
 export { BlogHeader, type BlogHeaderProps } from './BlogHeader';
 export { BlogContent, type BlogContentProps } from './BlogContent';
 export { RelatedPosts, type RelatedPostsProps } from './RelatedPosts';
-export { Breadcrumbs, type BreadcrumbsProps } from './Breadcrumbs';
+export { Breadcrumbs, generateBreadcrumbSchema, type BreadcrumbsProps } from './Breadcrumbs';
 export { ShareButtons, type ShareButtonsProps } from './ShareButtons';
 export { SearchBar } from './SearchBar';
 export { FilterBar } from './FilterBar';

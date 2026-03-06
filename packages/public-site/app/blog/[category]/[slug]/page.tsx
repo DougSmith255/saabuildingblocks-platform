@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
-import { CategoryBlogPostTemplate } from '@/components/blog';
+import { CategoryBlogPostTemplate, generateBreadcrumbSchema } from '@/components/blog';
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
-import { extractFAQs, generateFAQSchema, transformFAQToRankMathMarkup } from '@/lib/faq-utils';
+import { extractFAQs, generateFAQSchema, stripFAQSection } from '@/lib/faq-utils';
 import { getCachedBlogPosts, findPostBySlug, getRelatedPosts } from '@/lib/blog-post-page';
 import { STANDALONE_CATEGORIES, categoryToSlug, getPostUrl } from '@/lib/blog-post-urls';
 import { buildBlogPostingSchema, buildVideoSchema } from '@/lib/blog-schema';
@@ -113,20 +113,16 @@ export default async function BlogPostPage({
   const category = post.categories[0] || 'uncategorized';
   const postUrl = getPostUrl(post);
 
-  // Transform non-RankMath FAQ content to RankMath-style markup
-  const transformedContent = transformFAQToRankMathMarkup(post.content);
-  const postWithTransformedContent = {
-    ...post,
-    content: transformedContent
-  };
-
-  // Extract FAQs and generate schema
+  // Extract FAQs, strip FAQ section from content, generate schema
   const faqs = extractFAQs(post.content);
   const faqSchema = generateFAQSchema(faqs);
+  const strippedContent = faqs.length > 0 ? stripFAQSection(post.content) : post.content;
+  const postForTemplate = { ...post, content: strippedContent };
 
   // Structured data
   const blogPostingSchema = buildBlogPostingSchema(post, postUrl);
   const videoSchema = buildVideoSchema(post);
+  const breadcrumbSchema = generateBreadcrumbSchema(category, post.title);
 
   // Pre-filter related posts on server side to minimize client payload
   const relatedPosts = getRelatedPosts(posts, post);
@@ -136,6 +132,10 @@ export default async function BlogPostPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       {videoSchema && (
         <script
@@ -149,7 +149,7 @@ export default async function BlogPostPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
       )}
-      <CategoryBlogPostTemplate post={postWithTransformedContent} category={category} relatedPosts={relatedPosts} />
+      <CategoryBlogPostTemplate post={postForTemplate} category={category} relatedPosts={relatedPosts} faqs={faqs} />
     </main>
   );
 }
