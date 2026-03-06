@@ -5591,10 +5591,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             if (document.fullscreenElement) {
               document.exitFullscreen();
             } else if (floatState === 'floating') {
-              // Corner mode: move back into wrap, snap to inline, then fullscreen
-              if (container.parentNode === document.body && floatPlaceholder && floatPlaceholder.parentNode) {
-                floatPlaceholder.parentNode.insertBefore(container, floatPlaceholder.nextSibling);
-              }
+              // Corner mode: snap to inline, then fullscreen
               container.style.position = 'relative';
               container.style.left = '';
               container.style.top = '';
@@ -5607,6 +5604,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               container.style.boxShadow = '';
               container.style.aspectRatio = '16/9';
               container.style.overflow = 'hidden';
+              wrap.style.overflow = 'hidden';
               if (floatPlaceholder) floatPlaceholder.style.display = 'none';
               if (floatDismiss) floatDismiss.style.display = 'none';
               floatState = 'inline';
@@ -5678,16 +5676,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           var targetX = 20;
           var targetY = window.innerHeight - 20 - targetH;
 
-          // Capture playback state BEFORE DOM move (appendChild can disrupt audio)
-          var wasPlaying = wantsPlay && isPlaying;
-          var savedMuted = wygPlayer ? wygPlayer.muted : false;
-          var savedVolume = wygPlayer ? wygPlayer.volume : 1;
-
           // Show placeholder
           if (floatPlaceholder) { floatPlaceholder.style.display = 'block'; floatPlaceholder.style.height = placeholderH + 'px'; }
 
-          // Move container to body so it escapes parent stacking contexts
-          document.body.appendChild(container);
+          // Allow container to escape parent overflow:hidden by setting
+          // overflow:visible on the wrap. No DOM move needed — keeps the
+          // iframe in place so audio/playback state is preserved.
+          wrap.style.overflow = 'visible';
 
           // Show dismiss button
           if (floatDismiss) { floatDismiss.style.display = 'flex'; }
@@ -5719,25 +5714,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           if (!wantsPlay && wygPlayer) {
             // User never clicked play — force pause
             try { wygPlayer.pause(); } catch(e) {}
-          } else if (wasPlaying && wygPlayer) {
-            // User was actively watching — restore playback and audio state
-            // DOM move (appendChild) can cause browser to pause/mute the player
-            setTimeout(function() {
-              try {
-                wygPlayer.muted = savedMuted;
-                wygPlayer.volume = savedVolume;
-                if (wygPlayer.paused) wygPlayer.play();
-              } catch(e) {}
-            }, 100);
           }
         }
 
         function animateToInline() {
           if (document.fullscreenElement) return;
-          // Capture playback state before DOM move back
-          var wasPlayingReturn = wantsPlay && isPlaying;
-          var savedMutedReturn = wygPlayer ? wygPlayer.muted : false;
-          var savedVolumeReturn = wygPlayer ? wygPlayer.volume : 1;
           var startRect = container.getBoundingClientRect();
           var startLeft = startRect.left;
           var startTop = startRect.top;
@@ -5774,25 +5755,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             if (progress < 1) {
               requestAnimationFrame(tick);
             } else {
-              // Move container back into its original parent (after placeholder)
-              if (floatPlaceholder && floatPlaceholder.parentNode) {
-                floatPlaceholder.parentNode.insertBefore(container, floatPlaceholder.nextSibling);
-              }
-              // Reset to inline flow — restore ALL original inline styles
+              // Reset to inline flow
               if (floatPlaceholder) { floatPlaceholder.style.height = '0'; floatPlaceholder.style.display = 'none'; }
               container.style.cssText = 'position: relative; aspect-ratio: 16/9; background: #000; overflow: hidden;';
+              wrap.style.overflow = 'hidden';
               if (floatDismiss) floatDismiss.style.display = 'none';
               floatState = 'inline';
-              // Restore playback/audio after DOM move back
-              if (wasPlayingReturn && wygPlayer) {
-                setTimeout(function() {
-                  try {
-                    wygPlayer.muted = savedMutedReturn;
-                    wygPlayer.volume = savedVolumeReturn;
-                    if (wygPlayer.paused) wygPlayer.play();
-                  } catch(e) {}
-                }, 100);
-              }
             }
           }
           requestAnimationFrame(tick);
@@ -5817,11 +5785,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           if (wrap) wrap.classList.toggle('wyg-fs-active', isFullscreen);
 
           if (isFullscreen) {
-            // Move container back into wrap for fullscreen (if it was reparented to body)
-            if (container.parentNode === document.body && floatPlaceholder && floatPlaceholder.parentNode) {
-              floatPlaceholder.parentNode.insertBefore(container, floatPlaceholder.nextSibling);
-            }
-
             // Hide float dismiss button
             if (floatDismiss) floatDismiss.style.display = 'none';
 
@@ -5877,8 +5840,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
             // Restore container based on float state
             if (floatState === 'floating') {
-              // Re-reparent to body for floating (escapes stacking contexts)
-              document.body.appendChild(container);
+              // Restore floating corner position (no DOM move needed)
+              wrap.style.overflow = 'visible';
               var targetW = Math.min(320, window.innerWidth * 0.4);
               var targetH = targetW / VIDEO_AR;
               var targetX = 20;
