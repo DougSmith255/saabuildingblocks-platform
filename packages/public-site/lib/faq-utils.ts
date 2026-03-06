@@ -89,8 +89,8 @@ function extractPlainFAQ(content: string): FAQItem[] {
     ? afterFAQ.substring(0, afterFAQ.indexOf(nextH2Match[0]))
     : afterFAQ;
 
-  // Try H3-based extraction first
-  const h3Pattern = /<h3[^>]*>([^<]+\??)<\/h3>/gi;
+  // Try H3-based extraction first (handles optional <strong> wrapping)
+  const h3Pattern = /<h3[^>]*>(?:<strong>)?([\s\S]+?\??)(?:<\/strong>)?<\/h3>/gi;
   let h3Match;
   const questions: { question: string; index: number }[] = [];
 

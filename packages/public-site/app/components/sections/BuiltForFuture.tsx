@@ -442,6 +442,7 @@ export function BuiltForFuture() {
                           <img
                             src={point.image}
                             alt={point.text}
+                            loading="lazy"
                             className={point.imgClass}
                             style={point.imgStyle}
                           />

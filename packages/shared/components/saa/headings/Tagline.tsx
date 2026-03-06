@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
-import { useStrokeBackLayers, H2_DEFAULT_CONFIG } from './useStrokeBackLayers';
 
 export interface TaglineProps {
   children: React.ReactNode;
@@ -18,12 +17,39 @@ export interface TaglineProps {
   counterSuffix?: React.ReactNode;
 }
 
-/**
- * Tagline Component - 3D SVG Stroke Effect (matches H2 default style)
- *
- * Uses SVG stroke layers for sharp miter-joined backing depth,
- * with CSS text-shadow on the face for fill extrusion.
- */
+// Uses H2 default (grey) backing style
+
+const FACE_SHADOW = [
+  '0.003em 0.005em 0 #dddcd5',
+  '0.006em 0.011em 0 #d5d4cb',
+  '0.009em 0.017em 0 #cccbc2',
+  '0.012em 0.023em 0 #c2c1b8',
+  '0.015em 0.030em 0 #b8b7ae',
+  '0.018em 0.037em 0 #abaa9f',
+  '0.021em 0.044em 0 #a09f94',
+  '0.024em 0.051em 0 #96958a',
+  '0.027em 0.058em 0 #8d8c80',
+  '0.030em 0.065em 0 #838277',
+  '0.033em 0.070em 0 #7a7970',
+].join(', ');
+
+const SHADOW = { color: 'rgba(64, 64, 64, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' };
+
+const LAYERS = [
+  { color: '#444444', tx: '0.018em', ty: '0.053em' },
+  { color: '#3e3e3e', tx: '0.015em', ty: '0.045em' },
+  { color: '#383838', tx: '0.013em', ty: '0.038em' },
+  { color: '#323232', tx: '0.009em', ty: '0.028em' },
+  { color: '#2c2c2c', tx: '0.006em', ty: '0.019em' },
+  { color: '#262626', tx: '0.003em', ty: '0.010em' },
+  { color: '#202020', tx: '0.002em', ty: '0.005em' },
+  { color: '#1a1a1a', tx: '0em', ty: '0em' },
+];
+
+const RX = '8deg';
+const RY = '-1.5deg';
+const STROKE = '0.06em';
+
 export default function Tagline({
   children,
   className = '',
@@ -31,12 +57,11 @@ export default function Tagline({
   counterSuffix,
 }: TaglineProps) {
   const plainText = extractPlainText(children);
-  const config = H2_DEFAULT_CONFIG;
-  const wrapperRef = useStrokeBackLayers(config);
+  const persp = (tx: string, ty: string) =>
+    `perspective(800px) rotateX(${RX}) rotateY(${RY}) translate(${tx}, ${ty})`;
 
   return (
     <div
-      ref={wrapperRef}
       style={{
         position: 'relative',
         display: 'inline-block',
@@ -47,14 +72,77 @@ export default function Tagline({
         marginBottom: '30px',
       }}
     >
+      {/* SVG filter for sharp backing corners */}
+      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
+        <defs>
+          <filter id="saa-sharp-h2" x="-10%" y="-25%" width="120%" height="150%" primitiveUnits="userSpaceOnUse">
+            <feMorphology operator="dilate" radius={2} in="SourceGraphic" result="expanded" />
+            <feGaussianBlur stdDeviation={0.4} in="expanded" result="smoothed" />
+            <feComponentTransfer in="smoothed">
+              <feFuncA type="linear" slope={20} intercept={0} />
+            </feComponentTransfer>
+          </filter>
+        </defs>
+      </svg>
+
+      {/* Backing layers */}
+      <div aria-hidden="true" style={{ userSelect: 'none' }}>
+        {/* Shadow */}
+        <div
+          className="text-h2 text-display"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            pointerEvents: 'none',
+            textAlign: 'center',
+            lineHeight: 1.1,
+            fontFeatureSettings: '"ss01" 1',
+            color: SHADOW.color,
+            transform: persp(SHADOW.tx, SHADOW.ty),
+            filter: `blur(${SHADOW.blur})`,
+          }}
+        >
+          {plainText}
+        </div>
+
+        {/* Color gradient layers */}
+        {LAYERS.map((layer, i) => (
+          <div
+            key={i}
+            className="text-h2 text-display"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              pointerEvents: 'none',
+              textAlign: 'center',
+              lineHeight: 1.1,
+              fontFeatureSettings: '"ss01" 1',
+              color: layer.color,
+              WebkitTextStroke: `${STROKE} currentColor`,
+              WebkitTextFillColor: 'currentColor',
+              paintOrder: 'stroke fill',
+              filter: 'url(#saa-sharp-h2)',
+              transform: persp(layer.tx, layer.ty),
+            } as React.CSSProperties}
+          >
+            {plainText}
+          </div>
+        ))}
+      </div>
+
+      {/* Face */}
       <p
-        className={`heading-front text-h2 ${className}`}
+        className={`text-h2 ${className}`}
         style={{
           textAlign: 'center',
           fontFeatureSettings: '"ss01" 1',
-          color: config.faceColor,
-          textShadow: config.faceTextShadow,
-          transform: `perspective(800px) rotateX(${config.rotateX})`,
+          color: '#e5e4dd',
+          textShadow: FACE_SHADOW,
+          transform: persp('-0.025em', '-0.035em'),
           lineHeight: 1.1,
           position: 'relative',
           overflow: 'visible',

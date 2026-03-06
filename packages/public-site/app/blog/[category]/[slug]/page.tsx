@@ -44,7 +44,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { category, slug } = await params;
   const posts = getCachedBlogPosts();
-  const post = findPostBySlug(posts, slug);
+  const post = findPostBySlug(posts, slug, category);
 
   if (!post) {
     return {
@@ -102,15 +102,15 @@ export default async function BlogPostPage({
 }: {
   params: Promise<{ category: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { category, slug } = await params;
   const posts = getCachedBlogPosts();
-  const post = findPostBySlug(posts, slug);
+  const post = findPostBySlug(posts, slug, category);
 
   if (!post) {
     notFound();
   }
 
-  const category = post.categories[0] || 'uncategorized';
+  const resolvedCategory = post.categories[0] || 'uncategorized';
   const postUrl = getPostUrl(post);
 
   // Extract FAQs, strip FAQ section from content, generate schema

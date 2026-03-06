@@ -1,9 +1,5 @@
 'use client';
 
-import Image from 'next/image';
-import { CyberCard } from '@saa/shared/components/saa/cards';
-import H2 from '@saa/shared/components/saa/headings/H2';
-
 /**
  * School data for the cards section
  * Each school has a name, logo URL, and website link
@@ -134,78 +130,77 @@ export function SchoolCardsSection({ postSlug, schools: overrideSchools }: Schoo
   }
 
   return (
-    <section className="py-8 md:py-12">
-      <div className="max-w-[1200px] mx-auto">
-        {/* Section Header with proper H2 styling and spacing */}
-        <div className="mb-12">
-          <H2>FEATURED SCHOOLS</H2>
-        </div>
+    <section className="py-6 md:py-8">
+      <div className="max-w-[900px] mx-auto">
+        {/* Section Header */}
+        <h3
+          className="text-center mb-4"
+          style={{
+            fontFamily: 'var(--font-taskor, sans-serif)',
+            fontSize: 'clamp(0.85rem, calc(0.8rem + 0.3vw), 1.1rem)',
+            fontWeight: 600,
+            color: '#ffd700',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+          }}
+        >
+          Featured Schools
+        </h3>
 
-        {/* 3x2 Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Grid - equal height cards */}
+        <div
+          className="grid gap-3"
+          style={{ gridTemplateColumns: `repeat(auto-fit, minmax(160px, 1fr))` }}
+        >
           {schoolsData.map((school) => (
-            <CyberCard
+            <a
               key={school.name}
-              className="flex flex-col items-center"
-              padding="lg"
-              centered={true}
+              href={school.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center justify-between p-4 rounded-lg transition-all duration-300 hover:scale-[1.03]"
+              style={{
+                background: 'linear-gradient(145deg, rgba(50,50,50,0.6) 0%, rgba(25,25,25,0.8) 100%)',
+                border: '1px solid rgba(255, 215, 0, 0.15)',
+                minHeight: '90px',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 215, 0, 0.4)';
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(255, 215, 0, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 215, 0, 0.15)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
             >
-              {/* Logo Container - Fixed height for alignment */}
-              <div className="w-full h-24 flex items-center justify-center mb-4">
-                <div className="relative w-full h-full max-w-[180px]">
-                  <Image
-                    src={school.logo}
-                    alt={`${school.name} logo`}
-                    fill
-                    className="object-contain"
-                    sizes="180px"
-                    onError={(e) => {
-                      // Hide broken image and show school name instead
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* School Name - Fixed height for alignment */}
-              <h3
-                className="text-center mb-4 h-14 flex items-center justify-center"
+              {/* School Name */}
+              <span
+                className="text-center flex-1 flex items-center"
                 style={{
                   fontFamily: 'var(--font-amulya, sans-serif)',
-                  fontSize: '1.125rem',
-                  fontWeight: 600,
+                  fontSize: 'clamp(0.8rem, calc(0.75rem + 0.2vw), 0.95rem)',
+                  fontWeight: 500,
                   color: '#e5e4dd',
                   lineHeight: 1.3,
                 }}
               >
                 {school.name}
-              </h3>
+              </span>
 
-              {/* View Courses Button - Styled like SecondaryButton */}
-              <a
-                href={school.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-                  inline-flex items-center justify-center
-                  px-6 py-3
-                  rounded-xl
-                  text-sm font-semibold uppercase tracking-wider
-                  transition-all duration-300
-                  hover:scale-105
-                  mt-auto
-                "
+              {/* View Courses - always aligned at bottom */}
+              <span
+                className="mt-2 opacity-50 group-hover:opacity-100 transition-opacity"
                 style={{
                   fontFamily: 'var(--font-taskor, sans-serif)',
-                  background: 'linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%)',
+                  fontSize: '0.65rem',
                   color: '#ffd700',
-                  border: '1px solid rgba(255, 215, 0, 0.3)',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
                 }}
               >
-                View Courses
-              </a>
-            </CyberCard>
+                View Courses →
+              </span>
+            </a>
           ))}
         </div>
       </div>

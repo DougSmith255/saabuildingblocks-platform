@@ -119,6 +119,7 @@ export function WhySAA() {
                 <img
                   src={ALIGNED_INCENTIVES_IMAGE}
                   alt="Smart Agent Alliance aligned incentives model - where agent success and sponsor success grow together"
+                  loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />

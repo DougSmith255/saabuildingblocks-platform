@@ -303,7 +303,9 @@ export function MediaLogos() {
                   <img
                     src={`${CLOUDFLARE_BASE}/${logo.id}/public`}
                     alt={logo.alt}
-                    loading="eager"
+                    loading="lazy"
+                    width={200}
+                    height={70}
                     className="h-[70px] md:h-[72px] w-auto object-contain"
                     style={{
                       maxWidth: 'clamp(200px, 18vw, 300px)',

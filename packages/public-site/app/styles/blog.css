@@ -32,6 +32,26 @@
   letter-spacing: var(--letter-spacing-body, 0em);
 }
 
+/* Allow text selection on blog pages - !important to override globals.css */
+.blog-content,
+.blog-content *,
+.blog-content p,
+.blog-content li,
+.blog-content span,
+.blog-content blockquote,
+.blog-content td,
+.blog-content th,
+.blog-content div,
+.blog-content figcaption,
+.blog-content label,
+.blog-content dd,
+.blog-content dt {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
 /* RankMath Table of Contents - Fix spacing issues from malformed HTML */
 /* WordPress/RankMath sometimes generates empty divs and stray </p> tags */
 .blog-content .wp-block-rank-math-toc-block,
@@ -501,6 +521,14 @@ article p a:focus-visible,
   object-fit: contain;
 }
 
+/* Headings followed by figures/images need extra breathing room */
+.blog-content h2 + figure,
+.blog-content h2 + .wp-block-image,
+.blog-content h3 + figure,
+.blog-content h3 + .wp-block-image {
+  margin-top: 2rem;
+}
+
 /* WordPress figure wrapper - receives the CyberFrame styling */
 /* Float right with text wrapping, auto width based on image size */
 /* Default (dark mode): Yellow/gold glow for internal images */
@@ -732,7 +760,7 @@ body.light-mode .blog-content figure:hover {
 .blog-content img.alignright,
 .blog-content p > img.alignright {
   float: right;
-  margin: 0.5rem 0 1rem 1.5rem;
+  margin: 0.5rem 0 1rem 2rem;
   max-width: 50%;
 }
 
@@ -740,7 +768,7 @@ body.light-mode .blog-content figure:hover {
 .blog-content img.alignleft,
 .blog-content p > img.alignleft {
   float: left;
-  margin: 0.5rem 1.5rem 1rem 0;
+  margin: 0.5rem 2rem 1rem 0;
   max-width: 50%;
 }
 
@@ -884,7 +912,7 @@ body.light-mode .blog-post .blog-content > .float-right .cyber-frame {
 .blog-content .wp-block-media-text {
   display: flex !important;
   align-items: center;
-  gap: 5px;
+  gap: 1.5rem;
   grid-template-columns: unset !important;
 }
 
@@ -1128,13 +1156,13 @@ body.light-mode .blog-content .wp-block-media-text__media:hover {
 /* WordPress Alignment Classes */
 .blog-content .alignleft {
   float: left;
-  margin-right: 1.5rem;
+  margin-right: 2rem;
   margin-bottom: 1rem;
 }
 
 .blog-content .alignright {
   float: right;
-  margin-left: 1.5rem;
+  margin-left: 2rem;
   margin-bottom: 1rem;
 }
 
@@ -1593,11 +1621,41 @@ body.light-mode .blog-content.prose-invert h2 {
   font-family: var(--font-synonym), sans-serif !important;
 }
 
-/* Table styling for pricing tables - use !important to override WordPress inline styles */
+/* Table styling - override base figure styles that break table layout */
+.blog-content .wp-block-table,
+.blog-content figure.wp-block-table {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5rem 0 !important;
+  position: relative;
+  width: 100% !important;
+  /* Reset image-figure styles that don't apply to tables */
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* Mobile scroll indicator */
+@media (max-width: 768px) {
+  .blog-content .wp-block-table::after,
+  .blog-content figure.wp-block-table::after {
+    content: 'Swipe to scroll \2192';
+    display: block;
+    text-align: right;
+    font-size: 0.75rem;
+    color: rgba(255, 215, 0, 0.5);
+    padding: 0.25rem 0;
+    font-family: var(--font-amulya, sans-serif);
+  }
+}
+
 .blog-content table {
   width: 100% !important;
+  min-width: 500px;
   border-collapse: collapse !important;
-  margin: 1.5rem 0 !important;
   background: rgba(20, 20, 20, 0.6) !important;
   border-radius: 8px !important;
   overflow: hidden !important;

@@ -137,7 +137,6 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     // CTA removed - redundant on pages that list schools
     relatedPostsLimit: 3,
     customClassName: 'category-schools',
-    heroImageMaxHeight: '140px',
   },
 
   'winning-clients': {

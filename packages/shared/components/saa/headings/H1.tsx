@@ -2,8 +2,6 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
-import { useStrokeBackLayers, H1_GOLD_CONFIG, H1_CYAN_CONFIG } from './useStrokeBackLayers';
-import type { StrokeConfig } from './useStrokeBackLayers';
 
 export type H1Theme = 'default' | 'cyan';
 
@@ -20,21 +18,109 @@ export interface HeadingProps {
   theme?: H1Theme;
 }
 
-const THEME_CONFIGS: Record<H1Theme, StrokeConfig> = {
-  default: H1_GOLD_CONFIG,
-  cyan: H1_CYAN_CONFIG,
+// ── Layer config ─────────────────────────────────────────────────────
+
+interface BackingLayer {
+  color: string;
+  tx: string;
+  ty: string;
+}
+
+interface H1Config {
+  rotateX: string;
+  rotateY: string;
+  strokeWidth: string;
+  shadow: { color: string; tx: string; ty: string; blur: string };
+  layers: BackingLayer[];
+  face: { color: string; tx: string; ty: string; textShadow: string };
+}
+
+// ── Face text-shadow (extrusion depth) ───────────────────────────────
+
+const GOLD_FACE_SHADOW = [
+  '0 0 0.08em rgba(255, 215, 0, 0.4)',
+  '0 0 0.2em rgba(255, 215, 0, 0.25)',
+  '0.003em 0.005em 0 #e5e4dd',
+  '0.006em 0.010em 0 #e0dfda',
+  '0.009em 0.016em 0 #dbdad5',
+  '0.012em 0.022em 0 #d5d4cd',
+  '0.015em 0.028em 0 #cfcec6',
+  '0.018em 0.035em 0 #c8c7bf',
+  '0.021em 0.042em 0 #c0bfb7',
+  '0.024em 0.049em 0 #b8b7ae',
+  '0.027em 0.056em 0 #b0afa5',
+  '0.030em 0.063em 0 #a7a69c',
+  '0.033em 0.070em 0 #9e9d93',
+  '0.036em 0.077em 0 #96958a',
+  '0.039em 0.084em 0 #8d8c80',
+  '0.042em 0.090em 0 #848377',
+  '0.045em 0.096em 0 #7c7b6f',
+  '0.048em 0.102em 0 #747367',
+].join(', ');
+
+const CYAN_FACE_SHADOW = [
+  '0 0 0.08em rgba(0, 191, 255, 0.4)',
+  '0 0 0.2em rgba(0, 191, 255, 0.25)',
+  '0.003em 0.005em 0 #e5e4dd',
+  '0.006em 0.010em 0 #e0dfda',
+  '0.009em 0.016em 0 #dbdad5',
+  '0.012em 0.022em 0 #d5d4cd',
+  '0.015em 0.028em 0 #cfcec6',
+  '0.018em 0.035em 0 #c8c7bf',
+  '0.021em 0.042em 0 #c0bfb7',
+  '0.024em 0.049em 0 #b8b7ae',
+  '0.027em 0.056em 0 #b0afa5',
+  '0.030em 0.063em 0 #a7a69c',
+  '0.033em 0.070em 0 #9e9d93',
+  '0.036em 0.077em 0 #96958a',
+  '0.039em 0.084em 0 #8d8c80',
+  '0.042em 0.090em 0 #848377',
+  '0.045em 0.096em 0 #7c7b6f',
+  '0.048em 0.102em 0 #747367',
+].join(', ');
+
+// ── Theme configs ────────────────────────────────────────────────────
+// 6 backing layers: bright color (far) -> dark (near face)
+
+const H1_GOLD: H1Config = {
+  rotateX: '12deg',
+  rotateY: '-2deg',
+  strokeWidth: '0.08em',
+  shadow: { color: 'rgba(184, 150, 10, 0.5)', tx: '0.022em', ty: '0.065em', blur: '6px' },
+  layers: [
+    { color: '#e6ac00', tx: '0.018em', ty: '0.055em' },
+    { color: '#bd8e05', tx: '0.014em', ty: '0.043em' },
+    { color: '#94710a', tx: '0.010em', ty: '0.032em' },
+    { color: '#6b530e', tx: '0.007em', ty: '0.022em' },
+    { color: '#423613', tx: '0.004em', ty: '0.012em' },
+    { color: '#191818', tx: '0em', ty: '0em' },
+  ],
+  face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.05em', textShadow: GOLD_FACE_SHADOW },
 };
 
-/**
- * H1 Component - 3D SVG Stroke Heading Effect
- *
- * Uses SVG stroke layers for sharp miter-joined backing depth,
- * with CSS text-shadow on the face for fill extrusion.
- *
- * THEMES:
- * - default: gold backing (main site)
- * - cyan: cyan backing (about-exp-realty page)
- */
+const H1_CYAN: H1Config = {
+  rotateX: '12deg',
+  rotateY: '-2deg',
+  strokeWidth: '0.08em',
+  shadow: { color: 'rgba(10, 120, 152, 0.5)', tx: '0.022em', ty: '0.065em', blur: '6px' },
+  layers: [
+    { color: '#00bfff', tx: '0.018em', ty: '0.055em' },
+    { color: '#0aacdd', tx: '0.014em', ty: '0.043em' },
+    { color: '#0a98bb', tx: '0.010em', ty: '0.032em' },
+    { color: '#087080', tx: '0.007em', ty: '0.022em' },
+    { color: '#085c68', tx: '0.004em', ty: '0.012em' },
+    { color: '#181920', tx: '0em', ty: '0em' },
+  ],
+  face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.05em', textShadow: CYAN_FACE_SHADOW },
+};
+
+const THEME_CONFIGS: Record<H1Theme, H1Config> = {
+  default: H1_GOLD,
+  cyan: H1_CYAN,
+};
+
+// ── Component ────────────────────────────────────────────────────────
+
 export default function H1({
   children,
   className = '',
@@ -44,26 +130,80 @@ export default function H1({
 }: HeadingProps) {
   const plainText = extractPlainText(children);
   const config = THEME_CONFIGS[theme];
-  const wrapperRef = useStrokeBackLayers(config);
+  const persp = (tx: string, ty: string) =>
+    `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
 
   return (
-    <div
-      ref={wrapperRef}
-      style={{
-        position: 'relative',
-        display: 'inline-block',
-        width: '100%',
-        overflow: 'visible',
-      }}
-    >
+    <div style={{ position: 'relative', display: 'inline-block', width: '100%', overflow: 'visible' }}>
+      {/* SVG filter for sharp backing corners (dilate extends text-stroke) */}
+      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
+        <defs>
+          <filter id="saa-sharp-h1" x="-10%" y="-25%" width="120%" height="150%" primitiveUnits="userSpaceOnUse">
+            <feMorphology operator="dilate" radius={4} in="SourceGraphic" result="expanded" />
+            <feGaussianBlur stdDeviation={0.5} in="expanded" result="smoothed" />
+            <feComponentTransfer in="smoothed">
+              <feFuncA type="linear" slope={20} intercept={0} />
+            </feComponentTransfer>
+          </filter>
+        </defs>
+      </svg>
+
+      {/* Backing layers (decorative) */}
+      <div aria-hidden="true" style={{ userSelect: 'none' }}>
+        {/* Shadow */}
+        <div
+          className="text-h1 text-display"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            pointerEvents: 'none',
+            lineHeight: 1.1,
+            fontFeatureSettings: '"ss01" 1',
+            color: config.shadow.color,
+            transform: persp(config.shadow.tx, config.shadow.ty),
+            filter: `blur(${config.shadow.blur})`,
+          }}
+        >
+          {plainText}
+        </div>
+
+        {/* Color gradient layers */}
+        {config.layers.map((layer, i) => (
+          <div
+            key={i}
+            className="text-h1 text-display"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              pointerEvents: 'none',
+              lineHeight: 1.1,
+              fontFeatureSettings: '"ss01" 1',
+              color: layer.color,
+              WebkitTextStroke: `${config.strokeWidth} currentColor`,
+              WebkitTextFillColor: 'currentColor',
+              paintOrder: 'stroke fill',
+              filter: 'url(#saa-sharp-h1)',
+              transform: persp(layer.tx, layer.ty),
+            } as React.CSSProperties}
+          >
+            {plainText}
+          </div>
+        ))}
+      </div>
+
+      {/* Face */}
       <h1
         id={id}
-        className={`heading-front text-h1 text-display ${className}`}
+        className={`text-h1 text-display ${className}`}
         style={{
-          color: config.faceColor,
-          transform: `perspective(800px) rotateX(${config.rotateX})`,
+          color: config.face.color,
+          textShadow: config.face.textShadow,
+          transform: persp(config.face.tx, config.face.ty),
           fontFeatureSettings: '"ss01" 1',
-          textShadow: config.faceTextShadow,
           lineHeight: 1.1,
           position: 'relative',
           overflow: 'visible',

@@ -94,10 +94,25 @@ export function getRelatedPosts(
 }
 
 /**
- * Find a blog post by URL slug, checking custom URI first then WordPress slug.
+ * Find a blog post by URL slug and category.
+ * When category is provided, matches the full URI path to disambiguate
+ * posts with the same slug in different categories (e.g. oklahoma).
  */
-export function findPostBySlug(posts: BlogPost[], slug: string): BlogPost | undefined {
-  // First: match by custom URI slug (source of truth from Permalink Manager)
+export function findPostBySlug(posts: BlogPost[], slug: string, category?: string): BlogPost | undefined {
+  if (category) {
+    // Match by full custom URI path (category/slug)
+    const byFullUri = posts.find((p) => {
+      if (!p.customUri) return false;
+      return p.customUri === `${category}/${slug}`;
+    });
+    if (byFullUri) return byFullUri;
+    // Match by category array + slug
+    const byCatSlug = posts.find((p) =>
+      p.categories.includes(category) && p.slug === slug
+    );
+    if (byCatSlug) return byCatSlug;
+  }
+  // Fallback: match by custom URI slug only
   const byUri = posts.find((p) => {
     if (!p.customUri) return false;
     const uriSlug = p.customUri.split('/').pop();

@@ -29,7 +29,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const posts = getCachedBlogPosts();
-  const post = findPostBySlug(posts, slug);
+  const post = findPostBySlug(posts, slug, 'exp-realty-sponsor');
 
   if (!post) {
     return { title: 'Post Not Found | Smart Agent Alliance' };
@@ -81,7 +81,7 @@ export default async function ExpRealtySponsorPostPage({
 }) {
   const { slug } = await params;
   const posts = getCachedBlogPosts();
-  const post = findPostBySlug(posts, slug);
+  const post = findPostBySlug(posts, slug, 'exp-realty-sponsor');
 
   if (!post) {
     notFound();

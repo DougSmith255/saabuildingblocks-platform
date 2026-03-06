@@ -33,20 +33,21 @@
   Access-Control-Allow-Credentials: true
 
 # ============================================================
-# HTML PAGES - Cache until next deploy
-# Cloudflare Pages automatically purges cache on deploy
+# HTML PAGES - Browser always revalidates, CDN caches until next deploy
+# s-maxage = CDN cache (Cloudflare auto-purges on deploy)
+# max-age=0 = browser always checks CDN for fresh content
 # ============================================================
 /
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, s-maxage=31536000, max-age=0, must-revalidate
 
 /*.html
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, s-maxage=31536000, max-age=0, must-revalidate
 
 /blog/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, s-maxage=31536000, max-age=0, must-revalidate
 
 /about-*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, s-maxage=31536000, max-age=0, must-revalidate
 
 # ============================================================
 # STATIC ASSETS - Long cache (hashed filenames = immutable)
@@ -63,9 +64,9 @@
 /images/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Blog post JSON data chunks - cache until next deploy
+# Blog post JSON data chunks - browser revalidates, CDN caches until deploy
 /blog-posts-chunk-*.json
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, s-maxage=31536000, max-age=0, must-revalidate
 
 # Other static assets
 /*.css

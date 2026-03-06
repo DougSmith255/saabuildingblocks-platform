@@ -132,10 +132,10 @@ export default function Header() {
         else el.removeAttribute('style');
       });
 
-      // Min width: padding + logo + nav + CTA, with 15% compression tolerance
-      // Nav items use flexbox and can comfortably compress below their natural width
+      // Min width: padding + logo + nav gaps + CTA + small buffer
+      // No compression tolerance — switch to mobile before anything clips
       const rawMinWidth = 64 + logoWidth + 16 + navWidth + 16 + ctaWidth;
-      const minWidth = Math.round(rawMinWidth * 0.85);
+      const minWidth = rawMinWidth + 20;
 
       // Also measure mobile layout: logo + button + hamburger need comfortable gaps
       // Force mobile elements visible for measurement

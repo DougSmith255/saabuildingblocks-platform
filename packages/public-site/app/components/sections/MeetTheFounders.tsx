@@ -123,6 +123,7 @@ export function MeetTheFounders({ variant = 'default' }: { variant?: 'default' |
                 <img
                   src={FOUNDERS[0].image}
                   alt={FOUNDERS[0].name}
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </ProfileCyberFrame>
@@ -146,6 +147,7 @@ export function MeetTheFounders({ variant = 'default' }: { variant?: 'default' |
                 <img
                   src={FOUNDERS[1].image}
                   alt={FOUNDERS[1].name}
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </ProfileCyberFrame>

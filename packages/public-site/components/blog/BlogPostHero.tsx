@@ -172,7 +172,7 @@ export function BlogPostHero({
 
         {/* Featured Image - displayed centered below icons */}
         {featuredImage && (
-          <div className="mt-10 max-w-3xl mx-auto">
+          <div className="mt-10 mx-auto" style={{ width: '70%', maxWidth: '780px' }}>
             <CyberFrame>
               <div style={featuredImageMaxHeight ? { maxHeight: featuredImageMaxHeight, overflow: 'hidden' } : undefined}>
                 <Image
@@ -182,7 +182,7 @@ export function BlogPostHero({
                   height={506}
                   className="object-cover w-full h-auto"
                   style={featuredImageMaxHeight ? { maxHeight: featuredImageMaxHeight, objectFit: 'contain' } : undefined}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 900px"
+                  sizes="(max-width: 768px) 70vw, (max-width: 1200px) 70vw, 780px"
                   priority
                 />
               </div>
