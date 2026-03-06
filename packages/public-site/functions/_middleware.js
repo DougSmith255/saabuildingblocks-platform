@@ -156,6 +156,10 @@ const STATIC_REDIRECTS = new Map([
   ['/best-real-estate-brokerage/new-agents', '/best-real-estate-brokerage/'],
   ['/best-real-estate-brokerage/profits', '/best-real-estate-brokerage/'],
   ['/best-real-estate-brokerage/reviews', '/best-real-estate-brokerage/'],
+  // Removed duplicate brokerage-comparison posts -> correct category posts
+  ['/blog/brokerage-comparison/fees', '/about-exp-realty/fees/'],
+  ['/blog/brokerage-comparison/revenue-share', '/exp-realty-sponsor/revenue-share/'],
+  ['/blog/brokerage-comparison/new-agents', '/exp-realty-sponsor/new-agents/'],
   // about-exp-realty slug changes
   ['/about-exp-realty/workplace', '/about-exp-realty/exp-workplace/'],
   ['/about-exp-realty/awards', '/awards/'],
