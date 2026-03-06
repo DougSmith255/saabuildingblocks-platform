@@ -609,69 +609,10 @@ body.light-mode .blog-content figure:hover {
   border-radius: 6px;
 }
 
-/* Holographic glass overlay - vertical slide animation */
-.blog-content figure::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  pointer-events: none;
-  /* Horizontal sheen band that slides vertically */
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    transparent 30%,
-    rgba(255,255,255,0.06) 38%,
-    rgba(255,255,255,0.13) 50%,
-    rgba(255,255,255,0.06) 62%,
-    transparent 70%,
-    transparent 100%
-  );
-  /* Resting position - centered over image */
-  transform: translateY(0%);
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* Holographic iridescent overlay */
+/* No sheen/shimmer animations on blog figures */
+.blog-content figure::before,
 .blog-content figure::after {
-  content: "";
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  right: 6px;
-  bottom: 6px;
-  z-index: 11;
-  pointer-events: none;
-  border-radius: 6px;
-  background: linear-gradient(
-    115deg,
-    rgba(255, 0, 128, 0.03) 0%,
-    rgba(128, 0, 255, 0.03) 20%,
-    rgba(0, 128, 255, 0.03) 40%,
-    rgba(0, 255, 128, 0.03) 60%,
-    rgba(255, 255, 0, 0.03) 80%,
-    rgba(255, 128, 0, 0.03) 100%
-  );
-  mix-blend-mode: overlay;
-  transition: all 0.4s ease;
-}
-
-/* Hover - sheen slides up and off the image */
-.blog-content figure:hover::before {
-  transform: translateY(-100%);
-}
-
-/* Hover - holographic more visible */
-.blog-content figure:hover::after {
-  background: linear-gradient(
-    145deg,
-    rgba(255, 0, 128, 0.05) 0%,
-    rgba(128, 0, 255, 0.05) 20%,
-    rgba(0, 128, 255, 0.05) 40%,
-    rgba(0, 255, 128, 0.05) 60%,
-    rgba(255, 255, 0, 0.05) 80%,
-    rgba(255, 128, 0, 0.05) 100%
-  );
+  display: none;
 }
 
 /* Standalone images (not in figure) - also get CyberFrame */
@@ -921,7 +862,7 @@ body.light-mode .blog-post .blog-content > .float-right .cyber-frame {
   position: relative;
   flex-shrink: 0;
   max-width: 500px;
-  width: 45%;
+  width: fit-content;
   overflow: hidden;
   /* 3D Metal Frame styling to match figures */
   padding: 6px;
