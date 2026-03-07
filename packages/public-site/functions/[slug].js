@@ -84,9 +84,9 @@ const CUSTOM_ICON_PATHS = {
 };
 
 /**
- * NOTE: Alt glyphs are handled via CSS font-feature-settings: "aalt" 1
- * on .heading-front and .founder-name classes. Real letters stay in the DOM
- * (SEO/copy-paste friendly) while the font renders alternate glyphs visually.
+ * NOTE: Alt glyphs for A, E, T, F are applied selectively via per-character
+ * spans with font-feature-settings: "aalt" 1 (see wrapAltGlyphs function).
+ * Real letters stay in the DOM (SEO/copy-paste friendly).
  */
 
 /**
@@ -661,7 +661,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     /* Heading front face - shared */
     .heading-front {
       font-family: var(--font-taskor), serif;
-      font-feature-settings: "aalt" 1;
       line-height: 1.1;
       position: relative;
       overflow: visible;
@@ -3222,7 +3221,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     .founder-name {
       font-family: var(--font-taskor), serif;
-      font-feature-settings: "aalt" 1;
       font-size: clamp(27px, calc(25.36px + 0.65vw), 45px);
       line-height: 1.1;
       font-weight: 700;
@@ -7895,10 +7893,21 @@ ${agent.slug === 'jane-smith' ? `
 
   var isMobile = window.matchMedia('(max-width: 768px)').matches;
 
+  /* Wrap only A, E, T, F in spans with font-feature-settings: "aalt" 1.
+   * Other chars with alternates (M, N, R, H, K, V, W, Y) stay normal. */
+  function escapeText(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function wrapAltGlyphs(text) {
+    return escapeText(text).replace(/[AETF]+/g, function(m) {
+      return '<span style="font-feature-settings:\'aalt\' 1">' + m + '</span>';
+    });
+  }
+
   /* Create CSS div backing layers - 2-layer deep design.
    * Key: backing divs get the SAME CSS classes as the heading so font-size
    * uses the responsive clamp() from CSS vars, not fixed computed pixels.
-   * Alt glyphs handled via CSS font-feature-settings: "aalt" 1 on .heading-front
+   * Alt glyphs for A/E/T/F applied via per-character spans (wrapAltGlyphs).
    * Mobile: backing disabled entirely for performance. Desktop: 2 layers. */
   function createBackLayers(wrapper) {
     var heading = wrapper.querySelector('.heading-front');
@@ -7907,15 +7916,18 @@ ${agent.slug === 'jane-smith' ? `
     var cfg = CONFIGS[type];
     if (!cfg) return;
     var text = heading.textContent.trim();
+    var altHtml = wrapAltGlyphs(text);
     var headingClasses = heading.className;
     var cs = getComputedStyle(heading);
     var persp = function(tx, ty) {
       return 'perspective(800px) rotateX(' + cfg.rotateX + ') rotateY(' + cfg.rotateY + ') translate(' + tx + ', ' + ty + ')';
     };
+    /* Apply alt glyphs to the face heading */
+    heading.innerHTML = altHtml;
     /* Backing layers (skipped on mobile) */
     if (!isMobile) {
       var baseCss = 'position:absolute;top:0;left:0;right:0;pointer-events:none;'
-        + 'text-align:' + cs.textAlign + ';line-height:1.1;margin:0;font-feature-settings:"aalt" 1;';
+        + 'text-align:' + cs.textAlign + ';line-height:1.1;margin:0;';
       var container = document.createElement('div');
       container.setAttribute('aria-hidden', 'true');
       container.setAttribute('data-backing', '');
@@ -7925,7 +7937,7 @@ ${agent.slug === 'jane-smith' ? `
       shadow.className = headingClasses;
       shadow.style.cssText = baseCss + 'color:' + cfg.shadow.color + ';text-shadow:none;'
         + 'transform:' + persp(cfg.shadow.tx, cfg.shadow.ty) + ';filter:blur(' + cfg.shadow.blur + ');';
-      shadow.textContent = text;
+      shadow.innerHTML = altHtml;
       container.appendChild(shadow);
       /* 2 stroked layers */
       cfg.layers.forEach(function(layer) {
@@ -7935,7 +7947,7 @@ ${agent.slug === 'jane-smith' ? `
           + 'color:' + layer.color + ';-webkit-text-stroke:' + layer.stroke + ' ' + layer.color + ';'
           + '-webkit-text-fill-color:' + layer.color + ';paint-order:stroke fill;text-shadow:none;'
           + 'transform:' + persp(layer.tx, layer.ty) + ';';
-        div.textContent = text;
+        div.innerHTML = altHtml;
         container.appendChild(div);
       });
       wrapper.insertBefore(container, heading);
@@ -8850,7 +8862,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
     <h1 style="--name-font-size: ${nameFontSize}">
       <span class="sr-only">${escapeHTML(fullName)}</span>
-      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:calc(-1.5em - 20px) auto -2em;font-family:inherit;font-feature-settings:'aalt' 1;font-size:inherit;pointer-events:none;">
+      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:calc(-1.5em - 20px) auto -2em;font-family:inherit;font-size:inherit;pointer-events:none;">
         <defs>
           <linearGradient id="lfg" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#dddcd5"/><stop offset="35%" stop-color="#f2f1ec"/><stop offset="65%" stop-color="#f2f1ec"/><stop offset="100%" stop-color="#dddcd5"/>

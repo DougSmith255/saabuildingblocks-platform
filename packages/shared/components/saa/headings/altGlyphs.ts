@@ -1,13 +1,38 @@
 /**
- * Taskor font alternate glyphs for M, A, E, N, T.
+ * Selectively apply Taskor alternate glyphs for A, E, T, F only.
  *
- * The font has alternates under the `aalt` OpenType feature.
- * We use font-feature-settings: "aalt" 1 to activate them.
- * This applies to all characters that have alternates in the font
- * (M, A, E, N, T, F, H, K, R, V, W, Y).
+ * The font has alternates under the `aalt` OpenType feature for many
+ * characters (M, A, E, N, T, F, H, K, R, V, W, Y), but we only want
+ * alternates on A, E, T, F. Since CSS font-feature-settings applies to
+ * ALL characters, we wrap only the desired chars in spans with "aalt" 1.
  */
 
-/** No-op identity function - alt glyphs are now handled via CSS font-feature-settings */
-export function altGlyphs(text: string): string {
-  return text;
+import React from 'react';
+
+const ALT_CHARS = new Set(['A', 'E', 'T', 'F']);
+const AALT_STYLE = { fontFeatureSettings: '"aalt" 1' };
+
+export function altGlyphs(text: string): React.ReactNode {
+  const parts: React.ReactNode[] = [];
+  let i = 0;
+
+  while (i < text.length) {
+    if (ALT_CHARS.has(text[i])) {
+      let j = i;
+      while (j < text.length && ALT_CHARS.has(text[j])) j++;
+      parts.push(
+        React.createElement('span', { key: parts.length, style: AALT_STYLE }, text.slice(i, j))
+      );
+      i = j;
+    } else {
+      let j = i;
+      while (j < text.length && !ALT_CHARS.has(text[j])) j++;
+      parts.push(text.slice(i, j));
+      i = j;
+    }
+  }
+
+  if (parts.length === 0) return text;
+  if (parts.length === 1 && typeof parts[0] === 'string') return parts[0];
+  return React.createElement(React.Fragment, null, ...parts);
 }

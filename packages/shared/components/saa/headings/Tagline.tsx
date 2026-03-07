@@ -84,7 +84,7 @@ export default function Tagline({
               margin: 0,
               textAlign: 'center',
               lineHeight: 1.1,
-              fontFeatureSettings: '"aalt" 1',
+
               color: SHADOW.color,
               textShadow: 'none',
               transform: persp(SHADOW.tx, SHADOW.ty),
@@ -107,7 +107,7 @@ export default function Tagline({
                 margin: 0,
                 textAlign: 'center',
                 lineHeight: 1.1,
-                fontFeatureSettings: '"aalt" 1',
+  
                 color: layer.color,
                 WebkitTextStroke: `${layer.stroke} ${layer.color}`,
                 WebkitTextFillColor: layer.color,
@@ -128,7 +128,6 @@ export default function Tagline({
         style={{
           textAlign: 'center',
           margin: 0,
-          fontFeatureSettings: '"aalt" 1',
           color: '#e5e4dd',
           textShadow: hasBacking ? FACE_SHADOW : FACE_SHADOW,
           transform: hasBacking ? persp('-0.025em', '-0.055em') : undefined,
