@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
+import { getVisibleLayers } from './layerUtils';
 
 export type H2Theme = 'default' | 'blue' | 'gold' | 'purple' | 'emerald';
 
@@ -124,6 +125,7 @@ export default function H2({
 }: HeadingProps) {
   const plainText = extractPlainText(children);
   const config = THEME_CONFIGS[theme];
+  const visibleLayers = getVisibleLayers(config.layers);
   const textAlign = (style.textAlign || 'center') as React.CSSProperties['textAlign'];
   const persp = (tx: string, ty: string) =>
     `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
@@ -152,19 +154,6 @@ export default function H2({
         textAlign,
       }}
     >
-      {/* SVG filter for sharp backing corners */}
-      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
-        <defs>
-          <filter id="saa-sharp-h2" x="-10%" y="-25%" width="120%" height="150%" primitiveUnits="userSpaceOnUse">
-            <feMorphology operator="dilate" radius={2} in="SourceGraphic" result="expanded" />
-            <feGaussianBlur stdDeviation={0.8} in="expanded" result="smoothed" />
-            <feComponentTransfer in="smoothed">
-              <feFuncA type="linear" slope={15} intercept={0} />
-            </feComponentTransfer>
-          </filter>
-        </defs>
-      </svg>
-
       {/* Backing layers */}
       <div aria-hidden="true" style={{ userSelect: 'none' }}>
         {/* Shadow */}
@@ -182,7 +171,7 @@ export default function H2({
           {plainText}
         </div>
         {/* Color layers */}
-        {config.layers.map((layer, i) => (
+        {visibleLayers.map((layer, i) => (
           <div
             key={i}
             className={`text-h2 ${className}`}
@@ -194,7 +183,6 @@ export default function H2({
               WebkitTextFillColor: layer.color,
               paintOrder: 'stroke fill',
               textShadow: 'none',
-              filter: 'url(#saa-sharp-h2)',
               transform: persp(layer.tx, layer.ty),
             }}
           >

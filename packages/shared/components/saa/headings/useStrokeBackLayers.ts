@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useCallback } from 'react';
+import { getVisibleLayers } from './layerUtils';
 
 // ── Layer configuration ──────────────────────────────────────────────
 
@@ -406,6 +407,7 @@ export function createBackLayers(
   config: StrokeConfig,
 ) {
   const { layers, strokeWidth, rotateX } = config;
+  const visibleLayers = getVisibleLayers(layers);
   const styles = getComputedStyle(heading);
   const fontSizePx = parseFloat(styles.fontSize);
   const fontWeight = styles.fontWeight;
@@ -420,10 +422,7 @@ export function createBackLayers(
   heading.style.transform = origTransform;
   if (!lines.length) return;
 
-  // Morphological opening filter radius
-  const openingRadius = Math.max(0.8, fontSizePx * 0.03);
-
-  layers.forEach((layer, i) => {
+  visibleLayers.forEach((layer, i) => {
     const svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('aria-hidden', 'true');
     svg.setAttribute('overflow', 'visible');
@@ -434,42 +433,7 @@ export function createBackLayers(
     if (layer.filter) svg.style.filter = layer.filter;
     if (layer.opacity) svg.style.opacity = layer.opacity;
 
-    // Dilate + blur + slope filter to smooth jagged stroke edges
-    // Matches the H2.tsx component's feMorphology approach
-    if (!layer.filter) {
-      const defs = document.createElementNS(NS, 'defs');
-      const filterId = `stroke-smooth-${i}`;
-      const filter = document.createElementNS(NS, 'filter');
-      filter.setAttribute('id', filterId);
-      filter.setAttribute('x', '-10%');
-      filter.setAttribute('y', '-25%');
-      filter.setAttribute('width', '120%');
-      filter.setAttribute('height', '150%');
-      filter.setAttribute('primitiveUnits', 'userSpaceOnUse');
-      const dilate = document.createElementNS(NS, 'feMorphology');
-      dilate.setAttribute('operator', 'dilate');
-      dilate.setAttribute('radius', String(Math.max(1, Math.round(openingRadius))));
-      dilate.setAttribute('in', 'SourceGraphic');
-      dilate.setAttribute('result', 'expanded');
-      const blur = document.createElementNS(NS, 'feGaussianBlur');
-      blur.setAttribute('stdDeviation', '0.8');
-      blur.setAttribute('in', 'expanded');
-      blur.setAttribute('result', 'smoothed');
-      const transfer = document.createElementNS(NS, 'feComponentTransfer');
-      transfer.setAttribute('in', 'smoothed');
-      const funcA = document.createElementNS(NS, 'feFuncA');
-      funcA.setAttribute('type', 'linear');
-      funcA.setAttribute('slope', '15');
-      funcA.setAttribute('intercept', '0');
-      transfer.appendChild(funcA);
-      filter.appendChild(dilate);
-      filter.appendChild(blur);
-      filter.appendChild(transfer);
-      defs.appendChild(filter);
-      svg.appendChild(defs);
-    }
-
-    const isInnermostLayer = i === layers.length - 1;
+    const isInnermostLayer = i === visibleLayers.length - 1;
 
     lines.forEach((line) => {
       const textEl = document.createElementNS(NS, 'text');
@@ -482,16 +446,11 @@ export function createBackLayers(
       textEl.setAttribute('stroke-linejoin', 'miter');
       textEl.setAttribute('stroke-miterlimit', '4');
       textEl.setAttribute('paint-order', 'stroke fill');
-      if (!layer.filter) {
-        textEl.setAttribute('filter', `url(#stroke-smooth-${i})`);
-      }
       textEl.style.fontFamily = "'Taskor', serif";
       textEl.style.fontSize = `${fontSizePx}px`;
       textEl.style.fontWeight = fontWeight;
       textEl.style.fontFeatureSettings = "'ss01' 1";
       textEl.textContent = line.text;
-      // Force SVG text path to match HTML text width exactly.
-      // Stroke then extends uniformly beyond - consistent for all text.
       if (line.width > 0) {
         textEl.setAttribute('textLength', `${line.width}px`);
         textEl.setAttribute('lengthAdjust', 'spacing');
@@ -667,46 +626,6 @@ export const BLOG_H2_LIGHT: BlogH2DivConfig = {
   face: { color: '#191818', tx: '-0.025em', ty: '-0.035em', textShadow: BLOG_LIGHT_FACE_SHADOW },
 };
 
-function ensureBlogH2Filter() {
-  if (document.getElementById('saa-sharp-h2')) return;
-  const ns = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(ns, 'svg');
-  svg.setAttribute('width', '0');
-  svg.setAttribute('height', '0');
-  svg.style.position = 'absolute';
-  svg.setAttribute('aria-hidden', 'true');
-  const defs = document.createElementNS(ns, 'defs');
-  const filter = document.createElementNS(ns, 'filter');
-  filter.setAttribute('id', 'saa-sharp-h2');
-  filter.setAttribute('x', '-10%');
-  filter.setAttribute('y', '-25%');
-  filter.setAttribute('width', '120%');
-  filter.setAttribute('height', '150%');
-  filter.setAttribute('primitiveUnits', 'userSpaceOnUse');
-  const dilate = document.createElementNS(ns, 'feMorphology');
-  dilate.setAttribute('operator', 'dilate');
-  dilate.setAttribute('radius', '2');
-  dilate.setAttribute('in', 'SourceGraphic');
-  dilate.setAttribute('result', 'expanded');
-  const blur = document.createElementNS(ns, 'feGaussianBlur');
-  blur.setAttribute('stdDeviation', '0.8');
-  blur.setAttribute('in', 'expanded');
-  blur.setAttribute('result', 'smoothed');
-  const transfer = document.createElementNS(ns, 'feComponentTransfer');
-  transfer.setAttribute('in', 'smoothed');
-  const funcA = document.createElementNS(ns, 'feFuncA');
-  funcA.setAttribute('type', 'linear');
-  funcA.setAttribute('slope', '15');
-  funcA.setAttribute('intercept', '0');
-  transfer.appendChild(funcA);
-  filter.appendChild(dilate);
-  filter.appendChild(blur);
-  filter.appendChild(transfer);
-  defs.appendChild(filter);
-  svg.appendChild(defs);
-  document.body.appendChild(svg);
-}
-
 /**
  * Create CSS div-based backing layers for blog H2 elements.
  * Matches H2.tsx component rendering - layers reflow naturally on resize.
@@ -716,7 +635,7 @@ export function createDivBackLayers(
   heading: HTMLElement,
   config: BlogH2DivConfig,
 ) {
-  ensureBlogH2Filter();
+  const visibleLayers = getVisibleLayers(config.layers);
 
   const text = heading.textContent?.trim() || '';
   const cs = getComputedStyle(heading);
@@ -753,14 +672,14 @@ export function createDivBackLayers(
   container.appendChild(shadow);
 
   // Color layers
-  config.layers.forEach((layer) => {
+  visibleLayers.forEach((layer) => {
     const div = document.createElement('div');
     div.className = headingClasses;
     div.style.cssText =
       baseCss +
       `color:${layer.color};-webkit-text-stroke:${config.strokeWidth} ${layer.color};` +
       `-webkit-text-fill-color:${layer.color};paint-order:stroke fill;text-shadow:none;` +
-      `filter:url(#saa-sharp-h2);transform:${persp(layer.tx, layer.ty)};`;
+      `transform:${persp(layer.tx, layer.ty)};`;
     div.textContent = text;
     container.appendChild(div);
   });

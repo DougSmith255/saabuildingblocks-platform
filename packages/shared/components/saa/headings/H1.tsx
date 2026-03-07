@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
+import { getVisibleLayers } from './layerUtils';
 
 export type H1Theme = 'default' | 'cyan';
 
@@ -130,25 +131,13 @@ export default function H1({
 }: HeadingProps) {
   const plainText = extractPlainText(children);
   const config = THEME_CONFIGS[theme];
+  const visibleLayers = getVisibleLayers(config.layers);
   const persp = (tx: string, ty: string) =>
     `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
 
   return (
     <div style={{ position: 'relative', display: 'inline-block', width: '100%', overflow: 'visible' }}>
-      {/* SVG filter for sharp backing corners (dilate extends text-stroke) */}
-      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
-        <defs>
-          <filter id="saa-sharp-h1" x="-10%" y="-25%" width="120%" height="150%" primitiveUnits="userSpaceOnUse">
-            <feMorphology operator="dilate" radius={3} in="SourceGraphic" result="expanded" />
-            <feGaussianBlur stdDeviation={1.2} in="expanded" result="smoothed" />
-            <feComponentTransfer in="smoothed">
-              <feFuncA type="linear" slope={25} intercept={0} />
-            </feComponentTransfer>
-          </filter>
-        </defs>
-      </svg>
-
-      {/* Backing layers - no user styles spread here; absolute positioning fills wrapper */}
+      {/* Backing layers */}
       {/* overflow:clip prevents backing layers from extending below face text on mobile (multi-line titles) */}
       <div aria-hidden="true" style={{ userSelect: 'none', position: 'absolute', inset: 0, overflow: 'clip' }}>
         {/* Shadow */}
@@ -172,7 +161,7 @@ export default function H1({
           {plainText}
         </div>
         {/* Color layers */}
-        {config.layers.map((layer, i) => (
+        {visibleLayers.map((layer, i) => (
           <div
             key={i}
             className={`text-h1 text-display ${className}`}
@@ -190,7 +179,6 @@ export default function H1({
               WebkitTextFillColor: layer.color,
               paintOrder: 'stroke fill',
               textShadow: 'none',
-              filter: 'url(#saa-sharp-h1)',
               transform: persp(layer.tx, layer.ty),
             }}
           >
