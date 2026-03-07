@@ -194,6 +194,8 @@ const STATIC_REDIRECTS = new Map([
   ['/low-fees', '/'],
   ['/more-benefits', '/'],
   ['/blender', '/'],
+  // Stale test pages from old deploys
+  ['/heading-css-test', '/'],
   // Old WordPress image/attachment slugs
   ['/aceable-agent-logo', '/'],
   ['/corcoran-image', '/'],
