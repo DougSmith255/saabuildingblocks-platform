@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
+import { getVisibleLayers } from './layerUtils';
 
 export interface TaglineProps {
   children: React.ReactNode;
@@ -57,6 +58,7 @@ export default function Tagline({
   counterSuffix,
 }: TaglineProps) {
   const plainText = extractPlainText(children);
+  const visibleLayers = getVisibleLayers(LAYERS);
   const persp = (tx: string, ty: string) =>
     `perspective(800px) rotateX(${RX}) rotateY(${RY}) translate(${tx}, ${ty})`;
 
@@ -72,46 +74,11 @@ export default function Tagline({
         marginBottom: '30px',
       }}
     >
-      {/* SVG filter for sharp backing corners */}
-      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
-        <defs>
-          <filter id="saa-sharp-h2" x="-10%" y="-25%" width="120%" height="150%" primitiveUnits="userSpaceOnUse">
-            <feMorphology operator="dilate" radius={2} in="SourceGraphic" result="expanded" />
-            <feGaussianBlur stdDeviation={0.8} in="expanded" result="smoothed" />
-            <feComponentTransfer in="smoothed">
-              <feFuncA type="linear" slope={15} intercept={0} />
-            </feComponentTransfer>
-          </filter>
-        </defs>
-      </svg>
-
-      {/* Backing layers - no user styles spread here; absolute positioning fills wrapper */}
-      <div aria-hidden="true" style={{ userSelect: 'none' }}>
-        {/* Shadow */}
-        <div
-          className="text-h2"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            pointerEvents: 'none',
-            margin: 0,
-            textAlign: 'center',
-            lineHeight: 1.1,
-            fontFeatureSettings: '"ss01" 1',
-            color: SHADOW.color,
-            textShadow: 'none',
-            transform: persp(SHADOW.tx, SHADOW.ty),
-            filter: `blur(${SHADOW.blur})`,
-          }}
-        >
-          {plainText}
-        </div>
-        {/* Color layers */}
-        {LAYERS.map((layer, i) => (
+      {/* Backing layers (disabled on mobile for performance) */}
+      {visibleLayers.length > 0 && (
+        <div aria-hidden="true" style={{ userSelect: 'none' }}>
+          {/* Shadow */}
           <div
-            key={i}
             className="text-h2"
             style={{
               position: 'absolute',
@@ -123,19 +90,42 @@ export default function Tagline({
               textAlign: 'center',
               lineHeight: 1.1,
               fontFeatureSettings: '"ss01" 1',
-              color: layer.color,
-              WebkitTextStroke: `${STROKE} ${layer.color}`,
-              WebkitTextFillColor: layer.color,
-              paintOrder: 'stroke fill',
+              color: SHADOW.color,
               textShadow: 'none',
-              filter: 'url(#saa-sharp-h2)',
-              transform: persp(layer.tx, layer.ty),
+              transform: persp(SHADOW.tx, SHADOW.ty),
+              filter: `blur(${SHADOW.blur})`,
             }}
           >
             {plainText}
           </div>
-        ))}
-      </div>
+          {/* Color layers */}
+          {visibleLayers.map((layer, i) => (
+            <div
+              key={i}
+              className="text-h2"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                pointerEvents: 'none',
+                margin: 0,
+                textAlign: 'center',
+                lineHeight: 1.1,
+                fontFeatureSettings: '"ss01" 1',
+                color: layer.color,
+                WebkitTextStroke: `${STROKE} ${layer.color}`,
+                WebkitTextFillColor: layer.color,
+                paintOrder: 'stroke fill',
+                textShadow: 'none',
+                transform: persp(layer.tx, layer.ty),
+              }}
+            >
+              {plainText}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Face */}
       <p

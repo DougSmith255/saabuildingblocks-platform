@@ -7877,8 +7877,7 @@ ${agent.slug === 'jane-smith' ? `
         { color: '#423613', tx: '0.004em', ty: '0.012em' },
         { color: '#191818', tx: '0em', ty: '0em' }
       ],
-      face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.05em', textShadow: H1_FACE_SHADOW },
-      filterId: 'saa-sharp-h1', filterDilate: 3, filterBlur: 1.2, filterSlope: 25
+      face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.05em', textShadow: H1_FACE_SHADOW }
     },
     h2: {
       rotateX: '8deg', rotateY: '-1.5deg', strokeWidth: '0.06em',
@@ -7893,8 +7892,7 @@ ${agent.slug === 'jane-smith' ? `
         { color: '#202020', tx: '0.002em', ty: '0.005em' },
         { color: '#1a1a1a', tx: '0em', ty: '0em' }
       ],
-      face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.035em', textShadow: H2_FACE_SHADOW },
-      filterId: 'saa-sharp-h2', filterDilate: 2, filterBlur: 0.8, filterSlope: 15
+      face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.035em', textShadow: H2_FACE_SHADOW }
     },
     founder: {
       rotateX: '12deg', rotateY: '-2deg', strokeWidth: '0.08em',
@@ -7907,86 +7905,71 @@ ${agent.slug === 'jane-smith' ? `
         { color: '#423613', tx: '0.004em', ty: '0.012em' },
         { color: '#191818', tx: '0em', ty: '0em' }
       ],
-      face: { color: '#ffd700', tx: '-0.04em', ty: '-0.05em', textShadow: FOUNDER_FACE_SHADOW },
-      filterId: 'saa-sharp-h1', filterDilate: 3, filterBlur: 1.2, filterSlope: 25
+      face: { color: '#ffd700', tx: '-0.04em', ty: '-0.05em', textShadow: FOUNDER_FACE_SHADOW }
     }
   };
 
-  /* Inject SVG filters into document (shared by all headings) */
-  function ensureFilters() {
-    var ns = 'http://www.w3.org/2000/svg';
-    [{ id: 'saa-sharp-h1', dilate: 3, blur: 1.2, slope: 25 },
-     { id: 'saa-sharp-h2', dilate: 2, blur: 0.8, slope: 15 }].forEach(function(f) {
-      if (document.getElementById(f.id)) return;
-      var svg = document.createElementNS(ns, 'svg');
-      svg.setAttribute('width', '0'); svg.setAttribute('height', '0');
-      svg.style.position = 'absolute'; svg.setAttribute('aria-hidden', 'true');
-      var defs = document.createElementNS(ns, 'defs');
-      var filter = document.createElementNS(ns, 'filter');
-      filter.setAttribute('id', f.id);
-      filter.setAttribute('x', '-10%'); filter.setAttribute('y', '-25%');
-      filter.setAttribute('width', '120%'); filter.setAttribute('height', '150%');
-      filter.setAttribute('primitiveUnits', 'userSpaceOnUse');
-      var dilate = document.createElementNS(ns, 'feMorphology');
-      dilate.setAttribute('operator', 'dilate'); dilate.setAttribute('radius', String(f.dilate));
-      dilate.setAttribute('in', 'SourceGraphic'); dilate.setAttribute('result', 'expanded');
-      var blur = document.createElementNS(ns, 'feGaussianBlur');
-      blur.setAttribute('stdDeviation', String(f.blur));
-      blur.setAttribute('in', 'expanded'); blur.setAttribute('result', 'smoothed');
-      var transfer = document.createElementNS(ns, 'feComponentTransfer');
-      transfer.setAttribute('in', 'smoothed');
-      var funcA = document.createElementNS(ns, 'feFuncA');
-      funcA.setAttribute('type', 'linear'); funcA.setAttribute('slope', String(f.slope)); funcA.setAttribute('intercept', '0');
-      transfer.appendChild(funcA);
-      filter.appendChild(dilate); filter.appendChild(blur); filter.appendChild(transfer);
-      defs.appendChild(filter); svg.appendChild(defs);
-      document.body.appendChild(svg);
-    });
+  var isMobile = window.matchMedia('(max-width: 768px)').matches;
+  var DESKTOP_LAYERS = 4;
+
+  /* Evenly sample `count` layers from the full array */
+  function selectLayers(layers, count) {
+    if (count === 0) return [];
+    if (layers.length <= count) return layers;
+    if (count <= 1) return [layers[layers.length - 1]];
+    var result = [];
+    for (var i = 0; i < count; i++) {
+      var idx = Math.round(i * (layers.length - 1) / (count - 1));
+      result.push(layers[idx]);
+    }
+    return result;
   }
 
   /* Create CSS div backing layers - identical to H1.tsx/H2.tsx React components.
    * Key: backing divs get the SAME CSS classes as the heading so font-size
-   * uses the responsive clamp() from CSS vars, not fixed computed pixels. */
+   * uses the responsive clamp() from CSS vars, not fixed computed pixels.
+   * Mobile: backing disabled entirely for performance. Desktop: 4 layers. */
   function createBackLayers(wrapper) {
     var heading = wrapper.querySelector('.heading-front');
     if (!heading) return;
     var type = wrapper.dataset.type;
     var cfg = CONFIGS[type];
     if (!cfg) return;
-    ensureFilters();
+    var visibleLayers = isMobile ? [] : selectLayers(cfg.layers, DESKTOP_LAYERS);
     var text = heading.textContent.trim();
-    /* Copy the heading's CSS classes so backing divs get the same responsive font sizing */
     var headingClasses = heading.className;
     var cs = getComputedStyle(heading);
     var persp = function(tx, ty) {
       return 'perspective(800px) rotateX(' + cfg.rotateX + ') rotateY(' + cfg.rotateY + ') translate(' + tx + ', ' + ty + ')';
     };
-    var baseCss = 'position:absolute;top:0;left:0;right:0;pointer-events:none;'
-      + 'text-align:' + cs.textAlign + ';line-height:1.1;margin:0;';
-    /* Backing container */
-    var container = document.createElement('div');
-    container.setAttribute('aria-hidden', 'true');
-    container.setAttribute('data-backing', '');
-    container.style.userSelect = 'none';
-    /* Shadow layer */
-    var shadow = document.createElement('div');
-    shadow.className = headingClasses;
-    shadow.style.cssText = baseCss + 'color:' + cfg.shadow.color + ';text-shadow:none;'
-      + 'transform:' + persp(cfg.shadow.tx, cfg.shadow.ty) + ';filter:blur(' + cfg.shadow.blur + ');';
-    shadow.textContent = text;
-    container.appendChild(shadow);
-    /* Color layers */
-    cfg.layers.forEach(function(layer) {
-      var div = document.createElement('div');
-      div.className = headingClasses;
-      div.style.cssText = baseCss
-        + 'color:' + layer.color + ';-webkit-text-stroke:' + cfg.strokeWidth + ' ' + layer.color + ';'
-        + '-webkit-text-fill-color:' + layer.color + ';paint-order:stroke fill;text-shadow:none;'
-        + 'filter:url(#' + cfg.filterId + ');transform:' + persp(layer.tx, layer.ty) + ';';
-      div.textContent = text;
-      container.appendChild(div);
-    });
-    wrapper.insertBefore(container, heading);
+    /* Backing layers (skipped on mobile) */
+    if (visibleLayers.length > 0) {
+      var baseCss = 'position:absolute;top:0;left:0;right:0;pointer-events:none;'
+        + 'text-align:' + cs.textAlign + ';line-height:1.1;margin:0;';
+      var container = document.createElement('div');
+      container.setAttribute('aria-hidden', 'true');
+      container.setAttribute('data-backing', '');
+      container.style.userSelect = 'none';
+      /* Shadow layer */
+      var shadow = document.createElement('div');
+      shadow.className = headingClasses;
+      shadow.style.cssText = baseCss + 'color:' + cfg.shadow.color + ';text-shadow:none;'
+        + 'transform:' + persp(cfg.shadow.tx, cfg.shadow.ty) + ';filter:blur(' + cfg.shadow.blur + ');';
+      shadow.textContent = text;
+      container.appendChild(shadow);
+      /* Color layers */
+      visibleLayers.forEach(function(layer) {
+        var div = document.createElement('div');
+        div.className = headingClasses;
+        div.style.cssText = baseCss
+          + 'color:' + layer.color + ';-webkit-text-stroke:' + cfg.strokeWidth + ' ' + layer.color + ';'
+          + '-webkit-text-fill-color:' + layer.color + ';paint-order:stroke fill;text-shadow:none;'
+          + 'transform:' + persp(layer.tx, layer.ty) + ';';
+        div.textContent = text;
+        container.appendChild(div);
+      });
+      wrapper.insertBefore(container, heading);
+    }
     /* Style the face */
     heading.style.color = cfg.face.color;
     heading.style.textShadow = cfg.face.textShadow;
