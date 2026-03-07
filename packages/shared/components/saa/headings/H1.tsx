@@ -148,51 +148,7 @@ export default function H1({
         </defs>
       </svg>
 
-      {/* Backing layers */}
-      <div aria-hidden="true" style={{ userSelect: 'none' }}>
-        {/* Shadow */}
-        <div
-          className={`text-h1 text-display ${className}`}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            pointerEvents: 'none',
-            lineHeight: 1.1,
-            fontFeatureSettings: '"ss01" 1',
-            color: config.shadow.color,
-            transform: persp(config.shadow.tx, config.shadow.ty),
-            filter: `blur(${config.shadow.blur})`,
-          }}
-        >
-          {plainText}
-        </div>
-        {/* Color layers */}
-        {config.layers.map((layer, i) => (
-          <div
-            key={i}
-            className={`text-h1 text-display ${className}`}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              pointerEvents: 'none',
-              lineHeight: 1.1,
-              fontFeatureSettings: '"ss01" 1',
-              color: layer.color,
-              WebkitTextStroke: `${config.strokeWidth} ${layer.color}`,
-              WebkitTextFillColor: layer.color,
-              paintOrder: 'stroke fill',
-              filter: 'url(#saa-sharp-h1)',
-              transform: persp(layer.tx, layer.ty),
-            }}
-          >
-            {plainText}
-          </div>
-        ))}
-      </div>
+      {/* Backing layers - disabled pending alignment fix */}
 
       {/* Face */}
       <h1

@@ -85,53 +85,7 @@ export default function Tagline({
         </defs>
       </svg>
 
-      {/* Backing layers */}
-      <div aria-hidden="true" style={{ userSelect: 'none' }}>
-        {/* Shadow */}
-        <div
-          className={`text-h2 ${className}`}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            pointerEvents: 'none',
-            textAlign: 'center',
-            lineHeight: 1.1,
-            fontFeatureSettings: '"ss01" 1',
-            color: SHADOW.color,
-            transform: persp(SHADOW.tx, SHADOW.ty),
-            filter: `blur(${SHADOW.blur})`,
-          }}
-        >
-          {plainText}
-        </div>
-        {/* Color layers */}
-        {LAYERS.map((layer, i) => (
-          <div
-            key={i}
-            className={`text-h2 ${className}`}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              pointerEvents: 'none',
-              textAlign: 'center',
-              lineHeight: 1.1,
-              fontFeatureSettings: '"ss01" 1',
-              color: layer.color,
-              WebkitTextStroke: `${STROKE} ${layer.color}`,
-              WebkitTextFillColor: layer.color,
-              paintOrder: 'stroke fill',
-              filter: 'url(#saa-sharp-h2)',
-              transform: persp(layer.tx, layer.ty),
-            }}
-          >
-            {plainText}
-          </div>
-        ))}
-      </div>
+      {/* Backing layers - disabled pending alignment fix */}
 
       {/* Face */}
       <p
