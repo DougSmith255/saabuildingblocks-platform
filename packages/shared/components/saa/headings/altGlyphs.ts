@@ -1,18 +1,13 @@
 /**
- * Replace M, A, E, N, T with their Taskor alternate glyphs (PUA codepoints).
- * The Taskor font has alternates under the `aalt` feature, but since CSS
- * font-feature-settings applies to ALL characters, we use direct PUA
- * codepoint replacement for selective control.
+ * Taskor font alternate glyphs for M, A, E, N, T.
+ *
+ * The font has alternates under the `aalt` OpenType feature.
+ * We use font-feature-settings: "aalt" 1 to activate them.
+ * This applies to all characters that have alternates in the font
+ * (M, A, E, N, T, F, H, K, R, V, W, Y).
  */
 
-const ALT_MAP: Record<string, string> = {
-  M: '\uF016',
-  A: '\uF00E',
-  E: '\uF011',
-  N: '\uF015',
-  T: '\uF018',
-};
-
+/** No-op identity function - alt glyphs are now handled via CSS font-feature-settings */
 export function altGlyphs(text: string): string {
-  return text.replace(/[MAENT]/g, ch => ALT_MAP[ch] ?? ch);
+  return text;
 }

@@ -155,6 +155,7 @@ export default function H2({
               pointerEvents: 'none',
               textAlign,
               lineHeight: 1.1,
+              fontFeatureSettings: '"aalt" 1',
               marginLeft: textAlign === 'left' ? '0' : 'auto',
               marginRight: textAlign === 'right' ? '0' : 'auto',
               maxWidth: (style.maxWidth as string) || '95%',
@@ -180,6 +181,7 @@ export default function H2({
                 pointerEvents: 'none',
                 textAlign,
                 lineHeight: 1.1,
+                fontFeatureSettings: '"aalt" 1',
                 marginLeft: textAlign === 'left' ? '0' : 'auto',
                 marginRight: textAlign === 'right' ? '0' : 'auto',
                 maxWidth: (style.maxWidth as string) || '95%',
@@ -202,6 +204,7 @@ export default function H2({
         className={`text-h2 ${className}`}
         style={{
           textAlign,
+          fontFeatureSettings: '"aalt" 1',
           marginTop: 0,
           marginLeft: textAlign === 'left' ? '0' : 'auto',
           marginRight: textAlign === 'right' ? '0' : 'auto',

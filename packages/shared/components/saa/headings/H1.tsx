@@ -132,6 +132,7 @@ export default function H1({
               pointerEvents: 'none',
               margin: 0,
               lineHeight: 1.1,
+              fontFeatureSettings: '"aalt" 1',
               fontSize: style.fontSize,
               color: config.shadow.color,
               textShadow: 'none',
@@ -154,6 +155,7 @@ export default function H1({
                 pointerEvents: 'none',
                 margin: 0,
                 lineHeight: 1.1,
+                fontFeatureSettings: '"aalt" 1',
                 fontSize: style.fontSize,
                 color: layer.color,
                 WebkitTextStroke: `${layer.stroke} ${layer.color}`,
@@ -175,6 +177,7 @@ export default function H1({
         className={`text-h1 text-display ${className}`}
         style={{
           margin: 0,
+          fontFeatureSettings: '"aalt" 1',
           color: config.face.color,
           textShadow: hasBacking ? config.face.textShadow : EXTRUSION_SHADOWS,
           transform: hasBacking ? persp(config.face.tx, config.face.ty) : undefined,

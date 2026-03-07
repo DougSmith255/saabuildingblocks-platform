@@ -84,11 +84,9 @@ const CUSTOM_ICON_PATHS = {
 };
 
 /**
- * NOTE: convertToAltGlyphs is no longer needed!
- * The Taskor font now has an ss01 stylistic set that automatically
- * substitutes N, E, M with their alternate glyphs when font-feature-settings: "ss01" 1 is applied.
- * This means real letters are in the DOM (SEO/copy-paste friendly) while visually
- * displaying the alternate glyphs.
+ * NOTE: Alt glyphs are handled via CSS font-feature-settings: "aalt" 1
+ * on .heading-front and .founder-name classes. Real letters stay in the DOM
+ * (SEO/copy-paste friendly) while the font renders alternate glyphs visually.
  */
 
 /**
@@ -663,6 +661,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     /* Heading front face - shared */
     .heading-front {
       font-family: var(--font-taskor), serif;
+      font-feature-settings: "aalt" 1;
       line-height: 1.1;
       position: relative;
       overflow: visible;
@@ -3223,6 +3222,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     .founder-name {
       font-family: var(--font-taskor), serif;
+      font-feature-settings: "aalt" 1;
       font-size: clamp(27px, calc(25.36px + 0.65vw), 45px);
       line-height: 1.1;
       font-weight: 700;
@@ -7895,15 +7895,10 @@ ${agent.slug === 'jane-smith' ? `
 
   var isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-  /* Replace M, A, E, N, T with Taskor alternate glyphs (PUA codepoints) */
-  var ALT_MAP = { M: '\uF016', A: '\uF00E', E: '\uF011', N: '\uF015', T: '\uF018' };
-  function altGlyphs(text) {
-    return text.replace(/[MAENT]/g, function(ch) { return ALT_MAP[ch] || ch; });
-  }
-
   /* Create CSS div backing layers - 2-layer deep design.
    * Key: backing divs get the SAME CSS classes as the heading so font-size
    * uses the responsive clamp() from CSS vars, not fixed computed pixels.
+   * Alt glyphs handled via CSS font-feature-settings: "aalt" 1 on .heading-front
    * Mobile: backing disabled entirely for performance. Desktop: 2 layers. */
   function createBackLayers(wrapper) {
     var heading = wrapper.querySelector('.heading-front');
@@ -7911,18 +7906,16 @@ ${agent.slug === 'jane-smith' ? `
     var type = wrapper.dataset.type;
     var cfg = CONFIGS[type];
     if (!cfg) return;
-    var text = altGlyphs(heading.textContent.trim());
+    var text = heading.textContent.trim();
     var headingClasses = heading.className;
     var cs = getComputedStyle(heading);
     var persp = function(tx, ty) {
       return 'perspective(800px) rotateX(' + cfg.rotateX + ') rotateY(' + cfg.rotateY + ') translate(' + tx + ', ' + ty + ')';
     };
-    /* Update face text with alt glyphs */
-    heading.textContent = text;
     /* Backing layers (skipped on mobile) */
     if (!isMobile) {
       var baseCss = 'position:absolute;top:0;left:0;right:0;pointer-events:none;'
-        + 'text-align:' + cs.textAlign + ';line-height:1.1;margin:0;';
+        + 'text-align:' + cs.textAlign + ';line-height:1.1;margin:0;font-feature-settings:"aalt" 1;';
       var container = document.createElement('div');
       container.setAttribute('aria-hidden', 'true');
       container.setAttribute('data-backing', '');
@@ -8857,7 +8850,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
     <h1 style="--name-font-size: ${nameFontSize}">
       <span class="sr-only">${escapeHTML(fullName)}</span>
-      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:calc(-1.5em - 20px) auto -2em;font-family:inherit;font-feature-settings:'ss01' 1;font-size:inherit;pointer-events:none;">
+      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:calc(-1.5em - 20px) auto -2em;font-family:inherit;font-feature-settings:'aalt' 1;font-size:inherit;pointer-events:none;">
         <defs>
           <linearGradient id="lfg" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#dddcd5"/><stop offset="35%" stop-color="#f2f1ec"/><stop offset="65%" stop-color="#f2f1ec"/><stop offset="100%" stop-color="#dddcd5"/>
