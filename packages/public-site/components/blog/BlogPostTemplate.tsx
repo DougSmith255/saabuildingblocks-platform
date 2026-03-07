@@ -103,6 +103,14 @@ export function BlogPostTemplate({
   // Uses div layers (like H2.tsx) instead of SVG text - reflows naturally on resize.
   useEffect(() => {
     const applyH2Backing = () => {
+      // Deduplicate TOC blocks (WordPress sometimes outputs multiples) - keep only the first
+      const tocBlocks = document.querySelectorAll<HTMLElement>('.blog-content .wp-block-rank-math-toc-block, .blog-content #rank-math-toc');
+      const seen = new Set<HTMLElement>();
+      tocBlocks.forEach((toc) => {
+        if (seen.size > 0 && !seen.has(toc)) { toc.remove(); return; }
+        seen.add(toc);
+      });
+
       // Inject h2 into Rank Math TOC blocks that lack one (some posts have it, some don't)
       document.querySelectorAll<HTMLElement>('.blog-content .wp-block-rank-math-toc-block, .blog-content #rank-math-toc').forEach((toc) => {
         if (!toc.querySelector(':scope > h2')) {

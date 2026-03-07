@@ -85,20 +85,18 @@ export default function Tagline({
         </defs>
       </svg>
 
-      {/* Backing layers */}
+      {/* Backing layers - no user styles spread here; absolute positioning fills wrapper */}
       <div aria-hidden="true" style={{ userSelect: 'none' }}>
         {/* Shadow */}
         <div
-          className={`text-h2 ${className}`}
+          className="text-h2"
           style={{
-            ...style,
             position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
             pointerEvents: 'none',
-            marginTop: 0,
-            marginBottom: 0,
+            margin: 0,
             textAlign: 'center',
             lineHeight: 1.1,
             fontFeatureSettings: '"ss01" 1',
@@ -114,9 +112,8 @@ export default function Tagline({
         {LAYERS.map((layer, i) => (
           <div
             key={i}
-            className={`text-h2 ${className}`}
+            className="text-h2"
             style={{
-              ...style,
               position: 'absolute',
               top: 0,
               left: 0,

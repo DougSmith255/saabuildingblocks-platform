@@ -148,20 +148,18 @@ export default function H1({
         </defs>
       </svg>
 
-      {/* Backing layers */}
+      {/* Backing layers - no user styles spread here; absolute positioning fills wrapper */}
       <div aria-hidden="true" style={{ userSelect: 'none' }}>
         {/* Shadow */}
         <div
           className={`text-h1 text-display ${className}`}
           style={{
-            ...style,
             position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
             pointerEvents: 'none',
-            marginTop: 0,
-            marginBottom: 0,
+            margin: 0,
             lineHeight: 1.1,
             fontFeatureSettings: '"ss01" 1',
             color: config.shadow.color,
@@ -178,7 +176,6 @@ export default function H1({
             key={i}
             className={`text-h1 text-display ${className}`}
             style={{
-              ...style,
               position: 'absolute',
               top: 0,
               left: 0,
