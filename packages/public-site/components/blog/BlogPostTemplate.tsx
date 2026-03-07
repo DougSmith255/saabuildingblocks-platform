@@ -146,6 +146,27 @@ export function BlogPostTemplate({
       });
     };
     document.fonts.ready.then(applyH2Stroke);
+
+    // Rebuild SVG backing on resize (pixel positions go stale when text reflows)
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        document.querySelectorAll<HTMLElement>('.blog-content .heading-wrapper').forEach((wrapper) => {
+          wrapper.querySelectorAll('svg[aria-hidden]').forEach((svg) => svg.remove());
+          const h2 = wrapper.querySelector<HTMLElement>('.heading-front');
+          if (!h2) return;
+          const config = isDarkMode ? H2_DEFAULT_CONFIG : H2_LIGHT_CONFIG;
+          h2.style.transform = `perspective(800px) rotateX(${config.rotateX})`;
+          createBackLayers(wrapper, h2, config);
+        });
+      }, 150);
+    };
+    window.addEventListener('resize', onResize);
+    return () => {
+      clearTimeout(resizeTimer);
+      window.removeEventListener('resize', onResize);
+    };
   }, [post.content, isDarkMode]);
 
   // Format date for display
