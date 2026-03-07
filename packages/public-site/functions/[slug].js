@@ -7912,7 +7912,7 @@ ${agent.slug === 'jane-smith' ? `
   var isMobile = window.matchMedia('(max-width: 768px)').matches;
   var DESKTOP_LAYERS = 4;
 
-  /* Evenly sample `count` layers from the full array */
+  /* Evenly sample N layers from the full array */
   function selectLayers(layers, count) {
     if (count === 0) return [];
     if (layers.length <= count) return layers;
