@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
-import { isMobile } from './layerUtils';
+
 import { altGlyphs } from './altGlyphs';
 
 export type H1Theme = 'default' | 'cyan';
@@ -111,8 +111,7 @@ export default function H1({
 }: HeadingProps) {
   const plainText = altGlyphs(extractPlainText(children));
   const config = THEME_CONFIGS[theme];
-  const mobile = isMobile();
-  const hasBacking = !mobile;
+  const hasBacking = true;
   const persp = (tx: string, ty: string) =>
     `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
 

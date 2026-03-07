@@ -54,7 +54,7 @@ export function AgentCounter() {
             style={{
               color: '#e5e4dd',
               fontFamily: 'var(--font-taskor), sans-serif',
-              fontFeatureSettings: '"ss01" 1',
+              fontFeatureSettings: '"ss02" 1',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
               transform: 'perspective(800px) rotateX(8deg)',
@@ -98,7 +98,7 @@ export function AgentCounter() {
  * SEO/ACCESSIBILITY:
  * - Uses real letters in DOM (Google reads correctly)
  * - Copy/paste gives real letters
- * - Font's ss01 stylistic set renders alternate glyphs visually
+ * - Font's ss02 stylistic set renders alternate glyphs visually
  */
 export function TaglineCounterSuffix() {
   const { hasMounted, isCounterDesktop } = useViewport();
@@ -144,7 +144,7 @@ export function TaglineCounterSuffix() {
         style={{
           color: '#e5e4dd',
           fontFamily: 'var(--font-taskor), sans-serif',
-          fontFeatureSettings: '"ss01" 1',
+          fontFeatureSettings: '"ss02" 1',
           textTransform: 'uppercase',
           letterSpacing: '0.05em',
         }}

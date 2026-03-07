@@ -2,12 +2,12 @@
  * Heading layer utilities - controls how many backing layers render
  * based on screen size for performance.
  *
- * Desktop: 4 layers (from 6-8), no SVG filter
- * Mobile: 0 layers (backing disabled entirely)
+ * Desktop: 4 layers (sampled from 6-9 in SVG configs)
+ * Mobile: 4 layers (same as desktop - 2-layer design is lightweight)
  */
 
 const DESKTOP_LAYERS = 4;
-const MOBILE_LAYERS = 0;
+const MOBILE_LAYERS = 4;
 
 export function isMobile(): boolean {
   if (typeof window === 'undefined') return false;

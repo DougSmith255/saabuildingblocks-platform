@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
-import { isMobile } from './layerUtils';
+
 import { altGlyphs } from './altGlyphs';
 
 export interface TaglineProps {
@@ -52,8 +52,7 @@ export default function Tagline({
   counterSuffix,
 }: TaglineProps) {
   const plainText = altGlyphs(extractPlainText(children));
-  const mobile = isMobile();
-  const hasBacking = !mobile;
+  const hasBacking = true;
   const persp = (tx: string, ty: string) =>
     `perspective(800px) rotateX(${RX}) rotateY(${RY}) translate(${tx}, ${ty})`;
 
@@ -64,7 +63,7 @@ export default function Tagline({
         display: 'inline-block',
         width: '100%',
         overflow: 'visible',
-        fontFeatureSettings: '"ss01" 1',
+        fontFeatureSettings: '"ss02" 1',
         textAlign: 'center',
         marginTop: '30px',
         marginBottom: '30px',

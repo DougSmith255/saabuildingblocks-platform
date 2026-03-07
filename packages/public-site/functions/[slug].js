@@ -661,16 +661,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     /* Heading front face - shared */
     .heading-front {
       font-family: var(--font-taskor), serif;
-      font-feature-settings: "ss01" 1;
       line-height: 1.1;
       position: relative;
       overflow: visible;
     }
 
-    /* H1/H2/founder face - color, text-shadow, transform applied inline by createBackLayers JS */
-    /* CSS fallbacks before JS runs */
-    .h1-front { color: #f2f1ec; transform: perspective(800px) rotateX(12deg) rotateY(-2deg); }
-    .h2-front { color: #e5e4dd; transform: perspective(800px) rotateX(8deg) rotateY(-1.5deg); }
+    /* H1 uses ss01 (M,A,E,N,T,F), H2 uses ss02 (E,F only) */
+    .h1-front { color: #f2f1ec; font-feature-settings: "ss01" 1; transform: perspective(800px) rotateX(12deg) rotateY(-2deg); }
+    .h2-front { color: #e5e4dd; font-feature-settings: "ss02" 1; transform: perspective(800px) rotateX(8deg) rotateY(-1.5deg); }
     .heading-wrapper.text-left {
       text-align: left;
       margin-left: 0;
@@ -7893,13 +7891,11 @@ ${agent.slug === 'jane-smith' ? `
     }
   };
 
-  var isMobile = window.matchMedia('(max-width: 768px)').matches;
-
   /* Create CSS div backing layers - 2-layer deep design.
    * Key: backing divs get the SAME CSS classes as the heading so font-size
    * uses the responsive clamp() from CSS vars, not fixed computed pixels.
-   * Alt glyphs handled by font ss01 feature + CSS font-feature-settings.
-   * Mobile: backing disabled entirely for performance. Desktop: 2 layers. */
+   * Alt glyphs handled by font ss01/ss02 features + CSS font-feature-settings.
+   * 2-layer design is lightweight enough for mobile - no device check needed. */
   function createBackLayers(wrapper) {
     var heading = wrapper.querySelector('.heading-front');
     if (!heading) return;
@@ -7912,40 +7908,36 @@ ${agent.slug === 'jane-smith' ? `
     var persp = function(tx, ty) {
       return 'perspective(800px) rotateX(' + cfg.rotateX + ') rotateY(' + cfg.rotateY + ') translate(' + tx + ', ' + ty + ')';
     };
-    /* Backing layers (skipped on mobile) */
-    if (!isMobile) {
-      var baseCss = 'position:absolute;top:0;left:0;right:0;pointer-events:none;'
-        + 'text-align:' + cs.textAlign + ';line-height:1.1;margin:0;';
-      var container = document.createElement('div');
-      container.setAttribute('aria-hidden', 'true');
-      container.setAttribute('data-backing', '');
-      container.style.userSelect = 'none';
-      /* Shadow layer */
-      var shadow = document.createElement('div');
-      shadow.className = headingClasses;
-      shadow.style.cssText = baseCss + 'color:' + cfg.shadow.color + ';text-shadow:none;'
-        + 'transform:' + persp(cfg.shadow.tx, cfg.shadow.ty) + ';filter:blur(' + cfg.shadow.blur + ');';
-      shadow.textContent = text;
-      container.appendChild(shadow);
-      /* 2 stroked layers */
-      cfg.layers.forEach(function(layer) {
-        var div = document.createElement('div');
-        div.className = headingClasses;
-        div.style.cssText = baseCss
-          + 'color:' + layer.color + ';-webkit-text-stroke:' + layer.stroke + ' ' + layer.color + ';'
-          + '-webkit-text-fill-color:' + layer.color + ';paint-order:stroke fill;text-shadow:none;'
-          + 'transform:' + persp(layer.tx, layer.ty) + ';';
-        div.textContent = text;
-        container.appendChild(div);
-      });
-      wrapper.insertBefore(container, heading);
-    }
+    /* Backing layers */
+    var baseCss = 'position:absolute;top:0;left:0;right:0;pointer-events:none;'
+      + 'text-align:' + cs.textAlign + ';line-height:1.1;margin:0;';
+    var container = document.createElement('div');
+    container.setAttribute('aria-hidden', 'true');
+    container.setAttribute('data-backing', '');
+    container.style.userSelect = 'none';
+    /* Shadow layer */
+    var shadow = document.createElement('div');
+    shadow.className = headingClasses;
+    shadow.style.cssText = baseCss + 'color:' + cfg.shadow.color + ';text-shadow:none;'
+      + 'transform:' + persp(cfg.shadow.tx, cfg.shadow.ty) + ';filter:blur(' + cfg.shadow.blur + ');';
+    shadow.textContent = text;
+    container.appendChild(shadow);
+    /* 2 stroked layers */
+    cfg.layers.forEach(function(layer) {
+      var div = document.createElement('div');
+      div.className = headingClasses;
+      div.style.cssText = baseCss
+        + 'color:' + layer.color + ';-webkit-text-stroke:' + layer.stroke + ' ' + layer.color + ';'
+        + '-webkit-text-fill-color:' + layer.color + ';paint-order:stroke fill;text-shadow:none;'
+        + 'transform:' + persp(layer.tx, layer.ty) + ';';
+      div.textContent = text;
+      container.appendChild(div);
+    });
+    wrapper.insertBefore(container, heading);
     /* Style the face */
     heading.style.color = cfg.face.color;
     heading.style.textShadow = cfg.face.textShadow;
-    if (!isMobile) {
-      heading.style.transform = persp(cfg.face.tx, cfg.face.ty);
-    }
+    heading.style.transform = persp(cfg.face.tx, cfg.face.ty);
     heading.style.lineHeight = '1.1';
     heading.style.position = 'relative';
     heading.style.overflow = 'visible';

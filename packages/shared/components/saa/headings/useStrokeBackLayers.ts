@@ -22,6 +22,8 @@ export interface StrokeConfig {
   faceTextShadow: string;
   /** Face text color */
   faceColor: string;
+  /** OpenType feature settings for SVG text layers (default: "'ss01' 1") */
+  fontFeatureSettings?: string;
 }
 
 // ── H1 presets ───────────────────────────────────────────────────────
@@ -217,6 +219,7 @@ export const H2_DEFAULT_CONFIG: StrokeConfig = {
   faceOffset: H2_FACE_OFFSET,
   faceTextShadow: H2_FACE_TEXT_SHADOW,
   faceColor: '#e5e4dd',
+  fontFeatureSettings: "'ss02' 1",
 };
 
 export const H2_GOLD_CONFIG: StrokeConfig = {
@@ -226,6 +229,7 @@ export const H2_GOLD_CONFIG: StrokeConfig = {
   faceOffset: H2_FACE_OFFSET,
   faceTextShadow: H2_FACE_TEXT_SHADOW,
   faceColor: '#e8d4a0',
+  fontFeatureSettings: "'ss02' 1",
 };
 
 export const H2_BLUE_CONFIG: StrokeConfig = {
@@ -235,6 +239,7 @@ export const H2_BLUE_CONFIG: StrokeConfig = {
   faceOffset: H2_FACE_OFFSET,
   faceTextShadow: H2_FACE_TEXT_SHADOW,
   faceColor: '#b0d4e8',
+  fontFeatureSettings: "'ss02' 1",
 };
 
 export const H2_PURPLE_CONFIG: StrokeConfig = {
@@ -244,6 +249,7 @@ export const H2_PURPLE_CONFIG: StrokeConfig = {
   faceOffset: H2_FACE_OFFSET,
   faceTextShadow: H2_FACE_TEXT_SHADOW,
   faceColor: '#d4b0e8',
+  fontFeatureSettings: "'ss02' 1",
 };
 
 export const H2_EMERALD_CONFIG: StrokeConfig = {
@@ -253,6 +259,7 @@ export const H2_EMERALD_CONFIG: StrokeConfig = {
   faceOffset: H2_FACE_OFFSET,
   faceTextShadow: H2_FACE_TEXT_SHADOW,
   faceColor: '#a0e8c4',
+  fontFeatureSettings: "'ss02' 1",
 };
 
 export const H2_LIGHT_CONFIG: StrokeConfig = {
@@ -262,6 +269,7 @@ export const H2_LIGHT_CONFIG: StrokeConfig = {
   faceOffset: H2_FACE_OFFSET,
   faceTextShadow: H2_LIGHT_FACE_TEXT_SHADOW,
   faceColor: '#191818',
+  fontFeatureSettings: "'ss02' 1",
 };
 
 // ── Founder name preset (gold, smaller scale) ────────────────────────
@@ -450,7 +458,7 @@ export function createBackLayers(
       textEl.style.fontFamily = "'Taskor', serif";
       textEl.style.fontSize = `${fontSizePx}px`;
       textEl.style.fontWeight = fontWeight;
-      textEl.style.fontFeatureSettings = "'ss01' 1";
+      textEl.style.fontFeatureSettings = config.fontFeatureSettings || "'ss01' 1";
       textEl.textContent = line.text;
       if (line.width > 0) {
         textEl.setAttribute('textLength', `${line.width}px`);
@@ -562,9 +570,9 @@ export function useStrokeBackLayers(config: StrokeConfig) {
 export interface BlogH2DivConfig {
   rotateX: string;
   rotateY: string;
-  strokeWidth: string;
+  strokeWidth?: string;
   shadow: { color: string; tx: string; ty: string; blur: string };
-  layers: { color: string; tx: string; ty: string }[];
+  layers: { color: string; tx: string; ty: string; stroke?: string }[];
   face: { color: string; tx: string; ty: string; textShadow: string };
 }
 
@@ -612,19 +620,23 @@ const blogLayers = (colors: string[]) =>
 export const BLOG_H2_DARK: BlogH2DivConfig = {
   rotateX: '8deg',
   rotateY: '-1.5deg',
-  strokeWidth: '0.06em',
-  shadow: { color: 'rgba(64, 64, 64, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-  layers: blogLayers(['#444444', '#3e3e3e', '#383838', '#323232', '#2c2c2c', '#262626', '#202020', '#1a1a1a']),
-  face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.035em', textShadow: BLOG_FACE_SHADOW },
+  shadow: { color: 'rgba(64, 64, 64, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+  layers: [
+    { color: '#444444', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+    { color: '#1a1a1a', tx: '0em', ty: '0em', stroke: '0.16em' },
+  ],
+  face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.055em', textShadow: BLOG_FACE_SHADOW },
 };
 
 export const BLOG_H2_LIGHT: BlogH2DivConfig = {
   rotateX: '8deg',
   rotateY: '-1.5deg',
-  strokeWidth: '0.06em',
-  shadow: { color: 'rgba(80, 80, 80, 0.3)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-  layers: blogLayers(['#9a9a9a', '#909090', '#868686', '#7c7c7c', '#727272', '#686868', '#5e5e5e', '#545454']),
-  face: { color: '#191818', tx: '-0.025em', ty: '-0.035em', textShadow: BLOG_LIGHT_FACE_SHADOW },
+  shadow: { color: 'rgba(80, 80, 80, 0.3)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+  layers: [
+    { color: '#9a9a9a', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+    { color: '#545454', tx: '0em', ty: '0em', stroke: '0.16em' },
+  ],
+  face: { color: '#191818', tx: '-0.025em', ty: '-0.055em', textShadow: BLOG_LIGHT_FACE_SHADOW },
 };
 
 /**
@@ -636,8 +648,7 @@ export function createDivBackLayers(
   heading: HTMLElement,
   config: BlogH2DivConfig,
 ) {
-  const visibleLayers = getVisibleLayers(config.layers);
-  if (visibleLayers.length === 0) return;
+  if (config.layers.length === 0) return;
 
   const text = heading.textContent?.trim() || '';
   const cs = getComputedStyle(heading);
@@ -649,7 +660,7 @@ export function createDivBackLayers(
   const fontCss =
     `font-family:${cs.fontFamily};font-weight:${cs.fontWeight};` +
     `letter-spacing:${cs.letterSpacing};text-transform:${cs.textTransform};` +
-    `font-feature-settings:${cs.fontFeatureSettings || '"ss01" 1'};`;
+    `font-feature-settings:${cs.fontFeatureSettings || '"ss02" 1'};`;
   const baseCss =
     `position:absolute;top:0;left:0;right:0;pointer-events:none;` +
     `text-align:${cs.textAlign};line-height:1.1;${fontCss}`;
@@ -673,13 +684,14 @@ export function createDivBackLayers(
   shadow.textContent = text;
   container.appendChild(shadow);
 
-  // Color layers
-  visibleLayers.forEach((layer) => {
+  // Stroked layers (2-layer deep design)
+  config.layers.forEach((layer) => {
+    const strokeW = layer.stroke || config.strokeWidth || '0.10em';
     const div = document.createElement('div');
     div.className = headingClasses;
     div.style.cssText =
       baseCss +
-      `color:${layer.color};-webkit-text-stroke:${config.strokeWidth} ${layer.color};` +
+      `color:${layer.color};-webkit-text-stroke:${strokeW} ${layer.color};` +
       `-webkit-text-fill-color:${layer.color};paint-order:stroke fill;text-shadow:none;` +
       `transform:${persp(layer.tx, layer.ty)};`;
     div.textContent = text;

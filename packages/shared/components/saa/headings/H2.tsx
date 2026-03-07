@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
-import { isMobile } from './layerUtils';
+
 import { altGlyphs } from './altGlyphs';
 
 export type H2Theme = 'default' | 'blue' | 'gold' | 'purple' | 'emerald';
@@ -124,8 +124,7 @@ export default function H2({
 }: HeadingProps) {
   const plainText = altGlyphs(extractPlainText(children));
   const config = THEME_CONFIGS[theme];
-  const mobile = isMobile();
-  const hasBacking = !mobile;
+  const hasBacking = true;
   const textAlign = (style.textAlign || 'center') as React.CSSProperties['textAlign'];
   const persp = (tx: string, ty: string) =>
     `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
@@ -137,7 +136,7 @@ export default function H2({
         display: 'inline-block',
         width: '100%',
         overflow: 'visible',
-        fontFeatureSettings: '"ss01" 1',
+        fontFeatureSettings: '"ss02" 1',
         textAlign,
       }}
     >

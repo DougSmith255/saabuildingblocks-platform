@@ -329,7 +329,7 @@ export function CategoryBlogPostTemplate({
                 {hasVideo && (
                   <div className="mb-8">
                     <CyberFrame isVideo aspectRatio="16/9" className="w-full">
-                      <YouTubeFacade videoId={hasVideo} title={`Video: ${post.title}`} />
+                      <YouTubeFacade videoId={hasVideo} title={`Video: ${post.title}`} fallbackImage={post.featuredImage?.url} />
                     </CyberFrame>
                   </div>
                 )}

@@ -229,6 +229,7 @@ export function BlogPostTemplate({
                 <YouTubeFacade
                   videoId={extractYouTubeVideoId(post.youtubeVideoUrl)!}
                   title={`Video: ${post.title}`}
+                  fallbackImage={post.featuredImage?.url}
                 />
               </CyberFrame>
             </div>

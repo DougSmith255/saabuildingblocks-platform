@@ -765,7 +765,7 @@ function AgentCounter() {
             <span className="counter-digit">3</span><span className="counter-digit">7</span><span className="counter-digit">0</span><span className="counter-digit">0</span><span>+</span>
           </span>
           <div ref={agentsRef} style={{ position: 'relative', display: 'inline-block', overflow: 'visible' }}>
-            <span className="heading-front" style={{ color: config.faceColor, fontFamily: 'var(--font-taskor), sans-serif', fontFeatureSettings: '"ss01" 1', textTransform: 'uppercase', letterSpacing: '0.05em', textShadow: config.faceTextShadow, transform: `perspective(800px) rotateX(${config.rotateX})`, display: 'inline-block', position: 'relative', fontWeight: 700 }}>AGENTS</span>
+            <span className="heading-front" style={{ color: config.faceColor, fontFamily: 'var(--font-taskor), sans-serif', fontFeatureSettings: '"ss02" 1', textTransform: 'uppercase', letterSpacing: '0.05em', textShadow: config.faceTextShadow, transform: `perspective(800px) rotateX(${config.rotateX})`, display: 'inline-block', position: 'relative', fontWeight: 700 }}>AGENTS</span>
           </div>
         </span>
       </div>
@@ -781,7 +781,7 @@ function TaglineCounterSuffix() {
       <span style={{ display: 'inline', color: '#bfbdb0', fontFamily: 'var(--font-synonym), monospace', fontWeight: 300, fontSize: '1em', textShadow: 'none' }}>
         <span> (</span><span className="counter-digit">3</span><span className="counter-digit">7</span><span className="counter-digit">0</span><span className="counter-digit">0</span><span>+ </span>
       </span>
-      <span style={{ color: '#bfbdb0', fontFamily: 'var(--font-taskor), sans-serif', fontFeatureSettings: '"ss01" 1', textTransform: 'uppercase', letterSpacing: '0.05em' }}>AGENTS)</span>
+      <span style={{ color: '#bfbdb0', fontFamily: 'var(--font-taskor), sans-serif', fontFeatureSettings: '"ss02" 1', textTransform: 'uppercase', letterSpacing: '0.05em' }}>AGENTS)</span>
     </span>
   );
 }

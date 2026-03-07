@@ -10,6 +10,8 @@ export interface YouTubeFacadeProps {
   title: string;
   /** Optional className for container */
   className?: string;
+  /** Fallback image URL when YouTube has no custom thumbnail (e.g. blog featured image) */
+  fallbackImage?: string;
 }
 
 /**
@@ -42,9 +44,11 @@ export function YouTubeFacade({
   videoId,
   title,
   className = '',
+  fallbackImage,
 }: YouTubeFacadeProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [thumbnailUpgraded, setThumbnailUpgraded] = useState(false);
+  // 'pending' = checking maxres, 'maxres' = custom thumbnail found, 'fallback' = use fallbackImage, 'hq' = use hqdefault
+  const [thumbState, setThumbState] = useState<'pending' | 'maxres' | 'fallback' | 'hq'>('pending');
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = useCallback(() => {
@@ -58,16 +62,26 @@ export function YouTubeFacade({
     }
   }, []);
 
-  // Use hqdefault (always available), upgrade to maxresdefault in background if it exists
-  const thumbnailUrl = thumbnailUpgraded
-    ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`
-    : `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+  // Determine thumbnail: maxresdefault (custom) > fallbackImage > hqdefault (auto-generated)
+  let thumbnailUrl: string;
+  switch (thumbState) {
+    case 'maxres':
+      thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+      break;
+    case 'fallback':
+      thumbnailUrl = fallbackImage!;
+      break;
+    default:
+      thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+      break;
+  }
 
   useEffect(() => {
     const img = new Image();
-    img.onload = () => setThumbnailUpgraded(true);
+    img.onload = () => setThumbState('maxres');
+    img.onerror = () => setThumbState(fallbackImage ? 'fallback' : 'hq');
     img.src = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
-  }, [videoId]);
+  }, [videoId, fallbackImage]);
 
   // 3D metal effect filter for play button (matches Icon3D)
   const icon3DFilter = `
@@ -135,7 +149,7 @@ export function YouTubeFacade({
         src={thumbnailUrl}
         alt={`Video thumbnail: ${title}`}
         loading="lazy"
-        onError={() => setThumbnailUpgraded(false)}
+        onError={() => setThumbState(fallbackImage ? 'fallback' : 'hq')}
         style={{
           position: 'absolute',
           inset: 0,
