@@ -674,20 +674,22 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       text-shadow:
         0 0 0.08em rgba(255, 215, 0, 0.4),
         0 0 0.2em rgba(255, 215, 0, 0.25),
-        0.003em 0.004em 0 #e2e1da,
-        0.006em 0.008em 0 #dddcd5,
-        0.010em 0.013em 0 #d8d7d0,
-        0.013em 0.019em 0 #d1d0c7,
-        0.016em 0.025em 0 #cac9c0,
-        0.019em 0.032em 0 #c2c1b8,
-        0.022em 0.038em 0 #bbbab0,
-        0.025em 0.044em 0 #b3b2a8,
-        0.028em 0.050em 0 #abaa9f,
-        0.031em 0.057em 0 #a09f94,
-        0.034em 0.063em 0 #96958a,
-        0.037em 0.070em 0 #8d8c80,
-        0.040em 0.076em 0 #838278,
-        0.043em 0.082em 0 #7a7970;
+        0.003em 0.005em 0 #e5e4dd,
+        0.006em 0.010em 0 #e0dfda,
+        0.009em 0.016em 0 #dbdad5,
+        0.012em 0.022em 0 #d5d4cd,
+        0.015em 0.028em 0 #cfcec6,
+        0.018em 0.035em 0 #c8c7bf,
+        0.021em 0.042em 0 #c0bfb7,
+        0.024em 0.049em 0 #b8b7ae,
+        0.027em 0.056em 0 #b0afa5,
+        0.030em 0.063em 0 #a7a69c,
+        0.033em 0.070em 0 #9e9d93,
+        0.036em 0.077em 0 #96958a,
+        0.039em 0.084em 0 #8d8c80,
+        0.042em 0.090em 0 #848377,
+        0.045em 0.096em 0 #7c7b6f,
+        0.048em 0.102em 0 #747367;
     }
 
     /* H2 face - cream fill extrusion */
@@ -695,16 +697,17 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       color: #e5e4dd;
       transform: perspective(800px) rotateX(8deg);
       text-shadow:
-        0.005em 0.007em 0 #dddcd5,
-        0.010em 0.015em 0 #d5d4cb,
-        0.015em 0.025em 0 #cccbc2,
-        0.019em 0.035em 0 #c2c1b8,
-        0.023em 0.045em 0 #b8b7ae,
-        0.027em 0.055em 0 #abaa9f,
-        0.031em 0.065em 0 #a09f94,
-        0.034em 0.073em 0 #96958a,
-        0.037em 0.080em 0 #8d8c80,
-        0.040em 0.088em 0 #7a7970;
+        0.003em 0.005em 0 #dddcd5,
+        0.006em 0.011em 0 #d5d4cb,
+        0.009em 0.017em 0 #cccbc2,
+        0.012em 0.023em 0 #c2c1b8,
+        0.015em 0.030em 0 #b8b7ae,
+        0.018em 0.037em 0 #abaa9f,
+        0.021em 0.044em 0 #a09f94,
+        0.024em 0.051em 0 #96958a,
+        0.027em 0.058em 0 #8d8c80,
+        0.030em 0.065em 0 #838277,
+        0.033em 0.070em 0 #7a7970;
     }
     .heading-wrapper.text-left {
       text-align: left;
@@ -7920,7 +7923,7 @@ ${agent.slug === 'jane-smith' ? `
     { color: '#7c6008', tx: '0.016em', ty: '0.052em' },
     { color: '#5e4808', tx: '0.008em', ty: '0.026em' },
     { color: '#3f3010', tx: '0.004em', ty: '0.013em' },
-    { color: '#191818', tx: '0', ty: '0' }
+    { color: '#191818', tx: '0', ty: '0' },
   ];
   var H2_LAYERS = [
     { color: '#404040', tx: '0.04em', ty: '0.12em', filter: 'blur(6px)', opacity: '0.4' },
@@ -8013,18 +8016,25 @@ ${agent.slug === 'jane-smith' ? `
       if (layer.opacity) svg.style.opacity = layer.opacity;
       if (!layer.filter) {
         var defs = document.createElementNS(NS, 'defs');
-        var filterId = 'so-' + type[0] + '-' + i;
+        var filterId = 'ss-' + type[0] + '-' + i;
         var filter = document.createElementNS(NS, 'filter');
         filter.setAttribute('id', filterId);
-        filter.setAttribute('x', '-30%'); filter.setAttribute('y', '-30%');
-        filter.setAttribute('width', '160%'); filter.setAttribute('height', '160%');
-        var erode = document.createElementNS(NS, 'feMorphology');
-        erode.setAttribute('operator', 'erode'); erode.setAttribute('radius', openingRadius);
-        erode.setAttribute('in', 'SourceGraphic'); erode.setAttribute('result', 'eroded');
+        filter.setAttribute('x', '-10%'); filter.setAttribute('y', '-25%');
+        filter.setAttribute('width', '120%'); filter.setAttribute('height', '150%');
+        filter.setAttribute('primitiveUnits', 'userSpaceOnUse');
         var dilate = document.createElementNS(NS, 'feMorphology');
-        dilate.setAttribute('operator', 'dilate'); dilate.setAttribute('radius', openingRadius);
-        dilate.setAttribute('in', 'eroded');
-        filter.appendChild(erode); filter.appendChild(dilate);
+        dilate.setAttribute('operator', 'dilate');
+        dilate.setAttribute('radius', Math.max(1, Math.round(openingRadius)));
+        dilate.setAttribute('in', 'SourceGraphic'); dilate.setAttribute('result', 'expanded');
+        var blur = document.createElementNS(NS, 'feGaussianBlur');
+        blur.setAttribute('stdDeviation', '0.8');
+        blur.setAttribute('in', 'expanded'); blur.setAttribute('result', 'smoothed');
+        var transfer = document.createElementNS(NS, 'feComponentTransfer');
+        transfer.setAttribute('in', 'smoothed');
+        var funcA = document.createElementNS(NS, 'feFuncA');
+        funcA.setAttribute('type', 'linear'); funcA.setAttribute('slope', '15'); funcA.setAttribute('intercept', '0');
+        transfer.appendChild(funcA);
+        filter.appendChild(dilate); filter.appendChild(blur); filter.appendChild(transfer);
         defs.appendChild(filter); svg.appendChild(defs);
       }
       var isInnermost = (i === layers.length - 1);
@@ -8039,7 +8049,7 @@ ${agent.slug === 'jane-smith' ? `
         t.setAttribute('stroke-linejoin', 'miter');
         t.setAttribute('stroke-miterlimit', '4');
         t.setAttribute('paint-order', 'stroke fill');
-        if (!layer.filter) t.setAttribute('filter', 'url(#so-' + type[0] + '-' + i + ')');
+        if (!layer.filter) t.setAttribute('filter', 'url(#ss-' + type[0] + '-' + i + ')');
         t.style.fontFamily = "'Taskor', serif";
         t.style.fontSize = fontSizePx + 'px';
         t.style.fontWeight = fontWeight;
