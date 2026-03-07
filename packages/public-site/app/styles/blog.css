@@ -152,11 +152,33 @@
    (prevents bright yellow glow on light background)
    ======================================== */
 
-/* Light mode H1 - Disable breathing animation, keep SVG stroke backing from component */
+/* Light mode H1 - dark face text on light background, gold backing stays visible */
 .light-mode .text-h1,
 .light-mode h1.text-h1 {
   animation: none !important;
   filter: none !important;
+}
+.light-mode h1.text-h1.text-display {
+  color: #191818 !important;
+  text-shadow:
+    0 0 0.08em rgba(180, 140, 0, 0.3),
+    0 0 0.2em rgba(180, 140, 0, 0.15),
+    0.003em 0.005em 0 #a8a79e,
+    0.006em 0.010em 0 #9e9d94,
+    0.009em 0.016em 0 #94938a,
+    0.012em 0.022em 0 #8a8980,
+    0.015em 0.028em 0 #807f76,
+    0.018em 0.035em 0 #76756c,
+    0.021em 0.042em 0 #6c6b62,
+    0.024em 0.049em 0 #626158,
+    0.027em 0.056em 0 #58574e,
+    0.030em 0.063em 0 #4e4d44,
+    0.033em 0.070em 0 #444340,
+    0.036em 0.077em 0 #3a3938,
+    0.039em 0.084em 0 #303030,
+    0.042em 0.090em 0 #282828,
+    0.045em 0.096em 0 #222222,
+    0.048em 0.102em 0 #1c1c1c !important;
 }
 
 /* RankMath FAQ Block Styling - Accordion style matching homepage */
@@ -259,6 +281,8 @@
   margin-bottom: 1.5rem;
   /* Font feature for alt glyphs */
   font-feature-settings: "ss01" 1;
+  /* Links inside headings inherit heading font */
+  & a { font-family: inherit; font-size: inherit; font-weight: inherit; }
   /* 3D transform - matches H2.tsx */
   transform: perspective(800px) rotateX(8deg);
   /* H2 component text-shadow: white core + warm white glow + metal backing */
@@ -1391,31 +1415,14 @@ body.light-mode .blog-post .border-t {
 }
 
 /* ========================================
-   LIGHT MODE - H2 Metal Plate
-   Dark gray text (#191818) with medium gray (#404040) outline
-   Uses brand colors from Master Controller
+   LIGHT MODE - H2 Styling
+   SVG stroke backing handles 3D depth via createBackLayers (H2_LIGHT_CONFIG).
+   CSS provides fallback color for H2s not yet processed by JS.
    ======================================== */
 body.light-mode .blog-content h2,
 body.light-mode .blog-content.prose h2,
 body.light-mode .blog-content.prose-invert h2 {
   color: #191818;
-  text-shadow:
-    /* LIGHT GREY OUTLINE - subtle definition on light background */
-    0 0 0.01em #404040,
-    0 0 0.02em #404040,
-    0 0 0.03em rgba(64, 64, 64, 0.6),
-    /* SOFT GREY GLOW */
-    0 0 0.04em rgba(64, 64, 64, 0.4),
-    0 0 0.08em rgba(64, 64, 64, 0.2),
-    0 0 0.14em rgba(64, 64, 64, 0.1),
-    /* METAL BACKING (3D depth) - lighter for light mode */
-    0.02em 0.02em 0 #9a9a9a,
-    0.04em 0.04em 0 #8a8a8a,
-    0.06em 0.06em 0 #7a7a7a,
-    0.08em 0.08em 0 #6a6a6a,
-    0.10em 0.10em 0 #5a5a5a,
-    0.12em 0.12em 0 #4a4a4a;
-  filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.25));
 }
 
 /* ========================================

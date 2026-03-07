@@ -180,6 +180,33 @@ const H2_EMERALD_LAYERS: StrokeLayer[] = [
   { color: '#101a18', tx: '0', ty: '0' },
 ];
 
+// ── Light-mode H2 layers (visible depth on #e5e4dd background) ───────
+
+const H2_LIGHT_FACE_TEXT_SHADOW = [
+  '0.005em 0.007em 0 #a8a79e',
+  '0.010em 0.015em 0 #9e9d94',
+  '0.015em 0.025em 0 #94938a',
+  '0.019em 0.035em 0 #8a8980',
+  '0.023em 0.045em 0 #807f76',
+  '0.027em 0.055em 0 #76756c',
+  '0.031em 0.065em 0 #6c6b62',
+  '0.034em 0.073em 0 #626158',
+  '0.037em 0.080em 0 #58574e',
+  '0.040em 0.088em 0 #4e4d44',
+].join(', ');
+
+const H2_LIGHT_LAYERS: StrokeLayer[] = [
+  { color: 'rgba(80, 80, 80, 0.3)', tx: '0.04em', ty: '0.12em', filter: 'blur(6px)', opacity: '0.4' },
+  { color: '#9a9a9a', tx: '0.035em', ty: '0.105em' },
+  { color: '#909090', tx: '0.030em', ty: '0.09em' },
+  { color: '#868686', tx: '0.025em', ty: '0.075em' },
+  { color: '#7c7c7c', tx: '0.018em', ty: '0.055em' },
+  { color: '#727272', tx: '0.012em', ty: '0.038em' },
+  { color: '#686868', tx: '0.006em', ty: '0.020em' },
+  { color: '#5e5e5e', tx: '0.003em', ty: '0.010em' },
+  { color: '#545454', tx: '0', ty: '0' },
+];
+
 const H2_FACE_OFFSET = { x: '-0.018em', y: '0.15em' };
 
 export const H2_DEFAULT_CONFIG: StrokeConfig = {
@@ -225,6 +252,15 @@ export const H2_EMERALD_CONFIG: StrokeConfig = {
   faceOffset: H2_FACE_OFFSET,
   faceTextShadow: H2_FACE_TEXT_SHADOW,
   faceColor: '#a0e8c4',
+};
+
+export const H2_LIGHT_CONFIG: StrokeConfig = {
+  layers: H2_LIGHT_LAYERS,
+  strokeWidth: '0.18em',
+  rotateX: '8deg',
+  faceOffset: H2_FACE_OFFSET,
+  faceTextShadow: H2_LIGHT_FACE_TEXT_SHADOW,
+  faceColor: '#191818',
 };
 
 // ── Founder name preset (gold, smaller scale) ────────────────────────
@@ -398,27 +434,37 @@ export function createBackLayers(
     if (layer.filter) svg.style.filter = layer.filter;
     if (layer.opacity) svg.style.opacity = layer.opacity;
 
-    // Morphological opening filter (erode+dilate) to round miter spike tips
+    // Dilate + blur + slope filter to smooth jagged stroke edges
+    // Matches the H2.tsx component's feMorphology approach
     if (!layer.filter) {
       const defs = document.createElementNS(NS, 'defs');
-      const filterId = `stroke-open-${i}`;
+      const filterId = `stroke-smooth-${i}`;
       const filter = document.createElementNS(NS, 'filter');
       filter.setAttribute('id', filterId);
-      filter.setAttribute('x', '-30%');
-      filter.setAttribute('y', '-30%');
-      filter.setAttribute('width', '160%');
-      filter.setAttribute('height', '160%');
-      const erode = document.createElementNS(NS, 'feMorphology');
-      erode.setAttribute('operator', 'erode');
-      erode.setAttribute('radius', String(openingRadius));
-      erode.setAttribute('in', 'SourceGraphic');
-      erode.setAttribute('result', 'eroded');
+      filter.setAttribute('x', '-10%');
+      filter.setAttribute('y', '-25%');
+      filter.setAttribute('width', '120%');
+      filter.setAttribute('height', '150%');
+      filter.setAttribute('primitiveUnits', 'userSpaceOnUse');
       const dilate = document.createElementNS(NS, 'feMorphology');
       dilate.setAttribute('operator', 'dilate');
-      dilate.setAttribute('radius', String(openingRadius));
-      dilate.setAttribute('in', 'eroded');
-      filter.appendChild(erode);
+      dilate.setAttribute('radius', String(Math.max(1, Math.round(openingRadius))));
+      dilate.setAttribute('in', 'SourceGraphic');
+      dilate.setAttribute('result', 'expanded');
+      const blur = document.createElementNS(NS, 'feGaussianBlur');
+      blur.setAttribute('stdDeviation', '0.8');
+      blur.setAttribute('in', 'expanded');
+      blur.setAttribute('result', 'smoothed');
+      const transfer = document.createElementNS(NS, 'feComponentTransfer');
+      transfer.setAttribute('in', 'smoothed');
+      const funcA = document.createElementNS(NS, 'feFuncA');
+      funcA.setAttribute('type', 'linear');
+      funcA.setAttribute('slope', '15');
+      funcA.setAttribute('intercept', '0');
+      transfer.appendChild(funcA);
       filter.appendChild(dilate);
+      filter.appendChild(blur);
+      filter.appendChild(transfer);
       defs.appendChild(filter);
       svg.appendChild(defs);
     }
@@ -437,7 +483,7 @@ export function createBackLayers(
       textEl.setAttribute('stroke-miterlimit', '4');
       textEl.setAttribute('paint-order', 'stroke fill');
       if (!layer.filter) {
-        textEl.setAttribute('filter', `url(#stroke-open-${i})`);
+        textEl.setAttribute('filter', `url(#stroke-smooth-${i})`);
       }
       textEl.style.fontFamily = "'Taskor', serif";
       textEl.style.fontSize = `${fontSizePx}px`;

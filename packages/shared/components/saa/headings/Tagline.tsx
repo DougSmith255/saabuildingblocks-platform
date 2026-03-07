@@ -77,9 +77,9 @@ export default function Tagline({
         <defs>
           <filter id="saa-sharp-h2" x="-10%" y="-25%" width="120%" height="150%" primitiveUnits="userSpaceOnUse">
             <feMorphology operator="dilate" radius={2} in="SourceGraphic" result="expanded" />
-            <feGaussianBlur stdDeviation={0.4} in="expanded" result="smoothed" />
+            <feGaussianBlur stdDeviation={0.8} in="expanded" result="smoothed" />
             <feComponentTransfer in="smoothed">
-              <feFuncA type="linear" slope={20} intercept={0} />
+              <feFuncA type="linear" slope={15} intercept={0} />
             </feComponentTransfer>
           </filter>
         </defs>

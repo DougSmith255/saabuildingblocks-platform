@@ -10,7 +10,7 @@ import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { Breadcrumbs } from './Breadcrumbs';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { getPostUrl } from '@/lib/blog-post-urls';
-import { createBackLayers, H2_DEFAULT_CONFIG } from '@saa/shared/components/saa/headings/useStrokeBackLayers';
+import { createBackLayers, H2_DEFAULT_CONFIG, H2_LIGHT_CONFIG } from '@saa/shared/components/saa/headings/useStrokeBackLayers';
 
 // Lazy load CloudBackground - only loaded when user switches to light mode
 // Displays daylight sky scene with animated clouds
@@ -111,11 +111,21 @@ export function BlogPostTemplate({
         }
       });
 
+      const config = isDarkMode ? H2_DEFAULT_CONFIG : H2_LIGHT_CONFIG;
       const h2s = document.querySelectorAll<HTMLElement>('.blog-content h2');
-      const config = H2_DEFAULT_CONFIG;
       h2s.forEach((h2) => {
-        if (h2.closest('.heading-wrapper')) return; // Already wrapped
+        const existingWrapper = h2.closest('.heading-wrapper');
+        if (existingWrapper) {
+          // Already wrapped - clear old SVG layers and re-apply with current config
+          existingWrapper.querySelectorAll('svg[aria-hidden]').forEach((svg) => svg.remove());
+          h2.style.color = config.faceColor;
+          h2.style.textShadow = config.faceTextShadow;
+          h2.style.transform = `perspective(800px) rotateX(${config.rotateX})`;
+          createBackLayers(existingWrapper as HTMLDivElement, h2, config);
+          return;
+        }
         const wrapper = document.createElement('div');
+        wrapper.classList.add('heading-wrapper');
         // Move margins from H2 to wrapper so wrapper is tight around text.
         // This ensures SVG and H2 share the same transform-origin for rotateX.
         const computed = getComputedStyle(h2);
@@ -136,7 +146,7 @@ export function BlogPostTemplate({
       });
     };
     document.fonts.ready.then(applyH2Stroke);
-  }, [post.content]);
+  }, [post.content, isDarkMode]);
 
   // Format date for display
   const formattedDate = new Date(post.date).toLocaleDateString('en-US', {

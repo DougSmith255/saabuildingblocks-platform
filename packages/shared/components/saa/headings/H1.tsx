@@ -139,10 +139,10 @@ export default function H1({
       <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
         <defs>
           <filter id="saa-sharp-h1" x="-10%" y="-25%" width="120%" height="150%" primitiveUnits="userSpaceOnUse">
-            <feMorphology operator="dilate" radius={4} in="SourceGraphic" result="expanded" />
-            <feGaussianBlur stdDeviation={0.5} in="expanded" result="smoothed" />
+            <feMorphology operator="dilate" radius={3} in="SourceGraphic" result="expanded" />
+            <feGaussianBlur stdDeviation={1.2} in="expanded" result="smoothed" />
             <feComponentTransfer in="smoothed">
-              <feFuncA type="linear" slope={20} intercept={0} />
+              <feFuncA type="linear" slope={25} intercept={0} />
             </feComponentTransfer>
           </filter>
         </defs>
