@@ -1,0 +1,201 @@
+---
+/**
+ * ProvenAtScale - Wolf pack background + stats + 4000+ counter
+ * Pure static HTML. Zero JavaScript.
+ * Inlines GlassPanel champagne, NeonCard, and Icon3D styling.
+ */
+import H2 from '../saa/headings/H2.astro';
+
+// GlassPanel champagne
+const champagneBg = 'linear-gradient(180deg, rgba(247,231,206,0.04) 0%, rgba(247,231,206,0.05) 50%, rgba(247,231,206,0.04) 100%)';
+const champagneShadow = `0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 0 rgba(255,255,255,0.35), inset 0 2px 4px 0 rgba(255,255,255,0.2), inset 0 8px 20px -8px rgba(247,231,206,0.3), inset 0 20px 40px -20px rgba(255,255,255,0.15), inset 0 -1px 0 0 rgba(0,0,0,0.7), inset 0 -2px 6px 0 rgba(0,0,0,0.5), inset 0 -10px 25px -8px rgba(0,0,0,0.6), inset 0 -25px 50px -20px rgba(0,0,0,0.45)`;
+
+const WOLF_PACK_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop';
+
+const icon3dStyle = 'display: inline-flex; align-items: center; justify-content: center; color: #c4a94d; filter: drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0,0,0,0.5)); transform: perspective(500px) rotateX(8deg);';
+
+const counterShadow = `0.010em 0.013em 0 #dddcd5, 0.015em 0.025em 0 #d1d0c7, 0.019em 0.038em 0 #c2c1b8, 0.024em 0.050em 0 #b3b2a8, 0.029em 0.063em 0 #a09f94, 0.033em 0.075em 0 #8d8c80, 0.038em 0.088em 0 #7a7970, 0.040em 0.095em 0 #282828, 0.044em 0.110em 0 #333333, 0.048em 0.125em 0 #3e3e3e, 0.052em 0.140em 0 #4a4a4a, 0.054em 0.150em 0.02em rgba(0,0,0,0.5)`;
+
+const STATS = [
+  { text: "One of the fastest-growing sponsor organizations at eXp Realty", iconPath: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>' },
+  { text: "Consistently strong agent retention", iconPath: '<path d="M20 6 9 17l-5-5"/>' },
+  { text: "Supporting agents across the U.S., Canada, Mexico, Australia, and beyond", iconPath: '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>' },
+];
+---
+
+<div
+  class="relative overflow-hidden rounded-3xl"
+  style={`background: ${champagneBg}; box-shadow: ${champagneShadow}; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);`}
+>
+  <!-- Dots texture -->
+  <div
+    class="absolute inset-0 pointer-events-none z-[1] rounded-3xl"
+    style="background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px); background-size: 8px 8px;"
+  ></div>
+
+  <div class="relative z-10">
+    <section class="py-16 md:py-24 px-6 relative overflow-hidden">
+      <!-- Wolf Pack Background Image -->
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <img
+          src={WOLF_PACK_IMAGE}
+          srcset={`
+            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile 375w,
+            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet 768w,
+            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop 1280w,
+            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet2x 1536w,
+            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop2x 2560w
+          `}
+          sizes="100vw"
+          alt=""
+          aria-hidden="true"
+          class="w-full h-full object-cover"
+          loading="lazy"
+          style="object-position: center 55%; mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%); -webkit-mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%);"
+        />
+      </div>
+
+      <div class="mx-auto relative z-10" style="max-width: 1600px;">
+        <div class="grid md:grid-cols-12 gap-8 items-center">
+          <!-- Left - Content -->
+          <div class="md:col-span-8">
+            <H2 style="text-align: left;">Proven at Scale</H2>
+
+            <div class="space-y-4 mb-8">
+              {STATS.map((stat) => (
+                <div class="flex items-center gap-4">
+                  <span style={icon3dStyle}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 flex-shrink-0" set:html={stat.iconPath} />
+                  </span>
+                  <p class="text-body">{stat.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div class="text-center md:text-left">
+              <a
+                href="/exp-realty-sponsor#success-stories"
+                class="inline-flex items-center gap-2 transition-all duration-300 hover:gap-3"
+                style="color: var(--color-body-text, #dcdbd5); text-decoration: none; font-size: var(--font-size-body); font-family: var(--font-family-body); opacity: 0.8;"
+              >
+                <span style={icon3dStyle}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 flex-shrink-0">
+                    <path d="M5 12h14"/>
+                    <path d="m12 5 7 7-7 7"/>
+                  </svg>
+                </span>
+                <span>Read Their Success Stories</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right - NeonCard with 4000+ counter -->
+          <div class="md:col-span-4">
+            <div class="pas-neon-card-3d">
+              <div class="pas-neon-card-frame">
+                <div class="pas-neon-card-glass"></div>
+                <div class="pas-neon-card-content p-8 text-center">
+                  <!-- Globe Icon3D -->
+                  <span style={`${icon3dStyle} width: 56px; height: 56px; margin: 0 auto 12px;`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+                      <path d="M2 12h20"/>
+                    </svg>
+                  </span>
+                  <p class="font-heading text-3xl md:text-4xl font-bold text-heading">
+                    <span
+                      style={`font-variant-numeric: tabular-nums; color: #e5e4dd; text-shadow: ${counterShadow}; display: inline-block; letter-spacing: 0.02em; transform: perspective(800px) rotateX(8deg); filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));`}
+                    >
+                      4000+
+                    </span>
+                  </p>
+                  <p class="text-body text-base mt-2">Agents in Sponsor Network</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+  .pas-neon-card-3d {
+    perspective: 1000px;
+    display: block;
+  }
+  .pas-neon-card-frame {
+    position: relative;
+    border: 10px solid #ffd700;
+    border-radius: 16px;
+    box-shadow:
+      0 0 4px 1px rgba(255,215,0,0.5),
+      0 0 8px 2px rgba(255,215,0,0.35),
+      0 0 16px 4px rgba(255,215,0,0.2),
+      0 0 24px 6px rgba(255,215,0,0.1),
+      0 4px 12px rgba(0,0,0,0.3);
+    overflow: visible;
+    isolation: isolate;
+  }
+  .pas-neon-card-glass {
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    z-index: 0;
+    background:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+      linear-gradient(180deg, rgba(15,15,20,0.85) 0%, rgba(10,10,15,0.92) 100%);
+    background-blend-mode: overlay, normal;
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+  }
+  @media (min-width: 1024px) {
+    .pas-neon-card-glass {
+      background:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, rgba(15,15,20,0.85) 0%, rgba(10,10,15,0.92) 100%);
+    }
+  }
+  @keyframes pasNeonPulse {
+    0% { opacity: 0.55; }
+    13% { opacity: 0.95; }
+    28% { opacity: 0.6; }
+    41% { opacity: 0.85; }
+    54% { opacity: 0.5; }
+    67% { opacity: 1; }
+    83% { opacity: 0.7; }
+    100% { opacity: 0.55; }
+  }
+  .pas-neon-card-frame::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    border-radius: 18px;
+    border: 2px solid rgba(255,255,255,0.4);
+    box-shadow:
+      0 0 6px 2px rgba(255,215,0,0.6),
+      0 0 12px 4px rgba(255,215,0,0.4),
+      0 0 20px 6px rgba(255,215,0,0.25),
+      0 0 32px 10px rgba(255,215,0,0.12),
+      0 6px 16px rgba(0,0,0,0.35);
+    pointer-events: none;
+    z-index: -1;
+    animation: pasNeonPulse 2.4s linear infinite;
+    will-change: opacity;
+  }
+  .pas-neon-card-frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    border: 2px solid rgba(255,255,255,0.5);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .pas-neon-card-content {
+    position: relative;
+    z-index: 10;
+  }
+</style>

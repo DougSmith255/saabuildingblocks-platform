@@ -1,48 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import H1 from '@saa/shared/components/saa/headings/H1';
-import Tagline from '@saa/shared/components/saa/headings/Tagline';
-import BlogPageClient from '../../components/react/blog/BlogPageClient';
-
-const WORDPRESS_CATEGORIES = [
-  { slug: 'brokerage-comparison', name: 'Brokerage Comparison', count: 70, description: 'Compare different real estate brokerages.', icon: '\u{1F3E2}' },
-  { slug: 'about-exp-realty', name: 'About eXp Realty', count: 58, description: 'Learn about eXp Realty.', icon: '\u{2601}\u{FE0F}' },
-  { slug: 'exp-realty-sponsor', name: 'eXp Realty Sponsor', count: 32, description: 'eXp sponsorship program.', icon: '\u{1F91D}' },
-  { slug: 'marketing-mastery', name: 'Marketing Mastery', count: 28, description: 'Digital marketing strategies.', icon: '\u{1F4F1}' },
-  { slug: 'agent-career-info', name: 'Agent Career Info', count: 21, description: 'Career guidance.', icon: '\u{1F4BC}' },
-  { slug: 'winning-clients', name: 'Winning Clients', count: 12, description: 'Client attraction strategies.', icon: '\u{1F3AF}' },
-  { slug: 'real-estate-schools', name: 'Real Estate Schools', count: 12, description: 'Education programs.', icon: '\u{1F393}' },
-  { slug: 'become-an-agent', name: 'Become an Agent', count: 12, description: 'Start your journey.', icon: '\u{1F680}' },
-  { slug: 'industry-trends', name: 'Industry Trends', count: 8, description: 'Market insights.', icon: '\u{1F4CA}' },
-  { slug: 'fun-for-agents', name: 'Fun for Agents', count: 8, description: 'Work-life balance.', icon: '\u{1F389}' },
-];
+import PageIsland from '../../islands/blog';
 ---
 
 <BaseLayout
-  title="Agent Success Hub - Blog"
-  description="Real estate insights, marketing strategies, brokerage comparisons, and career tips for agents who want to level up."
-  ogTitle="Blog | Smart Agent Alliance"
+  title="Blog - Real Estate Tips & News"
+  description="Real estate tips, industry trends, and agent career advice from the Smart Agent Alliance."
+  canonical="/blog/"
 >
-  <main id="main-content" class="min-h-screen">
-    <!-- Hero Section -->
-    <div class="relative">
-      <section class="relative min-h-[100dvh] px-4 sm:px-8 md:px-12 flex items-center justify-center">
-        <div class="relative z-10 max-w-[2500px] mx-auto w-full text-center">
-          <div class="relative z-10">
-            <div class="mb-6">
-              <H1 client:load id="blog-heading">Agent Success Hub</H1>
-            </div>
-            <div class="mb-12">
-              <Tagline client:load>
-                Expert Insights, Career Guidance, and Industry Trends
-              </Tagline>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- Blog content loaded client-side -->
-    <BlogPageClient client:load categories={WORDPRESS_CATEGORIES} />
-  </main>
+  <PageIsland client:load />
 </BaseLayout>

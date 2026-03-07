@@ -1,14 +1,12 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import LoginPage from '@public-site/app/agent-portal/login/page';
+import PageIsland from '../../../islands/agent-portal-login';
 ---
 
 <BaseLayout
-  title="Agent Login | Smart Agent Alliance"
+  title="Login - Agent Portal"
   description="Log in to your Smart Agent Alliance agent portal."
-  noScrollIndicator
-  noScrollProgress
-  noStarBackground
+  canonical="/agent-portal/login/"
 >
-  <LoginPage client:only="react" />
+  <PageIsland client:load />
 </BaseLayout>

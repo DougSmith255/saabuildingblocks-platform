@@ -1,0 +1,61 @@
+---
+/**
+ * H2 - Pure CSS 3D heading (no JavaScript)
+ *
+ * Replicates the visual effect of the React H2 component using only CSS text-shadow.
+ */
+interface Props {
+  class?: string;
+  style?: Record<string, string>;
+  theme?: 'default' | 'gold' | 'blue' | 'purple' | 'emerald';
+}
+
+const { class: className = '', style = {}, theme = 'default' } = Astro.props;
+
+const faceTextShadow = [
+  '0.005em 0.007em 0 #dddcd5',
+  '0.010em 0.015em 0 #d5d4cb',
+  '0.015em 0.025em 0 #cccbc2',
+  '0.019em 0.035em 0 #c2c1b8',
+  '0.023em 0.045em 0 #b8b7ae',
+  '0.027em 0.055em 0 #abaa9f',
+  '0.031em 0.065em 0 #a09f94',
+  '0.034em 0.073em 0 #96958a',
+  '0.037em 0.080em 0 #8d8c80',
+  '0.040em 0.088em 0 #7a7970',
+].join(', ');
+
+const faceColors: Record<string, string> = {
+  default: '#e5e4dd',
+  gold: '#e8d4a0',
+  blue: '#b0d4e8',
+  purple: '#d4b0e8',
+  emerald: '#a0e8c4',
+};
+
+const mergedStyle = {
+  textAlign: 'center',
+  fontFeatureSettings: '"ss01" 1',
+  marginBottom: '2.5rem',
+  maxWidth: '95%',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  color: faceColors[theme] || faceColors.default,
+  textShadow: faceTextShadow,
+  transform: 'perspective(800px) rotateX(8deg)',
+  lineHeight: '1.1',
+  ...style,
+};
+
+const styleString = Object.entries(mergedStyle).map(([k, v]) => {
+  const prop = k.replace(/([A-Z])/g, '-$1').toLowerCase();
+  return `${prop}: ${v}`;
+}).join('; ');
+---
+
+<h2
+  class:list={['text-h2', className]}
+  style={styleString}
+>
+  <slot />
+</h2>

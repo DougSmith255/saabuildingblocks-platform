@@ -1,0 +1,168 @@
+---
+/**
+ * H1 - Pure CSS 3D Heading with Stacked Backing Layers
+ *
+ * Astro port of @saa/shared/components/saa/headings/H1
+ * Uses -webkit-text-stroke + SVG feMorphology filter for sharp corners.
+ * Zero JavaScript. Fully static HTML.
+ *
+ * Themes: default (gold), cyan
+ */
+interface Props {
+  id?: string;
+  class?: string;
+  style?: Record<string, string>;
+  theme?: 'default' | 'cyan';
+}
+
+const { id, class: className = '', style = {}, theme = 'default' } = Astro.props;
+
+// ── Face text-shadow (extrusion depth) ───────────────────────────────
+
+const GOLD_FACE_SHADOW = [
+  '0 0 0.08em rgba(255, 215, 0, 0.4)',
+  '0 0 0.2em rgba(255, 215, 0, 0.25)',
+  '0.003em 0.005em 0 #e5e4dd',
+  '0.006em 0.010em 0 #e0dfda',
+  '0.009em 0.016em 0 #dbdad5',
+  '0.012em 0.022em 0 #d5d4cd',
+  '0.015em 0.028em 0 #cfcec6',
+  '0.018em 0.035em 0 #c8c7bf',
+  '0.021em 0.042em 0 #c0bfb7',
+  '0.024em 0.049em 0 #b8b7ae',
+  '0.027em 0.056em 0 #b0afa5',
+  '0.030em 0.063em 0 #a7a69c',
+  '0.033em 0.070em 0 #9e9d93',
+  '0.036em 0.077em 0 #96958a',
+  '0.039em 0.084em 0 #8d8c80',
+  '0.042em 0.090em 0 #848377',
+  '0.045em 0.096em 0 #7c7b6f',
+  '0.048em 0.102em 0 #747367',
+].join(', ');
+
+const CYAN_FACE_SHADOW = [
+  '0 0 0.08em rgba(0, 191, 255, 0.4)',
+  '0 0 0.2em rgba(0, 191, 255, 0.25)',
+  '0.003em 0.005em 0 #e5e4dd',
+  '0.006em 0.010em 0 #e0dfda',
+  '0.009em 0.016em 0 #dbdad5',
+  '0.012em 0.022em 0 #d5d4cd',
+  '0.015em 0.028em 0 #cfcec6',
+  '0.018em 0.035em 0 #c8c7bf',
+  '0.021em 0.042em 0 #c0bfb7',
+  '0.024em 0.049em 0 #b8b7ae',
+  '0.027em 0.056em 0 #b0afa5',
+  '0.030em 0.063em 0 #a7a69c',
+  '0.033em 0.070em 0 #9e9d93',
+  '0.036em 0.077em 0 #96958a',
+  '0.039em 0.084em 0 #8d8c80',
+  '0.042em 0.090em 0 #848377',
+  '0.045em 0.096em 0 #7c7b6f',
+  '0.048em 0.102em 0 #747367',
+].join(', ');
+
+// ── Theme configs ────────────────────────────────────────────────────
+
+interface BackingLayer { color: string; tx: string; ty: string; }
+interface H1Config {
+  rotateX: string; rotateY: string; strokeWidth: string;
+  shadow: { color: string; tx: string; ty: string; blur: string };
+  layers: BackingLayer[];
+  face: { color: string; tx: string; ty: string; textShadow: string };
+}
+
+const H1_GOLD: H1Config = {
+  rotateX: '12deg', rotateY: '-2deg', strokeWidth: '0.08em',
+  shadow: { color: 'rgba(184, 150, 10, 0.5)', tx: '0.022em', ty: '0.065em', blur: '6px' },
+  layers: [
+    { color: '#e6ac00', tx: '0.018em', ty: '0.055em' },
+    { color: '#bd8e05', tx: '0.014em', ty: '0.043em' },
+    { color: '#94710a', tx: '0.010em', ty: '0.032em' },
+    { color: '#6b530e', tx: '0.007em', ty: '0.022em' },
+    { color: '#423613', tx: '0.004em', ty: '0.012em' },
+    { color: '#191818', tx: '0em', ty: '0em' },
+  ],
+  face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.05em', textShadow: GOLD_FACE_SHADOW },
+};
+
+const H1_CYAN: H1Config = {
+  rotateX: '12deg', rotateY: '-2deg', strokeWidth: '0.08em',
+  shadow: { color: 'rgba(10, 120, 152, 0.5)', tx: '0.022em', ty: '0.065em', blur: '6px' },
+  layers: [
+    { color: '#00bfff', tx: '0.018em', ty: '0.055em' },
+    { color: '#0aacdd', tx: '0.014em', ty: '0.043em' },
+    { color: '#0a98bb', tx: '0.010em', ty: '0.032em' },
+    { color: '#087080', tx: '0.007em', ty: '0.022em' },
+    { color: '#085c68', tx: '0.004em', ty: '0.012em' },
+    { color: '#181920', tx: '0em', ty: '0em' },
+  ],
+  face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.05em', textShadow: CYAN_FACE_SHADOW },
+};
+
+const config = theme === 'cyan' ? H1_CYAN : H1_GOLD;
+
+const persp = (tx: string, ty: string) =>
+  `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
+
+// Build inline styles
+const layerBaseStyle = (layer: { color: string; tx: string; ty: string }, extra = '') =>
+  `position: absolute; top: 0; left: 0; right: 0; pointer-events: none; margin: 0; line-height: 1.1; font-feature-settings: "ss01" 1; color: ${layer.color}; -webkit-text-stroke: ${config.strokeWidth} ${layer.color}; -webkit-text-fill-color: ${layer.color}; paint-order: stroke fill; text-shadow: none; filter: url(#saa-sharp-h1); transform: ${persp(layer.tx, layer.ty)}; ${extra}`;
+
+const shadowStyle = `position: absolute; top: 0; left: 0; right: 0; pointer-events: none; margin-top: 0; margin-bottom: 0; line-height: 1.1; font-feature-settings: "ss01" 1; color: ${config.shadow.color}; text-shadow: none; transform: ${persp(config.shadow.tx, config.shadow.ty)}; filter: blur(${config.shadow.blur});`;
+
+// Merge user style into face
+const faceStyle = {
+  margin: '0',
+  color: config.face.color,
+  textShadow: config.face.textShadow,
+  transform: persp(config.face.tx, config.face.ty),
+  fontFeatureSettings: '"ss01" 1',
+  lineHeight: '1.1',
+  position: 'relative',
+  overflow: 'visible',
+  ...style,
+};
+
+const faceStyleString = Object.entries(faceStyle).map(([k, v]) => {
+  const prop = k.replace(/([A-Z])/g, '-$1').toLowerCase();
+  return `${prop}: ${v}`;
+}).join('; ');
+---
+
+<div style="position: relative; display: inline-block; width: 100%; overflow: visible;">
+  {/* SVG filter for sharp backing corners (dilate extends text-stroke) */}
+  <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+    <defs>
+      <filter id="saa-sharp-h1" x="-10%" y="-25%" width="120%" height="150%" primitiveUnits="userSpaceOnUse">
+        <feMorphology operator="dilate" radius="3" in="SourceGraphic" result="expanded" />
+        <feGaussianBlur stdDeviation="1.2" in="expanded" result="smoothed" />
+        <feComponentTransfer in="smoothed">
+          <feFuncA type="linear" slope="25" intercept="0" />
+        </feComponentTransfer>
+      </filter>
+    </defs>
+  </svg>
+
+  {/* Backing layers */}
+  <div aria-hidden="true" style="user-select: none;">
+    {/* Shadow */}
+    <div class:list={['text-h1 text-display', className]} style={shadowStyle}>
+      <slot />
+    </div>
+    {/* Color layers */}
+    {config.layers.map((layer) => (
+      <div class:list={['text-h1 text-display', className]} style={layerBaseStyle(layer)}>
+        <slot />
+      </div>
+    ))}
+  </div>
+
+  {/* Face */}
+  <h1
+    id={id}
+    class:list={['text-h1 text-display', className]}
+    style={faceStyleString}
+  >
+    <slot />
+  </h1>
+</div>

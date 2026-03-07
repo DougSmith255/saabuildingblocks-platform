@@ -1,0 +1,111 @@
+---
+/**
+ * Tagline - Pure CSS 3D tagline with Stacked Backing Layers
+ *
+ * Astro port of @saa/shared/components/saa/headings/Tagline
+ * Uses H2 default (grey) backing style.
+ * Zero JavaScript. Fully static HTML.
+ */
+interface Props {
+  class?: string;
+  style?: Record<string, string>;
+}
+
+const { class: className = '', style = {} } = Astro.props;
+
+const FACE_SHADOW = [
+  '0.003em 0.005em 0 #dddcd5',
+  '0.006em 0.011em 0 #d5d4cb',
+  '0.009em 0.017em 0 #cccbc2',
+  '0.012em 0.023em 0 #c2c1b8',
+  '0.015em 0.030em 0 #b8b7ae',
+  '0.018em 0.037em 0 #abaa9f',
+  '0.021em 0.044em 0 #a09f94',
+  '0.024em 0.051em 0 #96958a',
+  '0.027em 0.058em 0 #8d8c80',
+  '0.030em 0.065em 0 #838277',
+  '0.033em 0.070em 0 #7a7970',
+].join(', ');
+
+const SHADOW = { color: 'rgba(64, 64, 64, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' };
+
+const LAYERS = [
+  { color: '#444444', tx: '0.018em', ty: '0.053em' },
+  { color: '#3e3e3e', tx: '0.015em', ty: '0.045em' },
+  { color: '#383838', tx: '0.013em', ty: '0.038em' },
+  { color: '#323232', tx: '0.009em', ty: '0.028em' },
+  { color: '#2c2c2c', tx: '0.006em', ty: '0.019em' },
+  { color: '#262626', tx: '0.003em', ty: '0.010em' },
+  { color: '#202020', tx: '0.002em', ty: '0.005em' },
+  { color: '#1a1a1a', tx: '0em', ty: '0em' },
+];
+
+const RX = '8deg';
+const RY = '-1.5deg';
+const STROKE = '0.06em';
+
+const persp = (tx: string, ty: string) =>
+  `perspective(800px) rotateX(${RX}) rotateY(${RY}) translate(${tx}, ${ty})`;
+
+const layerBase = `position: absolute; top: 0; left: 0; right: 0; pointer-events: none; text-align: center; line-height: 1.1; font-feature-settings: "ss01" 1;`;
+
+const layerStyle = (layer: { color: string; tx: string; ty: string }) =>
+  `${layerBase} margin: 0; color: ${layer.color}; -webkit-text-stroke: ${STROKE} ${layer.color}; -webkit-text-fill-color: ${layer.color}; paint-order: stroke fill; text-shadow: none; filter: url(#saa-sharp-h2); transform: ${persp(layer.tx, layer.ty)};`;
+
+const shadowStyle = `${layerBase} margin-top: 0; margin-bottom: 0; color: ${SHADOW.color}; text-shadow: none; transform: ${persp(SHADOW.tx, SHADOW.ty)}; filter: blur(${SHADOW.blur});`;
+
+const faceStyle = {
+  textAlign: 'center',
+  fontFeatureSettings: '"ss01" 1',
+  margin: '0',
+  color: '#e5e4dd',
+  textShadow: FACE_SHADOW,
+  transform: persp('-0.025em', '-0.035em'),
+  lineHeight: '1.1',
+  position: 'relative',
+  overflow: 'visible',
+  ...style,
+};
+
+const faceStyleString = Object.entries(faceStyle).map(([k, v]) => {
+  const prop = k.replace(/([A-Z])/g, '-$1').toLowerCase();
+  return `${prop}: ${v}`;
+}).join('; ');
+---
+
+<div style="position: relative; display: inline-block; width: 100%; overflow: visible; text-align: center; margin-top: 30px; margin-bottom: 30px;">
+  {/* SVG filter (reuses same filter ID as H2) */}
+  <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+    <defs>
+      <filter id="saa-sharp-h2" x="-10%" y="-25%" width="120%" height="150%" primitiveUnits="userSpaceOnUse">
+        <feMorphology operator="dilate" radius="2" in="SourceGraphic" result="expanded" />
+        <feGaussianBlur stdDeviation="0.8" in="expanded" result="smoothed" />
+        <feComponentTransfer in="smoothed">
+          <feFuncA type="linear" slope="15" intercept="0" />
+        </feComponentTransfer>
+      </filter>
+    </defs>
+  </svg>
+
+  {/* Backing layers */}
+  <div aria-hidden="true" style="user-select: none;">
+    {/* Shadow */}
+    <div class:list={['text-h2', className]} style={shadowStyle}>
+      <slot />
+    </div>
+    {/* Color layers */}
+    {LAYERS.map((layer) => (
+      <div class:list={['text-h2', className]} style={layerStyle(layer)}>
+        <slot />
+      </div>
+    ))}
+  </div>
+
+  {/* Face */}
+  <p
+    class:list={['text-h2', className]}
+    style={faceStyleString}
+  >
+    <slot />
+  </p>
+</div>

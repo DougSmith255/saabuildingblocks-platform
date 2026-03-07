@@ -1,0 +1,122 @@
+---
+/**
+ * ValuePillarsTab - "01, 02, 03" pillars section
+ * Pure static HTML with CSS animations. Zero JavaScript.
+ * Inlines GlassPanel champagne styling.
+ */
+
+const pillarNumberShadow = `
+  0 0 0.01em #fff,
+  0 0 0.02em #fff,
+  0 0 0.03em rgba(255,255,255,0.8),
+  0 0 0.04em rgba(255,250,240,0.7),
+  0 0 0.08em rgba(255,255,255,0.35),
+  0 0 0.14em rgba(255,255,255,0.15),
+  0 0 0.22em rgba(200,200,200,0.08),
+  0.02em 0.02em 0 #2a2a2a,
+  0.04em 0.04em 0 #222222,
+  0.06em 0.06em 0 #1a1a1a,
+  0.08em 0.08em 0 #141414,
+  0.10em 0.10em 0 #0f0f0f,
+  0.12em 0.12em 0 #080808
+`;
+
+// GlassPanel champagne: r=247 g=231 b=206, opacity=0.05
+const champagneBg = 'linear-gradient(180deg, rgba(247,231,206,0.04) 0%, rgba(247,231,206,0.05) 50%, rgba(247,231,206,0.04) 100%)';
+const champagneShadow = `
+  0 8px 32px rgba(0,0,0,0.4),
+  0 4px 12px rgba(0,0,0,0.25),
+  inset 0 1px 0 0 rgba(255,255,255,0.35),
+  inset 0 2px 4px 0 rgba(255,255,255,0.2),
+  inset 0 8px 20px -8px rgba(247,231,206,0.3),
+  inset 0 20px 40px -20px rgba(255,255,255,0.15),
+  inset 0 -1px 0 0 rgba(0,0,0,0.7),
+  inset 0 -2px 6px 0 rgba(0,0,0,0.5),
+  inset 0 -10px 25px -8px rgba(0,0,0,0.6),
+  inset 0 -25px 50px -20px rgba(0,0,0,0.45)
+`;
+
+const PILLARS = [
+  { num: '01', label: 'Smart Agent Alliance', text: ', sponsor support built and provided at no cost to agents.' },
+  { num: '02', label: 'Inside eXp Realty', text: ', the largest independent real estate brokerage in the world.' },
+  { num: '03', label: 'Stronger Together', text: ', eXp infrastructure plus SAA systems drive higher agent success.' },
+];
+---
+
+<div class="relative z-10" style="margin-bottom: -38px;">
+  <!-- Shadow underneath -->
+  <div
+    class="absolute left-8 right-8"
+    style="bottom: -12px; height: 35px; background: radial-gradient(ellipse 60% 100% at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 80%); filter: blur(12px); z-index: -1; border-radius: 50%;"
+  ></div>
+
+  <!-- White vignette glow overlay -->
+  <div class="vp-glow absolute inset-0 pointer-events-none z-[3] rounded-3xl"></div>
+
+  <!-- GlassPanel champagne (inlined) -->
+  <div
+    class="relative overflow-hidden rounded-3xl"
+    style={`background: ${champagneBg}; box-shadow: ${champagneShadow}; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);`}
+  >
+    <!-- Dots texture overlay -->
+    <div
+      class="absolute inset-0 pointer-events-none z-[1] rounded-3xl"
+      style="background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px); background-size: 8px 8px;"
+    ></div>
+
+    <!-- Content -->
+    <div class="relative z-10">
+      <section class="px-6" style="padding-top: calc(1.5rem + 15px); padding-bottom: calc(1.5rem + 15px);">
+        <div class="mx-auto" style="max-width: 1500px;">
+          <div class="flex flex-col gap-3 items-center">
+            <div class="flex flex-col gap-3 text-left">
+              {PILLARS.map((pillar) => (
+                <div class="flex items-center gap-3">
+                  <span
+                    class="text-body text-sm md:text-base"
+                    style={`color: #bfbdb0; font-weight: 700; min-width: 1.5em; font-size: 1.75em; text-shadow: ${pillarNumberShadow}; transform: perspective(800px) rotateX(8deg); filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));`}
+                  >
+                    {pillar.num}
+                  </span>
+                  <span
+                    class="text-body text-sm md:text-base"
+                    style="color: #bfbdb0; font-weight: 400; font-family: var(--font-synonym), system-ui, sans-serif;"
+                  >
+                    <span
+                      style={`color: #bfbdb0; font-weight: 700; text-shadow: ${pillarNumberShadow}; transform: perspective(800px) rotateX(8deg); filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));`}
+                    >
+                      {pillar.label}
+                    </span>
+                    {pillar.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes whiteVignetteGlow {
+    0%, 100% {
+      box-shadow:
+        inset 0 20px 30px -15px rgba(255,255,255,0.12),
+        inset 0 -20px 30px -15px rgba(255,255,255,0.12),
+        inset 20px 0 30px -15px rgba(255,255,255,0.12),
+        inset -20px 0 30px -15px rgba(255,255,255,0.12);
+    }
+    50% {
+      box-shadow:
+        inset 0 35px 45px -20px rgba(255,255,255,0.22),
+        inset 0 -35px 45px -20px rgba(255,255,255,0.22),
+        inset 35px 0 45px -20px rgba(255,255,255,0.22),
+        inset -35px 0 45px -20px rgba(255,255,255,0.22);
+    }
+  }
+  .vp-glow {
+    animation: whiteVignetteGlow 4s ease-in-out infinite;
+  }
+</style>

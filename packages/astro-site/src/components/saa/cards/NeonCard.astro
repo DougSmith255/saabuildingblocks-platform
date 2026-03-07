@@ -1,0 +1,109 @@
+---
+/**
+ * NeonCard - Premium neon gold card
+ *
+ * Astro port of @saa/shared/components/saa/cards/NeonCard
+ * Pure CSS with keyframe animation, zero JavaScript.
+ */
+interface Props {
+  class?: string;
+  padding?: 'sm' | 'md' | 'lg' | 'xl';
+  centered?: boolean;
+}
+
+const { class: className = '', padding = 'md', centered = true } = Astro.props;
+
+const paddingClasses: Record<string, string> = { sm: 'p-4', md: 'p-6', lg: 'p-8', xl: 'p-10' };
+const paddingClass = paddingClasses[padding];
+const centerClass = centered ? 'text-center' : '';
+---
+
+<style>
+  .cyber-card-gold-3d {
+    perspective: 1000px;
+    display: block;
+  }
+  .cyber-card-gold-frame {
+    position: relative;
+    border: 10px solid #ffd700;
+    border-radius: 16px;
+    box-shadow:
+      0 0 4px 1px rgba(255, 215, 0, 0.5),
+      0 0 8px 2px rgba(255, 215, 0, 0.35),
+      0 0 16px 4px rgba(255, 215, 0, 0.2),
+      0 0 24px 6px rgba(255, 215, 0, 0.1),
+      0 4px 12px rgba(0,0,0,0.3);
+    overflow: visible;
+    isolation: isolate;
+  }
+  .cyber-card-gold-glass {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 6px;
+    z-index: 0;
+    background:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+      linear-gradient(180deg, rgba(15, 15, 20, 0.85) 0%, rgba(10, 10, 15, 0.92) 100%);
+    background-blend-mode: overlay, normal;
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+  }
+  @media (min-width: 1024px) {
+    .cyber-card-gold-glass {
+      background:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, rgba(15, 15, 20, 0.85) 0%, rgba(10, 10, 15, 0.92) 100%);
+    }
+  }
+  @keyframes cyberCardGoldOrganicPulse {
+    0% { opacity: 0.55; }
+    13% { opacity: 0.95; }
+    28% { opacity: 0.6; }
+    41% { opacity: 0.85; }
+    54% { opacity: 0.5; }
+    67% { opacity: 1; }
+    83% { opacity: 0.7; }
+    100% { opacity: 0.55; }
+  }
+  /* Pulsing outer glow + white outline */
+  .cyber-card-gold-frame::after {
+    content: "";
+    position: absolute;
+    top: -12px; left: -12px; right: -12px; bottom: -12px;
+    border-radius: 18px;
+    border: 2px solid rgba(255,255,255,0.4);
+    box-shadow:
+      0 0 6px 2px rgba(255, 215, 0, 0.6),
+      0 0 12px 4px rgba(255, 215, 0, 0.4),
+      0 0 20px 6px rgba(255, 215, 0, 0.25),
+      0 0 32px 10px rgba(255, 215, 0, 0.12),
+      0 6px 16px rgba(0,0,0,0.35);
+    pointer-events: none;
+    z-index: -1;
+    animation: cyberCardGoldOrganicPulse 2.4s linear infinite;
+    will-change: opacity;
+  }
+  /* Inner white outline */
+  .cyber-card-gold-frame::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 6px;
+    border: 2px solid rgba(255,255,255,0.5);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .cyber-card-gold-content {
+    position: relative;
+    z-index: 10;
+  }
+</style>
+
+<div class:list={['cyber-card-gold-3d', className]}>
+  <div class="cyber-card-gold-frame">
+    <div class="cyber-card-gold-glass" />
+    <div class:list={['cyber-card-gold-content', paddingClass, centerClass]}>
+      <slot />
+    </div>
+  </div>
+</div>

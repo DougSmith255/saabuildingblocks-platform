@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
-import { getVisibleLayers } from './layerUtils';
+import { isMobile } from './layerUtils';
+import { altGlyphs } from './altGlyphs';
 
 export type H1Theme = 'default' | 'cyan';
 
@@ -25,12 +26,12 @@ interface BackingLayer {
   color: string;
   tx: string;
   ty: string;
+  stroke: string;
 }
 
 interface H1Config {
   rotateX: string;
   rotateY: string;
-  strokeWidth: string;
   shadow: { color: string; tx: string; ty: string; blur: string };
   layers: BackingLayer[];
   face: { color: string; tx: string; ty: string; textShadow: string };
@@ -38,7 +39,6 @@ interface H1Config {
 
 // ── Face text-shadow (extrusion depth) ───────────────────────────────
 
-// Extrusion-only shadows (no glow) - used on mobile where backing is disabled
 const EXTRUSION_SHADOWS = [
   '0.003em 0.005em 0 #e5e4dd',
   '0.006em 0.010em 0 #e0dfda',
@@ -71,38 +71,28 @@ const CYAN_FACE_SHADOW = [
 ].join(', ');
 
 // ── Theme configs ────────────────────────────────────────────────────
-// 6 backing layers: bright color (far) -> dark (near face)
+// 2 backing layers: bright/far + dark/near (bolder)
 
 const H1_GOLD: H1Config = {
   rotateX: '12deg',
   rotateY: '-2deg',
-  strokeWidth: '0.08em',
-  shadow: { color: 'rgba(184, 150, 10, 0.5)', tx: '0.022em', ty: '0.065em', blur: '6px' },
+  shadow: { color: 'rgba(184, 150, 10, 0.5)', tx: '0.025em', ty: '0.07em', blur: '6px' },
   layers: [
-    { color: '#e6ac00', tx: '0.018em', ty: '0.055em' },
-    { color: '#bd8e05', tx: '0.014em', ty: '0.043em' },
-    { color: '#94710a', tx: '0.010em', ty: '0.032em' },
-    { color: '#6b530e', tx: '0.007em', ty: '0.022em' },
-    { color: '#423613', tx: '0.004em', ty: '0.012em' },
-    { color: '#191818', tx: '0em', ty: '0em' },
+    { color: '#e6ac00', tx: '0.022em', ty: '0.065em', stroke: '0.16em' },
+    { color: '#191818', tx: '0em', ty: '0em', stroke: '0.22em' },
   ],
-  face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.05em', textShadow: GOLD_FACE_SHADOW },
+  face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.08em', textShadow: GOLD_FACE_SHADOW },
 };
 
 const H1_CYAN: H1Config = {
   rotateX: '12deg',
   rotateY: '-2deg',
-  strokeWidth: '0.08em',
-  shadow: { color: 'rgba(10, 120, 152, 0.5)', tx: '0.022em', ty: '0.065em', blur: '6px' },
+  shadow: { color: 'rgba(10, 120, 152, 0.5)', tx: '0.025em', ty: '0.07em', blur: '6px' },
   layers: [
-    { color: '#00bfff', tx: '0.018em', ty: '0.055em' },
-    { color: '#0aacdd', tx: '0.014em', ty: '0.043em' },
-    { color: '#0a98bb', tx: '0.010em', ty: '0.032em' },
-    { color: '#087080', tx: '0.007em', ty: '0.022em' },
-    { color: '#085c68', tx: '0.004em', ty: '0.012em' },
-    { color: '#181920', tx: '0em', ty: '0em' },
+    { color: '#00bfff', tx: '0.022em', ty: '0.065em', stroke: '0.16em' },
+    { color: '#181920', tx: '0em', ty: '0em', stroke: '0.22em' },
   ],
-  face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.05em', textShadow: CYAN_FACE_SHADOW },
+  face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.08em', textShadow: CYAN_FACE_SHADOW },
 };
 
 const THEME_CONFIGS: Record<H1Theme, H1Config> = {
@@ -119,10 +109,10 @@ export default function H1({
   id,
   theme = 'default',
 }: HeadingProps) {
-  const plainText = extractPlainText(children);
+  const plainText = altGlyphs(extractPlainText(children));
   const config = THEME_CONFIGS[theme];
-  const visibleLayers = getVisibleLayers(config.layers);
-  const hasBacking = visibleLayers.length > 0;
+  const mobile = isMobile();
+  const hasBacking = !mobile;
   const persp = (tx: string, ty: string) =>
     `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
 
@@ -130,7 +120,7 @@ export default function H1({
     <div style={{ position: 'relative', display: 'inline-block', width: '100%', overflow: 'visible' }}>
       {/* Backing layers (disabled on mobile for performance) */}
       {hasBacking && (
-        <div aria-hidden="true" style={{ userSelect: 'none', position: 'absolute', inset: 0, overflow: 'clip' }}>
+        <div aria-hidden="true" style={{ userSelect: 'none', position: 'absolute', inset: 0 }}>
           {/* Shadow */}
           <div
             className={`text-h1 text-display ${className}`}
@@ -143,7 +133,6 @@ export default function H1({
               margin: 0,
               lineHeight: 1.1,
               fontSize: style.fontSize,
-              fontFeatureSettings: '"ss01" 1',
               color: config.shadow.color,
               textShadow: 'none',
               transform: persp(config.shadow.tx, config.shadow.ty),
@@ -152,8 +141,8 @@ export default function H1({
           >
             {plainText}
           </div>
-          {/* Color layers */}
-          {visibleLayers.map((layer, i) => (
+          {/* 2 stroked layers */}
+          {config.layers.map((layer, i) => (
             <div
               key={i}
               className={`text-h1 text-display ${className}`}
@@ -166,9 +155,8 @@ export default function H1({
                 margin: 0,
                 lineHeight: 1.1,
                 fontSize: style.fontSize,
-                fontFeatureSettings: '"ss01" 1',
                 color: layer.color,
-                WebkitTextStroke: `${config.strokeWidth} ${layer.color}`,
+                WebkitTextStroke: `${layer.stroke} ${layer.color}`,
                 WebkitTextFillColor: layer.color,
                 paintOrder: 'stroke fill',
                 textShadow: 'none',
@@ -190,7 +178,6 @@ export default function H1({
           color: config.face.color,
           textShadow: hasBacking ? config.face.textShadow : EXTRUSION_SHADOWS,
           transform: hasBacking ? persp(config.face.tx, config.face.ty) : undefined,
-          fontFeatureSettings: '"ss01" 1',
           lineHeight: 1.1,
           position: 'relative',
           overflow: 'visible',

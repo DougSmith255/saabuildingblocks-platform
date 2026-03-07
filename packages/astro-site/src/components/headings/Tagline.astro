@@ -1,0 +1,50 @@
+---
+/**
+ * Tagline - Pure CSS 3D tagline (no JavaScript)
+ *
+ * Uses the same text-shadow style as H2 default theme.
+ */
+interface Props {
+  class?: string;
+  style?: Record<string, string>;
+}
+
+const { class: className = '', style = {} } = Astro.props;
+
+const faceTextShadow = [
+  '0.005em 0.007em 0 #dddcd5',
+  '0.010em 0.015em 0 #d5d4cb',
+  '0.015em 0.025em 0 #cccbc2',
+  '0.019em 0.035em 0 #c2c1b8',
+  '0.023em 0.045em 0 #b8b7ae',
+  '0.027em 0.055em 0 #abaa9f',
+  '0.031em 0.065em 0 #a09f94',
+  '0.034em 0.073em 0 #96958a',
+  '0.037em 0.080em 0 #8d8c80',
+  '0.040em 0.088em 0 #7a7970',
+].join(', ');
+
+const mergedStyle = {
+  textAlign: 'center',
+  fontFeatureSettings: '"ss01" 1',
+  color: '#e5e4dd',
+  textShadow: faceTextShadow,
+  transform: 'perspective(800px) rotateX(8deg)',
+  lineHeight: '1.1',
+  marginTop: '30px',
+  marginBottom: '30px',
+  ...style,
+};
+
+const styleString = Object.entries(mergedStyle).map(([k, v]) => {
+  const prop = k.replace(/([A-Z])/g, '-$1').toLowerCase();
+  return `${prop}: ${v}`;
+}).join('; ');
+---
+
+<p
+  class:list={['text-h2', className]}
+  style={styleString}
+>
+  <slot />
+</p>

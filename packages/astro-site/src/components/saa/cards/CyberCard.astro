@@ -1,0 +1,117 @@
+---
+/**
+ * CyberCard - Premium 3D metal-plate card
+ *
+ * Astro port of @saa/shared/components/saa/cards/CyberCard
+ * Zero JavaScript. Fully static HTML.
+ */
+interface Props {
+  class?: string;
+  padding?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  centered?: boolean;
+  href?: string;
+  interactive?: boolean;
+}
+
+const { class: className = '', padding = 'md', centered = true, href, interactive } = Astro.props;
+
+const isInteractive = interactive ?? !!href;
+
+const paddingClasses: Record<string, string> = {
+  sm: 'p-4',
+  md: 'p-6',
+  lg: 'p-8',
+  xl: 'p-10',
+  '2xl': 'p-12 pt-20',
+};
+const paddingClass = paddingClasses[padding];
+const centerClass = centered ? 'text-center' : '';
+---
+
+{href ? (
+  <a href={href} class="block no-underline">
+    <div class:list={['cyber-card-3d', isInteractive && 'cyber-card-interactive', className]}>
+      <div class="cyber-card-plate">
+        <div class:list={['cyber-card-content', paddingClass, centerClass]}>
+          <slot />
+        </div>
+      </div>
+    </div>
+  </a>
+) : (
+  <div class:list={['cyber-card-3d', isInteractive && 'cyber-card-interactive', className]}>
+    <div class="cyber-card-plate">
+      <div class:list={['cyber-card-content', paddingClass, centerClass]}>
+        <slot />
+      </div>
+    </div>
+  </div>
+)}
+
+<style>
+  .cyber-card-3d {
+    perspective: 1000px;
+    display: block;
+  }
+  .cyber-card-3d.h-full { height: 100%; }
+  .cyber-card-3d.h-full .cyber-card-plate { height: 100%; }
+  .cyber-card-3d.h-full .cyber-card-content { height: 100%; display: flex; flex-direction: column; }
+
+  .cyber-card-plate {
+    position: relative;
+    transform-style: preserve-3d;
+    transform: translateZ(0);
+    background: linear-gradient(180deg, #2a2a2a 0%, #1f1f1f 40%, #171717 100%);
+    border-radius: 12px;
+    overflow: visible;
+    border-top: 2px solid rgba(180,180,180,0.45);
+    border-left: 1px solid rgba(130,130,130,0.35);
+    border-right: 1px solid rgba(60,60,60,0.6);
+    border-bottom: 2px solid rgba(0,0,0,0.7);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.12),
+      inset 0 -1px 2px rgba(0,0,0,0.25),
+      0 6px 16px rgba(0,0,0,0.5),
+      0 2px 6px rgba(0,0,0,0.3);
+  }
+  .cyber-card-plate::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+    border-radius: 12px 12px 0 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .cyber-card-interactive { cursor: pointer; }
+  .cyber-card-interactive .cyber-card-plate {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+  }
+  .cyber-card-interactive:hover .cyber-card-plate {
+    transform: translateY(-4px) scale(1.02);
+    background: linear-gradient(180deg, #373737 0%, #2c2c2c 40%, #242424 100%);
+    border-color: rgba(255,215,0,0.6);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.2),
+      inset 0 -1px 2px rgba(0,0,0,0.25),
+      0 12px 30px rgba(0,0,0,0.5),
+      0 6px 12px rgba(0,0,0,0.3),
+      0 4px 16px rgba(255,215,0,0.1);
+  }
+
+  .cyber-card-content {
+    position: relative;
+    z-index: 2;
+    transform-style: preserve-3d;
+    transform: translateZ(0);
+    overflow: visible;
+  }
+  .cyber-card-content :global(h3),
+  .cyber-card-content :global(h4),
+  .cyber-card-content :global(h5),
+  .cyber-card-content :global(h6) {
+    color: #ffd700;
+  }
+</style>

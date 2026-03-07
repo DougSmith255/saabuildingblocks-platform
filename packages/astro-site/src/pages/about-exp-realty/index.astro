@@ -1,16 +1,12 @@
 ---
-/**
- * About eXp Realty - Company overview page.
- * Full React island due to theme override, animated stats,
- * flip cards, and 8 lazy-loaded sections.
- */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import AboutExpRealtyPage from '@public-site/app/about-exp-realty/page';
+import PageIsland from '../../islands/about-exp-realty';
 ---
 
 <BaseLayout
-  title="About eXp Realty | Smart Agent Alliance"
-  description="Learn about eXp Realty - the cloud-based brokerage revolutionizing real estate with industry-leading technology, revenue share, and agent-first culture."
+  title="About eXp Realty - Cloud Brokerage"
+  description="Learn about eXp Realty, the cloud-based real estate brokerage."
+  canonical="/about-exp-realty/"
 >
-  <AboutExpRealtyPage client:load />
+  <PageIsland client:load />
 </BaseLayout>

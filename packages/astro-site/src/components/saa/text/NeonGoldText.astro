@@ -1,0 +1,20 @@
+---
+/**
+ * NeonGoldText - Gold neon glow text with Taskor font
+ *
+ * Astro port of @saa/shared/components/saa/text/NeonGoldText
+ * Zero JavaScript. Fully static HTML.
+ */
+interface Props {
+  as?: 'span' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'div';
+  class?: string;
+}
+
+const { as: Tag = 'span', class: className = '' } = Astro.props;
+
+const style = `display: flex; flex-wrap: wrap; justify-content: center; row-gap: 0; column-gap: 0.35em; font-family: var(--font-taskor), sans-serif; font-feature-settings: "ss01" 1; color: #ffd700; text-shadow: -0.02em -0.02em 0 rgba(255,255,255,0.4), 0.02em -0.02em 0 rgba(255,255,255,0.4), -0.02em 0.02em 0 rgba(255,255,255,0.4), 0.02em 0.02em 0 rgba(255,255,255,0.4), 0 -0.03em 0.1em #ffd700, 0 0 0.03em #ffd700, 0 0 0.07em #ffd700, 0 0 0.12em #ffb347, 0 0.03em 0.05em #000;`;
+---
+
+<Tag class:list={['font-display', className]} style={style}>
+  <slot />
+</Tag>

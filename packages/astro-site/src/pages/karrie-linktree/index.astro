@@ -1,98 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { GenericCard } from '@saa/shared/components/saa/cards/GenericCard';
-import { ProfileCyberFrame } from '@saa/shared/components/saa/media/ProfileCyberFrame';
-
-const KARRIE_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public';
-
-const socialLinks = [
-  { title: "Instagram", href: "https://instagram.com/karriehill.jd.marinrealtor", icon: "\u{1F4F8}" },
-  { title: "YouTube", href: "https://youtube.com/@karriehill.jd.realtor", icon: "\u{1F3AC}" },
-  { title: "LinkedIn", href: "https://linkedin.com/in/karrie-hill-j-d", icon: "\u{1F4BC}" },
-];
-
-const resourceLinks = [
-  { title: "Smart Agent Alliance", description: "Our team website and resources", href: "/", highlight: true },
-  { title: "Everything About eXp", description: "Learn about eXp Realty", href: "/about-exp-realty/", highlight: false },
-  { title: "Join My eXp Sponsor Team", description: "Partner with the Wolf Pack", href: "/exp-realty-sponsor/", highlight: true },
-  { title: "YouTube - For Agents", description: "Training and tips for real estate agents", href: "https://youtube.com/@SmartAgentAlliance", highlight: false },
-  { title: "Marin County Real Estate", description: "My local real estate website", href: "https://karriehill.exprealty.com", highlight: false },
-];
+import PageIsland from '../../islands/karrie-linktree';
 ---
 
 <BaseLayout
-  title="Karrie Hill, JD - Links"
-  description="Quick links and resources from Karrie Hill, Co-Founder of Smart Agent Alliance."
-  ogTitle="Karrie Hill Links | Smart Agent Alliance"
-  noHeader
-  noFooter
-  noScrollIndicator
-  noScrollProgress
-  noStarBackground
+  title="Karrie Hill Links"
+  description="Karrie Hill's link page."
+  canonical="/karrie-linktree/"
 >
-  <main id="main-content" class="flex flex-col items-center py-12 px-4 min-h-screen">
-    <!-- Profile Section -->
-    <div class="text-center mb-8">
-      <ProfileCyberFrame client:visible size="md" index={1}>
-        <img
-          src={KARRIE_PROFILE_IMAGE}
-          alt="Karrie Hill"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-      </ProfileCyberFrame>
-      <h1 class="text-h4 text-[#e5e4dd] mb-1">Karrie Hill, JD</h1>
-      <p class="text-[#ffd700] mb-2" style={{ fontSize: 'var(--font-size-caption)' }}>Marin County Realtor</p>
-      <p class="text-[#dcdbd5]/80 max-w-xs mx-auto" style={{ fontSize: 'var(--font-size-caption)' }}>
-        Co-Founder, Smart Agent Alliance @ eXp Realty
-      </p>
-    </div>
-
-    <!-- Social Icons -->
-    <div class="flex gap-4 mb-8">
-      {socialLinks.map((link) => (
-        <a
-          href={link.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-xl hover:bg-[#ffd700]/20 transition-colors"
-          title={link.title}
-        >
-          {link.icon}
-        </a>
-      ))}
-    </div>
-
-    <!-- Resource Links -->
-    <div class="w-full max-w-md space-y-3">
-      {resourceLinks.map((link) => (
-        <a
-          href={link.href}
-          target={link.href.startsWith('http') ? '_blank' : undefined}
-          rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-          class="block"
-        >
-          <GenericCard hover padding="sm" centered>
-            <p class="text-body text-[#e5e4dd] font-medium">{link.title}</p>
-            {link.description && (
-              <p class="text-[#dcdbd5]/80 mt-1" style={{ fontSize: 'var(--font-size-caption)' }}>{link.description}</p>
-            )}
-          </GenericCard>
-        </a>
-      ))}
-    </div>
-
-    <!-- Email -->
-    <div class="mt-8 text-center">
-      <a href="mailto:team@smartagentalliance.com" class="text-link hover:underline">
-        team@smartagentalliance.com
-      </a>
-    </div>
-
-    <!-- Footer -->
-    <div class="mt-12 text-center">
-      <p class="text-caption text-[#dcdbd5]/40">
-        Smart Agent Alliance &bull; eXp Realty
-      </p>
-    </div>
-  </main>
+  <PageIsland client:idle />
 </BaseLayout>

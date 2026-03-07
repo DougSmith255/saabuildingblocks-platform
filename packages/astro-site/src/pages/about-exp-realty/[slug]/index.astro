@@ -1,159 +1,66 @@
 ---
 /**
- * Standalone category route for about-exp-realty blog posts.
- * These are WordPress blog posts served at /about-exp-realty/{slug}/ instead of /blog/.
+ * Dynamic about-exp-realty blog posts: /about-exp-realty/[slug]/
+ * These are standalone category posts that live outside /blog/.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { GenericCard } from '@saa/shared/components/saa/cards/GenericCard';
-import { CTAButton } from '../../../components/react/CTAButton';
-import { JoinAllianceCTA } from '../../../components/react/JoinAllianceCTA';
-import { getCachedBlogPosts, findPostBySlug, getRelatedPosts } from '../../../lib/blog-data';
-import { categoryToSlug, getPostUrl, getPostParts } from '../../../lib/blog-post-urls';
-import { buildBlogPostingSchema, buildVideoSchema } from '../../../lib/blog-schema';
-import { extractFAQs, generateFAQSchema, transformFAQToRankMathMarkup } from '../../../lib/faq-utils';
-import { cleanExcerpt } from '../../../lib/wordpress/fallbacks';
+import BlogPostIsland from '../../../islands/blog-post';
+import { getAllBlogPosts, findPostBySlug, getRelatedPosts } from '../../../lib/blog-data';
+import { cleanExcerpt } from '@public-site/lib/wordpress/fallbacks';
+import { extractFAQs, generateFAQSchema } from '@public-site/lib/faq-utils';
+import { buildBlogPostingSchema, buildVideoSchema } from '@public-site/lib/blog-schema';
+import { getPostUrl } from '@public-site/lib/blog-post-urls';
+import { buildBreadcrumbSchema } from '../../../lib/breadcrumb-schema';
 
 export function getStaticPaths() {
-  const posts = getCachedBlogPosts();
+  const posts = getAllBlogPosts();
 
   return posts
-    .filter((post) => getPostParts(post).category === 'about-exp-realty')
-    .map((post) => {
-      const { slug } = getPostParts(post);
-      return { params: { slug }, props: { post } };
-    });
+    .filter((post) => post.customUri?.startsWith('about-exp-realty/'))
+    .map((post) => ({
+      params: { slug: post.customUri!.split('/').pop()! },
+      props: { postSlug: post.customUri!.split('/').pop()! },
+    }));
 }
 
-const { post } = Astro.props;
+const { postSlug } = Astro.props;
 const { slug } = Astro.params;
-const posts = getCachedBlogPosts();
-const currentPost = post || findPostBySlug(posts, slug as string);
+const posts = getAllBlogPosts();
+const post = findPostBySlug(posts, postSlug);
 
-if (!currentPost) {
-  return Astro.redirect('/about-exp-realty/');
+if (!post) {
+  return Astro.redirect('/404');
 }
 
-const transformedContent = transformFAQToRankMathMarkup(currentPost.content);
-const seoTitle = currentPost.metaTitle || currentPost.title;
-const description = currentPost.metaDescription || cleanExcerpt(currentPost.excerpt, 160);
-const postUrl = getPostUrl(currentPost);
-const canonical = `https://smartagentalliance.com${postUrl}`;
-const blogPostingSchema = buildBlogPostingSchema(currentPost, postUrl);
-const videoSchema = buildVideoSchema(currentPost);
-const faqs = extractFAQs(currentPost.content);
+const category = post.categories[0] || 'uncategorized';
+const relatedPosts = getRelatedPosts(posts, post);
+
+const seoTitle = post.metaTitle || post.title;
+const description = post.metaDescription || cleanExcerpt(post.excerpt, 160);
+const ogImage = post.featuredImage?.url || '/og-image.jpg';
+
+const postUrl = getPostUrl(post);
+const faqs = extractFAQs(post.content);
 const faqSchema = generateFAQSchema(faqs);
-const relatedPosts = getRelatedPosts(posts, currentPost, 6);
-const formattedDate = new Date(currentPost.date).toLocaleDateString('en-US', {
-  year: 'numeric', month: 'long', day: 'numeric',
-});
-const primaryCategory = currentPost.categories[0] || 'About eXp Realty';
+const blogPostingSchema = buildBlogPostingSchema(post, postUrl);
+const videoSchema = buildVideoSchema(post);
+const breadcrumbSchema = buildBreadcrumbSchema(category, post.title);
 ---
 
 <BaseLayout
   title={`${seoTitle} | Smart Agent Alliance`}
   description={description}
-  ogTitle={seoTitle}
-  ogDescription={description}
-  ogImage={currentPost.featuredImage?.url}
-  canonical={canonical}
+  canonical={`/about-exp-realty/${slug}/`}
+  ogImage={ogImage}
 >
-  <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
-    {videoSchema && <script type="application/ld+json" set:html={JSON.stringify(videoSchema)} />}
-    {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
-  </Fragment>
-
-  <main id="main-content">
-    <section class="relative py-24 md:py-32 px-4 sm:px-8 md:px-12">
-      <div class="max-w-4xl mx-auto text-center">
-        <div class="flex items-center justify-center gap-3 mb-6">
-          <span class="text-[#ffd700]" style={{ fontSize: 'var(--font-size-caption)' }}>{primaryCategory}</span>
-          <span class="text-[#dcdbd5]/40">|</span>
-          <span class="text-[#dcdbd5]/60" style={{ fontSize: 'var(--font-size-caption)' }}>{formattedDate}</span>
-        </div>
-        <h1 class="text-h2 text-[#e5e4dd] mb-6" data-speakable="headline">{currentPost.title}</h1>
-        {currentPost.excerpt && (
-          <p class="text-body max-w-2xl mx-auto" data-speakable="summary">{cleanExcerpt(currentPost.excerpt, 200)}</p>
-        )}
-        <div class="flex items-center justify-center gap-3 mt-6">
-          <span class="text-body">{currentPost.author.name}</span>
-        </div>
-      </div>
-    </section>
-
-    {currentPost.featuredImage?.url && (
-      <section class="px-4 sm:px-8 md:px-12 mb-12">
-        <div class="max-w-4xl mx-auto">
-          <img src={currentPost.featuredImage.url} alt={currentPost.featuredImage.alt || currentPost.title} class="w-full rounded-xl" loading="eager" />
-        </div>
-      </section>
-    )}
-
-    {currentPost.comparisonImages && currentPost.comparisonImages.length > 0 && (
-      <section class="px-4 sm:px-8 md:px-12 mb-12">
-        <div class="max-w-4xl mx-auto">
-          {currentPost.comparisonImages.map((img: { url: string; alt: string; title: string }) => (
-            <img src={img.url} alt={img.alt} title={img.title} class="w-full rounded-xl mb-4" loading="lazy" />
-          ))}
-        </div>
-      </section>
-    )}
-
-    {currentPost.youtubeVideoUrl && (
-      <section class="px-4 sm:px-8 md:px-12 mb-12">
-        <div class="max-w-4xl mx-auto">
-          <div class="aspect-video rounded-xl overflow-hidden">
-            <iframe
-              src={`https://www.youtube.com/embed/${currentPost.youtubeVideoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/))([a-zA-Z0-9_-]{11})/)?.[1] || ''}`}
-              title={currentPost.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-              class="w-full h-full"
-              loading="lazy"
-            />
-          </div>
-        </div>
-      </section>
-    )}
-
-    <article class="px-4 sm:px-8 md:px-12 pb-16">
-      <div class="max-w-4xl mx-auto blog-content text-body" set:html={transformedContent} />
-    </article>
-
-    {relatedPosts.length > 0 && (
-      <section class="py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div class="max-w-[1900px] mx-auto">
-          <h2 class="text-h4 text-center mb-8">Related Posts</h2>
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {relatedPosts.map((related) => (
-              <a href={getPostUrl(related)} class="block group">
-                <GenericCard hover padding="none" className="h-full overflow-hidden">
-                  {related.featuredImage?.url && (
-                    <div class="aspect-[16/9] overflow-hidden">
-                      <img src={related.featuredImage.url} alt={related.featuredImage.alt || related.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                    </div>
-                  )}
-                  <div class="p-4">
-                    <span class="text-[#ffd700]" style={{ fontSize: 'var(--font-size-caption)' }}>{related.categories[0] || 'Uncategorized'}</span>
-                    <h3 class="text-h6 text-[#e5e4dd] mt-1 group-hover:text-[#00ff88] transition-colors line-clamp-2">{related.title}</h3>
-                  </div>
-                </GenericCard>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-    )}
-
-    <section class="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-      <div class="max-w-[1900px] mx-auto text-center">
-        <h2 class="text-h4 mb-4">Ready to Level Up?</h2>
-        <p class="text-body mt-4 mb-8">Join Smart Agent Alliance and get the eXp advantage.</p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <JoinAllianceCTA client:idle />
-          <CTAButton client:visible href="/exp-realty-sponsor/">See Our Value</CTAButton>
-        </div>
-      </div>
-    </section>
-  </main>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
+  {videoSchema && <script slot="head" type="application/ld+json" set:html={JSON.stringify(videoSchema)} />}
+  {faqSchema && <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <BlogPostIsland
+    client:load
+    post={post}
+    category={category}
+    relatedPosts={relatedPosts}
+  />
 </BaseLayout>

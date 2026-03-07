@@ -1,0 +1,47 @@
+---
+/**
+ * SecondaryButton - Dark button with side glow bars
+ *
+ * Astro port of @saa/shared/components/saa/buttons/SecondaryButton
+ * Pure CSS with keyframe animation, zero JavaScript.
+ */
+interface Props {
+  href?: string;
+  class?: string;
+  variant?: 'gold' | 'green' | 'purple' | 'blue';
+}
+
+const { href = '#', class: className = '', variant = 'gold' } = Astro.props;
+
+const colorConfig = {
+  gold: { bar: '#ffd700', glowRgb: '255, 215, 0' },
+  green: { bar: '#00cc66', glowRgb: '0, 255, 136' },
+  purple: { bar: '#9933ff', glowRgb: '191, 95, 255' },
+  blue: { bar: '#00bfff', glowRgb: '0, 191, 255' },
+};
+const { bar: lightBarColor, glowRgb } = colorConfig[variant];
+---
+
+<div class:list={['relative py-2', className]}>
+  <div class="group relative inline-block">
+    <a
+      href={href}
+      class="relative flex justify-center items-center overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-l before:from-white/15 before:to-transparent before:w-1/2 before:skew-x-[45deg]"
+      style={`color: var(--text-color-secondaryButton, var(--text-color-button, var(--color-headingText))); font-size: var(--font-size-secondaryButton, var(--font-size-button, 20px)); font-family: var(--font-family-secondaryButton, var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif)); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; height: clamp(35px, calc(33.182px + 0.7273vw), 55px); padding-left: 1.25rem; padding-right: 1.25rem; padding-top: 0.5rem; padding-bottom: 0.5rem; background-color: rgb(45,45,45); border-radius: 0.75rem; box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5); white-space: nowrap; z-index: 10;`}
+    >
+      <slot />
+    </a>
+
+    {/* Left side glow bar */}
+    <div
+      class="cta-light-bar cta-light-bar-pulse cta-light-bar-side rounded-md transition-all duration-500"
+      style={`--glow-color: ${glowRgb}; position: absolute; top: 50%; left: -5px; transform: translateY(-50%); width: 10px; height: 18px; background: ${lightBarColor}; border-radius: 6px; z-index: 5;`}
+    />
+
+    {/* Right side glow bar */}
+    <div
+      class="cta-light-bar cta-light-bar-pulse cta-light-bar-side rounded-md transition-all duration-500"
+      style={`--glow-color: ${glowRgb}; position: absolute; top: 50%; right: -5px; transform: translateY(-50%); width: 10px; height: 18px; background: ${lightBarColor}; border-radius: 6px; z-index: 5;`}
+    />
+  </div>
+</div>

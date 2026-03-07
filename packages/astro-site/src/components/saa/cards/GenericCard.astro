@@ -1,0 +1,60 @@
+---
+/**
+ * GenericCard - Premium dark glass card
+ *
+ * Astro port of @saa/shared/components/saa/cards/GenericCard
+ * Zero JavaScript. Fully static HTML.
+ */
+interface Props {
+  class?: string;
+  hover?: boolean;
+  padding?: 'sm' | 'md' | 'lg' | 'xl';
+  centered?: boolean;
+  href?: string;
+  style?: Record<string, string>;
+}
+
+const { class: className = '', hover = false, padding = 'md', centered = false, href, style = {} } = Astro.props;
+
+const isInteractive = hover || !!href;
+
+const paddingClasses: Record<string, string> = {
+  sm: 'p-4',
+  md: 'p-6',
+  lg: 'p-8 md:p-10',
+  xl: 'p-10 md:p-12',
+};
+const paddingClass = paddingClasses[padding];
+const centerClass = centered ? 'text-center' : '';
+const hoverClasses = isInteractive ? 'transition-all duration-500 ease-out hover:scale-[1.01] cursor-pointer' : '';
+
+const baseStyle = {
+  background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+  border: '1px solid rgba(255,255,255,0.06)',
+  boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+  ...style,
+};
+
+const styleString = Object.entries(baseStyle).map(([k, v]) => {
+  const prop = k.replace(/([A-Z])/g, '-$1').toLowerCase();
+  return `${prop}: ${v}`;
+}).join('; ');
+---
+
+{href ? (
+  <a href={href} class="block no-underline">
+    <div
+      class:list={['rounded-xl', paddingClass, hoverClasses, centerClass, className]}
+      style={styleString}
+    >
+      <slot />
+    </div>
+  </a>
+) : (
+  <div
+    class:list={['rounded-xl', paddingClass, hoverClasses, centerClass, className]}
+    style={styleString}
+  >
+    <slot />
+  </div>
+)}

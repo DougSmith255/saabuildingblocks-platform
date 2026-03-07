@@ -1,0 +1,375 @@
+---
+/**
+ * Component Comparison Page
+ *
+ * Side-by-side comparison of React shared components vs Astro component library.
+ * Left column: React (hydrated islands)
+ * Right column: Astro (static HTML)
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Astro components
+import GlassPanel from '../../components/saa/backgrounds/GlassPanel.astro';
+import NeonCard from '../../components/saa/cards/NeonCard.astro';
+import GrainCard from '../../components/saa/cards/GrainCard.astro';
+import GenericCard from '../../components/saa/cards/GenericCard.astro';
+import CyberCard from '../../components/saa/cards/CyberCard.astro';
+import IconCard from '../../components/saa/cards/IconCard.astro';
+import Icon3D from '../../components/saa/icons/Icon3D.astro';
+import SecondaryButton from '../../components/saa/buttons/SecondaryButton.astro';
+import CTAButton from '../../components/saa/buttons/CTAButton.astro';
+import NeonGoldText from '../../components/saa/text/NeonGoldText.astro';
+import H1 from '../../components/saa/headings/H1.astro';
+import H2 from '../../components/saa/headings/H2.astro';
+import Tagline from '../../components/saa/headings/Tagline.astro';
+
+// React islands for comparison
+import {
+  ReactGlassPanel,
+  ReactGlassPanelEmerald,
+  ReactNeonCard,
+  ReactGrainCard,
+  ReactGenericCard,
+  ReactCyberCard,
+  ReactIconCard,
+  ReactIconCardBlue,
+  ReactIcon3D,
+  ReactSecondaryButton,
+  ReactCTAButton,
+  ReactNeonGoldText,
+  ReactH1,
+  ReactH2Default,
+  ReactH2Gold,
+  ReactTagline,
+} from '../../islands/compare/react-components';
+---
+
+<BaseLayout title="Component Comparison - React vs Astro" canonical="/component-compare">
+  <main id="main-content" class="max-w-7xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold text-center mb-2" style="color: #e5e4dd; font-family: var(--font-taskor);">
+      Component Comparison
+    </h1>
+    <p class="text-center mb-12" style="color: #9a9990;">
+      Left: React (shared library) | Right: Astro (static)
+    </p>
+
+    {/* ── H1 Heading ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">H1 (Gold Theme)</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <ReactH1 client:visible />
+          </div>
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <H1>For Agents Who Want More</H1>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── H2 Default ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">H2 (Default Theme)</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <ReactH2Default client:visible />
+          </div>
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <H2>Why Smart Agent Alliance</H2>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── H2 Gold ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">H2 (Gold Theme)</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <ReactH2Gold client:visible />
+          </div>
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <H2 theme="gold">Built for the Future</H2>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── Tagline ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">Tagline</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <ReactTagline client:visible />
+          </div>
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <Tagline>The Alliance Advantage</Tagline>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── CTAButton ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">CTAButton</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <div class="p-6 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <ReactCTAButton client:visible />
+          </div>
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <div class="p-6 rounded-xl flex justify-center" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <CTAButton href="#">Join The Alliance</CTAButton>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── SecondaryButton ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">SecondaryButton</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <div class="p-6 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <ReactSecondaryButton client:visible />
+          </div>
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <div class="p-6 rounded-xl flex justify-center" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <SecondaryButton href="#">See Full Value Stack</SecondaryButton>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── NeonGoldText ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">NeonGoldText</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <div class="p-6 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <ReactNeonGoldText client:visible />
+          </div>
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <div class="p-6 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <NeonGoldText as="h3" class="text-h3">Premium Gold Title</NeonGoldText>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── GlassPanel Champagne ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">GlassPanel (Champagne)</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <ReactGlassPanel client:visible />
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <GlassPanel variant="champagne">
+            <div class="p-8">
+              <p style="color: #dcdbd5; text-align: center;">GlassPanel champagne variant</p>
+            </div>
+          </GlassPanel>
+        </div>
+      </div>
+    </section>
+
+    {/* ── GlassPanel Emerald ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">GlassPanel (Emerald)</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <ReactGlassPanelEmerald client:visible />
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <GlassPanel variant="emerald">
+            <div class="p-8">
+              <p style="color: #dcdbd5; text-align: center;">GlassPanel emerald variant</p>
+            </div>
+          </GlassPanel>
+        </div>
+      </div>
+    </section>
+
+    {/* ── NeonCard ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">NeonCard</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <ReactNeonCard client:visible />
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <NeonCard>
+            <p style="color: #ffd700; font-size: 1.25rem; font-weight: 700;">Neon Card Title</p>
+            <p style="color: #dcdbd5; margin-top: 0.5rem;">Card content goes here with pulsing glow.</p>
+          </NeonCard>
+        </div>
+      </div>
+    </section>
+
+    {/* ── GrainCard ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">GrainCard</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <ReactGrainCard client:visible />
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <GrainCard>
+            <h3 style="color: #e5e4dd; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.5rem;">Grain Card</h3>
+            <p style="color: #dcdbd5; font-size: 0.875rem;">Dark card with grainy noise texture.</p>
+          </GrainCard>
+        </div>
+      </div>
+    </section>
+
+    {/* ── GenericCard ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">GenericCard</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <ReactGenericCard client:visible />
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <GenericCard>
+            <h3 style="color: #e5e4dd; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.5rem;">Generic Card</h3>
+            <p style="color: #dcdbd5; font-size: 0.875rem;">Premium dark glass styling.</p>
+          </GenericCard>
+        </div>
+      </div>
+    </section>
+
+    {/* ── CyberCard ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">CyberCard</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <ReactCyberCard client:visible />
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <CyberCard>
+            <div style="font-size: 2.5rem; font-weight: 700; color: #ffd700;">2,900+</div>
+            <p style="color: #dcdbd5; margin-top: 0.5rem;">Agents Strong</p>
+          </CyberCard>
+        </div>
+      </div>
+    </section>
+
+    {/* ── IconCard Yellow ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">IconCard (Yellow)</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <ReactIconCard client:visible />
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <IconCard theme="yellow">
+            <div slot="icon" class="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
+              <div class="absolute inset-0 rounded-full" style="background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1)); box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1); animation: iconCardPulse 3s ease-in-out infinite;" />
+              <div class="absolute inset-2 rounded-full flex items-center justify-center" style="background: linear-gradient(180deg, rgba(15,15,10,0.95), rgba(10,10,5,0.98)); border: 1px solid rgba(255,215,0,0.3);">
+                <svg class="w-6 h-6" style="color: #ffd700; filter: drop-shadow(0 0 8px rgba(255,215,0,0.5));" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+              </div>
+            </div>
+            <h3 style="color: #e5e4dd; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.5rem;">Icon Card Yellow</h3>
+            <p style="color: #dcdbd5; font-size: 0.875rem;">Card with animated icon ring.</p>
+          </IconCard>
+        </div>
+      </div>
+    </section>
+
+    {/* ── IconCard Blue ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">IconCard (Blue)</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <ReactIconCardBlue client:visible />
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <IconCard theme="blue">
+            <div slot="icon" class="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
+              <div class="absolute inset-0 rounded-full" style="background: linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1)); box-shadow: 0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1); animation: iconCardPulse 3s ease-in-out infinite;" />
+              <div class="absolute inset-2 rounded-full flex items-center justify-center" style="background: linear-gradient(180deg, rgba(15,20,30,0.95), rgba(5,10,20,0.98)); border: 1px solid rgba(0,191,255,0.3);">
+                <svg class="w-6 h-6" style="color: #00bfff; filter: drop-shadow(0 0 8px rgba(0,191,255,0.5));" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+              </div>
+            </div>
+            <h3 style="color: #e5e4dd; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.5rem;">Icon Card Blue</h3>
+            <p style="color: #dcdbd5; font-size: 0.875rem;">Card with animated icon ring.</p>
+          </IconCard>
+        </div>
+      </div>
+    </section>
+
+    {/* ── Icon3D ── */}
+    <section class="mb-20">
+      <div class="text-xs uppercase tracking-widest mb-4 px-2" style="color: #ffd700;">Icon3D</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">React</div>
+          <div class="p-6 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <ReactIcon3D client:visible />
+          </div>
+        </div>
+        <div>
+          <div class="text-xs mb-2 px-2" style="color: #666;">Astro</div>
+          <div class="p-6 rounded-xl flex gap-8 justify-center items-center" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+            <Icon3D color="#ffd700" size={48}>
+              <svg class="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+            </Icon3D>
+            <Icon3D color="#00bfff" size={48}>
+              <svg class="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+            </Icon3D>
+            <Icon3D color="#00cc66" size={48}>
+              <svg class="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+            </Icon3D>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</BaseLayout>

@@ -1,0 +1,179 @@
+---
+/**
+ * WhatYouGet - "What You Get Inside SAA" with orbital rings + icon cards
+ * Pure static HTML with CSS animations. Zero JavaScript.
+ * Inlines IconCard and SecondaryButton styling.
+ */
+import H2 from '../saa/headings/H2.astro';
+
+const CARDS = [
+  {
+    title: 'Guided Launch',
+    text: 'Launch your business with clarity from day one.',
+    theme: 'yellow',
+    iconPath: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+  },
+  {
+    title: 'Done-For-You Lead Systems',
+    text: 'Pre-built business assets ready for implementation.',
+    theme: 'blue',
+    iconPath: '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 16h8"/><path d="M7 11h12"/><path d="M7 6h3"/>',
+  },
+  {
+    title: 'Training & Development',
+    text: 'Practical training designed for production growth.',
+    theme: 'yellow',
+    iconPath: '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+  },
+  {
+    title: 'Income Growth & Attraction',
+    text: 'Structured attraction pathways with team support.',
+    theme: 'blue',
+    iconPath: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+  },
+  {
+    title: 'Ongoing Support',
+    text: 'Accessible support and expanding resources.',
+    theme: 'yellow',
+    iconPath: '<circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/>',
+  },
+];
+
+const THEMES: Record<string, { primary: string; primaryRgb: string; border: string; hoverGlow: string; iconBg: string; iconBorder: string; iconGlow: string; iconInnerBg: string; iconColor: string; iconDropShadow: string }> = {
+  yellow: {
+    primary: '#ffd700', primaryRgb: '255, 215, 0',
+    border: 'rgba(255,215,0,0.15)', hoverGlow: 'rgba(255,215,0,0.12)',
+    iconBg: 'linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1))',
+    iconBorder: 'rgba(255,215,0,0.3)', iconGlow: 'rgba(255,215,0,0.2)',
+    iconInnerBg: 'linear-gradient(180deg, rgba(15,15,10,0.95), rgba(10,10,5,0.98))',
+    iconColor: '#ffd700', iconDropShadow: 'rgba(255,215,0,0.5)',
+  },
+  blue: {
+    primary: '#00bfff', primaryRgb: '0, 191, 255',
+    border: 'rgba(0,191,255,0.15)', hoverGlow: 'rgba(0,191,255,0.12)',
+    iconBg: 'linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1))',
+    iconBorder: 'rgba(0,191,255,0.3)', iconGlow: 'rgba(0,191,255,0.2)',
+    iconInnerBg: 'linear-gradient(180deg, rgba(15,20,30,0.95), rgba(5,10,20,0.98))',
+    iconColor: '#00bfff', iconDropShadow: 'rgba(0,191,255,0.5)',
+  },
+};
+---
+
+<section class="py-16 md:py-24 px-6 relative overflow-hidden">
+  <!-- Orbital Rings Background -->
+  <div
+    aria-hidden="true"
+    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; pointer-events: none; z-index: 0;"
+  >
+    <div class="wyg-ring" style="width: min(900px, 80vw); height: min(350px, 30vw); border: 1px solid rgba(255,215,0,0.12); animation: wyg-orbit 35s linear infinite;"></div>
+    <div class="wyg-ring" style="width: min(1100px, 95vw); height: min(420px, 36vw); border: 1px solid rgba(255,215,0,0.08); animation: wyg-orbit 50s linear infinite reverse; animation-delay: -15s;"></div>
+    <div class="wyg-ring" style="width: min(700px, 65vw); height: min(280px, 24vw); border: 1px solid rgba(255,215,0,0.15); animation: wyg-orbit 28s linear infinite; animation-delay: -10s;"></div>
+    <div class="wyg-ring" style="width: min(1300px, 110vw); height: min(500px, 42vw); border: 1px solid rgba(255,215,0,0.06); animation: wyg-orbit 60s linear infinite reverse; animation-delay: -25s;"></div>
+    <!-- Center glow -->
+    <div style="position: absolute; top: 50%; left: 50%; width: min(600px, 50vw); height: min(600px, 50vw); transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(255,215,0,0.06) 0%, transparent 70%); border-radius: 50%;"></div>
+  </div>
+
+  <div class="mx-auto relative z-10" style="max-width: 1400px;">
+    <!-- Header -->
+    <div class="text-center mb-10 md:mb-12">
+      <H2>What You Get Inside SAA</H2>
+      <p class="text-body opacity-60 mt-4 max-w-[750px] mx-auto">
+        Systems, training, and support built around how agents actually work &mdash; all accessible from your
+        <a href="/exp-realty-sponsor#agent-portal-walkthrough" style="color: #ffd700; text-decoration: underline; text-underline-offset: 3px;">Agent Portal</a>.
+      </p>
+    </div>
+
+    <!-- Cards -->
+    <div class="flex flex-wrap gap-5">
+      {CARDS.map((card) => {
+        const colors = THEMES[card.theme];
+        return (
+          <div class="flex-1" style="min-width: 260px;">
+            <div
+              class="group relative rounded-2xl p-6 md:p-8 text-center overflow-hidden h-full"
+              style={`background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid ${colors.border}; box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);`}
+            >
+              <!-- Hover glow -->
+              <div
+                class="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                style={`background: radial-gradient(ellipse 80% 60% at 50% 30%, ${colors.hoverGlow} 0%, transparent 70%);`}
+              ></div>
+
+              <!-- Icon with animated glow ring -->
+              <div class="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
+                <div
+                  class={`absolute inset-0 rounded-full wyg-icon-pulse-${card.theme}`}
+                  style={`background: ${colors.iconBg}; box-shadow: 0 0 30px ${colors.iconGlow}, inset 0 0 20px rgba(${colors.primaryRgb}, 0.1);`}
+                ></div>
+                <div
+                  class="absolute inset-2 rounded-full flex items-center justify-center"
+                  style={`background: ${colors.iconInnerBg}; border: 1px solid ${colors.iconBorder};`}
+                >
+                  <div style={`color: ${colors.iconColor}; filter: drop-shadow(0 0 8px ${colors.iconDropShadow});`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" set:html={card.iconPath} />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="relative z-10">
+                <h3 class="text-h6 mb-2">{card.title}</h3>
+                <p class="text-body" style="font-size: clamp(14px, calc(13.5px + 0.2vw), 18px);">{card.text}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center mt-10 md:mt-12">
+      <a
+        href="/exp-realty-sponsor/"
+        class="inline-flex items-center justify-center relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-l before:from-white/15 before:to-transparent before:w-1/2 before:skew-x-[45deg]"
+        style="color: var(--text-color-secondaryButton, var(--text-color-button, var(--color-headingText))); font-size: var(--font-size-secondaryButton, var(--font-size-button, 20px)); font-family: var(--font-family-secondaryButton, var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif)); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; height: clamp(35px, calc(33.182px + 0.7273vw), 55px); padding-left: 1.25rem; padding-right: 1.25rem; padding-top: 0.5rem; padding-bottom: 0.5rem; background-color: rgb(45,45,45); border-radius: 0.75rem; box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5); white-space: nowrap;"
+      >
+        See SAA&apos;s Full Value Stack
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .wyg-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  @keyframes wyg-orbit {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  @keyframes wyg-icon-pulse-yellow {
+    0%, 100% {
+      box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(255,215,0,0.35), inset 0 0 25px rgba(255,215,0,0.15);
+    }
+  }
+  @keyframes wyg-icon-pulse-blue {
+    0%, 100% {
+      box-shadow: 0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(0,191,255,0.35), inset 0 0 25px rgba(0,191,255,0.15);
+    }
+  }
+
+  .wyg-icon-pulse-yellow {
+    animation: wyg-icon-pulse-yellow 3s ease-in-out infinite;
+  }
+  .wyg-icon-pulse-blue {
+    animation: wyg-icon-pulse-blue 3s ease-in-out infinite;
+  }
+</style>

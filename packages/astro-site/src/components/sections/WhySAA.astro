@@ -1,0 +1,90 @@
+---
+/**
+ * WhySAA - "Why Smart Agent Alliance?" section
+ * Pure static HTML with Tailwind styling. Zero JavaScript.
+ */
+import H2 from '../saa/headings/H2.astro';
+
+const HEADLINE = "Why Smart Agent Alliance (SAA)?";
+const TAGLINE = "Elite systems. Proven training. Real community.";
+const INTRO = "Most eXp sponsors offer little or no ongoing value.";
+const SUBHEAD = "Smart Agent Alliance was built differently.";
+const DESCRIPTION = "We invest in real systems, long-term training, and agent collaboration because our incentives are aligned with agent success.";
+const BENEFITS = [
+  "Not a production team",
+  "No commission splits",
+  "No sponsor team fees",
+  "No required meetings",
+];
+const DISCLAIMER = "SAA resources are available to agents who select a SAA-aligned sponsor at the time they join eXp Realty.";
+const ALIGNED_INCENTIVES_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public';
+const BRAND_YELLOW = '#ffd700';
+---
+
+<section class="py-24 md:py-32 px-6 overflow-hidden relative">
+  <div class="mx-auto" style="max-width: 1500px;">
+    <!-- H2 -->
+    <div class="text-center mb-8 mx-auto" style="max-width: 1600px;">
+      <H2>{HEADLINE}</H2>
+    </div>
+
+    <div class="grid md:grid-cols-12 gap-4 md:gap-6 items-stretch">
+      <!-- Main content card - 7 columns -->
+      <div class="md:col-span-7">
+        <div
+          class="rounded-xl overflow-hidden h-full"
+          style="background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);"
+        >
+          <div class="p-8 md:p-10">
+            <p class="font-heading text-2xl md:text-3xl font-bold" style={`color: ${BRAND_YELLOW}`}>{TAGLINE}</p>
+            <p class="text-body text-lg mt-4 opacity-70">{INTRO}</p>
+            <p class="font-heading text-xl md:text-2xl font-bold mt-6" style={`color: ${BRAND_YELLOW}`}>{SUBHEAD}</p>
+            <p class="text-body text-lg mt-4 leading-relaxed">{DESCRIPTION}</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+              {BENEFITS.map((benefit) => (
+                <div class="flex items-center gap-3">
+                  <span
+                    class="inline-flex items-center justify-center"
+                    style="min-width: 32px; height: 32px; color: #c4a94d; filter: drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(2px 2px 0 #2a2a1d) drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5)); transform: perspective(500px) rotateX(8deg); flex-shrink: 0;"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </span>
+                  <span class="text-body text-sm font-medium">{benefit}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column - 5 columns -->
+      <div class="md:col-span-5 flex flex-col gap-4 md:gap-6 h-full">
+        <!-- Image card -->
+        <div class="flex-1 min-h-0">
+          <div
+            class="rounded-2xl overflow-hidden relative h-full"
+            style="border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; background: rgba(255,255,255,0.05);"
+          >
+            <img
+              src={ALIGNED_INCENTIVES_IMAGE}
+              alt="Smart Agent Alliance aligned incentives model - where agent success and sponsor success grow together"
+              loading="lazy"
+              class="absolute inset-0 w-full h-full object-cover object-center"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-5">
+              <p class="font-heading font-bold" style={`color: ${BRAND_YELLOW}; font-size: 23px;`}>Aligned Incentives</p>
+              <p class="text-body text-xs opacity-70 mt-1">When you succeed, we succeed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="text-center mt-12">
+      <p class="text-body mx-auto" style="color: #e5e4dd; max-width: 700px;">{DISCLAIMER}</p>
+    </div>
+  </div>
+</section>

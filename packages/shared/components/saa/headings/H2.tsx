@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
-import { getVisibleLayers } from './layerUtils';
+import { isMobile } from './layerUtils';
+import { altGlyphs } from './altGlyphs';
 
 export type H2Theme = 'default' | 'blue' | 'gold' | 'purple' | 'emerald';
 
@@ -20,12 +21,12 @@ interface BackingLayer {
   color: string;
   tx: string;
   ty: string;
+  stroke: string;
 }
 
 interface H2Config {
   rotateX: string;
   rotateY: string;
-  strokeWidth: string;
   shadow: { color: string; tx: string; ty: string; blur: string };
   layers: BackingLayer[];
   face: { color: string; tx: string; ty: string; textShadow: string };
@@ -47,64 +48,62 @@ const FACE_SHADOW = [
   '0.033em 0.070em 0 #7a7970',
 ].join(', ');
 
-// ── Shared H2 translate offsets (8 layers) ───────────────────────────
-
-const TX = [
-  { tx: '0.018em', ty: '0.053em' },
-  { tx: '0.015em', ty: '0.045em' },
-  { tx: '0.013em', ty: '0.038em' },
-  { tx: '0.009em', ty: '0.028em' },
-  { tx: '0.006em', ty: '0.019em' },
-  { tx: '0.003em', ty: '0.010em' },
-  { tx: '0.002em', ty: '0.005em' },
-  { tx: '0em', ty: '0em' },
-];
-
-const makeLayers = (colors: string[]): BackingLayer[] =>
-  colors.map((color, i) => ({ color, ...TX[i] }));
-
 // ── Theme configs ────────────────────────────────────────────────────
-// 8 backing layers: bright color (far) -> dark (near face)
+// 2 backing layers: bright/far + dark/near (bolder)
 
 const BASE = {
   rotateX: '8deg',
   rotateY: '-1.5deg',
-  strokeWidth: '0.06em',
 };
 
 const H2_DEFAULT: H2Config = {
   ...BASE,
-  shadow: { color: 'rgba(64, 64, 64, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-  layers: makeLayers(['#444444', '#3e3e3e', '#383838', '#323232', '#2c2c2c', '#262626', '#202020', '#1a1a1a']),
-  face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.035em', textShadow: FACE_SHADOW },
+  shadow: { color: 'rgba(64, 64, 64, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+  layers: [
+    { color: '#444444', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+    { color: '#1a1a1a', tx: '0em', ty: '0em', stroke: '0.16em' },
+  ],
+  face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.055em', textShadow: FACE_SHADOW },
 };
 
 const H2_GOLD: H2Config = {
   ...BASE,
-  shadow: { color: 'rgba(184, 150, 10, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-  layers: makeLayers(['#e6ac00', '#c89703', '#ab8207', '#8e6c0a', '#7c6008', '#5e4808', '#3f3010', '#191818']),
-  face: { color: '#e8d4a0', tx: '-0.025em', ty: '-0.035em', textShadow: FACE_SHADOW },
+  shadow: { color: 'rgba(184, 150, 10, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+  layers: [
+    { color: '#e6ac00', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+    { color: '#191818', tx: '0em', ty: '0em', stroke: '0.16em' },
+  ],
+  face: { color: '#e8d4a0', tx: '-0.025em', ty: '-0.055em', textShadow: FACE_SHADOW },
 };
 
 const H2_BLUE: H2Config = {
   ...BASE,
-  shadow: { color: 'rgba(10, 120, 152, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-  layers: makeLayers(['#00bfff', '#0aacdd', '#0a98bb', '#088499', '#086080', '#0a3a50', '#1a2a38', '#181920']),
-  face: { color: '#b0d4e8', tx: '-0.025em', ty: '-0.035em', textShadow: FACE_SHADOW },
+  shadow: { color: 'rgba(10, 120, 152, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+  layers: [
+    { color: '#00bfff', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+    { color: '#181920', tx: '0em', ty: '0em', stroke: '0.16em' },
+  ],
+  face: { color: '#b0d4e8', tx: '-0.025em', ty: '-0.055em', textShadow: FACE_SHADOW },
 };
 
 const H2_PURPLE: H2Config = {
   ...BASE,
-  shadow: { color: 'rgba(96, 48, 160, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-  layers: makeLayers(['#a855f7', '#7845c8', '#6030a0', '#4a2068', '#3a1a50', '#2a1535', '#1a1020', '#1a1020']),
-  face: { color: '#d4b0e8', tx: '-0.025em', ty: '-0.035em', textShadow: FACE_SHADOW },
+  shadow: { color: 'rgba(96, 48, 160, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+  layers: [
+    { color: '#a855f7', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+    { color: '#1a1020', tx: '0em', ty: '0em', stroke: '0.16em' },
+  ],
+  face: { color: '#d4b0e8', tx: '-0.025em', ty: '-0.055em', textShadow: FACE_SHADOW },
 };
 
 const H2_EMERALD: H2Config = {
   ...BASE,
-  shadow: { color: 'rgba(10, 152, 104, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-  layers: makeLayers(['#10b981', '#0a9868', '#086048', '#0a4a38', '#0f3a2a', '#152a25', '#101a18', '#101a18']),
-  face: { color: '#a0e8c4', tx: '-0.025em', ty: '-0.035em', textShadow: FACE_SHADOW },
+  shadow: { color: 'rgba(10, 152, 104, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+  layers: [
+    { color: '#10b981', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+    { color: '#101a18', tx: '0em', ty: '0em', stroke: '0.16em' },
+  ],
+  face: { color: '#a0e8c4', tx: '-0.025em', ty: '-0.055em', textShadow: FACE_SHADOW },
 };
 
 const THEME_CONFIGS: Record<H2Theme, H2Config> = {
@@ -123,26 +122,13 @@ export default function H2({
   style = {},
   theme = 'default',
 }: HeadingProps) {
-  const plainText = extractPlainText(children);
+  const plainText = altGlyphs(extractPlainText(children));
   const config = THEME_CONFIGS[theme];
-  const visibleLayers = getVisibleLayers(config.layers);
+  const mobile = isMobile();
+  const hasBacking = !mobile;
   const textAlign = (style.textAlign || 'center') as React.CSSProperties['textAlign'];
   const persp = (tx: string, ty: string) =>
     `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
-
-  const layerBase: React.CSSProperties = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    pointerEvents: 'none',
-    textAlign,
-    lineHeight: 1.1,
-    fontFeatureSettings: '"ss01" 1',
-    marginLeft: textAlign === 'left' ? '0' : 'auto',
-    marginRight: textAlign === 'right' ? '0' : 'auto',
-    maxWidth: (style.maxWidth as string) || '95%',
-  };
 
   return (
     <div
@@ -155,14 +141,23 @@ export default function H2({
       }}
     >
       {/* Backing layers (disabled on mobile for performance) */}
-      {visibleLayers.length > 0 && (
+      {hasBacking && (
         <div aria-hidden="true" style={{ userSelect: 'none' }}>
           {/* Shadow */}
           <div
             className={`text-h2 ${className}`}
             style={{
               ...style,
-              ...layerBase,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              pointerEvents: 'none',
+              textAlign,
+              lineHeight: 1.1,
+              marginLeft: textAlign === 'left' ? '0' : 'auto',
+              marginRight: textAlign === 'right' ? '0' : 'auto',
+              maxWidth: (style.maxWidth as string) || '95%',
               color: config.shadow.color,
               textShadow: 'none',
               transform: persp(config.shadow.tx, config.shadow.ty),
@@ -171,16 +166,25 @@ export default function H2({
           >
             {plainText}
           </div>
-          {/* Color layers */}
-          {visibleLayers.map((layer, i) => (
+          {/* 2 stroked layers */}
+          {config.layers.map((layer, i) => (
             <div
               key={i}
               className={`text-h2 ${className}`}
               style={{
                 ...style,
-                ...layerBase,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                pointerEvents: 'none',
+                textAlign,
+                lineHeight: 1.1,
+                marginLeft: textAlign === 'left' ? '0' : 'auto',
+                marginRight: textAlign === 'right' ? '0' : 'auto',
+                maxWidth: (style.maxWidth as string) || '95%',
                 color: layer.color,
-                WebkitTextStroke: `${config.strokeWidth} ${layer.color}`,
+                WebkitTextStroke: `${layer.stroke} ${layer.color}`,
                 WebkitTextFillColor: layer.color,
                 paintOrder: 'stroke fill',
                 textShadow: 'none',
@@ -198,15 +202,14 @@ export default function H2({
         className={`text-h2 ${className}`}
         style={{
           textAlign,
-          fontFeatureSettings: '"ss01" 1',
           marginTop: 0,
           marginLeft: textAlign === 'left' ? '0' : 'auto',
           marginRight: textAlign === 'right' ? '0' : 'auto',
           marginBottom: '2.5rem',
           maxWidth: (style.maxWidth as string) || '95%',
           color: config.face.color,
-          textShadow: config.face.textShadow,
-          transform: persp(config.face.tx, config.face.ty),
+          textShadow: hasBacking ? config.face.textShadow : FACE_SHADOW,
+          transform: hasBacking ? persp(config.face.tx, config.face.ty) : undefined,
           lineHeight: 1.1,
           position: 'relative',
           overflow: 'visible',

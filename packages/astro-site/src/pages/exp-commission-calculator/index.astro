@@ -1,15 +1,12 @@
 ---
-/**
- * eXp Commission Calculator
- * Full React island - complex calculator widget with embed mode support.
- */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import CommissionCalculatorPage from '@public-site/app/exp-commission-calculator/page';
+import PageIsland from '../../islands/exp-commission-calculator';
 ---
 
 <BaseLayout
-  title="eXp Realty Commission Calculator | Smart Agent Alliance"
-  description="Calculate your eXp Realty commission splits, caps, and net income with our interactive commission calculator."
+  title="eXp Commission Calculator"
+  description="Calculate your potential commission with eXp Realty."
+  canonical="/exp-commission-calculator/"
 >
-  <CommissionCalculatorPage client:load />
+  <PageIsland client:load />
 </BaseLayout>

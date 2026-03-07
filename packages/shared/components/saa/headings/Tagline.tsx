@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
-import { getVisibleLayers } from './layerUtils';
+import { isMobile } from './layerUtils';
+import { altGlyphs } from './altGlyphs';
 
 export interface TaglineProps {
   children: React.ReactNode;
@@ -18,7 +19,7 @@ export interface TaglineProps {
   counterSuffix?: React.ReactNode;
 }
 
-// Uses H2 default (grey) backing style
+// Uses H2 default (grey) backing style - 2 layers
 
 const FACE_SHADOW = [
   '0.003em 0.005em 0 #dddcd5',
@@ -34,22 +35,15 @@ const FACE_SHADOW = [
   '0.033em 0.070em 0 #7a7970',
 ].join(', ');
 
-const SHADOW = { color: 'rgba(64, 64, 64, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' };
+const SHADOW = { color: 'rgba(64, 64, 64, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' };
 
 const LAYERS = [
-  { color: '#444444', tx: '0.018em', ty: '0.053em' },
-  { color: '#3e3e3e', tx: '0.015em', ty: '0.045em' },
-  { color: '#383838', tx: '0.013em', ty: '0.038em' },
-  { color: '#323232', tx: '0.009em', ty: '0.028em' },
-  { color: '#2c2c2c', tx: '0.006em', ty: '0.019em' },
-  { color: '#262626', tx: '0.003em', ty: '0.010em' },
-  { color: '#202020', tx: '0.002em', ty: '0.005em' },
-  { color: '#1a1a1a', tx: '0em', ty: '0em' },
+  { color: '#444444', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+  { color: '#1a1a1a', tx: '0em', ty: '0em', stroke: '0.16em' },
 ];
 
 const RX = '8deg';
 const RY = '-1.5deg';
-const STROKE = '0.06em';
 
 export default function Tagline({
   children,
@@ -57,8 +51,9 @@ export default function Tagline({
   style = {},
   counterSuffix,
 }: TaglineProps) {
-  const plainText = extractPlainText(children);
-  const visibleLayers = getVisibleLayers(LAYERS);
+  const plainText = altGlyphs(extractPlainText(children));
+  const mobile = isMobile();
+  const hasBacking = !mobile;
   const persp = (tx: string, ty: string) =>
     `perspective(800px) rotateX(${RX}) rotateY(${RY}) translate(${tx}, ${ty})`;
 
@@ -75,7 +70,7 @@ export default function Tagline({
       }}
     >
       {/* Backing layers (disabled on mobile for performance) */}
-      {visibleLayers.length > 0 && (
+      {hasBacking && (
         <div aria-hidden="true" style={{ userSelect: 'none' }}>
           {/* Shadow */}
           <div
@@ -89,7 +84,6 @@ export default function Tagline({
               margin: 0,
               textAlign: 'center',
               lineHeight: 1.1,
-              fontFeatureSettings: '"ss01" 1',
               color: SHADOW.color,
               textShadow: 'none',
               transform: persp(SHADOW.tx, SHADOW.ty),
@@ -98,8 +92,8 @@ export default function Tagline({
           >
             {plainText}
           </div>
-          {/* Color layers */}
-          {visibleLayers.map((layer, i) => (
+          {/* 2 stroked layers */}
+          {LAYERS.map((layer, i) => (
             <div
               key={i}
               className="text-h2"
@@ -112,9 +106,8 @@ export default function Tagline({
                 margin: 0,
                 textAlign: 'center',
                 lineHeight: 1.1,
-                fontFeatureSettings: '"ss01" 1',
                 color: layer.color,
-                WebkitTextStroke: `${STROKE} ${layer.color}`,
+                WebkitTextStroke: `${layer.stroke} ${layer.color}`,
                 WebkitTextFillColor: layer.color,
                 paintOrder: 'stroke fill',
                 textShadow: 'none',
@@ -132,11 +125,10 @@ export default function Tagline({
         className={`text-h2 ${className}`}
         style={{
           textAlign: 'center',
-          fontFeatureSettings: '"ss01" 1',
           margin: 0,
           color: '#e5e4dd',
-          textShadow: FACE_SHADOW,
-          transform: persp('-0.025em', '-0.035em'),
+          textShadow: hasBacking ? FACE_SHADOW : FACE_SHADOW,
+          transform: hasBacking ? persp('-0.025em', '-0.055em') : undefined,
           lineHeight: 1.1,
           position: 'relative',
           overflow: 'visible',

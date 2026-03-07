@@ -1,15 +1,12 @@
 ---
-/**
- * eXp Revenue Share Calculator
- * Full React island - complex 7-tier visualization with scenarios.
- */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import RevenueShareCalculatorPage from '@public-site/app/exp-realty-revenue-share-calculator/page';
+import PageIsland from '../../islands/exp-realty-revenue-share-calculator';
 ---
 
 <BaseLayout
-  title="eXp Revenue Share Calculator | Smart Agent Alliance"
-  description="Visualize your eXp Realty revenue share potential across all 7 tiers with our interactive calculator."
+  title="eXp Revenue Share Calculator"
+  description="Calculate your potential revenue share with eXp Realty."
+  canonical="/exp-realty-revenue-share-calculator/"
 >
-  <RevenueShareCalculatorPage client:load />
+  <PageIsland client:load />
 </BaseLayout>

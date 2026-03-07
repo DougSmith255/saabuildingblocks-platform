@@ -1,0 +1,57 @@
+---
+/**
+ * H1 - Pure CSS 3D heading (no JavaScript)
+ *
+ * Replicates the visual effect of the React H1 component using only CSS text-shadow.
+ * The SVG stroke backing layers are omitted for zero-JS rendering.
+ * The text-shadow alone provides 90%+ of the 3D depth effect.
+ */
+interface Props {
+  id?: string;
+  class?: string;
+  style?: Record<string, string>;
+}
+
+const { id, class: className = '', style = {} } = Astro.props;
+
+const faceTextShadow = [
+  '0 0 0.08em rgba(255, 215, 0, 0.4)',
+  '0 0 0.2em rgba(255, 215, 0, 0.25)',
+  '0.003em 0.004em 0 #e2e1da',
+  '0.006em 0.008em 0 #dddcd5',
+  '0.010em 0.013em 0 #d8d7d0',
+  '0.013em 0.019em 0 #d1d0c7',
+  '0.016em 0.025em 0 #cac9c0',
+  '0.019em 0.032em 0 #c2c1b8',
+  '0.022em 0.038em 0 #bbbab0',
+  '0.025em 0.044em 0 #b3b2a8',
+  '0.028em 0.050em 0 #abaa9f',
+  '0.031em 0.057em 0 #a09f94',
+  '0.034em 0.063em 0 #96958a',
+  '0.037em 0.070em 0 #8d8c80',
+  '0.040em 0.076em 0 #838278',
+  '0.043em 0.082em 0 #7a7970',
+].join(', ');
+
+const mergedStyle = {
+  color: '#f2f1ec',
+  transform: 'perspective(800px) rotateX(12deg)',
+  fontFeatureSettings: '"ss01" 1',
+  textShadow: faceTextShadow,
+  lineHeight: '1.1',
+  ...style,
+};
+
+const styleString = Object.entries(mergedStyle).map(([k, v]) => {
+  const prop = k.replace(/([A-Z])/g, '-$1').toLowerCase();
+  return `${prop}: ${v}`;
+}).join('; ');
+---
+
+<h1
+  id={id}
+  class:list={['text-h1 text-display', className]}
+  style={styleString}
+>
+  <slot />
+</h1>

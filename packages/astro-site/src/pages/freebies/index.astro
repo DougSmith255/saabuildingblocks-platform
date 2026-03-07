@@ -1,16 +1,12 @@
 ---
-/**
- * Freebies page - Free resources for real estate agents.
- * Full React island since the entire page needs interactivity
- * (filtering, download modal).
- */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import FreebiesPage from '@public-site/app/freebies/page';
+import PageIsland from '../../islands/freebies';
 ---
 
 <BaseLayout
-  title="Free Resources for Real Estate Agents | Smart Agent Alliance"
-  description="Download free real estate marketing templates, Canva designs, and resources to grow your business."
+  title="Free Resources for Real Estate Agents"
+  description="Free downloadable resources, templates, and tools for real estate agents."
+  canonical="/freebies/"
 >
-  <FreebiesPage client:load />
+  <PageIsland client:idle />
 </BaseLayout>

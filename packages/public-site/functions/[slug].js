@@ -663,7 +663,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     /* Heading front face - shared */
     .heading-front {
       font-family: var(--font-taskor), serif;
-      font-feature-settings: "ss01" 1;
       line-height: 1.1;
       position: relative;
       overflow: visible;
@@ -3224,7 +3223,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     .founder-name {
       font-family: var(--font-taskor), serif;
-      font-feature-settings: "ss01" 1;
       font-size: clamp(27px, calc(25.36px + 0.65vw), 45px);
       line-height: 1.1;
       font-weight: 700;
@@ -7867,83 +7865,62 @@ ${agent.slug === 'jane-smith' ? `
   var FOUNDER_FACE_SHADOW = '0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.05em #ffd700, 0 0 0.09em rgba(255, 215, 0, 0.8), 0 0 0.13em rgba(255, 215, 0, 0.55), 0 0 0.18em rgba(255, 179, 71, 0.35)';
   var CONFIGS = {
     h1: {
-      rotateX: '12deg', rotateY: '-2deg', strokeWidth: '0.08em',
-      shadow: { color: 'rgba(184, 150, 10, 0.5)', tx: '0.022em', ty: '0.065em', blur: '6px' },
+      rotateX: '12deg', rotateY: '-2deg',
+      shadow: { color: 'rgba(184, 150, 10, 0.5)', tx: '0.025em', ty: '0.07em', blur: '6px' },
       layers: [
-        { color: '#e6ac00', tx: '0.018em', ty: '0.055em' },
-        { color: '#bd8e05', tx: '0.014em', ty: '0.043em' },
-        { color: '#94710a', tx: '0.010em', ty: '0.032em' },
-        { color: '#6b530e', tx: '0.007em', ty: '0.022em' },
-        { color: '#423613', tx: '0.004em', ty: '0.012em' },
-        { color: '#191818', tx: '0em', ty: '0em' }
+        { color: '#e6ac00', tx: '0.022em', ty: '0.065em', stroke: '0.16em' },
+        { color: '#191818', tx: '0em', ty: '0em', stroke: '0.22em' }
       ],
-      face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.05em', textShadow: H1_FACE_SHADOW }
+      face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.08em', textShadow: H1_FACE_SHADOW }
     },
     h2: {
-      rotateX: '8deg', rotateY: '-1.5deg', strokeWidth: '0.06em',
-      shadow: { color: 'rgba(64, 64, 64, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
+      rotateX: '8deg', rotateY: '-1.5deg',
+      shadow: { color: 'rgba(64, 64, 64, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
       layers: [
-        { color: '#444444', tx: '0.018em', ty: '0.053em' },
-        { color: '#3e3e3e', tx: '0.015em', ty: '0.045em' },
-        { color: '#383838', tx: '0.013em', ty: '0.038em' },
-        { color: '#323232', tx: '0.009em', ty: '0.028em' },
-        { color: '#2c2c2c', tx: '0.006em', ty: '0.019em' },
-        { color: '#262626', tx: '0.003em', ty: '0.010em' },
-        { color: '#202020', tx: '0.002em', ty: '0.005em' },
-        { color: '#1a1a1a', tx: '0em', ty: '0em' }
+        { color: '#444444', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+        { color: '#1a1a1a', tx: '0em', ty: '0em', stroke: '0.16em' }
       ],
-      face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.035em', textShadow: H2_FACE_SHADOW }
+      face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.055em', textShadow: H2_FACE_SHADOW }
     },
     founder: {
-      rotateX: '12deg', rotateY: '-2deg', strokeWidth: '0.08em',
-      shadow: { color: 'rgba(184, 150, 10, 0.4)', tx: '0.022em', ty: '0.065em', blur: '6px' },
+      rotateX: '12deg', rotateY: '-2deg',
+      shadow: { color: 'rgba(184, 150, 10, 0.4)', tx: '0.025em', ty: '0.07em', blur: '6px' },
       layers: [
-        { color: '#e6ac00', tx: '0.018em', ty: '0.055em' },
-        { color: '#bd8e05', tx: '0.014em', ty: '0.043em' },
-        { color: '#94710a', tx: '0.010em', ty: '0.032em' },
-        { color: '#6b530e', tx: '0.007em', ty: '0.022em' },
-        { color: '#423613', tx: '0.004em', ty: '0.012em' },
-        { color: '#191818', tx: '0em', ty: '0em' }
+        { color: '#e6ac00', tx: '0.022em', ty: '0.065em', stroke: '0.16em' },
+        { color: '#191818', tx: '0em', ty: '0em', stroke: '0.22em' }
       ],
-      face: { color: '#ffd700', tx: '-0.04em', ty: '-0.05em', textShadow: FOUNDER_FACE_SHADOW }
+      face: { color: '#ffd700', tx: '-0.04em', ty: '-0.08em', textShadow: FOUNDER_FACE_SHADOW }
     }
   };
 
   var isMobile = window.matchMedia('(max-width: 768px)').matches;
-  var DESKTOP_LAYERS = 4;
 
-  /* Evenly sample N layers from the full array */
-  function selectLayers(layers, count) {
-    if (count === 0) return [];
-    if (layers.length <= count) return layers;
-    if (count <= 1) return [layers[layers.length - 1]];
-    var result = [];
-    for (var i = 0; i < count; i++) {
-      var idx = Math.round(i * (layers.length - 1) / (count - 1));
-      result.push(layers[idx]);
-    }
-    return result;
+  /* Replace M, A, E, N, T with Taskor alternate glyphs (PUA codepoints) */
+  var ALT_MAP = { M: '\uF016', A: '\uF00E', E: '\uF011', N: '\uF015', T: '\uF018' };
+  function altGlyphs(text) {
+    return text.replace(/[MAENT]/g, function(ch) { return ALT_MAP[ch] || ch; });
   }
 
-  /* Create CSS div backing layers - identical to H1.tsx/H2.tsx React components.
+  /* Create CSS div backing layers - 2-layer deep design.
    * Key: backing divs get the SAME CSS classes as the heading so font-size
    * uses the responsive clamp() from CSS vars, not fixed computed pixels.
-   * Mobile: backing disabled entirely for performance. Desktop: 4 layers. */
+   * Mobile: backing disabled entirely for performance. Desktop: 2 layers. */
   function createBackLayers(wrapper) {
     var heading = wrapper.querySelector('.heading-front');
     if (!heading) return;
     var type = wrapper.dataset.type;
     var cfg = CONFIGS[type];
     if (!cfg) return;
-    var visibleLayers = isMobile ? [] : selectLayers(cfg.layers, DESKTOP_LAYERS);
-    var text = heading.textContent.trim();
+    var text = altGlyphs(heading.textContent.trim());
     var headingClasses = heading.className;
     var cs = getComputedStyle(heading);
     var persp = function(tx, ty) {
       return 'perspective(800px) rotateX(' + cfg.rotateX + ') rotateY(' + cfg.rotateY + ') translate(' + tx + ', ' + ty + ')';
     };
+    /* Update face text with alt glyphs */
+    heading.textContent = text;
     /* Backing layers (skipped on mobile) */
-    if (visibleLayers.length > 0) {
+    if (!isMobile) {
       var baseCss = 'position:absolute;top:0;left:0;right:0;pointer-events:none;'
         + 'text-align:' + cs.textAlign + ';line-height:1.1;margin:0;';
       var container = document.createElement('div');
@@ -7957,12 +7934,12 @@ ${agent.slug === 'jane-smith' ? `
         + 'transform:' + persp(cfg.shadow.tx, cfg.shadow.ty) + ';filter:blur(' + cfg.shadow.blur + ');';
       shadow.textContent = text;
       container.appendChild(shadow);
-      /* Color layers */
-      visibleLayers.forEach(function(layer) {
+      /* 2 stroked layers */
+      cfg.layers.forEach(function(layer) {
         var div = document.createElement('div');
         div.className = headingClasses;
         div.style.cssText = baseCss
-          + 'color:' + layer.color + ';-webkit-text-stroke:' + cfg.strokeWidth + ' ' + layer.color + ';'
+          + 'color:' + layer.color + ';-webkit-text-stroke:' + layer.stroke + ' ' + layer.color + ';'
           + '-webkit-text-fill-color:' + layer.color + ';paint-order:stroke fill;text-shadow:none;'
           + 'transform:' + persp(layer.tx, layer.ty) + ';';
         div.textContent = text;
@@ -7973,7 +7950,9 @@ ${agent.slug === 'jane-smith' ? `
     /* Style the face */
     heading.style.color = cfg.face.color;
     heading.style.textShadow = cfg.face.textShadow;
-    heading.style.transform = persp(cfg.face.tx, cfg.face.ty);
+    if (!isMobile) {
+      heading.style.transform = persp(cfg.face.tx, cfg.face.ty);
+    }
     heading.style.lineHeight = '1.1';
     heading.style.position = 'relative';
     heading.style.overflow = 'visible';
