@@ -15,7 +15,7 @@ import { LazySection } from '@/components/shared/LazySection';
 import { BlogSidebar } from '../BlogSidebar';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { getPostUrl } from '@/lib/blog-post-urls';
-import { createBackLayers, H2_DEFAULT_CONFIG, H2_LIGHT_CONFIG } from '@saa/shared/components/saa/headings/useStrokeBackLayers';
+import { createDivBackLayers, BLOG_H2_DARK, BLOG_H2_LIGHT } from '@saa/shared/components/saa/headings/useStrokeBackLayers';
 
 // Lazy load CloudBackground - only loaded when user switches to light mode
 const CloudBackground = dynamic(
@@ -169,9 +169,10 @@ export function CategoryBlogPostTemplate({
     };
   }, []);
 
-  // Apply SVG stroke backing to blog content H2 elements after render
+  // Apply CSS div backing to blog content H2 elements after render.
+  // Uses div layers (like H2.tsx) instead of SVG text - reflows naturally on resize.
   useEffect(() => {
-    const applyH2Stroke = () => {
+    const applyH2Backing = () => {
       // Inject h2 into Rank Math TOC blocks that lack one (some posts have it, some don't)
       document.querySelectorAll<HTMLElement>('.blog-content .wp-block-rank-math-toc-block, .blog-content #rank-math-toc').forEach((toc) => {
         if (!toc.querySelector(':scope > h2')) {
@@ -181,23 +182,18 @@ export function CategoryBlogPostTemplate({
         }
       });
 
-      const config = isDarkMode ? H2_DEFAULT_CONFIG : H2_LIGHT_CONFIG;
+      const config = isDarkMode ? BLOG_H2_DARK : BLOG_H2_LIGHT;
       const h2s = document.querySelectorAll<HTMLElement>('.blog-content h2');
       h2s.forEach((h2) => {
         const existingWrapper = h2.closest('.heading-wrapper');
         if (existingWrapper) {
-          // Already wrapped - clear old SVG layers and re-apply with current config
-          existingWrapper.querySelectorAll('svg[aria-hidden]').forEach((svg) => svg.remove());
-          h2.style.color = config.faceColor;
-          h2.style.textShadow = config.faceTextShadow;
-          h2.style.transform = `perspective(800px) rotateX(${config.rotateX})`;
-          createBackLayers(existingWrapper as HTMLDivElement, h2, config);
+          // Already wrapped - remove old backing and re-apply with current config
+          existingWrapper.querySelectorAll('[data-h2-backing], svg[aria-hidden]').forEach((el) => el.remove());
+          createDivBackLayers(existingWrapper as HTMLDivElement, h2, config);
           return;
         }
         const wrapper = document.createElement('div');
         wrapper.classList.add('heading-wrapper');
-        // Move margins from H2 to wrapper so wrapper is tight around text.
-        // This ensures SVG and H2 share the same transform-origin for rotateX.
         const computed = getComputedStyle(h2);
         wrapper.style.cssText = 'position:relative;display:inline-block;width:100%;overflow:visible;text-align:inherit;'
           + `margin-top:${computed.marginTop};margin-bottom:${computed.marginBottom};`;
@@ -206,37 +202,11 @@ export function CategoryBlogPostTemplate({
         h2.classList.add('heading-front');
         h2.style.marginTop = '0';
         h2.style.marginBottom = '0';
-        h2.style.color = config.faceColor;
-        h2.style.textShadow = config.faceTextShadow;
-        h2.style.position = 'relative';
-        h2.style.overflow = 'visible';
-        h2.style.transform = `perspective(800px) rotateX(${config.rotateX})`;
-        h2.style.filter = 'none';
-        createBackLayers(wrapper, h2, config);
+        createDivBackLayers(wrapper, h2, config);
       });
     };
-    document.fonts.ready.then(applyH2Stroke);
-
-    // Rebuild SVG backing on resize (pixel positions go stale when text reflows)
-    let resizeTimer: ReturnType<typeof setTimeout>;
-    const onResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        document.querySelectorAll<HTMLElement>('.blog-content .heading-wrapper').forEach((wrapper) => {
-          wrapper.querySelectorAll('svg[aria-hidden]').forEach((svg) => svg.remove());
-          const h2 = wrapper.querySelector<HTMLElement>('.heading-front');
-          if (!h2) return;
-          const config = isDarkMode ? H2_DEFAULT_CONFIG : H2_LIGHT_CONFIG;
-          h2.style.transform = `perspective(800px) rotateX(${config.rotateX})`;
-          createBackLayers(wrapper, h2, config);
-        });
-      }, 150);
-    };
-    window.addEventListener('resize', onResize);
-    return () => {
-      clearTimeout(resizeTimer);
-      window.removeEventListener('resize', onResize);
-    };
+    document.fonts.ready.then(applyH2Backing);
+    // No resize handler needed - CSS div layers reflow naturally
   }, [post.content, isDarkMode]);
 
   // Format date for display

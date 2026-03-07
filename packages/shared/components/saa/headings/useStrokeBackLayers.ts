@@ -594,3 +594,178 @@ export function useStrokeBackLayers(config: StrokeConfig) {
 
   return wrapperRef;
 }
+
+// ── Blog H2 CSS div backing ────────────────────────────────────────
+// Creates div-based backing layers that match H2.tsx component rendering.
+// Unlike SVG text layers, div layers reflow naturally on resize.
+
+export interface BlogH2DivConfig {
+  rotateX: string;
+  rotateY: string;
+  strokeWidth: string;
+  shadow: { color: string; tx: string; ty: string; blur: string };
+  layers: { color: string; tx: string; ty: string }[];
+  face: { color: string; tx: string; ty: string; textShadow: string };
+}
+
+const BLOG_FACE_SHADOW = [
+  '0.003em 0.005em 0 #dddcd5',
+  '0.006em 0.011em 0 #d5d4cb',
+  '0.009em 0.017em 0 #cccbc2',
+  '0.012em 0.023em 0 #c2c1b8',
+  '0.015em 0.030em 0 #b8b7ae',
+  '0.018em 0.037em 0 #abaa9f',
+  '0.021em 0.044em 0 #a09f94',
+  '0.024em 0.051em 0 #96958a',
+  '0.027em 0.058em 0 #8d8c80',
+  '0.030em 0.065em 0 #838277',
+  '0.033em 0.070em 0 #7a7970',
+].join(', ');
+
+const BLOG_LIGHT_FACE_SHADOW = [
+  '0.005em 0.007em 0 #a8a79e',
+  '0.010em 0.015em 0 #9e9d94',
+  '0.015em 0.025em 0 #94938a',
+  '0.019em 0.035em 0 #8a8980',
+  '0.023em 0.045em 0 #807f76',
+  '0.027em 0.055em 0 #76756c',
+  '0.031em 0.065em 0 #6c6b62',
+  '0.034em 0.073em 0 #626158',
+  '0.037em 0.080em 0 #58574e',
+  '0.040em 0.088em 0 #4e4d44',
+].join(', ');
+
+const BLOG_OFFSETS: { tx: string; ty: string }[] = [
+  { tx: '0.018em', ty: '0.053em' },
+  { tx: '0.015em', ty: '0.045em' },
+  { tx: '0.013em', ty: '0.038em' },
+  { tx: '0.009em', ty: '0.028em' },
+  { tx: '0.006em', ty: '0.019em' },
+  { tx: '0.003em', ty: '0.010em' },
+  { tx: '0.002em', ty: '0.005em' },
+  { tx: '0em', ty: '0em' },
+];
+
+const blogLayers = (colors: string[]) =>
+  colors.map((color, i) => ({ color, ...BLOG_OFFSETS[i] }));
+
+export const BLOG_H2_DARK: BlogH2DivConfig = {
+  rotateX: '8deg',
+  rotateY: '-1.5deg',
+  strokeWidth: '0.06em',
+  shadow: { color: 'rgba(64, 64, 64, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
+  layers: blogLayers(['#444444', '#3e3e3e', '#383838', '#323232', '#2c2c2c', '#262626', '#202020', '#1a1a1a']),
+  face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.035em', textShadow: BLOG_FACE_SHADOW },
+};
+
+export const BLOG_H2_LIGHT: BlogH2DivConfig = {
+  rotateX: '8deg',
+  rotateY: '-1.5deg',
+  strokeWidth: '0.06em',
+  shadow: { color: 'rgba(80, 80, 80, 0.3)', tx: '0.02em', ty: '0.06em', blur: '4px' },
+  layers: blogLayers(['#9a9a9a', '#909090', '#868686', '#7c7c7c', '#727272', '#686868', '#5e5e5e', '#545454']),
+  face: { color: '#191818', tx: '-0.025em', ty: '-0.035em', textShadow: BLOG_LIGHT_FACE_SHADOW },
+};
+
+function ensureBlogH2Filter() {
+  if (document.getElementById('saa-sharp-h2')) return;
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('width', '0');
+  svg.setAttribute('height', '0');
+  svg.style.position = 'absolute';
+  svg.setAttribute('aria-hidden', 'true');
+  const defs = document.createElementNS(ns, 'defs');
+  const filter = document.createElementNS(ns, 'filter');
+  filter.setAttribute('id', 'saa-sharp-h2');
+  filter.setAttribute('x', '-10%');
+  filter.setAttribute('y', '-25%');
+  filter.setAttribute('width', '120%');
+  filter.setAttribute('height', '150%');
+  filter.setAttribute('primitiveUnits', 'userSpaceOnUse');
+  const dilate = document.createElementNS(ns, 'feMorphology');
+  dilate.setAttribute('operator', 'dilate');
+  dilate.setAttribute('radius', '2');
+  dilate.setAttribute('in', 'SourceGraphic');
+  dilate.setAttribute('result', 'expanded');
+  const blur = document.createElementNS(ns, 'feGaussianBlur');
+  blur.setAttribute('stdDeviation', '0.8');
+  blur.setAttribute('in', 'expanded');
+  blur.setAttribute('result', 'smoothed');
+  const transfer = document.createElementNS(ns, 'feComponentTransfer');
+  transfer.setAttribute('in', 'smoothed');
+  const funcA = document.createElementNS(ns, 'feFuncA');
+  funcA.setAttribute('type', 'linear');
+  funcA.setAttribute('slope', '15');
+  funcA.setAttribute('intercept', '0');
+  transfer.appendChild(funcA);
+  filter.appendChild(dilate);
+  filter.appendChild(blur);
+  filter.appendChild(transfer);
+  defs.appendChild(filter);
+  svg.appendChild(defs);
+  document.body.appendChild(svg);
+}
+
+/**
+ * Create CSS div-based backing layers for blog H2 elements.
+ * Matches H2.tsx component rendering - layers reflow naturally on resize.
+ */
+export function createDivBackLayers(
+  wrapper: HTMLDivElement,
+  heading: HTMLElement,
+  config: BlogH2DivConfig,
+) {
+  ensureBlogH2Filter();
+
+  const text = heading.textContent?.trim() || '';
+  const cs = getComputedStyle(heading);
+  const persp = (tx: string, ty: string) =>
+    `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
+
+  const fontCss =
+    `font-family:${cs.fontFamily};font-size:${cs.fontSize};font-weight:${cs.fontWeight};` +
+    `letter-spacing:${cs.letterSpacing};text-transform:${cs.textTransform};` +
+    `font-feature-settings:${cs.fontFeatureSettings || '"ss01" 1'};`;
+  const baseCss =
+    `position:absolute;top:0;left:0;right:0;pointer-events:none;` +
+    `text-align:${cs.textAlign};line-height:1.1;${fontCss}`;
+
+  // Backing container
+  const container = document.createElement('div');
+  container.setAttribute('aria-hidden', 'true');
+  container.setAttribute('data-h2-backing', '');
+  container.style.userSelect = 'none';
+
+  // Shadow layer
+  const shadow = document.createElement('div');
+  shadow.style.cssText =
+    baseCss +
+    `color:${config.shadow.color};text-shadow:none;` +
+    `transform:${persp(config.shadow.tx, config.shadow.ty)};filter:blur(${config.shadow.blur});`;
+  shadow.textContent = text;
+  container.appendChild(shadow);
+
+  // Color layers
+  config.layers.forEach((layer) => {
+    const div = document.createElement('div');
+    div.style.cssText =
+      baseCss +
+      `color:${layer.color};-webkit-text-stroke:${config.strokeWidth} ${layer.color};` +
+      `-webkit-text-fill-color:${layer.color};paint-order:stroke fill;text-shadow:none;` +
+      `filter:url(#saa-sharp-h2);transform:${persp(layer.tx, layer.ty)};`;
+    div.textContent = text;
+    container.appendChild(div);
+  });
+
+  wrapper.insertBefore(container, heading);
+
+  // Style the face
+  heading.style.color = config.face.color;
+  heading.style.textShadow = config.face.textShadow;
+  heading.style.transform = persp(config.face.tx, config.face.ty);
+  heading.style.lineHeight = '1.1';
+  heading.style.position = 'relative';
+  heading.style.overflow = 'visible';
+  heading.style.filter = 'none';
+}
