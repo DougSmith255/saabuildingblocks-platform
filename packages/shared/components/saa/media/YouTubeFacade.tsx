@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Play } from 'lucide-react';
 
 export interface YouTubeFacadeProps {
@@ -44,7 +44,7 @@ export function YouTubeFacade({
   className = '',
 }: YouTubeFacadeProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [thumbnailError, setThumbnailError] = useState(false);
+  const [thumbnailUpgraded, setThumbnailUpgraded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = useCallback(() => {
@@ -58,10 +58,16 @@ export function YouTubeFacade({
     }
   }, []);
 
-  // YouTube thumbnail URLs - try maxresdefault first, fall back to hqdefault
-  const thumbnailUrl = thumbnailError
-    ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
-    : `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+  // Use hqdefault (always available), upgrade to maxresdefault in background if it exists
+  const thumbnailUrl = thumbnailUpgraded
+    ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`
+    : `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setThumbnailUpgraded(true);
+    img.src = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+  }, [videoId]);
 
   // 3D metal effect filter for play button (matches Icon3D)
   const icon3DFilter = `
@@ -129,7 +135,7 @@ export function YouTubeFacade({
         src={thumbnailUrl}
         alt={`Video thumbnail: ${title}`}
         loading="lazy"
-        onError={() => setThumbnailError(true)}
+        onError={() => setThumbnailUpgraded(false)}
         style={{
           position: 'absolute',
           inset: 0,
