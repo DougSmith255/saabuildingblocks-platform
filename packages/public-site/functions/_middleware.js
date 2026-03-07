@@ -160,6 +160,9 @@ const STATIC_REDIRECTS = new Map([
   ['/blog/brokerage-comparison/fees', '/about-exp-realty/fees/'],
   ['/blog/brokerage-comparison/revenue-share', '/exp-realty-sponsor/revenue-share/'],
   ['/blog/brokerage-comparison/new-agents', '/exp-realty-sponsor/new-agents/'],
+  // Removed duplicate fun-for-agents post
+  ['/fun-for-agents/real-estate-agent-books', '/fun-for-agents/books/'],
+  ['/blog/fun-for-agents/real-estate-agent-books', '/fun-for-agents/books/'],
   // about-exp-realty slug changes
   ['/about-exp-realty/workplace', '/about-exp-realty/exp-workplace/'],
   ['/about-exp-realty/awards', '/awards/'],
