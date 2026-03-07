@@ -84,7 +84,7 @@ const CUSTOM_ICON_PATHS = {
 };
 
 /**
- * NOTE: Alt glyphs for A, E, T, F are applied selectively via per-character
+ * NOTE: Alt glyphs for M, A, E, N, T, F are applied selectively via per-character
  * spans with font-feature-settings: "aalt" 1 (see wrapAltGlyphs function).
  * Real letters stay in the DOM (SEO/copy-paste friendly).
  */
@@ -7893,13 +7893,13 @@ ${agent.slug === 'jane-smith' ? `
 
   var isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-  /* Wrap only A, E, T, F in spans with font-feature-settings: "aalt" 1.
-   * Other chars with alternates (M, N, R, H, K, V, W, Y) stay normal. */
+  /* Wrap only M, A, E, N, T, F in spans with font-feature-settings: "aalt" 1.
+   * Other chars with alternates (H, K, R, V, W, Y) stay normal. */
   function escapeText(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
   function wrapAltGlyphs(text) {
-    return escapeText(text).replace(/[AETF]+/g, function(m) {
+    return escapeText(text).replace(/[MAENTF]+/g, function(m) {
       return '<span style="font-feature-settings:\'aalt\' 1">' + m + '</span>';
     });
   }
@@ -7907,7 +7907,7 @@ ${agent.slug === 'jane-smith' ? `
   /* Create CSS div backing layers - 2-layer deep design.
    * Key: backing divs get the SAME CSS classes as the heading so font-size
    * uses the responsive clamp() from CSS vars, not fixed computed pixels.
-   * Alt glyphs for A/E/T/F applied via per-character spans (wrapAltGlyphs).
+   * Alt glyphs for M/A/E/N/T/F applied via per-character spans (wrapAltGlyphs).
    * Mobile: backing disabled entirely for performance. Desktop: 2 layers. */
   function createBackLayers(wrapper) {
     var heading = wrapper.querySelector('.heading-front');

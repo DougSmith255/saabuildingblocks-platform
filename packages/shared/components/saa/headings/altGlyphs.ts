@@ -3,13 +3,13 @@
  *
  * The font has alternates under the `aalt` OpenType feature for many
  * characters (M, A, E, N, T, F, H, K, R, V, W, Y), but we only want
- * alternates on A, E, T, F. Since CSS font-feature-settings applies to
+ * alternates on M, A, E, N, T, F. Since CSS font-feature-settings applies to
  * ALL characters, we wrap only the desired chars in spans with "aalt" 1.
  */
 
 import React from 'react';
 
-const ALT_CHARS = new Set(['A', 'E', 'T', 'F']);
+const ALT_CHARS = new Set(['M', 'A', 'E', 'N', 'T', 'F']);
 const AALT_STYLE = { fontFeatureSettings: '"aalt" 1' };
 
 export function altGlyphs(text: string): React.ReactNode {
