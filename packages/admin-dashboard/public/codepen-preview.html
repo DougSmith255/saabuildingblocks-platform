@@ -383,9 +383,7 @@ function createBackLayers(wrapper) {
 
   const NS = 'http://www.w3.org/2000/svg';
 
-  // Morphological opening filter (erode+dilate) to round miter spike tips
-  // Aggressive radius: user prefers slightly cut N/M points over any visible spikes
-  const useOpening = true;
+  // Dilate + blur + slope filter to smooth jagged stroke edges
   const openingRadius = Math.max(0.8, fontSizePx * 0.03);
 
   layers.forEach((layer, i) => {
@@ -399,27 +397,35 @@ function createBackLayers(wrapper) {
     if (layer.filter) svg.style.filter = layer.filter;
     if (layer.opacity) svg.style.opacity = layer.opacity;
 
-    // Add SVG filter for morphological opening on H1
-    if (useOpening && !layer.filter) {
+    if (!layer.filter) {
       const defs = document.createElementNS(NS, 'defs');
-      const filterId = 'open-' + i;
+      const filterId = 'ss-' + i;
       const filter = document.createElementNS(NS, 'filter');
       filter.setAttribute('id', filterId);
-      filter.setAttribute('x', '-30%');
-      filter.setAttribute('y', '-30%');
-      filter.setAttribute('width', '160%');
-      filter.setAttribute('height', '160%');
-      const erode = document.createElementNS(NS, 'feMorphology');
-      erode.setAttribute('operator', 'erode');
-      erode.setAttribute('radius', openingRadius);
-      erode.setAttribute('in', 'SourceGraphic');
-      erode.setAttribute('result', 'eroded');
+      filter.setAttribute('x', '-10%');
+      filter.setAttribute('y', '-25%');
+      filter.setAttribute('width', '120%');
+      filter.setAttribute('height', '150%');
+      filter.setAttribute('primitiveUnits', 'userSpaceOnUse');
       const dilate = document.createElementNS(NS, 'feMorphology');
       dilate.setAttribute('operator', 'dilate');
-      dilate.setAttribute('radius', openingRadius);
-      dilate.setAttribute('in', 'eroded');
-      filter.appendChild(erode);
+      dilate.setAttribute('radius', Math.max(1, Math.round(openingRadius)));
+      dilate.setAttribute('in', 'SourceGraphic');
+      dilate.setAttribute('result', 'expanded');
+      const blur = document.createElementNS(NS, 'feGaussianBlur');
+      blur.setAttribute('stdDeviation', '0.8');
+      blur.setAttribute('in', 'expanded');
+      blur.setAttribute('result', 'smoothed');
+      const transfer = document.createElementNS(NS, 'feComponentTransfer');
+      transfer.setAttribute('in', 'smoothed');
+      const funcA = document.createElementNS(NS, 'feFuncA');
+      funcA.setAttribute('type', 'linear');
+      funcA.setAttribute('slope', '15');
+      funcA.setAttribute('intercept', '0');
+      transfer.appendChild(funcA);
       filter.appendChild(dilate);
+      filter.appendChild(blur);
+      filter.appendChild(transfer);
       defs.appendChild(filter);
       svg.appendChild(defs);
     }
@@ -438,8 +444,8 @@ function createBackLayers(wrapper) {
       textEl.setAttribute('stroke-linejoin', 'miter');
       textEl.setAttribute('stroke-miterlimit', '4');
       textEl.setAttribute('paint-order', 'stroke fill');
-      if (useOpening && !layer.filter) {
-        textEl.setAttribute('filter', 'url(#open-' + i + ')');
+      if (!layer.filter) {
+        textEl.setAttribute('filter', 'url(#ss-' + i + ')');
       }
       textEl.style.fontFamily = "'Taskor', serif";
       textEl.style.fontSize = fontSizePx + 'px';

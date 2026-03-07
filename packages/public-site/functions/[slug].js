@@ -667,48 +667,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       overflow: visible;
     }
 
-    /* H1 face - gold glow + cream fill extrusion */
-    .h1-front {
-      color: #f2f1ec;
-      transform: perspective(800px) rotateX(12deg);
-      text-shadow:
-        0 0 0.08em rgba(255, 215, 0, 0.4),
-        0 0 0.2em rgba(255, 215, 0, 0.25),
-        0.003em 0.005em 0 #e5e4dd,
-        0.006em 0.010em 0 #e0dfda,
-        0.009em 0.016em 0 #dbdad5,
-        0.012em 0.022em 0 #d5d4cd,
-        0.015em 0.028em 0 #cfcec6,
-        0.018em 0.035em 0 #c8c7bf,
-        0.021em 0.042em 0 #c0bfb7,
-        0.024em 0.049em 0 #b8b7ae,
-        0.027em 0.056em 0 #b0afa5,
-        0.030em 0.063em 0 #a7a69c,
-        0.033em 0.070em 0 #9e9d93,
-        0.036em 0.077em 0 #96958a,
-        0.039em 0.084em 0 #8d8c80,
-        0.042em 0.090em 0 #848377,
-        0.045em 0.096em 0 #7c7b6f,
-        0.048em 0.102em 0 #747367;
-    }
-
-    /* H2 face - cream fill extrusion */
-    .h2-front {
-      color: #e5e4dd;
-      transform: perspective(800px) rotateX(8deg);
-      text-shadow:
-        0.003em 0.005em 0 #dddcd5,
-        0.006em 0.011em 0 #d5d4cb,
-        0.009em 0.017em 0 #cccbc2,
-        0.012em 0.023em 0 #c2c1b8,
-        0.015em 0.030em 0 #b8b7ae,
-        0.018em 0.037em 0 #abaa9f,
-        0.021em 0.044em 0 #a09f94,
-        0.024em 0.051em 0 #96958a,
-        0.027em 0.058em 0 #8d8c80,
-        0.030em 0.065em 0 #838277,
-        0.033em 0.070em 0 #7a7970;
-    }
+    /* H1/H2/founder face - color, text-shadow, transform applied inline by createBackLayers JS */
+    /* CSS fallbacks before JS runs */
+    .h1-front { color: #f2f1ec; transform: perspective(800px) rotateX(12deg); }
+    .h2-front { color: #e5e4dd; transform: perspective(800px) rotateX(8deg); }
     .heading-wrapper.text-left {
       text-align: left;
       margin-left: 0;
@@ -3264,25 +3226,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       font-size: clamp(27px, calc(25.36px + 0.65vw), 45px);
       line-height: 1.1;
       font-weight: 700;
-      color: #f2f1ec;
+      /* Face color/text-shadow/transform applied inline by createBackLayers JS */
+      color: #ffd700;
       transform: perspective(800px) rotateX(12deg);
-      text-shadow:
-        0 0 0.08em rgba(255, 215, 0, 0.4),
-        0 0 0.2em rgba(255, 215, 0, 0.25),
-        0.003em 0.004em 0 #e2e1da,
-        0.006em 0.008em 0 #dddcd5,
-        0.010em 0.013em 0 #d8d7d0,
-        0.013em 0.019em 0 #d1d0c7,
-        0.016em 0.025em 0 #cac9c0,
-        0.019em 0.032em 0 #c2c1b8,
-        0.022em 0.038em 0 #bbbab0,
-        0.025em 0.044em 0 #b3b2a8,
-        0.028em 0.050em 0 #abaa9f,
-        0.031em 0.057em 0 #a09f94,
-        0.034em 0.063em 0 #96958a,
-        0.037em 0.070em 0 #8d8c80,
-        0.040em 0.076em 0 #838278,
-        0.043em 0.082em 0 #7a7970;
       margin-bottom: 0.25rem;
       text-align: center;
       position: relative;
@@ -7947,10 +7893,13 @@ ${agent.slug === 'jane-smith' ? `
     { color: '#3f3010', tx: '0.003em', ty: '0.010em' },
     { color: '#191818', tx: '0', ty: '0' }
   ];
+  var H1_FACE_SHADOW = '0 0 0.08em rgba(255, 215, 0, 0.4), 0 0 0.2em rgba(255, 215, 0, 0.25), 0.003em 0.005em 0 #e5e4dd, 0.006em 0.010em 0 #e0dfda, 0.009em 0.016em 0 #dbdad5, 0.012em 0.022em 0 #d5d4cd, 0.015em 0.028em 0 #cfcec6, 0.018em 0.035em 0 #c8c7bf, 0.021em 0.042em 0 #c0bfb7, 0.024em 0.049em 0 #b8b7ae, 0.027em 0.056em 0 #b0afa5, 0.030em 0.063em 0 #a7a69c, 0.033em 0.070em 0 #9e9d93, 0.036em 0.077em 0 #96958a, 0.039em 0.084em 0 #8d8c80, 0.042em 0.090em 0 #848377, 0.045em 0.096em 0 #7c7b6f, 0.048em 0.102em 0 #747367';
+  var H2_FACE_SHADOW = '0.003em 0.005em 0 #dddcd5, 0.006em 0.011em 0 #d5d4cb, 0.009em 0.017em 0 #cccbc2, 0.012em 0.023em 0 #c2c1b8, 0.015em 0.030em 0 #b8b7ae, 0.018em 0.037em 0 #abaa9f, 0.021em 0.044em 0 #a09f94, 0.024em 0.051em 0 #96958a, 0.027em 0.058em 0 #8d8c80, 0.030em 0.065em 0 #838277, 0.033em 0.070em 0 #7a7970';
+  var FOUNDER_FACE_SHADOW = '0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.05em #ffd700, 0 0 0.09em rgba(255, 215, 0, 0.8), 0 0 0.13em rgba(255, 215, 0, 0.55), 0 0 0.18em rgba(255, 179, 71, 0.35)';
   var CONFIGS = {
-    h1: { layers: H1_LAYERS, strokeWidth: '0.22em', rotateX: '12deg', faceOffset: { x: '-0.025em', y: '0.13em' } },
-    h2: { layers: H2_LAYERS, strokeWidth: '0.18em', rotateX: '8deg', faceOffset: { x: '-0.018em', y: '0.15em' } },
-    founder: { layers: FOUNDER_LAYERS, strokeWidth: '0.16em', rotateX: '12deg', faceOffset: { x: '-0.015em', y: '0.10em' } }
+    h1: { layers: H1_LAYERS, strokeWidth: '0.22em', rotateX: '12deg', faceOffset: { x: '-0.025em', y: '0.13em' }, faceColor: '#f2f1ec', faceTextShadow: H1_FACE_SHADOW },
+    h2: { layers: H2_LAYERS, strokeWidth: '0.18em', rotateX: '8deg', faceOffset: { x: '-0.018em', y: '0.15em' }, faceColor: '#e5e4dd', faceTextShadow: H2_FACE_SHADOW },
+    founder: { layers: FOUNDER_LAYERS, strokeWidth: '0.16em', rotateX: '12deg', faceOffset: { x: '-0.015em', y: '0.10em' }, faceColor: '#ffd700', faceTextShadow: FOUNDER_FACE_SHADOW }
   };
   var NS = 'http://www.w3.org/2000/svg';
 
@@ -8057,7 +8006,7 @@ ${agent.slug === 'jane-smith' ? `
         t.textContent = line.text;
         if (line.width > 0) {
           t.setAttribute('textLength', line.width + 'px');
-          t.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+          t.setAttribute('lengthAdjust', 'spacing');
         }
         svg.appendChild(t);
       });
@@ -8065,6 +8014,9 @@ ${agent.slug === 'jane-smith' ? `
     });
     var offset = cfg.faceOffset;
     if (offset) heading.style.transform = 'perspective(800px) rotateX(' + rotateX + ') translate(' + offset.x + ',' + offset.y + ')';
+    if (cfg.faceColor) heading.style.color = cfg.faceColor;
+    if (cfg.faceTextShadow) heading.style.textShadow = cfg.faceTextShadow;
+    heading.style.filter = 'none';
   }
 
   function initAll() {

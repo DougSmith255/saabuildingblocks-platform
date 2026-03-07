@@ -2824,8 +2824,52 @@ function Section3() {
                   background: 'rgba(0, 0, 0, 0.85)',
                 }}
               >
-                <CTAButton href="/book-a-call">BOOK A CALL</CTAButton>
-                <JoinAllianceCTA>JOIN THE ALLIANCE</JoinAllianceCTA>
+                <a
+                  href="/book-a-call"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0.85rem 2rem',
+                    background: 'linear-gradient(135deg, #ffd700, #e6c200)',
+                    color: '#2a2a2a',
+                    fontFamily: 'var(--font-taskor, system-ui), sans-serif',
+                    fontWeight: 600,
+                    fontSize: '1rem',
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                    textDecoration: 'none',
+                    borderRadius: '8px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    minWidth: '200px',
+                  }}
+                >BOOK A CALL</a>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.dispatchEvent(new Event('open-join-modal'));
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0.85rem 2rem',
+                    background: 'linear-gradient(135deg, #ffd700, #e6c200)',
+                    color: '#2a2a2a',
+                    fontFamily: 'var(--font-taskor, system-ui), sans-serif',
+                    fontWeight: 600,
+                    fontSize: '1rem',
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                    borderRadius: '8px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    minWidth: '200px',
+                  }}
+                >JOIN THE ALLIANCE</button>
                 <button
                   onClick={() => {
                     if (playerRef.current) {
@@ -2835,26 +2879,22 @@ function Section3() {
                     }
                   }}
                   style={{
-                    background: 'none',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                    borderRadius: '8px',
-                    color: '#e5e4dd',
-                    padding: '8px 20px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontFamily: 'var(--font-taskor, sans-serif)',
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
+                    justifyContent: 'center',
                     gap: '6px',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255, 215, 0, 0.5)';
-                    e.currentTarget.style.color = '#ffd700';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                    e.currentTarget.style.color = '#e5e4dd';
+                    padding: '0.6rem 1.5rem',
+                    background: 'rgba(255, 215, 0, 0.15)',
+                    border: '1px solid rgba(255, 215, 0, 0.4)',
+                    borderRadius: '8px',
+                    color: '#ffd700',
+                    fontFamily: 'var(--font-taskor, system-ui), sans-serif',
+                    fontWeight: 600,
+                    fontSize: '0.875rem',
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
                   }}
                 >
                   <span style={{ fontSize: '18px' }}>&#8635;</span> Rewatch
