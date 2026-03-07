@@ -7893,15 +7893,20 @@ ${agent.slug === 'jane-smith' ? `
 
   var isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-  /* Wrap only M, A, E, N, T, F in spans with font-feature-settings: "aalt" 1.
+  /* Wrap M, A, E, T, F with "aalt" 1 and N with "aalt" 2 (second alternate).
    * Other chars with alternates (H, K, R, V, W, Y) stay normal. */
   function escapeText(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
   function wrapAltGlyphs(text) {
-    return escapeText(text).replace(/[MAENTF]+/g, function(m) {
+    var safe = escapeText(text);
+    safe = safe.replace(/[MAETF]+/g, function(m) {
       return '<span style="font-feature-settings:\'aalt\' 1">' + m + '</span>';
     });
+    safe = safe.replace(/N+/g, function(m) {
+      return '<span style="font-feature-settings:\'aalt\' 2">' + m + '</span>';
+    });
+    return safe;
   }
 
   /* Create CSS div backing layers - 2-layer deep design.
