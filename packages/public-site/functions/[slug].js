@@ -669,8 +669,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     /* H1/H2/founder face - color, text-shadow, transform applied inline by createBackLayers JS */
     /* CSS fallbacks before JS runs */
-    .h1-front { color: #f2f1ec; transform: perspective(800px) rotateX(12deg); }
-    .h2-front { color: #e5e4dd; transform: perspective(800px) rotateX(8deg); }
+    .h1-front { color: #f2f1ec; transform: perspective(800px) rotateX(12deg) rotateY(-2deg); }
+    .h2-front { color: #e5e4dd; transform: perspective(800px) rotateX(8deg) rotateY(-1.5deg); }
     .heading-wrapper.text-left {
       text-align: left;
       margin-left: 0;
@@ -3228,7 +3228,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       font-weight: 700;
       /* Face color/text-shadow/transform applied inline by createBackLayers JS */
       color: #ffd700;
-      transform: perspective(800px) rotateX(12deg);
+      transform: perspective(800px) rotateX(12deg) rotateY(-2deg);
       margin-bottom: 0.25rem;
       text-align: center;
       position: relative;
@@ -7858,181 +7858,149 @@ ${agent.slug === 'jane-smith' ? `
 </script>
 ` : ''}
 <script>
-/* SVG stroke back layers - sharp miter-joined depth behind H1/H2/tagline headings */
+/* CSS div backing layers - matches H1.tsx/H2.tsx React component rendering exactly */
 (function(){
-  var H1_LAYERS = [
-    { color: '#b8960a', tx: '0.06em', ty: '0.18em', filter: 'blur(10px)', opacity: '0.5' },
-    { color: '#e6ac00', tx: '0.05em', ty: '0.155em' },
-    { color: '#d4a010', tx: '0.042em', ty: '0.13em' },
-    { color: '#b8900a', tx: '0.035em', ty: '0.11em' },
-    { color: '#9a7808', tx: '0.025em', ty: '0.08em' },
-    { color: '#7c6008', tx: '0.016em', ty: '0.052em' },
-    { color: '#5e4808', tx: '0.008em', ty: '0.026em' },
-    { color: '#3f3010', tx: '0.004em', ty: '0.013em' },
-    { color: '#191818', tx: '0', ty: '0' },
-  ];
-  var H2_LAYERS = [
-    { color: '#404040', tx: '0.04em', ty: '0.12em', filter: 'blur(6px)', opacity: '0.4' },
-    { color: '#404040', tx: '0.035em', ty: '0.105em' },
-    { color: '#3c3c3c', tx: '0.030em', ty: '0.09em' },
-    { color: '#383838', tx: '0.025em', ty: '0.075em' },
-    { color: '#343434', tx: '0.018em', ty: '0.055em' },
-    { color: '#303030', tx: '0.012em', ty: '0.038em' },
-    { color: '#2c2c2c', tx: '0.006em', ty: '0.020em' },
-    { color: '#282828', tx: '0.003em', ty: '0.010em' },
-    { color: '#222222', tx: '0', ty: '0' }
-  ];
-  var FOUNDER_LAYERS = [
-    { color: '#b8960a', tx: '0.04em', ty: '0.12em', filter: 'blur(6px)', opacity: '0.4' },
-    { color: '#e6ac00', tx: '0.035em', ty: '0.105em' },
-    { color: '#d4a010', tx: '0.030em', ty: '0.09em' },
-    { color: '#b8900a', tx: '0.025em', ty: '0.075em' },
-    { color: '#9a7808', tx: '0.018em', ty: '0.055em' },
-    { color: '#7c6008', tx: '0.012em', ty: '0.038em' },
-    { color: '#5e4808', tx: '0.006em', ty: '0.020em' },
-    { color: '#3f3010', tx: '0.003em', ty: '0.010em' },
-    { color: '#191818', tx: '0', ty: '0' }
-  ];
   var H1_FACE_SHADOW = '0 0 0.08em rgba(255, 215, 0, 0.4), 0 0 0.2em rgba(255, 215, 0, 0.25), 0.003em 0.005em 0 #e5e4dd, 0.006em 0.010em 0 #e0dfda, 0.009em 0.016em 0 #dbdad5, 0.012em 0.022em 0 #d5d4cd, 0.015em 0.028em 0 #cfcec6, 0.018em 0.035em 0 #c8c7bf, 0.021em 0.042em 0 #c0bfb7, 0.024em 0.049em 0 #b8b7ae, 0.027em 0.056em 0 #b0afa5, 0.030em 0.063em 0 #a7a69c, 0.033em 0.070em 0 #9e9d93, 0.036em 0.077em 0 #96958a, 0.039em 0.084em 0 #8d8c80, 0.042em 0.090em 0 #848377, 0.045em 0.096em 0 #7c7b6f, 0.048em 0.102em 0 #747367';
   var H2_FACE_SHADOW = '0.003em 0.005em 0 #dddcd5, 0.006em 0.011em 0 #d5d4cb, 0.009em 0.017em 0 #cccbc2, 0.012em 0.023em 0 #c2c1b8, 0.015em 0.030em 0 #b8b7ae, 0.018em 0.037em 0 #abaa9f, 0.021em 0.044em 0 #a09f94, 0.024em 0.051em 0 #96958a, 0.027em 0.058em 0 #8d8c80, 0.030em 0.065em 0 #838277, 0.033em 0.070em 0 #7a7970';
   var FOUNDER_FACE_SHADOW = '0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.05em #ffd700, 0 0 0.09em rgba(255, 215, 0, 0.8), 0 0 0.13em rgba(255, 215, 0, 0.55), 0 0 0.18em rgba(255, 179, 71, 0.35)';
   var CONFIGS = {
-    h1: { layers: H1_LAYERS, strokeWidth: '0.22em', rotateX: '12deg', faceOffset: { x: '-0.025em', y: '0.13em' }, faceColor: '#f2f1ec', faceTextShadow: H1_FACE_SHADOW },
-    h2: { layers: H2_LAYERS, strokeWidth: '0.18em', rotateX: '8deg', faceOffset: { x: '-0.018em', y: '0.15em' }, faceColor: '#e5e4dd', faceTextShadow: H2_FACE_SHADOW },
-    founder: { layers: FOUNDER_LAYERS, strokeWidth: '0.16em', rotateX: '12deg', faceOffset: { x: '-0.015em', y: '0.10em' }, faceColor: '#ffd700', faceTextShadow: FOUNDER_FACE_SHADOW }
+    h1: {
+      rotateX: '12deg', rotateY: '-2deg', strokeWidth: '0.08em',
+      shadow: { color: 'rgba(184, 150, 10, 0.5)', tx: '0.022em', ty: '0.065em', blur: '6px' },
+      layers: [
+        { color: '#e6ac00', tx: '0.018em', ty: '0.055em' },
+        { color: '#bd8e05', tx: '0.014em', ty: '0.043em' },
+        { color: '#94710a', tx: '0.010em', ty: '0.032em' },
+        { color: '#6b530e', tx: '0.007em', ty: '0.022em' },
+        { color: '#423613', tx: '0.004em', ty: '0.012em' },
+        { color: '#191818', tx: '0em', ty: '0em' }
+      ],
+      face: { color: '#f2f1ec', tx: '-0.04em', ty: '-0.05em', textShadow: H1_FACE_SHADOW },
+      filterId: 'saa-sharp-h1', filterDilate: 3, filterBlur: 1.2, filterSlope: 25
+    },
+    h2: {
+      rotateX: '8deg', rotateY: '-1.5deg', strokeWidth: '0.06em',
+      shadow: { color: 'rgba(64, 64, 64, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
+      layers: [
+        { color: '#444444', tx: '0.018em', ty: '0.053em' },
+        { color: '#3e3e3e', tx: '0.015em', ty: '0.045em' },
+        { color: '#383838', tx: '0.013em', ty: '0.038em' },
+        { color: '#323232', tx: '0.009em', ty: '0.028em' },
+        { color: '#2c2c2c', tx: '0.006em', ty: '0.019em' },
+        { color: '#262626', tx: '0.003em', ty: '0.010em' },
+        { color: '#202020', tx: '0.002em', ty: '0.005em' },
+        { color: '#1a1a1a', tx: '0em', ty: '0em' }
+      ],
+      face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.035em', textShadow: H2_FACE_SHADOW },
+      filterId: 'saa-sharp-h2', filterDilate: 2, filterBlur: 0.8, filterSlope: 15
+    },
+    founder: {
+      rotateX: '12deg', rotateY: '-2deg', strokeWidth: '0.08em',
+      shadow: { color: 'rgba(184, 150, 10, 0.4)', tx: '0.022em', ty: '0.065em', blur: '6px' },
+      layers: [
+        { color: '#e6ac00', tx: '0.018em', ty: '0.055em' },
+        { color: '#bd8e05', tx: '0.014em', ty: '0.043em' },
+        { color: '#94710a', tx: '0.010em', ty: '0.032em' },
+        { color: '#6b530e', tx: '0.007em', ty: '0.022em' },
+        { color: '#423613', tx: '0.004em', ty: '0.012em' },
+        { color: '#191818', tx: '0em', ty: '0em' }
+      ],
+      face: { color: '#ffd700', tx: '-0.04em', ty: '-0.05em', textShadow: FOUNDER_FACE_SHADOW },
+      filterId: 'saa-sharp-h1', filterDilate: 3, filterBlur: 1.2, filterSlope: 25
+    }
   };
-  var NS = 'http://www.w3.org/2000/svg';
 
-  function getTextLines(heading, wrapperRect) {
-    var fullText = heading.textContent.trim();
-    var textNode = heading.childNodes[0];
-    if (!textNode || textNode.nodeType !== 3 || heading.childNodes.length > 1) {
-      var hRect = heading.getBoundingClientRect();
-      var cx = (hRect.left + hRect.right) / 2 - wrapperRect.left;
-      return [{ text: fullText, bottom: hRect.bottom - wrapperRect.top, centerX: cx, width: hRect.width }];
-    }
-    var text = textNode.data;
-    var rawLines = [], lastTop = -Infinity, currentLine = '', lineRect = null, lineMinX = Infinity, lineMaxX = -Infinity;
-    for (var i = 0; i < text.length; i++) {
-      var range = document.createRange();
-      range.setStart(textNode, i);
-      range.setEnd(textNode, i + 1);
-      var rect = range.getBoundingClientRect();
-      range.detach();
-      if (rect.height === 0) continue;
-      if (rect.top > lastTop + 2 && currentLine) {
-        rawLines.push({ text: currentLine, bottom: lineRect.bottom - wrapperRect.top, minX: lineMinX - wrapperRect.left, maxX: lineMaxX - wrapperRect.left });
-        currentLine = text[i]; lineRect = rect; lineMinX = rect.left; lineMaxX = rect.right;
-      } else {
-        currentLine += text[i];
-        if (!lineRect || rect.top > lastTop + 2) lineRect = rect;
-        lineMinX = Math.min(lineMinX, rect.left); lineMaxX = Math.max(lineMaxX, rect.right);
-      }
-      lastTop = rect.top;
-    }
-    if (currentLine) rawLines.push({ text: currentLine.trimEnd(), bottom: lineRect ? lineRect.bottom - wrapperRect.top : 0, minX: lineMinX - wrapperRect.left, maxX: lineMaxX - wrapperRect.left });
-    if (rawLines.length <= 1) return rawLines.map(function(l) { return { text: l.text, bottom: l.bottom, centerX: (l.minX + l.maxX) / 2, width: l.maxX - l.minX }; });
-    var styles = getComputedStyle(heading);
-    var lineHeight = parseFloat(styles.lineHeight) || parseFloat(styles.fontSize) * 1.1;
-    var firstBottom = rawLines[0].bottom;
-    return rawLines.map(function(line, i) { return { text: line.text, bottom: firstBottom + i * lineHeight, centerX: (line.minX + line.maxX) / 2, width: line.maxX - line.minX }; });
+  /* Inject SVG filters into document (shared by all headings) */
+  function ensureFilters() {
+    var ns = 'http://www.w3.org/2000/svg';
+    [{ id: 'saa-sharp-h1', dilate: 3, blur: 1.2, slope: 25 },
+     { id: 'saa-sharp-h2', dilate: 2, blur: 0.8, slope: 15 }].forEach(function(f) {
+      if (document.getElementById(f.id)) return;
+      var svg = document.createElementNS(ns, 'svg');
+      svg.setAttribute('width', '0'); svg.setAttribute('height', '0');
+      svg.style.position = 'absolute'; svg.setAttribute('aria-hidden', 'true');
+      var defs = document.createElementNS(ns, 'defs');
+      var filter = document.createElementNS(ns, 'filter');
+      filter.setAttribute('id', f.id);
+      filter.setAttribute('x', '-10%'); filter.setAttribute('y', '-25%');
+      filter.setAttribute('width', '120%'); filter.setAttribute('height', '150%');
+      filter.setAttribute('primitiveUnits', 'userSpaceOnUse');
+      var dilate = document.createElementNS(ns, 'feMorphology');
+      dilate.setAttribute('operator', 'dilate'); dilate.setAttribute('radius', String(f.dilate));
+      dilate.setAttribute('in', 'SourceGraphic'); dilate.setAttribute('result', 'expanded');
+      var blur = document.createElementNS(ns, 'feGaussianBlur');
+      blur.setAttribute('stdDeviation', String(f.blur));
+      blur.setAttribute('in', 'expanded'); blur.setAttribute('result', 'smoothed');
+      var transfer = document.createElementNS(ns, 'feComponentTransfer');
+      transfer.setAttribute('in', 'smoothed');
+      var funcA = document.createElementNS(ns, 'feFuncA');
+      funcA.setAttribute('type', 'linear'); funcA.setAttribute('slope', String(f.slope)); funcA.setAttribute('intercept', '0');
+      transfer.appendChild(funcA);
+      filter.appendChild(dilate); filter.appendChild(blur); filter.appendChild(transfer);
+      defs.appendChild(filter); svg.appendChild(defs);
+      document.body.appendChild(svg);
+    });
   }
 
+  /* Create CSS div backing layers - identical to H1.tsx/H2.tsx React components */
   function createBackLayers(wrapper) {
     var heading = wrapper.querySelector('.heading-front');
     if (!heading) return;
     var type = wrapper.dataset.type;
     var cfg = CONFIGS[type];
     if (!cfg) return;
-    var layers = cfg.layers, strokeWidth = cfg.strokeWidth, rotateX = cfg.rotateX;
-    var styles = getComputedStyle(heading);
-    var fontSizePx = parseFloat(styles.fontSize);
-    var fontWeight = styles.fontWeight;
-    var origTransform = heading.style.transform;
-    heading.style.transform = 'none';
-    heading.offsetHeight;
-    var wrapperRect = wrapper.getBoundingClientRect();
-    var lines = getTextLines(heading, wrapperRect);
-    heading.style.transform = origTransform;
-    if (!lines.length) return;
-    var openingRadius = Math.max(0.8, fontSizePx * 0.03);
-    layers.forEach(function(layer, i) {
-      var svg = document.createElementNS(NS, 'svg');
-      svg.setAttribute('aria-hidden', 'true');
-      svg.setAttribute('overflow', 'visible');
-      svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:calc(100% + 1em);overflow:visible;pointer-events:none;user-select:none;transform:perspective(800px) rotateX(' + rotateX + ') translate(' + (layer.tx||'0') + ',' + (layer.ty||'0') + ')';
-      if (layer.filter) svg.style.filter = layer.filter;
-      if (layer.opacity) svg.style.opacity = layer.opacity;
-      if (!layer.filter) {
-        var defs = document.createElementNS(NS, 'defs');
-        var filterId = 'ss-' + type[0] + '-' + i;
-        var filter = document.createElementNS(NS, 'filter');
-        filter.setAttribute('id', filterId);
-        filter.setAttribute('x', '-10%'); filter.setAttribute('y', '-25%');
-        filter.setAttribute('width', '120%'); filter.setAttribute('height', '150%');
-        filter.setAttribute('primitiveUnits', 'userSpaceOnUse');
-        var dilate = document.createElementNS(NS, 'feMorphology');
-        dilate.setAttribute('operator', 'dilate');
-        dilate.setAttribute('radius', Math.max(1, Math.round(openingRadius)));
-        dilate.setAttribute('in', 'SourceGraphic'); dilate.setAttribute('result', 'expanded');
-        var blur = document.createElementNS(NS, 'feGaussianBlur');
-        blur.setAttribute('stdDeviation', '0.8');
-        blur.setAttribute('in', 'expanded'); blur.setAttribute('result', 'smoothed');
-        var transfer = document.createElementNS(NS, 'feComponentTransfer');
-        transfer.setAttribute('in', 'smoothed');
-        var funcA = document.createElementNS(NS, 'feFuncA');
-        funcA.setAttribute('type', 'linear'); funcA.setAttribute('slope', '15'); funcA.setAttribute('intercept', '0');
-        transfer.appendChild(funcA);
-        filter.appendChild(dilate); filter.appendChild(blur); filter.appendChild(transfer);
-        defs.appendChild(filter); svg.appendChild(defs);
-      }
-      var isInnermost = (i === layers.length - 1);
-      lines.forEach(function(line) {
-        var t = document.createElementNS(NS, 'text');
-        t.setAttribute('x', line.centerX + 'px');
-        t.setAttribute('y', (line.bottom - fontSizePx * 0.05) + 'px');
-        t.setAttribute('text-anchor', 'middle');
-        t.setAttribute('fill', isInnermost ? layer.color : 'none');
-        t.setAttribute('stroke', layer.color);
-        t.setAttribute('stroke-width', strokeWidth);
-        t.setAttribute('stroke-linejoin', 'miter');
-        t.setAttribute('stroke-miterlimit', '4');
-        t.setAttribute('paint-order', 'stroke fill');
-        if (!layer.filter) t.setAttribute('filter', 'url(#ss-' + type[0] + '-' + i + ')');
-        t.style.fontFamily = "'Taskor', serif";
-        t.style.fontSize = fontSizePx + 'px';
-        t.style.fontWeight = fontWeight;
-        t.style.fontFeatureSettings = "'ss01' 1";
-        t.textContent = line.text;
-        if (line.width > 0) {
-          t.setAttribute('textLength', line.width + 'px');
-          t.setAttribute('lengthAdjust', 'spacing');
-        }
-        svg.appendChild(t);
-      });
-      wrapper.insertBefore(svg, heading);
+    ensureFilters();
+    var text = heading.textContent.trim();
+    var cs = getComputedStyle(heading);
+    var persp = function(tx, ty) {
+      return 'perspective(800px) rotateX(' + cfg.rotateX + ') rotateY(' + cfg.rotateY + ') translate(' + tx + ', ' + ty + ')';
+    };
+    var fontCss = 'font-family:' + cs.fontFamily + ';font-size:' + cs.fontSize + ';font-weight:' + cs.fontWeight + ';'
+      + 'letter-spacing:' + cs.letterSpacing + ';text-transform:' + cs.textTransform + ';'
+      + 'font-feature-settings:' + (cs.fontFeatureSettings || '"ss01" 1') + ';';
+    var baseCss = 'position:absolute;top:0;left:0;right:0;pointer-events:none;text-align:'
+      + cs.textAlign + ';line-height:1.1;' + fontCss;
+    /* Backing container */
+    var container = document.createElement('div');
+    container.setAttribute('aria-hidden', 'true');
+    container.setAttribute('data-backing', '');
+    container.style.userSelect = 'none';
+    /* Shadow layer */
+    var shadow = document.createElement('div');
+    shadow.style.cssText = baseCss + 'color:' + cfg.shadow.color + ';text-shadow:none;'
+      + 'transform:' + persp(cfg.shadow.tx, cfg.shadow.ty) + ';filter:blur(' + cfg.shadow.blur + ');';
+    shadow.textContent = text;
+    container.appendChild(shadow);
+    /* Color layers */
+    cfg.layers.forEach(function(layer) {
+      var div = document.createElement('div');
+      div.style.cssText = baseCss
+        + 'color:' + layer.color + ';-webkit-text-stroke:' + cfg.strokeWidth + ' ' + layer.color + ';'
+        + '-webkit-text-fill-color:' + layer.color + ';paint-order:stroke fill;text-shadow:none;'
+        + 'filter:url(#' + cfg.filterId + ');transform:' + persp(layer.tx, layer.ty) + ';';
+      div.textContent = text;
+      container.appendChild(div);
     });
-    var offset = cfg.faceOffset;
-    if (offset) heading.style.transform = 'perspective(800px) rotateX(' + rotateX + ') translate(' + offset.x + ',' + offset.y + ')';
-    if (cfg.faceColor) heading.style.color = cfg.faceColor;
-    if (cfg.faceTextShadow) heading.style.textShadow = cfg.faceTextShadow;
+    wrapper.insertBefore(container, heading);
+    /* Style the face */
+    heading.style.color = cfg.face.color;
+    heading.style.textShadow = cfg.face.textShadow;
+    heading.style.transform = persp(cfg.face.tx, cfg.face.ty);
+    heading.style.lineHeight = '1.1';
+    heading.style.position = 'relative';
+    heading.style.overflow = 'visible';
     heading.style.filter = 'none';
   }
 
   function initAll() {
     document.querySelectorAll('.heading-wrapper[data-type],.founder-name-wrapper[data-type]').forEach(function(w) {
-      w.querySelectorAll('svg[aria-hidden]').forEach(function(s) { s.remove(); });
-      var h = w.querySelector('.heading-front');
-      var type = w.dataset.type;
-      var rotateX = CONFIGS[type] ? CONFIGS[type].rotateX : '8deg';
-      if (h) h.style.transform = 'perspective(800px) rotateX(' + rotateX + ')';
+      w.querySelectorAll('[data-backing], svg[aria-hidden]').forEach(function(s) { s.remove(); });
       createBackLayers(w);
     });
   }
 
   document.fonts.ready.then(initAll);
-  var resizeTimer;
-  window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initAll, 150); });
+  /* No resize handler needed - CSS div layers reflow naturally */
 })();
 </script>
 </body></html>`;
