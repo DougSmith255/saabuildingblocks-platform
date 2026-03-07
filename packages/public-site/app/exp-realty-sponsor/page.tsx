@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { H1, Tagline } from '@saa/shared/components/saa/headings';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
-import { AgentCounter, TaglineCounterSuffix } from '@/app/components/AgentCounter';
+import { AgentCounter } from '@/app/components/AgentCounter';
 
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
@@ -70,7 +70,7 @@ export default function ExpRealtySponsor() {
           <div className="max-w-[2500px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>Smart Agent Alliance</H1>
-              <Tagline className="mt-4" style={{ maxWidth: '95%', marginLeft: 'auto', marginRight: 'auto' }} counterSuffix={<TaglineCounterSuffix />}>Premium Tools. Real Training. Zero Cost.</Tagline>
+              <Tagline className="mt-4" style={{ maxWidth: '95%', marginLeft: 'auto', marginRight: 'auto' }}>Premium Tools. Real Training. Zero Cost.</Tagline>
             </div>
           </div>
 
