@@ -408,6 +408,7 @@ export function createBackLayers(
 ) {
   const { layers, strokeWidth, rotateX } = config;
   const visibleLayers = getVisibleLayers(layers);
+  if (visibleLayers.length === 0) return;
   const styles = getComputedStyle(heading);
   const fontSizePx = parseFloat(styles.fontSize);
   const fontWeight = styles.fontWeight;
@@ -636,6 +637,7 @@ export function createDivBackLayers(
   config: BlogH2DivConfig,
 ) {
   const visibleLayers = getVisibleLayers(config.layers);
+  if (visibleLayers.length === 0) return;
 
   const text = heading.textContent?.trim() || '';
   const cs = getComputedStyle(heading);

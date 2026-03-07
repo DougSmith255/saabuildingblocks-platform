@@ -137,33 +137,11 @@ export default function H1({
 
   return (
     <div style={{ position: 'relative', display: 'inline-block', width: '100%', overflow: 'visible' }}>
-      {/* Backing layers */}
-      {/* overflow:clip prevents backing layers from extending below face text on mobile (multi-line titles) */}
-      <div aria-hidden="true" style={{ userSelect: 'none', position: 'absolute', inset: 0, overflow: 'clip' }}>
-        {/* Shadow */}
-        <div
-          className={`text-h1 text-display ${className}`}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            pointerEvents: 'none',
-            margin: 0,
-            lineHeight: 1.1,
-            fontFeatureSettings: '"ss01" 1',
-            color: config.shadow.color,
-            textShadow: 'none',
-            transform: persp(config.shadow.tx, config.shadow.ty),
-            filter: `blur(${config.shadow.blur})`,
-          }}
-        >
-          {plainText}
-        </div>
-        {/* Color layers */}
-        {visibleLayers.map((layer, i) => (
+      {/* Backing layers (disabled on mobile for performance) */}
+      {visibleLayers.length > 0 && (
+        <div aria-hidden="true" style={{ userSelect: 'none', position: 'absolute', inset: 0, overflow: 'clip' }}>
+          {/* Shadow */}
           <div
-            key={i}
             className={`text-h1 text-display ${className}`}
             style={{
               position: 'absolute',
@@ -174,18 +152,41 @@ export default function H1({
               margin: 0,
               lineHeight: 1.1,
               fontFeatureSettings: '"ss01" 1',
-              color: layer.color,
-              WebkitTextStroke: `${config.strokeWidth} ${layer.color}`,
-              WebkitTextFillColor: layer.color,
-              paintOrder: 'stroke fill',
+              color: config.shadow.color,
               textShadow: 'none',
-              transform: persp(layer.tx, layer.ty),
+              transform: persp(config.shadow.tx, config.shadow.ty),
+              filter: `blur(${config.shadow.blur})`,
             }}
           >
             {plainText}
           </div>
-        ))}
-      </div>
+          {/* Color layers */}
+          {visibleLayers.map((layer, i) => (
+            <div
+              key={i}
+              className={`text-h1 text-display ${className}`}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                pointerEvents: 'none',
+                margin: 0,
+                lineHeight: 1.1,
+                fontFeatureSettings: '"ss01" 1',
+                color: layer.color,
+                WebkitTextStroke: `${config.strokeWidth} ${layer.color}`,
+                WebkitTextFillColor: layer.color,
+                paintOrder: 'stroke fill',
+                textShadow: 'none',
+                transform: persp(layer.tx, layer.ty),
+              }}
+            >
+              {plainText}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Face */}
       <h1

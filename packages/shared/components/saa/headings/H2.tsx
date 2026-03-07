@@ -154,42 +154,44 @@ export default function H2({
         textAlign,
       }}
     >
-      {/* Backing layers */}
-      <div aria-hidden="true" style={{ userSelect: 'none' }}>
-        {/* Shadow */}
-        <div
-          className={`text-h2 ${className}`}
-          style={{
-            ...style,
-            ...layerBase,
-            color: config.shadow.color,
-            textShadow: 'none',
-            transform: persp(config.shadow.tx, config.shadow.ty),
-            filter: `blur(${config.shadow.blur})`,
-          }}
-        >
-          {plainText}
-        </div>
-        {/* Color layers */}
-        {visibleLayers.map((layer, i) => (
+      {/* Backing layers (disabled on mobile for performance) */}
+      {visibleLayers.length > 0 && (
+        <div aria-hidden="true" style={{ userSelect: 'none' }}>
+          {/* Shadow */}
           <div
-            key={i}
             className={`text-h2 ${className}`}
             style={{
               ...style,
               ...layerBase,
-              color: layer.color,
-              WebkitTextStroke: `${config.strokeWidth} ${layer.color}`,
-              WebkitTextFillColor: layer.color,
-              paintOrder: 'stroke fill',
+              color: config.shadow.color,
               textShadow: 'none',
-              transform: persp(layer.tx, layer.ty),
+              transform: persp(config.shadow.tx, config.shadow.ty),
+              filter: `blur(${config.shadow.blur})`,
             }}
           >
             {plainText}
           </div>
-        ))}
-      </div>
+          {/* Color layers */}
+          {visibleLayers.map((layer, i) => (
+            <div
+              key={i}
+              className={`text-h2 ${className}`}
+              style={{
+                ...style,
+                ...layerBase,
+                color: layer.color,
+                WebkitTextStroke: `${config.strokeWidth} ${layer.color}`,
+                WebkitTextFillColor: layer.color,
+                paintOrder: 'stroke fill',
+                textShadow: 'none',
+                transform: persp(layer.tx, layer.ty),
+              }}
+            >
+              {plainText}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Face */}
       <h2

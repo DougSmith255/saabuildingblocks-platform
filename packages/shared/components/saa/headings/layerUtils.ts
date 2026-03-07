@@ -3,11 +3,11 @@
  * based on screen size for performance.
  *
  * Desktop: 4 layers (from 6-8), no SVG filter
- * Mobile: 2 layers (brightest + darkest), no SVG filter
+ * Mobile: 0 layers (backing disabled entirely)
  */
 
 const DESKTOP_LAYERS = 4;
-const MOBILE_LAYERS = 2;
+const MOBILE_LAYERS = 0;
 
 export function isMobile(): boolean {
   if (typeof window === 'undefined') return false;
