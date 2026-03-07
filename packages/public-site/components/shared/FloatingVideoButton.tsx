@@ -90,7 +90,7 @@ export function FloatingVideoButton() {
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px)
               `,
-              backgroundAttachment: 'fixed',
+              /* backgroundAttachment fixed removed - causes repaint on every scroll frame */
             }}
           />
 
@@ -172,11 +172,9 @@ export function FloatingVideoButton() {
         @keyframes fvbRadarShimmer {
           0%, 100% {
             background-position: 0% 50%;
-            filter: brightness(1.1);
           }
           50% {
             background-position: 100% 50%;
-            filter: brightness(2.2);
           }
         }
 

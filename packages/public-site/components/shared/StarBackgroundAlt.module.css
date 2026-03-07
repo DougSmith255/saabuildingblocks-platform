@@ -15,7 +15,7 @@
   /* Bulk: heading text color (#e5e4dd), Gradient: body text color (#dcdbd5) */
   background: radial-gradient(at center bottom, #dcdbd5 0%, #e5e4dd 100%) !important;
   background-color: #e5e4dd !important;
-  background-attachment: fixed !important;
+  /* background-attachment: fixed removed - element is already position:fixed */
 
   /* Performance optimizations */
   display: block;

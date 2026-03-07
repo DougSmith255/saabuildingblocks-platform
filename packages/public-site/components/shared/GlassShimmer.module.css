@@ -40,7 +40,6 @@
   background:
     repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
     repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px);
-  background-attachment: fixed;
   border-radius: 0 0 20px 20px;
   pointer-events: none;
 }
@@ -63,7 +62,6 @@
   mix-blend-mode: overlay;
   animation: radarShimmer 6s ease-in-out infinite;
   transition: opacity 0.6s ease;
-  will-change: background-position, filter;
   transform: translateZ(0);
   backface-visibility: hidden;
 }
@@ -75,15 +73,13 @@
   display: none;
 }
 
-/* Radar shimmer animation */
+/* Radar shimmer animation - background-position only (filter changes cause repaints) */
 @keyframes radarShimmer {
   0%, 100% {
     background-position: 0% 50%;
-    filter: brightness(1.1);
   }
   50% {
     background-position: 100% 50%;
-    filter: brightness(2.2);
   }
 }
 
@@ -95,7 +91,7 @@
   }
 }
 
-/* Mobile: stronger blur, tap prevention */
+/* Mobile: disable expensive effects for scroll/animation performance */
 @media (max-width: 768px) {
   .glassContainer {
     -webkit-tap-highlight-color: transparent !important;
@@ -103,14 +99,14 @@
   }
 
   .glassBase {
-    backdrop-filter: blur(28px) saturate(1.4);
-    -webkit-backdrop-filter: blur(28px) saturate(1.4);
     -webkit-tap-highlight-color: transparent !important;
   }
 
   .shimmerLayer {
-    animation-duration: 6s;
-    background-size: 350% 100%;
+    animation: none;
+    mix-blend-mode: normal;
+    opacity: 0.15;
+    background-size: 100% 100%;
     -webkit-tap-highlight-color: transparent !important;
   }
 }

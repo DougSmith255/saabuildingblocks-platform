@@ -149,7 +149,8 @@ export default function H1({
       </svg>
 
       {/* Backing layers - no user styles spread here; absolute positioning fills wrapper */}
-      <div aria-hidden="true" style={{ userSelect: 'none' }}>
+      {/* overflow:clip prevents backing layers from extending below face text on mobile (multi-line titles) */}
+      <div aria-hidden="true" style={{ userSelect: 'none', position: 'absolute', inset: 0, overflow: 'clip' }}>
         {/* Shadow */}
         <div
           className={`text-h1 text-display ${className}`}

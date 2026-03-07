@@ -40,7 +40,6 @@
 html {
   background: radial-gradient(at center bottom, rgb(30, 30, 30) 0%, rgb(8, 8, 8) 100%);
   background-color: rgb(8, 8, 8);
-  background-attachment: fixed;
   scroll-behavior: smooth;
   min-height: 100%;
 }
@@ -50,7 +49,6 @@ body {
   padding: 0;
   background: radial-gradient(at center bottom, rgb(30, 30, 30) 0%, rgb(8, 8, 8) 100%);
   background-color: rgb(8, 8, 8);
-  background-attachment: fixed;
   min-height: 100svh; /* Use svh (small viewport) to prevent layout shift when mobile address bar hides */
   color: var(--color-text-secondary);
   font-family: var(--font-synonym), 'Courier New', monospace;

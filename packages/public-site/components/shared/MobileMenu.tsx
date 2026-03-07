@@ -143,8 +143,6 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
             bottom: 0,
             zIndex: 10006,
             background: 'rgba(15, 15, 15, 0.95)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
             animation: 'menuTransitionFadeOut 200ms ease-out forwards',
             pointerEvents: 'none',
           }}
@@ -164,8 +162,6 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
           }`}
           style={{
             background: 'rgba(15, 15, 15, 0.98)',
-            backdropFilter: isMobileMenuOpen ? 'blur(8px)' : 'none',
-            WebkitBackdropFilter: isMobileMenuOpen ? 'blur(8px)' : 'none',
             transform: isMobileMenuOpen ? 'translate3d(0, 0, 0)' : 'translate3d(0, -100%, 0)',
             WebkitBackfaceVisibility: 'hidden',
             backfaceVisibility: 'hidden',
