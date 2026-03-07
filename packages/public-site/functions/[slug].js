@@ -7942,7 +7942,9 @@ ${agent.slug === 'jane-smith' ? `
     });
   }
 
-  /* Create CSS div backing layers - identical to H1.tsx/H2.tsx React components */
+  /* Create CSS div backing layers - identical to H1.tsx/H2.tsx React components.
+   * Key: backing divs get the SAME CSS classes as the heading so font-size
+   * uses the responsive clamp() from CSS vars, not fixed computed pixels. */
   function createBackLayers(wrapper) {
     var heading = wrapper.querySelector('.heading-front');
     if (!heading) return;
@@ -7951,15 +7953,14 @@ ${agent.slug === 'jane-smith' ? `
     if (!cfg) return;
     ensureFilters();
     var text = heading.textContent.trim();
+    /* Copy the heading's CSS classes so backing divs get the same responsive font sizing */
+    var headingClasses = heading.className;
     var cs = getComputedStyle(heading);
     var persp = function(tx, ty) {
       return 'perspective(800px) rotateX(' + cfg.rotateX + ') rotateY(' + cfg.rotateY + ') translate(' + tx + ', ' + ty + ')';
     };
-    var fontCss = 'font-family:' + cs.fontFamily + ';font-size:' + cs.fontSize + ';font-weight:' + cs.fontWeight + ';'
-      + 'letter-spacing:' + cs.letterSpacing + ';text-transform:' + cs.textTransform + ';'
-      + 'font-feature-settings:' + (cs.fontFeatureSettings || '"ss01" 1') + ';';
-    var baseCss = 'position:absolute;top:0;left:0;right:0;pointer-events:none;text-align:'
-      + cs.textAlign + ';line-height:1.1;' + fontCss;
+    var baseCss = 'position:absolute;top:0;left:0;right:0;pointer-events:none;'
+      + 'text-align:' + cs.textAlign + ';line-height:1.1;margin:0;';
     /* Backing container */
     var container = document.createElement('div');
     container.setAttribute('aria-hidden', 'true');
@@ -7967,6 +7968,7 @@ ${agent.slug === 'jane-smith' ? `
     container.style.userSelect = 'none';
     /* Shadow layer */
     var shadow = document.createElement('div');
+    shadow.className = headingClasses;
     shadow.style.cssText = baseCss + 'color:' + cfg.shadow.color + ';text-shadow:none;'
       + 'transform:' + persp(cfg.shadow.tx, cfg.shadow.ty) + ';filter:blur(' + cfg.shadow.blur + ');';
     shadow.textContent = text;
@@ -7974,6 +7976,7 @@ ${agent.slug === 'jane-smith' ? `
     /* Color layers */
     cfg.layers.forEach(function(layer) {
       var div = document.createElement('div');
+      div.className = headingClasses;
       div.style.cssText = baseCss
         + 'color:' + layer.color + ';-webkit-text-stroke:' + cfg.strokeWidth + ' ' + layer.color + ';'
         + '-webkit-text-fill-color:' + layer.color + ';paint-order:stroke fill;text-shadow:none;'

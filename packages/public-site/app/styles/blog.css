@@ -267,12 +267,11 @@
 }
 
 /* H2 - Blog content typography - matches H2.tsx component styling */
-/* Blog-specific size: 5px smaller than global H2 on both min and max */
+/* Font-size comes from .text-h2 class (same as site-wide H2) added by JS */
 .blog-content h2,
 .blog-content.prose h2,
 .blog-content.prose-invert h2 {
   font-family: var(--font-family-h2, var(--font-taskor), sans-serif);
-  font-size: clamp(23px, calc(19.36px + 1.45vw), 63px);
   line-height: var(--line-height-h2, 1.1);
   letter-spacing: var(--letter-spacing-h2, -0.01em);
   font-weight: var(--font-weight-h2, 700);

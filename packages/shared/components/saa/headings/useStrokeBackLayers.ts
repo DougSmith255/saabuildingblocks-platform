@@ -723,13 +723,18 @@ export function createDivBackLayers(
   const persp = (tx: string, ty: string) =>
     `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
 
+  // Static font properties only - font-size is provided by the heading's
+  // CSS classes (e.g. text-h2) via responsive clamp(), NOT computed pixels.
   const fontCss =
-    `font-family:${cs.fontFamily};font-size:${cs.fontSize};font-weight:${cs.fontWeight};` +
+    `font-family:${cs.fontFamily};font-weight:${cs.fontWeight};` +
     `letter-spacing:${cs.letterSpacing};text-transform:${cs.textTransform};` +
     `font-feature-settings:${cs.fontFeatureSettings || '"ss01" 1'};`;
   const baseCss =
     `position:absolute;top:0;left:0;right:0;pointer-events:none;` +
     `text-align:${cs.textAlign};line-height:1.1;${fontCss}`;
+
+  // Copy heading's classes so backing divs get the same responsive font-size
+  const headingClasses = heading.className;
 
   // Backing container
   const container = document.createElement('div');
@@ -739,6 +744,7 @@ export function createDivBackLayers(
 
   // Shadow layer
   const shadow = document.createElement('div');
+  shadow.className = headingClasses;
   shadow.style.cssText =
     baseCss +
     `color:${config.shadow.color};text-shadow:none;` +
@@ -749,6 +755,7 @@ export function createDivBackLayers(
   // Color layers
   config.layers.forEach((layer) => {
     const div = document.createElement('div');
+    div.className = headingClasses;
     div.style.cssText =
       baseCss +
       `color:${layer.color};-webkit-text-stroke:${config.strokeWidth} ${layer.color};` +

@@ -185,6 +185,8 @@ export function CategoryBlogPostTemplate({
       const config = isDarkMode ? BLOG_H2_DARK : BLOG_H2_LIGHT;
       const h2s = document.querySelectorAll<HTMLElement>('.blog-content h2');
       h2s.forEach((h2) => {
+        // Ensure text-h2 class for responsive font-size (same as site-wide H2)
+        h2.classList.add('text-h2');
         const existingWrapper = h2.closest('.heading-wrapper');
         if (existingWrapper) {
           // Already wrapped - remove old backing and re-apply with current config
@@ -199,7 +201,7 @@ export function CategoryBlogPostTemplate({
           + `margin-top:${computed.marginTop};margin-bottom:${computed.marginBottom};`;
         h2.parentNode?.insertBefore(wrapper, h2);
         wrapper.appendChild(h2);
-        h2.classList.add('heading-front');
+        h2.classList.add('heading-front', 'text-h2');
         h2.style.marginTop = '0';
         h2.style.marginBottom = '0';
         createDivBackLayers(wrapper, h2, config);
