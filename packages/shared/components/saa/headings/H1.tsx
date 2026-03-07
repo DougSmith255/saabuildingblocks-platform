@@ -38,9 +38,8 @@ interface H1Config {
 
 // ── Face text-shadow (extrusion depth) ───────────────────────────────
 
-const GOLD_FACE_SHADOW = [
-  '0 0 0.08em rgba(255, 215, 0, 0.4)',
-  '0 0 0.2em rgba(255, 215, 0, 0.25)',
+// Extrusion-only shadows (no glow) - used on mobile where backing is disabled
+const EXTRUSION_SHADOWS = [
   '0.003em 0.005em 0 #e5e4dd',
   '0.006em 0.010em 0 #e0dfda',
   '0.009em 0.016em 0 #dbdad5',
@@ -59,25 +58,16 @@ const GOLD_FACE_SHADOW = [
   '0.048em 0.102em 0 #747367',
 ].join(', ');
 
+const GOLD_FACE_SHADOW = [
+  '0 0 0.08em rgba(255, 215, 0, 0.4)',
+  '0 0 0.2em rgba(255, 215, 0, 0.25)',
+  EXTRUSION_SHADOWS,
+].join(', ');
+
 const CYAN_FACE_SHADOW = [
   '0 0 0.08em rgba(0, 191, 255, 0.4)',
   '0 0 0.2em rgba(0, 191, 255, 0.25)',
-  '0.003em 0.005em 0 #e5e4dd',
-  '0.006em 0.010em 0 #e0dfda',
-  '0.009em 0.016em 0 #dbdad5',
-  '0.012em 0.022em 0 #d5d4cd',
-  '0.015em 0.028em 0 #cfcec6',
-  '0.018em 0.035em 0 #c8c7bf',
-  '0.021em 0.042em 0 #c0bfb7',
-  '0.024em 0.049em 0 #b8b7ae',
-  '0.027em 0.056em 0 #b0afa5',
-  '0.030em 0.063em 0 #a7a69c',
-  '0.033em 0.070em 0 #9e9d93',
-  '0.036em 0.077em 0 #96958a',
-  '0.039em 0.084em 0 #8d8c80',
-  '0.042em 0.090em 0 #848377',
-  '0.045em 0.096em 0 #7c7b6f',
-  '0.048em 0.102em 0 #747367',
+  EXTRUSION_SHADOWS,
 ].join(', ');
 
 // ── Theme configs ────────────────────────────────────────────────────
@@ -132,13 +122,14 @@ export default function H1({
   const plainText = extractPlainText(children);
   const config = THEME_CONFIGS[theme];
   const visibleLayers = getVisibleLayers(config.layers);
+  const hasBacking = visibleLayers.length > 0;
   const persp = (tx: string, ty: string) =>
     `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
 
   return (
     <div style={{ position: 'relative', display: 'inline-block', width: '100%', overflow: 'visible' }}>
       {/* Backing layers (disabled on mobile for performance) */}
-      {visibleLayers.length > 0 && (
+      {hasBacking && (
         <div aria-hidden="true" style={{ userSelect: 'none', position: 'absolute', inset: 0, overflow: 'clip' }}>
           {/* Shadow */}
           <div
@@ -195,8 +186,8 @@ export default function H1({
         style={{
           margin: 0,
           color: config.face.color,
-          textShadow: config.face.textShadow,
-          transform: persp(config.face.tx, config.face.ty),
+          textShadow: hasBacking ? config.face.textShadow : EXTRUSION_SHADOWS,
+          transform: hasBacking ? persp(config.face.tx, config.face.ty) : undefined,
           fontFeatureSettings: '"ss01" 1',
           lineHeight: 1.1,
           position: 'relative',
