@@ -165,7 +165,43 @@ export default function H2({
         </defs>
       </svg>
 
-      {/* Backing layers - disabled pending alignment fix */}
+      {/* Backing layers */}
+      <div aria-hidden="true" style={{ userSelect: 'none' }}>
+        {/* Shadow */}
+        <div
+          className={`text-h2 ${className}`}
+          style={{
+            ...style,
+            ...layerBase,
+            color: config.shadow.color,
+            textShadow: 'none',
+            transform: persp(config.shadow.tx, config.shadow.ty),
+            filter: `blur(${config.shadow.blur})`,
+          }}
+        >
+          {plainText}
+        </div>
+        {/* Color layers */}
+        {config.layers.map((layer, i) => (
+          <div
+            key={i}
+            className={`text-h2 ${className}`}
+            style={{
+              ...style,
+              ...layerBase,
+              color: layer.color,
+              WebkitTextStroke: `${config.strokeWidth} ${layer.color}`,
+              WebkitTextFillColor: layer.color,
+              paintOrder: 'stroke fill',
+              textShadow: 'none',
+              filter: 'url(#saa-sharp-h2)',
+              transform: persp(layer.tx, layer.ty),
+            }}
+          >
+            {plainText}
+          </div>
+        ))}
+      </div>
 
       {/* Face */}
       <h2
