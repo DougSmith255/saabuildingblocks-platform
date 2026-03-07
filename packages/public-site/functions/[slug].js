@@ -571,7 +571,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       --color-brandGold: #ffd700;
       --color-headingText: #e5e4dd;
       --color-bodyText: #bfbdb0;
-      --font-size-h1: clamp(38px, calc(27.82px + 4.07vw), 150px);
+      --font-size-h1: clamp(50px, calc(30px + 4vw + 0.3vh), 150px);
       --font-size-h2: clamp(28px, calc(24.36px + 1.45vw), 68px);
       --font-size-body: clamp(16px, calc(15.09px + 0.36vw), 26px);
       --font-size-tagline: clamp(21px, calc(17.45px + 1.42vw), 60px);
@@ -605,6 +605,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       font-family: var(--font-taskor), sans-serif;
       font-size: var(--font-size-h1);
       line-height: 1.1;
+      letter-spacing: 0em;
       font-weight: 400;
       color: var(--color-headingText);
     }
@@ -613,6 +614,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       font-family: var(--font-taskor), sans-serif;
       font-size: var(--font-size-h2);
       line-height: 1.1;
+      letter-spacing: -0.01em;
       font-weight: 700;
       color: var(--color-headingText);
     }
