@@ -84,8 +84,8 @@ const CUSTOM_ICON_PATHS = {
 };
 
 /**
- * NOTE: Alt glyphs for M, A, E, N, T, F are applied selectively via per-character
- * spans with font-feature-settings: "aalt" 1 (see wrapAltGlyphs function).
+ * NOTE: Alt glyphs for M, A, E, N, T, F are handled by the font's custom ss01
+ * feature, activated via CSS font-feature-settings: "ss01" 1 on .heading-front.
  * Real letters stay in the DOM (SEO/copy-paste friendly).
  */
 
@@ -661,6 +661,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     /* Heading front face - shared */
     .heading-front {
       font-family: var(--font-taskor), serif;
+      font-feature-settings: "ss01" 1;
       line-height: 1.1;
       position: relative;
       overflow: visible;
@@ -3221,6 +3222,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     .founder-name {
       font-family: var(--font-taskor), serif;
+      font-feature-settings: "ss01" 1;
       font-size: clamp(27px, calc(25.36px + 0.65vw), 45px);
       line-height: 1.1;
       font-weight: 700;
@@ -7893,26 +7895,10 @@ ${agent.slug === 'jane-smith' ? `
 
   var isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-  /* Wrap M, A, E, T, F with "aalt" 1 and N with "aalt" 2 (second alternate).
-   * Other chars with alternates (H, K, R, V, W, Y) stay normal. */
-  function escapeText(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-  function wrapAltGlyphs(text) {
-    var safe = escapeText(text);
-    safe = safe.replace(/[MAETF]+/g, function(m) {
-      return '<span style="font-feature-settings:\'aalt\' 1">' + m + '</span>';
-    });
-    safe = safe.replace(/N+/g, function(m) {
-      return '<span style="font-feature-settings:\'aalt\' 2">' + m + '</span>';
-    });
-    return safe;
-  }
-
   /* Create CSS div backing layers - 2-layer deep design.
    * Key: backing divs get the SAME CSS classes as the heading so font-size
    * uses the responsive clamp() from CSS vars, not fixed computed pixels.
-   * Alt glyphs for M/A/E/N/T/F applied via per-character spans (wrapAltGlyphs).
+   * Alt glyphs handled by font ss01 feature + CSS font-feature-settings.
    * Mobile: backing disabled entirely for performance. Desktop: 2 layers. */
   function createBackLayers(wrapper) {
     var heading = wrapper.querySelector('.heading-front');
@@ -7921,14 +7907,11 @@ ${agent.slug === 'jane-smith' ? `
     var cfg = CONFIGS[type];
     if (!cfg) return;
     var text = heading.textContent.trim();
-    var altHtml = wrapAltGlyphs(text);
     var headingClasses = heading.className;
     var cs = getComputedStyle(heading);
     var persp = function(tx, ty) {
       return 'perspective(800px) rotateX(' + cfg.rotateX + ') rotateY(' + cfg.rotateY + ') translate(' + tx + ', ' + ty + ')';
     };
-    /* Apply alt glyphs to the face heading */
-    heading.innerHTML = altHtml;
     /* Backing layers (skipped on mobile) */
     if (!isMobile) {
       var baseCss = 'position:absolute;top:0;left:0;right:0;pointer-events:none;'
@@ -7942,7 +7925,7 @@ ${agent.slug === 'jane-smith' ? `
       shadow.className = headingClasses;
       shadow.style.cssText = baseCss + 'color:' + cfg.shadow.color + ';text-shadow:none;'
         + 'transform:' + persp(cfg.shadow.tx, cfg.shadow.ty) + ';filter:blur(' + cfg.shadow.blur + ');';
-      shadow.innerHTML = altHtml;
+      shadow.textContent = text;
       container.appendChild(shadow);
       /* 2 stroked layers */
       cfg.layers.forEach(function(layer) {
@@ -7952,7 +7935,7 @@ ${agent.slug === 'jane-smith' ? `
           + 'color:' + layer.color + ';-webkit-text-stroke:' + layer.stroke + ' ' + layer.color + ';'
           + '-webkit-text-fill-color:' + layer.color + ';paint-order:stroke fill;text-shadow:none;'
           + 'transform:' + persp(layer.tx, layer.ty) + ';';
-        div.innerHTML = altHtml;
+        div.textContent = text;
         container.appendChild(div);
       });
       wrapper.insertBefore(container, heading);
@@ -8867,7 +8850,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
     <h1 style="--name-font-size: ${nameFontSize}">
       <span class="sr-only">${escapeHTML(fullName)}</span>
-      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:calc(-1.5em - 20px) auto -2em;font-family:inherit;font-size:inherit;pointer-events:none;">
+      <svg aria-hidden="true" overflow="visible" style="display:block;width:100%;height:5em;margin:calc(-1.5em - 20px) auto -2em;font-family:inherit;font-feature-settings:'ss01' 1;font-size:inherit;pointer-events:none;">
         <defs>
           <linearGradient id="lfg" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#dddcd5"/><stop offset="35%" stop-color="#f2f1ec"/><stop offset="65%" stop-color="#f2f1ec"/><stop offset="100%" stop-color="#dddcd5"/>

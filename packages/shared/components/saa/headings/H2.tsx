@@ -137,6 +137,7 @@ export default function H2({
         display: 'inline-block',
         width: '100%',
         overflow: 'visible',
+        fontFeatureSettings: '"ss01" 1',
         textAlign,
       }}
     >

@@ -64,6 +64,7 @@ export default function Tagline({
         display: 'inline-block',
         width: '100%',
         overflow: 'visible',
+        fontFeatureSettings: '"ss01" 1',
         textAlign: 'center',
         marginTop: '30px',
         marginBottom: '30px',

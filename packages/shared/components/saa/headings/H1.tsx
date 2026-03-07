@@ -117,7 +117,7 @@ export default function H1({
     `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
 
   return (
-    <div style={{ position: 'relative', display: 'inline-block', width: '100%', overflow: 'visible' }}>
+    <div style={{ position: 'relative', display: 'inline-block', width: '100%', overflow: 'visible', fontFeatureSettings: '"ss01" 1' }}>
       {/* Backing layers (disabled on mobile for performance) */}
       {hasBacking && (
         <div aria-hidden="true" style={{ userSelect: 'none', position: 'absolute', inset: 0 }}>
@@ -132,7 +132,6 @@ export default function H1({
               pointerEvents: 'none',
               margin: 0,
               lineHeight: 1.1,
-
               fontSize: style.fontSize,
               color: config.shadow.color,
               textShadow: 'none',
@@ -155,7 +154,6 @@ export default function H1({
                 pointerEvents: 'none',
                 margin: 0,
                 lineHeight: 1.1,
-  
                 fontSize: style.fontSize,
                 color: layer.color,
                 WebkitTextStroke: `${layer.stroke} ${layer.color}`,
