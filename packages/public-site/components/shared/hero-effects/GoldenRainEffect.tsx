@@ -225,7 +225,7 @@ export function GoldenRainEffect() {
       state.frameId = requestAnimationFrame(animate);
     };
     img.fetchPriority = 'high';
-    img.src = '/images/hero/100-dollar-bill.png';
+    img.src = '/images/hero/100-dollar-bill.webp';
 
     // --- Lerp constant ---
     const LERP_SPEED = 0.07;

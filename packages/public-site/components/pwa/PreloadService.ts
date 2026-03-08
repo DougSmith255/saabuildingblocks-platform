@@ -20,7 +20,7 @@ export interface PreloadResult {
  * Critical static images to preload
  */
 const CRITICAL_IMAGES = [
-  '/images/saa-logo-gold.png',
+  '/images/saa-logo-gold.webp',
   '/icons/s-logo-80.webp', // SAA Support (transparent S logo, 80x80 WebP)
   // Cloudflare Images - preload to prevent slow loading in Support & Team Calls sections
   'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public', // eXp Support

@@ -571,7 +571,7 @@ const TRAINING_PROGRAMS = [
     icon: UserCircle,
     featured: false,
     colSpan: 1,
-    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-personal-branding/public',
+    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-personal-branding/mobile',
     imageAlt: 'Personal Branding Course',
   },
   {
@@ -601,7 +601,7 @@ const TRAINING_PROGRAMS = [
     icon: Handshake,
     featured: false,
     colSpan: 1,
-    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-investor-army-course/public',
+    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-investor-army-course/mobile',
     imageAlt: 'Investor Army Course',
   },
   {
@@ -656,7 +656,9 @@ function ValueSection3_Training() {
                   {/* Featured card image */}
                   {program.title === 'SAA Pro' ? (
                     <img
-                      src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-social-agent-academy/desktop"
+                      src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-social-agent-academy/tablet"
+                      srcSet="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-social-agent-academy/mobile 640w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-social-agent-academy/tablet 1024w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-social-agent-academy/desktop 2000w"
+                      sizes="(max-width: 768px) 100vw, 66vw"
                       alt="Social Agent Academy Pro"
                       width={1200}
                       height={686}
@@ -665,7 +667,9 @@ function ValueSection3_Training() {
                     />
                   ) : program.title === 'AI Accelerator' ? (
                     <img
-                      src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-ai-agent-accelerator/desktop"
+                      src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-ai-agent-accelerator/tablet"
+                      srcSet="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-ai-agent-accelerator/mobile 640w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-ai-agent-accelerator/tablet 1024w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-ai-agent-accelerator/desktop 2000w"
+                      sizes="(max-width: 768px) 100vw, 66vw"
                       alt="AI Agent Accelerator"
                       width={1200}
                       height={686}

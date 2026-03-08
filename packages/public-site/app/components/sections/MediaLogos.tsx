@@ -301,7 +301,7 @@ export function MediaLogos() {
                   }}
                 >
                   <img
-                    src={`${CLOUDFLARE_BASE}/${logo.id}/public`}
+                    src={`${CLOUDFLARE_BASE}/${logo.id}/mobile`}
                     alt={logo.alt}
                     loading="lazy"
                     width={200}

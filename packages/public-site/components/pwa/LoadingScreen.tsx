@@ -51,7 +51,7 @@ export function LoadingScreen({
         <div className={styles.logoContainer}>
           <div className={styles.logoGlow} />
           <Image
-            src="/images/saa-logo-gold.png"
+            src="/images/saa-logo-gold.webp"
             alt="SAA Logo"
             width={200}
             height={75}

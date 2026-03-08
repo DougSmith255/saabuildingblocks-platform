@@ -3807,7 +3807,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div class="expand-reveal-element" data-expand-id="saa-right" data-expand-dir="right" style="height: 100%; min-height: 300px;">
             <div id="saa-right-frame" class="rounded-2xl" style="position: relative; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; background: rgba(255,255,255,0.05); height: 100%; min-height: 300px;">
               <!-- Image is always visible -->
-              <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;">
+              <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/tablet" srcset="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/mobile 640w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/tablet 1024w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/desktop 2000w" sizes="(max-width: 768px) 100vw, 42vw" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;">
               <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
               <!-- Caption is always visible -->
               <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;">
@@ -4231,123 +4231,123 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div class="logo-track" id="logo-track" style="transform: translateX(-32.5px);">
             
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/public" alt="The Wall Street Journal" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/mobile" alt="The Wall Street Journal" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/public" alt="CNBC" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/mobile" alt="CNBC" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/public" alt="Fox Business" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/mobile" alt="Fox Business" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/public" alt="Bloomberg" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/mobile" alt="Bloomberg" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/public" alt="Yahoo Finance" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/mobile" alt="Yahoo Finance" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/public" alt="Forbes" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/mobile" alt="Forbes" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/public" alt="Business Insider" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/mobile" alt="Business Insider" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/public" alt="MarketWatch" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/mobile" alt="MarketWatch" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/public" alt="Reuters" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/mobile" alt="Reuters" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/public" alt="USA Today" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/mobile" alt="USA Today" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/public" alt="Los Angeles Times" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/mobile" alt="Los Angeles Times" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/public" alt="The Washington Post" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/mobile" alt="The Washington Post" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/public" alt="Nasdaq" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/mobile" alt="Nasdaq" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/public" alt="Barron's" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/mobile" alt="Barron's" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/public" alt="New York Post" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/mobile" alt="New York Post" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/public" alt="The Wall Street Journal" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/mobile" alt="The Wall Street Journal" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/public" alt="CNBC" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/mobile" alt="CNBC" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/public" alt="Fox Business" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/mobile" alt="Fox Business" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/public" alt="Bloomberg" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/mobile" alt="Bloomberg" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/public" alt="Yahoo Finance" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/mobile" alt="Yahoo Finance" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/public" alt="Forbes" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/mobile" alt="Forbes" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/public" alt="Business Insider" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/mobile" alt="Business Insider" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/public" alt="MarketWatch" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/mobile" alt="MarketWatch" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/public" alt="Reuters" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/mobile" alt="Reuters" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/public" alt="USA Today" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/mobile" alt="USA Today" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/public" alt="Los Angeles Times" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/mobile" alt="Los Angeles Times" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/public" alt="The Washington Post" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/mobile" alt="The Washington Post" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/public" alt="Nasdaq" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/mobile" alt="Nasdaq" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/public" alt="Barron's" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/mobile" alt="Barron's" loading="eager" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/public" alt="New York Post" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/mobile" alt="New York Post" loading="eager" class="logo-img"></span>
     </div>
   
           </div>
@@ -4392,7 +4392,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
-                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public" alt="Doug Smart" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/mobile" alt="Doug Smart" style="width: 100%; height: 100%; object-fit: cover;">
                       </div>
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
@@ -4416,7 +4416,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
-                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public" alt="Karrie Hill" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/mobile" alt="Karrie Hill" style="width: 100%; height: 100%; object-fit: cover;">
                       </div>
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
@@ -7073,11 +7073,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
         // FUTURE_POINTS - exact from React
         var FUTURE_POINTS = [
-          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/public', text: 'Cloud-First Brokerage Model', imgClass: 'w-full h-full object-contain', imgStyle: '', bgColor: 'rgba(17,17,17,0.5)' },
-          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-ai-bot/public', text: 'AI-Powered Tools and Training', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(1.25) translate(10px, 18px);', bgColor: 'rgba(17,17,17,0.5)' },
-          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-mobile-first/public', text: 'Mobile-First Workflows', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(0.95) translate(3px, 10px);', bgColor: 'rgba(17,17,17,0.5)' },
-          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-borderless/public', text: 'Borderless Business', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(1.15) translate(-1px, -1px);', bgColor: 'rgba(17,17,17,0.5)' },
-          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public', text: 'Sustainable Income Beyond Sales', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(1.35) translateX(5px);', bgColor: '#111' }
+          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/mobile', text: 'Cloud-First Brokerage Model', imgClass: 'w-full h-full object-contain', imgStyle: '', bgColor: 'rgba(17,17,17,0.5)' },
+          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-ai-bot/mobile', text: 'AI-Powered Tools and Training', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(1.25) translate(10px, 18px);', bgColor: 'rgba(17,17,17,0.5)' },
+          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-mobile-first/mobile', text: 'Mobile-First Workflows', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(0.95) translate(3px, 10px);', bgColor: 'rgba(17,17,17,0.5)' },
+          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-borderless/mobile', text: 'Borderless Business', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(1.15) translate(-1px, -1px);', bgColor: 'rgba(17,17,17,0.5)' },
+          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/mobile', text: 'Sustainable Income Beyond Sales', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(1.35) translateX(5px);', bgColor: '#111' }
         ];
 
         var totalCards = FUTURE_POINTS.length;
@@ -8255,8 +8255,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   // Button text size from settings (default: 14px)
   const buttonTextSize = agent.links_settings?.buttonTextSize ?? 14;
 
-  // S logo PNG: off-white for dark accent (needs light logo), dark for light accent (needs dark logo)
-  const sLogoPng = isAccentDark ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png';
+  // S logo: off-white for dark accent (needs light logo), dark for light accent (needs dark logo)
+  const sLogoPng = isAccentDark ? '/icons/s-logo-offwhite.webp' : '/icons/s-logo-dark.webp';
 
   // Function to generate all links HTML in the correct order
   function generateLinksHTML(agent, customLinks, accentColor, iconColor, attractionPageUrl) {

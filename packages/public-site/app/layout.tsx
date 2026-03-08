@@ -300,7 +300,7 @@ export default async function RootLayout({
               url: 'https://smartagentalliance.com',
               logo: {
                 '@type': 'ImageObject',
-                url: 'https://smartagentalliance.com/logo.png',
+                url: 'https://smartagentalliance.com/logo.webp',
                 width: 600,
                 height: 600,
               },

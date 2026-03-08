@@ -109,7 +109,7 @@ export function AuthorSection({ authorName, index = 0 }: AuthorSectionProps) {
         <div className="relative flex-shrink-0 flex flex-col items-center gap-3">
           <ProfileCyberFrame size="md" index={index}>
             <img
-              src={author.image}
+              src={author.image.replace('/public', '/mobile')}
               alt={author.name}
               className="object-cover w-full h-full"
             />

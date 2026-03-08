@@ -3179,7 +3179,7 @@ function AgentPortal() {
             />
             {/* SAA Logo */}
             <img
-              src="/images/saa-logo-gold.png"
+              src="/images/saa-logo-gold.webp"
               alt="SAA Logo"
               style={{
                 position: 'relative',
@@ -3971,7 +3971,7 @@ function AgentPortal() {
                 title="Go to Dashboard"
               >
                 <img
-                  src="/images/saa-logo-gold.png"
+                  src="/images/saa-logo-gold.webp"
                   alt="Smart Agent Alliance"
                   style={{ width: '120px', height: 'auto' }}
                 />
@@ -11626,7 +11626,7 @@ function AgentPagesSection({
 
   // Preload S logo variants for instant switching
   useEffect(() => {
-    const preloadImages = ['/icons/s-logo-dark.png', '/icons/s-logo-offwhite.png'];
+    const preloadImages = ['/icons/s-logo-dark.webp', '/icons/s-logo-offwhite.webp'];
     preloadImages.forEach(src => {
       const img = new Image();
       img.src = src;
@@ -11958,7 +11958,7 @@ function AgentPagesSection({
         height: 200,
         type: 'svg',
         data: linktreeUrl,
-        image: '/icons/s-logo-dark.png',
+        image: '/icons/s-logo-dark.webp',
         dotsOptions: {
           color: '#2a2a2a',
           type: 'dots', // Circular dots for a softer look
@@ -14133,7 +14133,7 @@ function AgentPagesSection({
                                 width: '16px',
                                 height: '16px',
                                 zIndex: 1,
-                                backgroundImage: `url('${isAccentDark ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png'}')`,
+                                backgroundImage: `url('${isAccentDark ? '/icons/s-logo-offwhite.webp' : '/icons/s-logo-dark.webp'}')`,
                                 backgroundSize: 'contain',
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center',
@@ -15548,7 +15548,7 @@ function DownloadSection() {
             {/* App Icon */}
             <div className="w-20 h-20 mx-auto min-[1200px]:mx-0 mb-4 rounded-2xl overflow-hidden shadow-xl shadow-[#ffd700]/20 border border-[#ffd700]/30">
               <img
-                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-s-icon-512x512/public"
+                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-s-icon-512x512/mobile"
                 alt="SAA Portal"
                 className="w-full h-full object-cover"
               />
