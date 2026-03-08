@@ -52,7 +52,7 @@ ${masterControllerCSS}
  * Combined with preload: true, fonts load very fast so block is minimal
  */
 const taskor = localFont({
-  src: '../public/fonts/taskor-regular-webfont.woff2',
+  src: '../fonts/taskor-regular-webfont.woff2',
   variable: '--font-taskor',
   display: 'block', // Block render until font loads - prevents fallback flash
   preload: true,
@@ -62,7 +62,7 @@ const taskor = localFont({
 // Amulya fonts - NOT preloaded (not used above fold - only in content areas)
 // CategoryBadge now uses Taskor, so Amulya can be deferred
 const amulya = localFont({
-  src: '../public/fonts/Amulya-Variable.woff2',
+  src: '../fonts/Amulya-Variable.woff2',
   variable: '--font-amulya',
   display: 'swap', // Swap when loaded - allows content to render immediately
   preload: false, // Don't preload - not used above fold
@@ -70,7 +70,7 @@ const amulya = localFont({
 });
 
 const amulyaItalic = localFont({
-  src: '../public/fonts/Amulya-VariableItalic.woff2',
+  src: '../fonts/Amulya-VariableItalic.woff2',
   variable: '--font-amulya-italic',
   display: 'swap', // Italic can swap - not used above fold
   preload: false, // Don't preload italic (not used above-fold)
@@ -79,7 +79,7 @@ const amulyaItalic = localFont({
 });
 
 const synonym = localFont({
-  src: '../public/fonts/Synonym-Variable.woff2',
+  src: '../fonts/Synonym-Variable.woff2',
   variable: '--font-synonym',
   display: 'block', // Block until font loads for consistent appearance
   preload: true,
