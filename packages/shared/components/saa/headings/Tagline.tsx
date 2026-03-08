@@ -84,6 +84,7 @@ export default function Tagline({
               margin: 0,
               textAlign: 'center',
               lineHeight: 1.1,
+              fontSize: style.fontSize,
 
               color: SHADOW.color,
               textShadow: 'none',
@@ -107,7 +108,8 @@ export default function Tagline({
                 margin: 0,
                 textAlign: 'center',
                 lineHeight: 1.1,
-  
+                fontSize: style.fontSize,
+
                 color: layer.color,
                 WebkitTextStroke: `${layer.stroke} ${layer.color}`,
                 WebkitTextFillColor: layer.color,
