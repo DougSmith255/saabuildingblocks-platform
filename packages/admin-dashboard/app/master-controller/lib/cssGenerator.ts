@@ -130,6 +130,7 @@ export class CSSGenerator {
   font-weight: var(--font-weight-h1);
   font-family: var(--font-family-h1);
   font-style: var(--font-style-h1, normal);
+  font-feature-settings: "ss01" 1;
 }
 
 .text-h2 {
@@ -140,6 +141,7 @@ export class CSSGenerator {
   font-weight: var(--font-weight-h2);
   font-family: var(--font-family-h2);
   font-style: var(--font-style-h2, normal);
+  font-feature-settings: "ss02" 1;
 }
 
 .text-h3 {
