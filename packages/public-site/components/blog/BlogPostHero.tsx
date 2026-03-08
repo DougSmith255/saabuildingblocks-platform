@@ -128,6 +128,7 @@ export function BlogPostHero({
         <div style={{ minHeight: 'clamp(50px, 6vw + 20px, 120px)', marginBottom: '60px' }}>
           <H1
             flat
+            noAltGlyphs
             style={{
               fontSize: 'clamp(32px, 4vw + 16px, 82px)',
             }}

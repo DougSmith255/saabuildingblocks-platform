@@ -20,6 +20,8 @@ export interface HeadingProps {
   theme?: H1Theme;
   /** Disable 3D perspective tilt (for long multi-line text like blog titles) */
   flat?: boolean;
+  /** Disable alternate glyphs (ss01) - use regular Taskor letterforms */
+  noAltGlyphs?: boolean;
 }
 
 // ── Layer config ─────────────────────────────────────────────────────
@@ -111,6 +113,7 @@ export default function H1({
   id,
   theme = 'default',
   flat = false,
+  noAltGlyphs = false,
 }: HeadingProps) {
   const plainText = altGlyphs(extractPlainText(children));
   const config = THEME_CONFIGS[theme];
@@ -121,7 +124,7 @@ export default function H1({
       : `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
 
   return (
-    <div style={{ position: 'relative', display: 'inline-block', width: '100%', overflow: 'visible', fontFeatureSettings: '"ss01" 1' }}>
+    <div style={{ position: 'relative', display: 'inline-block', width: '100%', overflow: 'visible', ...(!noAltGlyphs && { fontFeatureSettings: '"ss01" 1' }) }}>
       {/* Backing layers (disabled on mobile for performance) */}
       {hasBacking && (
         <div aria-hidden="true" style={{ userSelect: 'none', position: 'absolute', inset: 0 }}>

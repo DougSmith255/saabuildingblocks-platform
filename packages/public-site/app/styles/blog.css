@@ -278,8 +278,8 @@
   color: var(--text-color-h2, #e5e4dd);
   margin-top: 3rem;
   margin-bottom: 1.5rem;
-  /* Font feature for alt glyphs (H2 = ss02: E, F only) */
-  font-feature-settings: "ss02" 1;
+  /* Blog uses regular Taskor (no alternate glyphs) */
+  font-feature-settings: normal;
   /* Links inside headings inherit heading font */
   & a { font-family: inherit; font-size: inherit; font-weight: inherit; }
   /* 3D depth handled by SVG backing layers via createBackLayers (useStrokeBackLayers.ts) */
