@@ -220,12 +220,13 @@ export default function StarBackgroundCanvas() {
         }
       `}</style>
       {/* Gradient background layer */}
-      <div className="star-gradient" aria-hidden="true" />
-      {/* Star canvas layer */}
+      <div className="star-gradient" aria-hidden="true" style={{ position: 'fixed', inset: 0 }} />
+      {/* Star canvas layer - inline position:fixed prevents CLS from canvas default 300x150 size */}
       <canvas
         ref={canvasRef}
         aria-hidden="true"
         className="star-canvas"
+        style={{ position: 'fixed' }}
       />
     </>
   );

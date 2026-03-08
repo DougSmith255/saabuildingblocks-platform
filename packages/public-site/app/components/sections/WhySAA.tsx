@@ -19,7 +19,8 @@ const BENEFITS = [
 const DISCLAIMER = "SAA resources are available to agents who select a SAA-aligned sponsor at the time they join eXp Realty.";
 
 // Main image - Aligned Incentives
-const ALIGNED_INCENTIVES_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public';
+const ALIGNED_INCENTIVES_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication';
+const ALIGNED_INCENTIVES_SRCSET = `${ALIGNED_INCENTIVES_IMAGE}/mobile 640w, ${ALIGNED_INCENTIVES_IMAGE}/tablet 1024w, ${ALIGNED_INCENTIVES_IMAGE}/desktop 2000w`;
 
 // Brand yellow color
 const BRAND_YELLOW = '#ffd700';
@@ -117,7 +118,9 @@ export function WhySAA() {
                 }}
               >
                 <img
-                  src={ALIGNED_INCENTIVES_IMAGE}
+                  src={`${ALIGNED_INCENTIVES_IMAGE}/tablet`}
+                  srcSet={ALIGNED_INCENTIVES_SRCSET}
+                  sizes="(max-width: 640px) 640px, (max-width: 1024px) 1024px, 2000px"
                   alt="Smart Agent Alliance aligned incentives model - where agent success and sponsor success grow together"
                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover object-center"

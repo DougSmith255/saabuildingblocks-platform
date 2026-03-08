@@ -280,15 +280,11 @@ export default async function RootLayout({
         />
 
         {/* Plausible Analytics - Self-hosted, privacy-focused analytics */}
-        {/* Manual mode: delays pageview by 1s to filter bots and sub-1s bounces */}
-        <script
-          defer
-          data-domain="smartagentalliance.com"
-          src="https://plausible.saabuildingblocks.com/js/script.manual.file-downloads.pageview-props.tagged-events.js"
-        />
+        {/* Deferred load: waits for idle or 3s, then loads script + delays pageview 1s */}
+        {/* This prevents Plausible from causing forced reflows during critical rendering */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };setTimeout(function(){if(document.querySelector('main[data-is-404="true"]'))return;plausible('pageview')},1000);`,
+            __html: `window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)};(function(){function l(){var s=document.createElement('script');s.defer=true;s.dataset.domain='smartagentalliance.com';s.src='https://plausible.saabuildingblocks.com/js/script.manual.file-downloads.pageview-props.tagged-events.js';document.head.appendChild(s);setTimeout(function(){if(document.querySelector('main[data-is-404="true"]'))return;plausible('pageview')},1000)}if('requestIdleCallback' in window){requestIdleCallback(l,{timeout:3000})}else{setTimeout(l,3000)}})();`,
           }}
         />
 
