@@ -18,6 +18,8 @@ export interface HeadingProps {
   disableCloseGlow?: boolean;
   /** Color theme for the backing stroke layers */
   theme?: H1Theme;
+  /** Disable 3D perspective tilt (for long multi-line text like blog titles) */
+  flat?: boolean;
 }
 
 // ── Layer config ─────────────────────────────────────────────────────
@@ -108,12 +110,15 @@ export default function H1({
   style = {},
   id,
   theme = 'default',
+  flat = false,
 }: HeadingProps) {
   const plainText = altGlyphs(extractPlainText(children));
   const config = THEME_CONFIGS[theme];
   const hasBacking = true;
   const persp = (tx: string, ty: string) =>
-    `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
+    flat
+      ? `translate(${tx}, ${ty})`
+      : `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
 
   return (
     <div style={{ position: 'relative', display: 'inline-block', width: '100%', overflow: 'visible', fontFeatureSettings: '"ss01" 1' }}>

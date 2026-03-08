@@ -127,7 +127,7 @@ export function BlogPostHero({
         {/* minHeight prevents CLS when Taskor font loads with alt glyphs */}
         <div style={{ minHeight: 'clamp(50px, 6vw + 20px, 120px)', marginBottom: '60px' }}>
           <H1
-            data-speakable="headline"
+            flat
             style={{
               fontSize: 'clamp(32px, 4vw + 16px, 82px)',
             }}
