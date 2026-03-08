@@ -51,9 +51,11 @@ function BookACallContent() {
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>BOOK A CALL</H1>
-              <Tagline className="mt-4" style={{ maxWidth: '70vw', margin: '1rem auto 0' }}>
-                Schedule a one-on-one with our team to see if SAA is the right fit for you.
-              </Tagline>
+              <div style={{ maxWidth: '70vw', margin: '1rem auto 0' }}>
+                <Tagline className="mt-4">
+                  Schedule a one-on-one with our team to see if SAA is the right fit for you.
+                </Tagline>
+              </div>
             </div>
           </div>
         </section>
