@@ -2,12 +2,12 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-// Counter breakpoint: 1500px - counter in corner on desktop, in tagline on mobile
-// Counter shows in corner on desktop (>=1500px), in tagline on mobile (<1500px)
-const COUNTER_BREAKPOINT = 1500;
+// Counter breakpoint: 780px - counter in corner on desktop, below tagline on mobile
+// Counter shows in corner on desktop (>=780px), below tagline on mobile (<780px)
+const COUNTER_BREAKPOINT = 780;
 
 interface ViewportContextType {
-  /** True when viewport >= 1500px (show corner counter) */
+  /** True when viewport >= 780px (show corner counter) */
   isCounterDesktop: boolean;
   /** True after client-side hydration */
   hasMounted: boolean;
