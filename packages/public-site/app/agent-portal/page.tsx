@@ -11626,7 +11626,7 @@ function AgentPagesSection({
 
   // Preload S logo variants for instant switching
   useEffect(() => {
-    const preloadImages = ['/icons/s-logo-dark.webp', '/icons/s-logo-offwhite.webp'];
+    const preloadImages = ['/icons/s-logo-dark-60.webp', '/icons/s-logo-offwhite-60.webp'];
     preloadImages.forEach(src => {
       const img = new Image();
       img.src = src;
@@ -11958,7 +11958,7 @@ function AgentPagesSection({
         height: 200,
         type: 'svg',
         data: linktreeUrl,
-        image: '/icons/s-logo-dark.webp',
+        image: '/icons/s-logo-dark-60.webp',
         dotsOptions: {
           color: '#2a2a2a',
           type: 'dots', // Circular dots for a softer look
@@ -14133,7 +14133,7 @@ function AgentPagesSection({
                                 width: '16px',
                                 height: '16px',
                                 zIndex: 1,
-                                backgroundImage: `url('${isAccentDark ? '/icons/s-logo-offwhite.webp' : '/icons/s-logo-dark.webp'}')`,
+                                backgroundImage: `url('${isAccentDark ? '/icons/s-logo-offwhite-60.webp' : '/icons/s-logo-dark-60.webp'}')`,
                                 backgroundSize: 'contain',
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center',

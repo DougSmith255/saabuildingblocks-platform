@@ -89,29 +89,35 @@ export function ValuePillarsTab() {
           borderRadius: '50%',
         }}
       />
-      {/* White vignette glow animation */}
+      {/* White vignette glow - opacity animation (GPU-composited, no repaint) */}
       <style>{`
-        @keyframes whiteVignetteGlow {
-          0%, 100% {
-            box-shadow:
-              inset 0 20px 30px -15px rgba(255, 255, 255, 0.12),
-              inset 0 -20px 30px -15px rgba(255, 255, 255, 0.12),
-              inset 20px 0 30px -15px rgba(255, 255, 255, 0.12),
-              inset -20px 0 30px -15px rgba(255, 255, 255, 0.12);
-          }
-          50% {
-            box-shadow:
-              inset 0 35px 45px -20px rgba(255, 255, 255, 0.22),
-              inset 0 -35px 45px -20px rgba(255, 255, 255, 0.22),
-              inset 35px 0 45px -20px rgba(255, 255, 255, 0.22),
-              inset -35px 0 45px -20px rgba(255, 255, 255, 0.22);
-          }
+        @keyframes vignetteGlowPulse {
+          0%, 100% { opacity: 0; }
+          50% { opacity: 1; }
         }
       `}</style>
+      {/* Base vignette - static */}
       <div
         className="absolute inset-0 pointer-events-none z-[3] rounded-3xl"
         style={{
-          animation: 'whiteVignetteGlow 4s ease-in-out infinite',
+          boxShadow: `
+            inset 0 20px 30px -15px rgba(255, 255, 255, 0.12),
+            inset 0 -20px 30px -15px rgba(255, 255, 255, 0.12),
+            inset 20px 0 30px -15px rgba(255, 255, 255, 0.12),
+            inset -20px 0 30px -15px rgba(255, 255, 255, 0.12)`,
+        }}
+      />
+      {/* Pulse overlay - fades in/out for the intensified glow */}
+      <div
+        className="absolute inset-0 pointer-events-none z-[3] rounded-3xl"
+        style={{
+          boxShadow: `
+            inset 0 35px 45px -20px rgba(255, 255, 255, 0.22),
+            inset 0 -35px 45px -20px rgba(255, 255, 255, 0.22),
+            inset 35px 0 45px -20px rgba(255, 255, 255, 0.22),
+            inset -35px 0 45px -20px rgba(255, 255, 255, 0.22)`,
+          animation: 'vignetteGlowPulse 4s ease-in-out infinite',
+          willChange: 'opacity',
         }}
       />
       <GlassPanel variant="champagne">

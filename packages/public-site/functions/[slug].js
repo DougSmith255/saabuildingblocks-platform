@@ -1101,18 +1101,29 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       pointer-events: none;
     }
 
-    @keyframes whiteVignetteGlow {
-      0%, 100% { box-shadow: inset 0 20px 30px -15px rgba(255, 255, 255, 0.12), inset 0 -20px 30px -15px rgba(255, 255, 255, 0.12), inset 20px 0 30px -15px rgba(255, 255, 255, 0.12), inset -20px 0 30px -15px rgba(255, 255, 255, 0.12); }
-      50% { box-shadow: inset 0 35px 45px -20px rgba(255, 255, 255, 0.22), inset 0 -35px 45px -20px rgba(255, 255, 255, 0.22), inset 35px 0 45px -20px rgba(255, 255, 255, 0.22), inset -35px 0 45px -20px rgba(255, 255, 255, 0.22); }
+    @keyframes vignetteGlowPulse {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
     }
 
-    .value-pillars-glow {
+    .value-pillars-glow-base {
       position: absolute;
       inset: 0;
       pointer-events: none;
       z-index: 3;
       border-radius: 24px;
-      animation: whiteVignetteGlow 4s ease-in-out infinite;
+      box-shadow: inset 0 20px 30px -15px rgba(255, 255, 255, 0.12), inset 0 -20px 30px -15px rgba(255, 255, 255, 0.12), inset 20px 0 30px -15px rgba(255, 255, 255, 0.12), inset -20px 0 30px -15px rgba(255, 255, 255, 0.12);
+    }
+
+    .value-pillars-glow-pulse {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      border-radius: 24px;
+      box-shadow: inset 0 35px 45px -20px rgba(255, 255, 255, 0.22), inset 0 -35px 45px -20px rgba(255, 255, 255, 0.22), inset 35px 0 45px -20px rgba(255, 255, 255, 0.22), inset -35px 0 45px -20px rgba(255, 255, 255, 0.22);
+      animation: vignetteGlowPulse 4s ease-in-out infinite;
+      will-change: opacity;
     }
 
     /* Pillar numbers (01, 02, 03) - H2 3D styling, larger size */
@@ -1274,11 +1285,26 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       align-items: center;
       justify-content: center;
     }
+    /* Shared icon ring pulse opacity keyframe (GPU-composited) */
+    @keyframes iconRingPulseOpacity {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+    .icon-cyber-ring-pulse {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: iconRingPulseOpacity 3s ease-in-out infinite;
+      will-change: opacity;
+    }
     /* Yellow theme */
     .icon-cyber-ring-yellow .icon-cyber-ring-outer {
       background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1));
       box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1);
-      animation: iconCyberPulseYellow 3s ease-in-out infinite;
+    }
+    .icon-cyber-ring-yellow .icon-cyber-ring-pulse {
+      box-shadow: 0 0 40px rgba(255,215,0,0.35), inset 0 0 25px rgba(255,215,0,0.15);
     }
     .icon-cyber-ring-yellow .icon-cyber-ring-inner {
       background: linear-gradient(180deg, rgba(15,15,10,0.95), rgba(10,10,5,0.98));
@@ -1288,15 +1314,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       color: #ffd700;
       filter: drop-shadow(0 0 8px rgba(255,215,0,0.5));
     }
-    @keyframes iconCyberPulseYellow {
-      0%, 100% { box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1); }
-      50% { box-shadow: 0 0 40px rgba(255,215,0,0.35), inset 0 0 25px rgba(255,215,0,0.15); }
-    }
     /* Green theme */
     .icon-cyber-ring-green .icon-cyber-ring-outer {
       background: linear-gradient(135deg, rgba(0,204,102,0.2), rgba(0,150,75,0.1));
       box-shadow: 0 0 30px rgba(0,204,102,0.2), inset 0 0 20px rgba(0,204,102,0.1);
-      animation: iconCyberPulseGreen 3s ease-in-out infinite;
+    }
+    .icon-cyber-ring-green .icon-cyber-ring-pulse {
+      box-shadow: 0 0 40px rgba(0,204,102,0.35), inset 0 0 25px rgba(0,204,102,0.15);
     }
     .icon-cyber-ring-green .icon-cyber-ring-inner {
       background: linear-gradient(180deg, rgba(10,20,15,0.95), rgba(5,15,10,0.98));
@@ -1306,15 +1330,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       color: #00cc66;
       filter: drop-shadow(0 0 8px rgba(0,204,102,0.5));
     }
-    @keyframes iconCyberPulseGreen {
-      0%, 100% { box-shadow: 0 0 30px rgba(0,204,102,0.2), inset 0 0 20px rgba(0,204,102,0.1); }
-      50% { box-shadow: 0 0 40px rgba(0,204,102,0.35), inset 0 0 25px rgba(0,204,102,0.15); }
-    }
     /* Purple theme */
     .icon-cyber-ring-purple .icon-cyber-ring-outer {
       background: linear-gradient(135deg, rgba(160,80,255,0.2), rgba(120,60,200,0.1));
       box-shadow: 0 0 30px rgba(160,80,255,0.2), inset 0 0 20px rgba(160,80,255,0.1);
-      animation: iconCyberPulsePurple 3s ease-in-out infinite;
+    }
+    .icon-cyber-ring-purple .icon-cyber-ring-pulse {
+      box-shadow: 0 0 40px rgba(160,80,255,0.35), inset 0 0 25px rgba(160,80,255,0.15);
     }
     .icon-cyber-ring-purple .icon-cyber-ring-inner {
       background: linear-gradient(180deg, rgba(20,15,30,0.95), rgba(10,5,20,0.98));
@@ -1323,10 +1345,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .icon-cyber-ring-purple .icon-cyber-ring-inner svg {
       color: #a050ff;
       filter: drop-shadow(0 0 8px rgba(160,80,255,0.5));
-    }
-    @keyframes iconCyberPulsePurple {
-      0%, 100% { box-shadow: 0 0 30px rgba(160,80,255,0.2), inset 0 0 20px rgba(160,80,255,0.1); }
-      50% { box-shadow: 0 0 40px rgba(160,80,255,0.35), inset 0 0 25px rgba(160,80,255,0.15); }
     }
     /* Hover glow overlay */
     .why-exp-card-hover-glow {
@@ -1468,23 +1486,24 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .wyg-icon-ring-outer {
       position: absolute; inset: 0; border-radius: 50%;
     }
+    .wyg-icon-ring-pulse {
+      position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+      animation: iconRingPulseOpacity 3s ease-in-out infinite;
+      will-change: opacity;
+    }
     .wyg-theme-yellow .wyg-icon-ring-outer {
       background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1));
       box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1);
-      animation: iconPulseYellow 3s ease-in-out infinite;
+    }
+    .wyg-theme-yellow .wyg-icon-ring-pulse {
+      box-shadow: 0 0 40px rgba(255,215,0,0.35), inset 0 0 25px rgba(255,215,0,0.15);
     }
     .wyg-theme-blue .wyg-icon-ring-outer {
       background: linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.1));
       box-shadow: 0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1);
-      animation: iconPulseBlue 3s ease-in-out infinite;
     }
-    @keyframes iconPulseYellow {
-      0%, 100% { box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1); }
-      50%      { box-shadow: 0 0 40px rgba(255,215,0,0.35), inset 0 0 25px rgba(255,215,0,0.15); }
-    }
-    @keyframes iconPulseBlue {
-      0%, 100% { box-shadow: 0 0 30px rgba(0,191,255,0.2), inset 0 0 20px rgba(0,191,255,0.1); }
-      50%      { box-shadow: 0 0 40px rgba(0,191,255,0.35), inset 0 0 25px rgba(0,191,255,0.15); }
+    .wyg-theme-blue .wyg-icon-ring-pulse {
+      box-shadow: 0 0 40px rgba(0,191,255,0.35), inset 0 0 25px rgba(0,191,255,0.15);
     }
     .wyg-icon-ring-inner {
       position: absolute; inset: 8px; border-radius: 50%;
@@ -3180,21 +3199,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       box-shadow: 0 0 12px rgba(255,215,0,0.4);
     }
 
-    @keyframes profileFramePulse {
-      0%, 100% {
-        box-shadow:
-          0 0 8px rgba(255, 215, 0, 0.5),
-          0 0 16px rgba(255, 215, 0, 0.3),
-          0 0 24px rgba(255, 215, 0, 0.2);
-      }
-      50% {
-        box-shadow:
-          0 0 12px rgba(255, 215, 0, 0.7),
-          0 0 24px rgba(255, 215, 0, 0.5),
-          0 0 36px rgba(255, 215, 0, 0.3);
-      }
-    }
-
     .profile-cyber-frame-inner {
       width: 100%;
       height: 100%;
@@ -3672,9 +3676,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
   </style>
 
-  <!-- GSAP and Lenis for scroll animations (defer to avoid render blocking) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <!-- Lenis for smooth scroll (desktop only) -->
   <script src="https://unpkg.com/lenis@1.3.15/dist/lenis.min.js" defer></script>
 </head>
 <body>
@@ -3740,7 +3742,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <div class="value-pillars-tab">
       <div class="value-pillars-shadow"></div>
       <div class="value-pillars-bg"></div>
-      <div class="value-pillars-glow"></div>
+      <div class="value-pillars-glow-base"></div>
+      <div class="value-pillars-glow-pulse"></div>
       <div class="glass-panel">
         <div class="glass-panel-bg">
           <div class="glass-panel-texture"></div>
@@ -3807,7 +3810,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div class="expand-reveal-element" data-expand-id="saa-right" data-expand-dir="right" style="height: 100%; min-height: 300px;">
             <div id="saa-right-frame" class="rounded-2xl" style="position: relative; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; background: rgba(255,255,255,0.05); height: 100%; min-height: 300px;">
               <!-- Image is always visible -->
-              <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/tablet" srcset="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/mobile 640w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/tablet 1024w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/desktop 2000w" sizes="(max-width: 768px) 100vw, 42vw" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;">
+              <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/tablet" srcset="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/mobile 640w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/tablet 1024w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/desktop 2000w" sizes="(max-width: 768px) 100vw, 42vw" alt="Smart Agent Alliance aligned incentives model" class="bento-image" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;">
               <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
               <!-- Caption is always visible -->
               <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;">
@@ -3835,7 +3838,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                 https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile 640w,
                 https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet 1024w,
                 https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop 2000w
-              " sizes="100vw" alt="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; object-position: center 55%; mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%); -webkit-mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%);">
+              " sizes="100vw" alt="" aria-hidden="true" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; object-position: center 55%; mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%); -webkit-mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%);">
           </div>
 
           <div style="max-width: 1600px; margin: 0 auto; position: relative; z-index: 10;">
@@ -3976,6 +3979,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div class="wyg-card-hover-glow"></div>
             <div class="wyg-icon-ring-wrap">
               <div class="wyg-icon-ring-outer"></div>
+              <div class="wyg-icon-ring-pulse"></div>
               <div class="wyg-icon-ring-inner">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
               </div>
@@ -3991,6 +3995,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div class="wyg-card-hover-glow"></div>
             <div class="wyg-icon-ring-wrap">
               <div class="wyg-icon-ring-outer"></div>
+              <div class="wyg-icon-ring-pulse"></div>
               <div class="wyg-icon-ring-inner">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
               </div>
@@ -4006,6 +4011,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div class="wyg-card-hover-glow"></div>
             <div class="wyg-icon-ring-wrap">
               <div class="wyg-icon-ring-outer"></div>
+              <div class="wyg-icon-ring-pulse"></div>
               <div class="wyg-icon-ring-inner">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
               </div>
@@ -4021,6 +4027,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div class="wyg-card-hover-glow"></div>
             <div class="wyg-icon-ring-wrap">
               <div class="wyg-icon-ring-outer"></div>
+              <div class="wyg-icon-ring-pulse"></div>
               <div class="wyg-icon-ring-inner">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
               </div>
@@ -4036,6 +4043,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div class="wyg-card-hover-glow"></div>
             <div class="wyg-icon-ring-wrap">
               <div class="wyg-icon-ring-outer"></div>
+              <div class="wyg-icon-ring-pulse"></div>
               <div class="wyg-icon-ring-inner">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line></svg>
               </div>
@@ -4135,6 +4143,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="why-exp-card-hover-glow why-exp-card-hover-glow-yellow"></div>
               <div class="icon-cyber-ring icon-cyber-ring-yellow">
                 <div class="icon-cyber-ring-outer"></div>
+                <div class="icon-cyber-ring-pulse"></div>
                 <div class="icon-cyber-ring-inner">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
                 </div>
@@ -4148,6 +4157,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="why-exp-card-hover-glow why-exp-card-hover-glow-yellow"></div>
               <div class="icon-cyber-ring icon-cyber-ring-yellow">
                 <div class="icon-cyber-ring-outer"></div>
+                <div class="icon-cyber-ring-pulse"></div>
                 <div class="icon-cyber-ring-inner">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
                 </div>
@@ -4161,6 +4171,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="why-exp-card-hover-glow why-exp-card-hover-glow-yellow"></div>
               <div class="icon-cyber-ring icon-cyber-ring-yellow">
                 <div class="icon-cyber-ring-outer"></div>
+                <div class="icon-cyber-ring-pulse"></div>
                 <div class="icon-cyber-ring-inner">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 </div>
@@ -4177,6 +4188,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="why-exp-card-hover-glow why-exp-card-hover-glow-green"></div>
               <div class="icon-cyber-ring icon-cyber-ring-green">
                 <div class="icon-cyber-ring-outer"></div>
+                <div class="icon-cyber-ring-pulse"></div>
                 <div class="icon-cyber-ring-inner">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
                 </div>
@@ -4200,6 +4212,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="why-exp-card-hover-glow why-exp-card-hover-glow-purple"></div>
               <div class="icon-cyber-ring icon-cyber-ring-purple">
                 <div class="icon-cyber-ring-outer"></div>
+                <div class="icon-cyber-ring-pulse"></div>
                 <div class="icon-cyber-ring-inner">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
                 </div>
@@ -4231,123 +4244,123 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div class="logo-track" id="logo-track" style="transform: translateX(-32.5px);">
             
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/mobile" alt="The Wall Street Journal" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/mobile" alt="The Wall Street Journal" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/mobile" alt="CNBC" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/mobile" alt="CNBC" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/mobile" alt="Fox Business" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/mobile" alt="Fox Business" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/mobile" alt="Bloomberg" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/mobile" alt="Bloomberg" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/mobile" alt="Yahoo Finance" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/mobile" alt="Yahoo Finance" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/mobile" alt="Forbes" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/mobile" alt="Forbes" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/mobile" alt="Business Insider" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/mobile" alt="Business Insider" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/mobile" alt="MarketWatch" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/mobile" alt="MarketWatch" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/mobile" alt="Reuters" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/mobile" alt="Reuters" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/mobile" alt="USA Today" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/mobile" alt="USA Today" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/mobile" alt="Los Angeles Times" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/mobile" alt="Los Angeles Times" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/mobile" alt="The Washington Post" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/mobile" alt="The Washington Post" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/mobile" alt="Nasdaq" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/mobile" alt="Nasdaq" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/mobile" alt="Barron's" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/mobile" alt="Barron's" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/mobile" alt="New York Post" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/mobile" alt="New York Post" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/mobile" alt="The Wall Street Journal" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/mobile" alt="The Wall Street Journal" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/mobile" alt="CNBC" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/mobile" alt="CNBC" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/mobile" alt="Fox Business" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/mobile" alt="Fox Business" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/mobile" alt="Bloomberg" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/mobile" alt="Bloomberg" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/mobile" alt="Yahoo Finance" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/mobile" alt="Yahoo Finance" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/mobile" alt="Forbes" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/mobile" alt="Forbes" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/mobile" alt="Business Insider" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/mobile" alt="Business Insider" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/mobile" alt="MarketWatch" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/mobile" alt="MarketWatch" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/mobile" alt="Reuters" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/mobile" alt="Reuters" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/mobile" alt="USA Today" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/mobile" alt="USA Today" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/mobile" alt="Los Angeles Times" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/mobile" alt="Los Angeles Times" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/mobile" alt="The Washington Post" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/mobile" alt="The Washington Post" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/mobile" alt="Nasdaq" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/mobile" alt="Nasdaq" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/mobile" alt="Barron's" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/mobile" alt="Barron's" loading="lazy" class="logo-img"></span>
     </div>
   
     <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
-      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/mobile" alt="New York Post" loading="eager" class="logo-img"></span>
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/mobile" alt="New York Post" loading="lazy" class="logo-img"></span>
     </div>
   
           </div>
@@ -4375,7 +4388,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
-                        <img src="${escapeHTML(agentImageUrl)}" alt="${escapeHTML(displayName)}" style="width: 100%; height: 100%; object-fit: cover; background-color: #d8d8da;">
+                        <img src="${escapeHTML(agentImageUrl)}" alt="${escapeHTML(displayName)}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; background-color: #d8d8da;">
                       </div>
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
@@ -4392,7 +4405,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
-                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/mobile" alt="Doug Smart" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/mobile" alt="Doug Smart" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
                       </div>
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
@@ -4416,7 +4429,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
-                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/mobile" alt="Karrie Hill" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/mobile" alt="Karrie Hill" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
                       </div>
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
@@ -4509,7 +4522,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="video-player-container">
                 <div class="video-frame">
                   <div class="video-wrapper" style="position: relative; aspect-ratio: 16/9; background: #000; border-radius: 8px 8px 0 0; overflow: hidden;">
-                    <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-smart-agent-alliance-explained/desktop" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.3;" />
+                    <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-smart-agent-alliance-explained/desktop" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.3;" />
                     <!-- Disabled overlay -->
                     <div style="position: absolute; inset: 0; z-index: 10; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; border-radius: 8px 8px 0 0;">
                       <span style="color: #ffd700; font-size: clamp(14px, 2.5vw, 22px); font-family: var(--font-taskor, sans-serif); font-weight: 600; letter-spacing: 0.05em; text-shadow: 0 0 20px rgba(255,215,0,0.4);">Video Update Coming Soon</span>
@@ -8256,7 +8269,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   const buttonTextSize = agent.links_settings?.buttonTextSize ?? 14;
 
   // S logo: off-white for dark accent (needs light logo), dark for light accent (needs dark logo)
-  const sLogoPng = isAccentDark ? '/icons/s-logo-offwhite.webp' : '/icons/s-logo-dark.webp';
+  const sLogoPng = isAccentDark ? '/icons/s-logo-offwhite-60.webp' : '/icons/s-logo-dark-60.webp';
 
   // Function to generate all links HTML in the correct order
   function generateLinksHTML(agent, customLinks, accentColor, iconColor, attractionPageUrl) {

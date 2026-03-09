@@ -97,19 +97,12 @@ export function IconCard({
   const centerClass = centered ? 'text-center' : '';
   const hoverClass = hover ? 'group' : '';
 
-  // Unique animation name based on theme
-  const pulseKeyframes = `iconCardPulse-${theme}`;
-
   return (
     <>
       <style jsx global>{`
-        @keyframes ${pulseKeyframes} {
-          0%, 100% {
-            box-shadow: 0 0 30px rgba(${colors.primaryRgb}, 0.2), inset 0 0 20px rgba(${colors.primaryRgb}, 0.1);
-          }
-          50% {
-            box-shadow: 0 0 40px rgba(${colors.primaryRgb}, 0.35), inset 0 0 25px rgba(${colors.primaryRgb}, 0.15);
-          }
+        @keyframes iconCardPulseOpacity {
+          0%, 100% { opacity: 0; }
+          50% { opacity: 1; }
         }
       `}</style>
 
@@ -134,13 +127,21 @@ export function IconCard({
         {/* Icon container with animated glow ring */}
         {icon && (
           <div className="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
-            {/* Outer glow ring */}
+            {/* Outer glow ring - static base shadow */}
             <div
               className="absolute inset-0 rounded-full"
               style={{
                 background: colors.iconBg,
                 boxShadow: `0 0 30px ${colors.iconGlow}, inset 0 0 20px rgba(${colors.primaryRgb}, 0.1)`,
-                animation: `${pulseKeyframes} 3s ease-in-out infinite`,
+              }}
+            />
+            {/* Pulse overlay - opacity animation (GPU-composited, no repaint) */}
+            <div
+              className="absolute inset-0 rounded-full pointer-events-none"
+              style={{
+                boxShadow: `0 0 40px rgba(${colors.primaryRgb}, 0.35), inset 0 0 25px rgba(${colors.primaryRgb}, 0.15)`,
+                animation: 'iconCardPulseOpacity 3s ease-in-out infinite',
+                willChange: 'opacity',
               }}
             />
             {/* Inner icon circle */}

@@ -36,13 +36,22 @@ export default function WhoExpWorksBestForSection() {
                 />
 
                 <div className="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
+                  {/* Static base glow */}
                   <div
                     className="absolute inset-0 rounded-full"
                     style={{
                       background: 'linear-gradient(135deg, rgba(229,228,221,0.15), rgba(191,189,176,0.08))',
                       boxShadow: '0 0 30px rgba(229,228,221,0.15), inset 0 0 20px rgba(229,228,221,0.08)',
-                      animation: 'expFitIconPulse 3s ease-in-out infinite',
+                    }}
+                  />
+                  {/* Pulse overlay - opacity animation (GPU-composited) */}
+                  <div
+                    className="absolute inset-0 rounded-full pointer-events-none"
+                    style={{
+                      boxShadow: '0 0 40px rgba(229,228,221,0.25), inset 0 0 25px rgba(229,228,221,0.12)',
+                      animation: 'expFitIconPulseOpacity 3s ease-in-out infinite',
                       animationDelay: `${i * 0.4}s`,
+                      willChange: 'opacity',
                     }}
                   />
                   <div
@@ -83,9 +92,9 @@ export default function WhoExpWorksBestForSection() {
         </div>
 
         <style>{`
-          @keyframes expFitIconPulse {
-            0%, 100% { box-shadow: 0 0 30px rgba(229,228,221,0.15), inset 0 0 20px rgba(229,228,221,0.08); }
-            50% { box-shadow: 0 0 40px rgba(229,228,221,0.25), inset 0 0 25px rgba(229,228,221,0.12); }
+          @keyframes expFitIconPulseOpacity {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
           }
 
           .exp-fit-card-grainy {
