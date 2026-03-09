@@ -230,7 +230,7 @@ export default function SupportInfrastructureSection() {
   }, []);
 
   return (
-    <section id="support" ref={sectionRef} className="relative px-4 sm:px-8 md:px-12 overflow-hidden" style={{ margin: '-100px 0', padding: '100px 0' }}>
+    <section id="support" ref={sectionRef} className="relative px-4 sm:px-8 md:px-12 overflow-hidden" style={{ margin: '-100px 0', paddingTop: '100px', paddingBottom: '100px' }}>
 
       <div
         className="absolute inset-0 pointer-events-none"

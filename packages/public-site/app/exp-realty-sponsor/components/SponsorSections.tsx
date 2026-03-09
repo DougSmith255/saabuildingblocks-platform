@@ -9,7 +9,7 @@ import { MeetTheFounders } from '@/app/components/sections/MeetTheFounders';
 import { SuccessStories } from '@/app/components/sections/SuccessStories';
 import { GrainCard } from '@saa/shared/components/saa/cards';
 import { JoinAllianceCTA } from '@/components/shared/JoinAllianceCTA';
-import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers, Rocket, Link2, LifeBuoy, TrendingUp, UserCircle, Video, Megaphone, UserPlus, Download, Handshake, Sparkles, type LucideIcon } from 'lucide-react';
+import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers, Rocket, Link2, LifeBuoy, TrendingUp, UserCircle, Video, Megaphone, UserPlus, Download, Handshake, Sparkles, ChevronDown, type LucideIcon } from 'lucide-react';
 
 // SECTION 1 CONTENT — word for word
 // ============================================================================
@@ -1439,38 +1439,61 @@ function Section1() {
             })}
           </div>
 
-          {/* Mobile: both cards fully open, stacked */}
+          {/* Mobile: accordion — one panel open at a time */}
           <div className="md:hidden flex flex-col gap-3">
-            {PANELS.map((panel, i) => (
-              <div key={panel.id} className="relative">
-                {/* Glow ring */}
-                <div
-                  className="absolute -inset-[3px] rounded-2xl pointer-events-none"
-                  style={{
-                    border: `2px solid ${panel.color}50`,
-                    boxShadow: `0 0 12px 4px ${panel.color}44`,
-                    zIndex: 30,
-                  }}
-                />
+            {PANELS.map((panel, i) => {
+              const isActive = active === i;
+              return (
+                <div key={panel.id} className="relative">
+                  <div
+                    className={`${isActive ? 'focus-card' : ''} rounded-2xl relative`}
+                    style={{
+                      overflow: 'hidden',
+                      ...(!isActive ? {
+                        background: 'linear-gradient(180deg, rgba(18,18,18,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                      } : {}),
+                      border: isActive ? `3px solid ${panel.color}` : `1px solid ${panel.color}40`,
+                      boxShadow: isActive
+                        ? `0 0 6px 2px ${panel.color}44, 0 8px 32px rgba(0,0,0,0.4)`
+                        : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4)',
+                      transition: 'border 0.35s ease, box-shadow 0.35s ease',
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setActive(i)}
+                      className="w-full flex items-center justify-between cursor-pointer p-5"
+                    >
+                      <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: 0, maxWidth: '2500px' }}>
+                        {panel.shortLabel}
+                      </H2>
+                      <ChevronDown
+                        size={24}
+                        style={{
+                          color: panel.color,
+                          transform: isActive ? 'rotate(180deg)' : 'rotate(0)',
+                          transition: 'transform 0.3s ease',
+                          flexShrink: 0,
+                        }}
+                      />
+                    </button>
 
-                {/* Card — always open with grain bg and colored border */}
-                <div
-                  className="focus-card rounded-2xl relative"
-                  style={{
-                    overflow: 'hidden',
-                    border: `3px solid ${panel.color}`,
-                    boxShadow: `0 0 6px 2px ${panel.color}44, 0 8px 32px rgba(0,0,0,0.4)`,
-                  }}
-                >
-                  <div className="p-5">
-                    <H2 theme={panel.theme} style={{ textAlign: 'left', marginBottom: '1rem', maxWidth: '2500px' }}>
-                      {panel.label}
-                    </H2>
-                    {i === 0 ? <SAAContent /> : <SponsorshipContent />}
+                    <div
+                      style={{
+                        maxHeight: isActive ? '800px' : '0px',
+                        overflow: 'hidden',
+                        transition: 'max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                        willChange: 'max-height',
+                      }}
+                    >
+                      <div className="px-5 pb-5" style={{ opacity: isActive ? 1 : 0, transition: 'opacity 0.3s ease 0.1s' }}>
+                        {i === 0 ? <SAAContent /> : <SponsorshipContent />}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

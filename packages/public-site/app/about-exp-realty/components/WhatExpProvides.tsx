@@ -140,8 +140,6 @@ export default function WhatExpProvidesVersionB() {
                     style={{
                       background: isExpanded ? grainBg : inactiveBg,
                       backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
-                      backdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
-                      WebkitBackdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
                       border: isExpanded ? `2px solid rgba(${panel.rgb},0.5)` : `1px solid rgba(${panel.rgb},0.2)`,
                       boxShadow: isExpanded
                         ? `0 0 30px rgba(${panel.rgb},0.2), 0 8px 32px rgba(0,0,0,0.4)`
@@ -176,53 +174,52 @@ export default function WhatExpProvidesVersionB() {
 
                     <div
                       style={{
-                        display: 'grid',
-                        gridTemplateRows: isExpanded ? '1fr' : '0fr',
-                        transition: 'grid-template-rows 0.4s ease',
+                        maxHeight: isExpanded ? '500px' : '0px',
+                        overflow: 'hidden',
+                        transition: 'max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                        willChange: 'max-height',
                       }}
                     >
-                      <div style={{ overflowX: 'visible', overflowY: 'hidden' }}>
-                        <ul className="pt-4 space-y-3">
-                          {panel.bullets.map((bullet, j) => (
-                            <li
-                              key={bullet.text}
-                              className="text-body text-sm flex items-start gap-3"
+                      <ul className="pt-4 space-y-3">
+                        {panel.bullets.map((bullet, j) => (
+                          <li
+                            key={bullet.text}
+                            className="text-body text-sm flex items-start gap-3"
+                            style={{
+                              color: 'var(--color-body-text)',
+                              opacity: isExpanded ? 1 : 0,
+                              transition: `opacity 0.3s ease ${j * 80}ms`,
+                            }}
+                          >
+                            <span
+                              className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
                               style={{
-                                color: 'var(--color-body-text)',
-                                opacity: isExpanded ? 1 : 0,
-                                transition: `opacity 0.3s ease ${j * 100}ms`,
+                                background: `rgba(${panel.rgb},0.15)`,
+                                border: `1px solid rgba(${panel.rgb},0.3)`,
                               }}
                             >
-                              <span
-                                className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center mt-0.5"
-                                style={{
-                                  background: `rgba(${panel.rgb},0.15)`,
-                                  border: `1px solid rgba(${panel.rgb},0.3)`,
-                                }}
-                              >
-                                <bullet.icon size={14} style={{ color: panel.color }} />
-                              </span>
-                              <span>
-                                {bullet.text}
-                                {'guestPass' in bullet && bullet.guestPass && (
-                                  <>
-                                    {' - '}
-                                    <button
-                                      type="button"
-                                      onClick={() => window.dispatchEvent(new Event('open-vip-guest-pass'))}
-                                      className="cursor-pointer font-bold hover:underline"
-                                      style={{ color: '#00bfff' }}
-                                    >
-                                      Guest Pass
-                                    </button>
-                                  </>
-                                )}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                        {isExpanded && <a href={`/about-exp-realty/${panel.id}`} className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '13px', opacity: 0.7, display: 'block', marginTop: '16px' }}>Learn more about {panel.label.toLowerCase()} →</a>}
-                      </div>
+                              <bullet.icon size={14} style={{ color: panel.color }} />
+                            </span>
+                            <span>
+                              {bullet.text}
+                              {'guestPass' in bullet && bullet.guestPass && (
+                                <>
+                                  {' - '}
+                                  <button
+                                    type="button"
+                                    onClick={() => window.dispatchEvent(new Event('open-vip-guest-pass'))}
+                                    className="cursor-pointer font-bold hover:underline"
+                                    style={{ color: '#00bfff' }}
+                                  >
+                                    Guest Pass
+                                  </button>
+                                </>
+                              )}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      {isExpanded && <a href={`/about-exp-realty/${panel.id}`} className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '13px', opacity: 0.7, display: 'block', marginTop: '16px' }}>Learn more about {panel.label.toLowerCase()} →</a>}
                     </div>
                   </div>
                 </div>

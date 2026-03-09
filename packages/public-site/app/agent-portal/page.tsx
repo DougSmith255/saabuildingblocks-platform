@@ -3979,9 +3979,11 @@ function AgentPortal() {
               {/* Spacer to push title after sidebar width - larger on 1024-1300px since logo is hidden */}
               <div className="w-[205px] min-[1300px]:w-[160px] flex-shrink-0" />
               {/* Title */}
-              <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(24px, calc(18px + 1.2vw), 42px)', marginTop: '-13px' }}>
-                AGENT PORTAL
-              </H1>
+              <div style={{ marginTop: '-13px' }}>
+                <H1 className="whitespace-nowrap" style={{ fontSize: 'clamp(24px, calc(18px + 1.2vw), 42px)' }}>
+                  AGENT PORTAL
+                </H1>
+              </div>
               {/* Spacer */}
               <div className="flex-1" />
               {/* Logout */}
