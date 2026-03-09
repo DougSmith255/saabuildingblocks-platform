@@ -11386,7 +11386,7 @@ function AgentPagesSection({
   const [customLinks, setCustomLinks] = useState<CustomLink[]>(preloadedPageData?.page?.custom_links || DEFAULT_CUSTOM_LINKS);
   const [newLinkLabel, setNewLinkLabel] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
-  const [newLinkIcon, setNewLinkIcon] = useState<string>('Globe');
+  const [newLinkIcon, setNewLinkIcon] = useState<string | null>(null);
   const [showIconPicker, setShowIconPicker] = useState<string | null>(null); // Link ID of which icon picker is open
   const [editingLinkId, setEditingLinkId] = useState<string | null>(null); // ID of link being edited
   const [editingLinkLabel, setEditingLinkLabel] = useState(''); // Label of link being edited
@@ -13515,10 +13515,10 @@ function AgentPagesSection({
             <div className="flex gap-1">
               <button
                 onClick={() => setShowSocialIconPicker(showSocialIconPicker === 0 ? null : 0)}
-                className={`p-2 rounded-lg border flex-shrink-0 transition-colors ${customSocialLinks[0]?.icon && customSocialLinks[0].icon !== 'Globe' ? 'bg-[#ffd700]/20 border-[#ffd700]/30 text-[#ffd700]' : 'bg-black/40 border-white/10 text-white/60 hover:bg-white/10'}`}
+                className={`p-2 rounded-lg border flex-shrink-0 transition-colors ${customSocialLinks[0]?.icon ? 'bg-[#ffd700]/20 border-[#ffd700]/30 text-[#ffd700]' : 'bg-black/40 border-white/10 text-white/60 hover:bg-white/10'}`}
                 title="Choose icon"
               >
-                {customSocialLinks[0]?.icon && customSocialLinks[0].icon !== 'Globe' ? (
+                {customSocialLinks[0]?.icon ? (
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === customSocialLinks[0].icon)?.path || ''} />
                   </svg>
@@ -13535,8 +13535,8 @@ function AgentPagesSection({
                 onChange={(e) => {
                   // Ensure we have a proper array with no sparse elements
                   const newLinks = [
-                    customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
-                    customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                    customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: '' },
+                    customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: '' },
                   ];
                   newLinks[0] = { ...newLinks[0], url: e.target.value };
                   setCustomSocialLinks(newLinks);
@@ -13556,8 +13556,8 @@ function AgentPagesSection({
                       onClick={() => {
                         // Ensure we have a proper array with no sparse elements
                         const newLinks = [
-                          customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
-                          customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                          customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: '' },
+                          customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: '' },
                         ];
                         newLinks[0] = { ...newLinks[0], icon: icon.name };
                         setCustomSocialLinks(newLinks);
@@ -13583,10 +13583,10 @@ function AgentPagesSection({
             <div className="flex gap-1">
               <button
                 onClick={() => setShowSocialIconPicker(showSocialIconPicker === 1 ? null : 1)}
-                className={`p-2 rounded-lg border flex-shrink-0 transition-colors ${customSocialLinks[1]?.icon && customSocialLinks[1].icon !== 'Globe' ? 'bg-[#ffd700]/20 border-[#ffd700]/30 text-[#ffd700]' : 'bg-black/40 border-white/10 text-white/60 hover:bg-white/10'}`}
+                className={`p-2 rounded-lg border flex-shrink-0 transition-colors ${customSocialLinks[1]?.icon ? 'bg-[#ffd700]/20 border-[#ffd700]/30 text-[#ffd700]' : 'bg-black/40 border-white/10 text-white/60 hover:bg-white/10'}`}
                 title="Choose icon"
               >
-                {customSocialLinks[1]?.icon && customSocialLinks[1].icon !== 'Globe' ? (
+                {customSocialLinks[1]?.icon ? (
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === customSocialLinks[1].icon)?.path || ''} />
                   </svg>
@@ -13603,8 +13603,8 @@ function AgentPagesSection({
                 onChange={(e) => {
                   // Ensure we have a proper array with no sparse elements
                   const newLinks = [
-                    customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
-                    customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                    customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: '' },
+                    customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: '' },
                   ];
                   newLinks[1] = { ...newLinks[1], url: e.target.value };
                   setCustomSocialLinks(newLinks);
@@ -13624,8 +13624,8 @@ function AgentPagesSection({
                       onClick={() => {
                         // Ensure we have a proper array with no sparse elements
                         const newLinks = [
-                          customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
-                          customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                          customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: '' },
+                          customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: '' },
                         ];
                         newLinks[1] = { ...newLinks[1], icon: icon.name };
                         setCustomSocialLinks(newLinks);
@@ -14267,15 +14267,14 @@ function AgentPagesSection({
                         className="absolute left-3 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity"
                         title="Choose icon"
                       >
-                        {newLinkIcon === 'Globe' ? (
-                          /* Circled plus icon - FIX-017 */
+                        {newLinkIcon ? (
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || 'M12 5v14M5 12h14'} />
+                          </svg>
+                        ) : (
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10" />
                             <path strokeLinecap="round" d="M12 8v8M8 12h8" />
-                          </svg>
-                        ) : (
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || 'M12 5v14M5 12h14'} />
                           </svg>
                         )}
                       </button>
@@ -14351,7 +14350,7 @@ function AgentPagesSection({
                             }, 250);
                             setNewLinkLabel('');
                             setNewLinkUrl('');
-                            setNewLinkIcon('Globe');
+                            setNewLinkIcon(null);
                             setAddingNewLink(false);
                             setHasUnsavedChanges(true);
                           }
