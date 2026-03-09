@@ -402,7 +402,7 @@ export function BlogSidebar({ categorySlug, isDarkMode }: BlogSidebarProps) {
             {/* Founders image with gradient overlay */}
             <div style={{ position: 'relative' }}>
               <img
-                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop"
+                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/mobile"
                 alt="Doug Smart & Karrie Hill - Smart Agent Alliance co-founders"
                 width={320}
                 height={200}

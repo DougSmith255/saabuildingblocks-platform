@@ -428,6 +428,7 @@ export default function Header() {
               <img
                 src="/icons/s-logo-80.webp"
                 alt="SAA"
+                loading="lazy"
                 style={{
                   width: '100%', height: '100%', objectFit: 'contain',
                   ...(compactLogo !== null ? { display: compactLogo ? 'block' : 'none' } : {}),

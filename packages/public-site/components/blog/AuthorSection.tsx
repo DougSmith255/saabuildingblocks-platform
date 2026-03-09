@@ -111,6 +111,7 @@ export function AuthorSection({ authorName, index = 0 }: AuthorSectionProps) {
             <img
               src={author.image.replace('/public', '/mobile')}
               alt={author.name}
+              loading="lazy"
               className="object-cover w-full h-full"
             />
           </ProfileCyberFrame>

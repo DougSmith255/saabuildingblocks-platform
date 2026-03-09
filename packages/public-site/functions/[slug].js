@@ -3908,7 +3908,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
           <div id="wyg-video-container" class="wyg-video-container" style="position: relative; aspect-ratio: 16/9; background: #000; overflow: hidden;">
             <!-- Poster image (removed on first play) -->
-            <img id="wyg-video-poster" src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-team-value-thumbnail/desktop" alt="SAA Team Value" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2;" loading="lazy" />
+            <img id="wyg-video-poster" src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-team-value-thumbnail/tablet" srcset="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-team-value-thumbnail/mobile 375w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-team-value-thumbnail/tablet 768w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-team-value-thumbnail/desktop 1280w" sizes="(max-width: 900px) 100vw, 900px" alt="SAA Team Value" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2;" loading="lazy" />
 
             <!-- Play button overlay (before first play) -->
             <div id="wyg-play-btn" style="position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center; cursor: pointer;">

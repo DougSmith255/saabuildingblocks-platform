@@ -83,6 +83,7 @@ export function ProvenAtScale() {
           sizes="100vw"
           alt=""
           aria-hidden="true"
+          loading="lazy"
           className="w-full h-full object-cover"
           style={{
             objectPosition: 'center 55%',
