@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
-import { Settings, Type, Palette, LayoutGrid, FileCode, Layers } from 'lucide-react';
+import { Settings, Type, Palette, LayoutGrid, FileCode, Layers, Image } from 'lucide-react';
 
 const TypographyTab = dynamic(
   () => import('./TypographyTab').then(mod => ({ default: mod.TypographyTab })),
@@ -30,9 +30,14 @@ const ComponentsTab = dynamic(
   { ssr: false, loading: () => <div className="p-6 text-[#dcdbd5]">Loading Components...</div> }
 );
 
-type SubTabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components';
+const InfographicsTab = dynamic(
+  () => import('./InfographicsTab').then(mod => ({ default: mod.InfographicsTab })),
+  { ssr: false, loading: () => <div className="p-6 text-[#dcdbd5]">Loading Infographics...</div> }
+);
 
-const validSubTabs: SubTabId[] = ['typography', 'colors', 'spacing', 'templates', 'components'];
+type SubTabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'infographics';
+
+const validSubTabs: SubTabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'infographics'];
 
 export function WebSettingsTab() {
   const searchParams = useSearchParams();
@@ -56,6 +61,7 @@ export function WebSettingsTab() {
     { id: 'spacing' as SubTabId, label: 'Spacing', icon: LayoutGrid, description: 'Padding, margins, and grid settings' },
     { id: 'templates' as SubTabId, label: 'Templates', icon: FileCode, description: 'Blog and page templates' },
     { id: 'components' as SubTabId, label: 'Components', icon: Layers, description: 'Component configuration' },
+    { id: 'infographics' as SubTabId, label: 'Infographics', icon: Image, description: 'Blog infographic management' },
   ];
 
   return (
@@ -102,6 +108,7 @@ export function WebSettingsTab() {
         {activeSubTab === 'spacing' && <SpacingTab />}
         {activeSubTab === 'templates' && <TemplatesTab />}
         {activeSubTab === 'components' && <ComponentsTab />}
+        {activeSubTab === 'infographics' && <InfographicsTab />}
       </div>
     </div>
   );
