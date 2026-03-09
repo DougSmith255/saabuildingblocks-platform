@@ -544,7 +544,7 @@ export default function CustomBookingWidget({ agentSlug }: { agentSlug?: string 
               {/* Calendar grid + time slots side-by-side */}
               <div className="flex flex-col md:flex-row gap-6">
                 {/* Calendar grid */}
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 max-w-[320px]">
                   <div className="grid grid-cols-7 mb-2">
                     {DAY_HEADERS.map((d) => (
                       <div
@@ -566,30 +566,31 @@ export default function CustomBookingWidget({ agentSlug }: { agentSlug?: string 
                       const isSelected = selectedDate === dateKey;
 
                       return (
-                        <button
-                          key={dateKey}
-                          onClick={() => !past && hasSlots && setSelectedDate(dateKey)}
-                          disabled={past || !hasSlots}
-                          className={`
-                            relative w-full aspect-square flex items-center justify-center
-                            rounded-full text-sm transition-all duration-150
-                            ${isSelected
-                              ? 'bg-[#ffd700] text-[#111] font-bold scale-105'
-                              : past
-                                ? 'text-white/15 cursor-not-allowed'
-                                : hasSlots
-                                  ? 'text-[#ffd700] hover:bg-[#ffd700]/10 cursor-pointer font-medium'
-                                  : 'text-[#dcdbd5]/25 cursor-not-allowed'
-                            }
-                            ${today && !isSelected ? 'ring-1 ring-[#ffd700]/30' : ''}
-                          `}
-                          aria-label={`${dateKey}${hasSlots ? ', available' : ''}${isSelected ? ', selected' : ''}`}
-                        >
-                          {day}
-                          {hasSlots && !isSelected && (
-                            <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#ffd700]/60" />
-                          )}
-                        </button>
+                        <div key={dateKey} className="flex items-center justify-center aspect-square">
+                          <button
+                            onClick={() => !past && hasSlots && setSelectedDate(dateKey)}
+                            disabled={past || !hasSlots}
+                            className={`
+                              relative w-[67%] aspect-square flex items-center justify-center
+                              rounded-full text-sm transition-all duration-150
+                              ${isSelected
+                                ? 'bg-[#ffd700] text-[#111] font-bold scale-105'
+                                : past
+                                  ? 'text-white/15 cursor-not-allowed'
+                                  : hasSlots
+                                    ? 'text-[#ffd700] hover:bg-[#ffd700]/10 cursor-pointer font-medium'
+                                    : 'text-[#dcdbd5]/25 cursor-not-allowed'
+                              }
+                              ${today && !isSelected ? 'ring-1 ring-[#ffd700]/30' : ''}
+                            `}
+                            aria-label={`${dateKey}${hasSlots ? ', available' : ''}${isSelected ? ', selected' : ''}`}
+                          >
+                            {day}
+                            {hasSlots && !isSelected && (
+                              <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#ffd700]/60" />
+                            )}
+                          </button>
+                        </div>
                       );
                     })}
                   </div>

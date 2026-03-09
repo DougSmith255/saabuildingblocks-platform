@@ -219,8 +219,8 @@ export function CategoryBlogPostTemplate({
     // No resize handler needed - CSS div layers reflow naturally
   }, [post.content, isDarkMode]);
 
-  // Format date for display
-  const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+  // Format date for display - show last updated date (falls back to published date)
+  const formattedDate = new Date(post.modified || post.date).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
