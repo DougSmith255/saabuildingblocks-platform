@@ -3979,7 +3979,7 @@ function AgentPortal() {
               {/* Spacer to push title after sidebar width - larger on 1024-1300px since logo is hidden */}
               <div className="w-[205px] min-[1300px]:w-[160px] flex-shrink-0" />
               {/* Title */}
-              <div style={{ marginTop: '-9px' }}>
+              <div style={{ marginTop: '-4px' }}>
                 <H1 className="whitespace-nowrap" style={{ fontSize: 'clamp(24px, calc(18px + 1.2vw), 42px)' }}>
                   AGENT PORTAL
                 </H1>
@@ -11386,7 +11386,7 @@ function AgentPagesSection({
   const [customLinks, setCustomLinks] = useState<CustomLink[]>(preloadedPageData?.page?.custom_links || DEFAULT_CUSTOM_LINKS);
   const [newLinkLabel, setNewLinkLabel] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
-  const [newLinkIcon, setNewLinkIcon] = useState<string | null>(null);
+  const [newLinkIcon, setNewLinkIcon] = useState<string | undefined>(undefined);
   const [showIconPicker, setShowIconPicker] = useState<string | null>(null); // Link ID of which icon picker is open
   const [editingLinkId, setEditingLinkId] = useState<string | null>(null); // ID of link being edited
   const [editingLinkLabel, setEditingLinkLabel] = useState(''); // Label of link being edited
@@ -14350,7 +14350,7 @@ function AgentPagesSection({
                             }, 250);
                             setNewLinkLabel('');
                             setNewLinkUrl('');
-                            setNewLinkIcon(null);
+                            setNewLinkIcon(undefined);
                             setAddingNewLink(false);
                             setHasUnsavedChanges(true);
                           }
