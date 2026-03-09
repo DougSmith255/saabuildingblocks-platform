@@ -16,7 +16,7 @@ const TESTIMONIALS = [
       '$1M+ commission in her first year',
       'Over $200M in total closed volume',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-soomin/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-soomin/mobile`,
   },
   {
     name: 'Adam Fyfe',
@@ -27,7 +27,7 @@ const TESTIMONIALS = [
       'Generates 10\u201315 inbound leads per month',
       'Closed multiple six-figure deals from YouTube',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-adam/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-adam/mobile`,
   },
   {
     name: 'Amanda Aguiar',
@@ -38,7 +38,7 @@ const TESTIMONIALS = [
       'Built a recognizable personal brand',
       'Attracted higher-quality clients consistently',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-amanda/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-amanda/mobile`,
   },
   {
     name: 'Angie Foster',
@@ -49,7 +49,7 @@ const TESTIMONIALS = [
       'Built a consistent lead generation machine',
       'Now mentoring other agents in her brokerage',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-angie/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-angie/mobile`,
   },
   {
     name: 'Berry Cessna',
@@ -60,7 +60,7 @@ const TESTIMONIALS = [
       'Generates 20+ leads per month from social',
       'Built a team of 5 agents under his brand',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-berry/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-berry/mobile`,
   },
   {
     name: 'Gail DeMarco',
@@ -71,7 +71,7 @@ const TESTIMONIALS = [
       'Saves 15+ hours per week using AI systems',
       'Built a business without 24/7 hustle',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-gail/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-gail/mobile`,
   },
   {
     name: 'Jenny Celly',
@@ -82,7 +82,7 @@ const TESTIMONIALS = [
       'Now earning $400K+/year consistently',
       'Attracts luxury clients through premium branding',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-jenny/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-jenny/mobile`,
   },
   {
     name: 'Marty Pettiford',
@@ -93,7 +93,7 @@ const TESTIMONIALS = [
       'Posts content that consistently goes viral locally',
       'Established herself as the community expert',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-marty/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-marty/mobile`,
   },
   {
     name: 'Noah Ward',
@@ -104,7 +104,7 @@ const TESTIMONIALS = [
       'Consistent $100K months from content leads',
       'Automated 80% of his lead nurturing process',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-noah/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-noah/mobile`,
   },
   {
     name: 'Vane Monroe',
@@ -115,7 +115,7 @@ const TESTIMONIALS = [
       'Built a coaching business alongside real estate',
       'Commands premium fees for her expertise',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-vane/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-vane/mobile`,
   },
   {
     name: 'Shane Bernal',
@@ -126,7 +126,7 @@ const TESTIMONIALS = [
       'Built systems that work even when he couldn\u2019t',
       'Now cancer-free with a business that runs smoothly',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-shane/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-shane/mobile`,
   },
   {
     name: 'Shonnie Alridge',
@@ -137,7 +137,7 @@ const TESTIMONIALS = [
       'Now closing 2\u20135 deals per month consistently',
       'Works fewer hours with better results',
     ],
-    image: `${CLOUDFLARE_BASE}/testimonial-shonnie/public`,
+    image: `${CLOUDFLARE_BASE}/testimonial-shonnie/mobile`,
   },
 ];
 
@@ -170,6 +170,9 @@ export function SuccessStories() {
                   <img
                     src={t.image}
                     alt={t.name}
+                    width={192}
+                    height={192}
+                    loading="lazy"
                     className="w-full h-full object-cover"
                   />
                 </ProfileCyberFrame>

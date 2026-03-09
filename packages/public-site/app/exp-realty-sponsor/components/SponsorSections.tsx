@@ -1825,7 +1825,8 @@ function Section2() {
 // ============================================================================
 
 const WALKTHROUGH_VIDEO_ID = 'cd4d22b4fd6f33dfac69b0e1546d1c40';
-const WALKTHROUGH_POSTER = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-team-value-thumbnail/desktop';
+const WALKTHROUGH_POSTER = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-team-value-thumbnail';
+const WALKTHROUGH_POSTER_SRCSET = `${WALKTHROUGH_POSTER}/mobile 375w, ${WALKTHROUGH_POSTER}/tablet 768w, ${WALKTHROUGH_POSTER}/desktop 1280w`;
 
 // Cloudflare Stream SDK typings
 interface StreamPlayer {
@@ -2616,8 +2617,11 @@ function Section3() {
             {/* Poster image — removed from DOM once play is clicked */}
             {!hasPlayed && (
               <img
-                src={WALKTHROUGH_POSTER}
+                src={`${WALKTHROUGH_POSTER}/tablet`}
+                srcSet={WALKTHROUGH_POSTER_SRCSET}
+                sizes="(max-width: 480px) 375px, (max-width: 1024px) 768px, 1280px"
                 alt="SAA Team Value"
+                loading="lazy"
                 className="absolute inset-0 w-full h-full"
                 style={{
                   objectFit: 'cover',
