@@ -339,16 +339,16 @@ function ValueSection1_Launch() {
           <div className="w-full lg:w-[75%] lg:-mr-[10%] flex items-center justify-center">
             <BrowserMockup url="smartagentalliance.com/agent-portal">
               <img
-                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/desktop2x"
+                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/desktop"
                 srcSet="
-                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/mobile 640w,
-                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/tablet 1024w,
-                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/desktop2x 2160w
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/mobile 375w,
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/tablet 768w,
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/portal-onboarding-screenshot/desktop 1280w
                 "
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+                sizes="(max-width: 480px) 375px, (max-width: 1024px) 768px, 1280px"
                 alt="Agent Portal Onboarding Dashboard"
-                width={2160}
-                height={1117}
+                width={1280}
+                height={662}
                 className="w-full h-auto block"
                 loading="lazy"
               />

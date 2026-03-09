@@ -19,10 +19,11 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
-  # Early Hints - Preconnect to image CDN (establishes TCP+TLS early)
+  # Early Hints - Preconnect to external origins (establishes TCP+TLS early)
   # Note: Font preloads removed - Next.js localFont({ preload: true }) handles them.
   # Having both caused duplicate downloads of the same fonts from different URLs.
   Link: <https://imagedelivery.net>; rel=preconnect
+  Link: <https://plausible.saabuildingblocks.com>; rel=preconnect
 
   # CORS for API calls to origin server
   Access-Control-Allow-Origin: https://saabuildingblocks.com
