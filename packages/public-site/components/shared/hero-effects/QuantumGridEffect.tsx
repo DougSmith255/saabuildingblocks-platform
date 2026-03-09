@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 const GRID_LINES = 24;
 
 // Pre-compute static line positions (never changes)
-const HORIZONTAL_LINES = Array.from({ length: GRID_LINES }, (_, i) => {
+const LINE_POSITIONS = Array.from({ length: GRID_LINES }, (_, i) => {
   const t = i / (GRID_LINES - 1);
   return Math.pow(t, 1.8) * 100;
 });
@@ -14,17 +14,20 @@ const HORIZONTAL_LINES = Array.from({ length: GRID_LINES }, (_, i) => {
  * Quantum Grid Effect (Digital Horizon)
  * Perspective grid stretching to horizon with sweeping gold pulse.
  *
- * Performance: Uses a single CSS custom property (--pulse-y) updated via rAF
- * instead of React state. Grid lines render once and never re-render.
- * The pulse band moves via CSS calc() referencing the custom property.
+ * Performance: Uses direct DOM manipulation via refs instead of React state.
+ * Grid lines render once and never re-render. The animation loop updates
+ * line styles directly, avoiding per-frame React reconciliation of 72 elements.
  */
 export function QuantumGridEffect() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Animation loop - updates one CSS variable, zero React re-renders
+  // Animation loop - direct DOM updates, zero React re-renders
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    const lines = lineRefs.current;
 
     let rafId = 0;
     let time = 0;
@@ -61,8 +64,22 @@ export function QuantumGridEffect() {
       const wave2 = Math.sin(time * Math.PI * 1.3 + 0.5);
       const wave3 = Math.cos(time * Math.PI * 0.7);
       const progress = 0.575 + (wave1 * 0.5 + wave2 * 0.3 + wave3 * 0.2) * 0.375;
+      const pulseY = progress * 100;
 
-      container.style.setProperty('--pulse-y', `${progress * 100}`);
+      // Direct DOM updates - same visual logic as original, no React re-renders
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line) continue;
+        const y = LINE_POSITIONS[i];
+        const pulseHit = Math.abs(y - pulseY) < 8;
+
+        line.style.height = pulseHit ? '2px' : '1px';
+        line.style.background = pulseHit
+          ? 'rgba(255,215,0,0.8)'
+          : `rgba(255,215,0,${0.15 + (y / 100) * 0.2})`;
+        line.style.boxShadow = pulseHit ? '0 0 15px rgba(255,215,0,0.6)' : 'none';
+      }
+
       rafId = requestAnimationFrame(animate);
     };
 
@@ -92,11 +109,7 @@ export function QuantumGridEffect() {
   return (
     <>
       {/* Animation container - has overflow-hidden for performance */}
-      <div
-        ref={containerRef}
-        className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer"
-        style={{ '--pulse-y': '57.5' } as React.CSSProperties}
-      >
+      <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
         {/* Perspective grid at TOP extending to 95% */}
         <div
           className="absolute inset-0"
@@ -113,10 +126,11 @@ export function QuantumGridEffect() {
               transformOrigin: 'top center',
             }}
           >
-            {/* Static horizontal lines - render once, never re-render */}
-            {HORIZONTAL_LINES.map((y, i) => (
+            {/* Horizontal lines - render once, updated via direct DOM manipulation */}
+            {LINE_POSITIONS.map((y, i) => (
               <div
                 key={`h-${i}`}
+                ref={el => { lineRefs.current[i] = el; }}
                 style={{
                   position: 'absolute',
                   left: 0,
@@ -127,22 +141,6 @@ export function QuantumGridEffect() {
                 }}
               />
             ))}
-
-            {/* Pulse band - moves via CSS custom property, no React re-renders */}
-            <div
-              style={{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                top: 'calc(var(--pulse-y) * 1% - 8%)',
-                height: '16%',
-                background: 'linear-gradient(to bottom, transparent 0%, rgba(255,215,0,0.5) 25%, rgba(255,215,0,0.8) 50%, rgba(255,215,0,0.5) 75%, transparent 100%)',
-                boxShadow: '0 0 15px rgba(255,215,0,0.4)',
-                pointerEvents: 'none',
-                mixBlendMode: 'screen',
-              }}
-            />
-
             {/* Static vertical lines */}
             {[...Array(GRID_LINES * 2)].map((_, i) => {
               const x = (i / (GRID_LINES * 2)) * 100;
