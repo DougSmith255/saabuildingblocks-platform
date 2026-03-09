@@ -170,6 +170,8 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
       // Auto-open Join the Alliance modal if ?join=true is in the URL
       if (params.get('join') === 'true') {
+        // Suppress VIP popup when join modal is being opened intentionally
+        try { sessionStorage.setItem('saa_vip_pass_shown', 'true'); } catch {}
         // Small delay to ensure the modal listener is ready
         setTimeout(() => {
           window.dispatchEvent(new Event('open-join-modal'));
