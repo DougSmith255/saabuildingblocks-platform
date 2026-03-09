@@ -234,7 +234,7 @@ export default function SupportInfrastructureSection() {
 
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ opacity: 0.4, zIndex: 0 }}
+        style={{ opacity: 0.4, zIndex: 0, contain: 'layout style paint' }}
       >
         <HolographicGlobe isVisible={globeVisible} />
       </div>

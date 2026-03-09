@@ -35,6 +35,8 @@ export default function StarBackgroundCanvas() {
   const dimensionsRef = useRef({ width: 0, height: 0 });
   // Track initial viewport height to prevent address bar resize issues
   const initialHeightRef = useRef(0);
+  // Cleanup ref for deferred initialization
+  const cleanupRef = useRef<(() => void) | null>(null);
 
   // Generate stars once on mount
   const generateStars = useCallback((width: number, height: number) => {
@@ -163,22 +165,39 @@ export default function StarBackgroundCanvas() {
     }
   }, [generateStars]);
 
-  // Initialize canvas and start animation
+  // Initialize canvas and start animation - deferred to avoid blocking hydration
   useEffect(() => {
-    // Force regenerate on initial mount
-    handleResize(true);
+    const start = () => {
+      // Force regenerate on initial mount
+      handleResize(true);
 
-    // Start animation loop
-    animationRef.current = requestAnimationFrame(animate);
+      // Start animation loop
+      animationRef.current = requestAnimationFrame(animate);
 
-    // Handle window resize - don't regenerate stars, just resize canvas
-    const onResize = () => handleResize(false);
-    window.addEventListener('resize', onResize);
+      // Handle window resize - don't regenerate stars, just resize canvas
+      const onResize = () => handleResize(false);
+      window.addEventListener('resize', onResize);
 
-    return () => {
-      window.removeEventListener('resize', onResize);
-      cancelAnimationFrame(animationRef.current);
+      // Store cleanup for resize listener
+      cleanupRef.current = () => window.removeEventListener('resize', onResize);
     };
+
+    // Defer initialization so it doesn't compete with React hydration
+    if (typeof requestIdleCallback !== 'undefined') {
+      const idleId = requestIdleCallback(start, { timeout: 200 });
+      return () => {
+        cancelIdleCallback(idleId);
+        cancelAnimationFrame(animationRef.current);
+        cleanupRef.current?.();
+      };
+    } else {
+      const timerId = setTimeout(start, 50);
+      return () => {
+        clearTimeout(timerId);
+        cancelAnimationFrame(animationRef.current);
+        cleanupRef.current?.();
+      };
+    }
   }, [handleResize, animate]);
 
   return (
