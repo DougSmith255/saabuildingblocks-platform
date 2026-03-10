@@ -3345,9 +3345,9 @@ function Section6Final() {
 
             <ul className="space-y-2.5 mb-6 text-left max-w-[600px] mx-auto" style={{ listStyle: 'none', padding: 0, margin: '0 auto 1.5rem' }}>
               {BOTTOM_LINE_BULLETS.map((bullet, i) => (
-                <li key={i} className="flex gap-2.5 text-body">
+                <li key={i} className="flex items-start gap-2.5 text-body">
                   <span
-                    className="mt-[6px] flex-shrink-0 w-2 h-2 rounded-full"
+                    className="mt-[7px] flex-shrink-0 w-2 h-2 rounded-full"
                     style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.4)' }}
                   />
                   <span>{bullet}</span>
