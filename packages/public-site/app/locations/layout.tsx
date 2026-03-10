@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     title: 'eXp Realty Locations | Smart Agent Alliance',
     description:
       'eXp Realty operates in 29+ countries with 84,000+ agents worldwide. Explore the global presence.',
+    url: 'https://smartagentalliance.com/locations/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     title: 'About Doug Smart | Smart Agent Alliance',
     description:
       'Meet Doug Smart, co-founder of the Smart Agent Alliance. Builder of agent systems, tools, and technology at eXp Realty.',
+    url: 'https://smartagentalliance.com/about-doug-smart/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

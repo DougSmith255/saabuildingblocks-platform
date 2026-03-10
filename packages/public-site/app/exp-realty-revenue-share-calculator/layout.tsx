@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     title: 'eXp Revenue Share Calculator | Smart Agent Alliance',
     description:
       'Model your eXp Realty revenue share income across 7 tiers. See what building a team could earn you.',
+    url: 'https://smartagentalliance.com/exp-realty-revenue-share-calculator/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

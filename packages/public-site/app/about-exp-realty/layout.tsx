@@ -11,23 +11,11 @@ export const metadata: Metadata = {
     title: 'About eXp Realty | Smart Agent Alliance',
     description:
       "Learn about eXp Realty's cloud-based model, commission structure, stock awards, and global reach.",
+    url: 'https://smartagentalliance.com/about-exp-realty/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://smartagentalliance.com/' },
-    { '@type': 'ListItem', position: 2, name: 'About eXp Realty', item: 'https://smartagentalliance.com/about-exp-realty/' },
-  ],
-};
-
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      {children}
-    </>
-  );
+  return children;
 }

@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     title: 'eXp Commission Calculator | Smart Agent Alliance',
     description:
       'Calculate your potential eXp Realty earnings. Compare commission splits, fees, and net income.',
+    url: 'https://smartagentalliance.com/exp-commission-calculator/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

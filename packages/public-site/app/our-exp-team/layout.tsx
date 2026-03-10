@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     title: 'Our eXp Realty Team | Smart Agent Alliance',
     description:
       'Meet the Smart Agent Alliance founders and partners. A team dedicated to helping eXp agents succeed.',
+    url: 'https://smartagentalliance.com/our-exp-team/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

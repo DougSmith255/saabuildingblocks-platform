@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Disclaimer | Smart Agent Alliance',
     description: 'Important disclaimers about the information provided on Smart Agent Alliance website.',
+    url: 'https://smartagentalliance.com/disclaimer/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

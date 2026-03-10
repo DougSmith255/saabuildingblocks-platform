@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import '../styles/calculator.css';
 import { CTAButton } from '@saa/shared/components/saa/buttons';
 import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
@@ -731,8 +730,10 @@ function RevenueShareVisualization({
  * Supports ?embed=true for embedding in iframes (just the visualizer, no page chrome)
  */
 function RevenueShareCalculatorContent() {
-  const searchParams = useSearchParams();
-  const isEmbed = searchParams.get('embed') === 'true';
+  const [isEmbed, setIsEmbed] = useState(false);
+  useEffect(() => {
+    setIsEmbed(new URLSearchParams(window.location.search).get('embed') === 'true');
+  }, []);
 
   const [selectedScenario, setSelectedScenario] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -1024,9 +1025,5 @@ function RevenueShareCalculatorContent() {
 }
 
 export default function ExpRevenueShareCalculator() {
-  return (
-    <Suspense fallback={<div style={{ background: '#0a0a0a', minHeight: '100vh' }} />}>
-      <RevenueShareCalculatorContent />
-    </Suspense>
-  );
+  return <RevenueShareCalculatorContent />;
 }

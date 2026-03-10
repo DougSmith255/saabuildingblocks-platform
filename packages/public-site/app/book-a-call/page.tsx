@@ -1,7 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { useEffect, useState } from 'react';
 import { H1, Tagline } from '@saa/shared/components/saa/headings';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
@@ -19,9 +18,13 @@ import CustomBookingWidget from './components/CustomBookingWidget';
  */
 
 function BookACallContent() {
-  const searchParams = useSearchParams();
-  const isEmbed = searchParams.get('embed') === 'true';
-  const agentSlug = searchParams.get('agent') || undefined;
+  const [isEmbed, setIsEmbed] = useState(false);
+  const [agentSlug, setAgentSlug] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setIsEmbed(params.get('embed') === 'true');
+    setAgentSlug(params.get('agent') || undefined);
+  }, []);
 
   if (isEmbed) {
     return (
@@ -72,9 +75,5 @@ function BookACallContent() {
 }
 
 export default function BookACallPage() {
-  return (
-    <Suspense>
-      <BookACallContent />
-    </Suspense>
-  );
+  return <BookACallContent />;
 }

@@ -108,7 +108,7 @@ export const metadata: Metadata = {
     ],
   },
   description:
-    'Join the Smart Agent Alliance and eXp Realty to build your real estate career with industry-leading commission splits, revenue share, and mentorship from Doug Smart and Karrie Hill.',
+    'Build your real estate career with eXp Realty. Industry-leading commission splits, revenue share, and mentorship from Doug Smart and Karrie Hill.',
   keywords: [
     'eXp Realty',
     'real estate agent',

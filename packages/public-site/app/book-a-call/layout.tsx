@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     title: 'Book a Call With Our Team | Smart Agent Alliance',
     description:
       'Schedule a free consultation with the Smart Agent Alliance team about joining eXp Realty.',
+    url: 'https://smartagentalliance.com/book-a-call/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

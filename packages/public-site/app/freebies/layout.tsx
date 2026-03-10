@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     title: 'Free Resources | Smart Agent Alliance',
     description:
       'Free downloadable tools for real estate agents. Scripts, checklists, templates, and action plans.',
+    url: 'https://smartagentalliance.com/freebies/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

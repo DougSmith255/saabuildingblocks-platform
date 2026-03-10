@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Cookie Policy | Smart Agent Alliance',
     description: 'Learn about how Smart Agent Alliance uses cookies and similar tracking technologies.',
+    url: 'https://smartagentalliance.com/cookie-policy/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     title: 'Best Real Estate Brokerage Comparison | Smart Agent Alliance',
     description:
       'Compare real estate brokerages side by side. Commission splits, fees, tools, and support compared.',
+    url: 'https://smartagentalliance.com/best-real-estate-brokerage/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

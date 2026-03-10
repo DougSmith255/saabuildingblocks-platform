@@ -12,6 +12,8 @@ export const metadata: Metadata = {
     title: 'Real Estate Agent Blog | Smart Agent Alliance',
     description:
       'Real estate insights, marketing strategies, brokerage comparisons, and career tips for agents.',
+    url: 'https://smartagentalliance.com/blog/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

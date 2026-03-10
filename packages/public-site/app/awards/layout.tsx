@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     title: 'eXp Realty Awards & Recognition | Smart Agent Alliance',
     description:
       "See eXp Realty's industry awards including Forbes, Glassdoor, and RealTrends rankings.",
+    url: 'https://smartagentalliance.com/awards/',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],
   },
 };
 

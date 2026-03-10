@@ -1,9 +1,8 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import '../styles/calculator.css';
-import { Suspense, useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 
@@ -27,8 +26,10 @@ declare global {
  * Supports ?embed=true for embedding in iframes (just the calculator, no page chrome)
  */
 function CalculatorContent() {
-  const searchParams = useSearchParams();
-  const isEmbed = searchParams.get('embed') === 'true';
+  const [isEmbed, setIsEmbed] = useState(false);
+  useEffect(() => {
+    setIsEmbed(new URLSearchParams(window.location.search).get('embed') === 'true');
+  }, []);
 
   const embedRef = useRef<HTMLDivElement>(null);
 
@@ -206,9 +207,5 @@ function CalculatorContent() {
 }
 
 export default function ExpCommissionCalculator() {
-  return (
-    <Suspense fallback={<div style={{ background: '#0a0a0a', minHeight: '100vh' }} />}>
-      <CalculatorContent />
-    </Suspense>
-  );
+  return <CalculatorContent />;
 }
