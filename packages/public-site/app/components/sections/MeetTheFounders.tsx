@@ -29,9 +29,9 @@ const FOUNDERS = [
     bio: "Karrie focuses on clarity, structure, and agent outcomes.",
     bioCompact: "UC Berkeley Law graduate and eXp Certified Mentor. Built a six-figure real estate business in year one - no cold calls, no door knocking. Leads training and onboarding.",
     bullets: [
-      'Training design',
+      'Training design and updates',
       'Mentorship standards and onboarding pathways',
-      'Content direction and training updates',
+      'Content direction and program quality',
       'Advocating for agent-first decisions inside the model',
     ],
     footer: 'Her background as an attorney and longtime agent informs a focus on durability.',
