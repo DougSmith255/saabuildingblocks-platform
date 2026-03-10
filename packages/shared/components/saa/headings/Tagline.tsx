@@ -66,7 +66,7 @@ export default function Tagline({
         fontFeatureSettings: '"ss02" 1',
         textAlign: 'center',
         marginTop: '30px',
-        marginBottom: '30px',
+        marginBottom: '8px',
       }}
     >
       {/* Backing layers (disabled on mobile for performance) */}
