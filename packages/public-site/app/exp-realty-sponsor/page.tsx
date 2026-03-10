@@ -70,7 +70,10 @@ export default function ExpRealtySponsor() {
           <div className="max-w-[2500px] mx-auto w-full text-center relative z-10">
             <div className="relative z-10">
               <H1>Smart Agent Alliance</H1>
-              <Tagline className="mt-4" style={{ maxWidth: '95%', marginLeft: 'auto', marginRight: 'auto' }}>Premium Tools. Real Training. Zero Cost.</Tagline>
+              <Tagline className="mt-4" style={{ maxWidth: '95%', marginLeft: 'auto', marginRight: 'auto' }}>Premium Tools. Modern Training. Zero Cost.</Tagline>
+              <p className="text-body opacity-90 mt-2">
+                All Smart Agent Alliance systems live inside the agent portal.
+              </p>
               {/* Mobile counter - centered below tagline, visible only < 780px */}
               <MobileAgentCounter />
             </div>

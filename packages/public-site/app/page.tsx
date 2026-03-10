@@ -118,10 +118,10 @@ export default function Home() {
                 >
                   SMART AGENT ALLIANCE
                 </H1>
-                <Tagline className="hero-tagline-mobile-spacing" style={{ marginBottom: '0.25rem' }} counterSuffix={<TaglineCounterSuffix />}>
+                <Tagline className="hero-tagline-mobile-spacing" style={{ marginBottom: '2px' }} counterSuffix={<TaglineCounterSuffix />}>
                   For Agents Who Want More
                 </Tagline>
-                <p className="text-body opacity-90">
+                <p className="text-body opacity-90" style={{ marginBottom: '6px' }}>
                   Smart Agent Alliance costs agents nothing. Every system is delivered through our agent portal.
                 </p>
               </div>
