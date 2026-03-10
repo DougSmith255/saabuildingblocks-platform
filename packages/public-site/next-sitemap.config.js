@@ -16,6 +16,7 @@ const slugToFeatured = JSON.parse(
 // custom permalink slugs (what next-sitemap sees in the URL path).
 const STANDALONE_CATEGORIES = ['about-exp-realty', 'exp-realty-sponsor'];
 const pathToImage = {};
+const pathToModified = {};
 
 const chunkFiles = glob.sync(
   path.join(__dirname, 'public', 'blog-posts-chunk-*.json')
@@ -36,6 +37,11 @@ for (const chunkFile of chunkFiles) {
     const cfImage = slugToFeatured[post.slug];
     if (cfImage) {
       pathToImage[urlPath] = cfImage.cloudflareUrl;
+    }
+
+    // Store WordPress modification date for sitemap lastmod
+    if (post.modified) {
+      pathToModified[urlPath] = new Date(post.modified).toISOString();
     }
   }
 }
@@ -116,13 +122,16 @@ module.exports = {
 
   // Transform function to customize each URL entry
   transform: async (config, urlPath) => {
+    // Use WordPress modification date for blog posts, fall back to build time
+    const lastmod = pathToModified[urlPath] || new Date().toISOString();
+
     // Homepage gets highest priority
     if (urlPath === '/') {
       return {
         loc: urlPath,
         changefreq: 'daily',
         priority: 1.0,
-        lastmod: new Date().toISOString(),
+        lastmod,
         ...(staticPageImages['/'] && {
           images: staticPageImages['/'].map((url) => ({ loc: new URL(url) })),
         }),
@@ -135,7 +144,7 @@ module.exports = {
         loc: urlPath,
         changefreq: 'daily',
         priority: 0.8,
-        lastmod: new Date().toISOString(),
+        lastmod,
       };
     }
 
@@ -153,7 +162,7 @@ module.exports = {
         loc: urlPath,
         changefreq: 'monthly',
         priority: 0.7,
-        lastmod: new Date().toISOString(),
+        lastmod,
         ...(images && { images }),
       };
     }
@@ -165,7 +174,7 @@ module.exports = {
         loc: urlPath,
         changefreq: 'monthly',
         priority: 0.6,
-        lastmod: new Date().toISOString(),
+        lastmod,
         ...(imageUrl && { images: [{ loc: new URL(imageUrl) }] }),
       };
     }
@@ -177,7 +186,7 @@ module.exports = {
         loc: urlPath,
         changefreq: config.changefreq,
         priority: config.priority,
-        lastmod: new Date().toISOString(),
+        lastmod,
         images: staticImages.map((url) => ({ loc: new URL(url) })),
       };
     }

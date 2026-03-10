@@ -44,6 +44,32 @@ const JUNK_PATTERNS = [
   /^\/\d{4}\/?$/,
   // Joomla/Drupal/other CMS probes
   /^\/(media\/system|sites\/default|misc\/drupal)\//i,
+  // Infrastructure/credential probes (AWS, Terraform, SSH, K8s, etc.)
+  /^\/(\.ssh|\.aws|\.kube|\.docker|\.terraform|root|proc|etc|var\/log|var\/task|var\/export|opt\/)\//i,
+  /\/(terraform\.tf(state|vars)|\.s3cfg|\.boto|\.netrc|\.amplifyrc|\.kubeconfig|kubeconfig|ansible\.cfg|Vagrantfile|\.dockerenv)$/i,
+  /^\/(s3|aws|gcloud)\//i,
+  /\/(credentials|\.aws\/config|stripe\.config|firebase-?[Cc]onfig|sentry\.properties|craco\.config|app\.config)\.(js|json|cfg)$/i,
+  // n8n / REST API / service probes
+  /^\/rest\/(workflows|license|node-types|login|logout|settings|tags|users|variables|executions|credentials|oauth)/i,
+  // Port/service probes (Redis, Mongo, Postgres, Solr, etc.)
+  /^\/:\d+$/,
+  // Database/admin panel probes
+  /^\/(mongo-express|mongoadmin|phpadmin|phpRedisAdmin|redis-admin|redis-commander|pma\d?|myadmin|myadminphp|rockmongo|kibana|cerebro|superset)\//i,
+  // CI/CD and devops tool probes
+  /^\/(jenkins|confluence|jira|bitbucket|bamboo|teamcity|grafana|prometheus)\//i,
+  // HashiCorp / Consul / Vault probes
+  /^\/v1\/(sys|kv|agent|catalog|graphql)\//i,
+  // Common single-word scanner probes
+  /^\/(healthz|metrics|heapdump|graphiql|playground|swagger-ui|api-docs|query|graph|webhook|controlpanel|dashboardUser|hosts|status|form|chat|docs|user|profile|images|mentions|xleet)\/?$/i,
+  // Catch-all for common server config/state files at root
+  /^\/(\.cache|\.action|\.history|\.profile|\.zshrc|\.zsh_history|\.bundle|\.stripe|\.next\/BUILD_ID|__nextjs_action|__rsc|_rsc|_middleware|_vercel)\/?$/i,
+  // Google verification HTML files
+  /^\/google[0-9a-f]+\.html$/i,
+  // French-language CMS probes (non-applicable site)
+  /^\/(mentions-legales|politique-de-confidentialite|confidentialite|conditions-generales|qui-sommes-nous|a-propos|cgv)/i,
+  // Misc server probes
+  /^\/(balancer-manager|host-manager|web-console|websso|powershell|struts2|wls-wsat|jmx-console|qvisdvr|RestAPI|sdk|app_dev\.php|moveitisapi|samlLogin|autodiscover|CFIDE|_ignition)\//i,
+  /^\/(\_cat|\_all|\_cluster|\_plugin|\_profiler|\_utils)\//i,
 ];
 
 // In-isolate rate limiter: avoid logging the same path more than once per 60s per edge location
@@ -96,6 +122,13 @@ const WILDCARD_REDIRECTS = [
   // Blog prefix corrections (posts live at top-level, preserve slug)
   ['/blog/about-exp-realty/', '/about-exp-realty/', true],
   ['/blog/exp-realty-sponsor/', '/exp-realty-sponsor/', true],
+  // Old /blog/real-estate-agent-job/* paths (same mapping as /real-estate-agent-job/*)
+  ['/blog/real-estate-agent-job/entertainment/', '/blog/fun-for-agents/', true],
+  ['/blog/real-estate-agent-job/career/', '/blog/agent-career-info/', true],
+  ['/blog/real-estate-agent-job/marketing/', '/blog/marketing-mastery/', true],
+  ['/blog/real-estate-agent-job/clients/', '/blog/winning-clients/', true],
+  ['/blog/real-estate-agent-job/trends/', '/blog/industry-trends/', true],
+  ['/blog/real-estate-agent-job/', '/blog', false],
   // Old WordPress category slugs (all discard remainder)
   ['/category/about-exp/', '/blog#category=about-exp-realty', false],
   ['/category/career/', '/blog#category=agent-career-info', false],
@@ -219,6 +252,21 @@ const STATIC_REDIRECTS = new Map([
   ['/real-estate-closing-gifts-sented-candle', '/'],
   ['/real-estate-closing-gifts-wine-oor-champeine', '/'],
   ['/real-estate-business-card', '/'],
+  // 404 triage batch 2026-03-10
+  ['/exp-realty-sponsor/earnings', '/exp-realty-sponsor/revenue-share-earnings/'],
+  ['/exp-realty-sponsor/affect-revenue-share', '/exp-realty-sponsor/revenue-share-impact/'],
+  ['/contact', '/book-a-call/'],
+  ['/about-exp-realty/revenue-share-flexibility/true', '/about-exp-realty/revenue-share-flexibility/'],
+  ['/about-exp-realty/revenue-share-flexibility/loading', '/about-exp-realty/revenue-share-flexibility/'],
+  ['/about-exp-', '/about-exp-realty/'],
+  ['/products', '/'],
+  ['/privacy', '/privacy-policy/'],
+  ['/legal', '/privacy-policy/'],
+  ['/real-estate-schools', '/blog#category=real-estate-schools'],
+  ['/getting-a-license', '/blog#category=become-an-agent'],
+  ['/about-exp-realty/exp-agent-perceptions', '/about-exp-realty/'],
+  ['/about-exp-realty/exp-realty-offices/preload', '/about-exp-realty/exp-realty-offices/'],
+  ['/et_template/team-value-3-0-copy', '/exp-realty-sponsor/'],
 ]);
 
 export async function onRequest(context) {

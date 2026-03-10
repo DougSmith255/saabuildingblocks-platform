@@ -944,6 +944,62 @@ function RevenueShareCalculatorContent() {
         </div>
       </section>
 
+      {/* Supporting Content Section */}
+      <section className="relative py-16 px-4 sm:px-8 md:px-12">
+        <div className="max-w-[900px] mx-auto font-[var(--font-amulya)]">
+          <H2>How eXp Revenue Share Works</H2>
+
+          <div className="mt-8 space-y-6 text-[#dcdbd5] text-base leading-relaxed">
+            <div>
+              <h3 className="font-[var(--font-taskor)] text-[#e5e4dd] text-lg mb-2">Passive Income From Your Network</h3>
+              <p>Revenue share is income you earn when agents you attract to eXp Realty close deals. eXp pays a portion of the company dollar (their 20% of the commission split) back to the agents who helped build the network. You don&apos;t manage, train, or split commissions with anyone - you simply earn because you helped grow the brokerage.</p>
+            </div>
+
+            <div>
+              <h3 className="font-[var(--font-taskor)] text-[#e5e4dd] text-lg mb-2">The 7-Tier Structure</h3>
+              <p>Revenue share extends 7 levels deep. Tiers 1-3 pay on agents you directly or indirectly attract, with rates of 3.5%, 4.0%, and 2.5% of the company dollar respectively. Tiers 4-7 unlock as you qualify more Front Line Qualifying Agents (FLQAs), with rates ranging from 1.0% to 5.0%. Each tier has a per-agent annual cap, keeping the system sustainable.</p>
+            </div>
+
+            <div>
+              <h3 className="font-[var(--font-taskor)] text-[#e5e4dd] text-lg mb-2">What Is an FLQA?</h3>
+              <p>A Front Line Qualifying Agent is someone you directly sponsored who has capped or produced enough GCI to qualify. You need 5 FLQAs to unlock Tier 4, 10 for Tier 5, 15 for Tier 6, and 30 for Tier 7. Quality of your direct network determines how deep your revenue share goes.</p>
+            </div>
+
+            <div>
+              <h3 className="font-[var(--font-taskor)] text-[#e5e4dd] text-lg mb-2">Revenue Share 2.0</h3>
+              <p>eXp updated the revenue share model to help agents unlock earnings faster. Under 2.0, agents start earning revenue share sooner in their production cycle, and the 20% attraction bonus on Tiers 1-3 rewards those who actively grow the network. The system was redesigned to be more accessible to agents at every production level.</p>
+            </div>
+
+            <div>
+              <h3 className="font-[var(--font-taskor)] text-[#e5e4dd] text-lg mb-2">A Wealth-Building Strategy</h3>
+              <p>Revenue share is not a bonus or a perk. It is a compounding income stream that grows as your network grows. Agents who consistently attract productive agents to eXp build income that can eventually exceed their own production. It is the closest thing to true passive income in real estate.</p>
+            </div>
+          </div>
+
+          {/* Related Resources */}
+          <div className="mt-12">
+            <h3 className="font-[var(--font-taskor)] text-[#e5e4dd] text-xl mb-6">Related Resources</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <a href="/exp-realty-sponsor/revenue-share/" className="block p-4 rounded-lg border border-white/10 hover:border-[#00ff88]/30 transition-colors">
+                <span className="text-[#00ff88] text-sm font-[var(--font-taskor)]">Complete Guide to eXp Realty Revenue Share</span>
+              </a>
+              <a href="/exp-realty-sponsor/how-revenue-share-works/" className="block p-4 rounded-lg border border-white/10 hover:border-[#00ff88]/30 transition-colors">
+                <span className="text-[#00ff88] text-sm font-[var(--font-taskor)]">How eXp Revenue Share Is Structured</span>
+              </a>
+              <a href="/exp-realty-sponsor/revenue-share-earnings/" className="block p-4 rounded-lg border border-white/10 hover:border-[#00ff88]/30 transition-colors">
+                <span className="text-[#00ff88] text-sm font-[var(--font-taskor)]">How Much Can You Earn from Revenue Share?</span>
+              </a>
+              <a href="/about-exp-realty/revenue-share/" className="block p-4 rounded-lg border border-white/10 hover:border-[#00ff88]/30 transition-colors">
+                <span className="text-[#00ff88] text-sm font-[var(--font-taskor)]">eXp Revenue Share 2.0: What Changed</span>
+              </a>
+              <a href="/exp-realty-sponsor/revenue-share-2-0/" className="block p-4 rounded-lg border border-white/10 hover:border-[#00ff88]/30 transition-colors">
+                <span className="text-[#00ff88] text-sm font-[var(--font-taskor)]">How Revenue Share 2.0 Changes the Structure</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">

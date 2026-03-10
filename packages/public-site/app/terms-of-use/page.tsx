@@ -18,6 +18,9 @@ import '../styles/legal.css';
 export const metadata: Metadata = {
   title: 'Terms of Use',
   description: 'Read the terms and conditions governing the use of Smart Agent Alliance website and services.',
+  alternates: {
+    canonical: 'https://smartagentalliance.com/terms-of-use/',
+  },
   openGraph: {
     title: 'Terms of Use | Smart Agent Alliance',
     description: 'Read the terms and conditions governing the use of Smart Agent Alliance website and services.',

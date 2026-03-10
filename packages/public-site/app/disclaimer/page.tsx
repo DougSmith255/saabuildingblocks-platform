@@ -17,6 +17,9 @@ import '../styles/legal.css';
 export const metadata: Metadata = {
   title: 'Disclaimer',
   description: 'Important disclaimers about the information provided on Smart Agent Alliance website.',
+  alternates: {
+    canonical: 'https://smartagentalliance.com/disclaimer/',
+  },
   openGraph: {
     title: 'Disclaimer | Smart Agent Alliance',
     description: 'Important disclaimers about the information provided on Smart Agent Alliance website.',

@@ -17,6 +17,9 @@ import '../styles/legal.css';
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'Learn how Smart Agent Alliance collects, uses, and protects your personal information.',
+  alternates: {
+    canonical: 'https://smartagentalliance.com/privacy-policy/',
+  },
   openGraph: {
     title: 'Privacy Policy | Smart Agent Alliance',
     description: 'Learn how Smart Agent Alliance collects, uses, and protects your personal information.',

@@ -1,16 +1,33 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Our Team',
+  title: 'Our eXp Realty Team',
   description:
     'Meet the Smart Agent Alliance founders and partners. Doug Smart, Karrie Hill, and a team dedicated to helping eXp agents succeed.',
+  alternates: {
+    canonical: 'https://smartagentalliance.com/our-exp-team/',
+  },
   openGraph: {
-    title: 'Our Team | Smart Agent Alliance',
+    title: 'Our eXp Realty Team | Smart Agent Alliance',
     description:
       'Meet the Smart Agent Alliance founders and partners. A team dedicated to helping eXp agents succeed.',
   },
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://smartagentalliance.com/' },
+    { '@type': 'ListItem', position: 2, name: 'Our eXp Realty Team', item: 'https://smartagentalliance.com/our-exp-team/' },
+  ],
+};
+
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {children}
+    </>
+  );
 }

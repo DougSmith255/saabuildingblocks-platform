@@ -2,11 +2,14 @@ import type { Metadata } from 'next';
 import '../styles/blog.css';
 
 export const metadata: Metadata = {
-  title: 'Blog',
+  title: 'Real Estate Agent Blog',
   description:
     'Real estate insights, marketing strategies, brokerage comparisons, and career tips for agents who want to level up.',
+  alternates: {
+    canonical: 'https://smartagentalliance.com/blog/',
+  },
   openGraph: {
-    title: 'Blog | Smart Agent Alliance',
+    title: 'Real Estate Agent Blog | Smart Agent Alliance',
     description:
       'Real estate insights, marketing strategies, brokerage comparisons, and career tips for agents.',
   },

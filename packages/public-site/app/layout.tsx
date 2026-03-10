@@ -165,7 +165,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://smartagentalliance.com',
+    canonical: 'https://smartagentalliance.com/',
   },
 };
 

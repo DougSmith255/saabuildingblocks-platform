@@ -17,6 +17,9 @@ import '../styles/legal.css';
 export const metadata: Metadata = {
   title: 'Cookie Policy',
   description: 'Learn about how Smart Agent Alliance uses cookies and similar tracking technologies.',
+  alternates: {
+    canonical: 'https://smartagentalliance.com/cookie-policy/',
+  },
   openGraph: {
     title: 'Cookie Policy | Smart Agent Alliance',
     description: 'Learn about how Smart Agent Alliance uses cookies and similar tracking technologies.',
