@@ -29,9 +29,9 @@ const FOUNDERS = [
     bio: "Karrie focuses on clarity, structure, and agent outcomes.",
     bioCompact: "UC Berkeley Law graduate and eXp Certified Mentor. Built a six-figure real estate business in year one - no cold calls, no door knocking. Leads training and onboarding.",
     bullets: [
-      'Training design and content direction',
+      'Training design',
       'Mentorship standards and onboarding pathways',
-      'Evaluating tools and programs before adoption',
+      'Content direction and training updates',
       'Advocating for agent-first decisions inside the model',
     ],
     footer: 'Her background as an attorney and longtime agent informs a focus on durability.',
@@ -93,7 +93,7 @@ export function MeetTheFounders({ variant = 'default' }: { variant?: 'default' |
                   <ul className="space-y-2 mb-3">
                     {FOUNDERS[0].bullets.map((b, i) => (
                       <li key={i} className="flex items-start gap-2.5 text-body text-sm md:text-base">
-                        <span className="mt-[7px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 4px rgba(255,215,0,0.3)' }} />
+                        <span className="mt-[5px] md:mt-[6px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 4px rgba(255,215,0,0.3)' }} />
                         {b}
                       </li>
                     ))}
@@ -133,7 +133,7 @@ export function MeetTheFounders({ variant = 'default' }: { variant?: 'default' |
                   <ul className="space-y-2 mb-3">
                     {FOUNDERS[1].bullets.map((b, i) => (
                       <li key={i} className="flex items-start gap-2.5 text-body text-sm md:text-base">
-                        <span className="mt-[7px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 4px rgba(255,215,0,0.3)' }} />
+                        <span className="mt-[5px] md:mt-[6px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 4px rgba(255,215,0,0.3)' }} />
                         {b}
                       </li>
                     ))}
