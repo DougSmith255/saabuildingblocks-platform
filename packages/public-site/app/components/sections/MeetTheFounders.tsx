@@ -5,22 +5,36 @@ import { ProfileCyberFrame } from '@saa/shared/components/saa/media/ProfileCyber
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 import { H1, H2 } from '@saa/shared/components/saa/headings';
 
-const SECTION_INTRO = 'Smart Agent Alliance is led by operators, not figureheads. The leadership team is responsible for designing, maintaining, and improving the systems agents rely on every day.';
+const SECTION_INTRO = 'Smart Agent Alliance is led by operators, not figureheads. The leadership team is responsible for designing, maintaining, and protecting the systems agents rely on. This is not a sales role. It is an operational one.';
 const SECTION_INTRO_COMPACT = 'Built by operators, not figureheads.';
 
 const FOUNDERS = [
   {
     name: "Doug Smart",
-    title: "Co-Founder | Systems & Infrastructure",
-    bio: "Doug built SAA\u2019s systems from the ground up \u2014 this website, the agent portal, every automation and workflow agents use daily. As a top 1% eXp team builder, he believes agents deserve better tools than what most sponsors offer, so he builds them. His focus is on creating systems that actually work and showing agents what\u2019s possible when the right infrastructure is behind them.",
+    title: "Co-Founder | Systems Architecture & Infrastructure",
+    bio: "Doug is responsible for the technical and structural backbone of Smart Agent Alliance.",
     bioCompact: "Full-stack developer and top 1% eXp team builder. Designed and built every system agents use - the portal, automations, marketing tools, and this website.",
+    bullets: [
+      'Designing the agent portal and system architecture',
+      'Building automation and workflow infrastructure',
+      'Maintaining production and attraction systems',
+      'Ensuring scalability without fragility',
+    ],
+    footer: 'Doug operates as a builder and steward of systems.',
     image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public",
   },
   {
     name: "Karrie Hill, JD",
     title: "Co-Founder | Training & Agent Advocacy",
-    bio: "UC Berkeley Law graduate and experienced agent who built a six-figure real estate business in her first full year without cold calling or door knocking. Karrie focuses on training design, mentorship standards, and onboarding pathways \u2014 making sure agents have clear structure from day one. Her background as an attorney informs a focus on durability and getting things right.",
+    bio: "Karrie focuses on clarity, structure, and agent outcomes.",
     bioCompact: "UC Berkeley Law graduate and eXp Certified Mentor. Built a six-figure real estate business in year one - no cold calls, no door knocking. Leads training and onboarding.",
+    bullets: [
+      'Training design and content direction',
+      'Mentorship standards and onboarding pathways',
+      'Evaluating tools and programs before adoption',
+      'Advocating for agent-first decisions inside the model',
+    ],
+    footer: 'Her background as an attorney and longtime agent informs a focus on durability.',
     image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public",
   },
 ];
@@ -42,7 +56,7 @@ export function MeetTheFounders({ variant = 'default' }: { variant?: 'default' |
       <section ref={ref} className="px-6 relative">
         <div className="mx-auto relative z-10" style={{ maxWidth: '1500px' }}>
         <div className="text-center mb-12">
-          <H2>Meet SAA&apos;s Founders</H2>
+          <H2>Meet the Founders</H2>
           <p className="text-body mt-4 max-w-[800px] mx-auto opacity-80">
             {isCompact ? SECTION_INTRO_COMPACT : SECTION_INTRO}
           </p>
@@ -70,7 +84,23 @@ export function MeetTheFounders({ variant = 'default' }: { variant?: 'default' |
               </ProfileCyberFrame>
               <FounderName name={FOUNDERS[0].name} />
               <p className="text-body text-sm opacity-60 mb-3">{FOUNDERS[0].title}</p>
-              <p className="text-body text-sm md:text-base leading-relaxed flex-1">{isCompact ? FOUNDERS[0].bioCompact : FOUNDERS[0].bio}</p>
+              {isCompact ? (
+                <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[0].bioCompact}</p>
+              ) : (
+                <div className="text-left flex-1">
+                  <p className="text-body text-sm md:text-base leading-relaxed mb-3">{FOUNDERS[0].bio}</p>
+                  <p className="text-body text-sm opacity-70 mb-2">His work includes:</p>
+                  <ul className="space-y-2 mb-3">
+                    {FOUNDERS[0].bullets.map((b, i) => (
+                      <li key={i} className="flex items-start gap-2.5 text-body text-sm md:text-base">
+                        <span className="mt-[7px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 4px rgba(255,215,0,0.3)' }} />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="text-body text-sm md:text-base opacity-70 italic">{FOUNDERS[0].footer}</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -94,7 +124,23 @@ export function MeetTheFounders({ variant = 'default' }: { variant?: 'default' |
               </ProfileCyberFrame>
               <FounderName name={FOUNDERS[1].name} />
               <p className="text-body text-sm opacity-60 mb-3">{FOUNDERS[1].title}</p>
-              <p className="text-body text-sm md:text-base leading-relaxed flex-1">{isCompact ? FOUNDERS[1].bioCompact : FOUNDERS[1].bio}</p>
+              {isCompact ? (
+                <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[1].bioCompact}</p>
+              ) : (
+                <div className="text-left flex-1">
+                  <p className="text-body text-sm md:text-base leading-relaxed mb-3">{FOUNDERS[1].bio}</p>
+                  <p className="text-body text-sm opacity-70 mb-2">Her responsibilities include:</p>
+                  <ul className="space-y-2 mb-3">
+                    {FOUNDERS[1].bullets.map((b, i) => (
+                      <li key={i} className="flex items-start gap-2.5 text-body text-sm md:text-base">
+                        <span className="mt-[7px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 4px rgba(255,215,0,0.3)' }} />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="text-body text-sm md:text-base opacity-70 italic">{FOUNDERS[1].footer}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

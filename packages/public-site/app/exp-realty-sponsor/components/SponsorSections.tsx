@@ -15,7 +15,7 @@ import { Ban, Building2, Wrench, Shield, Settings, GraduationCap, Users, Layers,
 // ============================================================================
 
 const SAA_DESCRIPTION =
-  'Smart Agent Alliance (SAA) is a sponsor organization inside eXp Realty \u2014 built to deliver real systems, training, income infrastructure, and community to independent agents.';
+  'Smart Agent Alliance (SAA) is an organized eXp Realty sponsor organization built to deliver real systems, training, income infrastructure, and community to independent agents through a centralized agent portal.';
 
 const SAA_NOT_STATEMENTS = [
   'This is not a brokerage.',
@@ -25,7 +25,7 @@ const SAA_NOT_STATEMENTS = [
 const SPONSORSHIP_INTRO =
   'At eXp, agents join the brokerage directly and name a sponsor on their application. That sponsor sits within a broader seven-level upline structure.';
 
-const SPONSORSHIP_LEAD = 'Sponsor support varies widely.';
+const SPONSORSHIP_LEAD = 'At eXp, sponsor support varies widely.';
 
 const SPONSORSHIP_BULLETS = [
   'Many sponsors provide little or no ongoing value.',
@@ -37,10 +37,13 @@ const SPONSORSHIP_BULLETS = [
 // SHARED: Panel content renderers
 // ============================================================================
 
+const SAA_OPERATES = 'Smart Agent Alliance operates inside eXp Realty as sponsor-level infrastructure for agents who choose a SAA-aligned sponsor.';
+
 function SAAContent() {
   return (
     <div className="space-y-4">
       <p className="text-body" style={{ color: '#dcdbd5' }}>{SAA_DESCRIPTION}</p>
+      <p className="text-body" style={{ color: '#b0b0a8' }}>{SAA_OPERATES}</p>
       <div className="flex flex-wrap gap-3 pt-2">
         {SAA_NOT_STATEMENTS.map((s, i) => (
           <span
@@ -93,7 +96,7 @@ const PANELS = [
 // ============================================================================
 
 const SECTION2_HEADING = 'Why SAA Is Different';
-const SECTION2_INTRO = 'At eXp Realty, sponsors are not required to provide any ongoing support \u2014 SAA was built differently.';
+const SECTION2_INTRO = 'At eXp Realty, sponsors are not required to provide any ongoing support. Smart Agent Alliance was built differently.';
 const SECTION2_SUBHEADING = '';
 
 const DIFFERENTIATORS = [
@@ -310,9 +313,12 @@ function ValueSection1_Launch() {
           <div className="w-full lg:w-[35%] relative z-10">
             <GenericCard padding="lg">
               <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
-                Launch Your Business With Clarity From Day One
+                Professional Onboarding
               </h3>
               <div className="space-y-5">
+                <p className="text-body" style={{ color: '#ffd700', fontFamily: 'var(--font-taskor, sans-serif)', fontSize: 'clamp(14px, 1.8vw, 17px)', fontWeight: 600 }}>
+                  Launch your business with clarity from day one.
+                </p>
                 <p className="text-body">
                   Structured onboarding designed to move you from joining to operating without confusion or delay.
                 </p>
@@ -452,17 +458,20 @@ function ValueSection2_Marketing() {
           <div className="w-full lg:w-[35%] relative z-10">
             <GenericCard padding="lg">
               <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
-                Generate Business with Done-For-You Marketing Assets
+                Done-For-You Business Assets
               </h3>
               <div className="space-y-5">
+                <p className="text-body" style={{ color: '#ffd700', fontFamily: 'var(--font-taskor, sans-serif)', fontSize: 'clamp(14px, 1.8vw, 17px)', fontWeight: 600 }}>
+                  Start generating visibility and leads without building everything from scratch.
+                </p>
                 <p className="text-body">
-                  Move into active marketing without building all pages or materials from scratch.
+                  These systems are already built and ready to use.
                 </p>
                 <ul className="space-y-4">
                   {[
-                    'Branded Link Page system',
+                    'Branded link page system',
                     'Lead capture landing pages',
-                    'eXp-ready marketing templates',
+                    'Customizable marketing templates',
                     'Performance analytics dashboard',
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-body">
@@ -559,15 +568,15 @@ function ValueSection2_Marketing() {
 
 const TRAINING_PROGRAMS = [
   {
-    title: 'SAA Pro',
-    description: 'Generate leads through content and visibility. Used by thousands of agents, updated annually, with weekly live implementation calls.',
-    icon: GraduationCap,
+    title: 'AI Accelerator',
+    description: 'Automate tasks you already do, including content creation, follow-up drafts, listing prep, and admin workflows. This program is sold independently for $997 but is included for SAA agents.',
+    icon: Sparkles,
     featured: true,
     colSpan: 2,
   },
   {
     title: 'Personal Branding',
-    description: 'Build a personal brand that attracts clients and opportunities consistently.',
+    description: 'Build and promote a personal brand that attracts the right clients and opportunities consistently.',
     icon: UserCircle,
     featured: false,
     colSpan: 1,
@@ -575,45 +584,45 @@ const TRAINING_PROGRAMS = [
     imageAlt: 'Personal Branding Course',
   },
   {
-    title: 'Paid Ads',
-    description: 'Set up paid ads correctly, avoid common mistakes, and know when ads make sense.',
+    title: 'SAA Pro',
+    description: 'Generate leads through content and visibility instead of constant outbound effort. Used by thousands of agents, updated annually, includes a weekly live Zoom implementation call. Sold independently for $997 per year but included for SAA agents.',
+    icon: GraduationCap,
+    featured: true,
+    colSpan: 2,
+  },
+  {
+    title: 'Paid Ads Mastery',
+    description: 'Learn how to set up paid advertising correctly, avoid mistakes, and decide when ads make sense.',
     icon: Megaphone,
     featured: false,
     colSpan: 1,
   },
   {
     title: 'Google Business',
-    description: 'Drive local visibility and inbound leads through an optimized Google Business Profile.',
+    description: 'Optimize your Google Business Profile to drive real local visibility and inbound leads.',
     icon: Building2,
     featured: false,
     colSpan: 1,
   },
   {
     title: 'Master Attraction',
-    description: 'Attract agents into your downline using a structured, compliant approach.',
+    description: 'Learn how to attract agents into your own downline in a structured, compliant way.',
     icon: UserPlus,
     featured: false,
     colSpan: 1,
   },
   {
-    title: 'Investor Army',
-    description: 'Structure investor conversations correctly and avoid mistakes that slow or derail deals.',
+    title: 'Investor Agent Training',
+    description: 'Work with investor clients more confidently by structuring conversations correctly and avoiding mistakes that slow or derail deals.',
     icon: Handshake,
     featured: false,
     colSpan: 1,
     image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-investor-army-course/mobile',
-    imageAlt: 'Investor Army Course',
+    imageAlt: 'Investor Agent Training Course',
   },
   {
-    title: 'AI Accelerator',
-    description: 'Automate content creation, follow-ups, listing prep, and admin workflows.',
-    icon: Sparkles,
-    featured: true,
-    colSpan: 2,
-  },
-  {
-    title: 'Agent Checklists',
-    description: 'Structured guides for buyer agents and listing agents covering every step from first client meeting through closing.',
+    title: 'New Agent Playbooks',
+    description: 'Step-by-step resources that reduce uncertainty during onboarding, transitions, or changes in business focus.',
     icon: Download,
     featured: false,
     colSpan: 3,
@@ -630,10 +639,10 @@ function ValueSection3_Training() {
             Elite On-Demand Training
           </h3>
           <p className="text-body" style={{ color: '#ffd700', fontFamily: 'var(--font-taskor, sans-serif)', fontSize: 'clamp(14px, 1.8vw, 17px)', fontWeight: 600, marginBottom: '0.75rem' }}>
-            Generate business faster with proven systems.
+            Generate business faster using proven systems and modern production strategies.
           </p>
           <p className="text-body">
-            Training programs that help agents generate leads, stay current, and skip trial-and-error.
+            These programs help agents stay current as platforms evolve and avoid trial-and-error learning.
           </p>
         </GenericCard>
 
@@ -704,7 +713,7 @@ function ValueSection3_Training() {
 
             // Icon cards
             // Check if this card sits next to a featured card (stretched tall)
-            const isAdjacentToFeatured = program.title === 'Personal Branding' || program.title === 'Investor Army';
+            const isAdjacentToFeatured = program.title === 'Personal Branding' || program.title === 'Investor Agent Training';
 
             // Image card variant: image fills card with text overlay
             if (program.image) {
@@ -790,6 +799,181 @@ function ValueSection3_Training() {
               </div>
             );
           })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+// ============================================================================
+// VALUE SECTION 6 — "Leadership & Community" (Zoom Mockup)
+// ============================================================================
+
+function LeadershipZoomMockup() {
+  const participants = [
+    { initials: 'KH', color: '#D94A8C' },
+    { initials: 'CS', color: '#4AD9A5' },
+    { initials: 'MS', color: '#4A90D9' },
+    { initials: 'JT', color: '#D9A54A' },
+    { initials: 'LR', color: '#9B59B6' },
+    { initials: 'AM', color: '#E67E22' },
+  ];
+
+  return (
+    <div className="w-full rounded-xl overflow-hidden" style={{
+      border: '1px solid rgba(255,255,255,0.1)',
+      boxShadow: '0 12px 40px rgba(0,0,0,0.6)',
+      background: '#1a1a1a',
+    }}>
+      {/* Top bar */}
+      <div className="flex items-center justify-between px-3 py-2" style={{
+        background: 'linear-gradient(180deg, #2d2d2d 0%, #232323 100%)',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        <div className="flex items-center gap-2">
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#28c840' }} />
+          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace' }}>
+            Weekly Leadership Session
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)' }}>
+            <Users size={10} style={{ display: 'inline', marginRight: '3px', verticalAlign: 'middle' }} />
+            124
+          </span>
+          <button type="button" className="px-2 py-0.5 rounded" style={{
+            background: '#e53935',
+            fontSize: '10px',
+            color: '#fff',
+            border: 'none',
+            cursor: 'default',
+          }}>
+            End
+          </button>
+        </div>
+      </div>
+
+      {/* Main presenter area */}
+      <div className="relative" style={{
+        aspectRatio: '16/9',
+        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+      }}>
+        {/* Presenter name label */}
+        <div className="absolute bottom-3 left-3 px-2 py-1 rounded" style={{
+          background: 'rgba(0,0,0,0.6)',
+          backdropFilter: 'blur(4px)',
+        }}>
+          <span style={{ fontSize: '11px', color: '#fff', fontFamily: 'monospace' }}>
+            Doug Smart
+          </span>
+        </div>
+        {/* Presenter avatar */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{
+            background: 'linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.08))',
+            border: '2px solid rgba(255,215,0,0.25)',
+          }}>
+            <span style={{ fontSize: '20px', color: 'rgba(255,215,0,0.6)', fontFamily: 'var(--font-taskor, sans-serif)', fontWeight: 600 }}>DS</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Participant thumbnails row */}
+      <div className="flex gap-1.5 px-2 py-2" style={{
+        background: '#1a1a1a',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        {participants.map((p, i) => (
+          <div key={i} className="flex-1 rounded-md flex items-center justify-center" style={{
+            aspectRatio: '16/9',
+            background: `linear-gradient(135deg, ${p.color}22, ${p.color}11)`,
+            border: `1px solid ${p.color}33`,
+          }}>
+            <span style={{ fontSize: '10px', color: p.color, fontWeight: 600, fontFamily: 'monospace' }}>
+              {p.initials}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Controls bar */}
+      <div className="flex items-center justify-center gap-4 px-3 py-2" style={{
+        background: '#232323',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+          <line x1="12" x2="12" y1="19" y2="22" />
+        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" />
+          <rect x="2" y="6" width="14" height="12" rx="2" />
+        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        <div className="w-7 h-5 rounded-full flex items-center justify-center" style={{ background: '#e53935' }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91" />
+            <line x1="1" x2="23" y1="1" y2="23" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ValueSection6_Leadership() {
+  return (
+    <section className="px-4 sm:px-8 md:px-12">
+      <div className="max-w-[1800px] mx-auto">
+        {/* Two-column: card left, zoom mockup right — mirrors Section 2 layout */}
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
+          {/* Card side (left on desktop) */}
+          <div className="w-full lg:w-[35%] relative z-10">
+            <GenericCard padding="lg">
+              <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
+                Leadership &amp; Community
+              </h3>
+              <div className="space-y-5">
+                <p className="text-body" style={{ color: '#ffd700', fontFamily: 'var(--font-taskor, sans-serif)', fontSize: 'clamp(14px, 1.8vw, 17px)', fontWeight: 600 }}>
+                  Built for connection, shared learning, and faster progress.
+                </p>
+                <p className="text-body">
+                  This community is structured around active top agents sharing original strategies proven through real-world execution.
+                </p>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3 text-body">
+                    <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[6px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                    <div>
+                      <span>4 weekly leadership sessions</span>
+                      <ul className="mt-2 space-y-1.5 pl-1">
+                        <li className="flex items-center gap-2 text-body" style={{ fontSize: 'clamp(12px, 1.4vw, 14px)', color: '#b0b0a8' }}>
+                          <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: 'rgba(255,215,0,0.4)' }} />
+                          Practical takeaways to apply immediately
+                        </li>
+                        <li className="flex items-center gap-2 text-body" style={{ fontSize: 'clamp(12px, 1.4vw, 14px)', color: '#b0b0a8' }}>
+                          <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: 'rgba(255,215,0,0.4)' }} />
+                          Real wins and lessons learned
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li className="flex items-center gap-3 text-body">
+                    <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                    In-person meetups at major eXp events that deepen trust and collaboration
+                  </li>
+                </ul>
+              </div>
+            </GenericCard>
+          </div>
+
+          {/* Zoom mockup side (right on desktop) — oversized, overlaps behind the card */}
+          <div className="w-full lg:w-[75%] lg:-ml-[10%] flex items-center justify-center">
+            <LeadershipZoomMockup />
+          </div>
         </div>
       </div>
     </section>
@@ -938,15 +1122,15 @@ function ValueSection4_Attraction() {
               </h3>
               <div className="space-y-5">
                 <p className="text-body" style={{ color: '#ffd700', fontFamily: 'var(--font-taskor, sans-serif)', fontSize: 'clamp(14px, 1.8vw, 17px)', fontWeight: 600 }}>
-                  Build passive revenue share income.
+                  Build long-term revenue share income.
                 </p>
                 <p className="text-body">
-                  Participation is optional, compliant, and designed for when and if an agent chooses.
+                  Smart Agent Alliance builds the attraction infrastructure, so agents who choose to participate can start simply by sharing a link. Participation is optional, compliant, and designed for when and if an agent chooses.
                 </p>
                 <ul className="space-y-4">
                   {[
                     'Branded agent attraction webpage',
-                    'Long-term automated nurture systems',
+                    'Long-term automated nurturing systems',
                     'Leadership hosted calls for your prospects',
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-body">
@@ -1578,7 +1762,7 @@ function Section2() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 {goldDot}
-                <span className="text-body">Agents pay Smart Agent Alliance nothing</span>
+                <span className="text-body">Full access to the Smart Agent Alliance systems at no cost</span>
               </li>
               <li className="flex items-start gap-3">
                 {goldDot}
@@ -2609,7 +2793,7 @@ function Section3() {
             What You Get Inside SAA
           </H2>
           <p className="text-body max-w-[950px] mx-auto" style={{ marginTop: '-1.5rem' }}>
-            As an SAA agent, you&apos;re part of both Smart Agent Alliance and the Wolfpack, our larger team network within eXp Realty. Your Agent Portal brings everything together in one place.
+            As an SAA agent, you&apos;re part of both Smart Agent Alliance and the Wolf Pack, our larger team network within eXp Realty. Your agent portal brings everything together in one place.
           </p>
         </div>
 
@@ -3037,9 +3221,9 @@ function Section4() {
 // ============================================================================
 
 const BOTTOM_LINE_BULLETS = [
-  'Real systems that are built, maintained, and continuously improved',
+  'Real systems that are built, maintained, and updated',
+  'Value that grows as SAA adds new tools and resources',
   'Ongoing training led by agents who are actively producing',
-  'Infrastructure that works whether you joined yesterday or two years ago',
   'Accountable leadership that you can actually reach',
 ];
 
@@ -3235,8 +3419,8 @@ function Section6Final() {
           />
 
           <div className="relative z-10">
-            <p className="text-body mb-6 text-center">
-              Choosing an eXp sponsor isn&apos;t about logos or promises. It&apos;s about what actually shows up after onboarding.
+            <p className="text-body mb-4 text-center">
+              Choosing an eXp sponsor isn&apos;t about logos or promises. It&apos;s about what actually shows up after onboarding. Every one of these systems is delivered through the Smart Agent Alliance agent portal.
             </p>
 
             <ul className="space-y-2.5 mb-6 text-left max-w-[600px] mx-auto" style={{ listStyle: 'none', padding: 0, margin: '0 auto 1.5rem' }}>
@@ -3281,11 +3465,12 @@ export default function SponsorSections() {
     <div className="flex flex-col" style={{ gap: '100px' }}>
       <Section1 />
       <Section3 />
-      <ValueSection1_Launch />
       <ValueSection2_Marketing />
       <ValueSection3_Training />
-      <ValueSection4_Attraction />
+      <ValueSection6_Leadership />
       <ValueSection5_Referrals />
+      <ValueSection4_Attraction />
+      <ValueSection1_Launch />
       <Section2 />
       <SuccessStories />
       <MeetTheFounders />
