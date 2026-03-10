@@ -568,9 +568,9 @@ function ValueSection2_Marketing() {
 
 const TRAINING_PROGRAMS = [
   {
-    title: 'AI Accelerator',
-    description: 'Automate tasks you already do, including content creation, follow-up drafts, listing prep, and admin workflows. This program is sold independently for $997 but is included for SAA agents.',
-    icon: Sparkles,
+    title: 'Social Agent Academy Pro',
+    description: 'Generate leads through content and visibility instead of constant outbound effort. Used by thousands of agents, updated annually, includes a weekly live Zoom implementation call. Sold independently for $997 per year but included for SAA agents.',
+    icon: GraduationCap,
     featured: true,
     colSpan: 2,
   },
@@ -582,13 +582,6 @@ const TRAINING_PROGRAMS = [
     colSpan: 1,
     image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-personal-branding/mobile',
     imageAlt: 'Personal Branding Course',
-  },
-  {
-    title: 'SAA Pro',
-    description: 'Generate leads through content and visibility instead of constant outbound effort. Used by thousands of agents, updated annually, includes a weekly live Zoom implementation call. Sold independently for $997 per year but included for SAA agents.',
-    icon: GraduationCap,
-    featured: true,
-    colSpan: 2,
   },
   {
     title: 'Paid Ads Mastery',
@@ -619,6 +612,13 @@ const TRAINING_PROGRAMS = [
     colSpan: 1,
     image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-investor-army-course/mobile',
     imageAlt: 'Investor Agent Training Course',
+  },
+  {
+    title: 'AI Accelerator',
+    description: 'Automate tasks you already do, including content creation, follow-up drafts, listing prep, and admin workflows. This program is sold independently for $997 but is included for SAA agents.',
+    icon: Sparkles,
+    featured: true,
+    colSpan: 2,
   },
   {
     title: 'New Agent Playbooks',
@@ -663,7 +663,7 @@ function ValueSection3_Training() {
                   }}
                 >
                   {/* Featured card image */}
-                  {program.title === 'SAA Pro' ? (
+                  {program.title === 'Social Agent Academy Pro' ? (
                     <img
                       src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-social-agent-academy/tablet"
                       srcSet="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-social-agent-academy/mobile 640w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-social-agent-academy/tablet 1024w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-social-agent-academy/desktop 2000w"
@@ -692,7 +692,7 @@ function ValueSection3_Training() {
                   )}
                   {/* Title + description overlay at bottom */}
                   <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5" style={{
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 40%, transparent 100%)',
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.5) 70%, transparent 100%)',
                   }}>
                     <h4 style={{
                       fontFamily: 'var(--font-taskor, sans-serif)',
@@ -736,7 +736,7 @@ function ValueSection3_Training() {
                     loading="lazy"
                   />
                   <div className="absolute bottom-0 left-0 right-0 p-4" style={{
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)',
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.5) 75%, transparent 100%)',
                   }}>
                     <h4 style={{
                       fontFamily: 'var(--font-taskor, sans-serif)',
@@ -810,126 +810,11 @@ function ValueSection3_Training() {
 // VALUE SECTION 6 — "Leadership & Community" (Zoom Mockup)
 // ============================================================================
 
-function LeadershipZoomMockup() {
-  const participants = [
-    { initials: 'KH', color: '#D94A8C' },
-    { initials: 'CS', color: '#4AD9A5' },
-    { initials: 'MS', color: '#4A90D9' },
-    { initials: 'JT', color: '#D9A54A' },
-    { initials: 'LR', color: '#9B59B6' },
-    { initials: 'AM', color: '#E67E22' },
-  ];
-
-  return (
-    <div className="w-full rounded-xl overflow-hidden" style={{
-      border: '1px solid rgba(255,255,255,0.1)',
-      boxShadow: '0 12px 40px rgba(0,0,0,0.6)',
-      background: '#1a1a1a',
-    }}>
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-3 py-2" style={{
-        background: 'linear-gradient(180deg, #2d2d2d 0%, #232323 100%)',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-      }}>
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#28c840' }} />
-          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace' }}>
-            Weekly Leadership Session
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)' }}>
-            <Users size={10} style={{ display: 'inline', marginRight: '3px', verticalAlign: 'middle' }} />
-            124
-          </span>
-          <button type="button" className="px-2 py-0.5 rounded" style={{
-            background: '#e53935',
-            fontSize: '10px',
-            color: '#fff',
-            border: 'none',
-            cursor: 'default',
-          }}>
-            End
-          </button>
-        </div>
-      </div>
-
-      {/* Main presenter area */}
-      <div className="relative" style={{
-        aspectRatio: '16/9',
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-      }}>
-        {/* Presenter name label */}
-        <div className="absolute bottom-3 left-3 px-2 py-1 rounded" style={{
-          background: 'rgba(0,0,0,0.6)',
-          backdropFilter: 'blur(4px)',
-        }}>
-          <span style={{ fontSize: '11px', color: '#fff', fontFamily: 'monospace' }}>
-            Doug Smart
-          </span>
-        </div>
-        {/* Presenter avatar */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{
-            background: 'linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.08))',
-            border: '2px solid rgba(255,215,0,0.25)',
-          }}>
-            <span style={{ fontSize: '20px', color: 'rgba(255,215,0,0.6)', fontFamily: 'var(--font-taskor, sans-serif)', fontWeight: 600 }}>DS</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Participant thumbnails row */}
-      <div className="flex gap-1.5 px-2 py-2" style={{
-        background: '#1a1a1a',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-      }}>
-        {participants.map((p, i) => (
-          <div key={i} className="flex-1 rounded-md flex items-center justify-center" style={{
-            aspectRatio: '16/9',
-            background: `linear-gradient(135deg, ${p.color}22, ${p.color}11)`,
-            border: `1px solid ${p.color}33`,
-          }}>
-            <span style={{ fontSize: '10px', color: p.color, fontWeight: 600, fontFamily: 'monospace' }}>
-              {p.initials}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* Controls bar */}
-      <div className="flex items-center justify-center gap-4 px-3 py-2" style={{
-        background: '#232323',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-      }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-          <line x1="12" x2="12" y1="19" y2="22" />
-        </svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" />
-          <rect x="2" y="6" width="14" height="12" rx="2" />
-        </svg>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-        <div className="w-7 h-5 rounded-full flex items-center justify-center" style={{ background: '#e53935' }}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91" />
-            <line x1="1" x2="23" y1="1" y2="23" />
-          </svg>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function ValueSection6_Leadership() {
   return (
     <section className="px-4 sm:px-8 md:px-12">
       <div className="max-w-[1800px] mx-auto">
-        {/* Two-column: card left, zoom mockup right — mirrors Section 2 layout */}
+        {/* Two-column: card left, photo right — mirrors Section 2 layout */}
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
           {/* Card side (left on desktop) */}
           <div className="w-full lg:w-[35%] relative z-10">
@@ -946,7 +831,7 @@ function ValueSection6_Leadership() {
                 </p>
                 <ul className="space-y-4">
                   <li className="flex items-start gap-3 text-body">
-                    <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[6px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                    <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                     <div>
                       <span>4 weekly leadership sessions</span>
                       <ul className="mt-2 space-y-1.5 pl-1">
@@ -961,8 +846,8 @@ function ValueSection6_Leadership() {
                       </ul>
                     </div>
                   </li>
-                  <li className="flex items-center gap-3 text-body">
-                    <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                  <li className="flex items-start gap-3 text-body">
+                    <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                     In-person meetups at major eXp events that deepen trust and collaboration
                   </li>
                 </ul>
@@ -970,9 +855,44 @@ function ValueSection6_Leadership() {
             </GenericCard>
           </div>
 
-          {/* Zoom mockup side (right on desktop) — oversized, overlaps behind the card */}
+          {/* Photo side (right on desktop) — wolf pack group photo with overlay */}
           <div className="w-full lg:w-[75%] lg:-ml-[10%] flex items-center justify-center">
-            <LeadershipZoomMockup />
+            <div className="relative w-full rounded-xl overflow-hidden" style={{
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+            }}>
+              <img
+                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop"
+                srcSet="
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile 640w,
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet 1024w,
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop 2000w
+                "
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 65vw"
+                alt="Smart Agent Alliance and the Wolf Pack team at an eXp Realty event"
+                width={2000}
+                height={1125}
+                className="w-full h-auto block"
+                loading="lazy"
+              />
+              {/* Bottom gradient overlay with caption */}
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5" style={{
+                background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)',
+              }}>
+                <p style={{
+                  fontFamily: 'var(--font-taskor, sans-serif)',
+                  fontSize: 'clamp(13px, 1.6vw, 16px)',
+                  fontWeight: 600,
+                  color: '#ffd700',
+                  margin: 0,
+                }}>
+                  Smart Agent Alliance + Wolf Pack
+                </p>
+                <p className="text-body" style={{ fontSize: 'clamp(11px, 1.3vw, 13px)', color: '#b0b0a8', marginTop: '2px' }}>
+                  In-person meetup at eXp Realty event
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1112,9 +1032,9 @@ function ValueSection4_Attraction() {
   return (
     <section className="px-4 sm:px-8 md:px-12">
       <div className="max-w-[1800px] mx-auto">
-        {/* Two-column: mockups left, card right — mirrors Section 1 (flex-row-reverse) */}
-        <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-0">
-          {/* Card side (right on desktop) */}
+        {/* Two-column: card left, mockups right */}
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
+          {/* Card side (left on desktop) */}
           <div className="w-full lg:w-[35%] relative z-20">
             <GenericCard padding="lg">
               <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
@@ -1143,8 +1063,8 @@ function ValueSection4_Attraction() {
             </GenericCard>
           </div>
 
-          {/* Mockup side (left on desktop) — stacked/overlapping composition */}
-          <div className="w-full lg:w-[75%] lg:-mr-[10%] flex items-center justify-center">
+          {/* Mockup side (right on desktop) — stacked/overlapping composition */}
+          <div className="w-full lg:w-[75%] lg:-ml-[10%] flex items-center justify-center">
             <div className="relative w-full">
               {/* Browser mockup — main */}
               <BrowserMockup url="smartagentalliance.com/Jane-Smith">
@@ -1280,9 +1200,9 @@ function ValueSection5_Referrals() {
   return (
     <section className="px-4 sm:px-8 md:px-12" style={{ paddingTop: 'clamp(0px, 3vw, 60px)' }}>
       <div className="max-w-[1800px] mx-auto">
-        {/* Two-column: card left, phone mockup right — mirrors Section 2 */}
-        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
-          {/* Card side (left on desktop) */}
+        {/* Two-column: phone mockup left, card right */}
+        <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-0">
+          {/* Card side (right on desktop) */}
           <div className="w-full lg:w-[60%] relative z-10">
             <GenericCard padding="lg">
               <h3 className="text-h3" style={{ marginBottom: '1rem' }}>
@@ -1311,8 +1231,8 @@ function ValueSection5_Referrals() {
             </GenericCard>
           </div>
 
-          {/* Phone mockup side (right on desktop) — with orbital animation */}
-          <div className="w-full lg:w-[50%] lg:-ml-[10%] flex items-center justify-center">
+          {/* Phone mockup side (left on desktop) — with orbital animation */}
+          <div className="w-full lg:w-[50%] lg:-mr-[10%] flex items-center justify-center">
             <style>{`
               @keyframes vs5Orbit1 { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
               @keyframes vs5Orbit2 { from { transform: rotate(120deg); } to { transform: rotate(480deg); } }
