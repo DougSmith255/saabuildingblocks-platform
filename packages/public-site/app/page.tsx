@@ -122,7 +122,7 @@ export default function Home() {
                   For Agents Who Want More
                 </Tagline>
                 <p className="text-body opacity-90">
-                  Everything you need to build a real estate business with lasting income.
+                  Smart Agent Alliance costs agents nothing. Every system is delivered through our agent portal.
                 </p>
               </div>
             </div>

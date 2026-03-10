@@ -14,6 +14,9 @@ import Tagline from '../saa/headings/Tagline.astro';
   aria-label="Hero"
   style="max-width: 3000px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: visible;"
 >
+  <!-- RevealMaskEffect golden glow (React island, placed behind content) -->
+  <slot name="effect" />
+
   <!-- Hero Content Block -->
   <div
     class="hero-content-wrapper flex flex-col items-center w-full pt-[8%] md:pt-0"
@@ -64,7 +67,7 @@ import Tagline from '../saa/headings/Tagline.astro';
             For Agents Who Want More
           </Tagline>
           <p class="text-body opacity-90">
-            Everything you need to build a real estate business with lasting income.
+            Smart Agent Alliance costs agents nothing. Every system is delivered through our agent portal.
           </p>
         </div>
       </div>

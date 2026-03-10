@@ -5,37 +5,44 @@
  * Inlines IconCard and SecondaryButton styling.
  */
 import H2 from '../saa/headings/H2.astro';
+import SecondaryButton from '../saa/buttons/SecondaryButton.astro';
 
 const CARDS = [
   {
-    title: 'Guided Launch',
-    text: 'Launch your business with clarity from day one.',
+    title: 'Done-For-You Business Assets',
+    text: 'Ready-to-launch marketing funnels and lead tools.',
     theme: 'yellow',
-    iconPath: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+    iconPath: '<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
   },
   {
-    title: 'Done-For-You Lead Systems',
-    text: 'Pre-built business assets ready for implementation.',
+    title: 'Elite On-Demand Training',
+    text: 'Advanced blueprints for modern production and scale.',
     theme: 'blue',
-    iconPath: '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 16h8"/><path d="M7 11h12"/><path d="M7 6h3"/>',
-  },
-  {
-    title: 'Training & Development',
-    text: 'Practical training designed for production growth.',
-    theme: 'yellow',
     iconPath: '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
   },
   {
-    title: 'Income Growth & Attraction',
-    text: 'Structured attraction pathways with team support.',
-    theme: 'blue',
-    iconPath: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+    title: 'Leadership & Community',
+    text: 'Tactical implementation sessions with top active producers.',
+    theme: 'yellow',
+    iconPath: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
   },
   {
-    title: 'Ongoing Support',
-    text: 'Accessible support and expanding resources.',
+    title: 'Private Referrals & Global Collaboration',
+    text: 'Relationship-driven referral networks and cross-market collaboration.',
+    theme: 'blue',
+    iconPath: '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>',
+  },
+  {
+    title: 'Agent Attraction Infrastructure',
+    text: 'Automated attraction systems and structured pathways with team support.',
     theme: 'yellow',
-    iconPath: '<circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/>',
+    iconPath: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  },
+  {
+    title: 'Professional Onboarding',
+    text: 'From joining to operating in 24 hours.',
+    theme: 'blue',
+    iconPath: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
   },
 ];
 
@@ -75,11 +82,10 @@ const THEMES: Record<string, { primary: string; primaryRgb: string; border: stri
 
   <div class="mx-auto relative z-10" style="max-width: 1400px;">
     <!-- Header -->
-    <div class="text-center mb-10 md:mb-12">
-      <H2>What You Get Inside SAA</H2>
-      <p class="text-body opacity-60 mt-4 max-w-[750px] mx-auto">
-        Systems, training, and support built around how agents actually work &mdash; all accessible from your
-        <a href="/exp-realty-sponsor#agent-portal-walkthrough" style="color: #ffd700; text-decoration: underline; text-underline-offset: 3px;">Agent Portal</a>.
+    <div class="text-center mb-10">
+      <H2>Six Systems Inside the Smart Agent Alliance Portal</H2>
+      <p class="text-body opacity-60 mt-5 max-w-[750px] mx-auto">
+        Get the professional resources of a high-level organization with the 100% freedom of a solo agent. No splits. No sponsor fees. No added costs beyond eXp. Just a stronger eXp experience.
       </p>
     </div>
 
@@ -128,13 +134,7 @@ const THEMES: Record<string, { primary: string; primaryRgb: string; border: stri
 
     <!-- CTA -->
     <div class="text-center mt-10 md:mt-12">
-      <a
-        href="/exp-realty-sponsor/"
-        class="inline-flex items-center justify-center relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-l before:from-white/15 before:to-transparent before:w-1/2 before:skew-x-[45deg]"
-        style="color: var(--text-color-secondaryButton, var(--text-color-button, var(--color-headingText))); font-size: var(--font-size-secondaryButton, var(--font-size-button, 20px)); font-family: var(--font-family-secondaryButton, var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif)); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; height: clamp(35px, calc(33.182px + 0.7273vw), 55px); padding-left: 1.25rem; padding-right: 1.25rem; padding-top: 0.5rem; padding-bottom: 0.5rem; background-color: rgb(45,45,45); border-radius: 0.75rem; box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5); white-space: nowrap;"
-      >
-        See SAA&apos;s Full Value Stack
-      </a>
+      <SecondaryButton href="/exp-realty-sponsor/">See SAA's Full Value Stack</SecondaryButton>
     </div>
   </div>
 </section>

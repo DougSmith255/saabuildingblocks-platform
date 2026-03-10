@@ -3,38 +3,44 @@
 import { SecondaryButton } from '@saa/shared/components/saa/buttons';
 import { H2 } from '@saa/shared/components/saa/headings';
 import { IconCard } from '@saa/shared/components/saa/cards/IconCard';
-import { Rocket, BarChart3, GraduationCap, TrendingUp, LifeBuoy } from 'lucide-react';
+import { Briefcase, GraduationCap, Users, Globe, Target, Rocket } from 'lucide-react';
 
 const CARDS = [
   {
-    icon: Rocket,
-    title: 'Guided Launch',
-    text: 'Launch your business with clarity from day one.',
+    icon: Briefcase,
+    title: 'Done-For-You Business Assets',
+    text: 'Ready-to-launch marketing funnels and lead tools.',
     theme: 'yellow' as const,
-  },
-  {
-    icon: BarChart3,
-    title: 'Done-For-You Lead Systems',
-    text: 'Pre-built business assets ready for implementation.',
-    theme: 'blue' as const,
   },
   {
     icon: GraduationCap,
-    title: 'Training & Development',
-    text: 'Practical training designed for production growth.',
-    theme: 'yellow' as const,
-  },
-  {
-    icon: TrendingUp,
-    title: 'Income Growth & Attraction',
-    text: 'Structured attraction pathways with team support.',
+    title: 'Elite On-Demand Training',
+    text: 'Advanced blueprints for modern production and scale.',
     theme: 'blue' as const,
   },
   {
-    icon: LifeBuoy,
-    title: 'Ongoing Support',
-    text: 'Accessible support and expanding resources.',
+    icon: Users,
+    title: 'Leadership & Community',
+    text: 'Tactical implementation sessions with top active producers.',
     theme: 'yellow' as const,
+  },
+  {
+    icon: Globe,
+    title: 'Private Referrals & Global Collaboration',
+    text: 'Relationship-driven referral networks and cross-market collaboration.',
+    theme: 'blue' as const,
+  },
+  {
+    icon: Target,
+    title: 'Agent Attraction Infrastructure',
+    text: 'Automated attraction systems and structured pathways with team support.',
+    theme: 'yellow' as const,
+  },
+  {
+    icon: Rocket,
+    title: 'Professional Onboarding',
+    text: 'From joining to operating in 24 hours.',
+    theme: 'blue' as const,
   },
 ];
 
@@ -137,10 +143,9 @@ export function WhatYouGet() {
       <div className="mx-auto relative z-10" style={{ maxWidth: '1400px' }}>
         {/* Header */}
         <div className="text-center mb-10 md:mb-12">
-          <H2>What You Get Inside SAA</H2>
+          <H2>Six Systems Inside the Smart Agent Alliance Portal</H2>
           <p className="text-body opacity-60 mt-4 max-w-[750px] mx-auto">
-            Systems, training, and support built around how agents actually work &mdash; all accessible from your{' '}
-            <a href="/exp-realty-sponsor#agent-portal-walkthrough" style={{ color: '#ffd700', textDecoration: 'underline', textUnderlineOffset: '3px' }}>Agent Portal</a>.
+            Get the professional resources of a high-level organization with the 100% freedom of a solo agent. No splits. No sponsor fees. No added costs beyond eXp. Just a stronger eXp experience.
           </p>
         </div>
 
