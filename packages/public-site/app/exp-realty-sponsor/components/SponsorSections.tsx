@@ -1083,8 +1083,8 @@ function ValueSection4_Attraction() {
                   loading="lazy"
                 />
               </BrowserMockup>
-              {/* Zoom mockup — overlapping bottom-right */}
-              <div className="absolute bottom-[-8%] right-[-4%] w-[45%] sm:w-[40%] z-10">
+              {/* Zoom mockup — overlapping bottom-right (clamped on mobile) */}
+              <div className="absolute bottom-[-8%] right-0 lg:right-[-4%] w-[45%] sm:w-[40%] z-10">
                 <ZoomMockup />
               </div>
             </div>
