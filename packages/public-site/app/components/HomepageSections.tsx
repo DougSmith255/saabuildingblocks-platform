@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import { SecondaryButton } from '@saa/shared/components/saa/buttons';
-import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
 // ssr: false + loading: null prevents ANY rendering during SSR (no height = no CLS)
@@ -69,9 +68,22 @@ export function HomepageSections() {
       <MediaLogos />
       <MeetTheFounders variant="compact" />
       <BuiltForFuture />
-      <GlassPanel variant="champagne" noBlur>
-        <WatchAndDecide />
-      </GlassPanel>
+      <div
+        className="relative overflow-hidden rounded-3xl"
+        style={{
+          background: 'linear-gradient(180deg, rgba(255,215,0,0.03) 0%, rgba(255,215,0,0.04) 50%, rgba(255,215,0,0.03) 100%)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 0 rgba(255,255,255,0.35), inset 0 2px 4px 0 rgba(255,255,255,0.2), inset 0 8px 20px -8px rgba(255,215,0,0.25), inset 0 20px 40px -20px rgba(255,255,255,0.15), inset 0 -1px 0 0 rgba(0,0,0,0.7), inset 0 -2px 6px 0 rgba(0,0,0,0.5), inset 0 -10px 25px -8px rgba(0,0,0,0.6), inset 0 -25px 50px -20px rgba(0,0,0,0.45)',
+        }}
+      >
+        {/* Dots texture */}
+        <div
+          className="absolute inset-0 pointer-events-none z-[1] rounded-3xl"
+          style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)', backgroundSize: '8px 8px' }}
+        />
+        <div className="relative z-10">
+          <WatchAndDecide />
+        </div>
+      </div>
 
       {/* Bottom CTA Section - Outside glass panel */}
       <section className="py-16 md:py-20 px-6 text-center">

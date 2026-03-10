@@ -135,10 +135,10 @@ export function VideoSection({
       <div className={compact ? '' : 'max-w-[1400px] mx-auto'}>
         {/* Section Header */}
         {!hideTitle && (
-          <div className="text-center mb-8 md:mb-12">
-            <H2>{title}</H2>
+          <div className={`text-center ${disabled ? 'mb-4' : 'mb-10'}`}>
+            <H2 style={disabled ? { marginBottom: '0.5rem' } : undefined}>{title}</H2>
             {subtitle && (
-              <p className="text-body mt-4 max-w-2xl mx-auto opacity-80">
+              <p className={`text-body ${disabled ? 'mt-0' : 'mt-5'} max-w-2xl mx-auto opacity-80`}>
                 {subtitle}
               </p>
             )}
@@ -146,22 +146,21 @@ export function VideoSection({
         )}
 
         {/* Video Player with Progress Tracking */}
-        <div className={compact ? 'max-w-[85%] mx-auto' : disabled ? 'max-w-sm sm:max-w-md mx-auto' : 'max-w-4xl mx-auto'}>
-          <VideoPlayer
-            ref={videoPlayerRef}
-            videoId={videoId}
-            posterUrl={posterUrl}
-            storageKey={storageKey}
-            unlockThreshold={unlockThreshold}
-            onThresholdReached={handleThresholdReached}
-            onBeforePlay={disabled ? () => false : undefined}
-            disabled={disabled}
-            disabledMessage={disabledMessage}
-            pageSlug={pageSlug}
-          />
+        <div className={compact ? 'max-w-[85%] mx-auto' : disabled ? 'max-w-md mx-auto' : 'max-w-4xl mx-auto'}>
+          {!disabled && (
+            <VideoPlayer
+              ref={videoPlayerRef}
+              videoId={videoId}
+              posterUrl={posterUrl}
+              storageKey={storageKey}
+              unlockThreshold={unlockThreshold}
+              onThresholdReached={handleThresholdReached}
+              pageSlug={pageSlug}
+            />
+          )}
 
           {/* CTA Buttons */}
-          <div className={`video-section-buttons flex ${compact ? 'flex-col' : 'flex-col sm:flex-row'} gap-4 justify-center items-center mt-8`}>
+          <div className={`video-section-buttons flex ${compact ? 'flex-col' : 'flex-col sm:flex-row'} gap-4 justify-center items-center ${disabled ? 'mt-0' : 'mt-8'}`}>
             {/* Join The Alliance - always visible */}
             <CTAButton
               href="#"
