@@ -13897,7 +13897,7 @@ function AgentPagesSection({
 
                   // Add custom social links with their selected icons
                   const customSocialIcons = customSocialLinks
-                    .filter(link => link && link.url && link.icon && link.icon !== 'Globe')
+                    .filter(link => link && link.url && link.icon)
                     .map(link => ({
                       url: link.url,
                       icon: LINK_ICONS.find(i => i.name === link.icon)?.path || ''
