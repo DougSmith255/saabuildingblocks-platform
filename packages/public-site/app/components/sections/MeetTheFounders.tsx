@@ -56,8 +56,8 @@ export function MeetTheFounders({ variant = 'default' }: { variant?: 'default' |
       <section ref={ref} className="px-6 relative">
         <div className="mx-auto relative z-10" style={{ maxWidth: '1500px' }}>
         <div className="text-center mb-12">
-          <H2>Meet the Founders</H2>
-          <p className="text-body mt-4 max-w-[800px] mx-auto opacity-80">
+          <H2 style={{ marginBottom: '0.5rem' }}>Meet the Founders</H2>
+          <p className="text-body max-w-[800px] mx-auto opacity-80">
             {isCompact ? SECTION_INTRO_COMPACT : SECTION_INTRO}
           </p>
         </div>
