@@ -143,18 +143,18 @@ export function WhatYouGet() {
       <div className="mx-auto relative z-10" style={{ maxWidth: '1400px' }}>
         {/* Header */}
         <div className="text-center mb-10 md:mb-12">
-          <H2>Six Systems Inside the SAA Portal</H2>
-          <p className="text-body opacity-60 mt-4 max-w-[750px] mx-auto">
+          <H2 style={{ marginBottom: '0.5rem' }}>Six Systems Inside the SAA Portal</H2>
+          <p className="text-body opacity-60 max-w-[750px] mx-auto">
             Get the professional resources of a high-level organization with the 100% freedom of a solo agent. No splits. No sponsor fees. No added costs beyond eXp. Just a stronger eXp experience.
           </p>
         </div>
 
         {/* Cards */}
-        <div className="flex flex-wrap gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {CARDS.map((card) => (
-            <div key={card.title} className="flex-1" style={{ minWidth: '260px' }}>
+            <div key={card.title}>
               <IconCard icon={<card.icon className="w-6 h-6" />} theme={card.theme} className="h-full">
-                <h3 className="text-h6 mb-2" style={{ minHeight: '2.8em' }}>{card.title}</h3>
+                <h3 className="text-h6 mb-2" style={{ minHeight: '3em' }}>{card.title}</h3>
                 <p className="text-body" style={{ fontSize: 'clamp(14px, calc(13.5px + 0.2vw), 18px)' }}>{card.text}</p>
               </IconCard>
             </div>

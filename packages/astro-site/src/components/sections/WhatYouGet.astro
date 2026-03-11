@@ -83,18 +83,18 @@ const THEMES: Record<string, { primary: string; primaryRgb: string; border: stri
   <div class="mx-auto relative z-10" style="max-width: 1400px;">
     <!-- Header -->
     <div class="text-center mb-10">
-      <H2>Six Systems Inside the SAA Portal</H2>
-      <p class="text-body opacity-60 mt-5 max-w-[750px] mx-auto">
+      <H2 style={{ marginBottom: '0.5rem' }}>Six Systems Inside the SAA Portal</H2>
+      <p class="text-body opacity-60 max-w-[750px] mx-auto">
         Get the professional resources of a high-level organization with the 100% freedom of a solo agent. No splits. No sponsor fees. No added costs beyond eXp. Just a stronger eXp experience.
       </p>
     </div>
 
     <!-- Cards -->
-    <div class="flex flex-wrap gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
       {CARDS.map((card) => {
         const colors = THEMES[card.theme];
         return (
-          <div class="flex-1" style="min-width: 260px;">
+          <div>
             <div
               class="group relative rounded-2xl p-6 md:p-8 text-center overflow-hidden h-full"
               style={`background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid ${colors.border}; box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);`}
@@ -123,7 +123,7 @@ const THEMES: Record<string, { primary: string; primaryRgb: string; border: stri
 
               <!-- Content -->
               <div class="relative z-10">
-                <h3 class="text-h6 mb-2" style="min-height: 2.8em;">{card.title}</h3>
+                <h3 class="text-h6 mb-2" style="min-height: 3em;">{card.title}</h3>
                 <p class="text-body" style="font-size: clamp(14px, calc(13.5px + 0.2vw), 18px);">{card.text}</p>
               </div>
             </div>
