@@ -93,7 +93,7 @@ export function MeetTheFounders({ variant = 'default' }: { variant?: 'default' |
                   <ul className="space-y-2 mb-3">
                     {FOUNDERS[0].bullets.map((b, i) => (
                       <li key={i} className="flex items-start gap-2.5 text-body text-sm md:text-base">
-                        <span className="mt-[5px] md:mt-[6px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 4px rgba(255,215,0,0.3)' }} />
+                        <span className="mt-[7px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 4px rgba(255,215,0,0.3)' }} />
                         {b}
                       </li>
                     ))}
@@ -133,7 +133,7 @@ export function MeetTheFounders({ variant = 'default' }: { variant?: 'default' |
                   <ul className="space-y-2 mb-3">
                     {FOUNDERS[1].bullets.map((b, i) => (
                       <li key={i} className="flex items-start gap-2.5 text-body text-sm md:text-base">
-                        <span className="mt-[5px] md:mt-[6px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 4px rgba(255,215,0,0.3)' }} />
+                        <span className="mt-[7px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 4px rgba(255,215,0,0.3)' }} />
                         {b}
                       </li>
                     ))}

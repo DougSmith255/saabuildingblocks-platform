@@ -328,8 +328,8 @@ function ValueSection1_Launch() {
                     'Step-by-step setup checklist',
                     '1-on-1 strategy session',
                   ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-body">
-                      <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                    <li key={i} className="flex items-start gap-3 text-body">
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                       {item}
                     </li>
                   ))}
@@ -474,8 +474,8 @@ function ValueSection2_Marketing() {
                     'Customizable marketing templates',
                     'Performance analytics dashboard',
                   ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-body">
-                      <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                    <li key={i} className="flex items-start gap-3 text-body">
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                       {item}
                     </li>
                   ))}
@@ -1053,8 +1053,8 @@ function ValueSection4_Attraction() {
                     'Long-term automated nurturing systems',
                     'Leadership hosted calls for your prospects',
                   ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-body">
-                      <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                    <li key={i} className="flex items-start gap-3 text-body">
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                       {item}
                     </li>
                   ))}
@@ -1221,8 +1221,8 @@ function ValueSection5_Referrals() {
                     'City, state, and country-specific agent matching',
                     'Collaboration across U.S. and international markets',
                   ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-body">
-                      <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                    <li key={i} className="flex items-start gap-3 text-body">
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                       {item}
                     </li>
                   ))}
@@ -1672,7 +1672,7 @@ function Section2() {
 
   const darkCardBg = 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)';
 
-  const goldDot = <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[6px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />;
+  const goldDot = <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />;
 
   const renderContent = (cardIndex?: number) => {
     switch (cardIndex ?? activeCard) {
