@@ -1,0 +1,301 @@
+---
+/**
+ * BuiltForFuture - "Built for Where Real Estate Is Going"
+ *
+ * Astro port of @public-site/app/components/sections/BuiltForFuture.tsx
+ * Horizontal carousel with auto-scroll + GrayscaleDataStream background.
+ * CSS-only data stream, inline <script> for carousel interactivity.
+ */
+
+import H2 from '../saa/headings/H2.astro';
+
+const BRAND_YELLOW = '#ffd700';
+const HEADLINE = "Built for Where Real Estate Is Going";
+const SUBLINE = "The future of real estate is cloud-based, global, and technology-driven. SAA & eXp are already there.";
+
+const CDN = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
+
+const FUTURE_POINTS = [
+  { image: `${CDN}/saa-future-cloud/mobile`, srcSet: `${CDN}/saa-future-cloud/mobile 375w, ${CDN}/saa-future-cloud/tablet 768w`, text: "Cloud-First Brokerage Model", imgClass: "w-full h-full object-contain", imgStyle: '', bgColor: 'rgba(17,17,17,0.5)' },
+  { image: `${CDN}/saa-future-ai-bot/mobile`, srcSet: `${CDN}/saa-future-ai-bot/mobile 375w, ${CDN}/saa-future-ai-bot/tablet 768w`, text: "AI-Powered Tools and Training", imgClass: "w-full h-full object-cover", imgStyle: 'transform: scale(1.25) translate(10px, 18px);', bgColor: 'rgba(17,17,17,0.5)' },
+  { image: `${CDN}/saa-future-mobile-first/mobile`, srcSet: `${CDN}/saa-future-mobile-first/mobile 375w, ${CDN}/saa-future-mobile-first/tablet 768w`, text: "Mobile-First Workflows", imgClass: "w-full h-full object-cover", imgStyle: 'transform: scale(0.95) translate(3px, 10px);', bgColor: 'rgba(17,17,17,0.5)' },
+  { image: `${CDN}/saa-future-borderless/mobile`, srcSet: `${CDN}/saa-future-borderless/mobile 375w, ${CDN}/saa-future-borderless/tablet 768w`, text: "Borderless Business", imgClass: "w-full h-full object-cover", imgStyle: 'transform: scale(1.15) translate(-1px, -1px);', bgColor: 'rgba(17,17,17,0.5)' },
+  { image: `${CDN}/saa-future-income-benjamins/mobile`, srcSet: `${CDN}/saa-future-income-benjamins/mobile 375w, ${CDN}/saa-future-income-benjamins/tablet 768w`, text: "Sustainable Income Beyond Sales", imgClass: "w-full h-full object-cover", imgStyle: 'transform: scale(1.35) translateX(5px);', bgColor: '#111' },
+];
+
+const BUFFER = 2;
+const totalCards = FUTURE_POINTS.length;
+
+// Build looped cards: [last 2] + [all 5] + [first 2]
+const loopedCards = [
+  ...FUTURE_POINTS.slice(-BUFFER),
+  ...FUTURE_POINTS,
+  ...FUTURE_POINTS.slice(0, BUFFER),
+];
+
+
+// Dark glass card background (matches site theme)
+const darkBackground = 'linear-gradient(180deg, rgba(30,30,30,0.98), rgba(15,15,15,0.99))';
+
+// Pre-compute all per-card styles to keep template expressions simple
+const cardData = loopedCards.map((point, index) => {
+  const isActive = index === BUFFER;
+  const distance = Math.abs(index - BUFFER);
+  const scale = Math.max(0.85, 1 - distance * 0.1);
+  const blur = isActive ? 0 : Math.min(12, distance * 5);
+  const grayscale = isActive ? 0 : 100;
+  const brightness = isActive ? 1 : 0.4;
+  const opacity = isActive ? 1 : 0.6;
+
+  return {
+    ...point,
+    index,
+    isActive,
+    cardStyle: 'width: 560px; transform: scale(' + scale + ') translateZ(0); filter: blur(' + blur + 'px) grayscale(' + grayscale + '%) brightness(' + brightness + '); opacity: ' + opacity + ';',
+    innerStyle: 'border: ' + (isActive ? '1px solid rgba(255,215,0,0.25)' : '1px solid rgba(255,255,255,0.06)') + '; box-shadow: ' + (isActive ? '0 0 30px 4px rgba(255,215,0,0.12), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)' : '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)') + ';',
+    circleStyle: 'background-color: ' + point.bgColor + '; border: ' + (isActive ? '3px solid ' + BRAND_YELLOW : '3px solid rgba(255,215,0,0.3)') + '; box-shadow: ' + (isActive ? '0 0 20px rgba(255,215,0,0.2), inset 0 0 20px rgba(0,0,0,0.2)' : 'none') + ';',
+    titleColor: '#e5e4dd',
+  };
+});
+---
+
+<style is:global>
+  .bff-track { will-change: transform; }
+  .bff-track.transitioning { transition: transform 0.5s ease-out; }
+  .bff-card {
+    will-change: transform, filter, opacity;
+    backface-visibility: hidden;
+    transition: transform 0.5s ease, filter 0.5s ease, opacity 0.5s ease;
+  }
+  .bff-card.no-transition { transition: none !important; }
+  .bff-card-inner { transition: border 0.5s ease, box-shadow 0.5s ease; }
+  .bff-card.no-transition .bff-card-inner { transition: none !important; }
+  .bff-img-circle { transition: all 0.5s ease; }
+  .bff-card.no-transition .bff-img-circle { transition: none !important; }
+  .bff-card-title { transition: color 0.5s ease; }
+  .bff-card.no-transition .bff-card-title { transition: none !important; }
+  .bff-progress-fill { transition: width 0.5s ease; }
+</style>
+
+<section data-bff-section class="relative pt-[calc(6rem+25px)] pb-24">
+  {/* Content */}
+  <div class="relative" style="z-index: 1;">
+    {/* Header */}
+    <div class="text-center mb-5 px-6">
+      <H2>{HEADLINE}</H2>
+    </div>
+    <p class="text-body opacity-70 mb-10 text-center max-w-2xl mx-auto px-6">
+      {SUBLINE}
+    </p>
+
+    {/* Carousel container with portal edges */}
+    <div class="relative cursor-pointer" data-bff-carousel>
+      {/* Inner container */}
+      <div class="relative" style="margin-left: 12px; margin-right: 12px; overflow-x: clip; overflow-y: visible;">
+        <div class="py-12">
+          <div class="bff-track flex transitioning" data-bff-track style="gap: 24px;">
+            {cardData.map((card) => (
+              <div
+                class="bff-card flex-shrink-0"
+                data-bff-card={card.index}
+                data-active={card.isActive ? 'true' : 'false'}
+                style={card.cardStyle}
+              >
+                <div
+                  class="bff-card-inner rounded-2xl flex flex-col items-center justify-center relative overflow-hidden p-8 min-h-[380px]"
+                  style={card.innerStyle}
+                >
+                  <div class="absolute inset-0 rounded-2xl" style={`background: ${darkBackground};`}></div>
+                  <div
+                    class="bff-img-circle rounded-full flex items-center justify-center overflow-hidden relative z-10 w-[200px] h-[200px] mb-6 max-sm:w-[180px] max-sm:h-[180px]"
+                    style={card.circleStyle}
+                  >
+                    <img
+                      src={card.image}
+                      srcset={card.srcSet}
+                      sizes="200px"
+                      alt={card.text}
+                      loading="lazy"
+                      class={card.imgClass}
+                      style={card.imgStyle}
+                    />
+                  </div>
+                  <h3
+                    class="bff-card-title text-h5 font-bold text-center relative z-10"
+                    style={`color: ${card.titleColor};`}
+                  >
+                    {card.text}
+                  </h3>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Progress bar */}
+    <div class="flex justify-center px-6" style="margin-top: -6px;">
+      <div
+        class="w-80 h-3 rounded-full overflow-hidden relative"
+        style={`background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%); border: 1px solid rgba(245, 245, 240, 0.25); box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05);`}
+      >
+        <div
+          class="bff-progress-fill h-full rounded-full"
+          data-bff-progress
+          style={`width: 0%; background: linear-gradient(180deg, #ffe566 0%, ${BRAND_YELLOW} 40%, #cc9900 100%); box-shadow: 0 0 8px ${BRAND_YELLOW}, 0 0 16px ${BRAND_YELLOW}, 0 0 32px ${BRAND_YELLOW}66, inset 0 1px 2px rgba(255,255,255,0.4);`}
+        ></div>
+      </div>
+    </div>
+
+    <p class="text-center text-base font-bold text-white/60 mt-3 mb-6">
+      Click to control manually
+    </p>
+  </div>
+</section>
+
+<script>
+  // BuiltForFuture carousel - vanilla JS
+  (function () {
+    const section = document.querySelector('[data-bff-section]');
+    if (!section) return;
+
+    const carousel = section.querySelector('[data-bff-carousel]');
+    const track = section.querySelector('[data-bff-track]') as HTMLElement;
+    const cards = section.querySelectorAll('[data-bff-card]');
+    const progress = section.querySelector('[data-bff-progress]') as HTMLElement;
+    if (!carousel || !track || cards.length === 0 || !progress) return;
+
+    const TOTAL = 5;
+    const BUFFER = 2;
+    const CARD_GAP = 24;
+    let CARD_WIDTH = 560;
+    let currentCard = BUFFER;
+    let isAutoMode = true;
+    let hasStarted = false;
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    // Responsive
+    function checkMobile() {
+      const mobile = window.innerWidth < 640;
+      CARD_WIDTH = mobile ? 280 : 560;
+      // Update track gap
+      const gap = mobile ? 16 : 24;
+      track.style.gap = gap + 'px';
+      // Update card widths
+      cards.forEach(c => {
+        (c as HTMLElement).style.width = CARD_WIDTH + 'px';
+      });
+      updateCards();
+    }
+
+    function getGap() {
+      return window.innerWidth < 640 ? 16 : 24;
+    }
+
+    function updateCards() {
+      const gap = getGap();
+      // Update track position
+      track.style.transform = `translateX(calc(50vw - ${CARD_WIDTH / 2}px - 12px - ${currentCard * (CARD_WIDTH + gap)}px))`;
+
+      // Display card for progress
+      const displayCard = ((currentCard - BUFFER) % TOTAL + TOTAL) % TOTAL;
+      const prog = displayCard / (TOTAL - 1);
+      progress.style.width = `${prog * 100}%`;
+
+      // Update each card's visual state
+      cards.forEach((card, index) => {
+        const el = card as HTMLElement;
+        const isActive = index === currentCard;
+        const distance = Math.abs(index - currentCard);
+        const scale = Math.max(0.85, 1 - distance * 0.1);
+        const blur = isActive ? 0 : Math.min(12, distance * 5);
+        const grayscale = isActive ? 0 : 100;
+        const brightness = isActive ? 1 : 0.4;
+        const opacity = isActive ? 1 : 0.6;
+
+        el.style.transform = `scale(${scale}) translateZ(0)`;
+        el.style.filter = `blur(${blur}px) grayscale(${grayscale}%) brightness(${brightness})`;
+        el.style.opacity = String(opacity);
+        el.setAttribute('data-active', isActive ? 'true' : 'false');
+
+        // Inner card styles
+        const inner = el.querySelector('.bff-card-inner') as HTMLElement;
+        if (inner) {
+          inner.style.border = isActive ? '1px solid rgba(255,215,0,0.25)' : '1px solid rgba(255,255,255,0.06)';
+          inner.style.boxShadow = isActive ? '0 0 30px 4px rgba(255,215,0,0.12), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)' : '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)';
+        }
+
+        // Image circle
+        const circle = el.querySelector('.bff-img-circle') as HTMLElement;
+        if (circle) {
+          circle.style.border = isActive ? '3px solid #ffd700' : '3px solid rgba(255,215,0,0.3)';
+          circle.style.boxShadow = isActive ? '0 0 20px rgba(255,215,0,0.2), inset 0 0 20px rgba(0,0,0,0.2)' : 'none';
+        }
+      });
+    }
+
+    function disableTransitions() {
+      track.classList.remove('transitioning');
+      cards.forEach(c => c.classList.add('no-transition'));
+    }
+
+    function enableTransitions() {
+      track.classList.add('transitioning');
+      cards.forEach(c => c.classList.remove('no-transition'));
+    }
+
+    function advance() {
+      currentCard++;
+      updateCards();
+
+      // Handle seamless loop
+      if (currentCard >= BUFFER + TOTAL) {
+        setTimeout(() => {
+          disableTransitions();
+          currentCard = BUFFER;
+          updateCards();
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              enableTransitions();
+            });
+          });
+        }, 500);
+      }
+    }
+
+    function startAutoScroll() {
+      if (timer) clearInterval(timer);
+      timer = setInterval(advance, 3500);
+    }
+
+    // Click handler
+    carousel.addEventListener('click', () => {
+      if (isAutoMode) {
+        isAutoMode = false;
+        if (timer) { clearInterval(timer); timer = null; }
+      }
+      advance();
+    });
+
+    // Responsive listener
+    window.addEventListener('resize', checkMobile);
+
+    // IntersectionObserver
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.2 && !hasStarted) {
+          hasStarted = true;
+          if (isAutoMode) startAutoScroll();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    observer.observe(section);
+
+    // Initial render
+    updateCards();
+  })();
+</script>
+
