@@ -3,13 +3,10 @@
  * Homepage - Astro-native rebuild
  *
  * Architecture: Static Astro HTML for all sections where possible.
- * React islands only for interactive elements that require JS:
+ * React islands only for elements that require React specifically:
  * - Header (scroll behavior, mobile menu)
  * - Footer (interactive elements)
  * - JoinCTA button (modal trigger)
- * - WhyOnlyAtExp (auto-flip card stack)
- * - MediaLogos (RAF-driven scrolling carousel)
- * - BuiltForFuture (carousel + data stream background)
  * - WatchAndDecide (video player + progress tracking)
  *
  * Section order matches production HomepageSections.tsx:
@@ -27,14 +24,19 @@ import MeetTheFounders from '../components/sections/MeetTheFounders.astro';
 import HeaderIsland from '../islands/header';
 import FooterIsland from '../islands/footer';
 import JoinCTA from '../islands/join-cta';
-import WhyOnlyAtExpIsland from '../islands/why-only-at-exp';
-import MediaLogosIsland from '../islands/media-logos';
-import BuiltForFutureIsland from '../islands/built-for-future';
+import StarBackgroundIsland from '../islands/star-background';
+import SmoothScrollIsland from '../islands/smooth-scroll';
+import RevealMaskEffectIsland from '../islands/reveal-mask-effect';
+import ScrollIndicatorIsland from '../islands/scroll-indicator';
+import WhyOnlyAtExp from '../components/sections/WhyOnlyAtExp.astro';
+import MediaLogos from '../components/sections/MediaLogos.astro';
+import BuiltForFuture from '../components/sections/BuiltForFuture.astro';
 import WatchAndDecideIsland from '../islands/watch-and-decide';
+import SecondaryButton from '../components/saa/buttons/SecondaryButton.astro';
 
-// GlassPanel champagne styles (inlined for the WatchAndDecide wrapper)
-const champagneBg = 'linear-gradient(180deg, rgba(247,231,206,0.04) 0%, rgba(247,231,206,0.05) 50%, rgba(247,231,206,0.04) 100%)';
-const champagneShadow = '0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 0 rgba(255,255,255,0.35), inset 0 2px 4px 0 rgba(255,255,255,0.2), inset 0 8px 20px -8px rgba(247,231,206,0.3), inset 0 20px 40px -20px rgba(255,255,255,0.15), inset 0 -1px 0 0 rgba(0,0,0,0.7), inset 0 -2px 6px 0 rgba(0,0,0,0.5), inset 0 -10px 25px -8px rgba(0,0,0,0.6), inset 0 -25px 50px -20px rgba(0,0,0,0.45)';
+// GlassPanel gold styles (matching WhyOnlyAtExp panel)
+const glassBg = 'linear-gradient(180deg, rgba(255,215,0,0.03) 0%, rgba(255,215,0,0.04) 50%, rgba(255,215,0,0.03) 100%)';
+const glassShadow = '0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 0 rgba(255,255,255,0.35), inset 0 2px 4px 0 rgba(255,255,255,0.2), inset 0 8px 20px -8px rgba(255,215,0,0.25), inset 0 20px 40px -20px rgba(255,255,255,0.15), inset 0 -1px 0 0 rgba(0,0,0,0.7), inset 0 -2px 6px 0 rgba(0,0,0,0.5), inset 0 -10px 25px -8px rgba(0,0,0,0.6), inset 0 -25px 50px -20px rgba(0,0,0,0.45)';
 ---
 
 <BaseLayout
@@ -45,12 +47,22 @@ const champagneShadow = '0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25)
   <!-- Preload LCP image -->
   <link slot="head" rel="preload" as="image" href="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop" imagesrcset="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/mobile 375w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/tablet 768w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop 1280w" imagesizes="(max-width: 480px) 375px, (max-width: 768px) 768px, 1280px" />
 
+  <!-- Star background canvas - React island (fixed position, behind all content) -->
+  <StarBackgroundIsland client:only="react" />
+
+  <!-- Smooth scroll (Lenis) - desktop only, renders nothing -->
+  <SmoothScrollIsland client:idle />
+
+  <!-- Scroll indicator - bouncing chevrons bottom-right -->
+  <ScrollIndicatorIsland client:idle />
+
   <!-- Header - React island for interactive scroll behavior -->
   <HeaderIsland client:load />
 
   <main id="main-content">
-    <!-- Hero Section - static Astro HTML -->
+    <!-- Hero Section - static Astro HTML + RevealMaskEffect golden glow -->
     <HeroSection>
+      <RevealMaskEffectIsland client:idle slot="effect" />
       <JoinCTA client:idle slot="cta">JOIN THE ALLIANCE</JoinCTA>
     </HeroSection>
 
@@ -66,27 +78,27 @@ const champagneShadow = '0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25)
     <!-- WhatYouGet - static with CSS orbital rings -->
     <WhatYouGet />
 
-    <!-- WhyOnlyAtExp - React island (auto-flip card stack) -->
-    <WhyOnlyAtExpIsland client:visible />
+    <!-- WhyOnlyAtExp - Astro + inline script (auto-flip card stack) -->
+    <WhyOnlyAtExp />
 
-    <!-- MediaLogos - React island (RAF scrolling carousel) -->
-    <MediaLogosIsland client:visible />
+    <!-- MediaLogos - static Astro (CSS-only scrolling carousel) -->
+    <MediaLogos />
 
     <!-- MeetTheFounders - static -->
     <MeetTheFounders variant="compact" />
 
-    <!-- BuiltForFuture - React island (carousel + data stream) -->
-    <BuiltForFutureIsland client:visible />
+    <!-- BuiltForFuture - Astro + inline script (carousel + CSS data stream) -->
+    <BuiltForFuture />
 
-    <!-- WatchAndDecide - wrapped in GlassPanel champagne -->
+    <!-- WatchAndDecide - wrapped in gold-tinted glass panel -->
     <div
       class="relative overflow-hidden rounded-3xl"
-      style={`background: ${champagneBg}; box-shadow: ${champagneShadow};`}
+      style={`background: ${glassBg}; box-shadow: ${glassShadow};`}
     >
-      <!-- Dots texture -->
+      <!-- Crosshatch texture -->
       <div
         class="absolute inset-0 pointer-events-none z-[1] rounded-3xl"
-        style="background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px); background-size: 8px 8px;"
+        style="background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.08) 0px, transparent 1px, transparent 6px), repeating-linear-gradient(-45deg, rgba(255,255,255,0.08) 0px, transparent 1px, transparent 6px); background-size: 16px 16px;"
       ></div>
       <div class="relative z-10">
         <WatchAndDecideIsland client:visible />
@@ -98,13 +110,7 @@ const champagneShadow = '0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25)
       <p class="text-body mx-auto mb-8" style="max-width: 700px;">
         If you want to understand exactly how sponsorship works, what you keep, and what you never give up, see how Smart Agent Alliance fits inside eXp Realty.
       </p>
-      <a
-        href="/exp-realty-sponsor/"
-        class="inline-flex items-center justify-center relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-l before:from-white/15 before:to-transparent before:w-1/2 before:skew-x-[45deg]"
-        style="color: var(--text-color-secondaryButton, var(--text-color-button, var(--color-headingText))); font-size: var(--font-size-secondaryButton, var(--font-size-button, 20px)); font-family: var(--font-family-secondaryButton, var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif)); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; height: clamp(35px, calc(33.182px + 0.7273vw), 55px); padding-left: 1.25rem; padding-right: 1.25rem; padding-top: 0.5rem; padding-bottom: 0.5rem; background-color: rgb(45,45,45); border-radius: 0.75rem; box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5); white-space: nowrap;"
-      >
-        See SAA&apos;s Full Value Stack
-      </a>
+      <SecondaryButton href="/exp-realty-sponsor/">See SAA's Full Value Stack</SecondaryButton>
     </section>
   </main>
 
