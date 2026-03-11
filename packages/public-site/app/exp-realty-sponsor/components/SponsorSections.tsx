@@ -72,7 +72,7 @@ function SponsorshipContent() {
         {SPONSORSHIP_BULLETS.map((b, i) => (
           <li key={i} className="flex items-start gap-2.5 text-body" style={{ color: '#dcdbd5' }}>
             <span
-              className="mt-[7px] flex-shrink-0 w-2 h-2 rounded-full"
+              className="mt-[9px] flex-shrink-0 w-2 h-2 rounded-full"
               style={{
                 background: 'rgba(0,191,255,0.5)',
                 boxShadow: '0 0 6px rgba(0,191,255,0.3)',
@@ -329,7 +329,7 @@ function ValueSection1_Launch() {
                     '1-on-1 strategy session',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-body">
-                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[9px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                       {item}
                     </li>
                   ))}
@@ -475,7 +475,7 @@ function ValueSection2_Marketing() {
                     'Performance analytics dashboard',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-body">
-                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[9px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                       {item}
                     </li>
                   ))}
@@ -831,7 +831,7 @@ function ValueSection6_Leadership() {
                 </p>
                 <ul className="space-y-4">
                   <li className="flex items-start gap-3 text-body">
-                    <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                    <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[9px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                     <div>
                       <span>4 weekly leadership sessions</span>
                       <ul className="mt-2 space-y-1.5 pl-1">
@@ -847,7 +847,7 @@ function ValueSection6_Leadership() {
                     </div>
                   </li>
                   <li className="flex items-start gap-3 text-body">
-                    <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                    <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[9px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                     In-person meetups at major eXp events that deepen trust and collaboration
                   </li>
                 </ul>
@@ -1054,7 +1054,7 @@ function ValueSection4_Attraction() {
                     'Leadership hosted calls for your prospects',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-body">
-                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[9px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                       {item}
                     </li>
                   ))}
@@ -1222,7 +1222,7 @@ function ValueSection5_Referrals() {
                     'Collaboration across U.S. and international markets',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-body">
-                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
+                      <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[9px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />
                       {item}
                     </li>
                   ))}
@@ -1672,7 +1672,7 @@ function Section2() {
 
   const darkCardBg = 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)';
 
-  const goldDot = <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[7px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />;
+  const goldDot = <span className="flex-shrink-0 w-2 h-2 rounded-full mt-[9px]" style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.3)' }} />;
 
   const renderContent = (cardIndex?: number) => {
     switch (cardIndex ?? activeCard) {
@@ -3347,7 +3347,7 @@ function Section6Final() {
               {BOTTOM_LINE_BULLETS.map((bullet, i) => (
                 <li key={i} className="flex items-start gap-2.5 text-body">
                   <span
-                    className="mt-[7px] flex-shrink-0 w-2 h-2 rounded-full"
+                    className="mt-[9px] flex-shrink-0 w-2 h-2 rounded-full"
                     style={{ background: '#ffd700', boxShadow: '0 0 6px rgba(255,215,0,0.4)' }}
                   />
                   <span>{bullet}</span>
