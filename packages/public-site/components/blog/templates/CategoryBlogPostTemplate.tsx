@@ -118,6 +118,12 @@ function BlogContentRenderer({ html }: { html: string }) {
   return <div ref={containerRef} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
+/** Posts that handle their own comparison chart in the WordPress content.
+ *  These skip the auto-inserted "At-a-Glance Comparison" section. */
+const SKIP_AUTO_COMPARISON_SLUGS = new Set([
+  'exp-realty-vs-keller-williams',
+]);
+
 export interface FAQItem {
   question: string;
   answer: string;
@@ -335,7 +341,8 @@ export function CategoryBlogPostTemplate({
                 )}
                 <div className="blog-content max-w-none">
                   {/* Comparison Chart - inline for brokerage-comparison */}
-                  {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (
+                  {/* Posts with custom comparison placement in content skip the auto-inserted chart */}
+                  {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && !SKIP_AUTO_COMPARISON_SLUGS.has(post.slug) && (
                     <div className="mb-8 mx-auto" style={{ maxWidth: 900 }} id="at-a-glance-comparison">
                       <h2 id="at-a-glance-comparison-heading" style={{ textAlign: 'center' }}>At-a-Glance Comparison</h2>
                       <CyberFrame className="!block w-full">
