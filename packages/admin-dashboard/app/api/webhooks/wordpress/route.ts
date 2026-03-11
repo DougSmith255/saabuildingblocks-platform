@@ -35,29 +35,56 @@ function generateShortTitle(title: string): string {
 
 /**
  * Generate a Pexels search query from a blog title.
+ * Uses category-specific queries and filters out brand names that confuse
+ * image search (e.g., "exp", "keller", "compass" return irrelevant photos).
  */
 function generateSearchQuery(title: string, category: string): string {
-  // Category-specific base queries
+  // Category-specific base queries - these are reliable on their own
   const categoryQueries: Record<string, string> = {
-    'About eXp Realty': 'modern office technology business',
-    'eXp Realty Sponsor': 'mentorship business meeting professional',
-    'Brokerage Comparison': 'real estate office comparison business',
-    'Marketing Mastery': 'digital marketing strategy creative',
-    'Agent Career Info': 'career success professional growth',
-    'Winning Clients': 'client handshake real estate deal',
-    'Become an Agent': 'real estate license studying professional',
+    'About eXp Realty': 'modern office technology business professional',
+    'eXp Realty Sponsor': 'mentorship business meeting professional team',
+    'Brokerage Comparison': 'real estate agent office professional modern',
+    'Marketing Mastery': 'digital marketing strategy creative workspace',
+    'Agent Career Info': 'career success professional growth office',
+    'Winning Clients': 'client handshake real estate deal closing',
+    'Become an Agent': 'real estate license studying professional desk',
     'Real Estate Schools': 'education classroom learning professional',
-    'Fun for Agents': 'team celebration success fun',
-    'Industry Trends': 'modern cityscape real estate market',
+    'Fun for Agents': 'team celebration success professional group',
+    'Industry Trends': 'modern cityscape real estate market building',
+    'Everything Real Estate': 'real estate home property professional',
   };
 
-  // Extract key nouns from title
-  const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'shall', 'how', 'what', 'why', 'when', 'where', 'who', 'which', 'that', 'this', 'these', 'those', 'your', 'you', 'we', 'our', 'their', 'its', 'about', 'need', 'know', 'every', 'new', 'best', 'top', 'most']);
-  const titleWords = title.toLowerCase().replace(/[^a-z\s]/g, '').split(/\s+/).filter(w => !stopWords.has(w) && w.length > 2);
-  const titleKeywords = titleWords.slice(0, 3).join(' ');
+  // Brand names and brokerage terms that produce bad Pexels results
+  const brandWords = new Set([
+    'exp', 'expi', 'realty', 'keller', 'williams', 'coldwell', 'banker',
+    'compass', 'century', 'remax', 'sotheby', 'sothebys', 'berkshire',
+    'hathaway', 'weichert', 'fathom', 'lpt', 'brokerage', 'brokerages',
+    'realtor', 'realtors', 'mls', 'nar', 'kvcore', 'skyslope',
+  ]);
+
+  const stopWords = new Set([
+    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+    'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'being',
+    'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could',
+    'should', 'may', 'might', 'can', 'shall', 'how', 'what', 'why', 'when',
+    'where', 'who', 'which', 'that', 'this', 'these', 'those', 'your', 'you',
+    'we', 'our', 'their', 'its', 'about', 'need', 'know', 'every', 'new',
+    'best', 'top', 'most', 'honest', 'complete', 'guide', 'comparison',
+    'review', 'agents', 'agent', 'versus', 'vs',
+  ]);
+
+  // Extract meaningful nouns (not brands, not stop words)
+  const titleWords = title.toLowerCase().replace(/[^a-z\s]/g, '').split(/\s+/)
+    .filter(w => !stopWords.has(w) && !brandWords.has(w) && w.length > 2);
+  const titleKeywords = titleWords.slice(0, 2).join(' ');
 
   const base = categoryQueries[category] || 'real estate professional business';
-  return `${titleKeywords} ${base}`.trim();
+
+  // Only prepend title keywords if they add value
+  if (titleKeywords.length > 0) {
+    return `${titleKeywords} ${base}`.trim();
+  }
+  return base;
 }
 
 /**
