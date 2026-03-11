@@ -149,12 +149,22 @@ export function WhatYouGet() {
           </p>
         </div>
 
-        {/* Cards */}
+        {/* Cards - two independent rows so row heights don't affect each other */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {CARDS.map((card) => (
+          {CARDS.slice(0, 3).map((card) => (
             <div key={card.title}>
               <IconCard icon={<card.icon className="w-6 h-6" />} theme={card.theme} className="h-full">
-                <h3 className="text-h6 mb-2" style={{ minHeight: '3em' }}>{card.title}</h3>
+                <h3 className="text-h6 mb-2 flex items-center justify-center" style={{ minHeight: '2.4em' }}>{card.title}</h3>
+                <p className="text-body" style={{ fontSize: 'clamp(14px, calc(13.5px + 0.2vw), 18px)' }}>{card.text}</p>
+              </IconCard>
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
+          {CARDS.slice(3).map((card) => (
+            <div key={card.title}>
+              <IconCard icon={<card.icon className="w-6 h-6" />} theme={card.theme} className="h-full">
+                <h3 className="text-h6 mb-2 flex items-center justify-center" style={{ minHeight: '2.4em' }}>{card.title}</h3>
                 <p className="text-body" style={{ fontSize: 'clamp(14px, calc(13.5px + 0.2vw), 18px)' }}>{card.text}</p>
               </IconCard>
             </div>
