@@ -33,6 +33,7 @@ import {
   Mail,
   Bell,
   Wrench,
+  Share2,
   ChevronDown,
   ChevronRight,
 } from 'lucide-react';
@@ -67,6 +68,7 @@ const CATEGORY_CONFIG: Record<string, { icon: typeof Clock; label: string; order
   'Email': { icon: Mail, label: 'Email System', order: 7 },
   'Notification Automations': { icon: Bell, label: 'Notification Automations', order: 8 },
   'Build Pipelines': { icon: Wrench, label: 'Build Pipelines', order: 9 },
+  'Social Media': { icon: Share2, label: 'Social Media', order: 10 },
 };
 
 function formatRelativeTime(isoString: string): string {

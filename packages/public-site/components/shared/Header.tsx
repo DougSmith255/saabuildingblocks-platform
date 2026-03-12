@@ -840,6 +840,19 @@ export default function Header() {
             max-width: 113px !important;
             max-height: 41px !important;
           }
+          /* Pre-set compact logo size to prevent CLS when JS hydrates */
+          .logo-container.logo-css-default {
+            width: 40px !important;
+            height: 40px !important;
+            max-width: 40px !important;
+            max-height: 40px !important;
+          }
+          .logo-container.logo-css-default .logo-svg-default {
+            display: none !important;
+          }
+          .logo-container.logo-css-default .logo-img-default {
+            display: block !important;
+          }
           .hamburger {
             width: 59px !important;
             height: 59px !important;
@@ -864,6 +877,19 @@ export default function Header() {
             height: 33px !important;
             max-width: 90px !important;
             max-height: 33px !important;
+          }
+          /* Pre-set compact logo size on mobile to prevent CLS when JS hydrates */
+          .logo-container.logo-css-default {
+            width: 40px !important;
+            height: 40px !important;
+            max-width: 40px !important;
+            max-height: 40px !important;
+          }
+          .logo-container.logo-css-default .logo-svg-default {
+            display: none !important;
+          }
+          .logo-container.logo-css-default .logo-img-default {
+            display: block !important;
           }
           .hamburger {
             width: 53px !important;

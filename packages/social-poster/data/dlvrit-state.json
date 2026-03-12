@@ -1,0 +1,39 @@
+{
+  "lastScheduledDate": "2026-04-23T20:00:00.000Z",
+  "lastRunDate": "2026-03-09T21:43:03.527Z",
+  "totalQueued": 278,
+  "platforms": {
+    "linkedin-saa": {
+      "higherIdx": 15,
+      "lowerIdx": 30
+    },
+    "linkedin-doug": {
+      "higherIdx": 15,
+      "lowerIdx": 30
+    },
+    "linkedin-karrie": {
+      "higherIdx": 7,
+      "lowerIdx": 13
+    },
+    "facebook": {
+      "higherIdx": 15,
+      "lowerIdx": 30
+    },
+    "instagram": {
+      "higherIdx": 15,
+      "lowerIdx": 30
+    },
+    "threads": {
+      "higherIdx": 15,
+      "lowerIdx": 30
+    },
+    "tiktok": {
+      "higherIdx": 7,
+      "lowerIdx": 12
+    },
+    "reddit": {
+      "higherIdx": 7,
+      "lowerIdx": 7
+    }
+  }
+}

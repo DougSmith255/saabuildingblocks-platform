@@ -11,6 +11,8 @@ interface ColorSelectorProps {
 
 const COLOR_LABELS: Record<ColorName, string> = {
   accentGreen: 'Accent Green',
+  accentPurple: 'Accent Purple',
+  accentBlue: 'Accent Blue',
   brandGold: 'Brand Gold',
   headingText: 'Heading Text',
   bodyText: 'Body Text',
@@ -23,6 +25,8 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({ value, onChange })
 
   const colorEntries: Array<[ColorName, string]> = [
     ['accentGreen', brandColors.accentGreen],
+    ['accentPurple', brandColors.accentPurple],
+    ['accentBlue', brandColors.accentBlue],
     ['brandGold', brandColors.brandGold],
     ['headingText', brandColors.headingText],
     ['bodyText', brandColors.bodyText],

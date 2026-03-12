@@ -38,6 +38,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Block redirects for paths that exist in the sitemap
+    try {
+      const sitemapRes = await fetch('https://smartagentalliance.com/sitemap-0.xml');
+      if (sitemapRes.ok) {
+        const sitemapXml = await sitemapRes.text();
+        const normalizedPath = path.replace(/\/$/, '');
+        // Check both /path and /path/ variants in the sitemap
+        if (sitemapXml.includes(`/${normalizedPath.replace(/^\//, '')}`) ||
+            sitemapXml.includes(`/${normalizedPath.replace(/^\//, '')}/`)) {
+          return NextResponse.json(
+            { error: `Blocked: "${path}" exists in the sitemap as a live page. Redirecting a live URL would break the site.` },
+            { status: 409 }
+          );
+        }
+      }
+    } catch {
+      // If sitemap check fails, log but allow the redirect (fail open)
+      console.warn('[deploy-redirect] Sitemap validation check failed, proceeding anyway');
+    }
+
     // Write to Cloudflare KV via REST API
     const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
     const namespaceId = process.env.REDIRECT_OVERRIDES_KV_NAMESPACE_ID;

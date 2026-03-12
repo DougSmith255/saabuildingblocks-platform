@@ -11,6 +11,8 @@ interface BrandColorsStore {
 
 const defaultSettings: BrandColorsSettings = {
   accentGreen: '#00ff88',     // Bright green for links/accents
+  accentPurple: '#9933ff',    // Neon purple accent - monotony breaker
+  accentBlue: '#00bfff',      // Neon cyan accent - monotony breaker
   green: '#00ff88',           // Green color (same as accentGreen)
   headingText: '#ffd700',     // Gold for headings (matches brandGold)
   bodyText: '#dcdbd5',        // Slightly darker off-white for body

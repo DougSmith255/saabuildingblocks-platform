@@ -55,6 +55,8 @@ export interface TypographySettings {
  */
 export type ColorName =
   | 'accentGreen'
+  | 'accentPurple'
+  | 'accentBlue'
   | 'headingText'
   | 'bodyText'
   | 'brandGold'
@@ -86,6 +88,8 @@ export type TextType =
  */
 export interface BrandColorsSettings {
   accentGreen: string;
+  accentPurple: string;
+  accentBlue: string;
   headingText: string;
   bodyText: string;
   brandGold: string;

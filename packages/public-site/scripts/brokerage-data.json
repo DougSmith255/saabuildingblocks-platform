@@ -9,7 +9,7 @@
       "productionCap": "$16,000",
       "monthlyFees": "$85",
       "transactionFees": "$25 pre-cap; $250 post-cap (20 max), then $75",
-      "eoInsurance": "$40/txn ($500 cap)",
+      "eoInsurance": "$60/txn ($750 cap)",
       "training": "50+ live/week + University",
       "support247": "Yes",
       "sponsorValue": "Yes",

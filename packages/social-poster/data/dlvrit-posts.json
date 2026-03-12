@@ -1,0 +1,540 @@
+{
+  "higher_priority": [
+    {
+      "slug": "program-basics",
+      "title": "How the eXp Realty Sponsor Program Is Structured",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/program-basics",
+      "id": 3887
+    },
+    {
+      "slug": "sponsor-cosponsor",
+      "title": "What Is an eXp Sponsor and Co-Sponsor?",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/sponsor-cosponsor",
+      "id": 3888
+    },
+    {
+      "slug": "sponsor-role",
+      "title": "What Do eXp Sponsors Actually Do for You?",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/sponsor-role",
+      "id": 3886
+    },
+    {
+      "slug": "need-sponsor",
+      "title": "Do You Need a Primary Sponsor at eXp Realty?",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/need-sponsor",
+      "id": 3885
+    },
+    {
+      "slug": "need-cosponsor",
+      "title": "Do You Need a Co-Sponsor at eXp Realty?",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/need-cosponsor",
+      "id": 3884
+    },
+    {
+      "slug": "change-sponsor",
+      "title": "Can You Change Your Sponsor at eXp Realty?",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/change-sponsor",
+      "id": 3883
+    },
+    {
+      "slug": "sponsor-vs-team",
+      "title": "Difference between an eXp Sponsor and a Real Estate Team",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/sponsor-vs-team",
+      "id": 3882
+    },
+    {
+      "slug": "sponsor-vs-mentor",
+      "title": "What\u2019s the Difference Between an eXp Sponsor and Mentor?",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/sponsor-vs-mentor",
+      "id": 3880
+    },
+    {
+      "slug": "for-team-leaders",
+      "title": "What Does Sponsorship Mean for Team Leaders at eXp?",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/for-team-leaders",
+      "id": 3881
+    },
+    {
+      "slug": "co-sponsorship",
+      "title": "How eXp Co-Sponsorship Actually Works",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/co-sponsorship",
+      "id": 3918
+    },
+    {
+      "slug": "basics",
+      "title": "eXp Realty Sponsorship: How the Program Works and How to Evaluate Fit",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/basics",
+      "id": 8173
+    },
+    {
+      "slug": "wrong-sponsor",
+      "title": "How Choosing the Wrong eXp Sponsor Affects Agents Over Time",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/wrong-sponsor",
+      "id": 8520
+    },
+    {
+      "slug": "red-flags",
+      "title": "What Are Red Flags When Choosing an eXp Sponsor?",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/red-flags",
+      "id": 8526
+    },
+    {
+      "slug": "good-vs-popular",
+      "title": "Good vs Popular eXp Sponsors: How to Tell the Difference",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/good-vs-popular",
+      "id": 8532
+    },
+    {
+      "slug": "questions-to-ask",
+      "title": "Questions to Ask an eXp Sponsor Before You Choose",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/questions-to-ask",
+      "id": 8539
+    },
+    {
+      "slug": "what-they-provide",
+      "title": "What Do eXp Sponsors Provide and Not Provide?",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/what-they-provide",
+      "id": 8548
+    },
+    {
+      "slug": "big-vs-small-team",
+      "title": "Choosing Between Big and Small eXp Sponsor Teams",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/big-vs-small-team",
+      "id": 8554
+    },
+    {
+      "slug": "cosponsor-mistakes",
+      "title": "eXp Co-Sponsor Mistakes and Alignment Clarity",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/cosponsor-mistakes",
+      "id": 8560
+    },
+    {
+      "slug": "choice",
+      "title": "eXp Realty Sponsor Choice: How to Decide Carefully",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/choice",
+      "id": 8309
+    },
+    {
+      "slug": "find-yours",
+      "title": "How to Find and Choose the Best eXp Sponsors",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/find-yours",
+      "id": 3676
+    },
+    {
+      "slug": "sponsor-regrets",
+      "title": "eXp Sponsor Regrets: What Agents Realize Too Late",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/sponsor-regrets",
+      "id": 3919
+    }
+  ],
+  "lower_priority": [
+    {
+      "slug": "revenos-leads",
+      "title": "Real Estate Agent Leads at eXp Realty Explained",
+      "url": "https://smartagentalliance.com/about-exp-realty/revenos-leads",
+      "id": 8054
+    },
+    {
+      "slug": "zoocasa",
+      "title": "How Zoocasa Leads for Agents Operate at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/zoocasa",
+      "id": 3636
+    },
+    {
+      "slug": "making-it-rain",
+      "title": "How Making It Rain Leads Work at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/making-it-rain",
+      "id": 3652
+    },
+    {
+      "slug": "express-offers",
+      "title": "How Cash Offers for Homes Operate Within eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/express-offers",
+      "id": 3783
+    },
+    {
+      "slug": "my-link-my-lead",
+      "title": "How My Link My Lead Functions at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/my-link-my-lead",
+      "id": 8051
+    },
+    {
+      "slug": "boldtrail-leads",
+      "title": "How BoldTrail Lead Systems Work at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/boldtrail-leads",
+      "id": 3635
+    },
+    {
+      "slug": "new-agent-leads",
+      "title": "How New Agent Lead Programs Work at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/new-agent-leads",
+      "id": 3904
+    },
+    {
+      "slug": "renting-vs-owning-leads",
+      "title": "Should Realtors Buy Leads: Rent Leads or Own Their Pipeline",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/renting-vs-owning-leads",
+      "id": 8052
+    },
+    {
+      "slug": "leads",
+      "title": "eXp Realty Leads: Quality Leads Provided to Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/leads",
+      "id": 3736
+    },
+    {
+      "slug": "faqs",
+      "title": "What eXp Realty Is and How the Brokerage Works \u2013 FAQs",
+      "url": "https://smartagentalliance.com/about-exp-realty/faqs",
+      "id": 3690
+    },
+    {
+      "slug": "exp-commercial",
+      "title": "eXp Commercial Division Structure Explained",
+      "url": "https://smartagentalliance.com/about-exp-realty/exp-commercial",
+      "id": 3663
+    },
+    {
+      "slug": "luxury",
+      "title": "How the eXp Luxury Division Is Structured for Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/luxury",
+      "id": 3843
+    },
+    {
+      "slug": "land-ranch",
+      "title": "Land and Ranch Division: What Agents Need to Know",
+      "url": "https://smartagentalliance.com/about-exp-realty/land-ranch",
+      "id": 3892
+    },
+    {
+      "slug": "sports-and-entertainment",
+      "title": "How the eXp Sports and Entertainment Division Works",
+      "url": "https://smartagentalliance.com/about-exp-realty/sports-and-entertainment",
+      "id": 8074
+    },
+    {
+      "slug": "referral-division",
+      "title": "How the eXp Referral Division Is Structured",
+      "url": "https://smartagentalliance.com/about-exp-realty/referral-division",
+      "id": 3751
+    },
+    {
+      "slug": "new-homes",
+      "title": "eXp New Homes Division: What eXp Agents Need to Know",
+      "url": "https://smartagentalliance.com/blog/smartagentalliancecom/new-homes",
+      "id": 9967
+    },
+    {
+      "slug": "divisions",
+      "title": "Everything You Need to Know About eXp Realty Divisions",
+      "url": "https://smartagentalliance.com/about-exp-realty/divisions",
+      "id": 8048
+    },
+    {
+      "slug": "agent-help",
+      "title": "Understanding eXp Realty Agent Help and Support",
+      "url": "https://smartagentalliance.com/about-exp-realty/agent-help",
+      "id": 8073
+    },
+    {
+      "slug": "exp-employees",
+      "title": "How eXp Realty Employees Support Agents in Real Time",
+      "url": "https://smartagentalliance.com/about-exp-realty/exp-employees",
+      "id": 3664
+    },
+    {
+      "slug": "training",
+      "title": "Real Estate Agent Training at eXp Realty, Explained",
+      "url": "https://smartagentalliance.com/about-exp-realty/training",
+      "id": 3694
+    },
+    {
+      "slug": "innovation",
+      "title": "How eXp Realty Agent Resources Are Structured",
+      "url": "https://smartagentalliance.com/about-exp-realty/innovation",
+      "id": 3649
+    },
+    {
+      "slug": "onboarding",
+      "title": "How the eXp Onboarding Process Is Structured",
+      "url": "https://smartagentalliance.com/about-exp-realty/onboarding",
+      "id": 3912
+    },
+    {
+      "slug": "mentor-program",
+      "title": "What Is the eXp Mentor Program?",
+      "url": "https://smartagentalliance.com/about-exp-realty/mentor-program",
+      "id": 3670
+    },
+    {
+      "slug": "onboarding-exceptions",
+      "title": "What eXp Onboarding Exceptions Are Available for Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/onboarding-exceptions",
+      "id": 8072
+    },
+    {
+      "slug": "agent-exceptions",
+      "title": "How eXp Realty Agent Exceptions May Help After Agents Join",
+      "url": "https://smartagentalliance.com/about-exp-realty/agent-exceptions",
+      "id": 8070
+    },
+    {
+      "slug": "support",
+      "title": "The Complete Guide To eXp Realty Agent Support",
+      "url": "https://smartagentalliance.com/about-exp-realty/support",
+      "id": 8043
+    },
+    {
+      "slug": "collaborate",
+      "title": "How Collaboration Works for Agents Within eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/collaborate",
+      "id": 3660
+    },
+    {
+      "slug": "events",
+      "title": "How eXp Events and Networking Are Structured",
+      "url": "https://smartagentalliance.com/about-exp-realty/events",
+      "id": 3645
+    },
+    {
+      "slug": "community",
+      "title": "How Collaboration, Events, and Global Connection Actually Work",
+      "url": "https://smartagentalliance.com/about-exp-realty/community",
+      "id": 8053
+    },
+    {
+      "slug": "commission",
+      "title": "How the eXp Commission Split for Agents Is Structured",
+      "url": "https://smartagentalliance.com/about-exp-realty/commission",
+      "id": 3715
+    },
+    {
+      "slug": "100-percent",
+      "title": "Comparing 100 Percent Commission and eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/100-percent",
+      "id": 3667
+    },
+    {
+      "slug": "icon-agent",
+      "title": "How eXp ICON Status Qualification Works for Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/icon-agent",
+      "id": 3684
+    },
+    {
+      "slug": "stock-awards",
+      "title": "How eXp Realty Stock Awards for Agents Are Structured",
+      "url": "https://smartagentalliance.com/about-exp-realty/stock-awards",
+      "id": 3704
+    },
+    {
+      "slug": "fees",
+      "title": "eXp Realty Fees Explained for Real Estate Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/fees",
+      "id": 3714
+    },
+    {
+      "slug": "e-and-o",
+      "title": "How Errors and Omissions Insurance Works at eXp",
+      "url": "https://smartagentalliance.com/about-exp-realty/e-and-o",
+      "id": 3665
+    },
+    {
+      "slug": "brokerage-fee",
+      "title": "What the eXp Realty $85 Agent Brokerage Fee Covers",
+      "url": "https://smartagentalliance.com/about-exp-realty/brokerage-fee",
+      "id": 3669
+    },
+    {
+      "slug": "wealth-building",
+      "title": "How Wealth Building Is Structured at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/wealth-building",
+      "id": 3899
+    },
+    {
+      "slug": "pyramid-scheme",
+      "title": "Why eXp Realty Agent Recruiting Is Not a Pyramid Scheme",
+      "url": "https://smartagentalliance.com/exp-realty-sponsor/pyramid-scheme",
+      "id": 3871
+    },
+    {
+      "slug": "income",
+      "title": "How Income Actually Works at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/income",
+      "id": 8041
+    },
+    {
+      "slug": "crm-choice",
+      "title": "How CRM of Choice Options Work at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/crm-choice",
+      "id": 3893
+    },
+    {
+      "slug": "boldtrail",
+      "title": "How BoldTrail CRM Functions for Agents at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/boldtrail",
+      "id": 3661
+    },
+    {
+      "slug": "agent-website",
+      "title": "IDX Websites for Realtors: How They Function at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/agent-website",
+      "id": 3659
+    },
+    {
+      "slug": "exp-world",
+      "title": "Understanding How eXp World Functions as a Virtual Office",
+      "url": "https://smartagentalliance.com/about-exp-realty/exp-world",
+      "id": 3842
+    },
+    {
+      "slug": "skyslope",
+      "title": "How SkySlope Works at eXp Realty for Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/skyslope",
+      "id": 3679
+    },
+    {
+      "slug": "listings",
+      "title": "How the eXp Homes Platform Is Structured",
+      "url": "https://smartagentalliance.com/about-exp-realty/listings",
+      "id": 3648
+    },
+    {
+      "slug": "referral-form",
+      "title": "How the Referral Agent Transaction Works at eXp",
+      "url": "https://smartagentalliance.com/about-exp-realty/referral-form",
+      "id": 8045
+    },
+    {
+      "slug": "canva-pro",
+      "title": "How Canva Pro Access Works at eXp Realty for Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/canva-pro",
+      "id": 3653
+    },
+    {
+      "slug": "sisu",
+      "title": "How Sisu Agent Self-Tracking Operates Within eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/sisu",
+      "id": 3656
+    },
+    {
+      "slug": "fyxer",
+      "title": "How Fyxer AI Integrates With eXp Realty for Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/fyxer",
+      "id": 3890
+    },
+    {
+      "slug": "my-exp",
+      "title": "How the My eXp App Supports Agents at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/my-exp",
+      "id": 3650
+    },
+    {
+      "slug": "exp-hub",
+      "title": "How eXp Hub Is Structured for Collaboration and Support",
+      "url": "https://smartagentalliance.com/about-exp-realty/exp-hub",
+      "id": 8071
+    },
+    {
+      "slug": "slack",
+      "title": "How Slack Communication Functions at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/slack",
+      "id": 3889
+    },
+    {
+      "slug": "technology",
+      "title": "eXp Realty Technology: How It Works Behind the Scenes",
+      "url": "https://smartagentalliance.com/about-exp-realty/technology",
+      "id": 8040
+    },
+    {
+      "slug": "lawyer-to-realtor",
+      "title": "From Attorney to Agent: Why I Chose an eXp Realty Career",
+      "url": "https://smartagentalliance.com/about-exp-realty/lawyer-to-realtor",
+      "id": 3857
+    },
+    {
+      "slug": "teams-2026-structure",
+      "title": "eXp Realty Teams 2026 Structure Explained",
+      "url": "https://smartagentalliance.com/about-exp-realty/teams-2026-structure",
+      "id": 8618
+    },
+    {
+      "slug": "brokerages-to-exp",
+      "title": "Why Independent Brokerages Transition to eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/brokerages-to-exp",
+      "id": 3844
+    },
+    {
+      "slug": "vs-traditional",
+      "title": "Comparing eXp Realty and Traditional Brokerages for Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/vs-traditional",
+      "id": 3901
+    },
+    {
+      "slug": "experienced-agents-join-exp",
+      "title": "Why Experienced Agents Evaluate eXp Realty for Fit",
+      "url": "https://smartagentalliance.com/about-exp-realty/experienced-agents-join-exp",
+      "id": 3902
+    },
+    {
+      "slug": "joining-fears",
+      "title": "How Experienced Agents Evaluate Joining eXp",
+      "url": "https://smartagentalliance.com/about-exp-realty/joining-fears",
+      "id": 3900
+    },
+    {
+      "slug": "vs-traditional-new-agents",
+      "title": "Comparing eXp Realty and Traditional Models for New Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/vs-traditional-new-agents",
+      "id": 3905
+    },
+    {
+      "slug": "new-agent-guide",
+      "title": "How New Agents Launch Careers at eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/new-agent-guide",
+      "id": 3898
+    },
+    {
+      "slug": "new-agents",
+      "title": "Is eXp Realty a Good Fit for Brand New Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/new-agents",
+      "id": 3867
+    },
+    {
+      "slug": "fit",
+      "title": "Who eXp Realty Is (and Is Not) a Good Fit For",
+      "url": "https://smartagentalliance.com/about-exp-realty/fit",
+      "id": 8047
+    },
+    {
+      "slug": "offices",
+      "title": "How eXp Realty Office Access and Locations Work",
+      "url": "https://smartagentalliance.com/about-exp-realty/offices",
+      "id": 8046
+    },
+    {
+      "slug": "healthcare",
+      "title": "How eXp Healthcare Coverage Is Structured for Agents",
+      "url": "https://smartagentalliance.com/about-exp-realty/healthcare",
+      "id": 3841
+    },
+    {
+      "slug": "success-lending",
+      "title": "How Success Lending Mortgage Operates Within eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/success-lending",
+      "id": 8049
+    },
+    {
+      "slug": "curbio",
+      "title": "How Curbio Renovation Services Operate Within eXp Realty",
+      "url": "https://smartagentalliance.com/about-exp-realty/curbio",
+      "id": 3681
+    },
+    {
+      "slug": "solutions",
+      "title": "How eXp Solutions Helps Agents Work Smarter, Not Harder",
+      "url": "https://smartagentalliance.com/about-exp-realty/solutions",
+      "id": 3647
+    }
+  ]
+}

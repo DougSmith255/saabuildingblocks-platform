@@ -3,6 +3,7 @@ import { CategoryBlogPostTemplate, generateBreadcrumbSchema } from '@/components
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
 import '../../styles/blog.css';
 import { extractFAQs, generateFAQSchema, stripFAQSection } from '@/lib/faq-utils';
+import { extractTables, generateTableSchemas } from '@/lib/table-utils';
 import { getCachedBlogPosts, findPostBySlug, getRelatedPosts } from '@/lib/blog-post-page';
 import { buildBlogPostingSchema, buildVideoSchema } from '@/lib/blog-schema';
 import { getPostUrl } from '@/lib/blog-post-urls';
@@ -92,6 +93,8 @@ export default async function AboutExpRealtyPostPage({
 
   const faqs = extractFAQs(post.content);
   const faqSchema = generateFAQSchema(faqs);
+  const tables = extractTables(post.content);
+  const tableSchemas = generateTableSchemas(tables, post.title);
   const strippedContent = faqs.length > 0 ? stripFAQSection(post.content) : post.content;
   const postForTemplate = { ...post, content: strippedContent };
 
@@ -125,6 +128,13 @@ export default async function AboutExpRealtyPostPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
       )}
+      {tableSchemas?.map((schema, i) => (
+        <script
+          key={`table-schema-${i}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
       <CategoryBlogPostTemplate post={postForTemplate} category={category} relatedPosts={relatedPosts} faqs={faqs} />
     </main>
   );

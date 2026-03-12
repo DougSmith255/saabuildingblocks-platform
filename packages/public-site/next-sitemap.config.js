@@ -82,12 +82,6 @@ const staticPageImages = {
     `${CF_BASE}/d402a3b65b35bc37-Buyer-WebP.webp/public`,
     `${CF_BASE}/c3cc2ab729e003c9-Tour-notes-WebP.webp/public`,
   ],
-  '/doug-linktree': [
-    `${CF_BASE}/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public`,
-  ],
-  '/karrie-linktree': [
-    `${CF_BASE}/4e2a3c105e488654-Karrie-Profile-Picture.png/public`,
-  ],
   '/about-exp-realty': [
     `${CF_BASE}/exp-x-logo-icon/public`,
   ],

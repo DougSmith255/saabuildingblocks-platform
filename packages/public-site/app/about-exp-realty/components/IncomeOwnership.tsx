@@ -2,444 +2,434 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds';
-import { GenericCard } from '@saa/shared/components/saa/cards';
 import { H2 } from '@saa/shared/components/saa/headings';
-import { DollarSign, Award, TrendingUp, Receipt } from 'lucide-react';
 import { useScrambleCounter } from './hooks';
 
-const PURPLE_3D_SHADOW = '-1px -1px 0 #c9a0ff, 1px 1px 0 #8a5db8, 2px 2px 0 #6a4d98, 3px 3px 0 #4a3d78, 4px 4px 0 #2d2a4d, 5px 5px 4px rgba(0,0,0,0.5)';
+/* ═══ Sankey Flow Diagram (top strip) ═══ */
 
-const INCOME_STREAMS = [
-  {
-    icon: DollarSign,
-    title: 'Commission',
-    description: '80/20 split until a $16,000 annual cap, then 100% commission',
-  },
-  {
-    icon: Award,
-    title: 'ICON Program',
-    description: 'Cap returned in company stock for qualifying agents',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Stock Ownership',
-    description: 'Production awards plus discounted stock purchase option',
-  },
-];
-
-const FEES_CARD = {
-  icon: Receipt,
-  title: 'eXp Fees',
-  description: '$85 monthly flat fee, no desk, franchise, or royalty fees',
-};
-
-const REVENUE_SHARE = {
-  tierCount: 7,
-  description: 'Seven-tier program paid from company revenue, optional and inheritable',
-};
-
-const RING_COUNT = 7;
-const RING_BASE_PCT = 22;
-const RING_MAX_PCT = 95;
-const RING_STEP_PCT = (RING_MAX_PCT - RING_BASE_PCT) / (RING_COUNT - 1);
-
-function RisingParticles() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const COUNT = 25;
-
-    interface Particle {
-      x: number;
-      y: number;
-      r: number;
-      speed: number;
-      drift: number;
-      opacity: number;
-    }
-
-    let particles: Particle[] = [];
-    let rafId: number;
-
-    const init = () => {
-      particles = Array.from({ length: COUNT }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: 1.5 + Math.random() * 1.5,
-        speed: 0.3 + Math.random() * 0.5,
-        drift: (Math.random() - 0.5) * 0.4,
-        opacity: 0.1 + Math.random() * 0.25,
-      }));
-    };
-
-    const resize = () => {
-      const rect = canvas.parentElement?.getBoundingClientRect();
-      if (!rect) return;
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-      if (particles.length === 0) init();
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (const p of particles) {
-        p.y -= p.speed;
-        p.x += p.drift;
-        if (p.y < -p.r) {
-          p.y = canvas.height + p.r;
-          p.x = Math.random() * canvas.width;
-        }
-        if (p.x < -p.r) p.x = canvas.width + p.r;
-        if (p.x > canvas.width + p.r) p.x = -p.r;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(160,80,255,${p.opacity})`;
-        ctx.fill();
-      }
-      rafId = requestAnimationFrame(draw);
-    };
-
-    resize();
-    rafId = requestAnimationFrame(draw);
-
-    const ro = new ResizeObserver(resize);
-    ro.observe(canvas.parentElement!);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      ro.disconnect();
-    };
-  }, []);
-
+function SankeyFlow({ visible }: { visible: boolean }) {
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 z-0 pointer-events-none"
-      aria-hidden="true"
-    />
+    <div
+      className="relative w-full overflow-hidden rounded-xl mb-8"
+      style={{
+        background: 'linear-gradient(180deg, rgba(10,14,20,0.95), rgba(8,10,16,0.98))',
+        border: '1px solid rgba(0,191,255,0.1)',
+        padding: '20px 24px',
+      }}
+    >
+      {/* Horizontal step-based flow instead of Sankey */}
+      <div className="flex items-center justify-evenly gap-2 sm:gap-4">
+        {/* Step 1: Transaction */}
+        <div
+          className="flex-shrink-0 text-center"
+          style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.5s ease' }}
+        >
+          <div
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center mx-auto mb-2"
+            style={{ background: 'rgba(0,191,255,0.1)', border: '1.5px solid rgba(0,191,255,0.35)' }}
+          >
+            <span className="text-lg sm:text-xl font-bold" style={{ color: '#00bfff' }}>$</span>
+          </div>
+          <span className="text-xs sm:text-sm font-semibold block" style={{ color: '#00bfff' }}>Transaction</span>
+        </div>
+
+        {/* Arrow */}
+        <div className="flex-shrink-0 flex items-center" style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.5s ease 0.2s' }}>
+          <svg width="32" height="16" viewBox="0 0 32 16" fill="none">
+            <path d="M0 8 H24 M18 3 L26 8 L18 13" stroke="rgba(0,191,255,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+
+        {/* Step 2: 80/20 Split */}
+        <div
+          className="flex-1 max-w-[200px] text-center"
+          style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.5s ease 0.3s' }}
+        >
+          <div className="flex items-end justify-center gap-1 mb-2 h-16">
+            <div className="flex flex-col items-center">
+              <span className="text-xs font-semibold mb-1" style={{ color: '#00bfff' }}>80%</span>
+              <div className="w-8 sm:w-10 rounded-t" style={{ height: '40px', background: 'linear-gradient(180deg, rgba(0,191,255,0.5), rgba(0,191,255,0.2))', border: '1px solid rgba(0,191,255,0.4)', borderBottom: 'none' }} />
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-xs font-semibold mb-1" style={{ color: '#ffd700' }}>20%</span>
+              <div className="w-8 sm:w-10 rounded-t" style={{ height: '16px', background: 'linear-gradient(180deg, rgba(255,215,0,0.4), rgba(255,215,0,0.15))', border: '1px solid rgba(255,215,0,0.35)', borderBottom: 'none' }} />
+            </div>
+          </div>
+          <span className="text-xs sm:text-sm font-semibold" style={{ color: 'var(--color-body-text)' }}>80/20 Split</span>
+        </div>
+
+        {/* Arrow */}
+        <div className="flex-shrink-0 flex items-center" style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.5s ease 0.5s' }}>
+          <svg width="32" height="16" viewBox="0 0 32 16" fill="none">
+            <path d="M0 8 H24 M18 3 L26 8 L18 13" stroke="rgba(255,215,0,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+
+        {/* Step 3: $16K Cap */}
+        <div
+          className="flex-shrink-0 text-center"
+          style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.5s ease 0.6s' }}
+        >
+          <div
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center mx-auto mb-2"
+            style={{ background: 'rgba(255,215,0,0.08)', border: '1.5px solid rgba(255,215,0,0.35)' }}
+          >
+            <span className="text-sm sm:text-base font-bold" style={{ color: '#ffd700' }}>$16K</span>
+          </div>
+          <span className="text-xs sm:text-sm font-semibold block" style={{ color: '#ffd700' }}>Annual Cap</span>
+        </div>
+
+        {/* Arrow */}
+        <div className="flex-shrink-0 flex items-center" style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.5s ease 0.8s' }}>
+          <svg width="32" height="16" viewBox="0 0 32 16" fill="none">
+            <path d="M0 8 H24 M18 3 L26 8 L18 13" stroke="rgba(0,255,136,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+
+        {/* Step 4: 100% Commission */}
+        <div
+          className="flex-shrink-0 text-center"
+          style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.5s ease 0.9s' }}
+        >
+          <div
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center mx-auto mb-2"
+            style={{
+              background: 'rgba(0,255,136,0.1)',
+              border: '1.5px solid rgba(0,255,136,0.4)',
+              boxShadow: '0 0 16px rgba(0,255,136,0.15)',
+            }}
+          >
+            <span className="text-lg sm:text-xl font-bold" style={{ color: '#00ff88' }}>100%</span>
+          </div>
+          <span className="text-xs sm:text-sm font-semibold block" style={{ color: '#00ff88' }}>After Cap</span>
+          <span className="text-[10px] block mt-0.5" style={{ color: 'rgba(0,255,136,0.5)' }}>$85/mo only</span>
+        </div>
+      </div>
+    </div>
   );
 }
 
-function CommissionDonut() {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+/* ═══ ICON Gauge Ring ═══ */
 
-  useEffect(() => {
-    if (!ref.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
-      { threshold: 0.5 }
-    );
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
-  const size = 80;
-  const strokeWidth = 8;
+function IconGaugeRing({ visible }: { visible: boolean }) {
+  const size = 120;
+  const strokeWidth = 10;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const eightyPercent = circumference * 0.8;
 
   return (
-    <div ref={ref} className="flex items-center justify-center h-20 overflow-visible">
-      <svg width={size} height={size} className="transform -rotate-90 overflow-visible">
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(0,191,255,0.15)" strokeWidth={strokeWidth} />
-        <circle
-          cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#00bfff" strokeWidth={strokeWidth}
-          strokeDasharray={`${eightyPercent} ${circumference}`}
-          strokeDashoffset={isVisible ? 0 : circumference}
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)', filter: 'drop-shadow(0 0 4px rgba(0,191,255,0.5))' }}
-        />
-        <circle
-          cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#ffd700" strokeWidth={strokeWidth}
-          strokeDasharray={`${circumference * 0.2} ${circumference}`}
-          strokeDashoffset={isVisible ? -eightyPercent : circumference}
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s', filter: 'drop-shadow(0 0 4px rgba(255,215,0,0.5))' }}
-        />
-      </svg>
-      <div className="absolute flex flex-col items-center justify-center">
-        <span className="text-lg font-bold" style={{ color: '#00bfff' }}>80</span>
-        <span className="text-[10px] opacity-60" style={{ color: '#ffd700' }}>/ 20</span>
+    <div className="flex flex-col items-center">
+      <div className="relative">
+        <svg width={size} height={size} className="transform -rotate-90">
+          <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(255,215,0,0.1)" strokeWidth={strokeWidth} />
+          <circle
+            cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#ffd700" strokeWidth={strokeWidth}
+            strokeDasharray={circumference}
+            strokeDashoffset={visible ? 0 : circumference}
+            strokeLinecap="round"
+            style={{ transition: 'stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1)', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.5))' }}
+          />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-lg font-bold" style={{ color: '#ffd700' }}>$16K</span>
+          <span className="text-[11px] uppercase tracking-wider font-semibold" style={{ color: 'rgba(255,215,0,0.6)' }}>Cap</span>
+        </div>
       </div>
+      <p className="text-sm mt-3 text-center" style={{ color: 'rgba(255,215,0,0.8)' }}>ICON: Cap returned in stock</p>
     </div>
   );
 }
 
-function IconBadge() {
-  return (
-    <div className="flex items-center justify-center h-20">
-      <div
-        className="relative w-16 h-16 rounded-full flex items-center justify-center"
-        style={{
-          background: 'radial-gradient(circle, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0.05) 70%, transparent 100%)',
-          boxShadow: '0 0 20px rgba(255,215,0,0.3), inset 0 0 15px rgba(255,215,0,0.1)',
-          animation: 'iconGlow 3s ease-in-out infinite',
-        }}
-      >
-        <Award size={32} style={{ color: '#ffd700', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.6))' }} />
-      </div>
-      <style jsx>{`
-        @keyframes iconGlow {
-          0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.3), inset 0 0 15px rgba(255,215,0,0.1); }
-          50% { box-shadow: 0 0 30px rgba(255,215,0,0.5), inset 0 0 20px rgba(255,215,0,0.2); }
-        }
-      `}</style>
-    </div>
-  );
-}
+/* ═══ Stock Mini Chart ═══ */
 
-function StockChart() {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!ref.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
-      { threshold: 0.5 }
-    );
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
+function StockMiniChart({ visible }: { visible: boolean }) {
   const points = [
-    { x: 0, y: 45 }, { x: 15, y: 40 }, { x: 30, y: 42 }, { x: 45, y: 30 },
-    { x: 60, y: 25 }, { x: 75, y: 28 }, { x: 90, y: 15 }, { x: 100, y: 10 },
+    { x: 0, y: 40 }, { x: 14, y: 35 }, { x: 28, y: 38 }, { x: 42, y: 28 },
+    { x: 56, y: 22 }, { x: 70, y: 25 }, { x: 84, y: 14 }, { x: 100, y: 8 },
   ];
-
   const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
-  const areaD = pathD + ` L 100 50 L 0 50 Z`;
+  const areaD = pathD + ' L 100 45 L 0 45 Z';
 
   return (
-    <div ref={ref} className="flex items-center justify-center h-20">
-      <svg width={100} height={50} viewBox="0 0 100 50" className="overflow-visible">
+    <div className="mt-4">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ background: 'rgba(0,255,136,0.1)', color: '#00ff88', border: '1px solid rgba(0,255,136,0.2)' }}>
+          EXPI
+        </span>
+        <span className="text-xs" style={{ color: 'rgba(0,255,136,0.6)' }}>Stock + Production Awards</span>
+      </div>
+      <svg viewBox="0 0 100 45" className="w-full" style={{ maxHeight: '60px' }}>
         <defs>
-          <linearGradient id="stockGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(0,255,136,0.3)" />
+          <linearGradient id="stockFill" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="rgba(0,255,136,0.25)" />
             <stop offset="100%" stopColor="rgba(0,255,136,0)" />
           </linearGradient>
         </defs>
-        <path d={areaD} fill="url(#stockGradient)" style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.8s ease-out 0.5s' }} />
+        <path d={areaD} fill="url(#stockFill)" style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.8s ease 0.5s' }} />
         <path
-          d={pathD} fill="none" stroke="#00ff88" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+          d={pathD} fill="none" stroke="#00ff88" strokeWidth={1.5} strokeLinecap="round"
           style={{
-            strokeDasharray: 200, strokeDashoffset: isVisible ? 0 : 200,
+            strokeDasharray: 200, strokeDashoffset: visible ? 0 : 200,
             transition: 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)',
-            filter: 'drop-shadow(0 0 4px rgba(0,255,136,0.6))',
+            filter: 'drop-shadow(0 0 4px rgba(0,255,136,0.5))',
           }}
         />
-        <circle cx={100} cy={10} r={3} fill="#00ff88" style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.3s ease-out 1.5s', filter: 'drop-shadow(0 0 4px rgba(0,255,136,0.8))' }} />
+        <circle cx={100} cy={8} r={2.5} fill="#00ff88"
+          style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.3s ease 1.5s', filter: 'drop-shadow(0 0 4px rgba(0,255,136,0.7))' }} />
       </svg>
     </div>
   );
 }
 
-function FeesBadge() {
+/* ═══ Revenue Share Bar Chart ═══ */
+
+function RevenueShareBars({ visible }: { visible: boolean }) {
+  const tiers = [
+    { label: 'T1', height: 70, pct: '3.5%' },
+    { label: 'T2', height: 80, pct: '4.0%' },
+    { label: 'T3', height: 50, pct: '2.5%' },
+    { label: 'T4', height: 30, pct: '1.5%' },
+    { label: 'T5', height: 20, pct: '1.0%' },
+    { label: 'T6', height: 50, pct: '2.5%' },
+    { label: 'T7', height: 100, pct: '5.0%' },
+  ];
+
   return (
-    <div className="flex flex-col items-center justify-center h-20 overflow-visible">
-      <div
-        className="w-24 h-24 rounded-full flex items-center justify-center"
-        style={{
-          background: 'radial-gradient(circle, rgba(255,80,80,0.2) 0%, rgba(255,80,80,0.08) 60%, transparent 100%)',
-          border: '2px solid rgba(255,80,80,0.5)',
-          boxShadow: '0 0 25px rgba(255,80,80,0.3), inset 0 0 15px rgba(255,80,80,0.15)',
-        }}
-      >
-        <span className="text-2xl font-bold" style={{ color: '#ff5050', textShadow: '0 0 12px rgba(255,80,80,0.6)' }}>
-          $85
-        </span>
+    <div className="flex flex-col items-center">
+      <div className="flex items-end gap-1.5 sm:gap-2" style={{ height: '120px' }}>
+        {tiers.map((tier, i) => (
+          <div key={tier.label} className="flex flex-col items-center gap-1">
+            <span
+              className="text-[10px] font-bold"
+              style={{
+                color: 'rgba(153,51,255,0.9)',
+                opacity: visible ? 1 : 0,
+                transition: `opacity 0.5s ease ${i * 100 + 400}ms`,
+              }}
+            >{tier.pct}</span>
+            <div
+              className="io-tier-bar rounded-t"
+              style={{
+                width: '20px',
+                height: visible ? `${tier.height}px` : '0px',
+                background: `linear-gradient(180deg, rgba(153,51,255,${0.6 - i * 0.06}), rgba(153,51,255,${0.3 - i * 0.03}))`,
+                border: '1px solid rgba(153,51,255,0.4)',
+                borderBottom: 'none',
+                transition: `height 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${i * 100}ms`,
+              }}
+            />
+            <span className="text-[11px] font-mono font-semibold" style={{ color: 'rgba(153,51,255,0.7)' }}>{tier.label}</span>
+          </div>
+        ))}
       </div>
+      <p className="text-sm mt-3 text-center" style={{ color: 'rgba(153,51,255,0.7)' }}>
+        7-tier program from company revenue
+      </p>
+      <p className="text-xs mt-1 text-center" style={{ color: 'var(--color-body-text)', opacity: 0.75 }}>
+        Optional and inheritable
+      </p>
     </div>
   );
 }
 
-export default function IncomeOwnershipSection() {
-  const tierCounter = useScrambleCounter(7, 1500, false);
+/* ═══ Fee Comparison Bars ═══ */
 
-  const cardVisuals: Record<string, { visual: React.ReactNode; borderColor: string }> = {
-    'Commission': { visual: <CommissionDonut />, borderColor: 'rgba(0,191,255,0.3)' },
-    'ICON Program': { visual: <IconBadge />, borderColor: 'rgba(255,215,0,0.3)' },
-    'Stock Ownership': { visual: <StockChart />, borderColor: 'rgba(0,255,136,0.3)' },
-    'eXp Fees': { visual: <FeesBadge />, borderColor: 'rgba(255,80,80,0.3)' },
-  };
+function FeeComparison({ visible }: { visible: boolean }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="flex items-end gap-6" style={{ height: '120px' }}>
+        {/* Traditional */}
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-xs font-bold mb-1" style={{ color: 'rgba(255,80,80,0.8)' }}>$500-2K+</span>
+          <div
+            className="rounded-t"
+            style={{
+              width: '36px',
+              height: visible ? '95px' : '0px',
+              background: 'linear-gradient(180deg, rgba(255,80,80,0.5), rgba(255,80,80,0.2))',
+              border: '1px solid rgba(255,80,80,0.4)',
+              borderBottom: 'none',
+              transition: 'height 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s',
+            }}
+          />
+          <span className="text-[11px] font-medium" style={{ color: 'rgba(255,80,80,0.7)' }}>Traditional</span>
+        </div>
+        {/* eXp */}
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-xs font-bold mb-1" style={{ color: '#00bfff' }}>$85/mo</span>
+          <div
+            className="rounded-t"
+            style={{
+              width: '36px',
+              height: visible ? '24px' : '0px',
+              background: 'linear-gradient(180deg, rgba(0,191,255,0.5), rgba(0,191,255,0.2))',
+              border: '1px solid rgba(0,191,255,0.4)',
+              borderBottom: 'none',
+              transition: 'height 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s',
+            }}
+          />
+          <span className="text-[11px] font-medium" style={{ color: 'rgba(0,191,255,0.7)' }}>eXp</span>
+        </div>
+      </div>
+      <p className="text-sm mt-3 text-center" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
+        No desk, franchise, or royalty fees
+      </p>
+    </div>
+  );
+}
+
+/* ═══ Main Component ═══ */
+
+export default function IncomeOwnershipSection() {
+  const [visible, setVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { threshold: 0.15 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div style={{ marginBottom: '-3px', position: 'relative', zIndex: 2 }}>
-    <GlassPanel variant="expBlueCrosshatch" noBlur>
-      <section id="income" className="py-[50px] px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1400px] mx-auto">
-
-          <div className="text-center mb-12">
-            <H2>INCOME & OWNERSHIP</H2>
-          </div>
-
-          <div className="income-cards-grid gap-6 mb-12">
-            <div className="income-card-2 h-full">
-              <GenericCard padding="md" className="h-full" style={{ borderColor: cardVisuals['Commission'].borderColor }}>
-                <div className="flex flex-col items-center text-center h-full overflow-visible">
-                  <div className="relative mb-4 overflow-visible">{cardVisuals['Commission'].visual}</div>
-                  <h3 className="text-h4 mb-2" style={{ color: '#00bfff' }}>Commission</h3>
-                  <p className="text-body opacity-80 mt-auto">{INCOME_STREAMS[0].description}</p>
-                </div>
-              </GenericCard>
+      <GlassPanel variant="expBlueCrosshatch" noBlur>
+        <section id="income" ref={sectionRef} className="py-[50px] px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-6">
+              <H2>INCOME & OWNERSHIP</H2>
             </div>
 
-            <div className="income-card-2 h-full">
-              <GenericCard padding="md" className="h-full" style={{ borderColor: cardVisuals['ICON Program'].borderColor }}>
-                <div className="flex flex-col items-center text-center h-full overflow-visible">
-                  <div className="relative mb-4 overflow-visible">{cardVisuals['ICON Program'].visual}</div>
-                  <h3 className="text-h4 mb-2" style={{ color: '#ffd700' }}>ICON Program</h3>
-                  <p className="text-body opacity-80 mt-auto">{INCOME_STREAMS[1].description}</p>
-                </div>
-              </GenericCard>
+            {/* Sankey flow - desktop only */}
+            <div className="hidden lg:block">
+              <SankeyFlow visible={visible} />
             </div>
 
-            <div className="income-card-2 h-full">
-              <GenericCard padding="md" className="h-full" style={{ borderColor: cardVisuals['Stock Ownership'].borderColor }}>
-                <div className="flex flex-col items-center text-center h-full overflow-visible">
-                  <div className="relative mb-4 overflow-visible">{cardVisuals['Stock Ownership'].visual}</div>
-                  <h3 className="text-h4 mb-2" style={{ color: '#00ff88' }}>Stock Ownership</h3>
-                  <p className="text-body opacity-80 mt-auto">{INCOME_STREAMS[2].description}</p>
-                </div>
-              </GenericCard>
-            </div>
-
-            <div className="income-card-3 h-full">
-              <GenericCard padding="md" className="h-full" style={{ borderColor: cardVisuals['eXp Fees'].borderColor }}>
-                <div className="flex flex-col items-center text-center h-full justify-center">
-                  <div className="mb-4"><FeesBadge /></div>
-                  <h3 className="text-h4 mb-2" style={{ color: '#ff5050' }}>{FEES_CARD.title}</h3>
-                  <p className="text-body opacity-80">{FEES_CARD.description}</p>
-                </div>
-              </GenericCard>
-            </div>
-
-            <div className="income-card-3 income-card-md-full h-full">
+            {/* Mobile flow summary */}
+            <div className="lg:hidden mb-6">
               <div
-                className="relative rounded-2xl p-6 sm:p-8 h-full overflow-hidden"
+                className="flex flex-col items-center justify-center gap-0 py-3 px-4 rounded-xl"
                 style={{
-                  background: 'rgba(60,20,80,0.3)',
-                  border: '1px solid rgba(160,80,255,0.25)',
-                  boxShadow: 'inset 0 0 40px rgba(120,60,180,0.08), 0 0 30px rgba(100,50,150,0.1)',
+                  background: 'linear-gradient(135deg, rgba(0,191,255,0.06), rgba(0,255,136,0.04))',
+                  border: '1px solid rgba(0,191,255,0.15)',
                 }}
               >
-                <RisingParticles />
-
-                {/* Mobile layout */}
-                <div className="min-[765px]:hidden relative z-[1] flex gap-4 items-center">
-                  <div className="flex-1">
-                    <h3 className="text-h4 mb-2" style={{ color: '#a050ff' }}>Revenue Share</h3>
-                    <p className="text-body opacity-80">{REVENUE_SHARE.description}</p>
-                  </div>
-                  <div className="flex-shrink-0" style={{ width: '140px', height: '140px' }}>
-                    <div className="relative w-full h-full">
-                      {Array.from({ length: RING_COUNT }, (_, i) => {
-                        const pct = RING_BASE_PCT + i * RING_STEP_PCT;
-                        const opacity = 0.6 - i * 0.05;
-                        return (
-                          <div key={i} className="absolute rounded-full" style={{
-                            width: `${pct}%`, height: `${pct}%`, top: '50%', left: '50%',
-                            transform: 'translate(-50%,-50%) scale(1)', opacity: 1,
-                            border: `1px solid rgba(160,80,255,${opacity})`,
-                            boxShadow: `0 0 8px rgba(160,80,255,${opacity * 0.5})`,
-                            transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
-                          }} />
-                        );
-                      })}
-                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-                        <p className="text-4xl font-bold tabular-nums leading-none" style={{ color: '#a050ff', textShadow: PURPLE_3D_SHADOW }}>
-                          <span ref={tierCounter.elementRef}>{tierCounter.hasAnimated ? '7' : tierCounter.displayValue}</span>
-                        </p>
-                        <p className="text-xs uppercase tracking-widest mt-1" style={{ color: '#e5e4dd', opacity: 0.7 }}>TIERS</p>
-                      </div>
-                    </div>
-                  </div>
+                <div className="flex items-center justify-center gap-3">
+                  <span className="text-sm font-semibold" style={{ color: '#00bfff' }}>80/20</span>
+                  <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><path d="M0 5 H14 M10 1.5 L16 5 L10 8.5" stroke="rgba(0,191,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  <span className="text-xs uppercase" style={{ color: '#ffd700' }}>$16K Cap</span>
+                  <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><path d="M0 5 H14 M10 1.5 L16 5 L10 8.5" stroke="rgba(0,255,136,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  <span className="text-sm font-semibold" style={{ color: '#00ff88' }}>100%</span>
                 </div>
+                <p className="text-xs mt-1.5 text-center" style={{ color: 'var(--color-body-text, #dcdbd5)', opacity: 0.75 }}>
+                  80/20 split → $16K cap → 100% commission. $85/mo flat fee.
+                </p>
+              </div>
+            </div>
 
-                {/* Tablet layout */}
-                <div className="hidden min-[765px]:flex min-[1020px]:hidden relative z-[1] flex-col items-center text-center">
-                  <div className="mb-4" style={{ width: '180px', height: '180px' }}>
-                    <div className="relative w-full h-full">
-                      {Array.from({ length: RING_COUNT }, (_, i) => {
-                        const pct = RING_BASE_PCT + i * RING_STEP_PCT;
-                        const opacity = 0.6 - i * 0.05;
-                        return (
-                          <div key={i} className="absolute rounded-full" style={{
-                            width: `${pct}%`, height: `${pct}%`, top: '50%', left: '50%',
-                            transform: 'translate(-50%,-50%) scale(1)', opacity: 1,
-                            border: `1px solid rgba(160,80,255,${opacity})`,
-                            boxShadow: `0 0 8px rgba(160,80,255,${opacity * 0.5})`,
-                            transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
-                          }} />
-                        );
-                      })}
-                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-                        <p className="text-5xl font-bold tabular-nums leading-none" style={{ color: '#a050ff', textShadow: PURPLE_3D_SHADOW }}>
-                          {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
-                        </p>
-                        <p className="text-sm uppercase tracking-widest mt-1" style={{ color: '#e5e4dd', opacity: 0.7 }}>TIERS</p>
-                      </div>
-                    </div>
-                  </div>
-                  <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>Revenue Share</h3>
-                  <p className="text-body opacity-80">{REVENUE_SHARE.description}</p>
-                </div>
-
-                {/* Desktop layout */}
-                <div className="hidden min-[1020px]:block">
-                  <div
-                    className="absolute pointer-events-none z-0 flex items-center justify-end"
-                    style={{ top: '10px', bottom: '10px', right: '10px', left: '50%', overflow: 'visible' }}
-                  >
-                    <div className="relative" style={{ width: '240px', height: '240px' }}>
-                      {Array.from({ length: RING_COUNT }, (_, i) => {
-                        const pct = RING_BASE_PCT + i * RING_STEP_PCT;
-                        const opacity = 0.6 - i * 0.05;
-                        return (
-                          <div key={i} className="absolute rounded-full" style={{
-                            width: `${pct}%`, height: `${pct}%`, top: '50%', left: '50%',
-                            transform: 'translate(-50%,-50%) scale(1)', opacity: 1,
-                            border: `1px solid rgba(160,80,255,${opacity})`,
-                            boxShadow: `0 0 8px rgba(160,80,255,${opacity * 0.5})`,
-                            transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms, opacity 600ms cubic-bezier(0.22,1,0.36,1) ${i * 150}ms`,
-                            animation: i === RING_COUNT - 1 ? 'ringPulse 3s ease-in-out 2.5s infinite' : undefined,
-                          }} />
-                        );
-                      })}
-                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-                        <p className="text-5xl sm:text-6xl font-bold tabular-nums leading-none" style={{ color: '#a050ff', textShadow: PURPLE_3D_SHADOW }}>
-                          {tierCounter.hasAnimated ? '7' : tierCounter.displayValue}
-                        </p>
-                        <p className="text-sm uppercase tracking-widest mt-1" style={{ color: '#e5e4dd', opacity: 0.7 }}>TIERS</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="relative z-[1] grid grid-cols-2 gap-6 min-h-[200px]">
-                    <div className="flex flex-col justify-center">
-                      <h3 className="text-h4 mb-2" style={{ color: '#e5e4dd' }}>Revenue Share</h3>
-                      <p className="text-body opacity-80">{REVENUE_SHARE.description}</p>
-                    </div>
-                    <div />
+            {/* Asymmetric 3-panel grid */}
+            <div className="io-panels-grid gap-4 md:gap-5">
+              {/* Left panel: ICON + Stock (~45%) */}
+              <div
+                className="io-panel-left rounded-2xl p-5 md:p-6 relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(12,14,20,0.95), rgba(8,10,16,0.98))',
+                  border: '1px solid rgba(0,191,255,0.12)',
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s',
+                }}
+              >
+                <h3 className="text-h5 mb-3 text-center" style={{ color: '#e5e4dd' }}>Income & Stock</h3>
+                <p className="text-sm text-center mb-5" style={{ color: 'var(--color-body-text, #dcdbd5)', opacity: 0.8, lineHeight: '1.5' }}>
+                  80/20 split until a $16,000 annual cap, then 100% commission. Cap returned in company stock for qualifying ICON agents. Production awards plus discounted stock purchase option.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                  <IconGaugeRing visible={visible} />
+                  <div className="flex-1 w-full">
+                    <StockMiniChart visible={visible} />
                   </div>
                 </div>
               </div>
+
+              {/* Center panel: Revenue Share (~30%) */}
+              <div
+                className="io-panel-center rounded-2xl p-5 md:p-6 relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(20,12,28,0.95), rgba(12,8,18,0.98))',
+                  border: '1px solid rgba(153,51,255,0.15)',
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'opacity 0.6s ease 0.35s, transform 0.6s ease 0.35s',
+                }}
+              >
+                <h3 className="text-h5 mb-3 text-center" style={{ color: '#9933ff' }}>Revenue Share</h3>
+                <p className="text-sm text-center mb-5" style={{ color: 'var(--color-body-text, #dcdbd5)', opacity: 0.8, lineHeight: '1.5' }}>
+                  Seven-tier program paid from company revenue, optional and inheritable
+                </p>
+                <RevenueShareBars visible={visible} />
+              </div>
+
+              {/* Right panel: Fee Comparison (~25%) */}
+              <div
+                className="io-panel-right rounded-2xl p-5 md:p-6 relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(14,12,12,0.95), rgba(10,8,8,0.98))',
+                  border: '1px solid rgba(255,80,80,0.1)',
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'opacity 0.6s ease 0.5s, transform 0.6s ease 0.5s',
+                }}
+              >
+                <h3 className="text-h5 mb-3 text-center" style={{ color: '#e5e4dd' }}>Fees</h3>
+                <p className="text-sm text-center mb-5" style={{ color: 'var(--color-body-text, #dcdbd5)', opacity: 0.8, lineHeight: '1.5' }}>
+                  $85 monthly flat fee, no desk, franchise, or royalty fees
+                </p>
+                <FeeComparison visible={visible} />
+              </div>
+            </div>
+
+            <div className="text-center mt-8">
+              <a href="/about-exp-realty/income" className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '14px', opacity: 0.85 }}>Learn more about income & ownership →</a>
             </div>
           </div>
+        </section>
+      </GlassPanel>
 
-        </div>
-        <div className="text-center mt-8">
-          <a href="/about-exp-realty/income" className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '14px', opacity: 0.7 }}>Learn more about income &amp; ownership →</a>
-        </div>
-      </section>
-    </GlassPanel>
+      <style>{`
+        .io-panels-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+        @media (min-width: 768px) {
+          .io-panels-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+          .io-panel-left {
+            grid-column: 1 / 3;
+          }
+        }
+        @media (min-width: 1024px) {
+          .io-panels-grid {
+            grid-template-columns: 9fr 6fr 5fr;
+          }
+          .io-panel-left {
+            grid-column: auto;
+          }
+        }
+        .io-panel-left:hover,
+        .io-panel-center:hover,
+        .io-panel-right:hover {
+          box-shadow: 0 0 24px rgba(0,191,255,0.06), 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .io-tier-bar:hover {
+          filter: brightness(1.3);
+        }
+      `}</style>
     </div>
   );
 }

@@ -179,10 +179,10 @@ These are the top-level routes on the public site:
 ```
 /about-doug-smart      /about-karrie-hill     /awards
 /best-real-estate-brokerage  /blog            /book-a-call
-/cookie-policy         /disclaimer            /doug-linktree
-/download              /exp-commission-calculator
+/cookie-policy         /disclaimer            /download
+/exp-commission-calculator
 /exp-realty-revenue-share-calculator
-/exp-realty-sponsor    /freebies              /karrie-linktree
+/exp-realty-sponsor    /freebies
 /locations             /our-exp-team          /privacy-policy
 /terms-of-use
 ```

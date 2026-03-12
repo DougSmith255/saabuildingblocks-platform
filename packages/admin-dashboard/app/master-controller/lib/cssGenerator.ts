@@ -12,6 +12,8 @@ export class CSSGenerator {
   static generateBrandColors(colors: BrandColorsSettings): string {
     return `
       --color-accentGreen: ${colors.accentGreen};
+      --color-accentPurple: ${colors.accentPurple};
+      --color-accentBlue: ${colors.accentBlue};
       --color-brandGold: ${colors.brandGold};
       --color-headingText: ${colors.headingText};
       --color-bodyText: ${colors.bodyText};
@@ -52,7 +54,7 @@ export class CSSGenerator {
       }
 
       // Add text color - use direct hex value to avoid race condition with CSS variables
-      const validColors = ['accentGreen', 'brandGold', 'headingText', 'bodyText', 'darkGray', 'mediumGray'];
+      const validColors = ['accentGreen', 'accentPurple', 'accentBlue', 'brandGold', 'headingText', 'bodyText', 'darkGray', 'mediumGray'];
       const colorValue = validColors.includes(settings.color) ? settings.color : 'bodyText';
 
       if (!validColors.includes(settings.color)) {

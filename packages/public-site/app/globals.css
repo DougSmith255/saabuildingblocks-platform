@@ -1590,6 +1590,9 @@ body:has(main[data-is-404="true"]) .scroll-progress-bar {
 
 /* Intensified glow layer - fades in/out via opacity */
 /* Simplified to 2 shadow layers for Chrome performance */
+.cta-light-bar-pulse {
+  contain: layout style;
+}
 .cta-light-bar-pulse::after {
   content: "";
   position: absolute;

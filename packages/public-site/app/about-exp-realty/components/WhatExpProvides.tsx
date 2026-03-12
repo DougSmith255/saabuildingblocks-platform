@@ -1,10 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { GlassPanel } from '@saa/shared/components/saa/backgrounds';
 import { H2 } from '@saa/shared/components/saa/headings';
 import { Icon3D } from '@saa/shared/components/saa/icons';
 import { Users, Laptop, UserPlus, Calendar, Globe, MessageSquare, Share2, Contact, ClipboardCheck, BarChart3, Palette, Zap, DollarSign, Link, ChevronDown } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+
+const PANEL_STATS = ['90K+ Agents', '7+ Tools', '5 Lead Programs'];
 
 const COMMUNITY_BULLETS: { icon: LucideIcon; text: string }[] = [
   { icon: Users, text: 'Live interaction inside eXp World' },
@@ -72,7 +75,7 @@ export default function WhatExpProvidesVersionB() {
   }, []);
 
   const panels = [
-    { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS, color: '#a855f7', rgb: '168,85,247', h2Theme: 'purple' as const },
+    { id: 'community', label: 'COMMUNITY', icon: Users, bullets: COMMUNITY_BULLETS, color: '#9933ff', rgb: '153,51,255', h2Theme: 'purple' as const },
     { id: 'technology', label: 'TECHNOLOGY', icon: Laptop, bullets: TECHNOLOGY_BULLETS, color: '#00bfff', rgb: '0,191,255', h2Theme: 'blue' as const },
     { id: 'leads', label: 'LEADS', icon: UserPlus, bullets: LEADS_BULLETS, color: '#10b981', rgb: '16,185,129', h2Theme: 'emerald' as const },
   ];
@@ -81,24 +84,13 @@ export default function WhatExpProvidesVersionB() {
     ? { width: `${desktopContentW}px` }
     : { minWidth: '500px' };
 
-  const grainBg = `
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-    linear-gradient(180deg, rgba(18, 18, 18, 0.85) 0%, rgba(12, 12, 12, 0.92) 100%)
-  `;
+  const activeBg = 'linear-gradient(180deg, rgba(18,18,18,0.92) 0%, rgba(12,12,12,0.96) 100%)';
   const inactiveBg = 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)';
 
   return (
+    <GlassPanel variant="expBlueCrosshatch">
     <div
-      className="relative overflow-visible lg:overflow-hidden rounded-3xl"
-      style={{
-        boxShadow: `
-          0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25),
-          inset 0 1px 0 0 rgba(0,0,0,0.7), inset 0 2px 6px 0 rgba(0,0,0,0.5),
-          inset 0 10px 25px -8px rgba(0,0,0,0.6), inset 0 25px 50px -20px rgba(0,0,0,0.45),
-          inset 0 -1px 0 0 rgba(255,255,255,0.35), inset 0 -2px 4px 0 rgba(255,255,255,0.2),
-          inset 0 -20px 40px -20px rgba(255,255,255,0.15)
-        `,
-      }}
+      className="relative overflow-visible lg:overflow-hidden"
     >
       {panels.map((p, idx) => (
         <div
@@ -117,14 +109,12 @@ export default function WhatExpProvidesVersionB() {
           }}
         />
       ))}
+      {/* Subtle dot pattern overlay */}
       <div
         className="absolute inset-0 pointer-events-none z-[1]"
         style={{
-          backgroundImage: `
-            repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px),
-            repeating-linear-gradient(-45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px)
-          `,
-          backgroundSize: '16px 16px',
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
         }}
       />
       <section ref={providesSectionRef} className="relative z-10 py-[50px] px-4 sm:px-8 md:px-12">
@@ -138,8 +128,8 @@ export default function WhatExpProvidesVersionB() {
                   <div
                     className="rounded-xl p-4"
                     style={{
-                      background: isExpanded ? grainBg : inactiveBg,
-                      backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
+                      background: isExpanded ? activeBg : inactiveBg,
+                      backgroundBlendMode: 'normal',
                       border: isExpanded ? `2px solid rgba(${panel.rgb},0.5)` : `1px solid rgba(${panel.rgb},0.2)`,
                       boxShadow: isExpanded
                         ? `0 0 30px rgba(${panel.rgb},0.2), 0 8px 32px rgba(0,0,0,0.4)`
@@ -219,7 +209,7 @@ export default function WhatExpProvidesVersionB() {
                           </li>
                         ))}
                       </ul>
-                      {isExpanded && <a href={`/about-exp-realty/${panel.id}`} className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '13px', opacity: 0.7, display: 'block', marginTop: '16px' }}>Learn more about {panel.label.toLowerCase()} →</a>}
+                      {isExpanded && <a href={`/about-exp-realty/${panel.id}`} className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '14px', opacity: 0.85, display: 'block', marginTop: '16px' }}>Learn more about {panel.label.toLowerCase()} →</a>}
                     </div>
                   </div>
                 </div>
@@ -244,24 +234,25 @@ export default function WhatExpProvidesVersionB() {
                     boxShadow: isExpanded
                       ? `0 0 40px rgba(${panel.rgb},0.25), 0 8px 32px rgba(0,0,0,0.4)`
                       : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-                    background: isExpanded ? grainBg : inactiveBg,
+                    background: isExpanded ? activeBg : inactiveBg,
                     backgroundBlendMode: isExpanded ? 'overlay, normal' : 'normal',
                     backdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
                     WebkitBackdropFilter: isExpanded ? 'blur(16px) saturate(120%)' : 'none',
                   }}
                   onClick={() => setExpandedIndex(i)}
                 >
+                  {/* Subtle accent icon watermark */}
                   <div
                     className="absolute pointer-events-none"
                     style={{
-                      right: '-30px',
-                      bottom: '-30px',
-                      opacity: isExpanded ? 0.08 : 0.03,
+                      right: '-20px',
+                      bottom: '-20px',
+                      opacity: isExpanded ? 0.06 : 0.03,
                       transition: 'opacity 0.7s ease',
                       color: panel.color,
                     }}
                   >
-                    <panel.icon size={200} strokeWidth={1} />
+                    <panel.icon size={180} strokeWidth={0.8} />
                   </div>
 
                   <div className="relative z-10 h-full p-6 flex flex-col" style={desktopContentStyle}>
@@ -328,7 +319,23 @@ export default function WhatExpProvidesVersionB() {
                         </li>
                       ))}
                     </ul>
-                    {isExpanded && <a href={`/about-exp-realty/${panel.id}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '13px', opacity: 0.7, display: 'block', marginTop: '16px' }}>Learn more about {panel.label.toLowerCase()} →</a>}
+                    {isExpanded && (
+                      <div className="mt-auto pt-4 flex items-center justify-between">
+                        <span
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold"
+                          style={{
+                            background: `rgba(${panel.rgb},0.1)`,
+                            border: `1px solid rgba(${panel.rgb},0.25)`,
+                            color: panel.color,
+                            opacity: isExpanded ? 1 : 0,
+                            transition: 'opacity 0.5s ease 0.6s',
+                          }}
+                        >
+                          {PANEL_STATS[i]}
+                        </span>
+                        <a href={`/about-exp-realty/${panel.id}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 transition-opacity duration-200 hover:opacity-90" style={{ color: 'var(--color-body-text, #dcdbd5)', textDecoration: 'none', fontSize: '14px', opacity: 0.85 }}>Learn more →</a>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -337,5 +344,6 @@ export default function WhatExpProvidesVersionB() {
         </div>
       </section>
     </div>
+    </GlassPanel>
   );
 }

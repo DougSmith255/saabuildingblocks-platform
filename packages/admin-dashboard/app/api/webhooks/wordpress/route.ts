@@ -14,12 +14,13 @@ let pendingPostSlugs: string[] = [];
 const DEPLOY_DEBOUNCE_MS = 60_000; // 60 seconds
 
 async function triggerDeploy(postSlugs: string[]) {
-  const githubToken = process.env.GITHUB_TOKEN;
+  // Use GITHUB_DEPLOY_TOKEN (has repository dispatch perms) or fall back to GITHUB_TOKEN
+  const githubToken = process.env.GITHUB_DEPLOY_TOKEN || process.env.GITHUB_TOKEN;
   const githubOwner = process.env.GITHUB_OWNER || 'DougSmith255';
   const githubRepo = process.env.GITHUB_REPO || 'saabuildingblocks-platform';
 
   if (!githubToken) {
-    console.error('[WordPress Webhook] GITHUB_TOKEN not configured - skipping debounced deploy');
+    console.error('[WordPress Webhook] No GitHub token configured - skipping debounced deploy');
     return;
   }
 
@@ -29,24 +30,25 @@ async function triggerDeploy(postSlugs: string[]) {
 
   console.log(`[WordPress Webhook] Debounce fired - triggering single deploy for ${postSlugs.length} post(s): ${slugSummary}`);
 
-  const workflowUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/actions/workflows/deploy-cloudflare.yml/dispatches`;
+  // Use repository_dispatch (matches deploy-cloudflare.yml trigger)
+  const dispatchUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/dispatches`;
 
   try {
-    const response = await fetch(workflowUrl, {
+    const response = await fetch(dispatchUrl, {
       method: 'POST',
       headers: {
-        'Accept': 'application/vnd.github.v3+json',
+        'Accept': 'application/vnd.github+json',
         'Authorization': `Bearer ${githubToken}`,
         'Content-Type': 'application/json',
         'User-Agent': 'SAA-WordPress-Webhook/1.0',
+        'X-GitHub-Api-Version': '2022-11-28',
       },
       body: JSON.stringify({
-        ref: 'main',
-        inputs: {
-          post_id: 'batch',
-          post_slug: slugSummary,
-          deployment_type: 'incremental',
-          triggered_by: 'wordpress',
+        event_type: 'deploy-wordpress-content',
+        client_payload: {
+          post_slugs: slugSummary,
+          batch_size: postSlugs.length,
+          triggered_by: 'wordpress-debounced',
         },
       }),
     });

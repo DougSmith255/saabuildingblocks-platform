@@ -177,8 +177,6 @@ const STATIC_REDIRECTS = new Map([
   ['/our-exp-team/about-doug-smart', '/about-doug-smart/'],
   ['/our-exp-team/about-karrie-hill', '/about-karrie-hill/'],
   // Old linktree URLs → new link pages
-  ['/doug-linktree', '/doug-smart-links/'],
-  ['/karrie-linktree', '/karrie-hilljd-links/'],
   // Old parent index pages (no state/slug suffix)
   ['/become-real-estate-agent/schools', '/real-estate-schools/'],
   ['/become-real-estate-agent/license', '/become-an-agent/'],
@@ -255,15 +253,12 @@ const STATIC_REDIRECTS = new Map([
   ['/real-estate-closing-gifts-wine-oor-champeine', '/'],
   ['/real-estate-business-card', '/'],
   // 404 triage batch 2026-03-10
-  ['/exp-realty-sponsor/earnings', '/exp-realty-sponsor/revenue-share-earnings/'],
-  ['/exp-realty-sponsor/affect-revenue-share', '/exp-realty-sponsor/revenue-share-impact/'],
   ['/contact', '/book-a-call/'],
   // /true, /loading suffixes now handled generically by STEP 3b junk suffix stripper
   ['/about-exp-', '/about-exp-realty/'],
   ['/products', '/'],
   ['/privacy', '/privacy-policy/'],
   ['/legal', '/privacy-policy/'],
-  ['/real-estate-schools', '/real-estate-schools/'],
   ['/getting-a-license', '/become-an-agent/'],
   ['/about-exp-realty/exp-agent-perceptions', '/about-exp-realty/'],
   // /preload suffix now handled generically by STEP 3b junk suffix stripper

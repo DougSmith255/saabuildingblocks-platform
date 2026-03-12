@@ -9,6 +9,9 @@ const ALLOWED_LOGS: Record<string, string> = {
   'dependency-updates.log': '/var/log/dependency-updates.log',
   'auto-updates/cron.log': '/var/log/auto-updates/cron.log',
   'saa-notifications.log': '/var/log/saa-notifications.log',
+  'dlvrit-social-poster.log': '/var/log/dlvrit-social-poster/latest.log',
+  'dlvrit-youtube.log': '/var/log/dlvrit-social-poster/youtube-latest.log',
+  'dlvrit-youtube-rotation.log': '/var/log/dlvrit-social-poster/youtube-rotation-latest.log',
 };
 
 export async function GET(request: NextRequest) {

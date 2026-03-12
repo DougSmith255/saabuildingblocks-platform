@@ -26,7 +26,7 @@ const cloudFeesData = [
   { metric: 'Production Cap', exp: '$16,000', real: '$12,000', lpt: '$15K or $5K (by plan)', fathom: '$0 / $9K / $12K (by plan)' },
   { metric: 'Annual Fees', exp: '$1,020/yr ($85/mo)', real: '$750/yr + $249 startup', lpt: '$500/yr + $89-$149/mo', fathom: '$700/yr + $99 activation' },
   { metric: 'Transaction Fees', exp: '$25 pre-cap; $250 post-cap (first 20), $75 after', real: '$0 pre-cap; $285 post-cap', lpt: '$195/txn (after $2.5K GCI)', fathom: '$465/txn ($165 post-cap)' },
-  { metric: 'E&O Insurance', exp: '$40/txn ($500/yr cap)', real: '$40/txn (CBR fee)', lpt: '$0 (included in annual fee)', fathom: '$35/txn' },
+  { metric: 'E&O Insurance', exp: '$60/txn ($750/yr cap)', real: '$40/txn (CBR fee)', lpt: '$0 (included in annual fee)', fathom: '$35/txn' },
   { metric: 'Broker Review Fee', exp: '$85/txn', real: 'Included', lpt: 'Included', fathom: 'Included' },
 ];
 

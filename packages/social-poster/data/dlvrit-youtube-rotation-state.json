@@ -1,0 +1,14 @@
+{
+  "lastScheduledDate": "2026-04-23T19:30:00.000Z",
+  "lastRunDate": "2026-03-09T23:21:36.257Z",
+  "totalQueued": 83,
+  "platforms": {
+    "linkedin-saa": 15,
+    "facebook": 15,
+    "threads": 15,
+    "pinterest": 15,
+    "linkedin-doug": 12,
+    "linkedin-karrie": 6,
+    "reddit": 6
+  }
+}

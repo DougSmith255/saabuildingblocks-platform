@@ -18,7 +18,19 @@ const COLOR_DEFINITIONS: ColorDefinition[] = [
     name: 'accentGreen',
     label: 'Accent Green',
     description: '',
-    usageExample: 'Checkmarks, UI Confirmations (3s glow effects) - Use sparingly',
+    usageExample: 'Checkmarks, success cues, UI confirmations - most used accent',
+  },
+  {
+    name: 'accentPurple',
+    label: 'Accent Purple',
+    description: '',
+    usageExample: 'Subtle monotony breaker - low usage accent',
+  },
+  {
+    name: 'accentBlue',
+    label: 'Accent Blue',
+    description: '',
+    usageExample: 'Subtle monotony breaker - low usage accent',
   },
   {
     name: 'headingText',

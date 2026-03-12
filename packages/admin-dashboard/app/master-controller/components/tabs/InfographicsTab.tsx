@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { Image, ExternalLink, ChevronDown, ChevronUp, Copy, Check, Paintbrush } from 'lucide-react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { Image, ExternalLink, ChevronDown, ChevronUp, Copy, Check, Paintbrush, CheckCircle, XCircle, Loader2, Eye, X } from 'lucide-react';
 
 type Status = 'defined' | 'generated' | 'uploaded' | 'placed';
 type LayoutType = 'numbered-list' | 'checklist' | 'comparison-table' | 'bar-chart' | 'stats-chart' | 'revenue-share' | 'brokerage-comparison';
@@ -19,10 +19,10 @@ interface InfographicEntry {
   cloudflareId: string | null;
 }
 
-// --- CONTENT INFOGRAPHICS (from /tmp/infographic-generator/) --- All 61 placed as of 2026-03-09
+// --- CONTENT INFOGRAPHICS (from /tmp/infographic-generator/) --- 28 removed from about-exp-realty + exp-realty-sponsor blogs on 2026-03-12, 33 still placed
 const CONTENT_INFOGRAPHICS: InfographicEntry[] = [
   // NUMBERED LIST (25)
-  { id: 'infographic-stock-award-types', type: 'numbered-list', title: '7 eXp Stock Award Types', status: 'placed', category: 'content', blogPostId: '3704', blogPostTitle: 'How eXp Realty Stock Awards for Agents Are Structured', blogPostUri: 'about-exp-realty/stock-awards', cloudflareId: 'saa-infographic-stock-award-types' },
+  { id: 'infographic-stock-award-types', type: 'numbered-list', title: '7 eXp Stock Award Types', status: 'uploaded', category: 'content', blogPostId: '3704', blogPostTitle: 'How eXp Realty Stock Awards for Agents Are Structured', blogPostUri: 'about-exp-realty/stock-awards', cloudflareId: 'saa-infographic-stock-award-types' },
   { id: 'infographic-agent-side-hustles', type: 'numbered-list', title: '11 Agent Side Hustles', status: 'placed', category: 'content', blogPostId: '3697', blogPostTitle: 'Real Estate Agent Side Hustles: Best in 2025', blogPostUri: 'blog/agent-career-info/side-hustles', cloudflareId: 'saa-infographic-agent-side-hustles' },
   { id: 'infographic-free-leads', type: 'numbered-list', title: '15 Free Lead Gen Strategies', status: 'placed', category: 'content', blogPostId: '3864', blogPostTitle: 'Free Leads for Realtors in 2025: 15 Strategies for Success', blogPostUri: 'blog/marketing-mastery/free-leads', cloudflareId: 'saa-infographic-free-leads' },
   { id: 'infographic-google-ads-steps', type: 'numbered-list', title: '10-Step Google Ads Guide', status: 'placed', category: 'content', blogPostId: '3702', blogPostTitle: 'Win Big with Google Ads for Real Estate Agents: 2025 Guide', blogPostUri: 'blog/marketing-mastery/google-ads', cloudflareId: 'saa-infographic-google-ads-steps' },
@@ -37,15 +37,15 @@ const CONTENT_INFOGRAPHICS: InfographicEntry[] = [
   { id: 'infographic-negotiation-cheatsheet', type: 'numbered-list', title: 'Negotiation Cheat Sheet', status: 'placed', category: 'content', blogPostId: '3906', blogPostTitle: 'Mastering Real Estate Negotiations: Unlock Your Power', blogPostUri: 'blog/winning-clients/negotiate', cloudflareId: 'saa-infographic-negotiation-cheatsheet' },
   { id: 'infographic-brokerage-transition', type: 'numbered-list', title: 'Brokerage Transition Steps', status: 'placed', category: 'content', blogPostId: '3696', blogPostTitle: 'How to leave a Real Estate Brokerage for Greener Pastures', blogPostUri: 'blog/agent-career-info/change-brokerage', cloudflareId: 'saa-infographic-brokerage-transition' },
   { id: 'infographic-content-repurposing', type: 'numbered-list', title: 'Content Repurposing Wheel', status: 'placed', category: 'content', blogPostId: '3907', blogPostTitle: 'Agents, Repurpose Content for BIG Results', blogPostUri: 'blog/marketing-mastery/repurpose-content', cloudflareId: 'saa-infographic-content-repurposing' },
-  { id: 'infographic-exp-commission-pipeline', type: 'numbered-list', title: 'eXp Commission Pipeline', status: 'placed', category: 'content', blogPostId: '3715', blogPostTitle: 'How the eXp Commission Split for Agents Is Structured', blogPostUri: 'about-exp-realty/commission', cloudflareId: 'saa-infographic-exp-commission-pipeline' },
-  { id: 'infographic-exp-fee-waterfall', type: 'numbered-list', title: 'eXp Fee Waterfall', status: 'placed', category: 'content', blogPostId: '3714', blogPostTitle: 'eXp Realty Fees Explained for Real Estate Agents', blogPostUri: 'about-exp-realty/fees', cloudflareId: 'saa-infographic-exp-fee-waterfall' },
-  { id: 'infographic-landing-page-framework', type: 'numbered-list', title: 'Lead Gen Landing Page', status: 'placed', category: 'content', blogPostId: '3675', blogPostTitle: 'Lead Generation for Real Estate Agents: Ultimate Shortcut to More Clients', blogPostUri: 'exp-realty-sponsor/landing-pages', cloudflareId: 'saa-infographic-landing-page-framework' },
-  { id: 'infographic-mentorship-pathways', type: 'numbered-list', title: 'eXp Mentorship Pathways', status: 'placed', category: 'content', blogPostId: '3670', blogPostTitle: 'What Is the eXp Mentor Program?', blogPostUri: 'about-exp-realty/mentor-program', cloudflareId: 'saa-infographic-mentorship-pathways' },
+  { id: 'infographic-exp-commission-pipeline', type: 'numbered-list', title: 'eXp Commission Pipeline', status: 'uploaded', category: 'content', blogPostId: '3715', blogPostTitle: 'How the eXp Commission Split for Agents Is Structured', blogPostUri: 'about-exp-realty/commission', cloudflareId: 'saa-infographic-exp-commission-pipeline' },
+  { id: 'infographic-exp-fee-waterfall', type: 'numbered-list', title: 'eXp Fee Waterfall', status: 'uploaded', category: 'content', blogPostId: '3714', blogPostTitle: 'eXp Realty Fees Explained for Real Estate Agents', blogPostUri: 'about-exp-realty/fees', cloudflareId: 'saa-infographic-exp-fee-waterfall' },
+  { id: 'infographic-landing-page-framework', type: 'numbered-list', title: 'Lead Gen Landing Page', status: 'uploaded', category: 'content', blogPostId: '3675', blogPostTitle: 'Lead Generation for Real Estate Agents: Ultimate Shortcut to More Clients', blogPostUri: 'exp-realty-sponsor/landing-pages', cloudflareId: 'saa-infographic-landing-page-framework' },
+  { id: 'infographic-mentorship-pathways', type: 'numbered-list', title: 'eXp Mentorship Pathways', status: 'uploaded', category: 'content', blogPostId: '3670', blogPostTitle: 'What Is the eXp Mentor Program?', blogPostUri: 'about-exp-realty/mentor-program', cloudflareId: 'saa-infographic-mentorship-pathways' },
   { id: 'infographic-nar-changes-timeline', type: 'numbered-list', title: 'NAR Settlement Changes', status: 'placed', category: 'content', blogPostId: '3765', blogPostTitle: 'The Impact of NAR Changes on Real Estate Agent Fees in 2025', blogPostUri: 'blog/industry-trends/nar-agent-fees', cloudflareId: 'saa-infographic-nar-changes-timeline' },
-  { id: 'infographic-onboarding-roadmap', type: 'numbered-list', title: '6-Step Onboarding Roadmap', status: 'placed', category: 'content', blogPostId: '3912', blogPostTitle: 'How the eXp Onboarding Process Is Structured', blogPostUri: 'about-exp-realty/onboarding', cloudflareId: 'saa-infographic-onboarding-roadmap' },
-  { id: 'infographic-revenue-share-tiers', type: 'numbered-list', title: 'Revenue Share 2.0 Tiers', status: 'placed', category: 'content', blogPostId: '3876', blogPostTitle: 'How Revenue Share 2.0 Changes the Structure', blogPostUri: 'exp-realty-sponsor/revenue-share-2-0', cloudflareId: 'saa-infographic-revenue-share-tiers' },
-  { id: 'infographic-sponsor-types', type: 'numbered-list', title: '3 Types of eXp Sponsors', status: 'placed', category: 'content', blogPostId: '3887', blogPostTitle: 'How the eXp Realty Sponsor Program Is Structured', blogPostUri: 'exp-realty-sponsor/program-basics', cloudflareId: 'saa-infographic-sponsor-types' },
-  { id: 'infographic-wealth-pillars', type: 'numbered-list', title: '3 Wealth-Building Pillars', status: 'placed', category: 'content', blogPostId: '3832', blogPostTitle: 'How Wealth Building for Realtors Works at eXp Realty', blogPostUri: 'exp-realty-sponsor/wealth-building-realtors', cloudflareId: 'saa-infographic-wealth-pillars' },
+  { id: 'infographic-onboarding-roadmap', type: 'numbered-list', title: '6-Step Onboarding Roadmap', status: 'uploaded', category: 'content', blogPostId: '3912', blogPostTitle: 'How the eXp Onboarding Process Is Structured', blogPostUri: 'about-exp-realty/onboarding', cloudflareId: 'saa-infographic-onboarding-roadmap' },
+  { id: 'infographic-revenue-share-tiers', type: 'numbered-list', title: 'Revenue Share 2.0 Tiers', status: 'uploaded', category: 'content', blogPostId: '3876', blogPostTitle: 'How Revenue Share 2.0 Changes the Structure', blogPostUri: 'exp-realty-sponsor/revenue-share-2-0', cloudflareId: 'saa-infographic-revenue-share-tiers' },
+  { id: 'infographic-sponsor-types', type: 'numbered-list', title: '3 Types of eXp Sponsors', status: 'uploaded', category: 'content', blogPostId: '3887', blogPostTitle: 'How the eXp Realty Sponsor Program Is Structured', blogPostUri: 'exp-realty-sponsor/program-basics', cloudflareId: 'saa-infographic-sponsor-types' },
+  { id: 'infographic-wealth-pillars', type: 'numbered-list', title: '3 Wealth-Building Pillars', status: 'uploaded', category: 'content', blogPostId: '3832', blogPostTitle: 'How Wealth Building for Realtors Works at eXp Realty', blogPostUri: 'exp-realty-sponsor/wealth-building-realtors', cloudflareId: 'saa-infographic-wealth-pillars' },
   { id: 'infographic-blog-ideas', type: 'numbered-list', title: '22 Blog Ideas for Agents', status: 'placed', category: 'content', blogPostId: '3692', blogPostTitle: '22 Awesome Real Estate Blog Ideas: Get More Clients', blogPostUri: 'blog/marketing-mastery/blog-ideas', cloudflareId: 'saa-infographic-blog-ideas' },
   // CHECKLIST (11)
   { id: 'infographic-headshot-guide', type: 'checklist', title: "Agent Headshot Do's & Don'ts", status: 'placed', category: 'content', blogPostId: '3707', blogPostTitle: 'The Essential Guide to Real Estate Agent Headshots: Tips & Examples', blogPostUri: 'blog/marketing-mastery/headshots', cloudflareId: 'saa-infographic-headshot-guide' },
@@ -53,41 +53,41 @@ const CONTENT_INFOGRAPHICS: InfographicEntry[] = [
   { id: 'infographic-listing-checklist', type: 'checklist', title: 'Listing Appointment Checklist', status: 'placed', category: 'content', blogPostId: '3644', blogPostTitle: 'Your Ultimate Listing Appointment Checklist: Win More Listings', blogPostUri: 'blog/winning-clients/listing-checklist', cloudflareId: 'saa-infographic-listing-checklist' },
   { id: 'infographic-open-house-checklist', type: 'checklist', title: 'Open House Checklist', status: 'placed', category: 'content', blogPostId: '3688', blogPostTitle: 'Open House Checklist for Agents: The Secret to 2x More Offers', blogPostUri: 'blog/marketing-mastery/open-house-checklist', cloudflareId: 'saa-infographic-open-house-checklist' },
   { id: 'infographic-final-walkthrough', type: 'checklist', title: 'Final Walkthrough Checklist', status: 'placed', category: 'content', blogPostId: '3655', blogPostTitle: 'Final Walk Through Before Closing: What Agents Need to Know', blogPostUri: 'blog/winning-clients/walk-through', cloudflareId: 'saa-infographic-final-walkthrough' },
-  { id: 'infographic-sponsor-provides', type: 'checklist', title: "What Sponsors Provide vs Don't", status: 'placed', category: 'content', blogPostId: '8548', blogPostTitle: 'What Do eXp Sponsors Provide and Not Provide?', blogPostUri: 'exp-realty-sponsor/what-they-provide', cloudflareId: 'saa-infographic-sponsor-provides' },
-  { id: 'infographic-sponsor-questions', type: 'checklist', title: 'Sponsor Interview Questions', status: 'placed', category: 'content', blogPostId: '8539', blogPostTitle: 'Questions to Ask an eXp Sponsor Before You Choose', blogPostUri: 'exp-realty-sponsor/questions-to-ask', cloudflareId: 'saa-infographic-sponsor-questions' },
-  { id: 'infographic-sponsor-red-flags', type: 'checklist', title: 'eXp Sponsor Red Flags', status: 'placed', category: 'content', blogPostId: '8526', blogPostTitle: 'What Are Red Flags When Choosing an eXp Sponsor?', blogPostUri: 'exp-realty-sponsor/red-flags', cloudflareId: 'saa-infographic-sponsor-red-flags' },
+  { id: 'infographic-sponsor-provides', type: 'checklist', title: "What Sponsors Provide vs Don't", status: 'uploaded', category: 'content', blogPostId: '8548', blogPostTitle: 'What Do eXp Sponsors Provide and Not Provide?', blogPostUri: 'exp-realty-sponsor/what-they-provide', cloudflareId: 'saa-infographic-sponsor-provides' },
+  { id: 'infographic-sponsor-questions', type: 'checklist', title: 'Sponsor Interview Questions', status: 'uploaded', category: 'content', blogPostId: '8539', blogPostTitle: 'Questions to Ask an eXp Sponsor Before You Choose', blogPostUri: 'exp-realty-sponsor/questions-to-ask', cloudflareId: 'saa-infographic-sponsor-questions' },
+  { id: 'infographic-sponsor-red-flags', type: 'checklist', title: 'eXp Sponsor Red Flags', status: 'uploaded', category: 'content', blogPostId: '8526', blogPostTitle: 'What Are Red Flags When Choosing an eXp Sponsor?', blogPostUri: 'exp-realty-sponsor/red-flags', cloudflareId: 'saa-infographic-sponsor-red-flags' },
   { id: 'infographic-interview-questions', type: 'checklist', title: '17 Brokerage Interview Questions', status: 'placed', category: 'content', blogPostId: '3810', blogPostTitle: 'Top 17 Brokerage Interview Questions to Ask Before Choosing', blogPostUri: 'blog/agent-career-info/interview-questions', cloudflareId: 'saa-infographic-interview-questions' },
   { id: 'infographic-client-gifts', type: 'checklist', title: 'Client Gift Guide for Agents', status: 'placed', category: 'content', blogPostId: '3687', blogPostTitle: '15+ Great Ideas for Gifts to Wow Your Clients!', blogPostUri: 'blog/winning-clients/client-gifts', cloudflareId: 'saa-infographic-client-gifts' },
   { id: 'infographic-agent-books', type: 'checklist', title: '15 Must-Read Agent Books', status: 'placed', category: 'content', blogPostId: '3921', blogPostTitle: 'Best Real Estate Agent Books -15 Must-Reads for Serious Agents', blogPostUri: 'blog/fun-for-agents/books', cloudflareId: 'saa-infographic-agent-books' },
   // COMPARISON TABLE (17)
   { id: 'infographic-brokerage-commissions', type: 'comparison-table', title: 'Brokerage Commission Splits', status: 'placed', category: 'content', blogPostId: '3683', blogPostTitle: 'Best Real Estate Companies to Work For By Commission Splits in 2025', blogPostUri: 'blog/brokerage-comparison/commissions', cloudflareId: 'saa-infographic-brokerage-commissions' },
-  { id: 'infographic-brokerage-fees', type: 'comparison-table', title: 'Brokerage Fees Compared', status: 'placed', category: 'content', blogPostId: '3669', blogPostTitle: 'What the eXp Realty $85 Agent Brokerage Fee Covers', blogPostUri: 'about-exp-realty/brokerage-fee', cloudflareId: 'saa-infographic-brokerage-fees' },
-  { id: 'infographic-hidden-brokerage-fees', type: 'comparison-table', title: 'Hidden Brokerage Fees', status: 'placed', category: 'content', blogPostId: '3836', blogPostTitle: 'Hidden Real Estate Brokerage Agents Fees Explained', blogPostUri: 'exp-realty-sponsor/hidden-fees', cloudflareId: 'saa-infographic-hidden-brokerage-fees' },
-  { id: 'infographic-hidden-costs-top-producers', type: 'comparison-table', title: 'Hidden Costs for Top Producers', status: 'placed', category: 'content', blogPostId: '3834', blogPostTitle: 'Hidden Brokerage Costs for Top Producing Realtors', blogPostUri: 'exp-realty-sponsor/hidden-costs', cloudflareId: 'saa-infographic-hidden-costs-top-producers' },
-  { id: 'infographic-exp-vs-traditional', type: 'comparison-table', title: 'eXp vs Traditional Brokerages', status: 'placed', category: 'content', blogPostId: '3901', blogPostTitle: 'Comparing eXp Realty and Traditional Brokerages for Agents', blogPostUri: 'about-exp-realty/vs-traditional', cloudflareId: 'saa-infographic-exp-vs-traditional' },
-  { id: 'infographic-revenue-share-showdown', type: 'comparison-table', title: 'Revenue Share Showdown', status: 'placed', category: 'content', blogPostId: '3877', blogPostTitle: 'How eXp Realty Revenue Share Is Structured for Agents', blogPostUri: 'exp-realty-sponsor/how-revenue-share-works', cloudflareId: 'saa-infographic-revenue-share-showdown' },
-  { id: 'infographic-split-vs-net-income', type: 'comparison-table', title: 'Split vs Net Income', status: 'placed', category: 'content', blogPostId: '3835', blogPostTitle: 'Commission Split Versus Net Income for Realtors', blogPostUri: 'exp-realty-sponsor/commission-split-vs-net-income', cloudflareId: 'saa-infographic-split-vs-net-income' },
-  { id: 'infographic-sponsor-team-vs-production', type: 'comparison-table', title: 'Sponsor Team vs Production Team', status: 'placed', category: 'content', blogPostId: '3882', blogPostTitle: 'Difference between an eXp Sponsor and a Real Estate Team', blogPostUri: 'exp-realty-sponsor/sponsor-vs-team', cloudflareId: 'saa-infographic-sponsor-team-vs-production' },
-  { id: 'infographic-sponsor-vs-cosponsor', type: 'comparison-table', title: 'Sponsor vs Co-Sponsor', status: 'placed', category: 'content', blogPostId: '3888', blogPostTitle: 'What Is an eXp Sponsor and Co-Sponsor?', blogPostUri: 'exp-realty-sponsor/sponsor-cosponsor', cloudflareId: 'saa-infographic-sponsor-vs-cosponsor' },
-  { id: 'infographic-team-commission-math', type: 'comparison-table', title: 'Team Commission Math', status: 'placed', category: 'content', blogPostId: '8050', blogPostTitle: 'How eXp Realty Teams for Agents Are Structured', blogPostUri: 'about-exp-realty/teams', cloudflareId: 'saa-infographic-team-commission-math' },
-  { id: 'infographic-team-types-matrix', type: 'comparison-table', title: 'eXp Team Types Matrix', status: 'placed', category: 'content', blogPostId: '3651', blogPostTitle: 'Your Ultimate Guide to eXp Realty Teams: Structure, Splits, and Team Perks', blogPostUri: 'about-exp-realty/exp-realty-teams', cloudflareId: 'saa-infographic-team-types-matrix' },
+  { id: 'infographic-brokerage-fees', type: 'comparison-table', title: 'Brokerage Fees Compared', status: 'uploaded', category: 'content', blogPostId: '3669', blogPostTitle: 'What the eXp Realty $85 Agent Brokerage Fee Covers', blogPostUri: 'about-exp-realty/brokerage-fee', cloudflareId: 'saa-infographic-brokerage-fees' },
+  { id: 'infographic-hidden-brokerage-fees', type: 'comparison-table', title: 'Hidden Brokerage Fees', status: 'uploaded', category: 'content', blogPostId: '3836', blogPostTitle: 'Hidden Real Estate Brokerage Agents Fees Explained', blogPostUri: 'exp-realty-sponsor/hidden-fees', cloudflareId: 'saa-infographic-hidden-brokerage-fees' },
+  { id: 'infographic-hidden-costs-top-producers', type: 'comparison-table', title: 'Hidden Costs for Top Producers', status: 'uploaded', category: 'content', blogPostId: '3834', blogPostTitle: 'Hidden Brokerage Costs for Top Producing Realtors', blogPostUri: 'exp-realty-sponsor/hidden-costs', cloudflareId: 'saa-infographic-hidden-costs-top-producers' },
+  { id: 'infographic-exp-vs-traditional', type: 'comparison-table', title: 'eXp vs Traditional Brokerages', status: 'uploaded', category: 'content', blogPostId: '3901', blogPostTitle: 'Comparing eXp Realty and Traditional Brokerages for Agents', blogPostUri: 'about-exp-realty/vs-traditional', cloudflareId: 'saa-infographic-exp-vs-traditional' },
+  { id: 'infographic-revenue-share-showdown', type: 'comparison-table', title: 'Revenue Share Showdown', status: 'uploaded', category: 'content', blogPostId: '3877', blogPostTitle: 'How eXp Realty Revenue Share Is Structured for Agents', blogPostUri: 'exp-realty-sponsor/how-revenue-share-works', cloudflareId: 'saa-infographic-revenue-share-showdown' },
+  { id: 'infographic-split-vs-net-income', type: 'comparison-table', title: 'Split vs Net Income', status: 'uploaded', category: 'content', blogPostId: '3835', blogPostTitle: 'Commission Split Versus Net Income for Realtors', blogPostUri: 'exp-realty-sponsor/commission-split-vs-net-income', cloudflareId: 'saa-infographic-split-vs-net-income' },
+  { id: 'infographic-sponsor-team-vs-production', type: 'comparison-table', title: 'Sponsor Team vs Production Team', status: 'uploaded', category: 'content', blogPostId: '3882', blogPostTitle: 'Difference between an eXp Sponsor and a Real Estate Team', blogPostUri: 'exp-realty-sponsor/sponsor-vs-team', cloudflareId: 'saa-infographic-sponsor-team-vs-production' },
+  { id: 'infographic-sponsor-vs-cosponsor', type: 'comparison-table', title: 'Sponsor vs Co-Sponsor', status: 'uploaded', category: 'content', blogPostId: '3888', blogPostTitle: 'What Is an eXp Sponsor and Co-Sponsor?', blogPostUri: 'exp-realty-sponsor/sponsor-cosponsor', cloudflareId: 'saa-infographic-sponsor-vs-cosponsor' },
+  { id: 'infographic-team-commission-math', type: 'comparison-table', title: 'Team Commission Math', status: 'uploaded', category: 'content', blogPostId: '8050', blogPostTitle: 'How eXp Realty Teams for Agents Are Structured', blogPostUri: 'about-exp-realty/teams', cloudflareId: 'saa-infographic-team-commission-math' },
+  { id: 'infographic-team-types-matrix', type: 'comparison-table', title: 'eXp Team Types Matrix', status: 'uploaded', category: 'content', blogPostId: '3651', blogPostTitle: 'Your Ultimate Guide to eXp Realty Teams: Structure, Splits, and Team Perks', blogPostUri: 'about-exp-realty/exp-realty-teams', cloudflareId: 'saa-infographic-team-types-matrix' },
   { id: 'infographic-top-brokerages', type: 'comparison-table', title: 'Top Brokerages by Profitability', status: 'placed', category: 'content', blogPostId: '3816', blogPostTitle: "Top Real Estate Companies: Who's Really Got Your Back?", blogPostUri: 'blog/brokerage-comparison/profits', cloudflareId: 'saa-infographic-top-brokerages' },
   { id: 'infographic-re-schools-scorecard', type: 'comparison-table', title: 'Top Real Estate Schools', status: 'placed', category: 'content', blogPostId: '3814', blogPostTitle: 'The Top 5 Real Estate Schools Online in 2025', blogPostUri: 'blog/real-estate-schools/schools', cloudflareId: 'saa-infographic-re-schools-scorecard' },
-  { id: 'infographic-100-commission-vs-exp', type: 'comparison-table', title: '100% Commission vs eXp', status: 'placed', category: 'content', blogPostId: '3667', blogPostTitle: 'Comparing 100 Percent Commission and eXp Realty', blogPostUri: 'about-exp-realty/100-percent', cloudflareId: 'saa-infographic-100-commission-vs-exp' },
-  { id: 'infographic-100-percent-commission', type: 'comparison-table', title: '100% Commission: The Truth', status: 'placed', category: 'content', blogPostId: '3742', blogPostTitle: 'What Does Over 100% Commission Payout Really Mean for Realtors?', blogPostUri: 'exp-realty-sponsor/over-100-percent-commission', cloudflareId: 'saa-infographic-100-percent-commission' },
-  { id: 'infographic-exp-team-types-2026', type: 'comparison-table', title: 'eXp Team Types 2026', status: 'placed', category: 'content', blogPostId: '8618', blogPostTitle: 'eXp Realty Teams 2026 Structure Explained', blogPostUri: 'about-exp-realty/teams-2026-structure', cloudflareId: 'saa-infographic-exp-team-types-2026' },
+  { id: 'infographic-100-commission-vs-exp', type: 'comparison-table', title: '100% Commission vs eXp', status: 'uploaded', category: 'content', blogPostId: '3667', blogPostTitle: 'Comparing 100 Percent Commission and eXp Realty', blogPostUri: 'about-exp-realty/100-percent', cloudflareId: 'saa-infographic-100-commission-vs-exp' },
+  { id: 'infographic-100-percent-commission', type: 'comparison-table', title: '100% Commission: The Truth', status: 'uploaded', category: 'content', blogPostId: '3742', blogPostTitle: 'What Does Over 100% Commission Payout Really Mean for Realtors?', blogPostUri: 'exp-realty-sponsor/over-100-percent-commission', cloudflareId: 'saa-infographic-100-percent-commission' },
+  { id: 'infographic-exp-team-types-2026', type: 'comparison-table', title: 'eXp Team Types 2026', status: 'uploaded', category: 'content', blogPostId: '8618', blogPostTitle: 'eXp Realty Teams 2026 Structure Explained', blogPostUri: 'about-exp-realty/teams-2026-structure', cloudflareId: 'saa-infographic-exp-team-types-2026' },
   { id: 'comparison-exp-kw', type: 'comparison-table', title: 'eXp vs KW', status: 'placed', category: 'content', blogPostId: '3826', blogPostTitle: 'eXp Realty vs Keller Williams: Which Brokerage is Best for Realtors?', blogPostUri: 'blog/brokerage-comparison/exp-kw', cloudflareId: 'saa-comparison-exp-kw' },
   // BAR CHART (5)
   { id: 'infographic-new-agent-expenses', type: 'bar-chart', title: 'New Agent Expense Budget', status: 'placed', category: 'content', blogPostId: '3923', blogPostTitle: 'Real Estate Agent Expenses New Agents Should Expect in 2025', blogPostUri: 'blog/agent-career-info/expenses', cloudflareId: 'saa-infographic-new-agent-expenses' },
   { id: 'infographic-social-platforms', type: 'bar-chart', title: 'Top Social Platforms for Agents', status: 'placed', category: 'content', blogPostId: '3678', blogPostTitle: 'Real Estate Social Network: Top 10 Platforms to Build Your Presence', blogPostUri: 'blog/marketing-mastery/social-network', cloudflareId: 'saa-infographic-social-platforms' },
   { id: 'infographic-top-cities-agents', type: 'bar-chart', title: 'Best Cities for Real Estate Agents', status: 'placed', category: 'content', blogPostId: '3691', blogPostTitle: 'Best Places to be a Real Estate Agent: Opportunity Galore', blogPostUri: 'blog/agent-career-info/best-places', cloudflareId: 'saa-infographic-top-cities-agents' },
   { id: 'infographic-agent-hours', type: 'bar-chart', title: 'Real Estate Agent Hours', status: 'placed', category: 'content', blogPostId: '3677', blogPostTitle: 'The Truth About Real Estate Agent Hours: Flexibility or 24/7 Grind?', blogPostUri: 'blog/agent-career-info/hours', cloudflareId: 'saa-infographic-agent-hours' },
-  { id: 'infographic-30-hour-week', type: 'bar-chart', title: 'The 30-Hour Week', status: 'placed', category: 'content', blogPostId: '3738', blogPostTitle: 'How to Structure a 30 Hour Realtor Work Week Plan', blogPostUri: 'exp-realty-sponsor/30-hour-week', cloudflareId: 'saa-infographic-30-hour-week' },
+  { id: 'infographic-30-hour-week', type: 'bar-chart', title: 'The 30-Hour Week', status: 'uploaded', category: 'content', blogPostId: '3738', blogPostTitle: 'How to Structure a 30 Hour Realtor Work Week Plan', blogPostUri: 'exp-realty-sponsor/30-hour-week', cloudflareId: 'saa-infographic-30-hour-week' },
   // STATS CHART (2)
   { id: 'infographic-off-market-stats', type: 'stats-chart', title: 'Off-Market vs MLS Sales', status: 'placed', category: 'content', blogPostId: '3646', blogPostTitle: 'Compass, Zillow, eXp Realty Clash with Off Market Listings', blogPostUri: 'blog/industry-trends/exclusive-listings', cloudflareId: 'saa-infographic-off-market-stats' },
-  { id: 'infographic-exp-healthcare', type: 'stats-chart', title: 'eXp Healthcare Options', status: 'placed', category: 'content', blogPostId: '3841', blogPostTitle: 'How eXp Healthcare Coverage Is Structured for Agents', blogPostUri: 'about-exp-realty/healthcare', cloudflareId: 'saa-infographic-exp-healthcare' },
+  { id: 'infographic-exp-healthcare', type: 'stats-chart', title: 'eXp Healthcare Options', status: 'uploaded', category: 'content', blogPostId: '3841', blogPostTitle: 'How eXp Healthcare Coverage Is Structured for Agents', blogPostUri: 'about-exp-realty/healthcare', cloudflareId: 'saa-infographic-exp-healthcare' },
   // REVENUE SHARE (1)
-  { id: 'revenue-share-breakdown-v2', type: 'revenue-share', title: 'eXp Revenue Share', status: 'placed', category: 'content', blogPostId: '3879', blogPostTitle: 'Complete Guide to eXp Realty Revenue Share for Agents', blogPostUri: 'exp-realty-sponsor/revenue-share', cloudflareId: 'saa-revenue-share-breakdown-v2' },
+  { id: 'revenue-share-breakdown-v2', type: 'revenue-share', title: 'eXp Revenue Share', status: 'uploaded', category: 'content', blogPostId: '3879', blogPostTitle: 'Complete Guide to eXp Realty Revenue Share for Agents', blogPostUri: 'exp-realty-sponsor/revenue-share', cloudflareId: 'saa-revenue-share-breakdown-v2' },
 ];
 
 // --- BROKERAGE COMPARISON CHARTS (from generate-comparison-image.mjs, all uploaded to Cloudflare Images) ---
@@ -216,12 +216,58 @@ const WORKFLOW_STEPS = [
   { step: 8, title: 'Rebuild & Deploy', desc: 'Regenerate blog posts JSON, commit, push to trigger Cloudflare Pages deploy. Build and reload admin dashboard for tab updates.' },
 ];
 
+const CF_IMG_HASH = 'RZBQ4dWu2c_YEpklnDDxFg';
+
 export function InfographicsTab() {
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>('all');
   const [filterStatus, setFilterStatus] = useState<Status | 'all'>('all');
   const [filterType, setFilterType] = useState<LayoutType | 'all'>('all');
   const [showWorkflow, setShowWorkflow] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<{ url: string; title: string } | null>(null);
+
+  // Approval state
+  const [approvals, setApprovals] = useState<Record<string, boolean>>({});
+  const [loadingApprovals, setLoadingApprovals] = useState(true);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
+
+  // Fetch approvals on mount
+  useEffect(() => {
+    fetch('/api/master-controller/infographics')
+      .then(r => r.json())
+      .then(data => {
+        const map: Record<string, boolean> = {};
+        for (const a of data.approvals || []) {
+          map[a.id] = a.approved;
+        }
+        setApprovals(map);
+      })
+      .catch(() => {})
+      .finally(() => setLoadingApprovals(false));
+  }, []);
+
+  const toggleApproval = useCallback(async (ig: InfographicEntry) => {
+    const newApproved = !approvals[ig.id];
+    setTogglingId(ig.id);
+    try {
+      const res = await fetch('/api/master-controller/infographics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: ig.id,
+          approved: newApproved,
+          blogPostId: ig.blogPostId,
+          cloudflareId: ig.cloudflareId,
+          title: ig.title,
+          blogPostTitle: ig.blogPostTitle,
+        }),
+      });
+      if (res.ok) {
+        setApprovals(prev => ({ ...prev, [ig.id]: newApproved }));
+      }
+    } catch {}
+    setTogglingId(null);
+  }, [approvals]);
 
   const activeList = useMemo(() => {
     if (activeCategory === 'content') return CONTENT_INFOGRAPHICS;
@@ -382,7 +428,9 @@ export function InfographicsTab() {
       {/* Infographic List */}
       <div className="rounded-lg border border-[#2a2a2a] overflow-hidden">
         {/* Table Header */}
-        <div className="grid grid-cols-[1fr_140px_120px_1fr] gap-2 px-4 py-2.5 bg-[rgba(128,128,0,0.15)] text-xs text-[#ffd700] uppercase tracking-wider font-bold">
+        <div className="grid grid-cols-[60px_110px_1fr_130px_100px_1fr] gap-2 px-4 py-2.5 bg-[rgba(128,128,0,0.15)] text-xs text-[#ffd700] uppercase tracking-wider font-bold">
+          <div className="text-center">Preview</div>
+          <div className="text-center">Approval</div>
           <div>Infographic</div>
           <div>Type</div>
           <div>Status</div>
@@ -393,12 +441,62 @@ export function InfographicsTab() {
         {filtered.map((ig, i) => (
           <div
             key={ig.id}
-            className="grid grid-cols-[1fr_140px_120px_1fr] gap-2 px-4 py-3 items-center"
+            className="grid grid-cols-[60px_110px_1fr_130px_100px_1fr] gap-2 px-4 py-3 items-center"
             style={{
               background: i % 2 === 0 ? '#141414' : '#1a1a1a',
               borderBottom: '1px solid #2a2a2a',
             }}
           >
+            {/* Preview Button */}
+            <div className="flex justify-center">
+              {ig.cloudflareId ? (
+                <button
+                  onClick={() => setPreviewImage({
+                    url: `https://imagedelivery.net/${CF_IMG_HASH}/${ig.cloudflareId}/public`,
+                    title: ig.title,
+                  })}
+                  className="p-1.5 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] text-[#dcdbd5] hover:text-[#ffd700] transition-all"
+                  title="Preview image"
+                >
+                  <Eye className="w-4 h-4" />
+                </button>
+              ) : (
+                <span className="text-[#333] text-xs">-</span>
+              )}
+            </div>
+
+            {/* Approve / Disapprove Toggle */}
+            <div className="flex justify-center">
+              {loadingApprovals ? (
+                <Loader2 className="w-4 h-4 text-[#555] animate-spin" />
+              ) : togglingId === ig.id ? (
+                <span className="flex items-center gap-1.5 text-xs text-[#ffd700]">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Saving...
+                </span>
+              ) : approvals[ig.id] ? (
+                <button
+                  onClick={() => toggleApproval(ig)}
+                  disabled={!ig.blogPostId}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-[rgba(255,50,50,0.15)] text-[#ff5555] border border-[rgba(255,50,50,0.3)] hover:bg-[rgba(255,50,50,0.25)] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  title="Click to disapprove and remove from blog"
+                >
+                  <XCircle className="w-3.5 h-3.5" />
+                  Disapprove
+                </button>
+              ) : (
+                <button
+                  onClick={() => toggleApproval(ig)}
+                  disabled={!ig.blogPostId}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-[rgba(0,255,136,0.1)] text-[#00ff88] border border-[rgba(0,255,136,0.25)] hover:bg-[rgba(0,255,136,0.2)] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  title={!ig.blogPostId ? 'No blog post mapped' : 'Click to approve and place in blog'}
+                >
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  Approve
+                </button>
+              )}
+            </div>
+
             {/* Name */}
             <div className="flex items-center gap-2 min-w-0">
               <span className="text-sm text-[#e5e4dd] font-semibold truncate">{ig.title}</span>
@@ -470,6 +568,43 @@ export function InfographicsTab() {
           </div>
         </div>
       </div>
+
+      {/* Image Preview Modal */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="relative max-w-[90vw] max-h-[90vh] flex flex-col items-center"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between w-full mb-3 px-1">
+              <span className="text-sm text-[#e5e4dd] font-semibold truncate mr-4">{previewImage.title}</span>
+              <button
+                onClick={() => setPreviewImage(null)}
+                className="p-1 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] text-[#dcdbd5] hover:text-white transition-all flex-shrink-0"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <img
+              src={previewImage.url}
+              alt={previewImage.title}
+              className="max-w-full max-h-[80vh] rounded-lg border border-[#2a2a2a] object-contain"
+            />
+            <a
+              href={previewImage.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 flex items-center gap-1.5 text-xs text-[#00ff88] hover:underline"
+            >
+              <ExternalLink className="w-3 h-3" />
+              Open full size in new tab
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
