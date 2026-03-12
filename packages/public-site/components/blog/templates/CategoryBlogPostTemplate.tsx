@@ -187,8 +187,12 @@ export function CategoryBlogPostTemplate({
       });
 
       // Inject h2 into Rank Math TOC blocks that lack one (some posts have it, some don't)
+      // Check both direct h2 children and h2s inside heading-wrappers (created by the backing effect)
       document.querySelectorAll<HTMLElement>('.blog-content .wp-block-rank-math-toc-block, .blog-content #rank-math-toc').forEach((toc) => {
-        if (!toc.querySelector(':scope > h2')) {
+        // Deduplicate heading-wrappers inside TOC (can accumulate from dark/light mode toggling)
+        const tocWrappers = toc.querySelectorAll(':scope > .heading-wrapper');
+        for (let i = 1; i < tocWrappers.length; i++) tocWrappers[i].remove();
+        if (!toc.querySelector(':scope > h2') && !toc.querySelector(':scope > .heading-wrapper > h2')) {
           const h2 = document.createElement('h2');
           h2.textContent = 'Table of Contents';
           toc.insertBefore(h2, toc.firstChild);
