@@ -152,33 +152,11 @@
    (prevents bright yellow glow on light background)
    ======================================== */
 
-/* Light mode H1 - dark face text on light background, gold backing stays visible */
+/* Light mode H1 - keep same white face as dark mode, dark backing provides contrast */
 .light-mode .text-h1,
 .light-mode h1.text-h1 {
   animation: none !important;
   filter: none !important;
-}
-.light-mode h1.text-h1.text-display {
-  color: #191818 !important;
-  text-shadow:
-    0 0 0.08em rgba(180, 140, 0, 0.3),
-    0 0 0.2em rgba(180, 140, 0, 0.15),
-    0.003em 0.005em 0 #a8a79e,
-    0.006em 0.010em 0 #9e9d94,
-    0.009em 0.016em 0 #94938a,
-    0.012em 0.022em 0 #8a8980,
-    0.015em 0.028em 0 #807f76,
-    0.018em 0.035em 0 #76756c,
-    0.021em 0.042em 0 #6c6b62,
-    0.024em 0.049em 0 #626158,
-    0.027em 0.056em 0 #58574e,
-    0.030em 0.063em 0 #4e4d44,
-    0.033em 0.070em 0 #444340,
-    0.036em 0.077em 0 #3a3938,
-    0.039em 0.084em 0 #303030,
-    0.042em 0.090em 0 #282828,
-    0.045em 0.096em 0 #222222,
-    0.048em 0.102em 0 #1c1c1c !important;
 }
 
 /* RankMath FAQ Block Styling - Accordion style matching homepage */
@@ -967,41 +945,7 @@ body.light-mode .blog-content .wp-block-media-text__media:hover {
   }
 }
 
-/* Tables */
-.blog-content table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid rgba(229, 228, 221, 0.2);
-  border-radius: 0.5rem;
-  overflow: hidden;
-}
-
-.blog-content th {
-  font-family: var(--font-taskor);
-  padding: 0.75rem 1rem;
-  text-align: left;
-  font-weight: 600;
-  border-bottom: 2px solid #ffd700;
-  background: rgba(255, 215, 0, 0.1);
-  color: #e5e4dd;
-}
-
-.blog-content td {
-  font-family: var(--font-amulya);
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid rgba(229, 228, 221, 0.1);
-  color: #dcdbd5;
-}
-
-.blog-content tr:last-child td {
-  border-bottom: none;
-}
-
-.blog-content tr:hover {
-  background: rgba(255, 215, 0, 0.03);
-}
+/* Tables - base rules removed; overridden by !important section below */
 
 /* Horizontal Rule */
 .blog-content hr {
@@ -1143,12 +1087,15 @@ body.light-mode .blog-content .wp-block-media-text__media:hover {
   }
 
   .blog-content table {
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
   }
 
-  .blog-content th,
+  .blog-content th {
+    padding: 0.75rem !important;
+  }
+
   .blog-content td {
-    padding: 0.5rem 0.75rem;
+    padding: 0.625rem 0.75rem !important;
   }
 }
 
@@ -1226,20 +1173,20 @@ body.light-mode .blog-content pre code {
 }
 
 body.light-mode .blog-content table {
-  /* Tables - medium gray text */
   color: #4a4a4a;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(250, 248, 240, 0.7));
+  border-color: rgba(179, 143, 0, 0.2);
 }
 
 body.light-mode .blog-content th {
-  /* Table headers - dark gray on light background */
-  color: #3a3a3a;
-  background-color: rgba(0, 0, 0, 0.08);
+  color: #7a5c00;
+  background: linear-gradient(180deg, rgba(179, 143, 0, 0.12), rgba(179, 143, 0, 0.06));
+  border-bottom-color: rgba(179, 143, 0, 0.25);
 }
 
 body.light-mode .blog-content td {
-  color: #4a4a4a;
-  border-color: rgba(0, 0, 0, 0.1);
-  background-color: rgba(0, 0, 0, 0.02);
+  color: #3a3a3a;
+  border-color: rgba(0, 0, 0, 0.08);
 }
 
 body.light-mode .blog-content hr {
@@ -1541,7 +1488,7 @@ body.light-mode .blog-content.prose-invert h2 {
   background: none !important;
   border: none !important;
   box-shadow: none !important;
-  border-radius: 0 !important;
+  border-radius: 12px !important;
 }
 
 /* Mobile scroll indicator */
@@ -1561,34 +1508,58 @@ body.light-mode .blog-content.prose-invert h2 {
 .blog-content table {
   width: 100% !important;
   min-width: 500px;
-  border-collapse: collapse !important;
-  background: rgba(20, 20, 20, 0.6) !important;
-  border-radius: 8px !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.7), rgba(30, 28, 22, 0.6)) !important;
+  border-radius: 12px !important;
   overflow: hidden !important;
-  border: 1px solid rgba(255, 215, 0, 0.2) !important;
+  border: 1px solid rgba(255, 215, 0, 0.15) !important;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.3) !important;
 }
 
 .blog-content th {
-  background: rgba(255, 215, 0, 0.15) !important;
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.14), rgba(255, 215, 0, 0.08)) !important;
   color: #ffd700 !important;
+  font-family: var(--font-taskor) !important;
   font-weight: 600 !important;
   text-align: left !important;
-  padding: 1rem !important;
-  border-bottom: 2px solid rgba(255, 215, 0, 0.3) !important;
-  border-color: rgba(255, 215, 0, 0.3) !important;
+  padding: 1rem 1.25rem !important;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.25) !important;
+  border-right: 1px solid rgba(255, 215, 0, 0.08) !important;
+  letter-spacing: 0.01em !important;
+}
+
+.blog-content th:last-child {
+  border-right: none !important;
 }
 
 .blog-content td {
-  padding: 1rem !important;
-  border-bottom: 1px solid rgba(100, 100, 100, 0.3) !important;
-  border-color: rgba(100, 100, 100, 0.3) !important;
+  padding: 0.875rem 1.25rem !important;
+  border-bottom: 1px solid rgba(100, 100, 100, 0.2) !important;
+  border-right: 1px solid rgba(100, 100, 100, 0.08) !important;
   vertical-align: top !important;
   color: #e5e4dd !important;
   background: transparent !important;
+  transition: background 0.2s ease !important;
+}
+
+.blog-content td:last-child {
+  border-right: none !important;
+}
+
+/* First column emphasis - label column */
+.blog-content td:first-child {
+  color: #f0efe8 !important;
+  font-weight: 500 !important;
 }
 
 .blog-content tr {
   background: transparent !important;
+}
+
+/* Alternating row tint */
+.blog-content tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.02) !important;
 }
 
 .blog-content tr:last-child td {
@@ -1596,7 +1567,7 @@ body.light-mode .blog-content.prose-invert h2 {
 }
 
 .blog-content tr:hover td {
-  background: rgba(255, 215, 0, 0.05) !important;
+  background: rgba(255, 215, 0, 0.06) !important;
 }
 
 /* Override any WordPress text color inline styles on table elements */
@@ -1645,23 +1616,34 @@ body.light-mode .blog-content.prose-invert h2 {
 }
 
 .light-mode .blog-content table {
-  background: rgba(240, 240, 240, 0.6) !important;
-  border-color: rgba(179, 143, 0, 0.3) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(250, 248, 240, 0.75)) !important;
+  border-color: rgba(179, 143, 0, 0.2) !important;
+  box-shadow: 0 0 16px rgba(179, 143, 0, 0.04), 0 2px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
 .light-mode .blog-content th {
-  background: rgba(179, 143, 0, 0.15) !important;
-  color: #8b6914 !important;
-  border-bottom-color: rgba(179, 143, 0, 0.3) !important;
+  background: linear-gradient(180deg, rgba(179, 143, 0, 0.12), rgba(179, 143, 0, 0.06)) !important;
+  color: #7a5c00 !important;
+  border-bottom-color: rgba(179, 143, 0, 0.25) !important;
+  border-right-color: rgba(179, 143, 0, 0.08) !important;
 }
 
 .light-mode .blog-content td {
   color: #3a3a3a !important;
-  border-color: rgba(0, 0, 0, 0.1) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  border-right-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.light-mode .blog-content td:first-child {
+  color: #2a2a2a !important;
+}
+
+.light-mode .blog-content tbody tr:nth-child(even) td {
+  background: rgba(0, 0, 0, 0.02) !important;
 }
 
 .light-mode .blog-content tr:hover td {
-  background: rgba(179, 143, 0, 0.05) !important;
+  background: rgba(179, 143, 0, 0.06) !important;
 }
 
 .light-mode .blog-content th *[style*="color"],
