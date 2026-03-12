@@ -182,7 +182,9 @@ const STATIC_REDIRECTS = new Map([
   // Old parent index pages (no state/slug suffix)
   ['/become-real-estate-agent/schools', '/blog#category=real-estate-schools'],
   ['/become-real-estate-agent/license', '/blog#category=become-an-agent'],
-  // best-real-estate-brokerage old sub-pages
+  // best-real-estate-brokerage old sub-pages (online + traditional merged into hub)
+  ['/best-real-estate-brokerage/online', '/best-real-estate-brokerage/'],
+  ['/best-real-estate-brokerage/traditional', '/best-real-estate-brokerage/'],
   ['/best-real-estate-brokerage/commissions', '/best-real-estate-brokerage/'],
   ['/best-real-estate-brokerage/fees', '/best-real-estate-brokerage/'],
   ['/best-real-estate-brokerage/revenue-share', '/best-real-estate-brokerage/'],
@@ -215,7 +217,7 @@ const STATIC_REDIRECTS = new Map([
   ['/exp-realty-vs-redfin', '/best-real-estate-brokerage/'],
   ['/how-hard-is-the-real-estate-exam', '/blog#category=become-an-agent'],
   ['/pros-and-cons-of-360training', '/blog#category=real-estate-schools'],
-  ['/online-real-estate-brokerage', '/best-real-estate-brokerage/online/'],
+  ['/online-real-estate-brokerage', '/best-real-estate-brokerage/'],
   ['/divisions-2', '/about-exp-realty/divisions/'],
   ['/linkedin-hashtags', '/blog/marketing-mastery/linkedin-hashtags/'],
   // Old page slugs
