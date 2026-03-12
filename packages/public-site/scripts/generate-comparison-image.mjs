@@ -68,9 +68,11 @@ const ALL_STATS = [
  */
 function isAmbiguous(val) {
   const v = val.toLowerCase();
-  return v.includes('varies') || v.includes('negotiable') || v.includes('unclear')
-    || v.includes('unspecified') || v.includes('unverified')
-    || (v.includes('-') && /\$\d/.test(v) && /\$.*-.*\$/.test(v)); // price ranges like $15K-$36K
+  if (v.includes('varies') || v.includes('negotiable') || v.includes('unclear')
+    || v.includes('unspecified') || v.includes('unverified')) return true;
+  // Price ranges like "$15K-$36K" or "$300 - $2,500" but NOT "pre-cap"/"post-cap" hyphens
+  if (/\$[\d,.]+[Kk]?\s*-\s*\$[\d,.]+[Kk]?/.test(val)) return true;
+  return false;
 }
 
 /**
@@ -159,6 +161,12 @@ function getAdvantage(key, valueA, valueB, dataA, dataB) {
     if (!ambigA && ambigB) return { a: 'green', b: 'red' };
     if (ambigA && !ambigB) return { a: 'red', b: 'green' };
 
+    // For per-transaction fees: having a cap is better (limits total annual cost)
+    const hasCapA = a.includes('cap');
+    const hasCapB = b.includes('cap');
+    if (hasCapA && !hasCapB) return { a: 'green', b: 'red' };
+    if (hasCapB && !hasCapA) return { a: 'red', b: 'green' };
+
     // Both have concrete values - compare amounts
     const amtA = extractDollarAmount(valueA);
     const amtB = extractDollarAmount(valueB);
@@ -198,10 +206,11 @@ function getAdvantage(key, valueA, valueB, dataA, dataB) {
     return { a: 'neutral', b: 'neutral' };
   }
 
-  // Commission: higher starting split is better, reaching 100% is best
+  // Commission: reaching 100% is best; if both reach 100%, neutral
   if (key === 'commissionSplit') {
     const hasHundredA = a.includes('100');
     const hasHundredB = b.includes('100');
+    if (hasHundredA && hasHundredB) return { a: 'neutral', b: 'neutral' };
     if (hasHundredA && !hasHundredB) return { a: 'green', b: 'red' };
     if (hasHundredB && !hasHundredA) return { a: 'red', b: 'green' };
     const splitA = a.match(/(\d+)\//);
