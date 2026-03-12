@@ -136,6 +136,55 @@ async function checkGitHubWorkflow(workflowFile: string, id: string, name: strin
 
 // ─── Main check ───────────────────────────────────────────────────────────────
 
+async function checkDlvritQueue(): Promise<Automation> {
+  try {
+    const stateFile = await fs.readFile('/home/ubuntu/saabuildingblocks-platform/packages/social-poster/data/dlvrit-state.json', 'utf-8');
+    const state = JSON.parse(stateFile);
+    const lastScheduled = new Date(state.lastScheduledDate);
+    const daysRemaining = Math.floor((lastScheduled.getTime() - Date.now()) / 86400000);
+    const cronExists = await cronJobExists('dlvrit-cron.sh');
+
+    if (daysRemaining > 0 && cronExists) {
+      return { id: 'dlvrit-social-poster', name: 'dlvr.it Social Poster', description: 'Blog post queue for social media', category: 'Social Media', status: 'active' };
+    }
+    return {
+      id: 'dlvrit-social-poster', name: 'dlvr.it Social Poster', description: 'Blog post queue for social media', category: 'Social Media', status: 'broken',
+      statusDetail: daysRemaining <= 0 ? 'Queue exhausted' : 'Cron job missing',
+    };
+  } catch {
+    return { id: 'dlvrit-social-poster', name: 'dlvr.it Social Poster', description: 'Blog post queue for social media', category: 'Social Media', status: 'broken', statusDetail: 'State file not found' };
+  }
+}
+
+async function checkDlvritYouTube(): Promise<Automation> {
+  const cronExists = await cronJobExists('dlvrit-youtube-cron');
+  return {
+    id: 'dlvrit-youtube-resharer', name: 'dlvr.it YouTube Resharer', description: 'YouTube video resharing', category: 'Social Media',
+    status: cronExists ? 'active' : 'broken',
+    statusDetail: !cronExists ? 'Cron job missing' : undefined,
+  };
+}
+
+async function checkDlvritYouTubeRotation(): Promise<Automation> {
+  try {
+    const stateFile = await fs.readFile('/home/ubuntu/saabuildingblocks-platform/packages/social-poster/data/dlvrit-youtube-rotation-state.json', 'utf-8');
+    const state = JSON.parse(stateFile);
+    const lastScheduled = new Date(state.lastScheduledDate);
+    const daysRemaining = Math.floor((lastScheduled.getTime() - Date.now()) / 86400000);
+    const cronExists = await cronJobExists('dlvrit-youtube-rotation-cron');
+
+    if (daysRemaining > 0 && cronExists) {
+      return { id: 'dlvrit-youtube-rotation', name: 'dlvr.it YouTube Rotation', description: 'YouTube video reshare rotation', category: 'Social Media', status: 'active' };
+    }
+    return {
+      id: 'dlvrit-youtube-rotation', name: 'dlvr.it YouTube Rotation', description: 'YouTube video reshare rotation', category: 'Social Media', status: 'broken',
+      statusDetail: daysRemaining <= 0 ? 'Queue exhausted' : 'Cron job missing',
+    };
+  } catch {
+    return { id: 'dlvrit-youtube-rotation', name: 'dlvr.it YouTube Rotation', description: 'YouTube video reshare rotation', category: 'Social Media', status: 'broken', statusDetail: 'State file not found' };
+  }
+}
+
 async function getAllStatuses(): Promise<Automation[]> {
   const results = await Promise.all([
     checkPM2(),
@@ -151,6 +200,9 @@ async function getAllStatuses(): Promise<Automation[]> {
     checkSystemdTimer('playwright-chrome-cleanup', 'timer-playwright-cleanup', 'Playwright Cleanup', 'Kills orphaned Chrome processes'),
     checkGitHubWorkflow('deploy-cloudflare.yml', 'gh-deploy-cloudflare', 'Deploy to Cloudflare', 'Static site deployment'),
     checkGitHubWorkflow('ci.yml', 'gh-ci-pipeline', 'CI Pipeline', 'TypeScript type-checking'),
+    checkDlvritQueue(),
+    checkDlvritYouTube(),
+    checkDlvritYouTubeRotation(),
   ]);
   return results;
 }

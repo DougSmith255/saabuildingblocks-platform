@@ -755,6 +755,161 @@ async function checkBuildPipelines(): Promise<Automation[]> {
   ];
 }
 
+// ─── Check: dlvr.it Social Poster ────────────────────────────────────────────
+
+async function checkDlvritSocialPoster(): Promise<Automation> {
+  const statePath = '/home/ubuntu/saabuildingblocks-platform/packages/social-poster/data/dlvrit-state.json';
+  const cronExists = await cronJobExists('dlvrit-cron.sh');
+
+  let status: 'active' | 'broken' = 'broken';
+  let lastRun: string | undefined;
+  let nextRun: string | undefined;
+  let statusDetail: string | undefined;
+
+  try {
+    const stateFile = await fs.readFile(statePath, 'utf-8');
+    const state = JSON.parse(stateFile);
+
+    lastRun = state.lastRunDate;
+    statusDetail = `${state.totalQueued} posts queued, scheduled through ${new Date(state.lastScheduledDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+
+    // Check if the queue extends at least 7 days into the future
+    const lastScheduled = new Date(state.lastScheduledDate);
+    const now = new Date();
+    const daysRemaining = Math.floor((lastScheduled.getTime() - now.getTime()) / 86400000);
+
+    if (daysRemaining > 0 && cronExists) {
+      status = 'active';
+      if (daysRemaining < 14) {
+        statusDetail += ` (${daysRemaining} days remaining - refill soon)`;
+      }
+    } else if (daysRemaining <= 0) {
+      status = 'broken';
+      statusDetail = 'Queue exhausted - no future posts scheduled';
+    } else if (!cronExists) {
+      status = 'broken';
+      statusDetail += ' (cron job not found)';
+    }
+  } catch {
+    statusDetail = 'State file not found - scheduler has not run yet';
+  }
+
+  if (!cronExists && status === 'active') {
+    status = 'broken';
+    statusDetail = (statusDetail || '') + ' (cron job missing)';
+  }
+
+  return {
+    id: 'dlvrit-social-poster',
+    name: 'dlvr.it Social Poster',
+    description: 'Queues blog posts to dlvr.it for scheduled posting to LinkedIn, Facebook, Threads, Pinterest, Reddit',
+    category: 'Social Media',
+    schedule: 'Monthly cron (refills 45-day queue)',
+    status,
+    lastRun,
+    statusDetail,
+    logFile: 'dlvrit-social-poster.log',
+  };
+}
+
+// ─── Check: dlvr.it YouTube Resharer ────────────────────────────────────────
+
+async function checkDlvritYouTube(): Promise<Automation> {
+  const statePath = '/home/ubuntu/saabuildingblocks-platform/packages/social-poster/data/dlvrit-youtube-state.json';
+  const cronExists = await cronJobExists('dlvrit-youtube-cron');
+
+  let status: 'active' | 'broken' = 'broken';
+  let lastRun: string | undefined;
+  let statusDetail: string | undefined;
+
+  try {
+    const stateFile = await fs.readFile(statePath, 'utf-8');
+    const state = JSON.parse(stateFile);
+
+    lastRun = state.lastChecked;
+    statusDetail = `${state.videosShared} videos shared, last: "${state.lastVideoTitle}"`;
+
+    if (cronExists) {
+      status = 'active';
+    } else {
+      statusDetail += ' (cron job not found)';
+    }
+  } catch {
+    if (cronExists) {
+      status = 'active';
+      statusDetail = 'Cron active, no videos shared yet';
+    } else {
+      statusDetail = 'State file not found and cron job missing';
+    }
+  }
+
+  return {
+    id: 'dlvrit-youtube-resharer',
+    name: 'dlvr.it YouTube Resharer',
+    description: 'Checks for new YouTube videos every 4 hours and queues them across social platforms with staggered timing',
+    category: 'Social Media',
+    schedule: 'Every 4 hours',
+    status,
+    lastRun,
+    statusDetail,
+    logFile: 'dlvrit-youtube.log',
+  };
+}
+
+// ─── Check: dlvr.it YouTube Rotation ────────────────────────────────────────
+
+async function checkDlvritYouTubeRotation(): Promise<Automation> {
+  const statePath = '/home/ubuntu/saabuildingblocks-platform/packages/social-poster/data/dlvrit-youtube-rotation-state.json';
+  const cronExists = await cronJobExists('dlvrit-youtube-rotation-cron');
+
+  let status: 'active' | 'broken' = 'broken';
+  let lastRun: string | undefined;
+  let statusDetail: string | undefined;
+
+  try {
+    const stateFile = await fs.readFile(statePath, 'utf-8');
+    const state = JSON.parse(stateFile);
+
+    lastRun = state.lastRunDate;
+    statusDetail = `${state.totalQueued} reshares queued, scheduled through ${new Date(state.lastScheduledDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+
+    const lastScheduled = new Date(state.lastScheduledDate);
+    const daysRemaining = Math.floor((lastScheduled.getTime() - Date.now()) / 86400000);
+
+    if (daysRemaining > 0 && cronExists) {
+      status = 'active';
+      if (daysRemaining < 14) {
+        statusDetail += ` (${daysRemaining} days remaining - refill soon)`;
+      }
+    } else if (daysRemaining <= 0) {
+      status = 'broken';
+      statusDetail = 'Queue exhausted - no future reshares scheduled';
+    } else if (!cronExists) {
+      status = 'broken';
+      statusDetail += ' (cron job not found)';
+    }
+  } catch {
+    if (cronExists) {
+      status = 'active';
+      statusDetail = 'Cron active, scheduler has not run yet';
+    } else {
+      statusDetail = 'State file not found and cron job missing';
+    }
+  }
+
+  return {
+    id: 'dlvrit-youtube-rotation',
+    name: 'dlvr.it YouTube Rotation',
+    description: 'Reshares recent YouTube videos on a rotating schedule across all platforms',
+    category: 'Social Media',
+    schedule: 'Monthly cron (refills 45-day queue)',
+    status,
+    lastRun,
+    statusDetail,
+    logFile: 'dlvrit-youtube-rotation.log',
+  };
+}
+
 // ─── Main API Handler ────────────────────────────────────────────────────────
 
 export async function GET(request: NextRequest) {
@@ -784,6 +939,9 @@ export async function GET(request: NextRequest) {
       email,
       notifications,
       buildPipelines,
+      dlvritSocialPoster,
+      dlvritYouTube,
+      dlvritYouTubeRotation,
     ] = await Promise.all([
       checkAutoUpdate(),
       checkDependencyUpdates(),
@@ -835,6 +993,9 @@ export async function GET(request: NextRequest) {
       checkEmailSystem(),
       checkNotificationAutomations(),
       checkBuildPipelines(),
+      checkDlvritSocialPoster(),
+      checkDlvritYouTube(),
+      checkDlvritYouTubeRotation(),
     ]);
 
     const automations: Automation[] = [
@@ -866,6 +1027,10 @@ export async function GET(request: NextRequest) {
       ...notifications,
       // Build Pipelines
       ...buildPipelines,
+      // Social Media
+      dlvritSocialPoster,
+      dlvritYouTube,
+      dlvritYouTubeRotation,
     ];
 
     const activeCount = automations.filter(a => a.status === 'active').length;
