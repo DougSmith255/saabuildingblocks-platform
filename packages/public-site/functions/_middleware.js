@@ -256,8 +256,7 @@ const STATIC_REDIRECTS = new Map([
   ['/exp-realty-sponsor/earnings', '/exp-realty-sponsor/revenue-share-earnings/'],
   ['/exp-realty-sponsor/affect-revenue-share', '/exp-realty-sponsor/revenue-share-impact/'],
   ['/contact', '/book-a-call/'],
-  ['/about-exp-realty/revenue-share-flexibility/true', '/about-exp-realty/revenue-share-flexibility/'],
-  ['/about-exp-realty/revenue-share-flexibility/loading', '/about-exp-realty/revenue-share-flexibility/'],
+  // /true, /loading suffixes now handled generically by STEP 3b junk suffix stripper
   ['/about-exp-', '/about-exp-realty/'],
   ['/products', '/'],
   ['/privacy', '/privacy-policy/'],
@@ -265,7 +264,7 @@ const STATIC_REDIRECTS = new Map([
   ['/real-estate-schools', '/blog#category=real-estate-schools'],
   ['/getting-a-license', '/blog#category=become-an-agent'],
   ['/about-exp-realty/exp-agent-perceptions', '/about-exp-realty/'],
-  ['/about-exp-realty/exp-realty-offices/preload', '/about-exp-realty/exp-realty-offices/'],
+  // /preload suffix now handled generically by STEP 3b junk suffix stripper
   ['/et_template/team-value-3-0-copy', '/exp-realty-sponsor/'],
 ]);
 
@@ -309,13 +308,16 @@ export async function onRequest(context) {
     }
   }
 
-  // --- STEP 3b: Strip trailing pagination/null suffixes from content paths ---
-  // Bots append /1, /2, /null etc. to blog and category pages
-  const paginationMatch = path.match(/^(\/(?:blog\/[a-z-]+\/[a-z0-9-]+|about-exp-realty\/[a-z0-9-]+|exp-realty-sponsor\/[a-z0-9-]+))\/(\d+|null)\/?$/);
-  if (paginationMatch) {
+  // --- STEP 3b: Strip trailing junk suffixes from content paths ---
+  // Bots/crawlers append /true, /loading, /null, /preload, /1, /2, etc. to page URLs.
+  // This is not a code bug - it's crawlers testing JavaScript state values as URL suffixes.
+  // Evidence: different Chrome versions (103-133) within minutes, hit count always 1-2,
+  // referrer always bare origin. Facebook's crawler appends /null specifically.
+  const junkSuffixMatch = path.match(/^(\/(?:blog\/[a-z-]+\/[a-z0-9-]+|about-exp-realty\/[a-z0-9-]+|exp-realty-sponsor\/[a-z0-9-]+|(?!api|_next|agent-portal|master-controller|login)[a-z0-9-]+))\/(true|false|loading|null|undefined|preload|\d+)\/?$/);
+  if (junkSuffixMatch) {
     return new Response(null, {
       status: 301,
-      headers: { 'Location': paginationMatch[1] + '/' },
+      headers: { 'Location': junkSuffixMatch[1] + '/' },
     });
   }
 
