@@ -19,6 +19,8 @@ export const COLOR_PRESETS: ColorPreset[] = [
     description: 'Cool blues and teals inspired by the sea',
     colors: {
       accentGreen: '#0ea5e9', // Sky blue accent
+      accentPurple: '#7c3aed',
+      accentBlue: '#06b6d4',
       green: '#0ea5e9',
       brandGold: '#06b6d4', // Cyan brand
       headingText: '#0f172a', // Slate 900 headings
@@ -33,6 +35,8 @@ export const COLOR_PRESETS: ColorPreset[] = [
     description: 'Natural greens and earth tones',
     colors: {
       accentGreen: '#10b981', // Emerald accent
+      accentPurple: '#7c3aed',
+      accentBlue: '#3b82f6',
       green: '#10b981',
       brandGold: '#14b8a6', // Teal brand
       headingText: '#1c1917', // Stone 900 headings
@@ -47,6 +51,8 @@ export const COLOR_PRESETS: ColorPreset[] = [
     description: 'Warm oranges and purples',
     colors: {
       accentGreen: '#f97316', // Orange accent
+      accentPurple: '#a855f7',
+      accentBlue: '#3b82f6',
       green: '#f97316',
       brandGold: '#a855f7', // Purple brand
       headingText: '#1c1917', // Stone 900 headings
@@ -61,6 +67,8 @@ export const COLOR_PRESETS: ColorPreset[] = [
     description: 'Dark theme with vibrant accents',
     colors: {
       accentGreen: '#3b82f6', // Blue accent
+      accentPurple: '#8b5cf6',
+      accentBlue: '#3b82f6',
       green: '#3b82f6',
       brandGold: '#8b5cf6', // Violet brand
       headingText: '#f8fafc', // Slate 50 headings
@@ -75,6 +83,8 @@ export const COLOR_PRESETS: ColorPreset[] = [
     description: 'Soft pinks and warm neutrals',
     colors: {
       accentGreen: '#f43f5e', // Rose accent
+      accentPurple: '#ec4899',
+      accentBlue: '#3b82f6',
       green: '#f43f5e',
       brandGold: '#ec4899', // Pink brand
       headingText: '#1f2937', // Gray 800 headings
@@ -89,6 +99,8 @@ export const COLOR_PRESETS: ColorPreset[] = [
     description: 'Professional blues and grays',
     colors: {
       accentGreen: '#2563eb', // Blue 600 accent
+      accentPurple: '#7c3aed',
+      accentBlue: '#2563eb',
       green: '#2563eb',
       brandGold: '#7c3aed', // Violet 600 brand
       headingText: '#111827', // Gray 900 headings
@@ -103,6 +115,8 @@ export const COLOR_PRESETS: ColorPreset[] = [
     description: 'Custom brand colors for Hyperdrive theme',
     colors: {
       accentGreen: '#00ff88',
+      accentPurple: '#a855f7',
+      accentBlue: '#3b82f6',
       green: '#00ff88',
       headingText: '#e5e4dd',
       bodyText: '#dcdbd5',

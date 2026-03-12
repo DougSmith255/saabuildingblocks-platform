@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Auto-place or remove from WordPress
-    let wpResult = { success: true, error: undefined as string | undefined };
+    let wpResult: { success: boolean; error?: string } = { success: true };
     if (blogPostId && cloudflareId) {
       if (approved) {
         wpResult = await placeInfographic(blogPostId, cloudflareId, title || id, blogPostTitle || '');
