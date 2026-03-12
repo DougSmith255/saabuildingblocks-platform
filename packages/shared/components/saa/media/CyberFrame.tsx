@@ -86,6 +86,11 @@ export function CyberFrame({
         .cyber-frame {
           position: relative;
           display: inline-block;
+        }
+
+        .cyber-frame.cyber-frame-block {
+          display: block;
+          width: 100%;
           /* 3D Metal Frame - separate from H2 plates */
           padding: 6px;
           background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);

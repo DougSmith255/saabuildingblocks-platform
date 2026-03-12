@@ -120,8 +120,7 @@ function BlogContentRenderer({ html }: { html: string }) {
 
 /** Posts that handle their own comparison chart in the WordPress content.
  *  These skip the auto-inserted "At-a-Glance Comparison" section. */
-const SKIP_AUTO_COMPARISON_SLUGS = new Set([
-  'exp-realty-vs-keller-williams',
+const SKIP_AUTO_COMPARISON_SLUGS = new Set<string>([
 ]);
 
 export interface FAQItem {
@@ -343,19 +342,15 @@ export function CategoryBlogPostTemplate({
                   {/* Comparison Chart - inline for brokerage-comparison */}
                   {/* Posts with custom comparison placement in content skip the auto-inserted chart */}
                   {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && !SKIP_AUTO_COMPARISON_SLUGS.has(post.slug) && (
-                    <div className="mb-8 mx-auto" style={{ maxWidth: 900 }} id="at-a-glance-comparison">
+                    <div className="mb-8 w-full" id="at-a-glance-comparison">
                       <h2 id="at-a-glance-comparison-heading" style={{ textAlign: 'center' }}>At-a-Glance Comparison</h2>
-                      <CyberFrame className="!block w-full">
-                        <Image
-                          src={post.comparisonImages[0].url}
-                          alt={post.comparisonImages[0].alt || post.comparisonImages[0].title || 'Brokerage comparison chart'}
-                          width={900}
-                          height={1013}
-                          sizes="(max-width: 900px) 100vw, 900px"
-                          className="object-contain w-full h-auto"
-                          priority={true}
-                        />
-                      </CyberFrame>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={post.comparisonImages[0].url}
+                        alt={post.comparisonImages[0].alt || post.comparisonImages[0].title || 'Brokerage comparison chart'}
+                        style={{ display: 'block', width: '100%', height: 'auto', borderRadius: '12px' }}
+                        loading="eager"
+                      />
                     </div>
                   )}
                   <div data-speakable="summary">
