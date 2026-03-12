@@ -17,7 +17,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const FONTS_DIR = resolve(__dirname, '../public/fonts');
+const FONTS_DIR = resolve(__dirname, '../fonts');
 const IMAGES_DIR = resolve(__dirname, '../public/images');
 const DATA_FILE = resolve(__dirname, 'brokerage-data.json');
 
@@ -89,21 +89,49 @@ function extractDollarAmount(val) {
  * Determine advantage for a stat comparison.
  * Fixed values beat ambiguous ranges (certainty = advantage).
  */
-function getAdvantage(key, valueA, valueB) {
+function getAdvantage(key, valueA, valueB, dataA, dataB) {
   const a = (valueA || '').toLowerCase();
   const b = (valueB || '').toLowerCase();
 
-  // Glassdoor: higher is better
+  // Glassdoor: neutral if within 0.5, otherwise higher wins
   if (key === 'glassdoorRating') {
     const numA = parseFloat(valueA);
     const numB = parseFloat(valueB);
+    if (Math.abs(numA - numB) < 0.5) return { a: 'neutral', b: 'neutral' };
     if (numA > numB) return { a: 'green', b: 'red' };
     if (numB > numA) return { a: 'red', b: 'green' };
     return { a: 'neutral', b: 'neutral' };
   }
 
+  // Revenue share: if both have "Yes", compare tier counts (more tiers = higher income potential)
+  if (key === 'revenueShareIncome') {
+    function boolScore(v) {
+      if (v.startsWith('yes')) return 3;
+      if (v.includes('401') || v.includes('limited') || v.includes('unknown') || v.includes('unclear')) return 1;
+      if (v.startsWith('no') || v.startsWith('n/a') || v === 'no') return 0;
+      return 2;
+    }
+    const scoreA = boolScore(a);
+    const scoreB = boolScore(b);
+    // If both have revenue share, compare tier counts
+    if (scoreA >= 2 && scoreB >= 2) {
+      const tiersA = a.match(/(\d+)\s*tier/);
+      const tiersB = b.match(/(\d+)\s*tier/);
+      if (tiersA && tiersB) {
+        const tA = parseInt(tiersA[1]);
+        const tB = parseInt(tiersB[1]);
+        if (tA > tB) return { a: 'green', b: 'red' };
+        if (tB > tA) return { a: 'red', b: 'green' };
+      }
+      return { a: 'neutral', b: 'neutral' };
+    }
+    if (scoreA > scoreB) return { a: 'green', b: 'red' };
+    if (scoreB > scoreA) return { a: 'red', b: 'green' };
+    return { a: 'neutral', b: 'neutral' };
+  }
+
   // Boolean-style fields: Yes > Limited/Unknown/401k > No/N/A
-  if (['support247', 'sponsorValue', 'revenueShareIncome', 'retirementPath', 'willableIncome'].includes(key)) {
+  if (['support247', 'sponsorValue', 'retirementPath', 'willableIncome'].includes(key)) {
     function boolScore(v) {
       if (v.startsWith('yes')) return 3;
       if (v.includes('401') || v.includes('limited') || v.includes('unknown') || v.includes('unclear')) return 1;
@@ -236,7 +264,7 @@ function buildComparisonHtml(nameA, nameB, dataA, dataB) {
 
     const valA = dataA[key] || 'N/A';
     const valB = dataB[key] || 'N/A';
-    const adv = getAdvantage(key, valA, valB);
+    const adv = getAdvantage(key, valA, valB, dataA, dataB);
 
     // Glassdoor gets star display
     let displayA = valA;
@@ -282,31 +310,31 @@ function buildComparisonHtml(nameA, nameB, dataA, dataB) {
 
 body {
   background: #0a0a0a;
-  width: 800px;
+  width: 1600px;
   overflow: hidden;
 }
 
 .container {
-  width: 800px;
-  padding: 28px 30px 20px;
+  width: 1600px;
+  padding: 56px 60px 40px;
 }
 
 /* Header bar */
 .header {
   background: linear-gradient(135deg, rgba(255,215,0,0.15) 0%, rgba(255,215,0,0.05) 100%);
   border: 1px solid rgba(255,215,0,0.3);
-  border-radius: 8px;
-  padding: 14px 28px;
+  border-radius: 16px;
+  padding: 28px 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  margin-bottom: 16px;
+  gap: 40px;
+  margin-bottom: 32px;
 }
 
 .header-title {
   font-family: 'Taskor', sans-serif;
-  font-size: 22px;
+  font-size: 44px;
   color: #ffd700;
   letter-spacing: 0.04em;
   text-align: center;
@@ -314,25 +342,25 @@ body {
 
 .header-vs {
   font-family: 'Taskor', sans-serif;
-  font-size: 16px;
+  font-size: 32px;
   color: rgba(255,215,0,0.5);
-  padding: 0 4px;
+  padding: 0 8px;
 }
 
 /* Column headers */
 .col-headers {
   display: flex;
   justify-content: space-between;
-  padding: 0 8px;
-  margin-bottom: 8px;
+  padding: 0 16px;
+  margin-bottom: 16px;
 }
 
 .col-name {
   font-family: 'Taskor', sans-serif;
-  font-size: 16px;
+  font-size: 32px;
   letter-spacing: 0.03em;
-  padding: 7px 14px;
-  border-radius: 6px;
+  padding: 14px 28px;
+  border-radius: 12px;
 }
 
 .col-name-left {
@@ -351,7 +379,7 @@ body {
 table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 3px;
+  border-spacing: 0 6px;
 }
 
 tr {
@@ -363,17 +391,17 @@ tr:nth-child(odd) {
 }
 
 td {
-  padding: 9px 16px;
+  padding: 18px 32px;
   vertical-align: middle;
 }
 
 .label-cell {
   font-family: 'Amulya', sans-serif;
-  font-size: 14px;
+  font-size: 28px;
   font-weight: 600;
   color: #e5e4dd;
   text-align: center;
-  width: 190px;
+  width: 380px;
   white-space: nowrap;
   border-left: 1px solid rgba(255,215,0,0.1);
   border-right: 1px solid rgba(255,215,0,0.1);
@@ -381,19 +409,19 @@ td {
 
 .val-cell {
   font-family: 'Synonym', sans-serif;
-  font-size: 14px;
+  font-size: 28px;
   font-weight: 500;
   line-height: 1.35;
 }
 
 .val-left {
   text-align: right;
-  padding-right: 20px;
+  padding-right: 40px;
 }
 
 .val-right {
   text-align: left;
-  padding-left: 20px;
+  padding-left: 40px;
 }
 
 /* Section header rows */
@@ -403,18 +431,18 @@ td {
 
 .section-cell {
   font-family: 'Taskor', sans-serif;
-  font-size: 13px;
+  font-size: 26px;
   color: #ffd700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 12px 0 4px 0;
+  padding: 24px 0 8px 0;
   border-bottom: 1px solid rgba(255,215,0,0.15);
 }
 
 /* Footer */
 .footer {
-  margin-top: 12px;
-  padding-top: 10px;
+  margin-top: 24px;
+  padding-top: 20px;
   border-top: 1px solid rgba(255,215,0,0.12);
   display: flex;
   align-items: center;
@@ -424,49 +452,49 @@ td {
 .footer-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
 }
 
 .footer-logo {
-  width: 26px;
-  height: 26px;
+  width: 52px;
+  height: 52px;
   opacity: 0.7;
 }
 
 .footer-brand {
   font-family: 'Taskor', sans-serif;
-  font-size: 11px;
+  font-size: 22px;
   color: rgba(255,215,0,0.6);
   letter-spacing: 0.03em;
 }
 
 .footer-url {
   font-family: 'Synonym', sans-serif;
-  font-size: 11px;
+  font-size: 22px;
   color: #555;
 }
 
 /* Legend */
 .legend {
   display: flex;
-  gap: 20px;
+  gap: 40px;
   justify-content: center;
-  margin-top: 8px;
-  margin-bottom: 2px;
+  margin-top: 16px;
+  margin-bottom: 4px;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 12px;
   font-family: 'Synonym', sans-serif;
-  font-size: 10px;
+  font-size: 20px;
   color: #777;
 }
 
 .legend-dot {
-  width: 7px;
-  height: 7px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
 }
 </style>
@@ -540,7 +568,7 @@ async function generateImage(browser, slug, outDir) {
 
   const html = buildComparisonHtml(nameA, nameB, dataA, dataB);
   const page = await browser.newPage();
-  await page.setViewport({ width: 800, height: 1600 });
+  await page.setViewport({ width: 1600, height: 3200, deviceScaleFactor: 2 });
   await page.setContent(html, { waitUntil: 'networkidle0' });
 
   // Get actual content height
@@ -552,7 +580,7 @@ async function generateImage(browser, slug, outDir) {
   const outputPath = resolve(outDir, `comparison-${slug}.png`);
   await page.screenshot({
     path: outputPath,
-    clip: { x: 0, y: 0, width: 800, height: bodyHeight },
+    clip: { x: 0, y: 0, width: 1600, height: bodyHeight },
     omitBackground: false,
   });
 

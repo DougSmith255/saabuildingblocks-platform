@@ -3,11 +3,12 @@
     "eXp Realty": {
       "shortName": "eXp",
       "glassdoorRating": "4.4",
+      "glassdoorReviews": 2100,
       "commissionSplit": "80/20 → 100/0",
       "franchiseFee": "0%",
       "productionCap": "$16,000",
       "monthlyFees": "$85",
-      "transactionFees": "$25/transaction",
+      "transactionFees": "$25 pre-cap; $250 post-cap (20 max), then $75",
       "eoInsurance": "$40/txn ($500 cap)",
       "training": "50+ live/week + University",
       "support247": "Yes",
@@ -20,6 +21,7 @@
     "Keller Williams": {
       "shortName": "KW",
       "glassdoorRating": "4.3",
+      "glassdoorReviews": 9000,
       "commissionSplit": "70/30 → 100/0",
       "franchiseFee": "6% ($3K cap/yr)",
       "productionCap": "$15K-$36K+ (varies)",
@@ -37,6 +39,7 @@
     "Century 21": {
       "shortName": "C21",
       "glassdoorRating": "3.9",
+      "glassdoorReviews": 1400,
       "commissionSplit": "70/30 → 90/10",
       "franchiseFee": "6-8% (even after cap)",
       "productionCap": "$22,500",
@@ -54,6 +57,7 @@
     "Coldwell Banker": {
       "shortName": "CB",
       "glassdoorRating": "4.1",
+      "glassdoorReviews": 2800,
       "commissionSplit": "50/50 → 90/10",
       "franchiseFee": "5-6.5% (up to 8%)",
       "productionCap": "No cap",
@@ -71,6 +75,7 @@
     "Compass": {
       "shortName": "Compass",
       "glassdoorRating": "4.0",
+      "glassdoorReviews": 2400,
       "commissionSplit": "60/40 → 90/10",
       "franchiseFee": "None (company-owned)",
       "productionCap": "Negotiable (market-dependent)",
@@ -88,6 +93,7 @@
     "RE/MAX": {
       "shortName": "RE/MAX",
       "glassdoorRating": "4.1",
+      "glassdoorReviews": 3000,
       "commissionSplit": "60/40 → 95/5",
       "franchiseFee": "5% royalty + 1% franchise",
       "productionCap": "$23K (some $15K-$20K)",
@@ -105,6 +111,7 @@
     "Berkshire Hathaway": {
       "shortName": "BH",
       "glassdoorRating": "4.2",
+      "glassdoorReviews": 683,
       "commissionSplit": "60/40 → 90/10",
       "franchiseFee": "6-7% (declining structure)",
       "productionCap": "No cap (rare exceptions)",
@@ -122,6 +129,7 @@
     "Sotheby's": {
       "shortName": "Sotheby's",
       "glassdoorRating": "4.4",
+      "glassdoorReviews": 572,
       "commissionSplit": "70/30 → 90/10",
       "franchiseFee": "8% (6% royalty + 2% ad)",
       "productionCap": "No cap",
@@ -139,6 +147,7 @@
     "Douglas Elliman": {
       "shortName": "Elliman",
       "glassdoorRating": "3.8",
+      "glassdoorReviews": 600,
       "commissionSplit": "50/50 → 70/30 (tiered)",
       "franchiseFee": "6%",
       "productionCap": "$21K-$30K (where available)",
@@ -156,6 +165,7 @@
     "Redfin": {
       "shortName": "Redfin",
       "glassdoorRating": "3.6",
+      "glassdoorReviews": 1800,
       "commissionSplit": "40/60 → 75/25 (W-2)",
       "franchiseFee": "0% (not a franchise)",
       "productionCap": "N/A (W-2 employees)",
@@ -173,6 +183,7 @@
     "The Agency": {
       "shortName": "The Agency",
       "glassdoorRating": "4.0",
+      "glassdoorReviews": 84,
       "commissionSplit": "70/30 → 90/10",
       "franchiseFee": "6% (5% royalty + 1% mktg)",
       "productionCap": "No cap",
@@ -190,6 +201,7 @@
     "Corcoran": {
       "shortName": "Corcoran",
       "glassdoorRating": "4.2",
+      "glassdoorReviews": 377,
       "commissionSplit": "50/50 → 70/30 (tiered)",
       "franchiseFee": "6%",
       "productionCap": "No cap",
@@ -207,6 +219,7 @@
     "Better Homes & Gardens": {
       "shortName": "BHG",
       "glassdoorRating": "4.4",
+      "glassdoorReviews": 300,
       "commissionSplit": "50/50 → 80/20",
       "franchiseFee": "5-8% (varies by franchise)",
       "productionCap": "Some offices have caps",
@@ -224,6 +237,7 @@
     "Fathom Realty": {
       "shortName": "Fathom",
       "glassdoorRating": "4.6",
+      "glassdoorReviews": 70,
       "commissionSplit": "100/0, 88/12, or 80/20",
       "franchiseFee": "0%",
       "productionCap": "$0 / $9K / $12K (by plan)",
@@ -241,6 +255,7 @@
     "LPT Realty": {
       "shortName": "LPT",
       "glassdoorRating": "3.5",
+      "glassdoorReviews": 70,
       "commissionSplit": "80/20 or $500/txn flat",
       "franchiseFee": "0%",
       "productionCap": "$15K or $5K (by plan)",
@@ -258,6 +273,7 @@
     "Real Brokerage": {
       "shortName": "Real",
       "glassdoorRating": "4.4",
+      "glassdoorReviews": 155,
       "commissionSplit": "85/15 → 100/0",
       "franchiseFee": "0%",
       "productionCap": "$12,000",
