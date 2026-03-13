@@ -265,9 +265,11 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         ctx.restore();
       }
 
-      // ── Edge vignette (only when active) ────────────────
-      if (isActive && bass > 0.15) {
-        const va = (bass - 0.15) * 0.5;
+      // ── Edge vignette (fades in smoothly from audio start) ──
+      if (hasAudio) {
+        // Smooth fade-in over first 1.5s after clicking play
+        const fadeIn = Math.min(initAge / 1.5, 1);
+        const va = fadeIn * (0.06 + bass * 0.35);
         const lG = ctx.createLinearGradient(0, 0, w * 0.12, 0);
         lG.addColorStop(0, `rgba(160,80,255,${va})`);
         lG.addColorStop(1, 'transparent');
