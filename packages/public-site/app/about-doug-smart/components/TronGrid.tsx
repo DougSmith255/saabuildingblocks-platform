@@ -39,10 +39,12 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
     );
     observer.observe(canvas);
 
-    // Small blue particles
-    const particles = Array.from({ length: 50 }, (_, i) => ({
+    // Blue dot atmosphere - varied sizes, brighter, audio-reactive
+    const particles = Array.from({ length: 120 }, (_, i) => ({
       a: i * 137.508,
-      s: 0.08 + (i % 7) * 0.03,
+      s: 0.06 + (i % 9) * 0.025,
+      r: 1.0 + (i % 5) * 0.35,       // radius 1.0 - 2.4
+      alpha: 0.18 + (i % 7) * 0.035,  // alpha 0.18 - 0.39
     }));
 
     // Each colored line tracks its own position 0-1 independently
@@ -104,9 +106,9 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
       const perspY = (t: number) => horizon + (h - horizon) * (t * t);
 
       // Bass pulse for grid brightness (blue only, more dramatic)
-      const bassPulse = hasAudio ? bass * 0.45 : 0;
-      // Base idle brightness - brighter so grid is clearly visible before play
-      const baseAlpha = 0.25 + bassPulse;
+      const bassPulse = hasAudio ? bass * 0.6 : 0;
+      // Base idle brightness - clearly visible grid before play
+      const baseAlpha = 0.38 + bassPulse;
 
       // ── Horizontal grid lines (ALWAYS CYAN) ─────────────
       for (let i = 0; i <= hLines; i++) {
@@ -115,12 +117,18 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         const { xl, xr } = xBounds(y);
         const fade = 0.3 + 0.7 * (1 - t);
 
+        ctx.save();
         ctx.strokeStyle = `rgba(0,212,255,${baseAlpha * fade})`;
-        ctx.lineWidth = 0.5 + bassPulse * 4 * (1 - t * 0.6);
+        ctx.lineWidth = 0.5 + bassPulse * 5 * (1 - t * 0.6);
+        if (hasAudio) {
+          ctx.shadowBlur = 6 + bass * 16 * (1 - t * 0.5);
+          ctx.shadowColor = `rgba(0,212,255,${0.3 + bass * 0.6})`;
+        }
         ctx.beginPath();
         ctx.moveTo(xl, y);
         ctx.lineTo(xr, y);
         ctx.stroke();
+        ctx.restore();
 
         // Init shockwave
         if (isInit) {
@@ -145,19 +153,25 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
       for (let i = -vLines; i <= vLines; i++) {
         const bottomX = vanishX + (i / vLines) * spread;
         const intensity = 1 - Math.abs(i / vLines) * 0.5;
+        ctx.save();
         ctx.strokeStyle = `rgba(0,212,255,${baseAlpha * intensity})`;
-        ctx.lineWidth = 0.5 + bassPulse * 3 * intensity;
+        ctx.lineWidth = 0.5 + bassPulse * 4 * intensity;
+        if (hasAudio) {
+          ctx.shadowBlur = 4 + bass * 12 * intensity;
+          ctx.shadowColor = `rgba(0,212,255,${0.2 + bass * 0.5})`;
+        }
         ctx.beginPath();
         ctx.moveTo(vanishX, horizon);
         ctx.lineTo(bottomX, h);
         ctx.stroke();
+        ctx.restore();
       }
 
-      // ── Horizon glow (cyan) ─────────────────────────────
-      const glowR = 220 + bassPulse * 1400 + initBright * 300;
+      // ── Horizon glow (cyan, capped so it doesn't take over the screen) ──
+      const glowR = Math.min(200 + bassPulse * 280 + initBright * 200, 380);
       const grad = ctx.createRadialGradient(vanishX, horizon, 0, vanishX, horizon, glowR);
-      grad.addColorStop(0, `rgba(0,212,255,${0.18 + bassPulse * 2 + initBright * 0.5})`);
-      grad.addColorStop(0.35, `rgba(0,212,255,${0.06 + bassPulse * 0.5})`);
+      grad.addColorStop(0, `rgba(0,212,255,${0.2 + bassPulse * 0.8 + initBright * 0.5})`);
+      grad.addColorStop(0.4, `rgba(0,212,255,${0.06 + bassPulse * 0.25})`);
       grad.addColorStop(1, 'transparent');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
@@ -274,14 +288,23 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         ctx.fillRect(w * 0.88, 0, w * 0.12, h);
       }
 
-      // ── Small blue particles (always present) ───────────
+      // ── Blue dot atmosphere (always present, pulses with music) ──
+      const audioBoost = hasAudio ? 0.3 + bass * 0.5 : 0;
       for (const p of particles) {
-        const px = (Math.sin(p.a + time * p.s * 0.06) * 0.42 + 0.5) * w;
-        const py = (Math.cos(p.a * 1.3 + time * p.s * 0.04) * 0.32 + 0.28) * h;
-        ctx.fillStyle = 'rgba(0,212,255,0.15)';
+        const px = (Math.sin(p.a + time * p.s * 0.06) * 0.46 + 0.5) * w;
+        const py = (Math.cos(p.a * 1.3 + time * p.s * 0.04) * 0.38 + 0.3) * h;
+        const pa = p.alpha + audioBoost * (0.5 + 0.5 * Math.sin(time * 0.8 + p.a));
+        const pr = p.r + (hasAudio ? bass * 1.2 : 0);
+        ctx.save();
+        ctx.fillStyle = `rgba(0,212,255,${pa})`;
+        if (hasAudio && bass > 0.2) {
+          ctx.shadowBlur = 4 + bass * 8;
+          ctx.shadowColor = `rgba(0,212,255,${bass * 0.4})`;
+        }
         ctx.beginPath();
-        ctx.arc(px, py, 0.8, 0, Math.PI * 2);
+        ctx.arc(px, py, pr, 0, Math.PI * 2);
         ctx.fill();
+        ctx.restore();
       }
 
       raf = requestAnimationFrame(draw);
