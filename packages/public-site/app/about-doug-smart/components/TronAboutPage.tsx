@@ -2,60 +2,29 @@
 
 import { useRef, useEffect } from 'react';
 import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
-import { IconCard } from '@saa/shared/components/saa/cards';
-import { CyberFrame } from '@saa/shared/components/saa/media';
+import { CyberCard } from '@saa/shared/components/saa/cards';
+import { NeonCard } from '@saa/shared/components/saa/cards';
+import { ProfileCyberFrame } from '@saa/shared/components/saa/media';
+import { DiagonalWipeReveal, type DiagonalWipeRevealItem } from '@saa/shared/components/saa/scroll-animations/DiagonalWipeReveal';
 import { CTAButton } from '@saa/shared/components/saa/buttons';
-import { ClipPathReveal, type ClipPathRevealItem } from '@saa/shared/components/saa/scroll-animations/ClipPathReveal';
 import { JoinAllianceCTA } from '@/components/shared/JoinAllianceCTA';
 import Image from 'next/image';
 import { useTronAudio } from './useTronAudio';
 import { TronGrid } from './TronGrid';
+import {
+  Trophy,
+  Code2,
+  Zap,
+  Globe,
+  LayoutDashboard,
+  UserPlus,
+  Workflow,
+  Server,
+} from 'lucide-react';
 
 const AUDIO_URL = '/audio/doug-theme.mp3';
 const AUDIO_START = 5;
 const DOUG_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public';
-
-// ── SVG Icons (larger, multi-color) ─────────────────────────────
-
-function IconPortal() {
-  return (
-    <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="#00bfff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="6" y="8" width="36" height="32" rx="3" />
-      <path d="M6 16h36" />
-      <path d="M18 16v24" />
-      <rect x="22" y="22" width="16" height="6" rx="1" opacity="0.5" />
-      <rect x="22" y="32" width="10" height="6" rx="1" opacity="0.5" />
-    </svg>
-  );
-}
-
-function IconAttraction() {
-  return (
-    <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="#00cc66" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="24" cy="16" r="8" />
-      <path d="M8 42c0-8.8 7.2-16 16-16s16 7.2 16 16" />
-      <path d="M36 16l6 6M42 16l-6 6" opacity="0.6" />
-    </svg>
-  );
-}
-
-function IconAutomation() {
-  return (
-    <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="#a050ff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M26 6L12 28h12L22 42l16-22H26L26 6z" fill="rgba(160,80,255,0.1)" />
-    </svg>
-  );
-}
-
-function IconPlatform() {
-  return (
-    <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="#ffd700" strokeWidth="1.5" strokeLinecap="round">
-      <circle cx="24" cy="24" r="18" />
-      <ellipse cx="24" cy="24" rx="8" ry="18" />
-      <path d="M6 24h36M8 14h32M8 34h32" />
-    </svg>
-  );
-}
 
 // ── ASCII Art (perfectly symmetrical - 64 chars inner) ──────────
 
@@ -79,64 +48,68 @@ const SYSTEM_STATUS = `┌──────────────────
 │                                                              │
 └──────────────────────────────────────────────────────────────┘`;
 
-// ── Stats - things realtors actually care about ─────────────────
+// ── Stats ─────────────────────────────────────────────────────
 
-const STATS: { value: string; label: string; theme: 'blue' | 'purple' | 'green' | 'yellow' }[] = [
-  { value: 'Top 1%', label: 'eXp Attraction Network', theme: 'yellow' },
-  { value: 'Solo', label: 'Built The Entire Platform', theme: 'blue' },
-  { value: '24/7', label: 'Automated Infrastructure', theme: 'purple' },
-  { value: 'Global', label: '300+ Edge Servers', theme: 'green' },
-];
-
-// ── What I Built (reframed for agent value, removed Master Controller) ──
-
-const SYSTEMS_BUILT: ClipPathRevealItem[] = [
+const STATS: {
+  value: string;
+  label: string;
+  icon: React.ReactNode;
+  color: string;
+}[] = [
   {
-    icon: <IconPortal />,
-    title: 'The Agent Portal',
-    subtitle: 'Your Command Center',
-    description: 'Onboarding flows, analytics dashboards, marketing templates, elite courses, agent attraction tools, customizable link pages - everything you need to run your business, in one place.',
-    color: '#00bfff',
+    value: 'Top 1%',
+    label: 'eXp Attraction Network',
+    icon: <Trophy size={48} />,
+    color: '#ffd700',
   },
   {
-    icon: <IconAttraction />,
-    title: 'Agent Attraction Pages',
-    subtitle: 'Your Recruiting Machine',
-    description: 'Dynamic recruiting pages that work while you sleep. Custom video players, real-time tracking, conversion analytics - your personal landing page built to attract and convert new agents.',
-    color: '#00cc66',
+    value: 'Solo',
+    label: 'Built The Entire Platform',
+    icon: <Code2 size={48} />,
+    color: '#00d4ff',
   },
   {
-    icon: <IconAutomation />,
-    title: 'Automation Engine',
-    subtitle: 'Never Stops Working',
-    description: 'Email sequences that nurture leads around the clock. CRM sync, cron-based notifications, guest pass automations - systems that run your follow-up so you can focus on selling.',
+    value: '24/7',
+    label: 'Automated Infrastructure',
+    icon: <Zap size={48} />,
     color: '#a050ff',
   },
   {
-    icon: <IconPlatform />,
-    title: 'The Entire Platform',
-    subtitle: 'Built From Scratch',
-    description: 'Dual-deployment architecture across 300+ global edge servers. Zero-downtime deploys, CI/CD pipelines, enterprise-grade infrastructure - all designed, coded, and maintained by one developer.',
-    color: '#ffd700',
+    value: '300+',
+    label: 'Global Edge Servers',
+    icon: <Globe size={48} />,
+    color: '#00cc66',
   },
 ];
 
-// ── Dark glass card wrapper ─────────────────────────────────────
+// ── Systems Built ─────────────────────────────────────────────
 
-function GlassCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div
-      className={`rounded-2xl ${className}`}
-      style={{
-        background: 'linear-gradient(180deg, rgba(12,12,18,0.92) 0%, rgba(8,8,14,0.95) 100%)',
-        border: '1px solid rgba(0,212,255,0.08)',
-        boxShadow: '0 4px 30px rgba(0,0,0,0.4)',
-      }}
-    >
-      {children}
-    </div>
-  );
-}
+const SYSTEMS_BUILT: DiagonalWipeRevealItem[] = [
+  {
+    icon: <LayoutDashboard size={36} color="#00bfff" />,
+    title: 'The Agent Portal',
+    subtitle: 'Your Command Center',
+    description: 'Onboarding flows, analytics dashboards, marketing templates, elite courses, agent attraction tools, customizable link pages - everything you need to run your business, in one place.',
+  },
+  {
+    icon: <UserPlus size={36} color="#00cc66" />,
+    title: 'Agent Attraction Pages',
+    subtitle: 'Your Recruiting Machine',
+    description: 'Dynamic recruiting pages that work while you sleep. Custom video players, real-time tracking, conversion analytics - your personal landing page built to attract and convert new agents.',
+  },
+  {
+    icon: <Workflow size={36} color="#a050ff" />,
+    title: 'Automation Engine',
+    subtitle: 'Never Stops Working',
+    description: 'Email sequences that nurture leads around the clock. CRM sync, cron-based notifications, guest pass automations - systems that run your follow-up so you can focus on selling.',
+  },
+  {
+    icon: <Server size={36} color="#ffd700" />,
+    title: 'The Entire Platform',
+    subtitle: 'Built From Scratch',
+    description: 'Dual-deployment architecture across 300+ global edge servers. Zero-downtime deploys, CI/CD pipelines, enterprise-grade infrastructure - all designed, coded, and maintained by one developer.',
+  },
+];
 
 // ── Frequency Visualizer ────────────────────────────────────────
 
@@ -304,111 +277,152 @@ export function TronAboutPage() {
           </div>
         </section>
 
-        {/* ━━━ SYSTEM STATUS ASCII ART ━━━ */}
+        {/* ━━━ SYSTEM STATUS TERMINAL ━━━ */}
         <section className="relative py-20 md:py-28">
-          <GlassCard className="max-w-4xl mx-auto px-6 py-10 md:px-10 md:py-14">
-            <div className="text-center mb-5">
-              <H2 theme="blue">System Status</H2>
-            </div>
-            <div className="overflow-x-auto">
-              <pre
-                className="font-mono text-[0.5rem] sm:text-xs md:text-sm leading-relaxed mx-auto whitespace-pre"
-                style={{
-                  color: 'rgba(0,212,255,0.85)',
-                  textShadow: '0 0 5px rgba(0,212,255,0.3), 0 0 10px rgba(0,212,255,0.12)',
-                  width: 'fit-content',
-                }}
+          <CyberCard padding="xl" centered={false} className="max-w-4xl mx-auto">
+            <div className="terminal-wrapper relative overflow-hidden rounded-lg">
+              {/* Scanline overlay */}
+              <div className="terminal-scanlines absolute inset-0 pointer-events-none" style={{ zIndex: 2 }} />
+              {/* Sweep highlight */}
+              <div className="terminal-sweep absolute inset-0 pointer-events-none" style={{ zIndex: 3 }} />
+
+              {/* Terminal prompt */}
+              <div
+                className="font-mono text-[0.6rem] sm:text-xs mb-4 tracking-wider"
+                style={{ color: 'rgba(0,212,255,0.5)' }}
               >
-                {SYSTEM_STATUS}
-              </pre>
+                {'> SYSTEM DIAGNOSTIC_'}
+              </div>
+
+              {/* Terminal content */}
+              <div className="overflow-x-auto">
+                <pre
+                  className="font-mono text-[0.5rem] sm:text-xs md:text-sm leading-relaxed mx-auto whitespace-pre"
+                  style={{
+                    color: 'rgba(0,212,255,0.85)',
+                    textShadow: '0 0 5px rgba(0,212,255,0.3), 0 0 10px rgba(0,212,255,0.12)',
+                    width: 'fit-content',
+                  }}
+                >
+                  {SYSTEM_STATUS}
+                </pre>
+              </div>
             </div>
-          </GlassCard>
+          </CyberCard>
         </section>
 
-        {/* ━━━ STATS (IconCards) ━━━ */}
+        {/* ━━━ STATS GRID ━━━ */}
         <section className="relative py-16 md:py-20 px-4">
-          <div className="max-w-5xl mx-auto grid grid-cols-2 gap-4 md:gap-6">
+          <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {STATS.map((stat) => (
-              <IconCard key={stat.label} theme={stat.theme} hover centered>
+              <CyberCard key={stat.label} padding="lg" centered>
+                <div
+                  className="mb-3"
+                  style={{
+                    color: stat.color,
+                    filter: `drop-shadow(0 0 8px ${stat.color}80)`,
+                  }}
+                >
+                  {stat.icon}
+                </div>
                 <div
                   className="text-[clamp(1.8rem,4vw,3rem)] font-bold"
-                  style={{ fontFamily: 'var(--font-taskor)' }}
+                  style={{ fontFamily: 'var(--font-taskor)', color: '#e5e4dd' }}
                 >
                   {stat.value}
                 </div>
-                <p className="text-body mt-1 opacity-70">{stat.label}</p>
-              </IconCard>
+                <p
+                  className="mt-1"
+                  style={{ color: '#dcdbd5', opacity: 0.7, fontFamily: 'var(--font-amulya)' }}
+                >
+                  {stat.label}
+                </p>
+                {/* Bottom accent bar */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-[2px]"
+                  style={{
+                    background: stat.color,
+                    boxShadow: `0 0 12px ${stat.color}60, 0 0 4px ${stat.color}40`,
+                  }}
+                />
+              </CyberCard>
             ))}
           </div>
         </section>
 
         {/* ━━━ PROFILE + BIO ━━━ */}
         <section className="relative py-20 md:py-28 px-4">
-          <GlassCard className="max-w-5xl mx-auto p-8 md:p-12">
-            <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
-              {/* Photo */}
-              <div className="lg:w-2/5 flex justify-center">
-                <div className="w-[280px] md:w-[340px]">
-                  <CyberFrame variant="green" className="cyber-frame-block">
-                    <Image
-                      src={DOUG_PROFILE_IMAGE}
-                      alt="Doug Smart"
-                      width={400}
-                      height={400}
-                      className="object-cover"
-                      sizes="(max-width: 768px) 280px, 340px"
-                    />
-                  </CyberFrame>
-                </div>
-              </div>
-
-              {/* Bio */}
-              <div className="lg:w-3/5 space-y-6">
-                <h3
-                  className="text-h4 font-bold"
-                  style={{
-                    color: '#00d4ff',
-                    textShadow: '0 0 5px rgba(0,212,255,0.3), 0 0 10px rgba(0,212,255,0.12)',
-                    fontFamily: 'var(--font-taskor)',
-                  }}
-                >
-                  The Builder
-                </h3>
-                <p className="text-body" style={{ color: '#dcdbd5' }}>
-                  Top 1% eXp team builder and the architect behind Smart Agent Alliance&apos;s
-                  entire digital infrastructure. Every page on this site, every automation
-                  running in the background, every tool agents use daily - built from scratch
-                  by one developer.
-                </p>
-                <p className="text-body" style={{ color: '#dcdbd5' }}>
-                  With a Bachelor&apos;s in Industrial Design and four years building
-                  multi-million dollar homes during college, Doug developed the work ethic and
-                  attention to detail he now applies to building systems for agents. The result:
-                  a full-stack platform that gives our team a genuine competitive edge in their
-                  markets.
-                </p>
-                <p className="text-body" style={{ color: '#dcdbd5' }}>
-                  Doug specializes in passive revenue systems, branding, and marketing
-                  automation. If it&apos;s digital and it helps agents win, he built it.
-                </p>
+          <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+            {/* Photo with radial glow halo */}
+            <div className="lg:w-2/5 flex justify-center">
+              <div className="relative">
+                {/* Radial glow halo behind frame */}
+                <div className="profile-halo absolute inset-0" />
+                <ProfileCyberFrame size="xl" index={0}>
+                  <Image
+                    src={DOUG_PROFILE_IMAGE}
+                    alt="Doug Smart"
+                    fill
+                    className="object-cover"
+                    sizes="224px"
+                  />
+                </ProfileCyberFrame>
               </div>
             </div>
-          </GlassCard>
+
+            {/* Bio in NeonCard */}
+            <div className="lg:w-3/5">
+              <NeonCard padding="lg" centered={false}>
+                <H2 theme="blue">The Builder</H2>
+                <div className="space-y-5 mt-6">
+                  <p style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
+                    Top 1% eXp team builder and the architect behind Smart Agent Alliance&apos;s
+                    entire digital infrastructure. Every page on this site, every automation
+                    running in the background, every tool agents use daily - built from scratch
+                    by one developer.
+                  </p>
+                  <p style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
+                    With a Bachelor&apos;s in Industrial Design and four years building
+                    multi-million dollar homes during college, Doug developed the work ethic and
+                    attention to detail he now applies to building systems for agents. The result:
+                    a full-stack platform that gives our team a genuine competitive edge in their
+                    markets.
+                  </p>
+                  <p style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
+                    Doug specializes in passive revenue systems, branding, and marketing
+                    automation. If it&apos;s digital and it helps agents win, he built it.
+                  </p>
+                </div>
+              </NeonCard>
+            </div>
+          </div>
         </section>
 
-        {/* ━━━ WHAT I BUILT ━━━ */}
+        {/* ━━━ SYSTEMS I BUILT ━━━ */}
         <div className="relative">
-          <ClipPathReveal
-            items={SYSTEMS_BUILT}
-            header={<H2 theme="blue">What I Built</H2>}
+          <DiagonalWipeReveal
+            cards={SYSTEMS_BUILT}
+            header={<H2 theme="blue">Systems I Built</H2>}
+            showProgressBar={false}
           />
         </div>
 
         {/* ━━━ CTA ━━━ */}
         <section className="relative py-20 md:py-28 px-4">
-          <GlassCard className="max-w-3xl mx-auto p-8 md:p-12 text-center">
-            <H2 theme="blue">Ready to Level Up?</H2>
-            <p className="text-body mt-6 mb-10" style={{ color: '#dcdbd5' }}>
+          {/* Cyan separator line */}
+          <div
+            className="max-w-3xl mx-auto mb-12 h-px"
+            style={{
+              background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.5), transparent)',
+              boxShadow: '0 0 8px rgba(0,212,255,0.2)',
+            }}
+          />
+          <NeonCard padding="xl" centered className="max-w-3xl mx-auto">
+            <H2 theme="gold">Ready to Level Up?</H2>
+            <p
+              className="mt-6 mb-10"
+              style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}
+            >
               Join The Alliance and get access to the digital infrastructure
               that powers top-producing agents.
             </p>
@@ -418,15 +432,57 @@ export function TronAboutPage() {
                 Meet The Team
               </CTAButton>
             </div>
-          </GlassCard>
+          </NeonCard>
         </section>
       </main>
 
       {/* ━━━ STYLES ━━━ */}
       <style jsx global>{`
-        .cyber-frame-block {
-          display: block;
-          width: 100%;
+        /* Terminal scanlines */
+        .terminal-scanlines {
+          background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 212, 255, 0.03) 2px,
+            rgba(0, 212, 255, 0.03) 3px
+          );
+        }
+
+        /* Terminal sweep highlight */
+        .terminal-sweep {
+          background: linear-gradient(
+            180deg,
+            transparent 0%,
+            rgba(0, 212, 255, 0.06) 45%,
+            rgba(0, 212, 255, 0.1) 50%,
+            rgba(0, 212, 255, 0.06) 55%,
+            transparent 100%
+          );
+          animation: terminalSweep 4s ease-in-out infinite;
+        }
+
+        @keyframes terminalSweep {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100%); }
+        }
+
+        /* Profile glow halo */
+        .profile-halo {
+          background: radial-gradient(
+            circle at center,
+            rgba(0, 212, 255, 0.2) 0%,
+            rgba(0, 212, 255, 0.08) 40%,
+            transparent 70%
+          );
+          animation: haloPulse 3s ease-in-out infinite;
+          transform: scale(1.5);
+          border-radius: 50%;
+        }
+
+        @keyframes haloPulse {
+          0%, 100% { opacity: 0.15; }
+          50% { opacity: 0.3; }
         }
       `}</style>
     </div>
