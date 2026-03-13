@@ -14,6 +14,8 @@ export interface ClipPathRevealItem {
   subtitle: string;
   /** Description text */
   description: string;
+  /** Optional accent color (hex). Falls back to brand gold. */
+  color?: string;
 }
 
 export interface ClipPathRevealProps {
@@ -84,24 +86,26 @@ export function ClipPathReveal({
   return (
     <section ref={sectionRef} className={`py-16 px-4 ${className}`}>
       <div className="max-w-4xl mx-auto">
-        {header && <div className="text-center mb-12">{header}</div>}
+        {header && <div className="text-center mb-8">{header}</div>}
 
-        <div className="space-y-12">
+        <div className="space-y-16">
           {items.map((item, index) => {
             const cardProgress = revealProgress[index];
             const isEven = index % 2 === 0;
+            const c = item.color || BRAND_YELLOW;
 
             return (
               <div
                 key={item.title}
-                className={`reveal-card flex flex-col md:flex-row items-center gap-6 ${isEven ? '' : 'md:flex-row-reverse'}`}
+                className={`reveal-card flex flex-col md:flex-row items-center gap-8 ${isEven ? '' : 'md:flex-row-reverse'}`}
               >
                 {/* Icon circle */}
                 <div
-                  className="w-32 h-32 md:w-40 md:h-40 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
+                  className="w-36 h-36 md:w-44 md:h-44 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
                   style={{
-                    background: 'rgba(255,255,255,0.08)',
-                    border: '2px solid rgba(255,255,255,0.15)',
+                    background: 'rgba(255,255,255,0.12)',
+                    border: `2px solid ${c}44`,
+                    boxShadow: `0 0 20px ${c}15`,
                     transform: `scale(${0.8 + cardProgress * 0.2})`,
                     opacity: 0.3 + cardProgress * 0.7,
                   }}
@@ -114,8 +118,8 @@ export function ClipPathReveal({
                   className={`flex-1 p-6 rounded-2xl ${isEven ? '' : 'md:text-right'}`}
                   style={{
                     background: darkBackground,
-                    border: `1px solid ${BRAND_YELLOW}44`,
-                    boxShadow: `0 0 40px ${BRAND_YELLOW}15`,
+                    border: `1px solid ${c}44`,
+                    boxShadow: `0 0 40px ${c}15`,
                     opacity: 0.4 + cardProgress * 0.6,
                     transform: `translateX(${isEven ? (1 - cardProgress) * 30 : (cardProgress - 1) * 30}px)`,
                   }}
@@ -123,8 +127,8 @@ export function ClipPathReveal({
                   <div
                     className="inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-3"
                     style={{
-                      background: `${BRAND_YELLOW}22`,
-                      color: BRAND_YELLOW,
+                      background: `${c}22`,
+                      color: c,
                     }}
                   >
                     {item.subtitle}
