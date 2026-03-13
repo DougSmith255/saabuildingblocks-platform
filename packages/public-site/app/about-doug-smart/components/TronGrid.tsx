@@ -105,30 +105,25 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
       // Perspective curve: accelerates toward the bottom
       const perspY = (t: number) => horizon + (h - horizon) * (t * t);
 
-      // Bass pulse for grid brightness (blue only, more dramatic)
-      const bassPulse = hasAudio ? bass * 0.6 : 0;
-      // Base idle brightness - clearly visible grid before play
-      const baseAlpha = 0.38 + bassPulse;
+      // Bass pulse - subtle blue hue wash over grid, not bright lines
+      const bassPulse = hasAudio ? bass * 0.35 : 0;
+      // Idle: clearly visible grid. During music: grid stays subdued so scan lines pop
+      const baseAlpha = 0.32 + bassPulse;
 
       // ── Horizontal grid lines (ALWAYS CYAN) ─────────────
+      // Pass 1: normal crisp lines
       for (let i = 0; i <= hLines; i++) {
         const t = i / hLines;
         const y = perspY(t);
         const { xl, xr } = xBounds(y);
         const fade = 0.3 + 0.7 * (1 - t);
 
-        ctx.save();
         ctx.strokeStyle = `rgba(0,212,255,${baseAlpha * fade})`;
-        ctx.lineWidth = 0.5 + bassPulse * 5 * (1 - t * 0.6);
-        if (hasAudio) {
-          ctx.shadowBlur = 6 + bass * 16 * (1 - t * 0.5);
-          ctx.shadowColor = `rgba(0,212,255,${0.3 + bass * 0.6})`;
-        }
+        ctx.lineWidth = 0.5 + bassPulse * 3 * (1 - t * 0.6);
         ctx.beginPath();
         ctx.moveTo(xl, y);
         ctx.lineTo(xr, y);
         ctx.stroke();
-        ctx.restore();
 
         // Init shockwave
         if (isInit) {
@@ -153,18 +148,23 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
       for (let i = -vLines; i <= vLines; i++) {
         const bottomX = vanishX + (i / vLines) * spread;
         const intensity = 1 - Math.abs(i / vLines) * 0.5;
-        ctx.save();
         ctx.strokeStyle = `rgba(0,212,255,${baseAlpha * intensity})`;
-        ctx.lineWidth = 0.5 + bassPulse * 4 * intensity;
-        if (hasAudio) {
-          ctx.shadowBlur = 4 + bass * 12 * intensity;
-          ctx.shadowColor = `rgba(0,212,255,${0.2 + bass * 0.5})`;
-        }
+        ctx.lineWidth = 0.5 + bassPulse * 3 * intensity;
         ctx.beginPath();
         ctx.moveTo(vanishX, horizon);
         ctx.lineTo(bottomX, h);
         ctx.stroke();
-        ctx.restore();
+      }
+
+      // ── Blue hue wash over grid area (pulses with bass) ──────
+      // Single gradient fill - cheap alternative to per-line shadowBlur
+      if (hasAudio && bass > 0.08) {
+        const washGrad = ctx.createLinearGradient(0, horizon, 0, h);
+        washGrad.addColorStop(0, `rgba(0,212,255,${bass * 0.12})`);
+        washGrad.addColorStop(0.5, `rgba(0,212,255,${bass * 0.06})`);
+        washGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = washGrad;
+        ctx.fillRect(0, horizon, w, h - horizon);
       }
 
       // ── Horizon glow (cyan, capped so it doesn't take over the screen) ──
@@ -229,13 +229,13 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         greenPos = (greenPos + scanSpeed * 0.85) % 1;
         goldPos = (goldPos + scanSpeed * 0.7) % 1;
 
-        // Purple
+        // Purple - thick glowing scan line
         const pY = perspY(purplePos);
         const pb = xBounds(pY);
         ctx.save();
         ctx.strokeStyle = 'rgb(160,80,255)';
-        ctx.lineWidth = 1.2 + bass * 1.5;
-        ctx.shadowBlur = 18 + bass * 40;
+        ctx.lineWidth = 2 + bass * 3;
+        ctx.shadowBlur = 25 + bass * 50;
         ctx.shadowColor = 'rgba(160,80,255,1)';
         ctx.beginPath();
         ctx.moveTo(pb.xl, pY);
@@ -243,13 +243,13 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         ctx.stroke();
         ctx.restore();
 
-        // Green
+        // Green - thick glowing scan line
         const gY = perspY(greenPos);
         const gb = xBounds(gY);
         ctx.save();
         ctx.strokeStyle = 'rgb(0,255,136)';
-        ctx.lineWidth = 1.2 + mids * 1.5;
-        ctx.shadowBlur = 18 + mids * 40;
+        ctx.lineWidth = 2 + mids * 3;
+        ctx.shadowBlur = 25 + mids * 50;
         ctx.shadowColor = 'rgba(0,255,136,1)';
         ctx.beginPath();
         ctx.moveTo(gb.xl, gY);
@@ -257,13 +257,13 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         ctx.stroke();
         ctx.restore();
 
-        // Gold
+        // Gold - thick glowing scan line
         const yY = perspY(goldPos);
         const yb = xBounds(yY);
         ctx.save();
         ctx.strokeStyle = 'rgb(255,215,0)';
-        ctx.lineWidth = 1.2 + highs * 1.5;
-        ctx.shadowBlur = 18 + highs * 40;
+        ctx.lineWidth = 2 + highs * 3;
+        ctx.shadowBlur = 25 + highs * 50;
         ctx.shadowColor = 'rgba(255,215,0,1)';
         ctx.beginPath();
         ctx.moveTo(yb.xl, yY);
@@ -289,22 +289,25 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
       }
 
       // ── Blue dot atmosphere (always present, pulses with music) ──
+      // No shadowBlur - use double-circle technique for fake glow
       const audioBoost = hasAudio ? 0.3 + bass * 0.5 : 0;
       for (const p of particles) {
         const px = (Math.sin(p.a + time * p.s * 0.06) * 0.46 + 0.5) * w;
         const py = (Math.cos(p.a * 1.3 + time * p.s * 0.04) * 0.38 + 0.3) * h;
         const pa = p.alpha + audioBoost * (0.5 + 0.5 * Math.sin(time * 0.8 + p.a));
         const pr = p.r + (hasAudio ? bass * 1.2 : 0);
-        ctx.save();
+
+        // Outer glow circle (larger, dimmer)
+        ctx.fillStyle = `rgba(0,212,255,${pa * 0.3})`;
+        ctx.beginPath();
+        ctx.arc(px, py, pr * 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Inner bright dot
         ctx.fillStyle = `rgba(0,212,255,${pa})`;
-        if (hasAudio && bass > 0.2) {
-          ctx.shadowBlur = 4 + bass * 8;
-          ctx.shadowColor = `rgba(0,212,255,${bass * 0.4})`;
-        }
         ctx.beginPath();
         ctx.arc(px, py, pr, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
       }
 
       raf = requestAnimationFrame(draw);
