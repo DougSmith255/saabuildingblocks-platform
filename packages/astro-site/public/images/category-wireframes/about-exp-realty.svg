@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Cloud Network - About eXp Realty -->
+  <!-- Redesigned cloud with only connected nodes -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Metal backing plate for cloud -->
+  <path d="M260 270 Q230 270 230 230 Q230 180 290 180 Q290 140 360 140 Q390 100 440 120 Q500 90 560 140 Q620 140 620 200 Q660 200 660 250 Q660 310 600 310 Q600 360 520 360 L320 360 Q260 360 260 310 Q200 310 200 260 Q200 210 260 270"
+        stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+
+  <!-- Main cloud shape - glowing -->
+  <path d="M270 260 Q240 260 240 225 Q240 180 295 180 Q295 145 355 145 Q385 110 435 125 Q490 100 545 145 Q600 145 600 195 Q635 195 635 240 Q635 290 580 290 Q580 335 510 335 L330 335 Q270 335 270 295 Q220 295 220 250 Q220 205 270 260"
+        stroke="#ffd700" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+  <!-- Connection nodes with lines to cloud -->
+  <!-- Top nodes -->
+  <line x1="355" y1="145" x2="355" y2="100" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="355" y1="145" x2="355" y2="100" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <circle cx="355" cy="80" r="18" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="355" cy="80" r="18" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <line x1="490" y1="120" x2="520" y2="70" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="490" y1="120" x2="520" y2="70" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <circle cx="535" cy="55" r="20" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="535" cy="55" r="20" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Side nodes -->
+  <line x1="220" y1="250" x2="160" y2="250" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="220" y1="250" x2="160" y2="250" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <circle cx="135" cy="250" r="22" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="135" cy="250" r="22" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <line x1="635" y1="240" x2="690" y2="240" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="635" y1="240" x2="690" y2="240" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <circle cx="715" cy="240" r="20" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="715" cy="240" r="20" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Bottom nodes -->
+  <line x1="350" y1="335" x2="320" y2="400" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="350" y1="335" x2="320" y2="400" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <circle cx="305" cy="420" r="18" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="305" cy="420" r="18" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <line x1="480" y1="335" x2="510" y2="400" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="480" y1="335" x2="510" y2="400" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <circle cx="525" cy="420" r="18" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="525" cy="420" r="18" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+</svg>

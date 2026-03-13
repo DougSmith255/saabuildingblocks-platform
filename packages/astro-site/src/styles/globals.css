@@ -2,8 +2,10 @@
  * Astro globals.css - imports the SAME CSS as Next.js public-site
  * Order: critical.css (variables + base) → globals.css (Tailwind + custom rules)
  *
- * Tailwind v4 auto-detects content from Vite's module graph,
- * but @source directives ensure it also scans cross-package components.
+ * Tailwind v4 auto-detects content from Vite's module graph.
+ * NO @source directives - Vite follows imports through aliases (@public-site/,
+ * @saa/shared/) and auto-detects only classes actually used. @source scans ALL
+ * files and generates 190KB+ of unused CSS.
  */
 
 /* Critical CSS: font variables, brand colors, base layout styles */
@@ -12,4 +14,5 @@
 /* Main CSS: Tailwind v4 + all custom rules (view transitions, form autofill, etc.) */
 @import "@public-site/app/globals.css";
 
-/* Tailwind v4 auto-detects classes from Vite's module graph. */
+/* Safelist: Tailwind classes used by React islands (Header etc.) that Vite can't trace */
+@source "../../src/styles/island-safelist.html";

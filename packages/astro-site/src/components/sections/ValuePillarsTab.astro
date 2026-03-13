@@ -2,7 +2,7 @@
 /**
  * ValuePillarsTab - "01, 02, 03" pillars section
  * Pure static HTML with CSS animations. Zero JavaScript.
- * Inlines GlassPanel champagne styling.
+ * Inlines gold-tinted glass panel styling.
  */
 
 const pillarNumberShadow = `
@@ -21,14 +21,14 @@ const pillarNumberShadow = `
   0.12em 0.12em 0 #080808
 `;
 
-// GlassPanel champagne: r=247 g=231 b=206, opacity=0.05
-const champagneBg = 'linear-gradient(180deg, rgba(247,231,206,0.04) 0%, rgba(247,231,206,0.05) 50%, rgba(247,231,206,0.04) 100%)';
-const champagneShadow = `
+// GlassPanel gold-tinted
+const glassBg = 'linear-gradient(180deg, rgba(255,215,0,0.03) 0%, rgba(255,215,0,0.04) 50%, rgba(255,215,0,0.03) 100%)';
+const glassShadow = `
   0 8px 32px rgba(0,0,0,0.4),
   0 4px 12px rgba(0,0,0,0.25),
   inset 0 1px 0 0 rgba(255,255,255,0.35),
   inset 0 2px 4px 0 rgba(255,255,255,0.2),
-  inset 0 8px 20px -8px rgba(247,231,206,0.3),
+  inset 0 8px 20px -8px rgba(255,215,0,0.25),
   inset 0 20px 40px -20px rgba(255,255,255,0.15),
   inset 0 -1px 0 0 rgba(0,0,0,0.7),
   inset 0 -2px 6px 0 rgba(0,0,0,0.5),
@@ -50,13 +50,13 @@ const PILLARS = [
     style="bottom: -12px; height: 35px; background: radial-gradient(ellipse 60% 100% at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 80%); filter: blur(12px); z-index: -1; border-radius: 50%;"
   ></div>
 
-  <!-- White vignette glow overlay -->
+  <!-- Gold vignette glow overlay -->
   <div class="vp-glow absolute inset-0 pointer-events-none z-[3] rounded-3xl"></div>
 
-  <!-- GlassPanel champagne (inlined) -->
+  <!-- Gold-tinted glass panel (inlined) -->
   <div
     class="relative overflow-hidden rounded-3xl"
-    style={`background: ${champagneBg}; box-shadow: ${champagneShadow}; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);`}
+    style={`background: ${glassBg}; box-shadow: ${glassShadow}; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);`}
   >
     <!-- Dots texture overlay -->
     <div
@@ -100,23 +100,23 @@ const PILLARS = [
 </div>
 
 <style>
-  @keyframes whiteVignetteGlow {
+  @keyframes goldVignetteGlow {
     0%, 100% {
       box-shadow:
-        inset 0 20px 30px -15px rgba(255,255,255,0.12),
-        inset 0 -20px 30px -15px rgba(255,255,255,0.12),
-        inset 20px 0 30px -15px rgba(255,255,255,0.12),
-        inset -20px 0 30px -15px rgba(255,255,255,0.12);
+        inset 0 20px 30px -15px rgba(255,215,0,0.08),
+        inset 0 -20px 30px -15px rgba(255,215,0,0.08),
+        inset 20px 0 30px -15px rgba(255,215,0,0.08),
+        inset -20px 0 30px -15px rgba(255,215,0,0.08);
     }
     50% {
       box-shadow:
-        inset 0 35px 45px -20px rgba(255,255,255,0.22),
-        inset 0 -35px 45px -20px rgba(255,255,255,0.22),
-        inset 35px 0 45px -20px rgba(255,255,255,0.22),
-        inset -35px 0 45px -20px rgba(255,255,255,0.22);
+        inset 0 35px 45px -20px rgba(255,215,0,0.16),
+        inset 0 -35px 45px -20px rgba(255,215,0,0.16),
+        inset 35px 0 45px -20px rgba(255,215,0,0.16),
+        inset -35px 0 45px -20px rgba(255,215,0,0.16);
     }
   }
   .vp-glow {
-    animation: whiteVignetteGlow 4s ease-in-out infinite;
+    animation: goldVignetteGlow 4s ease-in-out infinite;
   }
 </style>

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Trophy Cup - Winning Clients -->
+  <!-- Championship trophy representing success and achievement -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Trophy cup body - backing -->
+  <path d="M300 160 L300 280 Q300 360 400 390 Q500 360 500 280 L500 160"
+        stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <!-- Trophy cup body - glowing -->
+  <path d="M300 160 L300 280 Q300 360 400 390 Q500 360 500 280 L500 160"
+        stroke="#ffd700" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+  <!-- Cup rim - backing -->
+  <ellipse cx="400" cy="160" rx="105" ry="30" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <ellipse cx="400" cy="155" rx="85" ry="22" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.4"/>
+  <!-- Cup rim - glowing -->
+  <ellipse cx="400" cy="160" rx="105" ry="30" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <ellipse cx="400" cy="155" rx="85" ry="22" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Left handle - backing -->
+  <path d="M295 180 Q220 180 220 260 Q220 340 295 340"
+        stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <path d="M300 200 Q240 200 240 260 Q240 320 300 320"
+        stroke="#5a5248" stroke-width="4" fill="none" opacity="0.4"/>
+  <!-- Left handle - glowing -->
+  <path d="M295 180 Q220 180 220 260 Q220 340 295 340"
+        stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <path d="M300 200 Q240 200 240 260 Q240 320 300 320"
+        stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Right handle - backing -->
+  <path d="M505 180 Q580 180 580 260 Q580 340 505 340"
+        stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <path d="M500 200 Q560 200 560 260 Q560 320 500 320"
+        stroke="#5a5248" stroke-width="4" fill="none" opacity="0.4"/>
+  <!-- Right handle - glowing -->
+  <path d="M505 180 Q580 180 580 260 Q580 340 505 340"
+        stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <path d="M500 200 Q560 200 560 260 Q560 320 500 320"
+        stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Trophy stem - backing -->
+  <path d="M370 390 L370 430 Q370 445 385 445 L415 445 Q430 445 430 430 L430 390"
+        stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <!-- Trophy stem - glowing -->
+  <path d="M370 390 L370 430 Q370 445 385 445 L415 445 Q430 445 430 430 L430 390"
+        stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+
+  <!-- Trophy base top - backing -->
+  <path d="M340 445 L340 470 Q340 480 355 480 L445 480 Q460 480 460 470 L460 445"
+        stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <!-- Trophy base top - glowing -->
+  <path d="M340 445 L340 470 Q340 480 355 480 L445 480 Q460 480 460 470 L460 445"
+        stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+
+  <!-- Base platform - backing -->
+  <path d="M300 480 L300 510 Q300 525 320 525 L480 525 Q500 525 500 510 L500 480"
+        stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <!-- Base platform - glowing -->
+  <path d="M300 480 L300 510 Q300 525 320 525 L480 525 Q500 525 500 510 L500 480"
+        stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+
+  <!-- Base bottom line - backing -->
+  <line x1="310" y1="510" x2="490" y2="510" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <!-- Base bottom line - glowing -->
+  <line x1="310" y1="510" x2="490" y2="510" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+
+  <!-- Star decoration on trophy - backing -->
+  <polygon points="400,200 410,225 438,225 416,242 424,270 400,255 376,270 384,242 362,225 390,225"
+           stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <!-- Star decoration - glowing -->
+  <polygon points="400,200 410,225 438,225 416,242 424,270 400,255 376,270 384,242 362,225 390,225"
+           stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Number 1 - backing -->
+  <text x="400" y="340" font-family="sans-serif" font-size="45" font-weight="bold"
+        stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5" text-anchor="middle" dominant-baseline="middle">1</text>
+  <!-- Number 1 - glowing -->
+  <text x="400" y="340" font-family="sans-serif" font-size="45" font-weight="bold"
+        stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)" text-anchor="middle" dominant-baseline="middle">1</text>
+</svg>

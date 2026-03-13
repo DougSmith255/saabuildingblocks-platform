@@ -7,7 +7,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import BlogPostIsland from '../../../islands/blog-post';
 import { getAllBlogPosts, findPostBySlug, getRelatedPosts } from '../../../lib/blog-data';
 import { cleanExcerpt } from '@public-site/lib/wordpress/fallbacks';
-import { extractFAQs, generateFAQSchema } from '@public-site/lib/faq-utils';
+import { extractFAQs, generateFAQSchema, stripFAQSection } from '@public-site/lib/faq-utils';
+import { extractTables, generateTableSchemas } from '@public-site/lib/table-utils';
 import { buildBlogPostingSchema, buildVideoSchema } from '@public-site/lib/blog-schema';
 import { getPostUrl } from '@public-site/lib/blog-post-urls';
 import { buildBreadcrumbSchema } from '../../../lib/breadcrumb-schema';
@@ -42,6 +43,10 @@ const ogImage = post.featuredImage?.url || '/og-image.jpg';
 const postUrl = getPostUrl(post);
 const faqs = extractFAQs(post.content);
 const faqSchema = generateFAQSchema(faqs);
+const tables = extractTables(post.content);
+const tableSchemas = generateTableSchemas(tables, post.title);
+const strippedContent = faqs.length > 0 ? stripFAQSection(post.content) : post.content;
+const postForTemplate = { ...post, content: strippedContent };
 const blogPostingSchema = buildBlogPostingSchema(post, postUrl);
 const videoSchema = buildVideoSchema(post);
 const breadcrumbSchema = buildBreadcrumbSchema(category, post.title);
@@ -56,11 +61,13 @@ const breadcrumbSchema = buildBreadcrumbSchema(category, post.title);
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
   {videoSchema && <script slot="head" type="application/ld+json" set:html={JSON.stringify(videoSchema)} />}
   {faqSchema && <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+  {tableSchemas?.map(schema => <script slot="head" type="application/ld+json" set:html={JSON.stringify(schema)} />)}
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   <BlogPostIsland
     client:load
-    post={post}
+    post={postForTemplate}
     category={category}
     relatedPosts={relatedPosts}
+    faqs={faqs}
   />
 </BaseLayout>

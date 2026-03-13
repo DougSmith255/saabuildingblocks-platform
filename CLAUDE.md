@@ -451,6 +451,26 @@ wp plugin list --path=/var/www/wordpress/
 wp core version --path=/var/www/wordpress/
 ```
 
+### Blog Post URL Structure
+
+**CRITICAL: All blog post URLs follow this pattern:**
+```
+https://smartagentalliance.com/{custom_uri}
+```
+
+- `custom_uri` comes from Permalink Manager plugin (stored in `wp_postmeta` with `meta_key = 'custom_uri'`)
+- There is **NO `/blog/` prefix** - the custom_uri IS the full path after the domain
+- **NEVER use WordPress `post_name`** - it is irrelevant and will produce wrong URLs
+- Example: custom_uri `about-exp/exp-realty-fees` - live URL is `https://smartagentalliance.com/about-exp/exp-realty-fees`
+
+```bash
+# Get a post's live URL
+wp db query "SELECT pm.meta_value AS custom_uri FROM wp_postmeta pm WHERE pm.post_id = <POST_ID> AND pm.meta_key = 'custom_uri'" --path=/var/www/wordpress/
+
+# Find posts by URL path
+wp db query "SELECT post_id FROM wp_postmeta WHERE meta_key = 'custom_uri' AND meta_value = '<path>'" --path=/var/www/wordpress/
+```
+
 ---
 
 ## Plausible CE (Analytics)

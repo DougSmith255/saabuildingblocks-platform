@@ -3,16 +3,12 @@
  * Homepage - Astro-native rebuild
  *
  * Architecture: Static Astro HTML for all sections where possible.
- * React islands only for elements that require React specifically:
- * - Header (scroll behavior, mobile menu)
- * - Footer (interactive elements)
- * - JoinCTA button (modal trigger)
+ * React islands only for elements that truly require React:
+ * - Header (scroll behavior, mobile menu, join modal)
  * - WatchAndDecide (video player + progress tracking)
  *
- * Section order matches production HomepageSections.tsx:
- * Hero > ValuePillarsTab > WhySAA > ProvenAtScale > WhatYouGet >
- * WhyOnlyAtExp > MediaLogos > MeetTheFounders > BuiltForFuture >
- * WatchAndDecide (in GlassPanel) > Bottom CTA
+ * Everything else is pure Astro (zero JS or tiny inline scripts):
+ * - Footer, ScrollIndicator, JoinCTAButton, all content sections
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
@@ -22,12 +18,11 @@ import ProvenAtScale from '../components/sections/ProvenAtScale.astro';
 import WhatYouGet from '../components/sections/WhatYouGet.astro';
 import MeetTheFounders from '../components/sections/MeetTheFounders.astro';
 import HeaderIsland from '../islands/header';
-import FooterIsland from '../islands/footer';
-import JoinCTA from '../islands/join-cta';
-import StarBackgroundIsland from '../islands/star-background';
-import SmoothScrollIsland from '../islands/smooth-scroll';
+import Footer from '../components/Footer.astro';
+import JoinCTAButton from '../components/JoinCTAButton.astro';
+import ScrollIndicator from '../components/ScrollIndicator.astro';
+import SmoothScroll from '../components/SmoothScroll.astro';
 import RevealMaskEffectIsland from '../islands/reveal-mask-effect';
-import ScrollIndicatorIsland from '../islands/scroll-indicator';
 import WhyOnlyAtExp from '../components/sections/WhyOnlyAtExp.astro';
 import MediaLogos from '../components/sections/MediaLogos.astro';
 import BuiltForFuture from '../components/sections/BuiltForFuture.astro';
@@ -47,23 +42,20 @@ const glassShadow = '0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25), in
   <!-- Preload LCP image -->
   <link slot="head" rel="preload" as="image" href="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop" imagesrcset="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/mobile 375w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/tablet 768w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop 1280w" imagesizes="(max-width: 480px) 375px, (max-width: 768px) 768px, 1280px" />
 
-  <!-- Star background canvas - React island (fixed position, behind all content) -->
-  <StarBackgroundIsland client:only="react" />
+  <!-- Smooth scroll (Lenis) - bundled script, no React -->
+  <SmoothScroll />
 
-  <!-- Smooth scroll (Lenis) - desktop only, renders nothing -->
-  <SmoothScrollIsland client:idle />
-
-  <!-- Scroll indicator - bouncing chevrons bottom-right -->
-  <ScrollIndicatorIsland client:idle />
+  <!-- Scroll indicator - pure Astro + inline script -->
+  <ScrollIndicator />
 
   <!-- Header - React island for interactive scroll behavior -->
-  <HeaderIsland client:load />
+  <HeaderIsland client:idle />
 
   <main id="main-content">
     <!-- Hero Section - static Astro HTML + RevealMaskEffect golden glow -->
     <HeroSection>
       <RevealMaskEffectIsland client:idle slot="effect" />
-      <JoinCTA client:idle slot="cta">JOIN THE ALLIANCE</JoinCTA>
+      <JoinCTAButton slot="cta">JOIN THE ALLIANCE</JoinCTAButton>
     </HeroSection>
 
     <!-- ValuePillarsTab - static (01, 02, 03 pillars) -->
@@ -73,27 +65,39 @@ const glassShadow = '0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25), in
     <WhySAA />
 
     <!-- ProvenAtScale - static with wolf pack bg -->
-    <ProvenAtScale />
+    <div class="cv-auto" style="contain-intrinsic-size: auto 800px;">
+      <ProvenAtScale />
+    </div>
 
     <!-- WhatYouGet - static with CSS orbital rings -->
-    <WhatYouGet />
+    <div class="cv-auto" style="contain-intrinsic-size: auto 900px;">
+      <WhatYouGet />
+    </div>
 
     <!-- WhyOnlyAtExp - Astro + inline script (auto-flip card stack) -->
-    <WhyOnlyAtExp />
+    <div class="cv-auto" style="contain-intrinsic-size: auto 700px;">
+      <WhyOnlyAtExp />
+    </div>
 
     <!-- MediaLogos - static Astro (CSS-only scrolling carousel) -->
-    <MediaLogos />
+    <div class="cv-auto" style="contain-intrinsic-size: auto 200px;">
+      <MediaLogos />
+    </div>
 
     <!-- MeetTheFounders - static -->
-    <MeetTheFounders variant="compact" />
+    <div class="cv-auto" style="contain-intrinsic-size: auto 500px;">
+      <MeetTheFounders variant="compact" />
+    </div>
 
     <!-- BuiltForFuture - Astro + inline script (carousel + CSS data stream) -->
-    <BuiltForFuture />
+    <div class="cv-auto" style="contain-intrinsic-size: auto 800px;">
+      <BuiltForFuture />
+    </div>
 
     <!-- WatchAndDecide - wrapped in gold-tinted glass panel -->
     <div
-      class="relative overflow-hidden rounded-3xl"
-      style={`background: ${glassBg}; box-shadow: ${glassShadow};`}
+      class="cv-auto relative overflow-hidden rounded-3xl"
+      style={`contain-intrinsic-size: auto 600px; background: ${glassBg}; box-shadow: ${glassShadow};`}
     >
       <!-- Crosshatch texture -->
       <div
@@ -106,14 +110,24 @@ const glassShadow = '0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25), in
     </div>
 
     <!-- Bottom CTA -->
-    <section class="py-16 md:py-20 px-6 text-center">
-      <p class="text-body mx-auto mb-8" style="max-width: 700px;">
-        If you want to understand exactly how sponsorship works, what you keep, and what you never give up, see how Smart Agent Alliance fits inside eXp Realty.
-      </p>
-      <SecondaryButton href="/exp-realty-sponsor/">See SAA's Full Value Stack</SecondaryButton>
-    </section>
+    <div class="cv-auto" style="contain-intrinsic-size: auto 200px;">
+      <section class="py-16 md:py-20 px-6 text-center">
+        <p class="text-body mx-auto mb-8" style="max-width: 700px;">
+          If you want to understand exactly how sponsorship works, what you keep, and what you never give up, see how Smart Agent Alliance fits inside eXp Realty.
+        </p>
+        <SecondaryButton href="/exp-realty-sponsor/">See SAA's Full Value Stack</SecondaryButton>
+      </section>
+    </div>
   </main>
 
-  <!-- Footer - React island -->
-  <FooterIsland client:idle />
+  <!-- Footer - pure Astro, zero JS -->
+  <Footer />
 </BaseLayout>
+
+<style>
+  /* Defer rendering of below-fold sections until near viewport.
+     Reduces initial style+layout from ~1400ms to ~400ms on mobile. */
+  .cv-auto {
+    content-visibility: auto;
+  }
+</style>

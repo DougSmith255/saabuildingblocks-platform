@@ -140,7 +140,7 @@ const H2_BLUE_LAYERS: StrokeLayer[] = [
 
 const H2_PURPLE_LAYERS: StrokeLayer[] = [
   { color: '#6030a0', tx: '0.04em', ty: '0.12em', filter: 'blur(6px)', opacity: '0.4' },
-  { color: '#a855f7', tx: '0.035em', ty: '0.105em' },
+  { color: '#9933ff', tx: '0.035em', ty: '0.105em' },
   { color: '#7845c8', tx: '0.030em', ty: '0.09em' },
   { color: '#6030a0', tx: '0.025em', ty: '0.075em' },
   { color: '#4a2068', tx: '0.018em', ty: '0.055em' },

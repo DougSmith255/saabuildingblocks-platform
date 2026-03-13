@@ -1,0 +1,59 @@
+---
+/**
+ * SmoothScroll - Lenis smooth scrolling, zero React.
+ * Uses Astro's bundled <script> tag to import Lenis directly.
+ * Desktop-only (skipped on touch-primary devices).
+ * Renders no HTML - pure behavior component.
+ */
+---
+
+<script>
+import Lenis from 'lenis';
+
+// Detect touch-primary devices (phones/tablets)
+function isTouchPrimary(): boolean {
+  if (window.matchMedia('(pointer: coarse)').matches) return true;
+  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  return hasTouch && window.innerWidth < 768;
+}
+
+if (!isTouchPrimary()) {
+  // Defer initialization to avoid blocking main thread
+  const init = () => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1,
+      infinite: false,
+      lerp: 0.1,
+    });
+
+    // Stop scroll animation on click for immediate interaction
+    window.addEventListener('pointerdown', () => {
+      if (lenis.isScrolling) {
+        lenis.stop();
+        lenis.start();
+      }
+    }, { capture: true, passive: true });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  };
+
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(init, { timeout: 1000 });
+  } else {
+    setTimeout(init, 50);
+  }
+}
+
+// Scroll to top on initial load
+window.scrollTo(0, 0);
+</script>

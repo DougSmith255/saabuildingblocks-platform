@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How eXp is Built for Agents - Prototype V4</title>
+<style>
+  @font-face {
+    font-family: 'Taskor';
+    src: url('/fonts/taskor-regular-webfont.woff2') format('woff2');
+    font-weight: 400;
+    font-display: block;
+  }
+  @font-face {
+    font-family: 'Amulya';
+    src: url('/fonts/Amulya-Variable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Synonym';
+    src: url('/fonts/Synonym-Variable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: block;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    color: #dcdbd5;
+    font-family: 'Synonym', system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  #star-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+  }
+
+  /* ═══════ SECTION ═══════ */
+  .section {
+    max-width: 1400px;
+    margin: 60px auto;
+    padding: 0 24px;
+  }
+
+  /* ═══════ H2 HEADING ═══════ */
+  .section-heading {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .section-heading h2 {
+    font-family: 'Taskor', sans-serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #e5e4dd;
+    text-shadow:
+      0.010em 0.013em 0 #dddcd5,
+      0.015em 0.025em 0 #d1d0c7,
+      0.019em 0.038em 0 #c2c1b8,
+      0.024em 0.050em 0 #b3b2a8,
+      0.029em 0.063em 0 #a09f94,
+      0.033em 0.075em 0 #8d8c80,
+      0.038em 0.088em 0 #7a7970,
+      0.040em 0.095em 0 #282828,
+      0.044em 0.110em 0 #333333,
+      0.048em 0.125em 0 #3e3e3e,
+      0.052em 0.140em 0 #4a4a4a,
+      0.054em 0.150em 0.02em rgba(0, 0, 0, 0.5);
+    transform: perspective(800px) rotateX(8deg);
+    filter: drop-shadow(0.04em 0.04em 0.06em rgba(0,0,0,0.6));
+  }
+
+  /* ═══════ COMPARISON ═══════ */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    margin-bottom: 56px;
+    position: relative;
+    min-height: 300px;
+    border-radius: 24px;
+    overflow: hidden;
+  }
+  .comparison::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255,60,60,0.3), rgba(255,255,255,0.05) 40%, rgba(255,255,255,0.05) 60%, rgba(0,191,255,0.3));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .comparison-side {
+    padding: 56px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .comparison-left {
+    background: linear-gradient(160deg, rgba(50,15,15,0.9) 0%, rgba(15,8,8,0.98) 100%);
+  }
+  .comparison-right {
+    background: linear-gradient(160deg, rgba(8,25,45,0.9) 0%, rgba(5,12,25,0.98) 100%);
+  }
+
+  /* Glow orbs */
+  .comparison-left::before {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 20%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(255,60,60,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+  .comparison-right::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    right: 15%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(0,191,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    animation: orbFloat 8s ease-in-out infinite reverse;
+  }
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(15px, -20px); }
+  }
+
+  /* Background imagery for comparison panels */
+  .comparison-bg-image {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.06;
+    pointer-events: none;
+  }
+
+  .comparison-divider {
+    width: 1px;
+    position: relative;
+    z-index: 2;
+  }
+  .comparison-divider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.25) 20%, rgba(255,255,255,0.25) 80%, transparent 100%);
+  }
+  .comparison-divider::after {
+    content: 'VS';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    color: rgba(255,255,255,0.85);
+    background: radial-gradient(circle, rgba(30,30,40,0.98) 0%, rgba(15,15,20,0.95) 100%);
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.15);
+    box-shadow: 0 0 30px rgba(0,191,255,0.2), 0 0 60px rgba(0,191,255,0.1), 0 4px 20px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,191,255,0.05);
+    text-shadow: 0 0 12px rgba(255,255,255,0.4);
+  }
+
+  .comparison-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .comparison-icon-red {
+    background: rgba(255,60,60,0.08);
+    border: 1px solid rgba(255,60,60,0.2);
+    box-shadow: 0 0 40px rgba(255,60,60,0.1), inset 0 0 20px rgba(255,60,60,0.05);
+  }
+  .comparison-icon-blue {
+    background: rgba(0,191,255,0.08);
+    border: 1px solid rgba(0,191,255,0.2);
+    box-shadow: 0 0 40px rgba(0,191,255,0.1), inset 0 0 20px rgba(0,191,255,0.05);
+  }
+
+  .comparison-label {
+    font-family: 'Synonym', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 14px;
+    opacity: 0.45;
+    position: relative;
+    z-index: 1;
+  }
+  .comparison-text {
+    font-family: 'Amulya', sans-serif;
+    font-size: clamp(18px, 2.5vw, 28px);
+    font-weight: 600;
+    line-height: 1.45;
+    max-width: 380px;
+    position: relative;
+    z-index: 1;
+  }
+  .comparison-left .comparison-text { color: #e8a0a0; }
+  .comparison-right .comparison-text { color: #b0d4e8; }
+  .comparison-right .comparison-text em { color: #5ad4ff; font-style: normal; font-weight: 700; }
+
+  /* ═══════ TRANSITION STRIP ═══════ */
+  .transition-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 48px;
+    padding: 0 48px;
+  }
+  .transition-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,191,255,0.2), transparent);
+  }
+  .transition-text {
+    font-family: 'Synonym', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(229,228,221,0.5);
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+
+  /* ═══════ BENTO GRID ═══════ */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 16px;
+  }
+
+  /* ═══════ BASE CARD ═══════ */
+  .bento-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .bento-card:hover { transform: translateY(-4px); }
+
+  /* Card-specific backgrounds */
+  .bento-card.card-income {
+    grid-row: span 2;
+    text-align: left;
+    align-items: flex-start;
+    padding: 40px 32px;
+    justify-content: space-between;
+    background: linear-gradient(170deg, rgba(8,22,40,0.95) 0%, rgba(8,12,20,0.98) 100%);
+    border: 1px solid rgba(0,191,255,0.15);
+  }
+  .bento-card.card-income:hover { border-color: rgba(0,191,255,0.3); box-shadow: 0 0 40px rgba(0,191,255,0.08); }
+
+  .bento-card.card-stock {
+    background: linear-gradient(160deg, rgba(18,18,18,0.97) 0%, rgba(10,10,10,0.99) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .bento-card.card-stock:hover { border-color: rgba(76,217,100,0.2); box-shadow: 0 0 30px rgba(76,217,100,0.06); }
+
+  .bento-card.card-collab {
+    background: linear-gradient(160deg, rgba(18,18,18,0.97) 0%, rgba(10,10,10,0.99) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .bento-card.card-collab:hover { border-color: rgba(153,51,255,0.2); box-shadow: 0 0 30px rgba(153,51,255,0.06); }
+
+  .bento-card.card-revshare {
+    grid-column: span 2;
+    flex-direction: row;
+    text-align: left;
+    gap: 28px;
+    align-items: center;
+    padding: 36px 32px;
+    background: linear-gradient(160deg, rgba(20,18,12,0.97) 0%, rgba(10,10,10,0.99) 100%);
+    border: 1px solid rgba(255,215,0,0.12);
+  }
+  .bento-card.card-revshare:hover { border-color: rgba(255,215,0,0.25); box-shadow: 0 0 30px rgba(255,215,0,0.06); }
+
+  /* Glow + texture layers */
+  .bento-glow {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bento-card:hover .bento-glow { opacity: 1; }
+  .card-income .bento-glow { background: radial-gradient(ellipse 80% 50% at 30% 20%, rgba(0,191,255,0.06) 0%, transparent 70%); }
+  .card-stock .bento-glow { background: radial-gradient(ellipse 80% 70% at 50% 20%, rgba(76,217,100,0.05) 0%, transparent 70%); }
+  .card-collab .bento-glow { background: radial-gradient(ellipse 80% 70% at 50% 20%, rgba(153,51,255,0.05) 0%, transparent 70%); }
+  .card-revshare .bento-glow { background: radial-gradient(ellipse 60% 80% at 30% 50%, rgba(255,215,0,0.04) 0%, transparent 70%); }
+
+  .bento-texture {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 20px;
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 8px),
+                       repeating-linear-gradient(-45deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 8px);
+    background-size: 20px 20px;
+    z-index: 0;
+  }
+
+  /* ═══════ CARD BACKGROUND VISUALS ═══════ */
+  .card-visual {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+
+  /* Income card: ascending staircase pattern */
+  .card-visual-income svg {
+    position: absolute;
+    bottom: 60px;
+    right: -10px;
+    width: 280px;
+    height: 200px;
+    opacity: 0.06;
+  }
+
+  /* Stock card: chart line */
+  .card-visual-stock svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    opacity: 0.12;
+  }
+
+  /* Collab card: network nodes */
+  .card-visual-collab svg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.08;
+  }
+
+  /* Revshare card: flowing income streams */
+  .card-visual-revshare svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.06;
+  }
+
+  /* ═══════ ICONS ═══════ */
+  .icon-wrap {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    position: relative;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+  .card-revshare .icon-wrap { width: 80px; height: 80px; margin-bottom: 0; }
+
+  .icon-outer { position: absolute; inset: 0; border-radius: 20px; }
+  .icon-inner {
+    position: absolute;
+    inset: 5px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-inner svg { width: 30px; height: 30px; }
+  .card-revshare .icon-inner svg { width: 36px; height: 36px; }
+
+  .icon-blue .icon-outer {
+    background: linear-gradient(135deg, rgba(0,191,255,0.2), rgba(0,120,200,0.08));
+    box-shadow: 0 0 30px rgba(0,191,255,0.15), inset 0 0 15px rgba(0,191,255,0.08);
+    animation: pulseCyan 4s ease-in-out infinite;
+  }
+  .icon-blue .icon-inner { background: linear-gradient(180deg, rgba(10,20,35,0.95), rgba(5,10,25,0.99)); border: 1px solid rgba(0,191,255,0.25); }
+  .icon-blue .icon-inner svg { color: #00bfff; filter: drop-shadow(0 0 8px rgba(0,191,255,0.5)); }
+
+  .icon-green .icon-outer {
+    background: linear-gradient(135deg, rgba(76,217,100,0.18), rgba(40,160,60,0.08));
+    box-shadow: 0 0 30px rgba(76,217,100,0.12), inset 0 0 15px rgba(76,217,100,0.06);
+    animation: pulseGreen 4s ease-in-out infinite 1s;
+  }
+  .icon-green .icon-inner { background: linear-gradient(180deg, rgba(12,22,14,0.95), rgba(8,15,10,0.99)); border: 1px solid rgba(76,217,100,0.25); }
+  .icon-green .icon-inner svg { color: #4cd964; filter: drop-shadow(0 0 8px rgba(76,217,100,0.5)); }
+
+  .icon-purple .icon-outer {
+    background: linear-gradient(135deg, rgba(153,51,255,0.18), rgba(100,80,200,0.08));
+    box-shadow: 0 0 30px rgba(153,51,255,0.12), inset 0 0 15px rgba(153,51,255,0.06);
+    animation: pulsePurple 4s ease-in-out infinite 2s;
+  }
+  .icon-purple .icon-inner { background: linear-gradient(180deg, rgba(18,14,28,0.95), rgba(10,8,20,0.99)); border: 1px solid rgba(153,51,255,0.25); }
+  .icon-purple .icon-inner svg { color: #9933ff; filter: drop-shadow(0 0 8px rgba(153,51,255,0.5)); }
+
+  .icon-gold .icon-outer {
+    background: linear-gradient(135deg, rgba(255,215,0,0.18), rgba(200,170,0,0.08));
+    box-shadow: 0 0 30px rgba(255,215,0,0.12), inset 0 0 15px rgba(255,215,0,0.06);
+    animation: pulseGold 4s ease-in-out infinite 0.5s;
+  }
+  .icon-gold .icon-inner { background: linear-gradient(180deg, rgba(22,18,8,0.95), rgba(14,12,5,0.99)); border: 1px solid rgba(255,215,0,0.25); }
+  .icon-gold .icon-inner svg { color: #ffd700; filter: drop-shadow(0 0 8px rgba(255,215,0,0.5)); }
+
+  @keyframes pulseCyan {
+    0%, 100% { box-shadow: 0 0 30px rgba(0,191,255,0.15), inset 0 0 15px rgba(0,191,255,0.08); }
+    50% { box-shadow: 0 0 45px rgba(0,191,255,0.22), inset 0 0 25px rgba(0,191,255,0.12); }
+  }
+  @keyframes pulseGreen {
+    0%, 100% { box-shadow: 0 0 30px rgba(76,217,100,0.12), inset 0 0 15px rgba(76,217,100,0.06); }
+    50% { box-shadow: 0 0 40px rgba(76,217,100,0.2), inset 0 0 22px rgba(76,217,100,0.1); }
+  }
+  @keyframes pulsePurple {
+    0%, 100% { box-shadow: 0 0 30px rgba(153,51,255,0.12), inset 0 0 15px rgba(153,51,255,0.06); }
+    50% { box-shadow: 0 0 40px rgba(153,51,255,0.2), inset 0 0 22px rgba(153,51,255,0.1); }
+  }
+  @keyframes pulseGold {
+    0%, 100% { box-shadow: 0 0 30px rgba(255,215,0,0.12), inset 0 0 15px rgba(255,215,0,0.06); }
+    50% { box-shadow: 0 0 40px rgba(255,215,0,0.2), inset 0 0 22px rgba(255,215,0,0.1); }
+  }
+
+  /* ═══════ NUMBER BADGE ═══════ */
+  .bento-num {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .card-income .bento-num { color: rgba(0,191,255,0.05); }
+  .card-stock .bento-num { color: rgba(76,217,100,0.05); }
+  .card-collab .bento-num { color: rgba(153,51,255,0.05); }
+  .card-revshare .bento-num { font-size: 72px; color: rgba(255,215,0,0.04); }
+
+  /* ═══════ TEXT ═══════ */
+  .card-keyword {
+    font-family: 'Amulya', sans-serif;
+    font-size: clamp(17px, 1.5vw, 21px);
+    font-weight: 700;
+    color: #e5e4dd;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+  }
+  .card-income .card-keyword { font-size: clamp(22px, 2vw, 28px); margin-bottom: 10px; }
+  .card-revshare .card-keyword { font-size: clamp(20px, 2vw, 26px); }
+
+  .card-desc {
+    font-family: 'Synonym', sans-serif;
+    font-size: clamp(13px, 1.1vw, 15px);
+    color: #bfbdb0;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+  }
+  .card-income .card-desc { font-size: 15px; }
+
+  /* ═══════ STAT CALLOUT ═══════ */
+  .stat-callout {
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid rgba(0,191,255,0.1);
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .stat-number {
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, #00bfff, #0099cc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 15px rgba(0,191,255,0.3));
+  }
+  .stat-label {
+    font-size: 13px;
+    color: rgba(191,189,176,0.45);
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ═══════ MINI STAT CHIPS ═══════ */
+  .mini-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+  }
+  .mini-stat-green { background: rgba(76,217,100,0.08); border: 1px solid rgba(76,217,100,0.15); color: rgba(76,217,100,0.8); }
+  .mini-stat-purple { background: rgba(153,51,255,0.08); border: 1px solid rgba(153,51,255,0.15); color: rgba(153,51,255,0.8); }
+
+  /* ═══════ REVSHARE BARS ═══════ */
+  .revshare-bars {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    margin-top: 12px;
+    height: 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .revshare-bar {
+    width: 6px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #ffd700, rgba(255,215,0,0.3));
+    transform: scaleY(0);
+    transform-origin: bottom;
+    opacity: 0;
+    transition: none;
+  }
+  .revshare-bar:nth-child(1) { height: 40%; }
+  .revshare-bar:nth-child(2) { height: 55%; }
+  .revshare-bar:nth-child(3) { height: 70%; }
+  .revshare-bar:nth-child(4) { height: 85%; }
+  .revshare-bar:nth-child(5) { height: 100%; }
+  .revshare-bar:nth-child(6) { height: 90%; }
+  .revshare-bar:nth-child(7) { height: 75%; }
+
+  /* Bars grow up when card scrolls into view */
+  .in-view .revshare-bar {
+    animation: barEnter 0.6s ease-out forwards, barPulse 2s ease-in-out 0.6s infinite;
+  }
+  .in-view .revshare-bar:nth-child(1) { animation-delay: 0s, 0.6s; }
+  .in-view .revshare-bar:nth-child(2) { animation-delay: 0.08s, 0.68s; }
+  .in-view .revshare-bar:nth-child(3) { animation-delay: 0.16s, 0.76s; }
+  .in-view .revshare-bar:nth-child(4) { animation-delay: 0.24s, 0.84s; }
+  .in-view .revshare-bar:nth-child(5) { animation-delay: 0.32s, 0.92s; }
+  .in-view .revshare-bar:nth-child(6) { animation-delay: 0.40s, 1.0s; }
+  .in-view .revshare-bar:nth-child(7) { animation-delay: 0.48s, 1.08s; }
+
+  @keyframes barEnter {
+    from { transform: scaleY(0); opacity: 0; }
+    to { transform: scaleY(1); opacity: 1; }
+  }
+  @keyframes barPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  /* ═══════ ANIMATED STOCK LINE (card 02) ═══════ */
+  @keyframes stockDraw {
+    from { stroke-dashoffset: 500; }
+    to { stroke-dashoffset: 0; }
+  }
+  .stock-line-animated {
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+  }
+  .in-view .stock-line-animated {
+    animation: stockDraw 3s ease-out forwards;
+  }
+
+  /* ═══════ NETWORK PULSE (card 03) ═══════ */
+  @keyframes nodePulse {
+    0%, 100% { r: 3; opacity: 0.4; }
+    50% { r: 5; opacity: 0.8; }
+  }
+  .network-node { animation: nodePulse 3s ease-in-out infinite; }
+  .network-node:nth-child(2) { animation-delay: 0.5s; }
+  .network-node:nth-child(3) { animation-delay: 1s; }
+  .network-node:nth-child(4) { animation-delay: 1.5s; }
+  .network-node:nth-child(5) { animation-delay: 2s; }
+
+  /* ═══════ MOBILE ═══════ */
+  @media (max-width: 768px) {
+    .section { padding: 0 16px; margin: 40px auto; }
+    .section-heading { margin-bottom: 36px; }
+
+    .comparison {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      min-height: auto;
+      margin-bottom: 40px;
+      border-radius: 20px;
+    }
+    .comparison::before { border-radius: 20px; }
+    .comparison-side { padding: 36px 28px; }
+    .comparison-divider {
+      width: 100%;
+      height: 1px;
+    }
+    .comparison-divider::before {
+      top: 50%; bottom: auto; left: 0; right: 0;
+      width: 100%; height: 1px; transform: none;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    }
+
+    .transition-strip { padding: 0 16px; margin-bottom: 32px; }
+    .transition-text { font-size: 13px; }
+
+    .bento-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      gap: 14px;
+    }
+    .bento-card.card-income { grid-row: span 1; padding: 28px 24px; }
+    .bento-card.card-revshare {
+      grid-column: span 1;
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+      gap: 16px;
+      padding: 28px 24px;
+    }
+    .bento-card.card-revshare .icon-wrap { margin-bottom: 0; }
+    .bento-card.card-stock, .bento-card.card-collab { padding: 28px 24px; }
+
+    .stat-number { font-size: 40px; }
+    .bento-num { font-size: 40px; }
+    .card-revshare .bento-num { font-size: 52px; }
+    .icon-wrap { width: 64px; height: 64px; }
+    .card-revshare .icon-wrap { width: 72px; height: 72px; }
+    .card-income .card-keyword { font-size: 22px; }
+    .card-keyword { font-size: 18px; }
+    .card-revshare .card-keyword { font-size: 20px; }
+    .card-desc, .card-income .card-desc { font-size: 14px; }
+    .revshare-bars { justify-content: center; }
+  }
+
+  @media (max-width: 400px) {
+    .section { padding: 0 12px; }
+    .comparison-side { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="star-canvas"></canvas>
+
+<div class="section">
+  <div class="section-heading">
+    <h2>How eXp is Built for Agents</h2>
+  </div>
+
+  <!-- ═══════ COMPARISON ═══════ -->
+  <div class="comparison">
+    <div class="comparison-side comparison-left">
+      <div class="comparison-icon comparison-icon-red">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff5050" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
+        </svg>
+      </div>
+      <div class="comparison-label">Traditional Brokerages</div>
+      <p class="comparison-text">Most brokerages focus on transactions.</p>
+    </div>
+
+    <div class="comparison-divider"></div>
+
+    <div class="comparison-side comparison-right">
+      <!-- Background: abstract cloud/digital network -->
+      <div class="comparison-bg-image">
+        <svg viewBox="0 0 500 400" fill="none" style="width:100%;height:100%;">
+          <!-- Cloud/network nodes -->
+          <circle cx="100" cy="150" r="40" stroke="#00bfff" stroke-width="1" opacity="0.4"/>
+          <circle cx="250" cy="100" r="60" stroke="#00bfff" stroke-width="1" opacity="0.3"/>
+          <circle cx="400" cy="180" r="35" stroke="#00bfff" stroke-width="1" opacity="0.35"/>
+          <circle cx="180" cy="300" r="50" stroke="#00bfff" stroke-width="1" opacity="0.25"/>
+          <circle cx="350" cy="320" r="45" stroke="#00bfff" stroke-width="1" opacity="0.3"/>
+          <!-- Connection lines -->
+          <line x1="130" y1="130" x2="210" y2="110" stroke="#00bfff" stroke-width="0.5" opacity="0.3"/>
+          <line x1="290" y1="120" x2="380" y2="165" stroke="#00bfff" stroke-width="0.5" opacity="0.25"/>
+          <line x1="230" y1="140" x2="200" y2="270" stroke="#00bfff" stroke-width="0.5" opacity="0.2"/>
+          <line x1="120" y1="180" x2="160" y2="270" stroke="#00bfff" stroke-width="0.5" opacity="0.2"/>
+          <line x1="370" y1="200" x2="360" y2="290" stroke="#00bfff" stroke-width="0.5" opacity="0.25"/>
+          <!-- Glowing dots at intersections -->
+          <circle cx="100" cy="150" r="4" fill="#00bfff" opacity="0.5"/>
+          <circle cx="250" cy="100" r="5" fill="#00bfff" opacity="0.4"/>
+          <circle cx="400" cy="180" r="3" fill="#00bfff" opacity="0.5"/>
+          <circle cx="180" cy="300" r="4" fill="#00bfff" opacity="0.3"/>
+          <circle cx="350" cy="320" r="4" fill="#00bfff" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="comparison-icon comparison-icon-blue">
+        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public" alt="eXp" width="28" height="28" style="filter: drop-shadow(0 0 6px rgba(0,191,255,0.5));" />
+      </div>
+      <div class="comparison-label">eXp Realty</div>
+      <p class="comparison-text">eXp focuses on transactions <em>and income beyond.</em></p>
+    </div>
+  </div>
+
+  <div class="transition-strip">
+    <div class="transition-line"></div>
+    <span class="transition-text">eXp is structured to help agents</span>
+    <div class="transition-line"></div>
+  </div>
+
+  <!-- ═══════ BENTO GRID ═══════ -->
+  <div class="bento-grid">
+    <!-- Card 1: INCOME -->
+    <div class="bento-card card-income">
+      <div class="bento-glow"></div>
+      <div class="bento-texture"></div>
+      <span class="bento-num">01</span>
+      <!-- Background visual: ascending steps -->
+      <div class="card-visual card-visual-income">
+        <svg viewBox="0 0 300 220" fill="none">
+          <path d="M0 200 L60 200 L60 160 L120 160 L120 120 L180 120 L180 80 L240 80 L240 40 L300 40 L300 0" stroke="rgba(0,191,255,0.15)" stroke-width="2" fill="none"/>
+          <path d="M0 200 L60 200 L60 160 L120 160 L120 120 L180 120 L180 80 L240 80 L240 40 L300 40 L300 0 L300 220 L0 220 Z" fill="url(#incomeGrad)"/>
+          <defs>
+            <linearGradient id="incomeGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(0,191,255,0.08)"/>
+              <stop offset="100%" stop-color="rgba(0,191,255,0)"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div style="position:relative;z-index:1;">
+        <div class="icon-wrap icon-blue">
+          <div class="icon-outer"></div>
+          <div class="icon-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+        </div>
+        <p class="card-keyword">Keep more take-home income</p>
+        <p class="card-desc">80/20 split until a $16,000 annual cap, then 100% commission. No royalties, no desk fees, no franchise fees.</p>
+      </div>
+      <div class="stat-callout">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">commission after cap</div>
+      </div>
+    </div>
+
+    <!-- Card 2: STOCK -->
+    <div class="bento-card card-stock">
+      <div class="bento-glow"></div>
+      <div class="bento-texture"></div>
+      <span class="bento-num">02</span>
+      <!-- Background visual: stock chart -->
+      <div class="card-visual card-visual-stock">
+        <svg viewBox="0 0 300 80" preserveAspectRatio="none" fill="none">
+          <path d="M0 60 L30 55 L60 58 L90 40 L120 45 L150 30 L180 35 L210 20 L240 25 L270 12 L300 15" stroke="#4cd964" stroke-width="2" class="stock-line-animated"/>
+          <path d="M0 60 L30 55 L60 58 L90 40 L120 45 L150 30 L180 35 L210 20 L240 25 L270 12 L300 15 L300 80 L0 80 Z" fill="url(#stockGrad)"/>
+          <defs>
+            <linearGradient id="stockGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(76,217,100,0.15)"/>
+              <stop offset="100%" stop-color="rgba(76,217,100,0)"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="icon-wrap icon-green" style="position:relative;z-index:1;">
+        <div class="icon-outer"></div>
+        <div class="icon-inner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+          </svg>
+        </div>
+      </div>
+      <p class="card-keyword" style="position:relative;z-index:1;">Earn stock</p>
+      <p class="card-desc" style="position:relative;z-index:1;">in a publicly traded company</p>
+      <div class="mini-stat mini-stat-green">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/></svg>
+        EXPI · NYSE
+      </div>
+    </div>
+
+    <!-- Card 3: COLLABORATION -->
+    <div class="bento-card card-collab">
+      <div class="bento-glow"></div>
+      <div class="bento-texture"></div>
+      <span class="bento-num">03</span>
+      <!-- Background visual: network constellation -->
+      <div class="card-visual card-visual-collab">
+        <svg viewBox="0 0 300 300" fill="none">
+          <!-- Connection lines -->
+          <line x1="80" y1="60" x2="200" y2="40" stroke="#9933ff" stroke-width="0.5" opacity="0.5"/>
+          <line x1="200" y1="40" x2="260" y2="120" stroke="#9933ff" stroke-width="0.5" opacity="0.4"/>
+          <line x1="80" y1="60" x2="50" y2="160" stroke="#9933ff" stroke-width="0.5" opacity="0.4"/>
+          <line x1="50" y1="160" x2="150" y2="200" stroke="#9933ff" stroke-width="0.5" opacity="0.3"/>
+          <line x1="260" y1="120" x2="220" y2="230" stroke="#9933ff" stroke-width="0.5" opacity="0.35"/>
+          <line x1="150" y1="200" x2="220" y2="230" stroke="#9933ff" stroke-width="0.5" opacity="0.3"/>
+          <line x1="200" y1="40" x2="150" y2="200" stroke="#9933ff" stroke-width="0.5" opacity="0.2"/>
+          <line x1="80" y1="60" x2="260" y2="120" stroke="#9933ff" stroke-width="0.5" opacity="0.15"/>
+          <!-- Animated nodes -->
+          <circle class="network-node" cx="80" cy="60" r="4" fill="#9933ff" opacity="0.5"/>
+          <circle class="network-node" cx="200" cy="40" r="5" fill="#9933ff" opacity="0.4"/>
+          <circle class="network-node" cx="260" cy="120" r="3" fill="#9933ff" opacity="0.5"/>
+          <circle class="network-node" cx="50" cy="160" r="4" fill="#9933ff" opacity="0.3"/>
+          <circle class="network-node" cx="150" cy="200" r="5" fill="#9933ff" opacity="0.4"/>
+          <circle class="network-node" cx="220" cy="230" r="3" fill="#9933ff" opacity="0.35"/>
+          <!-- Outer rings on nodes -->
+          <circle cx="80" cy="60" r="12" stroke="#9933ff" stroke-width="0.5" opacity="0.15"/>
+          <circle cx="200" cy="40" r="15" stroke="#9933ff" stroke-width="0.5" opacity="0.1"/>
+          <circle cx="150" cy="200" r="14" stroke="#9933ff" stroke-width="0.5" opacity="0.12"/>
+        </svg>
+      </div>
+      <div class="icon-wrap icon-purple" style="position:relative;z-index:1;">
+        <div class="icon-outer"></div>
+        <div class="icon-inner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+      </div>
+      <p class="card-keyword" style="position:relative;z-index:1;">Gain more business</p>
+      <p class="card-desc" style="position:relative;z-index:1;">through collaboration</p>
+      <div class="mini-stat mini-stat-purple">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg>
+        90,000+ agents
+      </div>
+    </div>
+
+    <!-- Card 4: REVSHARE -->
+    <div class="bento-card card-revshare">
+      <div class="bento-glow"></div>
+      <div class="bento-texture"></div>
+      <span class="bento-num">04</span>
+      <!-- Background visual: flowing income streams -->
+      <div class="card-visual card-visual-revshare">
+        <svg viewBox="0 0 800 200" preserveAspectRatio="none" fill="none" style="width:100%;height:100%;">
+          <path d="M0 180 C200 180, 200 100, 400 100 C600 100, 600 40, 800 40" stroke="rgba(255,215,0,0.12)" stroke-width="2"/>
+          <path d="M0 160 C200 160, 250 120, 400 120 C550 120, 600 70, 800 70" stroke="rgba(255,215,0,0.08)" stroke-width="1.5"/>
+          <path d="M0 140 C150 140, 300 80, 500 80 C700 80, 650 30, 800 20" stroke="rgba(255,215,0,0.06)" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="icon-wrap icon-gold" style="position:relative;z-index:1;">
+        <div class="icon-outer"></div>
+        <div class="icon-inner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>
+          </svg>
+        </div>
+      </div>
+      <div style="flex: 1; position:relative;z-index:1;">
+        <p class="card-keyword">Build income beyond closings</p>
+        <p class="card-desc">Revenue share, stock awards, and ICON status create income streams that aren't tied to individual transactions.</p>
+        <div class="revshare-bars">
+          <div class="revshare-bar"></div>
+          <div class="revshare-bar"></div>
+          <div class="revshare-bar"></div>
+          <div class="revshare-bar"></div>
+          <div class="revshare-bar"></div>
+          <div class="revshare-bar"></div>
+          <div class="revshare-bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Star background -->
+<script>
+(function() {
+  const canvas = document.getElementById('star-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = document.documentElement.scrollHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const stars = [];
+  for (let i = 0; i < 500; i++) {
+    stars.push({
+      x: Math.random(),
+      y: Math.random(),
+      size: Math.random() * 1.6 + 0.2,
+      opacity: Math.random() * 0.6 + 0.1,
+      speed: Math.random() * 0.015 + 0.005,
+      offset: Math.random() * Math.PI * 2,
+    });
+  }
+  // Feature stars
+  for (let i = 0; i < 20; i++) {
+    stars.push({
+      x: Math.random(),
+      y: Math.random(),
+      size: Math.random() * 2 + 1.5,
+      opacity: Math.random() * 0.35 + 0.25,
+      speed: Math.random() * 0.012 + 0.006,
+      offset: Math.random() * Math.PI * 2,
+      glow: true,
+    });
+  }
+
+  let time = 0;
+  function draw() {
+    const w = canvas.width;
+    const h = canvas.height;
+
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, w, h);
+
+    // Blue nebula at top
+    const g1 = ctx.createRadialGradient(w * 0.5, 0, 0, w * 0.5, 0, h * 0.5);
+    g1.addColorStop(0, 'rgba(10, 18, 40, 0.7)');
+    g1.addColorStop(0.5, 'rgba(8, 12, 28, 0.3)');
+    g1.addColorStop(1, 'rgba(10, 10, 10, 0)');
+    ctx.fillStyle = g1;
+    ctx.fillRect(0, 0, w, h);
+
+    // Purple nebula accent
+    const g2 = ctx.createRadialGradient(w * 0.75, h * 0.25, 0, w * 0.75, h * 0.25, h * 0.4);
+    g2.addColorStop(0, 'rgba(25, 12, 40, 0.25)');
+    g2.addColorStop(1, 'rgba(10, 10, 10, 0)');
+    ctx.fillStyle = g2;
+    ctx.fillRect(0, 0, w, h);
+
+    time += 0.016;
+    for (const s of stars) {
+      const twinkle = Math.sin(time * s.speed * 60 + s.offset) * 0.5 + 0.5;
+      const alpha = s.opacity * (0.5 + twinkle * 0.5);
+      const sx = s.x * w;
+      const sy = s.y * h;
+
+      if (s.glow) {
+        const gg = ctx.createRadialGradient(sx, sy, 0, sx, sy, s.size * 4);
+        gg.addColorStop(0, 'rgba(180, 200, 255, ' + (alpha * 0.25) + ')');
+        gg.addColorStop(1, 'rgba(180, 200, 255, 0)');
+        ctx.fillStyle = gg;
+        ctx.fillRect(sx - s.size * 4, sy - s.size * 4, s.size * 8, s.size * 8);
+      }
+
+      ctx.beginPath();
+      ctx.arc(sx, sy, s.size, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(220, 225, 240, ' + alpha + ')';
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+
+<!-- Intersection Observer for scroll-triggered animations -->
+<script>
+(function() {
+  // For the revshare bars: observe the bars element itself,
+  // require it to be fully visible and well inside viewport
+  var barsObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.closest('.bento-card').classList.add('in-view');
+        barsObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 1.0, rootMargin: '0px 0px -80px 0px' });
+
+  var bars = document.querySelector('.revshare-bars');
+  if (bars) barsObserver.observe(bars);
+
+  // For other animated cards (stock line draw, etc.)
+  var cardObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        cardObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.bento-card:not(.card-revshare)').forEach(function(card) {
+    cardObserver.observe(card);
+  });
+})();
+</script>
+
+</body>
+</html>

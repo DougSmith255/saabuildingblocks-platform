@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Weight Scale - Brokerage Comparison -->
+  <!-- Balance scale tilted slightly, empty pans -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Base/stand backing plate -->
+  <line x1="400" y1="520" x2="400" y2="200" stroke="#5a5248" stroke-width="8" opacity="0.5"/>
+  <!-- Base/stand glowing -->
+  <line x1="400" y1="520" x2="400" y2="200" stroke="#ffd700" stroke-width="3" filter="url(#glow)"/>
+
+  <!-- Base platform backing -->
+  <path d="M300 520 L500 520 L480 540 L320 540 Z" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <!-- Base platform glowing -->
+  <line x1="300" y1="520" x2="500" y2="520" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
+  <line x1="300" y1="520" x2="320" y2="540" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
+  <line x1="500" y1="520" x2="480" y2="540" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
+  <line x1="320" y1="540" x2="480" y2="540" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
+
+  <!-- Center fulcrum/pivot point -->
+  <circle cx="400" cy="200" r="15" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="200" r="15" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+
+  <!-- Balance beam - tilted slightly (left side down) -->
+  <!-- Backing plate -->
+  <line x1="180" y1="220" x2="620" y2="180" stroke="#5a5248" stroke-width="8" opacity="0.5"/>
+  <!-- Glowing beam -->
+  <line x1="180" y1="220" x2="620" y2="180" stroke="#ffd700" stroke-width="3" filter="url(#glow)"/>
+
+  <!-- Left chain/strings -->
+  <line x1="180" y1="220" x2="140" y2="320" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="180" y1="220" x2="220" y2="320" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="180" y1="220" x2="140" y2="320" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="180" y1="220" x2="220" y2="320" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+
+  <!-- Left pan (lower) -->
+  <path d="M100 320 Q100 360 180 360 Q260 360 260 320" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <path d="M100 320 Q100 360 180 360 Q260 360 260 320" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <line x1="100" y1="320" x2="260" y2="320" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="100" y1="320" x2="260" y2="320" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+
+  <!-- Right chain/strings -->
+  <line x1="620" y1="180" x2="580" y2="280" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="620" y1="180" x2="660" y2="280" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="620" y1="180" x2="580" y2="280" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="620" y1="180" x2="660" y2="280" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+
+  <!-- Right pan (higher) -->
+  <path d="M540 280 Q540 320 620 320 Q700 320 700 280" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <path d="M540 280 Q540 320 620 320 Q700 320 700 280" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <line x1="540" y1="280" x2="700" y2="280" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="540" y1="280" x2="700" y2="280" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+
+  <!-- Decorative top piece -->
+  <path d="M380 200 L400 170 L420 200" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <path d="M380 200 L400 170 L420 200" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+</svg>

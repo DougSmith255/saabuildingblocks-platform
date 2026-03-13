@@ -149,8 +149,11 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/master-controller/infographics
- * Toggle approval for an infographic. Auto-places/removes from WordPress.
- * Body: { id, approved, blogPostId, cloudflareId, title, blogPostTitle }
+ * Set approval status for an infographic. Auto-places/removes from WordPress.
+ * Body: { id, approved (true/false/null), notes?, blogPostId, cloudflareId, title, blogPostTitle }
+ *   approved=true  -> place in blog
+ *   approved=false -> disapprove (remove from blog), notes explain why
+ *   approved=null  -> reset to pending (remove from blog)
  */
 export async function POST(request: NextRequest) {
   try {
@@ -160,10 +163,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { id, approved, blogPostId, cloudflareId, title, blogPostTitle } = body;
+    const { id, approved, notes, blogPostId, cloudflareId, title, blogPostTitle } = body;
 
-    if (!id || typeof approved !== 'boolean') {
-      return NextResponse.json({ error: 'Missing required fields: id, approved' }, { status: 400 });
+    if (!id || (approved !== true && approved !== false && approved !== null)) {
+      return NextResponse.json({ error: 'Missing required fields: id, approved (true/false/null)' }, { status: 400 });
     }
 
     // Update Supabase
@@ -172,8 +175,9 @@ export async function POST(request: NextRequest) {
       .from('infographic_approvals')
       .upsert({
         id,
-        approved,
-        approved_at: approved ? new Date().toISOString() : null,
+        approved: approved ?? false,
+        notes: notes ?? null,
+        approved_at: approved === true ? new Date().toISOString() : null,
         updated_at: new Date().toISOString(),
       });
 
@@ -184,9 +188,10 @@ export async function POST(request: NextRequest) {
     // Auto-place or remove from WordPress
     let wpResult: { success: boolean; error?: string } = { success: true };
     if (blogPostId && cloudflareId) {
-      if (approved) {
+      if (approved === true) {
         wpResult = await placeInfographic(blogPostId, cloudflareId, title || id, blogPostTitle || '');
       } else {
+        // Both disapproved and pending -> remove from blog
         wpResult = await removeInfographic(blogPostId);
       }
     }
@@ -194,6 +199,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       id,
       approved,
+      notes,
       wpPlacement: wpResult.success ? 'ok' : 'failed',
       wpError: wpResult.error,
     });

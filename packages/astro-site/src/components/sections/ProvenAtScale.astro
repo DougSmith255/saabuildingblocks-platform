@@ -2,13 +2,13 @@
 /**
  * ProvenAtScale - Wolf pack background + stats + 4000+ counter
  * Pure static HTML. Zero JavaScript.
- * Inlines GlassPanel champagne, NeonCard, and Icon3D styling.
+ * Inlines gold-tinted glass panel, NeonCard, and Icon3D styling.
  */
 import H2 from '../saa/headings/H2.astro';
 
-// GlassPanel champagne
-const champagneBg = 'linear-gradient(180deg, rgba(247,231,206,0.04) 0%, rgba(247,231,206,0.05) 50%, rgba(247,231,206,0.04) 100%)';
-const champagneShadow = `0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 0 rgba(255,255,255,0.35), inset 0 2px 4px 0 rgba(255,255,255,0.2), inset 0 8px 20px -8px rgba(247,231,206,0.3), inset 0 20px 40px -20px rgba(255,255,255,0.15), inset 0 -1px 0 0 rgba(0,0,0,0.7), inset 0 -2px 6px 0 rgba(0,0,0,0.5), inset 0 -10px 25px -8px rgba(0,0,0,0.6), inset 0 -25px 50px -20px rgba(0,0,0,0.45)`;
+// GlassPanel gold-tinted
+const glassBg = 'linear-gradient(180deg, rgba(255,215,0,0.03) 0%, rgba(255,215,0,0.04) 50%, rgba(255,215,0,0.03) 100%)';
+const glassShadow = `0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 0 rgba(255,255,255,0.35), inset 0 2px 4px 0 rgba(255,255,255,0.2), inset 0 8px 20px -8px rgba(255,215,0,0.25), inset 0 20px 40px -20px rgba(255,255,255,0.15), inset 0 -1px 0 0 rgba(0,0,0,0.7), inset 0 -2px 6px 0 rgba(0,0,0,0.5), inset 0 -10px 25px -8px rgba(0,0,0,0.6), inset 0 -25px 50px -20px rgba(0,0,0,0.45)`;
 
 const WOLF_PACK_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop';
 
@@ -25,7 +25,7 @@ const STATS = [
 
 <div
   class="relative overflow-hidden rounded-3xl"
-  style={`background: ${champagneBg}; box-shadow: ${champagneShadow}; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);`}
+  style={`background: ${glassBg}; box-shadow: ${glassShadow}; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);`}
 >
   <!-- Dots texture -->
   <div
@@ -59,7 +59,9 @@ const STATS = [
         <div class="grid md:grid-cols-12 gap-8 items-center">
           <!-- Left - Content -->
           <div class="md:col-span-8">
-            <H2 style="text-align: left;">Proven at Scale</H2>
+            <div class="mb-10">
+              <H2 style={{ textAlign: 'left' }}>Proven at Scale</H2>
+            </div>
 
             <div class="space-y-4 mb-8">
               {STATS.map((stat) => (

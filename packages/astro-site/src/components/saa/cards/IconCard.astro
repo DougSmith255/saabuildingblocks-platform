@@ -32,20 +32,20 @@ const THEME_COLORS = {
     iconColor: '#00bfff', iconDropShadow: 'rgba(0,191,255,0.5)',
   },
   green: {
-    primary: '#00cc66', primaryRgb: '0, 204, 102',
-    border: 'rgba(0, 204, 102, 0.15)', hoverGlow: 'rgba(0, 204, 102, 0.12)',
-    iconBg: 'linear-gradient(135deg, rgba(0,204,102,0.2), rgba(0,150,75,0.1))',
-    iconBorder: 'rgba(0,204,102,0.3)', iconGlow: 'rgba(0,204,102,0.2)',
+    primary: '#00ff88', primaryRgb: '0, 255, 136',
+    border: 'rgba(0, 255, 136, 0.15)', hoverGlow: 'rgba(0, 255, 136, 0.12)',
+    iconBg: 'linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,200,100,0.1))',
+    iconBorder: 'rgba(0,255,136,0.3)', iconGlow: 'rgba(0,255,136,0.2)',
     iconInnerBg: 'linear-gradient(180deg, rgba(10,20,15,0.95), rgba(5,15,10,0.98))',
-    iconColor: '#00cc66', iconDropShadow: 'rgba(0,204,102,0.5)',
+    iconColor: '#00ff88', iconDropShadow: 'rgba(0,255,136,0.5)',
   },
   purple: {
-    primary: '#a050ff', primaryRgb: '160, 80, 255',
-    border: 'rgba(160, 80, 255, 0.15)', hoverGlow: 'rgba(160, 80, 255, 0.12)',
-    iconBg: 'linear-gradient(135deg, rgba(160,80,255,0.2), rgba(120,60,200,0.1))',
-    iconBorder: 'rgba(160,80,255,0.3)', iconGlow: 'rgba(160,80,255,0.2)',
+    primary: '#9933ff', primaryRgb: '153, 51, 255',
+    border: 'rgba(153, 51, 255, 0.15)', hoverGlow: 'rgba(153, 51, 255, 0.12)',
+    iconBg: 'linear-gradient(135deg, rgba(153,51,255,0.2), rgba(120,40,200,0.1))',
+    iconBorder: 'rgba(153,51,255,0.3)', iconGlow: 'rgba(153,51,255,0.2)',
     iconInnerBg: 'linear-gradient(180deg, rgba(20,15,30,0.95), rgba(10,5,20,0.98))',
-    iconColor: '#a050ff', iconDropShadow: 'rgba(160,80,255,0.5)',
+    iconColor: '#9933ff', iconDropShadow: 'rgba(153,51,255,0.5)',
   },
 };
 
@@ -57,14 +57,10 @@ const hoverClass = hover ? 'group' : '';
 const pulseId = `iconCardPulse-${theme}`;
 ---
 
-<style define:vars={{ primaryRgb: colors.primaryRgb, pulseId }}>
-  @keyframes iconCardPulse {
-    0%, 100% {
-      box-shadow: 0 0 30px rgba(var(--primaryRgb), 0.2), inset 0 0 20px rgba(var(--primaryRgb), 0.1);
-    }
-    50% {
-      box-shadow: 0 0 40px rgba(var(--primaryRgb), 0.35), inset 0 0 25px rgba(var(--primaryRgb), 0.15);
-    }
+<style>
+  @keyframes iconCardPulseOpacity {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
   }
 </style>
 

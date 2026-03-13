@@ -1,0 +1,100 @@
+---
+/**
+ * ScrollIndicator - Pure Astro replacement for React ScrollIndicator island.
+ * Double chevron arrows with bounce animation, fades on scroll.
+ * Zero React, tiny inline script for scroll fade.
+ */
+---
+
+<div
+  id="global-scroll-indicator"
+  class="fixed pointer-events-none"
+  style="bottom: max(12px, calc(env(safe-area-inset-bottom, 0px) + 4px)); right: 24px; z-index: -1; transform-origin: center bottom; transition: opacity 0.3s ease-out, transform 0.3s ease-out;"
+  aria-hidden="true"
+>
+  <div style="filter: drop-shadow(0 0 2px rgba(136, 136, 136, 0.2));">
+    <div class="scroll-prompt-arrow-container">
+      <div class="scroll-prompt-arrow"><div></div></div>
+      <div class="scroll-prompt-arrow"><div></div></div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+(function() {
+  var el = document.getElementById('global-scroll-indicator');
+  if (!el) return;
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function() {
+      var y = window.scrollY;
+      if (y <= 20) {
+        el.style.opacity = '1';
+        el.style.transform = 'scale(1)';
+      } else if (y >= 100) {
+        el.style.opacity = '0';
+        el.style.transform = 'scale(0.5)';
+      } else {
+        var p = (y - 20) / 80;
+        el.style.opacity = String(1 - p);
+        el.style.transform = 'scale(' + (1 - p * 0.5) + ')';
+      }
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
+<style>
+  @keyframes scrollBounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(30px); }
+  }
+
+  @keyframes scrollOpacity {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .scroll-prompt-arrow-container {
+    animation: scrollBounce 1.5s infinite;
+  }
+
+  .scroll-prompt-arrow {
+    animation: scrollOpacity 1.5s infinite;
+  }
+
+  .scroll-prompt-arrow:last-child {
+    animation-direction: reverse;
+    margin-top: -6px;
+  }
+
+  .scroll-prompt-arrow > div {
+    width: 36px;
+    height: 36px;
+    border-right: 8px solid #888;
+    border-bottom: 8px solid #888;
+    border-radius: 4px;
+    transform: rotate(45deg) translateZ(1px);
+    filter:
+      drop-shadow(0 0 1px rgba(255,255,255,0.6))
+      drop-shadow(0 0 2px rgba(255,255,255,0.3));
+  }
+
+  @media (max-width: 1023px) {
+    #global-scroll-indicator {
+      right: 30px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-prompt-arrow-container,
+    .scroll-prompt-arrow {
+      animation: none;
+    }
+  }
+</style>

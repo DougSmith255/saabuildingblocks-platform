@@ -224,21 +224,23 @@ export function InfographicsTab() {
   const [filterType, setFilterType] = useState<LayoutType | 'all'>('all');
   const [showWorkflow, setShowWorkflow] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [previewImage, setPreviewImage] = useState<{ url: string; title: string } | null>(null);
+  // Review modal: shows image + notes + approve/disapprove
+  const [reviewItem, setReviewItem] = useState<InfographicEntry | null>(null);
+  const [reviewNotes, setReviewNotes] = useState('');
+  const [saving, setSaving] = useState(false);
 
-  // Approval state
-  const [approvals, setApprovals] = useState<Record<string, boolean>>({});
+  // Approval state: true = approved, false = disapproved, undefined = pending
+  const [approvals, setApprovals] = useState<Record<string, { approved: boolean; notes: string | null }>>({});
   const [loadingApprovals, setLoadingApprovals] = useState(true);
-  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   // Fetch approvals on mount
   useEffect(() => {
     fetch('/api/master-controller/infographics')
       .then(r => r.json())
       .then(data => {
-        const map: Record<string, boolean> = {};
+        const map: Record<string, { approved: boolean; notes: string | null }> = {};
         for (const a of data.approvals || []) {
-          map[a.id] = a.approved;
+          map[a.id] = { approved: a.approved, notes: a.notes || null };
         }
         setApprovals(map);
       })
@@ -246,28 +248,71 @@ export function InfographicsTab() {
       .finally(() => setLoadingApprovals(false));
   }, []);
 
-  const toggleApproval = useCallback(async (ig: InfographicEntry) => {
-    const newApproved = !approvals[ig.id];
-    setTogglingId(ig.id);
+  const openReview = useCallback((ig: InfographicEntry) => {
+    setReviewItem(ig);
+    setReviewNotes(approvals[ig.id]?.notes || '');
+  }, [approvals]);
+
+  const submitReview = useCallback(async (approved: boolean | null) => {
+    if (!reviewItem) return;
+    setSaving(true);
     try {
       const res = await fetch('/api/master-controller/infographics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: ig.id,
-          approved: newApproved,
-          blogPostId: ig.blogPostId,
-          cloudflareId: ig.cloudflareId,
-          title: ig.title,
-          blogPostTitle: ig.blogPostTitle,
+          id: reviewItem.id,
+          approved,
+          notes: reviewNotes || null,
+          blogPostId: reviewItem.blogPostId,
+          cloudflareId: reviewItem.cloudflareId,
+          title: reviewItem.title,
+          blogPostTitle: reviewItem.blogPostTitle,
         }),
       });
       if (res.ok) {
-        setApprovals(prev => ({ ...prev, [ig.id]: newApproved }));
+        if (approved === null) {
+          setApprovals(prev => {
+            const next = { ...prev };
+            delete next[reviewItem.id];
+            return next;
+          });
+        } else {
+          setApprovals(prev => ({ ...prev, [reviewItem.id]: { approved, notes: reviewNotes || null } }));
+        }
+        setReviewItem(null);
       }
     } catch {}
-    setTogglingId(null);
-  }, [approvals]);
+    setSaving(false);
+  }, [reviewItem, reviewNotes]);
+
+  const saveNotesOnly = useCallback(async () => {
+    if (!reviewItem) return;
+    setSaving(true);
+    const existing = approvals[reviewItem.id];
+    try {
+      const res = await fetch('/api/master-controller/infographics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: reviewItem.id,
+          approved: existing ? existing.approved : false,
+          notes: reviewNotes || null,
+          blogPostId: reviewItem.blogPostId,
+          cloudflareId: reviewItem.cloudflareId,
+          title: reviewItem.title,
+          blogPostTitle: reviewItem.blogPostTitle,
+        }),
+      });
+      if (res.ok) {
+        setApprovals(prev => ({
+          ...prev,
+          [reviewItem.id]: { approved: existing?.approved ?? false, notes: reviewNotes || null },
+        }));
+      }
+    } catch {}
+    setSaving(false);
+  }, [reviewItem, reviewNotes, approvals]);
 
   const activeList = useMemo(() => {
     if (activeCategory === 'content') return CONTENT_INFOGRAPHICS;
@@ -428,12 +473,12 @@ export function InfographicsTab() {
       {/* Infographic List */}
       <div className="rounded-lg border border-[#2a2a2a] overflow-hidden">
         {/* Table Header */}
-        <div className="grid grid-cols-[60px_110px_1fr_130px_100px_1fr] gap-2 px-4 py-2.5 bg-[rgba(128,128,0,0.15)] text-xs text-[#ffd700] uppercase tracking-wider font-bold">
-          <div className="text-center">Preview</div>
-          <div className="text-center">Approval</div>
+        <div className="grid grid-cols-[70px_100px_1fr_130px_100px_1fr] gap-2 px-4 py-2.5 bg-[rgba(128,128,0,0.15)] text-xs text-[#ffd700] uppercase tracking-wider font-bold">
+          <div className="text-center">Review</div>
+          <div className="text-center">Status</div>
           <div>Infographic</div>
           <div>Type</div>
-          <div>Status</div>
+          <div>Deploy</div>
           <div>{activeCategory === 'brokerage-comparison' ? 'Cloudflare ID' : 'Blog Post'}</div>
         </div>
 
@@ -441,22 +486,19 @@ export function InfographicsTab() {
         {filtered.map((ig, i) => (
           <div
             key={ig.id}
-            className="grid grid-cols-[60px_110px_1fr_130px_100px_1fr] gap-2 px-4 py-3 items-center"
+            className="grid grid-cols-[70px_100px_1fr_130px_100px_1fr] gap-2 px-4 py-3 items-center"
             style={{
               background: i % 2 === 0 ? '#141414' : '#1a1a1a',
               borderBottom: '1px solid #2a2a2a',
             }}
           >
-            {/* Preview Button */}
+            {/* Review Button (opens modal with image + notes + approve/disapprove) */}
             <div className="flex justify-center">
               {ig.cloudflareId ? (
                 <button
-                  onClick={() => setPreviewImage({
-                    url: `https://imagedelivery.net/${CF_IMG_HASH}/${ig.cloudflareId}/public`,
-                    title: ig.title,
-                  })}
+                  onClick={() => openReview(ig)}
                   className="p-1.5 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] text-[#dcdbd5] hover:text-[#ffd700] transition-all"
-                  title="Preview image"
+                  title="Review infographic"
                 >
                   <Eye className="w-4 h-4" />
                 </button>
@@ -465,35 +507,25 @@ export function InfographicsTab() {
               )}
             </div>
 
-            {/* Approve / Disapprove Toggle */}
+            {/* Approval Status Badge */}
             <div className="flex justify-center">
               {loadingApprovals ? (
                 <Loader2 className="w-4 h-4 text-[#555] animate-spin" />
-              ) : togglingId === ig.id ? (
-                <span className="flex items-center gap-1.5 text-xs text-[#ffd700]">
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Saving...
+              ) : approvals[ig.id]?.approved === true ? (
+                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[rgba(0,255,136,0.15)] text-[#00ff88] border border-[rgba(0,255,136,0.25)]">
+                  <CheckCircle className="w-3 h-3" />
+                  Approved
                 </span>
-              ) : approvals[ig.id] ? (
-                <button
-                  onClick={() => toggleApproval(ig)}
-                  disabled={!ig.blogPostId}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-[rgba(255,50,50,0.15)] text-[#ff5555] border border-[rgba(255,50,50,0.3)] hover:bg-[rgba(255,50,50,0.25)] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                  title="Click to disapprove and remove from blog"
+              ) : approvals[ig.id]?.approved === false ? (
+                <span
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[rgba(255,50,50,0.15)] text-[#ff5555] border border-[rgba(255,50,50,0.3)] cursor-help"
+                  title={approvals[ig.id]?.notes || 'No notes'}
                 >
-                  <XCircle className="w-3.5 h-3.5" />
-                  Disapprove
-                </button>
+                  <XCircle className="w-3 h-3" />
+                  Rejected
+                </span>
               ) : (
-                <button
-                  onClick={() => toggleApproval(ig)}
-                  disabled={!ig.blogPostId}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-[rgba(0,255,136,0.1)] text-[#00ff88] border border-[rgba(0,255,136,0.25)] hover:bg-[rgba(0,255,136,0.2)] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                  title={!ig.blogPostId ? 'No blog post mapped' : 'Click to approve and place in blog'}
-                >
-                  <CheckCircle className="w-3.5 h-3.5" />
-                  Approve
-                </button>
+                <span className="text-[10px] text-[#555] uppercase">Pending</span>
               )}
             </div>
 
@@ -569,39 +601,128 @@ export function InfographicsTab() {
         </div>
       </div>
 
-      {/* Image Preview Modal */}
-      {previewImage && (
+      {/* Review Modal */}
+      {reviewItem && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-          onClick={() => setPreviewImage(null)}
+          onClick={() => { if (!saving) setReviewItem(null); }}
         >
           <div
-            className="relative max-w-[90vw] max-h-[90vh] flex flex-col items-center"
+            className="relative w-[90vw] max-w-[900px] max-h-[92vh] bg-[#141414] border border-[#2a2a2a] rounded-xl flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between w-full mb-3 px-1">
-              <span className="text-sm text-[#e5e4dd] font-semibold truncate mr-4">{previewImage.title}</span>
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-5 py-3 border-b border-[#2a2a2a] bg-[#1a1a1a]">
+              <div className="min-w-0 mr-4">
+                <h3 className="text-base font-bold text-[#e5e4dd] truncate">{reviewItem.title}</h3>
+                {reviewItem.blogPostTitle && (
+                  <span className="text-xs text-[#888]">Blog: {reviewItem.blogPostTitle}</span>
+                )}
+              </div>
               <button
-                onClick={() => setPreviewImage(null)}
-                className="p-1 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] text-[#dcdbd5] hover:text-white transition-all flex-shrink-0"
+                onClick={() => { if (!saving) setReviewItem(null); }}
+                className="p-1.5 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] text-[#dcdbd5] hover:text-white transition-all flex-shrink-0"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <img
-              src={previewImage.url}
-              alt={previewImage.title}
-              className="max-w-full max-h-[80vh] rounded-lg border border-[#2a2a2a] object-contain"
-            />
-            <a
-              href={previewImage.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 flex items-center gap-1.5 text-xs text-[#00ff88] hover:underline"
-            >
-              <ExternalLink className="w-3 h-3" />
-              Open full size in new tab
-            </a>
+
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+              {/* Image */}
+              {reviewItem.cloudflareId && (
+                <div className="flex justify-center bg-[#0d0d0d] rounded-lg p-3 border border-[#2a2a2a]">
+                  <img
+                    src={`https://imagedelivery.net/${CF_IMG_HASH}/${reviewItem.cloudflareId}/desktop`}
+                    alt={reviewItem.title}
+                    className="max-w-full max-h-[50vh] object-contain rounded"
+                  />
+                </div>
+              )}
+
+              {/* Open full size link */}
+              {reviewItem.cloudflareId && (
+                <div className="flex justify-center">
+                  <a
+                    href={`https://imagedelivery.net/${CF_IMG_HASH}/${reviewItem.cloudflareId}/public`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-xs text-[#00ff88] hover:underline"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    Open full size in new tab
+                  </a>
+                </div>
+              )}
+
+              {/* Current status */}
+              {approvals[reviewItem.id] && (
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
+                  <span className="text-xs text-[#888]">Current status:</span>
+                  {approvals[reviewItem.id].approved ? (
+                    <span className="flex items-center gap-1 text-xs font-bold text-[#00ff88]">
+                      <CheckCircle className="w-3.5 h-3.5" /> Approved
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1 text-xs font-bold text-[#ff5555]">
+                      <XCircle className="w-3.5 h-3.5" /> Disapproved
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Notes / Feedback */}
+              <div>
+                <label className="block text-xs font-bold text-[#ffd700] uppercase tracking-wider mb-1.5">
+                  Notes / Feedback
+                </label>
+                <textarea
+                  value={reviewNotes}
+                  onChange={e => setReviewNotes(e.target.value)}
+                  placeholder="What needs to change? Be specific about any text, data, or layout issues..."
+                  className="w-full h-28 bg-[#0d0d0d] border border-[#2a2a2a] rounded-lg px-3 py-2.5 text-sm text-[#dcdbd5] placeholder-[#555] focus:border-[#ffd700] outline-none resize-y"
+                />
+                {reviewNotes !== (approvals[reviewItem.id]?.notes || '') && (
+                  <button
+                    onClick={saveNotesOnly}
+                    disabled={saving}
+                    className="mt-1.5 text-xs text-[#ffd700] hover:underline disabled:opacity-50"
+                  >
+                    {saving ? 'Saving...' : 'Save notes without changing approval'}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3 px-5 py-4 border-t border-[#2a2a2a] bg-[#1a1a1a]">
+              <button
+                onClick={() => submitReview(true)}
+                disabled={saving || !reviewItem.blogPostId}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold bg-[rgba(0,255,136,0.15)] text-[#00ff88] border border-[rgba(0,255,136,0.3)] hover:bg-[rgba(0,255,136,0.25)] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                title={!reviewItem.blogPostId ? 'No blog post mapped' : 'Approve and place in blog'}
+              >
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+                Approve
+              </button>
+              <button
+                onClick={() => submitReview(false)}
+                disabled={saving || !reviewItem.blogPostId}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold bg-[rgba(255,50,50,0.15)] text-[#ff5555] border border-[rgba(255,50,50,0.3)] hover:bg-[rgba(255,50,50,0.25)] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                title={!reviewItem.blogPostId ? 'No blog post mapped' : 'Disapprove and remove from blog'}
+              >
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
+                Disapprove
+              </button>
+              <div className="flex-1" />
+              <button
+                onClick={() => setReviewItem(null)}
+                disabled={saving}
+                className="px-4 py-2.5 rounded-lg text-sm text-[#888] hover:text-[#dcdbd5] transition-all"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Target - Marketing Mastery -->
+  <!-- Simple bullseye target, no arrows -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Target rings - backing plates -->
+  <circle cx="400" cy="300" r="220" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="300" r="175" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="300" r="130" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="300" r="85" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="300" r="40" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+
+  <!-- Target rings - glowing -->
+  <circle cx="400" cy="300" r="220" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <circle cx="400" cy="300" r="175" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <circle cx="400" cy="300" r="130" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <circle cx="400" cy="300" r="85" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <circle cx="400" cy="300" r="40" stroke="#ffd700" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+  <!-- Bullseye center - backing -->
+  <circle cx="400" cy="300" r="12" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <!-- Bullseye center - glowing -->
+  <circle cx="400" cy="300" r="12" stroke="#ffd700" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+  <!-- Cross hairs - backing -->
+  <line x1="400" y1="70" x2="400" y2="180" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="400" y1="420" x2="400" y2="530" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="170" y1="300" x2="280" y2="300" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="520" y1="300" x2="630" y2="300" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+
+  <!-- Cross hairs - glowing -->
+  <line x1="400" y1="70" x2="400" y2="180" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="400" y1="420" x2="400" y2="530" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="170" y1="300" x2="280" y2="300" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="520" y1="300" x2="630" y2="300" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+</svg>

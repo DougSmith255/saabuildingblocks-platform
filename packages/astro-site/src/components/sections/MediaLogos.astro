@@ -1,0 +1,209 @@
+---
+/**
+ * MediaLogos - Astro-native "Why eXp Realty?" section + scrolling logo carousel
+ *
+ * Port of packages/public-site/app/components/sections/MediaLogos.tsx
+ * Zero JavaScript - CSS-only infinite scroll animation.
+ */
+import H2 from '../saa/headings/H2.astro';
+import SecondaryButton from '../saa/buttons/SecondaryButton.astro';
+import IconCard from '../saa/cards/IconCard.astro';
+
+const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
+
+const logos = [
+  { id: 'wsj-logo', alt: 'The Wall Street Journal' },
+  { id: 'cnbc-logo', alt: 'CNBC' },
+  { id: 'fox-business-logo', alt: 'Fox Business' },
+  { id: 'bloomberg-logo', alt: 'Bloomberg' },
+  { id: 'yahoo-finance-logo', alt: 'Yahoo Finance' },
+  { id: 'forbes-logo', alt: 'Forbes' },
+  { id: 'business-insider-logo', alt: 'Business Insider' },
+  { id: 'market-watch-logo', alt: 'MarketWatch' },
+  { id: 'reuters-logo', alt: 'Reuters' },
+  { id: 'usa-today-logo', alt: 'USA Today' },
+  { id: 'la-times-logo', alt: 'Los Angeles Times' },
+  { id: 'washington-post-logo', alt: 'The Washington Post' },
+  { id: 'nasdaq-logo', alt: 'Nasdaq' },
+  { id: 'barrons-logo', alt: "Barron's" },
+  { id: 'new-york-post-logo', alt: 'New York Post' },
+];
+---
+
+<section class="relative py-16 md:py-24 overflow-hidden">
+  <!-- SVG filter for subtle crosshatch/sandpaper texture on logos -->
+  <svg width="0" height="0" style="position: absolute;">
+    <defs>
+      <filter id="crosshatch-texture" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8 0.8" numOctaves="1" seed="5" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.4" xChannelSelector="R" yChannelSelector="G" result="textured" />
+        <feSpecularLighting in="noise" surfaceScale="0.8" specularConstant="0.3" specularExponent="35" lighting-color="#ffffff" result="highlight">
+          <feDistantLight azimuth="225" elevation="45" />
+        </feSpecularLighting>
+        <feComposite in="highlight" in2="SourceGraphic" operator="in" result="highlightMask" />
+        <feBlend in="textured" in2="highlightMask" mode="screen" result="final" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Heading + Cards -->
+  <div class="text-center px-4 relative z-10">
+    <div class="mb-10">
+      <H2>Why eXp Realty?</H2>
+    </div>
+
+    <div class="mx-auto mb-8" style="max-width: 1800px;">
+      <!-- Top Row - 3 cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <!-- Card 1: Profitable -->
+        <IconCard theme="yellow" hover centered>
+          <Fragment slot="icon">
+            <div class="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
+              <div class="absolute inset-0 rounded-full" style="background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1)); box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1);"></div>
+              <div class="absolute inset-0 rounded-full pointer-events-none media-logos-icon-pulse" style="box-shadow: 0 0 40px rgba(255,215,0,0.35), inset 0 0 25px rgba(255,215,0,0.15);"></div>
+              <div class="absolute inset-2 rounded-full flex items-center justify-center" style="background: linear-gradient(180deg, rgba(15,15,10,0.95), rgba(10,10,5,0.98)); border: 1px solid rgba(255,215,0,0.3);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(255,215,0,0.5));"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+              </div>
+            </div>
+          </Fragment>
+          <h3 class="font-bold mb-2" style="color: #ffd700; font-size: clamp(24px, calc(22.55px + 0.58vw), 40px);">Proven Profitability</h3>
+          <p class="text-body opacity-90 text-sm">The only cumulatively profitable public real estate brokerage in the last 6 years.</p>
+        </IconCard>
+
+        <!-- Card 2: Cloud-Based -->
+        <IconCard theme="yellow" hover centered>
+          <Fragment slot="icon">
+            <div class="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
+              <div class="absolute inset-0 rounded-full" style="background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1)); box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1);"></div>
+              <div class="absolute inset-0 rounded-full pointer-events-none media-logos-icon-pulse" style="box-shadow: 0 0 40px rgba(255,215,0,0.35), inset 0 0 25px rgba(255,215,0,0.15);"></div>
+              <div class="absolute inset-2 rounded-full flex items-center justify-center" style="background: linear-gradient(180deg, rgba(15,15,10,0.95), rgba(10,10,5,0.98)); border: 1px solid rgba(255,215,0,0.3);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(255,215,0,0.5));"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+              </div>
+            </div>
+          </Fragment>
+          <h3 class="font-bold mb-2" style="color: #ffd700; font-size: clamp(24px, calc(22.55px + 0.58vw), 40px);">Cloud-First Pioneer</h3>
+          <p class="text-body opacity-90 text-sm">S&P 600 SmallCap. First cloud-based brokerage.</p>
+        </IconCard>
+
+        <!-- Card 3: Sponsor Choice -->
+        <IconCard theme="yellow" hover centered>
+          <Fragment slot="icon">
+            <div class="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
+              <div class="absolute inset-0 rounded-full" style="background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(200,160,0,0.1)); box-shadow: 0 0 30px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.1);"></div>
+              <div class="absolute inset-0 rounded-full pointer-events-none media-logos-icon-pulse" style="box-shadow: 0 0 40px rgba(255,215,0,0.35), inset 0 0 25px rgba(255,215,0,0.15);"></div>
+              <div class="absolute inset-2 rounded-full flex items-center justify-center" style="background: linear-gradient(180deg, rgba(15,15,10,0.95), rgba(10,10,5,0.98)); border: 1px solid rgba(255,215,0,0.3);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(255,215,0,0.5));"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              </div>
+            </div>
+          </Fragment>
+          <h3 class="font-bold mb-2" style="color: #ffd700; font-size: clamp(24px, calc(22.55px + 0.58vw), 40px);">Choose Your Sponsor</h3>
+          <p class="text-body opacity-90 text-sm">Access real systems and support through the sponsor you choose.</p>
+        </IconCard>
+      </div>
+
+      <!-- Bottom Row - 2 cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Card 4: Commission - Green -->
+        <IconCard theme="green" hover centered>
+          <Fragment slot="icon">
+            <div class="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
+              <div class="absolute inset-0 rounded-full" style="background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,200,100,0.1)); box-shadow: 0 0 30px rgba(0,255,136,0.2), inset 0 0 20px rgba(0,255,136,0.1);"></div>
+              <div class="absolute inset-0 rounded-full pointer-events-none media-logos-icon-pulse" style="box-shadow: 0 0 40px rgba(0,255,136,0.35), inset 0 0 25px rgba(0,255,136,0.15);"></div>
+              <div class="absolute inset-2 rounded-full flex items-center justify-center" style="background: linear-gradient(180deg, rgba(10,20,15,0.95), rgba(5,15,10,0.98)); border: 1px solid rgba(0,255,136,0.3);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(0,255,136,0.5));"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+              </div>
+            </div>
+          </Fragment>
+          <h3 class="font-bold mb-2" style="color: #00ff88; font-size: clamp(24px, calc(22.55px + 0.58vw), 40px);">Industry-Leading Splits</h3>
+          <p class="text-body opacity-90 text-sm">80/20 split until cap &rarr; 100% commission. Flat monthly fee.</p>
+        </IconCard>
+
+        <!-- Card 5: RevShare - Purple -->
+        <IconCard theme="purple" hover centered>
+          <Fragment slot="icon">
+            <div class="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
+              <div class="absolute inset-0 rounded-full" style="background: linear-gradient(135deg, rgba(153,51,255,0.2), rgba(120,40,200,0.1)); box-shadow: 0 0 30px rgba(153,51,255,0.2), inset 0 0 20px rgba(153,51,255,0.1);"></div>
+              <div class="absolute inset-0 rounded-full pointer-events-none media-logos-icon-pulse" style="box-shadow: 0 0 40px rgba(153,51,255,0.35), inset 0 0 25px rgba(153,51,255,0.15);"></div>
+              <div class="absolute inset-2 rounded-full flex items-center justify-center" style="background: linear-gradient(180deg, rgba(20,15,30,0.95), rgba(10,5,20,0.98)); border: 1px solid rgba(153,51,255,0.3);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9933ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(153,51,255,0.5));"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+              </div>
+            </div>
+          </Fragment>
+          <h3 class="font-bold mb-2" style="color: #9933ff; font-size: clamp(24px, calc(22.55px + 0.58vw), 40px);">Passive Income Potential</h3>
+          <p class="text-body opacity-90 text-sm">Optional revenue share income + stock opportunities.</p>
+        </IconCard>
+      </div>
+
+      <!-- CTA -->
+      <div class="text-center mt-6">
+        <SecondaryButton href="/about-exp-realty/">See eXp's Full Value Stack</SecondaryButton>
+      </div>
+    </div>
+  </div>
+
+  <!-- Caption above logo scroller -->
+  <p class="text-body text-sm opacity-60 text-center mb-6 px-4">
+    eXp is frequently featured in major national and global media outlets.
+  </p>
+
+  <!-- Carousel Container -->
+  <div class="relative z-10">
+    <!-- 3D Curved Portal Edges -->
+    <div class="absolute left-0 z-20 pointer-events-none" style="top: -8px; bottom: -8px; width: 12px; border-radius: 0 12px 12px 0; background: radial-gradient(ellipse 200% 50% at 0% 50%, rgba(255,200,50,0.35) 0%, rgba(255,180,0,0.2) 40%, rgba(180,140,0,0.1) 70%, rgba(100,80,0,0.05) 100%); border-right: 1px solid rgba(255,190,0,0.4); box-shadow: inset -3px 0 6px rgba(255,200,50,0.2), inset -1px 0 2px rgba(255,220,100,0.3), 3px 0 12px rgba(0,0,0,0.6), 6px 0 24px rgba(0,0,0,0.3); transform: perspective(500px) rotateY(-3deg); transform-origin: right center;"></div>
+    <div class="absolute right-0 z-20 pointer-events-none" style="top: -8px; bottom: -8px; width: 12px; border-radius: 12px 0 0 12px; background: radial-gradient(ellipse 200% 50% at 100% 50%, rgba(255,200,50,0.35) 0%, rgba(255,180,0,0.2) 40%, rgba(180,140,0,0.1) 70%, rgba(100,80,0,0.05) 100%); border-left: 1px solid rgba(255,190,0,0.4); box-shadow: inset 3px 0 6px rgba(255,200,50,0.2), inset 1px 0 2px rgba(255,220,100,0.3), -3px 0 12px rgba(0,0,0,0.6), -6px 0 24px rgba(0,0,0,0.3); transform: perspective(500px) rotateY(3deg); transform-origin: left center;"></div>
+
+    <!-- Inner clipping container -->
+    <div class="relative" style="margin-left: 12px; margin-right: 12px; overflow: hidden; border-radius: 12px;">
+      <!-- Shadow overlays -->
+      <div class="absolute left-0 top-0 bottom-0 z-10 pointer-events-none" style="width: 30px; background: radial-gradient(ellipse 100% 60% at 0% 50%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);"></div>
+      <div class="absolute right-0 top-0 bottom-0 z-10 pointer-events-none" style="width: 30px; background: radial-gradient(ellipse 100% 60% at 100% 50%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);"></div>
+
+      <!-- Scrolling Track - CSS animation, no JS -->
+      <div class="media-logos-track flex items-center gap-8 md:gap-16 py-8">
+        {/* Two copies for seamless loop */}
+        {[...logos, ...logos].map((logo, index) => (
+          <div class="flex-shrink-0 flex items-center justify-center" style="min-width: clamp(180px, 15vw, 200px);">
+            <span style="display: inline-flex; align-items: center; justify-content: center; width: 120px; height: 120px; filter: drop-shadow(-1px -1px 0 #e6d99a) drop-shadow(1px 1px 0 #756429) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5)); transform: perspective(500px) rotateX(8deg);">
+              <img
+                src={`${CLOUDFLARE_BASE}/${logo.id}/mobile`}
+                alt={logo.alt}
+                loading="lazy"
+                width="200"
+                height="70"
+                class="h-[70px] md:h-[72px] w-auto object-contain"
+                style="max-width: clamp(200px, 18vw, 300px); filter: brightness(0) invert(0.8);"
+              />
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Icon pulse - GPU-composited opacity animation */
+  @keyframes mediaLogosIconPulse {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+  }
+  .media-logos-icon-pulse {
+    animation: mediaLogosIconPulse 3s ease-in-out infinite;
+    will-change: opacity;
+  }
+
+  /* CSS-only infinite scroll - no JavaScript needed */
+  @keyframes mediaLogosScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .media-logos-track {
+    animation: mediaLogosScroll 60s linear infinite;
+    will-change: transform;
+  }
+
+  /* Pause on hover for accessibility */
+  .media-logos-track:hover {
+    animation-play-state: paused;
+  }
+</style>

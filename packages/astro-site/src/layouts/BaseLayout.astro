@@ -6,6 +6,7 @@
  * and global components from the Next.js layout.
  */
 import '../styles/globals.css';
+import StarBackground from '../components/StarBackground.astro';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -50,39 +51,110 @@ const canonicalUrl = canonical ? `${siteUrl}${canonical}` : siteUrl;
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalUrl} />
 
-    <!-- Fonts - Preloaded (matches Next.js localFont with preload: true) -->
+    <!-- Font preloads for fast loading -->
     <link rel="preload" href="/fonts/taskor-regular-webfont.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
     <link rel="preload" href="/fonts/Synonym-Variable.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="/fonts/Amulya-Variable.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
 
-    <!-- Font face declarations (matches Next.js localFont config) -->
-    <style>
-      @font-face {
-        font-family: 'taskor';
-        src: url('/fonts/taskor-regular-webfont.woff2') format('woff2');
-        font-weight: 400;
-        font-style: normal;
-        font-display: block;
+    <!-- Font face + fallback metrics. MUST be is:inline to stay in HTML.
+         Fallback @font-face rules match web font metrics to DejaVu system fonts
+         (Chrome's default on Linux, which DebugBear/Lighthouse use).
+         font-display:swap shows fallback immediately, swaps when ready.
+         With matching metrics, swaps cause zero layout shift. -->
+    <style is:inline>
+      @font-face{font-family:'taskor';src:url('/fonts/taskor-regular-webfont.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+      @font-face{font-family:'taskor Fallback';src:local('DejaVu Sans'),local('Arial'),local('Helvetica');size-adjust:140.1%;ascent-override:68.8%;descent-override:16.9%;line-gap-override:0.0%}
+      @font-face{font-family:'amulya';src:url('/fonts/Amulya-Variable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+      @font-face{font-family:'amulya Fallback';src:local('DejaVu Serif'),local('Georgia'),local('Times New Roman');size-adjust:109.0%;ascent-override:95.4%;descent-override:32.1%;line-gap-override:8.3%}
+      @font-face{font-family:'amulya';src:url('/fonts/Amulya-VariableItalic.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap}
+      @font-face{font-family:'synonym';src:url('/fonts/Synonym-Variable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+      @font-face{font-family:'synonym Fallback';src:local('DejaVu Sans Mono'),local('Courier New'),local('monospace');size-adjust:97.2%;ascent-override:103.9%;descent-override:26.8%;line-gap-override:10.3%}
+      .header-bg-container{transform:translateY(0) translateZ(0)!important}
+    </style>
+
+    <!-- Critical header layout CSS (prevents CLS before React island hydrates) -->
+    <style is:global>
+      /* Header container sizing at breakpoints */
+      .header-container {
+        height: 75px;
+        padding-top: 0;
+        padding-bottom: 0;
       }
-      @font-face {
-        font-family: 'amulya';
-        src: url('/fonts/Amulya-Variable.woff2') format('woff2');
-        font-weight: 100 900;
-        font-style: normal;
-        font-display: swap;
+      @media (max-width: 81.25rem) {
+        .header-container { height: 67px; }
+        .logo-container:not(.logo-compact) {
+          width: 113px !important; height: 41px !important;
+          max-width: 113px !important; max-height: 41px !important;
+        }
+        .logo-container.logo-css-default {
+          width: 40px !important; height: 40px !important;
+          max-width: 40px !important; max-height: 40px !important;
+        }
+        .logo-container.logo-css-default .logo-svg-default { display: none !important; }
+        .logo-container.logo-css-default .logo-img-default { display: block !important; }
+        .hamburger {
+          width: 59px !important; height: 59px !important;
+          min-width: 59px !important; min-height: 59px !important;
+        }
+        .hamburger-svg {
+          width: 59px !important; height: 59px !important;
+          min-width: 59px !important; min-height: 59px !important;
+        }
       }
-      @font-face {
-        font-family: 'amulya';
-        src: url('/fonts/Amulya-VariableItalic.woff2') format('woff2');
-        font-weight: 100 900;
-        font-style: italic;
-        font-display: swap;
+      @media (max-width: 64rem) {
+        .header-container { height: 55px; }
+        .logo-container:not(.logo-compact) {
+          width: 90px !important; height: 33px !important;
+          max-width: 90px !important; max-height: 33px !important;
+        }
+        .logo-container.logo-css-default {
+          width: 40px !important; height: 40px !important;
+          max-width: 40px !important; max-height: 40px !important;
+        }
+        .logo-container.logo-css-default .logo-svg-default { display: none !important; }
+        .logo-container.logo-css-default .logo-img-default { display: block !important; }
+        .hamburger {
+          width: 53px !important; height: 53px !important;
+          min-width: 53px !important; min-height: 53px !important;
+        }
+        .hamburger-svg {
+          width: 53px !important; height: 53px !important;
+          min-width: 53px !important; min-height: 53px !important;
+        }
       }
-      @font-face {
-        font-family: 'synonym';
-        src: url('/fonts/Synonym-Variable.woff2') format('woff2');
-        font-weight: 100 900;
-        font-style: normal;
-        font-display: block;
+      @media (min-width: 90rem) {
+        .header-container {
+          height: 75px; padding-top: 3px; padding-bottom: 3px;
+          padding-left: 32px !important; padding-right: 32px !important;
+        }
+      }
+      @media (min-width: 768px) {
+        .header-container {
+          padding-left: 32px !important; padding-right: 32px !important;
+        }
+      }
+      /* Hamburger base sizing */
+      .hamburger {
+        cursor: pointer; position: static;
+        width: 65px; height: 65px; min-width: 65px; min-height: 65px;
+        flex-shrink: 0; transform: translateY(2px) translateZ(0);
+        margin-right: -5px;
+      }
+      .hamburger-svg {
+        width: 65px; height: 65px; min-width: 65px; min-height: 65px;
+        contain: strict; transform: translateZ(0);
+      }
+      .line {
+        fill: none; stroke: #ffd700; stroke-linecap: round;
+        stroke-linejoin: round; stroke-width: 3;
+      }
+      .line-top-bottom { stroke-dasharray: 12 63; }
+      /* Glass container for header */
+      .header-bg-container .glassContainer,
+      .header-bg-container [class*="glassContainer"] {
+        position: absolute; top: -5px; left: 0; right: 0; bottom: 0;
+        overflow: hidden; border-radius: 0 0 20px 20px; z-index: 0;
+        pointer-events: none;
       }
     </style>
 
@@ -244,6 +316,8 @@ const canonicalUrl = canonical ? `${siteUrl}${canonical}` : siteUrl;
     >
       Skip to main content
     </a>
+
+    <StarBackground />
 
     <slot />
 

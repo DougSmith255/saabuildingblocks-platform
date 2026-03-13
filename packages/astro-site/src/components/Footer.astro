@@ -1,0 +1,388 @@
+---
+/**
+ * Footer - Pure Astro replacement for the React Footer island.
+ * Eliminates ~21KB of JS. All behavior is CSS-only except
+ * a tiny inline script to hide/show on modal events.
+ */
+const year = new Date().getFullYear();
+
+const socialIcons = [
+  {
+    name: 'Email',
+    href: 'mailto:team@smartagentalliance.com',
+    icon: "url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27%3E%3Cpath fill=%27%2396a9b2%27 d=%27M511.824 425.007c1.941-5.245-220.916-173.519-220.916-173.519c-27.9-20.589-42.574-20.913-70.164 0c0 0-222.532 168.138-220.659 173.311l-.045.038c.023.045.06.076.091.117a48.5 48.5 0 0 0 8.119 14.157c1.473 1.786 3.248 3.282 4.955 4.837l-.083.064c.136.121.317.177.453.298c7.235 6.454 16.359 10.634 26.495 11.827c.159.019.287.102.446.121h.612c1.541.147 3.006.517 4.584.517h420.721c20.717 0 38.269-13.028 45.241-31.291c.083-.136.211-.234.287-.374z%27/%3E%3Cpath fill=%27%23b9c5c6%27 d=%27M256.133 232.176L1.216 423.364V152.515c0-26.4 21.397-47.797 47.797-47.797h414.24c26.4 0 47.797 21.397 47.797 47.797v270.849z%27/%3E%3Cpath fill=%27%23edece6%27 d=%27m4.189 135.896l217.645 170.949c27.47 20.271 41.918 20.591 69.083 0L508.22 136.167c-3.77-6.834-9.414-12.233-15.869-16.538l2.989-2.342c-7.295-6.641-16.62-10.946-26.971-12.058l-424.455.015c-10.322 1.097-19.662 5.417-26.942 12.043l2.967 2.313c-6.38 4.245-11.972 9.551-15.75 16.296%27/%3E%3Cpath fill=%27%23dce2e2%27 d=%27M4.118 136.254C2.207 141.419 221.63 307.099 221.63 307.099c27.47 20.271 41.918 20.591 69.083 0c0 0 219.103-165.546 217.258-170.64l.045-.037c-.022-.045-.059-.074-.089-.115a47.7 47.7 0 0 0-7.994-13.939c-1.45-1.759-3.198-3.231-4.878-4.763l.082-.063c-.134-.119-.312-.175-.446-.294c-7.124-6.354-16.107-10.47-26.086-11.645c-.156-.019-.283-.1-.439-.119h-.602c-1.517-.145-2.96-.509-4.514-.509H48.81c-20.398 0-37.68 12.828-44.543 30.809c-.082.134-.208.231-.283.368z%27/%3E%3Cpath fill=%27%23597b91%27 d=%27M291.401 154.645h-38.632a6.155 6.155 0 0 0-6.155 6.155v21.722a6.155 6.155 0 0 0 6.155 6.155h31.415a6.155 6.155 0 0 1 6.155 6.155v11.616a6.155 6.155 0 0 1-6.155 6.155h-31.415a6.155 6.155 0 0 0-6.155 6.155v23.578a6.155 6.155 0 0 0 6.155 6.155h41.316a6.155 6.155 0 0 1 6.155 6.155v12.441a6.155 6.155 0 0 1-6.155 6.155h-75.76a6.155 6.155 0 0 1-6.155-6.155V136.461a6.155 6.155 0 0 1 6.155-6.155h74.81c3.749 0 6.627 3.322 6.092 7.033l-1.733 12.028a6.156 6.156 0 0 1-6.093 5.278%27/%3E%3C/svg%3E')",
+    label: 'Email',
+    external: true,
+  },
+  {
+    name: 'YouTube',
+    href: 'https://www.youtube.com/@SmartAgentAlliance',
+    icon: "url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%271.43em%27 height=%271em%27 viewBox=%270 0 256 180%27%3E%3Cpath fill=%27red%27 d=%27M250.346 28.075A32.18 32.18 0 0 0 227.69 5.418C207.824 0 127.87 0 127.87 0S47.912.164 28.046 5.582A32.18 32.18 0 0 0 5.39 28.24c-6.009 35.298-8.34 89.084.165 122.97a32.18 32.18 0 0 0 22.656 22.657c19.866 5.418 99.822 5.418 99.822 5.418s79.955 0 99.82-5.418a32.18 32.18 0 0 0 22.657-22.657c6.338-35.348 8.291-89.1-.164-123.134%27/%3E%3Cpath fill=%27%23FFF%27 d=%27m102.421 128.06l66.328-38.418l-66.328-38.418z%27/%3E%3C/svg%3E')",
+    label: 'YouTube',
+    external: true,
+  },
+  {
+    name: 'LinkedIn',
+    href: 'https://www.linkedin.com/company/smart-agent-alliance',
+    icon: "url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27256%27 height=%27256%27 viewBox=%27-26 -26 308 308%27%3E%3Cg fill=%27none%27%3E%3Crect width=%27256%27 height=%27256%27 fill=%27%23fff%27 rx=%2760%27/%3E%3Crect width=%27256%27 height=%27256%27 fill=%27%230a66c2%27 rx=%2760%27/%3E%3Cpath fill=%27%23fff%27 d=%27M184.715 217.685h29.27a4 4 0 0 0 4-3.999l.015-61.842c0-32.323-6.965-57.168-44.738-57.168c-14.359-.534-27.9 6.868-35.207 19.228a.32.32 0 0 1-.595-.161V101.66a4 4 0 0 0-4-4h-27.777a4 4 0 0 0-4 4v112.02a4 4 0 0 0 4 4h29.268a4 4 0 0 0 4-4v-55.373c0-15.657 2.97-30.82 22.381-30.82c19.135 0 19.383 17.916 19.383 31.834v54.364a4 4 0 0 0 4 4M38 59.628c0 11.864 9.767 21.626 21.632 21.626c11.862-.001 21.623-9.769 21.623-21.631C81.253 47.761 71.491 38 59.628 38C47.762 38 38 47.763 38 59.627m6.959 158.058h29.307a4 4 0 0 0 4-4V101.66a4 4 0 0 0-4-4H44.959a4 4 0 0 0-4 4v112.025a4 4 0 0 0 4 4%27/%3E%3C/g%3E%3C/svg%3E')",
+    label: 'LinkedIn',
+    external: true,
+  },
+  {
+    name: 'Book a Call',
+    href: '/book-a-call',
+    icon: "url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%271em%27 height=%271em%27 viewBox=%270 0 48 48%27%3E%3Cpath fill=%27%23CFD8DC%27 d=%27M5 38V14h38v24c0 2.2-1.8 4-4 4H9c-2.2 0-4-1.8-4-4%27/%3E%3Cpath fill=%27%23F44336%27 d=%27M43 10v6H5v-6c0-2.2 1.8-4 4-4h30c2.2 0 4 1.8 4 4%27/%3E%3Cg fill=%27%23B71C1C%27%3E%3Ccircle cx=%2733%27 cy=%2710%27 r=%273%27/%3E%3Ccircle cx=%2715%27 cy=%2710%27 r=%273%27/%3E%3C/g%3E%3Cpath fill=%27%23B0BEC5%27 d=%27M33 3c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2s2-.9 2-2V5c0-1.1-.9-2-2-2M15 3c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2s2-.9 2-2V5c0-1.1-.9-2-2-2%27/%3E%3Cpath fill=%27%2390A4AE%27 d=%27M13 20h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm-18 6h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm-18 6h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4z%27/%3E%3C/svg%3E')",
+    label: 'Book a Call',
+    external: false,
+  },
+];
+
+const navLinks = [
+  { href: '/privacy-policy/', label: 'Privacy Policy' },
+  { href: '/disclaimer/', label: 'Disclaimer' },
+  { href: '/terms-of-use/', label: 'Terms of Use' },
+  { href: '/cookie-policy/', label: 'Cookie Policy' },
+  { href: '/sites-and-software/', label: 'Recommended Tools' },
+];
+---
+
+<footer role="contentinfo" class="footer-wrapper" data-footer>
+  <!-- Glassmorphism Background -->
+  <div class="footer-glass-container">
+    <div class="footer-glass-base"></div>
+    <div class="footer-shimmer"></div>
+  </div>
+  <div class="footer-container">
+    <!-- Logo -->
+    <div class="footer-logo">
+      <a href="/" class="footer-logo-link" aria-label="Smart Agent Alliance Home">
+        <svg width="120px" height="45px" viewBox="0 0 201.96256 75.736626" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+          <defs>
+            <linearGradient id="footerLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color: #fff3b0; stop-opacity: 1" />
+              <stop offset="40%" style="stop-color: #ffd700; stop-opacity: 1" />
+              <stop offset="100%" style="stop-color: #e6ac00; stop-opacity: 1" />
+            </linearGradient>
+          </defs>
+          <g transform="translate(-5.5133704,-105.97189)">
+            <path fill="url(#footerLogoGradient)" d="M 21.472273,180.56058 C 11.316147,178.12213 1.9355119,166.45773 6.8673475,154.38101 c 0.2284985,-0.55952 1.4152886,-0.30887 8.5218335,-0.25364 6.089186,0.0474 11.528887,-0.54887 11.563021,0.35268 0.12172,3.21493 1.548705,4.66069 2.560443,5.07358 1.092535,0.44586 18.027365,0.14064 18.956531,-0.51505 2.086142,-1.47214 2.326164,-6.74 -0.732868,-6.70809 -1.893125,0.0197 -16.677992,0.18141 -18.724365,-0.11743 -4.043916,-0.59058 -5.591737,-1.59981 -9.49172,-4.13883 -8.077325,-5.25858 -10.5671578,-12.68416 -8.96983,-21.28238 0,0 6.234294,-0.12184 10.651176,-0.37024 4.312501,-0.24253 8.14686,-0.34782 8.671149,0.65635 1.028138,1.96921 2.764824,2.67171 3.10468,3.73011 0.296847,0.92448 1.558671,0.84083 5.661272,0.85056 4.303079,0.01 9.549862,0.24636 14.627167,0.65835 6.271917,0.50893 12.606804,1.04447 18.1587,14.09205 1.256383,2.95263 -0.05146,7.82433 2.707298,0.89052 0.906748,-2.27902 1.363355,-2.02044 15.012644,-2.13873 7.507113,-0.065 13.649301,-0.23577 13.649301,-0.37936 0,-0.1436 -0.28095,-0.89482 -0.62433,-1.66938 -0.34338,-0.77455 -1.02601,-2.31327 -1.51695,-3.41938 -0.49094,-1.10612 -2.062126,-4.92722 -3.491523,-8.49135 -1.429397,-3.56413 -2.857843,-7.08356 -3.174329,-7.82097 -0.316495,-0.7374 -1.226445,-2.94962 -2.022113,-4.91605 -0.795667,-1.96641 -4.043105,-11.29798 -3.693629,-11.88325 0.458064,-0.76712 -0.18677,-0.40385 12.337194,-0.40385 9.84423,0 9.65274,0.24739 9.65274,0.24739 1.2078,1.06083 2.78957,6.78964 3.34621,8.01751 0.55721,1.22913 1.27686,2.83788 1.59864,3.57529 0.60465,1.38564 1.79312,3.9863 4.28898,9.38518 0.79543,1.72061 2.34948,5.13949 3.45345,7.59751 2.67446,5.95472 3.04484,6.75259 5.91254,12.73702 2.46283,5.1395 2.46283,5.1395 3.20091,3.24636 2.23698,-5.73776 1.98186,-5.7611 4.28454,-5.95219 1.54958,-0.1286 24.51316,0.54777 24.82611,0.0215 0,0 -3.59658,-6.2074 -5.83995,-10.49576 -8.26158,-15.79266 -13.92752,-27.26401 -13.81355,-28.2205 0.0424,-0.35537 5.59171,-0.19826 13.73661,-0.17244 11.92585,0.0378 11.19138,0.12582 11.45775,0.44068 0.7756,0.9168 5.56816,10.25269 6.3956,11.61578 0.82745,1.36309 2.32581,3.98669 3.32968,5.83019 1.00389,1.84351 2.17996,3.95518 2.61353,4.69258 0.43356,0.7374 1.35628,2.34629 2.0505,3.5753 0.6942,1.22901 3.48408,6.15623 6.19971,10.94936 2.71564,4.79315 6.57201,11.63091 8.5697,15.19503 1.99772,3.56414 3.98079,6.98302 4.40686,7.59753 1.75557,2.53202 7.19727,12.85738 7.19727,13.65646 0,1.35047 -1.83096,1.53856 -14.97656,1.53856 -15.12194,0 -11.00005,0.41867 -13.10487,-0.35263 -2.71179,-0.99372 -7.4667,-12.35312 -8.24465,-13.49738 -0.5144,-0.75665 -20.11115,-0.50211 -20.85813,0.10747 -0.30114,0.24573 -4.74222,12.87268 -5.21806,13.18149 -0.51253,0.33263 1.56565,0.31373 -13.12083,0.46948 -14.37638,0.15246 -12.92516,-0.20864 -13.7378,-0.46876 -1.39249,-0.44578 -3.05836,-6.3221 -3.28223,-6.8137 -0.2239,-0.4916 -1.69614,-6.08358 -2.6942,-7.30424 -0.46821,-0.57263 -22.000524,-0.10018 -22.427167,0.30027 -0.495999,0.46555 -2.403531,4.97746 -3.536292,7.45088 -3.647579,7.96455 -0.798091,6.48322 -14.189162,6.21687 -7.764148,-0.15444 -10.944164,0.0682 -12.663388,-0.49314 -2.370345,-0.7739 -1.493164,-2.84033 -1.713395,-2.39718 -2.970363,5.97706 -32.338174,3.84174 -36.236923,2.90565 z m 12.24087,-53.49377 c -0.644922,-0.55276 -1.868417,-1.61286 -2.718877,-2.35578 C 28.5887,122.6096 17.54033,106.32825 20.700077,106.24689 c 18.520277,-0.47684 31.530155,-0.22018 43.622587,-0.0695 12.878883,18.49983 14.110357,21.6067 12.221476,21.31699 -20.587891,-5.5e-4 -41.658407,0.57749 -42.830997,-0.42752 z" />
+          </g>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Social Media Icons -->
+    <div class="footer-social">
+      <nav class="footer-links">
+        {socialIcons.map((social) => (
+          <a
+            class="footer-link"
+            href={social.href}
+            style={`--icon: ${social.icon};`}
+            {...(social.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            aria-label={social.label}
+          />
+        ))}
+      </nav>
+    </div>
+
+    <!-- Rocket Icon -->
+    <div class="footer-rocket">
+      <svg class="rocket-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C4.21 7.51 3 10.62 3 14c0 4.42 3.58 8 8 8s8-3.58 8-8C19 8.61 16.41 3.8 12.5.67zM10.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>
+      </svg>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="footer-nav-links">
+        {navLinks.map((link) => (
+          <a href={link.href} class="footer-nav-link">{link.label}</a>
+        ))}
+      </div>
+      <div class="footer-copyright">
+        Copyright &copy; {year} - SmartAgentAlliance.com
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script is:inline>
+(function() {
+  var f = document.querySelector('[data-footer]');
+  if (!f) return;
+  window.addEventListener('saa-modal-open', function() {
+    f.style.transform = 'translateY(100%)';
+    f.style.opacity = '0';
+    f.style.pointerEvents = 'none';
+  });
+  window.addEventListener('saa-modal-close', function() {
+    f.style.transform = '';
+    f.style.opacity = '';
+    f.style.pointerEvents = '';
+  });
+})();
+</script>
+
+<style>
+  .footer-wrapper {
+    position: relative;
+    width: 100%;
+    background: transparent;
+    margin-top: auto;
+    border-radius: 20px 20px 0 0;
+    border-top: 2px solid rgba(60, 60, 60, 0.8);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
+  /* Glass layers */
+  .footer-glass-container {
+    position: absolute;
+    top: -5px;
+    left: 0;
+    right: 0;
+    bottom: -5px;
+    overflow: hidden;
+    border-radius: 20px 20px 0 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .footer-glass-base {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(14, 14, 14) 0%, rgb(10, 10, 10) 100%);
+    border-radius: 20px 20px 0 0;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .footer-glass-base::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.025) 2px, rgba(255, 215, 0, 0.025) 4px),
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px);
+    border-radius: 20px 20px 0 0;
+    pointer-events: none;
+  }
+
+  .footer-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.30) 25%,
+      rgba(255, 255, 255, 0.50) 50%,
+      rgba(255, 255, 255, 0.28) 75%,
+      rgba(255, 255, 255, 0.12) 100%
+    );
+    background-size: 400% 400%;
+    border-radius: 20px 20px 0 0;
+    opacity: 0.7;
+    mix-blend-mode: overlay;
+    animation: footerShimmer 6s ease-in-out infinite;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  @keyframes footerShimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .footer-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    margin: 0 auto;
+    padding: 50px 20px 20px;
+  }
+
+  /* Logo */
+  .footer-logo {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .footer-logo-link {
+    width: 120px;
+    height: 45px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+  }
+
+  .footer-logo-link:hover {
+    transform: scale(1.05);
+  }
+
+  /* Social Media Icons */
+  .footer-links {
+    --hover-height: 0.5rem;
+    --link-size: 4rem;
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    align-items: end;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .footer-links:has(.footer-link:hover) .footer-link:not(:hover) {
+    filter: grayscale(0.9) blur(0.1rem);
+  }
+
+  .footer-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: var(--link-size);
+    padding: 0;
+    background-image: var(--icon);
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-origin: content-box;
+    will-change: transform, filter;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    transition-property: transform, filter;
+    transition-timing-function: ease-in-out, ease;
+    transition-duration: 0.35s, 0.2s;
+    transition-delay: 0s, 0.2s;
+  }
+
+  .footer-link::after {
+    pointer-events: none;
+    display: block;
+    content: "";
+    position: absolute;
+    height: var(--link-size);
+    inset: 0;
+    top: 90%;
+    transform: scaleY(-1);
+    mask: linear-gradient(to bottom, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.2));
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    filter: blur(2px);
+    padding: 0;
+    background-image: var(--icon);
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-origin: content-box;
+    transition-property: transform;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.35s;
+  }
+
+  .footer-link[href*="linkedin"]::after {
+    top: 95%;
+  }
+
+  .footer-link:hover {
+    transform: translateY(calc(-1 * var(--hover-height))) scale(1.1);
+    filter: drop-shadow(0 0 0.25rem rgba(255, 255, 255, 0.25));
+  }
+
+  .footer-link:hover::after {
+    transform: scaleY(-1) translateY(calc(-2 * var(--hover-height))) scale(1.1);
+  }
+
+  /* Footer Bottom */
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-nav-links {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+  }
+
+  .footer-nav-link {
+    color: #cccccc;
+    text-decoration: none;
+    font-family: 'Synonym', sans-serif;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+
+  .footer-nav-link:hover {
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+  }
+
+  .footer-copyright {
+    color: #cccccc;
+    font-family: 'Synonym', sans-serif;
+    font-size: 14px;
+  }
+
+  /* Rocket */
+  .footer-rocket {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 45px 0 20px;
+  }
+
+  .rocket-icon {
+    width: 28px;
+    height: 28px;
+    fill: #ffd700;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+    animation: rocketPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes rocketPulse {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-3px) scale(1.05); }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .footer-container { padding: 40px 15px 20px; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .footer-nav-links { justify-content: center; }
+    .footer-shimmer { animation: none; mix-blend-mode: normal; opacity: 0.15; background-size: 100% 100%; }
+  }
+
+  @media (max-width: 500px) {
+    .footer-links { --link-size: 2.8rem; }
+  }
+
+  @media (max-width: 480px) {
+    .footer-container { padding: 30px 15px 15px; }
+    .footer-logo { margin-bottom: 30px; }
+    .footer-nav-links { flex-direction: column; gap: 12px; }
+  }
+
+  @media (max-width: 400px) {
+    .footer-links { --link-size: 2.5rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer-shimmer { animation: none; opacity: 0.4; }
+    .rocket-icon { animation: none; }
+  }
+
+  @media (prefers-contrast: high) {
+    .footer-glass-base { background: rgba(20, 20, 20, 0.95); border: 2px solid rgba(255, 255, 255, 0.3); }
+    .footer-shimmer { display: none; }
+  }
+</style>

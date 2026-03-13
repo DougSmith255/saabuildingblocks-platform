@@ -1,9 +1,10 @@
 ---
 /**
- * H2 - Pure CSS 3D Heading with Stacked Backing Layers
+ * H2 - Pure CSS 3D Heading with 2 Stacked Backing Layers
  *
  * Astro port of @saa/shared/components/saa/headings/H2
- * Uses -webkit-text-stroke + SVG feMorphology filter for sharp corners.
+ * Exact match to React production version.
+ * 2 backing layers: bright/far + dark/near (bolder)
  * Zero JavaScript. Fully static HTML.
  *
  * Themes: default (grey), gold, blue, purple, emerald
@@ -32,62 +33,64 @@ const FACE_SHADOW = [
   '0.033em 0.070em 0 #7a7970',
 ].join(', ');
 
-// ── Shared H2 translate offsets (8 layers) ───────────────────────────
+// ── Theme configs ────────────────────────────────────────────────────
+// 2 backing layers: bright/far + dark/near (bolder)
 
-const TX = [
-  { tx: '0.018em', ty: '0.053em' },
-  { tx: '0.015em', ty: '0.045em' },
-  { tx: '0.013em', ty: '0.038em' },
-  { tx: '0.009em', ty: '0.028em' },
-  { tx: '0.006em', ty: '0.019em' },
-  { tx: '0.003em', ty: '0.010em' },
-  { tx: '0.002em', ty: '0.005em' },
-  { tx: '0em', ty: '0em' },
-];
-
-interface BackingLayer { color: string; tx: string; ty: string; }
+interface BackingLayer { color: string; tx: string; ty: string; stroke: string; }
 interface H2Config {
-  rotateX: string; rotateY: string; strokeWidth: string;
+  rotateX: string; rotateY: string;
   shadow: { color: string; tx: string; ty: string; blur: string };
   layers: BackingLayer[];
   face: { color: string; tx: string; ty: string; textShadow: string };
 }
 
-const makeLayers = (colors: string[]): BackingLayer[] =>
-  colors.map((color, i) => ({ color, ...TX[i] }));
-
-const BASE = { rotateX: '8deg', rotateY: '-1.5deg', strokeWidth: '0.06em' };
+const BASE = { rotateX: '8deg', rotateY: '-1.5deg' };
 
 const CONFIGS: Record<string, H2Config> = {
   default: {
     ...BASE,
-    shadow: { color: 'rgba(64, 64, 64, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-    layers: makeLayers(['#444444', '#3e3e3e', '#383838', '#323232', '#2c2c2c', '#262626', '#202020', '#1a1a1a']),
-    face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.035em', textShadow: FACE_SHADOW },
+    shadow: { color: 'rgba(64, 64, 64, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+    layers: [
+      { color: '#444444', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+      { color: '#1a1a1a', tx: '0em', ty: '0em', stroke: '0.16em' },
+    ],
+    face: { color: '#e5e4dd', tx: '-0.025em', ty: '-0.055em', textShadow: FACE_SHADOW },
   },
   gold: {
     ...BASE,
-    shadow: { color: 'rgba(184, 150, 10, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-    layers: makeLayers(['#e6ac00', '#c89703', '#ab8207', '#8e6c0a', '#7c6008', '#5e4808', '#3f3010', '#191818']),
-    face: { color: '#e8d4a0', tx: '-0.025em', ty: '-0.035em', textShadow: FACE_SHADOW },
+    shadow: { color: 'rgba(184, 150, 10, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+    layers: [
+      { color: '#e6ac00', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+      { color: '#191818', tx: '0em', ty: '0em', stroke: '0.16em' },
+    ],
+    face: { color: '#e8d4a0', tx: '-0.025em', ty: '-0.055em', textShadow: FACE_SHADOW },
   },
   blue: {
     ...BASE,
-    shadow: { color: 'rgba(10, 120, 152, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-    layers: makeLayers(['#00bfff', '#0aacdd', '#0a98bb', '#088499', '#086080', '#0a3a50', '#1a2a38', '#181920']),
-    face: { color: '#b0d4e8', tx: '-0.025em', ty: '-0.035em', textShadow: FACE_SHADOW },
+    shadow: { color: 'rgba(10, 120, 152, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+    layers: [
+      { color: '#00bfff', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+      { color: '#181920', tx: '0em', ty: '0em', stroke: '0.16em' },
+    ],
+    face: { color: '#b0d4e8', tx: '-0.025em', ty: '-0.055em', textShadow: FACE_SHADOW },
   },
   purple: {
     ...BASE,
-    shadow: { color: 'rgba(96, 48, 160, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-    layers: makeLayers(['#a855f7', '#7845c8', '#6030a0', '#4a2068', '#3a1a50', '#2a1535', '#1a1020', '#1a1020']),
-    face: { color: '#d4b0e8', tx: '-0.025em', ty: '-0.035em', textShadow: FACE_SHADOW },
+    shadow: { color: 'rgba(96, 48, 160, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+    layers: [
+      { color: '#9933ff', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+      { color: '#1a1020', tx: '0em', ty: '0em', stroke: '0.16em' },
+    ],
+    face: { color: '#d4b0e8', tx: '-0.025em', ty: '-0.055em', textShadow: FACE_SHADOW },
   },
   emerald: {
     ...BASE,
-    shadow: { color: 'rgba(10, 152, 104, 0.4)', tx: '0.02em', ty: '0.06em', blur: '4px' },
-    layers: makeLayers(['#10b981', '#0a9868', '#086048', '#0a4a38', '#0f3a2a', '#152a25', '#101a18', '#101a18']),
-    face: { color: '#a0e8c4', tx: '-0.025em', ty: '-0.035em', textShadow: FACE_SHADOW },
+    shadow: { color: 'rgba(10, 152, 104, 0.4)', tx: '0.025em', ty: '0.07em', blur: '4px' },
+    layers: [
+      { color: '#10b981', tx: '0.022em', ty: '0.065em', stroke: '0.10em' },
+      { color: '#101a18', tx: '0em', ty: '0em', stroke: '0.16em' },
+    ],
+    face: { color: '#a0e8c4', tx: '-0.025em', ty: '-0.055em', textShadow: FACE_SHADOW },
   },
 };
 
@@ -97,20 +100,19 @@ const textAlign = style.textAlign || 'center';
 const persp = (tx: string, ty: string) =>
   `perspective(800px) rotateX(${config.rotateX}) rotateY(${config.rotateY}) translate(${tx}, ${ty})`;
 
-const layerBase = `position: absolute; top: 0; left: 0; right: 0; pointer-events: none; text-align: ${textAlign}; line-height: 1.1; font-feature-settings: "ss01" 1; margin-left: ${textAlign === 'left' ? '0' : 'auto'}; margin-right: ${textAlign === 'right' ? '0' : 'auto'}; max-width: ${style.maxWidth || '95%'};`;
+const layerBase = `position: absolute; top: 0; left: 0; right: 0; pointer-events: none; text-align: ${textAlign}; line-height: 1.1; margin-left: ${textAlign === 'left' ? '0' : 'auto'}; margin-right: ${textAlign === 'right' ? '0' : 'auto'}; max-width: ${style.maxWidth || '95%'};`;
 
 const layerStyle = (layer: BackingLayer) =>
-  `${layerBase} color: ${layer.color}; -webkit-text-stroke: ${config.strokeWidth} ${layer.color}; -webkit-text-fill-color: ${layer.color}; paint-order: stroke fill; text-shadow: none; filter: url(#saa-sharp-h2); transform: ${persp(layer.tx, layer.ty)};`;
+  `${layerBase} color: ${layer.color}; -webkit-text-stroke: ${layer.stroke} ${layer.color}; -webkit-text-fill-color: ${layer.color}; paint-order: stroke fill; text-shadow: none; transform: ${persp(layer.tx, layer.ty)};`;
 
 const shadowStyle = `${layerBase} margin-top: 0; margin-bottom: 0; color: ${config.shadow.color}; text-shadow: none; transform: ${persp(config.shadow.tx, config.shadow.ty)}; filter: blur(${config.shadow.blur});`;
 
 const faceStyle = {
   textAlign,
-  fontFeatureSettings: '"ss01" 1',
   marginTop: '0',
   marginLeft: textAlign === 'left' ? '0' : 'auto',
   marginRight: textAlign === 'right' ? '0' : 'auto',
-  marginBottom: '2.5rem',
+  marginBottom: '0',
   maxWidth: style.maxWidth || '95%',
   color: config.face.color,
   textShadow: config.face.textShadow,
@@ -127,27 +129,14 @@ const faceStyleString = Object.entries(faceStyle).map(([k, v]) => {
 }).join('; ');
 ---
 
-<div style={`position: relative; display: inline-block; width: 100%; overflow: visible; text-align: ${textAlign};`}>
-  {/* SVG filter for sharp backing corners */}
-  <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
-    <defs>
-      <filter id="saa-sharp-h2" x="-10%" y="-25%" width="120%" height="150%" primitiveUnits="userSpaceOnUse">
-        <feMorphology operator="dilate" radius="2" in="SourceGraphic" result="expanded" />
-        <feGaussianBlur stdDeviation="0.8" in="expanded" result="smoothed" />
-        <feComponentTransfer in="smoothed">
-          <feFuncA type="linear" slope="15" intercept="0" />
-        </feComponentTransfer>
-      </filter>
-    </defs>
-  </svg>
-
+<div style={`position: relative; display: inline-block; width: 100%; overflow: visible; font-feature-settings: 'ss02' 1; text-align: ${textAlign};`}>
   {/* Backing layers */}
   <div aria-hidden="true" style="user-select: none;">
     {/* Shadow */}
     <div class:list={['text-h2', className]} style={shadowStyle}>
       <slot />
     </div>
-    {/* Color layers */}
+    {/* 2 stroked layers */}
     {config.layers.map((layer) => (
       <div class:list={['text-h2', className]} style={layerStyle(layer)}>
         <slot />

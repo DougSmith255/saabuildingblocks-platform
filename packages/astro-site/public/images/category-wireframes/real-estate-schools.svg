@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Lightbulb - Real Estate Schools -->
+  <!-- Simple lightbulb shape -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Lightbulb glass - backing plate -->
+  <path d="M310 320 Q260 270 260 200 Q260 100 400 80 Q540 100 540 200 Q540 270 490 320 L490 380 L310 380 Z"
+        stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+
+  <!-- Lightbulb glass - glowing -->
+  <path d="M310 320 Q260 270 260 200 Q260 100 400 80 Q540 100 540 200 Q540 270 490 320 L490 380 L310 380 Z"
+        stroke="#ffd700" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+  <!-- Filament inside bulb - backing -->
+  <path d="M350 280 L350 200 Q350 170 380 170 L380 200 Q380 230 400 230 Q420 230 420 200 L420 170 Q450 170 450 200 L450 280"
+        stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+
+  <!-- Filament inside bulb - glowing -->
+  <path d="M350 280 L350 200 Q350 170 380 170 L380 200 Q380 230 400 230 Q420 230 420 200 L420 170 Q450 170 450 200 L450 280"
+        stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Filament support wires -->
+  <line x1="350" y1="280" x2="350" y2="320" stroke="#5a5248" stroke-width="3" opacity="0.4"/>
+  <line x1="450" y1="280" x2="450" y2="320" stroke="#5a5248" stroke-width="3" opacity="0.4"/>
+  <line x1="350" y1="280" x2="350" y2="320" stroke="#ffd700" stroke-width="1.5" filter="url(#glow)"/>
+  <line x1="450" y1="280" x2="450" y2="320" stroke="#ffd700" stroke-width="1.5" filter="url(#glow)"/>
+
+  <!-- Screw base - backing -->
+  <rect x="310" y="380" width="180" height="30" rx="3" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <line x1="310" y1="395" x2="490" y2="395" stroke="#5a5248" stroke-width="3" opacity="0.4"/>
+
+  <!-- Screw base - glowing -->
+  <rect x="310" y="380" width="180" height="30" rx="3" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <line x1="310" y1="395" x2="490" y2="395" stroke="#ffd700" stroke-width="1.5" filter="url(#glow)"/>
+
+  <!-- Screw threads - backing -->
+  <path d="M320 415 Q400 430 480 415" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <path d="M330 435 Q400 450 470 435" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <path d="M340 455 Q400 470 460 455" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <path d="M350 475 Q400 490 450 475" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+
+  <!-- Screw threads - glowing -->
+  <path d="M320 415 Q400 430 480 415" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <path d="M330 435 Q400 450 470 435" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <path d="M340 455 Q400 470 460 455" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <path d="M350 475 Q400 490 450 475" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Bottom contact - backing -->
+  <ellipse cx="400" cy="500" rx="40" ry="12" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <!-- Bottom contact - glowing -->
+  <ellipse cx="400" cy="500" rx="40" ry="12" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+
+  <!-- Light rays - backing -->
+  <line x1="400" y1="50" x2="400" y2="20" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="480" y1="70" x2="510" y2="45" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="540" y1="120" x2="580" y2="100" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="320" y1="70" x2="290" y2="45" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="260" y1="120" x2="220" y2="100" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+
+  <!-- Light rays - glowing -->
+  <line x1="400" y1="50" x2="400" y2="20" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="480" y1="70" x2="510" y2="45" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="540" y1="120" x2="580" y2="100" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="320" y1="70" x2="290" y2="45" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="260" y1="120" x2="220" y2="100" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+</svg>

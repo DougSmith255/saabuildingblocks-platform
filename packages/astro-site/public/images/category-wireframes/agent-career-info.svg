@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Compass Rose - Agent Career Info -->
+  <!-- Elegant compass design representing career direction and guidance -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer circles - backing -->
+  <circle cx="400" cy="300" r="200" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="300" r="170" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.4"/>
+  <circle cx="400" cy="300" r="130" stroke="#5a5248" stroke-width="3" fill="none" opacity="0.35"/>
+  <circle cx="400" cy="300" r="50" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+
+  <!-- Outer circles - glowing -->
+  <circle cx="400" cy="300" r="200" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <circle cx="400" cy="300" r="170" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <circle cx="400" cy="300" r="130" stroke="#ffd700" stroke-width="1.5" fill="none" filter="url(#glow)"/>
+  <circle cx="400" cy="300" r="50" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+
+  <!-- North pointer - backing -->
+  <path d="M400 100 L420 240 L400 200 L380 240 Z" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <!-- North pointer - glowing -->
+  <path d="M400 100 L420 240 L400 200 L380 240 Z" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+
+  <!-- South pointer - backing -->
+  <path d="M400 500 L420 360 L400 400 L380 360 Z" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.4"/>
+  <!-- South pointer - glowing -->
+  <path d="M400 500 L420 360 L400 400 L380 360 Z" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- East pointer - backing -->
+  <path d="M600 300 L460 320 L500 300 L460 280 Z" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.4"/>
+  <!-- East pointer - glowing -->
+  <path d="M600 300 L460 320 L500 300 L460 280 Z" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- West pointer - backing -->
+  <path d="M200 300 L340 320 L300 300 L340 280 Z" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.4"/>
+  <!-- West pointer - glowing -->
+  <path d="M200 300 L340 320 L300 300 L340 280 Z" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Intercardinal points (NE, SE, SW, NW) - backing -->
+  <line x1="541" y1="159" x2="470" y2="230" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="541" y1="441" x2="470" y2="370" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="259" y1="441" x2="330" y2="370" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="259" y1="159" x2="330" y2="230" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <!-- Intercardinal points - glowing -->
+  <line x1="541" y1="159" x2="470" y2="230" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="541" y1="441" x2="470" y2="370" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="259" y1="441" x2="330" y2="370" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="259" y1="159" x2="330" y2="230" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+
+  <!-- Intercardinal arrow tips - backing -->
+  <circle cx="541" cy="159" r="8" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.4"/>
+  <circle cx="541" cy="441" r="8" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.4"/>
+  <circle cx="259" cy="441" r="8" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.4"/>
+  <circle cx="259" cy="159" r="8" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.4"/>
+  <!-- Intercardinal arrow tips - glowing -->
+  <circle cx="541" cy="159" r="8" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <circle cx="541" cy="441" r="8" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <circle cx="259" cy="441" r="8" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <circle cx="259" cy="159" r="8" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Degree marks on outer ring - backing -->
+  <line x1="400" y1="100" x2="400" y2="120" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="400" y1="480" x2="400" y2="500" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="200" y1="300" x2="220" y2="300" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="580" y1="300" x2="600" y2="300" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <!-- Degree marks - glowing -->
+  <line x1="400" y1="100" x2="400" y2="120" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="400" y1="480" x2="400" y2="500" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="200" y1="300" x2="220" y2="300" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="580" y1="300" x2="600" y2="300" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+
+  <!-- Center point - backing -->
+  <circle cx="400" cy="300" r="12" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <!-- Center point - glowing -->
+  <circle cx="400" cy="300" r="12" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+</svg>

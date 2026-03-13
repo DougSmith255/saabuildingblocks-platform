@@ -10,7 +10,6 @@
 'use client';
 
 import React from 'react';
-import StarBackground from '@public-site/components/shared/StarBackgroundCanvas';
 import LayoutWrapper from '@public-site/app/components/LayoutWrapper';
 
 interface AppShellProps {
@@ -18,10 +17,5 @@ interface AppShellProps {
 }
 
 export default function AppShell({ children }: AppShellProps) {
-  return (
-    <>
-      <StarBackground />
-      <LayoutWrapper>{children}</LayoutWrapper>
-    </>
-  );
+  return <LayoutWrapper>{children}</LayoutWrapper>;
 }

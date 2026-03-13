@@ -158,7 +158,7 @@ const container: React.CSSProperties = {
   maxWidth: '600px',
   width: '100%', // Ensure container takes full width up to max
   borderRadius: '12px',
-  border: '2px solid #888888',
+  border: '1px solid #333333',
   overflow: 'hidden',
 };
 
@@ -654,7 +654,7 @@ export const EmailSignature = () => (
       style={{
         borderCollapse: 'separate' as const,
         borderSpacing: '0',
-        border: '2px solid #888888',
+        border: '1px solid #333333',
         borderRadius: '10px',
         overflow: 'hidden',
         fontFamily: "'Century Gothic', Futura, 'Trebuchet MS', Arial, sans-serif",
@@ -728,7 +728,7 @@ export const EmailSignature = () => (
         <td style={{ backgroundColor: '#0d0d0d', padding: '0 28px' }}>
           <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
             <tr>
-              <td style={{ height: '1px', backgroundColor: '#888888', fontSize: '1px', lineHeight: '1px' }}>&nbsp;</td>
+              <td style={{ height: '1px', backgroundColor: '#333333', fontSize: '1px', lineHeight: '1px' }}>&nbsp;</td>
             </tr>
           </table>
         </td>
