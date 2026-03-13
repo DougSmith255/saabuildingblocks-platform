@@ -39,8 +39,8 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
     );
     observer.observe(canvas);
 
-    // Blue dot atmosphere - varied sizes, brighter, audio-reactive
-    const particles = Array.from({ length: 120 }, (_, i) => ({
+    // Blue dot atmosphere - varied sizes, audio-reactive
+    const particles = Array.from({ length: 60 }, (_, i) => ({
       a: i * 137.508,
       s: 0.06 + (i % 9) * 0.025,
       r: 1.0 + (i % 5) * 0.35,       // radius 1.0 - 2.4
@@ -156,22 +156,15 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         ctx.stroke();
       }
 
-      // ── Blue hue wash over grid area (pulses with bass) ──────
-      // Single gradient fill - cheap alternative to per-line shadowBlur
-      if (hasAudio && bass > 0.08) {
-        const washGrad = ctx.createLinearGradient(0, horizon, 0, h);
-        washGrad.addColorStop(0, `rgba(0,212,255,${bass * 0.12})`);
-        washGrad.addColorStop(0.5, `rgba(0,212,255,${bass * 0.06})`);
-        washGrad.addColorStop(1, 'transparent');
-        ctx.fillStyle = washGrad;
-        ctx.fillRect(0, horizon, w, h - horizon);
-      }
-
-      // ── Horizon glow (cyan, capped so it doesn't take over the screen) ──
-      const glowR = Math.min(200 + bassPulse * 280 + initBright * 200, 380);
+      // ── Horizon glow (cyan, radiates from vanishing point through the grid) ──
+      // This IS the grid glow - it pulses with bass from the convergence point
+      const glowR = Math.min(180 + bassPulse * 350 + initBright * 200, 420);
+      const glowCenter = 0.15 + bassPulse * 0.55 + initBright * 0.5;
+      const glowMid = 0.04 + bassPulse * 0.2;
       const grad = ctx.createRadialGradient(vanishX, horizon, 0, vanishX, horizon, glowR);
-      grad.addColorStop(0, `rgba(0,212,255,${0.2 + bassPulse * 0.8 + initBright * 0.5})`);
-      grad.addColorStop(0.4, `rgba(0,212,255,${0.06 + bassPulse * 0.25})`);
+      grad.addColorStop(0, `rgba(0,212,255,${glowCenter})`);
+      grad.addColorStop(0.35, `rgba(0,212,255,${glowMid})`);
+      grad.addColorStop(0.7, `rgba(0,212,255,${glowMid * 0.3})`);
       grad.addColorStop(1, 'transparent');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
@@ -288,23 +281,22 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         ctx.fillRect(w * 0.88, 0, w * 0.12, h);
       }
 
-      // ── Blue dot atmosphere (always present, pulses with music) ──
-      // No shadowBlur - use double-circle technique for fake glow
-      const audioBoost = hasAudio ? 0.3 + bass * 0.5 : 0;
+      // ── Blue dot atmosphere (always present, subtle pulse with music) ──
+      const audioBoost = hasAudio ? 0.15 + bass * 0.25 : 0;
       for (const p of particles) {
         const px = (Math.sin(p.a + time * p.s * 0.06) * 0.46 + 0.5) * w;
         const py = (Math.cos(p.a * 1.3 + time * p.s * 0.04) * 0.38 + 0.3) * h;
-        const pa = p.alpha + audioBoost * (0.5 + 0.5 * Math.sin(time * 0.8 + p.a));
-        const pr = p.r + (hasAudio ? bass * 1.2 : 0);
+        const pa = (p.alpha * 0.6) + audioBoost * (0.5 + 0.5 * Math.sin(time * 0.8 + p.a));
+        const pr = p.r * 0.8 + (hasAudio ? bass * 0.6 : 0);
 
-        // Outer glow circle (larger, dimmer)
-        ctx.fillStyle = `rgba(0,212,255,${pa * 0.3})`;
+        // Soft outer halo
+        ctx.fillStyle = `rgba(0,212,255,${pa * 0.15})`;
         ctx.beginPath();
-        ctx.arc(px, py, pr * 2.5, 0, Math.PI * 2);
+        ctx.arc(px, py, pr * 2, 0, Math.PI * 2);
         ctx.fill();
 
-        // Inner bright dot
-        ctx.fillStyle = `rgba(0,212,255,${pa})`;
+        // Inner dot
+        ctx.fillStyle = `rgba(0,212,255,${pa * 0.7})`;
         ctx.beginPath();
         ctx.arc(px, py, pr, 0, Math.PI * 2);
         ctx.fill();
