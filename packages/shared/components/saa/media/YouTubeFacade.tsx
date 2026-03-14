@@ -78,7 +78,15 @@ export function YouTubeFacade({
 
   useEffect(() => {
     const img = new Image();
-    img.onload = () => setThumbState('maxres');
+    img.onload = () => {
+      // YouTube returns a 120x90 grey placeholder (valid JPEG, HTTP 404) when
+      // no custom thumbnail exists. Real custom thumbnails are >= 1280x720.
+      if (img.naturalWidth > 200) {
+        setThumbState('maxres');
+      } else {
+        setThumbState(fallbackImage ? 'fallback' : 'hq');
+      }
+    };
     img.onerror = () => setThumbState(fallbackImage ? 'fallback' : 'hq');
     img.src = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
   }, [videoId, fallbackImage]);
