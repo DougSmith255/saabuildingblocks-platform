@@ -763,6 +763,10 @@ export function TronAboutPage() {
           border-radius: 50%;
           overflow: hidden;
           filter: drop-shadow(0 0 12px rgba(0,212,255,0.3));
+          transform: translateZ(0);
+          -webkit-transform: translateZ(0);
+          will-change: transform;
+          isolation: isolate;
         }
         @media (min-width: 1024px) {
           .tron-profile-ring {
