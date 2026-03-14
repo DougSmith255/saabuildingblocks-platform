@@ -2020,3 +2020,130 @@ body.light-mode .blog-content.prose-invert h2 {
   background-color: rgba(200, 210, 230, 0.35);
   opacity: 1;
 }
+
+/* ========================================
+   CALLOUT / HIGHLIGHT BOXES
+   Usage in WordPress: Custom HTML block with
+   <div class="callout callout-info">content</div>
+   Variants: callout-info, callout-cost, callout-tip, callout-warning
+   ======================================== */
+
+.blog-content .callout {
+  position: relative;
+  padding: 20px 24px 20px 56px;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border-left: 4px solid;
+  font-family: var(--font-synonym), sans-serif;
+}
+
+.blog-content .callout::before {
+  position: absolute;
+  left: 18px;
+  top: 20px;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.blog-content .callout p {
+  margin: 0;
+}
+
+.blog-content .callout p + p {
+  margin-top: 0.5rem;
+}
+
+.blog-content .callout strong {
+  font-family: var(--font-taskor), sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* Info - cyan/blue accent */
+.blog-content .callout-info {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 212, 255, 0.03) 100%);
+  border-color: #00d4ff;
+}
+.blog-content .callout-info::before {
+  content: '\2139';
+  color: #00d4ff;
+}
+
+/* Cost / Money - gold accent */
+.blog-content .callout-cost {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.03) 100%);
+  border-color: #ffd700;
+}
+.blog-content .callout-cost::before {
+  content: '\1F4B0';
+  color: #ffd700;
+}
+
+/* Tip - green accent */
+.blog-content .callout-tip {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.08) 0%, rgba(0, 255, 136, 0.03) 100%);
+  border-color: #00ff88;
+}
+.blog-content .callout-tip::before {
+  content: '\2714';
+  color: #00ff88;
+}
+
+/* Warning - orange/red accent */
+.blog-content .callout-warning {
+  background: linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 140, 0, 0.03) 100%);
+  border-color: #ff8c00;
+}
+.blog-content .callout-warning::before {
+  content: '\26A0';
+  color: #ff8c00;
+}
+
+/* Light mode overrides */
+.light-mode .blog-content .callout-info {
+  background: linear-gradient(135deg, rgba(0, 140, 200, 0.08) 0%, rgba(0, 140, 200, 0.03) 100%);
+  border-color: #0088cc;
+}
+.light-mode .blog-content .callout-info::before { color: #0088cc; }
+
+.light-mode .blog-content .callout-cost {
+  background: linear-gradient(135deg, rgba(200, 160, 0, 0.1) 0%, rgba(200, 160, 0, 0.04) 100%);
+  border-color: #c8a000;
+}
+.light-mode .blog-content .callout-cost::before { color: #c8a000; }
+
+.light-mode .blog-content .callout-tip {
+  background: linear-gradient(135deg, rgba(0, 160, 80, 0.08) 0%, rgba(0, 160, 80, 0.03) 100%);
+  border-color: #00a050;
+}
+.light-mode .blog-content .callout-tip::before { color: #00a050; }
+
+.light-mode .blog-content .callout-warning {
+  background: linear-gradient(135deg, rgba(200, 100, 0, 0.1) 0%, rgba(200, 100, 0, 0.04) 100%);
+  border-color: #c86400;
+}
+.light-mode .blog-content .callout-warning::before { color: #c86400; }
+
+/* Comparison summary box - used at end of brokerage posts */
+.blog-content .comparison-summary {
+  padding: 24px;
+  margin: 2rem 0;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.06) 0%, rgba(255, 215, 0, 0.02) 100%);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.blog-content .comparison-summary h3,
+.blog-content .comparison-summary h4 {
+  color: #ffd700 !important;
+  margin-top: 0;
+}
+
+.light-mode .blog-content .comparison-summary {
+  background: linear-gradient(180deg, rgba(0, 100, 180, 0.06) 0%, rgba(0, 100, 180, 0.02) 100%);
+  border-color: rgba(0, 100, 180, 0.15);
+}
+
+.light-mode .blog-content .comparison-summary h3,
+.light-mode .blog-content .comparison-summary h4 {
+  color: #006090 !important;
+}
