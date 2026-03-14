@@ -2483,7 +2483,7 @@ function JoinModal({ isOpen, onClose, onSuccess, sponsorName = null, apiEndpoint
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.email.toLowerCase().endsWith('@exprealty.com')) { setMessage({ type: 'error', text: 'It looks like you are already with eXp Realty. Please use a personal email address or reach out to us directly.' }); return; }
+    if (formData.email.toLowerCase().endsWith('@exprealty.com')) { setMessage({ type: 'error', text: 'It looks like you\'re already with eXp! If you have any questions, feel free to reach out to us directly.' }); return; }
     setIsSubmitting(true); setMessage(null);
     try {
       const { getTurnstileToken } = await import('@saa/shared/lib/turnstile');

@@ -110,7 +110,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose, disableAutoPopup }:
     if (!formData.firstName.trim() || !formData.email.trim()) return;
     if (formData.email.toLowerCase().endsWith('@exprealty.com')) {
       setSubmitStatus('error');
-      setErrorMessage('It looks like you are already with eXp Realty. Please use a personal email address or reach out to us directly.');
+      setErrorMessage('It looks like you\'re already with eXp! If you have any questions, feel free to reach out to us directly.');
       return;
     }
     if (!formData.consent) {

@@ -335,7 +335,7 @@ export async function onRequestPost(context) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'It looks like you are already with eXp Realty. Please use a personal email address or reach out to us directly.'
+          error: 'It looks like you\'re already with eXp! If you have any questions, feel free to reach out to us directly.'
         }),
         { status: 400, headers: corsHeaders }
       );
