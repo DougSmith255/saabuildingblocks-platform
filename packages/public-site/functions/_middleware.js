@@ -201,6 +201,7 @@ const STATIC_REDIRECTS = new Map([
   ['/about-exp-realty/awards', '/awards/'],
   ['/about-exp-realty/locations', '/locations/'],
   // exp-realty-sponsor old sub-pages
+  ['/exp-realty-sponsor/grow-revenue-share-cosponsor', '/exp-realty-sponsor/agent-cosponsors/'],
   ['/exp-realty-sponsor/topics', '/exp-realty-sponsor/'],
   ['/exp-realty-sponsor/experienced-agents-old', '/exp-realty-sponsor/experienced-agents/'],
   ['/exp-realty-sponsor/keep-your-brand', '/exp-realty-sponsor/keep-brand/'],
