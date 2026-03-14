@@ -1,28 +1,63 @@
 ---
 /**
- * ScrollIndicator - Pure Astro replacement for React ScrollIndicator island.
- * Double chevron arrows with bounce animation, fades on scroll.
- * Zero React, tiny inline script for scroll fade.
+ * ScrollIndicator - Simple bouncing double chevron (center bottom).
+ * ALL CSS is injected via is:inline <style> to bypass Astro CSS pipeline entirely.
+ * Bounce + fade animation, fades on scroll.
  */
 ---
 
-<div
-  id="global-scroll-indicator"
-  class="fixed pointer-events-none"
-  style="bottom: max(12px, calc(env(safe-area-inset-bottom, 0px) + 4px)); right: 24px; z-index: -1; transform-origin: center bottom; transition: opacity 0.3s ease-out, transform 0.3s ease-out;"
-  aria-hidden="true"
->
-  <div style="filter: drop-shadow(0 0 2px rgba(136, 136, 136, 0.2));">
-    <div class="scroll-prompt-arrow-container">
-      <div class="scroll-prompt-arrow"><div></div></div>
-      <div class="scroll-prompt-arrow"><div></div></div>
-    </div>
+<style is:inline>
+@keyframes si-bounce-kf {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+@keyframes si-fade-down-kf {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+@keyframes si-fade-up-kf {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 1; }
+}
+#scroll-indicator-wrap {
+  position: fixed;
+  bottom: max(28px, calc(env(safe-area-inset-bottom, 0px) + 16px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 0.3s ease-out;
+}
+#scroll-indicator-bounce {
+  animation: si-bounce-kf 1.8s ease-in-out infinite;
+}
+#scroll-indicator-top {
+  animation: si-fade-down-kf 1.8s ease-in-out infinite;
+}
+#scroll-indicator-bottom {
+  animation: si-fade-up-kf 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  #scroll-indicator-bounce,
+  #scroll-indicator-top,
+  #scroll-indicator-bottom {
+    animation: none !important;
+  }
+}
+</style>
+
+<div id="scroll-indicator-wrap" aria-hidden="true">
+  <div id="scroll-indicator-bounce">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 3px rgba(229,228,221,0.3));">
+      <path id="scroll-indicator-top" d="M7 6l5 5 5-5" stroke="#e5e4dd" />
+      <path id="scroll-indicator-bottom" d="M7 13l5 5 5-5" stroke="#e5e4dd" />
+    </svg>
   </div>
 </div>
 
 <script is:inline>
 (function() {
-  var el = document.getElementById('global-scroll-indicator');
+  var el = document.getElementById('scroll-indicator-wrap');
   if (!el) return;
   var ticking = false;
   function onScroll() {
@@ -30,17 +65,7 @@
     ticking = true;
     requestAnimationFrame(function() {
       var y = window.scrollY;
-      if (y <= 20) {
-        el.style.opacity = '1';
-        el.style.transform = 'scale(1)';
-      } else if (y >= 100) {
-        el.style.opacity = '0';
-        el.style.transform = 'scale(0.5)';
-      } else {
-        var p = (y - 20) / 80;
-        el.style.opacity = String(1 - p);
-        el.style.transform = 'scale(' + (1 - p * 0.5) + ')';
-      }
+      el.style.opacity = y <= 20 ? '1' : y >= 120 ? '0' : String(1 - (y - 20) / 100);
       ticking = false;
     });
   }
@@ -48,53 +73,3 @@
   onScroll();
 })();
 </script>
-
-<style>
-  @keyframes scrollBounce {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(30px); }
-  }
-
-  @keyframes scrollOpacity {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-  }
-
-  .scroll-prompt-arrow-container {
-    animation: scrollBounce 1.5s infinite;
-  }
-
-  .scroll-prompt-arrow {
-    animation: scrollOpacity 1.5s infinite;
-  }
-
-  .scroll-prompt-arrow:last-child {
-    animation-direction: reverse;
-    margin-top: -6px;
-  }
-
-  .scroll-prompt-arrow > div {
-    width: 36px;
-    height: 36px;
-    border-right: 8px solid #888;
-    border-bottom: 8px solid #888;
-    border-radius: 4px;
-    transform: rotate(45deg) translateZ(1px);
-    filter:
-      drop-shadow(0 0 1px rgba(255,255,255,0.6))
-      drop-shadow(0 0 2px rgba(255,255,255,0.3));
-  }
-
-  @media (max-width: 1023px) {
-    #global-scroll-indicator {
-      right: 30px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .scroll-prompt-arrow-container,
-    .scroll-prompt-arrow {
-      animation: none;
-    }
-  }
-</style>

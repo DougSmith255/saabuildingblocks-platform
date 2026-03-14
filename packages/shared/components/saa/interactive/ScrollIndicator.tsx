@@ -6,24 +6,20 @@ import { useEffect, useState, useRef } from 'react';
 let globalInstanceCount = 0;
 
 /**
- * ScrollIndicator - Double chevron scroll indicator
+ * ScrollIndicator - Simple bouncing double chevron (center bottom)
  *
  * MASTER CONTROLLER COMPONENT
  * Location: @saa/shared/components/saa/interactive/ScrollIndicator
  *
  * Features:
- * - Two stacked chevron arrows with bounce animation
- * - Opposing opacity fade effect on arrows
- * - Gold color with neon glow effect matching website theme
- * - Fixed to bottom-right with safe area inset for mobile
+ * - Two stacked SVG chevron paths with bounce animation
+ * - Opposing opacity fade on top/bottom arrows
+ * - Centered at bottom of viewport
  * - Fades out as user scrolls down
  * - Singleton pattern: only one instance renders at a time
- *
- * Based on: https://codepen.io/ckschmieder/pen/MGGMQG
  */
 export function ScrollIndicator() {
   const [opacity, setOpacity] = useState(1);
-  const [scale, setScale] = useState(1);
   const instanceIdRef = useRef<number | null>(null);
   const [isFirstInstance, setIsFirstInstance] = useState(false);
 
@@ -43,18 +39,14 @@ export function ScrollIndicator() {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const fadeStart = 20;
-      const fadeEnd = 100;
+      const fadeEnd = 120;
 
       if (scrollY <= fadeStart) {
         setOpacity(1);
-        setScale(1);
       } else if (scrollY >= fadeEnd) {
         setOpacity(0);
-        setScale(0.5); // Compress to 50% as it fades into distance
       } else {
-        const progress = (scrollY - fadeStart) / (fadeEnd - fadeStart);
-        setOpacity(1 - progress);
-        setScale(1 - progress * 0.5); // Scale from 1 to 0.5
+        setOpacity(1 - (scrollY - fadeStart) / (fadeEnd - fadeStart));
       }
     };
 
@@ -69,64 +61,41 @@ export function ScrollIndicator() {
   return (
     <>
       <style>{`
-        @keyframes scrollBounce {
-          0% { transform: translateY(0); }
-          10% { transform: translateY(3px); }
-          20% { transform: translateY(6px); }
-          30% { transform: translateY(9px); }
-          40% { transform: translateY(12px); }
-          50% { transform: translateY(15px); }
-          60% { transform: translateY(18px); }
-          70% { transform: translateY(21px); }
-          80% { transform: translateY(24px); }
-          90% { transform: translateY(27px); }
-          100% { transform: translateY(30px); }
+        @keyframes si-bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(10px); }
         }
-
-        @keyframes scrollOpacity {
-          0% { opacity: 0; }
-          10% { opacity: 0.1; }
-          20% { opacity: 0.2; }
-          30% { opacity: 0.3; }
-          40% { opacity: 0.4; }
-          50% { opacity: 0.5; }
-          60% { opacity: 0.6; }
-          70% { opacity: 0.7; }
-          80% { opacity: 0.8; }
-          90% { opacity: 0.9; }
-          100% { opacity: 1; }
+        @keyframes si-fade-down {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.15; }
         }
-
-        .scroll-prompt-arrow-container {
-          animation: scrollBounce 1.5s infinite;
+        @keyframes si-fade-up {
+          0%, 100% { opacity: 0.15; }
+          50% { opacity: 1; }
         }
-
-        .scroll-prompt-arrow {
-          animation: scrollOpacity 1.5s infinite;
+        #global-scroll-indicator {
+          position: fixed;
+          bottom: max(28px, calc(env(safe-area-inset-bottom, 0px) + 16px));
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: -1;
+          pointer-events: none;
+          transition: opacity 0.3s ease-out;
         }
-
-        .scroll-prompt-arrow:last-child {
-          animation-direction: reverse;
-          margin-top: -6px;
+        .si-bounce-wrap {
+          animation: si-bounce 1.8s ease-in-out infinite;
         }
-
-        .scroll-prompt-arrow > div {
-          width: 36px;
-          height: 36px;
-          border-right: 8px solid #888;
-          border-bottom: 8px solid #888;
-          border-radius: 4px;
-          transform: rotate(45deg) translateZ(1px);
-          /* Tight white outline using drop-shadow */
-          filter:
-            drop-shadow(0 0 1px rgba(255,255,255,0.6))
-            drop-shadow(0 0 2px rgba(255,255,255,0.3));
+        .si-arrow-top {
+          animation: si-fade-down 1.8s ease-in-out infinite;
         }
-
-        /* Slightly inset on mobile */
-        @media (max-width: 1023px) {
-          #global-scroll-indicator {
-            right: 30px;
+        .si-arrow-bottom {
+          animation: si-fade-up 1.8s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .si-bounce-wrap,
+          .si-arrow-top,
+          .si-arrow-bottom {
+            animation: none !important;
           }
         }
       `}</style>
@@ -134,29 +103,23 @@ export function ScrollIndicator() {
       <div
         id="global-scroll-indicator"
         data-source="layout-wrapper"
-        className="fixed pointer-events-none"
-        style={{
-          bottom: 'max(12px, calc(env(safe-area-inset-bottom, 0px) + 4px))',
-          right: '24px',
-          opacity,
-          transform: `scale(${scale})`,
-          transformOrigin: 'center bottom',
-          transition: 'opacity 0.3s ease-out, transform 0.3s ease-out',
-          zIndex: -1, // Behind all content, sections scroll over it
-        }}
+        aria-hidden="true"
+        style={{ opacity }}
       >
-        {/* Arrow container with subtle glow */}
-        <div
-          style={{
-            filter: `
-              drop-shadow(0 0 2px rgba(136, 136, 136, 0.2))
-            `,
-          }}
-        >
-          <div className="scroll-prompt-arrow-container">
-            <div className="scroll-prompt-arrow"><div></div></div>
-            <div className="scroll-prompt-arrow"><div></div></div>
-          </div>
+        <div className="si-bounce-wrap">
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ filter: 'drop-shadow(0 0 3px rgba(229,228,221,0.3))' }}
+          >
+            <path className="si-arrow-top" d="M7 6l5 5 5-5" stroke="#e5e4dd" />
+            <path className="si-arrow-bottom" d="M7 13l5 5 5-5" stroke="#e5e4dd" />
+          </svg>
         </div>
       </div>
     </>

@@ -420,11 +420,6 @@ export function TronAboutPage() {
           <div className="pb-16 pt-6">
             <FrequencyBars analyserRef={analyserRef} />
           </div>
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0,212,255,0.4)" strokeWidth="2">
-              <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
-            </svg>
-          </div>
         </section>
 
         {/* ━━━ CRT TERMINAL ━━━ */}

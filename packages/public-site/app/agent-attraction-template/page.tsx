@@ -383,20 +383,15 @@ function CTAButton({ href = '#', children, className = '', onClick }: CTAButtonP
 // =============================================================================
 function ScrollIndicator() {
   const [opacity, setOpacity] = useState(1);
-  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const fadeStart = 20;
-      const fadeEnd = 100;
-      if (scrollY <= fadeStart) { setOpacity(1); setScale(1); }
-      else if (scrollY >= fadeEnd) { setOpacity(0); setScale(0.5); }
-      else {
-        const progress = (scrollY - fadeStart) / (fadeEnd - fadeStart);
-        setOpacity(1 - progress);
-        setScale(1 - progress * 0.5);
-      }
+      const fadeEnd = 120;
+      if (scrollY <= fadeStart) { setOpacity(1); }
+      else if (scrollY >= fadeEnd) { setOpacity(0); }
+      else { setOpacity(1 - (scrollY - fadeStart) / (fadeEnd - fadeStart)); }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
@@ -408,30 +403,27 @@ function ScrollIndicator() {
   return (
     <>
       <style>{`
-        @keyframes scrollBounce { 0% { transform: translateY(0); } 100% { transform: translateY(30px); } }
-        @keyframes scrollOpacity { 0% { opacity: 0; } 100% { opacity: 1; } }
-        .scroll-prompt-arrow-container { animation: scrollBounce 1.5s infinite; }
-        .scroll-prompt-arrow { animation: scrollOpacity 1.5s infinite; }
-        .scroll-prompt-arrow:last-child { animation-direction: reverse; margin-top: -6px; }
-        .scroll-prompt-arrow > div {
-          width: 36px; height: 36px; border-right: 8px solid #888; border-bottom: 8px solid #888;
-          border-radius: 4px; transform: rotate(45deg) translateZ(1px);
-          filter: drop-shadow(0 0 1px rgba(255,255,255,0.6)) drop-shadow(0 0 2px rgba(255,255,255,0.3));
-        }
+        @keyframes si-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+        @keyframes si-fade-down { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+        @keyframes si-fade-up { 0%, 100% { opacity: 0.15; } 50% { opacity: 1; } }
+        .si-bounce-wrap { animation: si-bounce 1.8s ease-in-out infinite; }
+        .si-arrow-top { animation: si-fade-down 1.8s ease-in-out infinite; }
+        .si-arrow-bottom { animation: si-fade-up 1.8s ease-in-out infinite; }
       `}</style>
       <div
         className="fixed pointer-events-none"
+        aria-hidden="true"
         style={{
-          bottom: 'max(12px, calc(env(safe-area-inset-bottom, 0px) + 4px))',
-          right: '24px', opacity, transform: `scale(${scale})`, transformOrigin: 'center bottom',
-          transition: 'opacity 0.3s ease-out, transform 0.3s ease-out', zIndex: -1,
+          bottom: 'max(28px, calc(env(safe-area-inset-bottom, 0px) + 16px))',
+          left: '50%', transform: 'translateX(-50%)', opacity,
+          transition: 'opacity 0.3s ease-out', zIndex: -1,
         }}
       >
-        <div style={{ filter: 'drop-shadow(0 0 2px rgba(136, 136, 136, 0.2))' }}>
-          <div className="scroll-prompt-arrow-container">
-            <div className="scroll-prompt-arrow"><div></div></div>
-            <div className="scroll-prompt-arrow"><div></div></div>
-          </div>
+        <div className="si-bounce-wrap">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ filter: 'drop-shadow(0 0 3px rgba(229,228,221,0.3))' }}>
+            <path className="si-arrow-top" d="M7 6l5 5 5-5" stroke="#e5e4dd" />
+            <path className="si-arrow-bottom" d="M7 13l5 5 5-5" stroke="#e5e4dd" />
+          </svg>
         </div>
       </div>
     </>
