@@ -89,54 +89,52 @@ const THEMES: Record<string, { primary: string; primaryRgb: string; border: stri
       </p>
     </div>
 
-    <!-- Cards - two independent rows so row heights don't affect each other -->
-    {[CARDS.slice(0, 3), CARDS.slice(3)].map((row, rowIdx) => (
-      <div class={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5${rowIdx > 0 ? ' mt-5' : ''}`}>
-        {row.map((card) => {
-          const colors = THEMES[card.theme];
-          return (
-            <div>
+    <!-- Cards - single grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {CARDS.map((card) => {
+        const colors = THEMES[card.theme];
+        return (
+          <div>
+            <div
+              class="group relative rounded-2xl p-6 md:p-8 text-center overflow-hidden h-full"
+              style={`background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid ${colors.border}; box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);`}
+            >
+              <!-- Hover glow -->
               <div
-                class="group relative rounded-2xl p-6 md:p-8 text-center overflow-hidden h-full"
-                style={`background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%); border: 1px solid ${colors.border}; box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);`}
-              >
-                <!-- Hover glow -->
-                <div
-                  class="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
-                  style={`background: radial-gradient(ellipse 80% 60% at 50% 30%, ${colors.hoverGlow} 0%, transparent 70%);`}
-                ></div>
+                class="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                style={`background: radial-gradient(ellipse 80% 60% at 50% 30%, ${colors.hoverGlow} 0%, transparent 70%);`}
+              ></div>
 
-                <!-- Icon with animated glow ring -->
-                <div class="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
-                  <div
-                    class={`absolute inset-0 rounded-full wyg-icon-pulse-${card.theme}`}
-                    style={`background: ${colors.iconBg}; box-shadow: 0 0 30px ${colors.iconGlow}, inset 0 0 20px rgba(${colors.primaryRgb}, 0.1);`}
-                  ></div>
-                  <div
-                    class="absolute inset-2 rounded-full flex items-center justify-center"
-                    style={`background: ${colors.iconInnerBg}; border: 1px solid ${colors.iconBorder};`}
-                  >
-                    <div style={`color: ${colors.iconColor}; filter: drop-shadow(0 0 8px ${colors.iconDropShadow});`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" set:html={card.iconPath} />
-                    </div>
+              <!-- Icon with animated glow ring -->
+              <div class="relative mx-auto mb-5 w-16 h-16 md:w-20 md:h-20">
+                <div
+                  class={`absolute inset-0 rounded-full wyg-icon-pulse-${card.theme}`}
+                  style={`background: ${colors.iconBg}; box-shadow: 0 0 30px ${colors.iconGlow}, inset 0 0 20px rgba(${colors.primaryRgb}, 0.1);`}
+                ></div>
+                <div
+                  class="absolute inset-2 rounded-full flex items-center justify-center"
+                  style={`background: ${colors.iconInnerBg}; border: 1px solid ${colors.iconBorder};`}
+                >
+                  <div style={`color: ${colors.iconColor}; filter: drop-shadow(0 0 8px ${colors.iconDropShadow});`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" set:html={card.iconPath} />
                   </div>
                 </div>
+              </div>
 
-                <!-- Content -->
-                <div class="relative z-10">
-                  <h3 class="text-h6 mb-2 flex items-center justify-center" style="min-height: 2.4em;">{card.title}</h3>
-                  <p class="text-body" style="font-size: clamp(14px, calc(13.5px + 0.2vw), 18px);">{card.text}</p>
-                </div>
+              <!-- Content -->
+              <div class="relative z-10">
+                <h3 class="text-h6 mb-2 flex items-center justify-center" style="min-height: 2.4em;">{card.title}</h3>
+                <p class="text-body" style="font-size: clamp(14px, calc(13.5px + 0.2vw), 18px);">{card.text}</p>
               </div>
             </div>
-          );
-        })}
-      </div>
-    ))}
+          </div>
+        );
+      })}
+    </div>
 
     <!-- CTA -->
     <div class="text-center mt-10 md:mt-12">
-      <SecondaryButton href="/exp-realty-sponsor/">See SAA's Full Value Stack</SecondaryButton>
+      <SecondaryButton href="/exp-realty-sponsor/">See SAA's Value Stack</SecondaryButton>
     </div>
   </div>
 </section>

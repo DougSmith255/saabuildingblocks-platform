@@ -984,34 +984,28 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
 
     /* Scroll Indicator */
+    @keyframes si-bounce-kf {
+      0%, 100% {
+        transform: translateY(-25%) translateX(-50%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+      }
+      50% {
+        transform: translateY(0) translateX(-50%);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      }
+    }
     .scroll-indicator {
-      position: fixed;
-      bottom: max(28px, calc(env(safe-area-inset-bottom, 0px) + 16px));
+      position: absolute;
+      top: calc(100svh - 50px);
       left: 50%;
       transform: translateX(-50%);
+      z-index: 10;
       pointer-events: none;
-      z-index: -1;
-      transition: opacity 0.3s ease-out;
+      animation: si-bounce-kf 1s infinite;
     }
-
-    @keyframes si-bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(10px); }
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-indicator { animation: none !important; }
     }
-
-    @keyframes si-fade-down {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.15; }
-    }
-
-    @keyframes si-fade-up {
-      0%, 100% { opacity: 0.15; }
-      50% { opacity: 1; }
-    }
-
-    .scroll-arrow-container { animation: si-bounce 1.8s ease-in-out infinite; }
-    .si-arrow-top { animation: si-fade-down 1.8s ease-in-out infinite; }
-    .si-arrow-bottom { animation: si-fade-up 1.8s ease-in-out infinite; }
 
     /* Glass Panel */
     .glass-panel {
@@ -3717,13 +3711,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <div class="hero-spacer" aria-hidden="true"></div>
 
     <!-- Scroll Indicator -->
-    <div class="scroll-indicator" id="scroll-indicator" style="opacity: 1;" aria-hidden="true">
-      <div class="scroll-arrow-container">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 3px rgba(229,228,221,0.3));">
-          <path class="si-arrow-top" d="M7 6l5 5 5-5" stroke="#e5e4dd" />
-          <path class="si-arrow-bottom" d="M7 13l5 5 5-5" stroke="#e5e4dd" />
-        </svg>
-      </div>
+    <div class="scroll-indicator" aria-hidden="true">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 3px rgba(229,228,221,0.3));">
+        <path d="M7 6l5 5 5-5" stroke="#e5e4dd" />
+        <path d="M7 13l5 5 5-5" stroke="#e5e4dd" />
+      </svg>
     </div>
 
     <!-- Value Pillars Tab -->
@@ -6590,35 +6582,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       }
 
       // Hero scroll effects - DISABLED: Hero now scrolls naturally like home page
-      function setupScrollEffects() {
-        const scrollIndicator = document.getElementById('scroll-indicator');
-        // Hero effects removed - hero scrolls naturally with page
-
-        function handleScroll() {
-          const scrollY = window.scrollY;
-          // Hero scale/blur/fade effects removed - just scrolls naturally
-
-          // Scroll indicator
-          if (scrollIndicator) {
-            const fadeStart = 20;
-            const fadeEnd = 120;
-            let indicatorOpacity = 1;
-
-            if (scrollY <= fadeStart) {
-              indicatorOpacity = 1;
-            } else if (scrollY >= fadeEnd) {
-              indicatorOpacity = 0;
-            } else {
-              indicatorOpacity = 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
-            }
-
-            scrollIndicator.style.opacity = indicatorOpacity;
-          }
-        }
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll();
-      }
+      // Scroll indicator is position:absolute and scrolls with the page, no JS needed
+      function setupScrollEffects() {}
 
       // Scroll reveal - add visible class immediately (no animation, elements already visible)
       function setupScrollReveal() {

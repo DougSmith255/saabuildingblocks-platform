@@ -12,7 +12,7 @@ import Tagline from '../saa/headings/Tagline.astro';
 <section
   class="relative min-h-[100dvh] w-full"
   aria-label="Hero"
-  style="max-width: 3000px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; overflow: visible;"
+  style="max-width: 3000px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: visible;"
 >
   <!-- RevealMaskEffect golden glow (React island, placed behind content) -->
   <slot name="effect" />
@@ -109,15 +109,6 @@ import Tagline from '../saa/headings/Tagline.astro';
 
   .hero-content-wrapper {
     contain: layout style;
-    /* Fixed padding instead of justify-content:center on parent.
-       Anchors content position so font swaps can't cause CLS. */
-    padding-top: max(12dvh, 64px);
-  }
-
-  @media (min-width: 768px) {
-    .hero-content-wrapper {
-      padding-top: 8dvh;
-    }
   }
 
   .hero-content-wrapper *:not(.hero-3d-image) {
@@ -126,5 +117,34 @@ import Tagline from '../saa/headings/Tagline.astro';
 
   .hero-tagline-mobile-spacing {
     margin-top: 20px;
+  }
+
+  /* RevealMaskEffect CSS - needed for the React island to render visibly */
+  :global(.hero-effect-layer) {
+    opacity: 1;
+  }
+
+  :global(.hero-vignette) {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 100%;
+    background: transparent;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+  }
+
+  :global(.reveal-mask-effect) {
+    opacity: 1;
+  }
+
+  :global(.reveal-mask-effect > div:first-child) {
+    background: radial-gradient(ellipse 72% 50.4% at 50% 42%,
+      rgba(255,215,0,0.2) 0%,
+      rgba(255,180,0,0.12) 35%,
+      rgba(255,150,0,0.06) 55%,
+      transparent 80%);
   }
 </style>

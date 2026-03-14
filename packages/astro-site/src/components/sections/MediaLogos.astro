@@ -202,6 +202,13 @@ const logos = [
     will-change: transform;
   }
 
+  /* 5x faster on mobile (under 900px) */
+  @media (max-width: 899px) {
+    .media-logos-track {
+      animation-duration: 12s;
+    }
+  }
+
   /* Pause on hover for accessibility */
   .media-logos-track:hover {
     animation-play-state: paused;

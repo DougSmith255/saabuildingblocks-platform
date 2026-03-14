@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Play } from 'lucide-react';
 
 export interface YouTubeFacadeProps {
   /** YouTube video ID (11 character string) */
@@ -15,30 +14,16 @@ export interface YouTubeFacadeProps {
 }
 
 /**
- * YouTubeFacade - Lazy-loading YouTube embed with 3D metal styling
+ * YouTubeFacade - Lazy-loading YouTube embed with TRON-style play button
  *
  * MASTER CONTROLLER COMPONENT
  * Location: @saa/shared/components/saa/media/YouTubeFacade
  *
- * This component displays a YouTube thumbnail with a 3D metal-styled play button.
+ * Shows a YouTube thumbnail with a sci-fi concentric ring play button.
  * The actual iframe is ONLY loaded when the user clicks to play.
- * This dramatically improves page load performance (~1MB+ saved per video).
  *
- * Features:
- * - Shows high-quality YouTube thumbnail (maxresdefault with fallback)
- * - 3D metal backing plate with dark overlay
- * - Play button uses Icon3D effect with gold styling
- * - Overlay fades out on hover as play button enlarges
- * - Iframe only loads on click with autoplay
- * - Accessible with keyboard navigation
- *
- * @example
- * ```tsx
- * <YouTubeFacade
- *   videoId="dQw4w9WgXcQ"
- *   title="Video Title"
- * />
- * ```
+ * Design: Concentric rotating rings with thin-stroke play triangle,
+ * cyan glow, inspired by TRON Legacy UI/HUD elements.
  */
 export function YouTubeFacade({
   videoId,
@@ -47,8 +32,6 @@ export function YouTubeFacade({
   fallbackImage,
 }: YouTubeFacadeProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  // 'pending' = checking maxres, 'maxres' = custom thumbnail found,
-  // 'sd' = maxres failed but sddefault has custom thumb, 'fallback' = use fallbackImage, 'hq' = use hqdefault
   const [thumbState, setThumbState] = useState<'pending' | 'maxres' | 'sd' | 'fallback' | 'hq'>('pending');
   const [isHovered, setIsHovered] = useState(false);
 
@@ -83,13 +66,9 @@ export function YouTubeFacade({
   useEffect(() => {
     const img = new Image();
     img.onload = () => {
-      // YouTube returns a 120x90 grey placeholder (valid JPEG, HTTP 404) when
-      // maxresdefault isn't available. Real custom thumbnails are >= 1280x720.
       if (img.naturalWidth > 200) {
         setThumbState('maxres');
       } else {
-        // maxresdefault failed - try sddefault (640x480), which YouTube serves
-        // reliably even when maxresdefault 404s. object-fit:cover crops letterboxing.
         const sd = new Image();
         sd.onload = () => setThumbState('sd');
         sd.onerror = () => setThumbState(fallbackImage ? 'fallback' : 'hq');
@@ -100,16 +79,7 @@ export function YouTubeFacade({
     img.src = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
   }, [videoId, fallbackImage]);
 
-  // 3D metal effect filter for play button (matches Icon3D)
-  const icon3DFilter = `
-    drop-shadow(-1px -1px 0 #ffe680)
-    drop-shadow(1px 1px 0 #8a7a3d)
-    drop-shadow(3px 3px 0 #2a2a1d)
-    drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))
-  `;
-
   if (isLoaded) {
-    // Render actual iframe with autoplay
     return (
       <div
         className={className}
@@ -139,7 +109,6 @@ export function YouTubeFacade({
     );
   }
 
-  // Render thumbnail facade with 3D metal play button
   return (
     <div
       className={className}
@@ -173,96 +142,131 @@ export function YouTubeFacade({
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          transition: 'transform 0.3s ease',
-          transform: isHovered ? 'scale(1.08)' : 'scale(1.05)',
+          transition: 'transform 0.4s ease, filter 0.4s ease',
+          transform: isHovered ? 'scale(1.06)' : 'scale(1.02)',
+          filter: isHovered ? 'brightness(0.6)' : 'brightness(0.45)',
         }}
       />
 
-      {/* Dark overlay - fades out on hover */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 100%)',
-          opacity: isHovered ? 0 : 1,
-          transition: 'opacity 0.3s ease',
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* 3D Metal Play Button Container */}
+      {/* TRON Play Button */}
       <div
         style={{
           position: 'absolute',
           top: '50%',
           left: '50%',
-          transform: `translate(-50%, -50%) scale(${isHovered ? 1.15 : 1})`,
-          transition: 'transform 0.3s ease',
+          transform: 'translate(-50%, -50%)',
           zIndex: 10,
+          filter: `drop-shadow(0 0 ${isHovered ? '20px' : '12px'} rgba(0,212,255,${isHovered ? '0.6' : '0.3'}))`,
+          transition: 'filter 0.3s ease',
         }}
       >
-        {/* Metal backing plate */}
-        <div
+        <svg
+          viewBox="0 0 120 120"
           style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: '50%',
-            background: 'linear-gradient(145deg, #3a3a3a 0%, #1a1a1a 50%, #2a2a2a 100%)',
-            border: '2px solid rgba(196, 169, 77, 0.4)',
-            boxShadow: `
-              0 4px 20px rgba(0, 0, 0, 0.6),
-              0 0 30px rgba(196, 169, 77, 0.15),
-              inset 0 2px 4px rgba(255, 255, 255, 0.1),
-              inset 0 -2px 4px rgba(0, 0, 0, 0.3)
-            `,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transform: 'perspective(500px) rotateX(8deg)',
+            width: '100px',
+            height: '100px',
+            transition: 'transform 0.3s ease',
+            transform: isHovered ? 'scale(1.1)' : 'scale(1)',
           }}
         >
-          {/* Play icon with 3D effect */}
-          <Play
+          {/* Outer ring - dashed, rotating clockwise */}
+          <circle
+            cx="60" cy="60" r="56"
+            fill="none"
+            stroke="rgba(0,212,255,0.3)"
+            strokeWidth="1"
+            strokeDasharray="8 12"
             style={{
-              width: '36px',
-              height: '36px',
-              color: '#c4a94d',
-              filter: icon3DFilter.trim(),
-              marginLeft: '4px', // Visual centering for play triangle
-              fill: 'currentColor',
+              animation: 'ytFacadeSpin 8s linear infinite',
+              transformOrigin: 'center',
             }}
           />
-        </div>
+
+          {/* Middle ring - solid with tick marks */}
+          <circle
+            cx="60" cy="60" r="48"
+            fill="none"
+            stroke={isHovered ? 'rgba(0,212,255,0.6)' : 'rgba(0,212,255,0.25)'}
+            strokeWidth="1"
+            style={{ transition: 'stroke 0.3s ease' }}
+          />
+          {/* Tick marks at cardinal points */}
+          <line x1="60" y1="8" x2="60" y2="14" stroke="rgba(0,212,255,0.4)" strokeWidth="1" />
+          <line x1="60" y1="106" x2="60" y2="112" stroke="rgba(0,212,255,0.4)" strokeWidth="1" />
+          <line x1="8" y1="60" x2="14" y2="60" stroke="rgba(0,212,255,0.4)" strokeWidth="1" />
+          <line x1="106" y1="60" x2="112" y2="60" stroke="rgba(0,212,255,0.4)" strokeWidth="1" />
+          {/* Diagonal ticks */}
+          <line x1="23" y1="23" x2="27" y2="27" stroke="rgba(0,212,255,0.2)" strokeWidth="0.75" />
+          <line x1="93" y1="23" x2="97" y2="27" stroke="rgba(0,212,255,0.2)" strokeWidth="0.75" />
+          <line x1="23" y1="93" x2="27" y2="97" stroke="rgba(0,212,255,0.2)" strokeWidth="0.75" />
+          <line x1="93" y1="93" x2="97" y2="97" stroke="rgba(0,212,255,0.2)" strokeWidth="0.75" />
+
+          {/* Inner ring - segmented, counter-rotating */}
+          <circle
+            cx="60" cy="60" r="40"
+            fill="none"
+            stroke={isHovered ? 'rgba(0,212,255,0.5)' : 'rgba(0,212,255,0.15)'}
+            strokeWidth="1.5"
+            strokeDasharray="20 10 5 10"
+            style={{
+              animation: 'ytFacadeSpinReverse 6s linear infinite',
+              transformOrigin: 'center',
+              transition: 'stroke 0.3s ease',
+            }}
+          />
+
+          {/* Core circle - subtle fill */}
+          <circle
+            cx="60" cy="60" r="32"
+            fill={isHovered ? 'rgba(0,212,255,0.08)' : 'rgba(0,212,255,0.03)'}
+            stroke={isHovered ? 'rgba(0,212,255,0.3)' : 'rgba(0,212,255,0.1)'}
+            strokeWidth="0.5"
+            style={{ transition: 'fill 0.3s ease, stroke 0.3s ease' }}
+          />
+
+          {/* Play triangle - thin stroke, fills on hover */}
+          <polygon
+            points="50,40 50,80 82,60"
+            fill={isHovered ? 'rgba(0,212,255,0.2)' : 'none'}
+            stroke={isHovered ? 'rgba(0,212,255,0.9)' : 'rgba(0,212,255,0.5)'}
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+            style={{ transition: 'fill 0.3s ease, stroke 0.3s ease' }}
+          />
+        </svg>
       </div>
 
-      {/* Video title on hover */}
+      {/* "PLAY" label */}
       <div
         style={{
           position: 'absolute',
-          bottom: '16px',
-          left: '16px',
-          right: '16px',
-          color: 'white',
-          fontSize: '14px',
-          fontWeight: 500,
-          textShadow: '0 1px 3px rgba(0,0,0,0.8)',
-          opacity: isHovered ? 1 : 0,
-          transform: isHovered ? 'translateY(0)' : 'translateY(8px)',
-          transition: 'opacity 0.3s ease, transform 0.3s ease',
+          bottom: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          color: isHovered ? 'rgba(0,212,255,0.8)' : 'rgba(0,212,255,0.4)',
+          fontSize: '11px',
+          letterSpacing: '0.3em',
+          fontFamily: 'var(--font-taskor, monospace)',
+          textTransform: 'uppercase',
+          transition: 'color 0.3s ease',
           pointerEvents: 'none',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
+          zIndex: 10,
         }}
       >
-        {title}
+        {isHovered ? '[ PLAY ]' : 'PLAY'}
       </div>
 
       {/* Focus ring for accessibility */}
       <style jsx>{`
         div:focus-visible {
-          outline: 2px solid rgba(196, 169, 77, 0.8);
+          outline: 2px solid rgba(0, 212, 255, 0.6);
           outline-offset: 2px;
+        }
+        @keyframes ytFacadeSpin {
+          to { transform: rotate(360deg); }
+        }
+        @keyframes ytFacadeSpinReverse {
+          to { transform: rotate(-360deg); }
         }
       `}</style>
     </div>
