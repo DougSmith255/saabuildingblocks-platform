@@ -540,7 +540,7 @@ export function TronAboutPage() {
             <div className="lg:w-3/5">
               <div className="tron-reveal tron-bio-panel" style={{ '--reveal-delay': '0.1s' } as React.CSSProperties}>
                 <H2 theme="blue">The Builder</H2>
-                <div className="space-y-5 -mt-2 md:-mt-4">
+                <div className="space-y-5 md:-mt-4">
                   <p style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
                     Top 1% eXp team builder and the architect behind Smart Agent Alliance&apos;s
                     entire digital infrastructure. Every page on this site, every automation
@@ -623,7 +623,7 @@ export function TronAboutPage() {
           />
           <div className="tron-reveal tron-cta-panel max-w-5xl mx-auto text-center" style={{ '--reveal-delay': '0s' } as React.CSSProperties}>
             <H2 theme="gold">Ready to Level Up?</H2>
-            <p className="-mt-2 md:-mt-5 mb-10" style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
+            <p className="md:-mt-5 mb-10" style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
               Join The Alliance and get access to the digital infrastructure
               that powers top-producing agents.
             </p>
