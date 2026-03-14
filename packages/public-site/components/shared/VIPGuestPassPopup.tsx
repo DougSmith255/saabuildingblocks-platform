@@ -155,6 +155,11 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose, disableAutoPopup }:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.firstName.trim() || !formData.email.trim()) return;
+    if (formData.email.toLowerCase().endsWith('@exprealty.com')) {
+      setSubmitStatus('error');
+      setErrorMessage('It looks like you are already with eXp Realty. Please use a personal email address or reach out to us directly.');
+      return;
+    }
     if (!formData.consent) {
       setSubmitStatus('error');
       setErrorMessage('Please accept the terms and conditions to continue.');

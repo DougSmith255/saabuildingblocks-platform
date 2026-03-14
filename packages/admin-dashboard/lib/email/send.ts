@@ -12,7 +12,7 @@ import { WelcomeEmail } from './templates/WelcomeEmail';
 import { AccountLockedEmail } from './templates/AccountLockedEmail';
 import { ApplyInstructionsEmail } from './templates/ApplyInstructionsEmail';
 import { AgentActivationEmail } from './templates/AgentActivationEmail';
-import { ActivationApologyEmail } from './templates/ActivationApologyEmail';
+import { CongratsTransactionEmail } from './templates/CongratsTransactionEmail';
 
 /**
  * Send password reset email with token link
@@ -169,28 +169,23 @@ export async function sendAgentActivationEmail(
 }
 
 /**
- * Send apology activation email to agents who received broken links
+ * Send congratulations transaction email
  */
-export async function sendApologyActivationEmail(
+export async function sendCongratsTransactionEmail(
   email: string,
   firstName: string,
-  tokenHash: string,
-  expiresInHours: number = 168
+  phoneNumber?: string
 ): Promise<EmailResult> {
-  const activationBaseUrl = 'https://smartagentalliance.com';
-  const activationLink = `${activationBaseUrl}/agent-portal/activate?token_hash=${encodeURIComponent(tokenHash)}&type=invite`;
-
   try {
     const result = await sendEmail({
       to: email,
-      subject: "Your Activation - We've Got It Right This Time",
-      react: ActivationApologyEmail({
+      subject: 'Congratulations on Your Transaction!',
+      react: CongratsTransactionEmail({
         firstName,
-        activationLink,
-        expiresInHours,
+        phoneNumber,
       }),
       tags: [
-        { name: 'category', value: 'activation_apology' },
+        { name: 'category', value: 'congrats_transaction' },
       ],
     });
 

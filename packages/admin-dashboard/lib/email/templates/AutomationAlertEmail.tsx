@@ -11,6 +11,7 @@ import {
   EmailHeading,
   EmailParagraph,
   EmailDivider,
+  EmailSignature,
   BRAND_COLORS,
 } from './components/Layout';
 import { Section, Text } from '@react-email/components';
@@ -49,7 +50,7 @@ export function AutomationAlertEmail({
     : `${newlyBroken.length} automation(s) broke - ${totalBroken} total broken`;
 
   return (
-    <EmailLayout preview={preview} showFooter={false}>
+    <EmailLayout preview={preview}>
       <EmailHeading>
         {allRecovered ? 'All Automations Recovered' : 'Automation Health Alert'}
       </EmailHeading>
@@ -160,6 +161,8 @@ export function AutomationAlertEmail({
           Master Controller - Automations
         </a>
       </EmailParagraph>
+
+      <EmailSignature />
     </EmailLayout>
   );
 }

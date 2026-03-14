@@ -50,9 +50,9 @@ async function sendTest(name: string, subject: string, element: React.ReactEleme
 }
 
 async function main() {
-  console.log('Sending 12 test emails to', TO, '...\n');
+  console.log('Sending 12 test emails to', TO, '(updated styling)...\n');
 
-  // Small delay between sends to avoid rate limits
+  // Resend rate limit: 2 requests/sec, so 600ms between sends
   const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
 
   await sendTest('PasswordResetEmail', 'Password Reset',
@@ -62,7 +62,7 @@ async function main() {
       expiresInMinutes: 15,
     })
   );
-  await delay(200);
+  await delay(600);
 
   await sendTest('UsernameReminderEmail', 'Username Reminder',
     UsernameReminderEmail({
@@ -70,7 +70,7 @@ async function main() {
       email: 'doug@smartagentalliance.com',
     })
   );
-  await delay(200);
+  await delay(600);
 
   await sendTest('WelcomeEmail', 'Welcome / Activation',
     WelcomeEmail({
@@ -79,7 +79,7 @@ async function main() {
       expiresInHours: 168,
     })
   );
-  await delay(200);
+  await delay(600);
 
   await sendTest('AgentActivationEmail', 'Agent Activation',
     AgentActivationEmail({
@@ -88,7 +88,7 @@ async function main() {
       expiresInHours: 168,
     })
   );
-  await delay(200);
+  await delay(600);
 
   await sendTest('ActivationApologyEmail', 'Activation Apology',
     ActivationApologyEmail({
@@ -97,7 +97,7 @@ async function main() {
       expiresInHours: 168,
     })
   );
-  await delay(200);
+  await delay(600);
 
   await sendTest('AccountLockedEmail', 'Account Locked',
     AccountLockedEmail({
@@ -107,14 +107,14 @@ async function main() {
       supportUrl: 'https://smartagentalliance.com/contact',
     })
   );
-  await delay(200);
+  await delay(600);
 
   await sendTest('AnnouncementEmail', 'Announcement',
     AnnouncementEmail({
       recipientName: 'Doug',
     })
   );
-  await delay(200);
+  await delay(600);
 
   await sendTest('ApplyInstructionsEmail', 'Apply Instructions',
     ApplyInstructionsEmail({
@@ -123,7 +123,7 @@ async function main() {
       agentEmail: 'sarah@example.com',
     })
   );
-  await delay(200);
+  await delay(600);
 
   await sendTest('LinkPageNudgeEmail', 'Link Page Nudge',
     LinkPageNudgeEmail({
@@ -131,7 +131,7 @@ async function main() {
       portalLink: 'https://smartagentalliance.com/agent-portal',
     })
   );
-  await delay(200);
+  await delay(600);
 
   await sendTest('BookingReferralNotification', 'Booking Referral',
     BookingReferralNotification({
@@ -144,14 +144,14 @@ async function main() {
       portalUrl: 'https://smartagentalliance.com/agent-portal',
     })
   );
-  await delay(200);
+  await delay(600);
 
   await sendTest('PortalPromoEmail', 'Portal Promo',
     PortalPromoEmail({
       firstName: 'Doug',
     })
   );
-  await delay(200);
+  await delay(600);
 
   await sendTest('AutomationAlertEmail', 'Automation Alert',
     AutomationAlertEmail({

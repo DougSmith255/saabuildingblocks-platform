@@ -6526,6 +6526,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           sponsorName: SPONSOR_NAME
         };
 
+        // Block eXp Realty corporate emails
+        if (formData.email.toLowerCase().endsWith('@exprealty.com')) {
+          joinMessage.textContent = 'It looks like you are already with eXp Realty. Please use a personal email address or reach out to us directly.';
+          joinMessage.className = 'form-message error';
+          joinMessage.style.display = 'block';
+          return;
+        }
+
         joinSubmit.disabled = true;
         joinSubmit.textContent = 'Submitting...';
         joinMessage.style.display = 'none';
@@ -9055,6 +9063,16 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       const submitBtn = document.getElementById('submitBtn');
       const name = form.name.value;
       const email = form.email.value;
+
+      // Block eXp Realty corporate emails
+      if (email.toLowerCase().endsWith('@exprealty.com')) {
+        const msgEl = form.querySelector('.form-message') || form.querySelector('[class*="message"]');
+        if (msgEl) { msgEl.textContent = 'It looks like you are already with eXp Realty. Please use a personal email address or reach out to us directly.'; msgEl.style.display = 'block'; msgEl.style.color = '#ef4444'; }
+        else { alert('It looks like you are already with eXp Realty. Please use a personal email address or reach out to us directly.'); }
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Join The Alliance';
+        return;
+      }
 
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending...';

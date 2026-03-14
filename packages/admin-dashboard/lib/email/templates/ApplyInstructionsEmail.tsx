@@ -139,13 +139,13 @@ const containerStyle: React.CSSProperties = {
   margin: '0 auto',
   backgroundColor: '#1a1a1a',
   borderRadius: '12px',
-  border: '2px solid #888888',
+  border: '1px solid #333333',
   overflow: 'hidden',
 };
 
 const headerStyle: React.CSSProperties = {
   padding: '20px 24px 16px',
-  backgroundColor: '#0a0a0a',
+  backgroundColor: '#1a1a1a',
   textAlign: 'center',
   borderBottom: '1px solid #333333',
 };
@@ -294,7 +294,7 @@ const closingStyle: React.CSSProperties = {
 
 const footerStyle: React.CSSProperties = {
   padding: '24px',
-  backgroundColor: '#0a0a0a',
+  backgroundColor: '#1a1a1a',
   textAlign: 'center',
 };
 

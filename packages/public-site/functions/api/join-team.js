@@ -330,6 +330,17 @@ export async function onRequestPost(context) {
       );
     }
 
+    // Block eXp Realty corporate emails - these agents are already at eXp
+    if (email.toLowerCase().endsWith('@exprealty.com')) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'It looks like you are already with eXp Realty. Please use a personal email address or reach out to us directly.'
+        }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
     // Get GHL credentials from environment
     const apiKey = env.GOHIGHLEVEL_API_KEY;
     const locationId = env.GOHIGHLEVEL_LOCATION_ID;

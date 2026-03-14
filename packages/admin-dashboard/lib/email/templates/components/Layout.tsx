@@ -164,7 +164,7 @@ const container: React.CSSProperties = {
 
 const header: React.CSSProperties = {
   padding: '20px 24px 16px',
-  backgroundColor: BRAND_COLORS.offBlack,
+  backgroundColor: BRAND_COLORS.containerBg,
   textAlign: 'center' as const,
   borderBottom: `1px solid ${BRAND_COLORS.border}`,
 };
@@ -183,7 +183,7 @@ const content: React.CSSProperties = {
 
 const footer: React.CSSProperties = {
   padding: '24px',
-  backgroundColor: BRAND_COLORS.offBlack,
+  backgroundColor: BRAND_COLORS.containerBg,
   textAlign: 'center' as const,
 };
 
