@@ -16,3 +16,11 @@
 
 /* Safelist: Tailwind classes used by React islands (Header etc.) that Vite can't trace */
 @source "../../src/styles/island-safelist.html";
+
+/*
+ * Targeted @source for pages whose components Vite can't trace:
+ * - about-exp-realty: all 8 components loaded via next/dynamic (runtime import())
+ * - about-doug-smart: static imports but alias resolution prevents detection
+ */
+@source "../../../public-site/app/about-exp-realty/";
+@source "../../../public-site/app/about-doug-smart/";
