@@ -47,12 +47,16 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
     );
     observer.observe(canvas);
 
-    // Blue dot atmosphere - varied sizes, audio-reactive
-    const particles = Array.from({ length: 60 }, (_, i) => ({
+    // Mobile detection for performance scaling
+    const isMobile = w < 768;
+
+    // Blue dot atmosphere - fewer on mobile
+    const particleCount = isMobile ? 20 : 60;
+    const particles = Array.from({ length: particleCount }, (_, i) => ({
       a: i * 137.508,
       s: 0.06 + (i % 9) * 0.025,
-      r: 1.0 + (i % 5) * 0.35,       // radius 1.0 - 2.4
-      alpha: 0.18 + (i % 7) * 0.035,  // alpha 0.18 - 0.39
+      r: 1.0 + (i % 5) * 0.35,
+      alpha: 0.18 + (i % 7) * 0.035,
     }));
 
     // Each colored line tracks its own position 0-1 independently
@@ -73,9 +77,9 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
 
       const horizon = h * 0.38;
       const vanishX = w / 2;
-      const vLines = 22;
+      const vLines = isMobile ? 12 : 22;
       const spread = w * 1.3;
-      const hLines = 40;
+      const hLines = isMobile ? 20 : 40;
 
       // ── Init animation ──────────────────────────────────
       const initAge = initTimeRef.current > 0 ? (Date.now() - initTimeRef.current) / 1000 : 999;
@@ -141,8 +145,10 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
             ctx.save();
             ctx.strokeStyle = `rgba(0,212,255,${wi * 0.5})`;
             ctx.lineWidth = 1.5 + wi * 3;
-            ctx.shadowBlur = 12 + wi * 20;
-            ctx.shadowColor = `rgba(0,212,255,${wi * 0.8})`;
+            if (!isMobile) {
+              ctx.shadowBlur = 12 + wi * 20;
+              ctx.shadowColor = `rgba(0,212,255,${wi * 0.8})`;
+            }
             ctx.beginPath();
             ctx.moveTo(xl, y);
             ctx.lineTo(xr, y);
@@ -177,8 +183,8 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
 
-      // Colored horizon glows when active
-      if (isActive) {
+      // Colored horizon glows when active (desktop only - expensive)
+      if (isActive && !isMobile) {
         const pGrad = ctx.createRadialGradient(vanishX, horizon, 0, vanishX, horizon, glowR * 0.6);
         pGrad.addColorStop(0, `rgba(160,80,255,${bass * 0.25})`);
         pGrad.addColorStop(1, 'transparent');
@@ -210,10 +216,12 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         const cb = xBounds(cyanY);
 
         ctx.save();
-        ctx.strokeStyle = 'rgba(0,212,255,0.5)';
-        ctx.lineWidth = 1.2;
-        ctx.shadowBlur = 18;
-        ctx.shadowColor = 'rgba(0,212,255,0.7)';
+        ctx.strokeStyle = isMobile ? 'rgba(0,212,255,0.7)' : 'rgba(0,212,255,0.5)';
+        ctx.lineWidth = isMobile ? 1.5 : 1.2;
+        if (!isMobile) {
+          ctx.shadowBlur = 18;
+          ctx.shadowColor = 'rgba(0,212,255,0.7)';
+        }
         ctx.beginPath();
         ctx.moveTo(cb.xl, cyanY);
         ctx.lineTo(cb.xr, cyanY);
@@ -232,8 +240,7 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         ctx.save();
         ctx.strokeStyle = 'rgb(160,80,255)';
         ctx.lineWidth = 2 + bass * 3;
-        ctx.shadowBlur = 25 + bass * 50;
-        ctx.shadowColor = 'rgba(160,80,255,1)';
+        if (!isMobile) { ctx.shadowBlur = 25 + bass * 50; ctx.shadowColor = 'rgba(160,80,255,1)'; }
         ctx.beginPath();
         ctx.moveTo(pb.xl, pY);
         ctx.lineTo(pb.xr, pY);
@@ -246,8 +253,7 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         ctx.save();
         ctx.strokeStyle = 'rgb(0,255,136)';
         ctx.lineWidth = 2 + mids * 3;
-        ctx.shadowBlur = 25 + mids * 50;
-        ctx.shadowColor = 'rgba(0,255,136,1)';
+        if (!isMobile) { ctx.shadowBlur = 25 + mids * 50; ctx.shadowColor = 'rgba(0,255,136,1)'; }
         ctx.beginPath();
         ctx.moveTo(gb.xl, gY);
         ctx.lineTo(gb.xr, gY);
@@ -260,8 +266,7 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         ctx.save();
         ctx.strokeStyle = 'rgb(255,215,0)';
         ctx.lineWidth = 2 + highs * 3;
-        ctx.shadowBlur = 25 + highs * 50;
-        ctx.shadowColor = 'rgba(255,215,0,1)';
+        if (!isMobile) { ctx.shadowBlur = 25 + highs * 50; ctx.shadowColor = 'rgba(255,215,0,1)'; }
         ctx.beginPath();
         ctx.moveTo(yb.xl, yY);
         ctx.lineTo(yb.xr, yY);
@@ -295,11 +300,13 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         const pa = (p.alpha * 0.6) + audioBoost * (0.5 + 0.5 * Math.sin(time * 0.8 + p.a));
         const pr = p.r * 0.8 + (hasAudio ? bass * 0.6 : 0);
 
-        // Soft outer halo
-        ctx.fillStyle = `rgba(0,212,255,${pa * 0.15})`;
-        ctx.beginPath();
-        ctx.arc(px, py, pr * 2, 0, Math.PI * 2);
-        ctx.fill();
+        // Soft outer halo (skip on mobile - halves arc draw calls)
+        if (!isMobile) {
+          ctx.fillStyle = `rgba(0,212,255,${pa * 0.15})`;
+          ctx.beginPath();
+          ctx.arc(px, py, pr * 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
         // Inner dot
         ctx.fillStyle = `rgba(0,212,255,${pa * 0.7})`;
