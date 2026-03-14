@@ -758,15 +758,17 @@ export function TronAboutPage() {
         }
         .tron-profile-ring {
           position: relative;
-          width: 236px;
-          height: 236px;
+          width: 240px;
+          height: 240px;
           border-radius: 50%;
           overflow: hidden;
+          filter: drop-shadow(0 0 12px rgba(0,212,255,0.3));
         }
         @media (min-width: 1024px) {
           .tron-profile-ring {
-            width: 300px;
-            height: 300px;
+            width: 310px;
+            height: 310px;
+            filter: drop-shadow(0 0 18px rgba(0,212,255,0.4));
           }
         }
         .tron-profile-ring-spin {
@@ -778,10 +780,10 @@ export function TronAboutPage() {
           background: conic-gradient(
             from 0deg,
             transparent 0%,
-            transparent 50%,
-            #00d4ff 65%,
-            #a050ff 78%,
-            #00ff88 90%,
+            transparent 40%,
+            #00d4ff 55%,
+            #a050ff 70%,
+            #00ff88 85%,
             transparent 100%
           );
           animation: tronRingSpin 3s linear infinite;
@@ -789,22 +791,30 @@ export function TronAboutPage() {
         }
         .tron-profile-ring-dash {
           position: absolute;
-          inset: 4px;
+          inset: 6px;
           border-radius: 50%;
-          border: 1px dashed rgba(0,212,255,0.2);
+          border: 1px dashed rgba(0,212,255,0.25);
           z-index: 1;
           pointer-events: none;
         }
         .tron-profile-inner {
           position: absolute;
-          top: 6px;
-          left: 6px;
-          right: 6px;
-          bottom: 6px;
+          top: 5px;
+          left: 5px;
+          right: 5px;
+          bottom: 5px;
           border-radius: 50%;
           overflow: hidden;
           z-index: 2;
           background: #0a0a12;
+        }
+        @media (min-width: 1024px) {
+          .tron-profile-inner {
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+          }
         }
         @keyframes tronHaloPulse {
           0%,100% { opacity: 0.4; transform: scale(1); }

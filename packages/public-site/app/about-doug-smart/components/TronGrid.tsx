@@ -125,16 +125,16 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         ctx.lineTo(xr, y);
         ctx.stroke();
 
-        // Init shockwave
+        // Init shockwave - cyan glow only, no white flash
         if (isInit) {
           const tLinear = (y - horizon) / (h - horizon);
           if (Math.abs(tLinear - initPulse) < 0.15) {
             const wi = initBright * (1 - Math.abs(tLinear - initPulse) / 0.15);
             ctx.save();
-            ctx.strokeStyle = `rgba(255,255,255,${wi * 0.9})`;
-            ctx.lineWidth = 2 + wi * 6;
-            ctx.shadowBlur = 15 + wi * 30;
-            ctx.shadowColor = `rgba(0,212,255,${wi})`;
+            ctx.strokeStyle = `rgba(0,212,255,${wi * 0.5})`;
+            ctx.lineWidth = 1.5 + wi * 3;
+            ctx.shadowBlur = 12 + wi * 20;
+            ctx.shadowColor = `rgba(0,212,255,${wi * 0.8})`;
             ctx.beginPath();
             ctx.moveTo(xl, y);
             ctx.lineTo(xr, y);
@@ -184,12 +184,8 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
         ctx.fillRect(0, 0, w, h);
       }
 
-      // Init flash
-      if (isInit && initAge < 0.3) {
-        const fa = initAge < 0.1 ? initAge / 0.1 * 0.4 : Math.max(0, 0.4 - (initAge - 0.1) / 0.2 * 0.4);
-        ctx.fillStyle = `rgba(0,212,255,${fa})`;
-        ctx.fillRect(0, 0, w, h);
-      }
+      // Init flash (gradient only, no white/bright wash)
+      // Removed: the full-screen cyan flash was too harsh
 
       // ── SCAN LINES ─────────────────────────────────────
       time += 0.016; // ~60fps frame time for consistent particle movement
