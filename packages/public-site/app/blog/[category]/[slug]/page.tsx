@@ -17,15 +17,6 @@ export async function generateStaticParams() {
 
   return posts
     .map((post) => {
-      if (post.customUri) {
-        const parts = post.customUri.split('/');
-        if (parts.length >= 2) {
-          return {
-            category: parts[0],
-            slug: parts[parts.length - 1],
-          };
-        }
-      }
       const category = post.categories[0] || 'uncategorized';
       return {
         category: categoryToSlug(category),

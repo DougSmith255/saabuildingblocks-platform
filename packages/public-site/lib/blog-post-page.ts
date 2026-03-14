@@ -3,6 +3,7 @@
  * Uses fs — must only be imported from server components / route handlers.
  */
 import type { BlogPost } from '@/lib/wordpress/types';
+import { categoryToSlug } from '@/lib/blog-post-urls';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
@@ -100,25 +101,12 @@ export function getRelatedPosts(
  */
 export function findPostBySlug(posts: BlogPost[], slug: string, category?: string): BlogPost | undefined {
   if (category) {
-    // Match by full custom URI path (category/slug)
-    const byFullUri = posts.find((p) => {
-      if (!p.customUri) return false;
-      return p.customUri === `${category}/${slug}`;
-    });
-    if (byFullUri) return byFullUri;
-    // Match by category array + slug
+    // Match by WP category + slug
     const byCatSlug = posts.find((p) =>
-      p.categories.includes(category) && p.slug === slug
+      p.categories.some((c) => categoryToSlug(c) === category) && p.slug === slug
     );
     if (byCatSlug) return byCatSlug;
   }
-  // Fallback: match by custom URI slug only
-  const byUri = posts.find((p) => {
-    if (!p.customUri) return false;
-    const uriSlug = p.customUri.split('/').pop();
-    return uriSlug === slug;
-  });
-  if (byUri) return byUri;
-  // Fallback: match by WordPress post slug
+  // Fallback: match by slug only
   return posts.find((p) => p.slug === slug);
 }
