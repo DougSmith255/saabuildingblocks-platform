@@ -20,10 +20,18 @@ export function TronGrid({ bandsRef, initTimeRef }: TronGridProps) {
     let w = 0;
     let h = 0;
 
+    // Use a stable height to prevent mobile toolbar retract from
+    // causing the grid to jump. On mobile, toolbar show/hide changes
+    // innerHeight but we want the canvas pinned to the largest size.
+    let stableH = window.innerHeight;
+
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio, 2);
       w = window.innerWidth;
-      h = window.innerHeight;
+      const newH = window.innerHeight;
+      // Only grow, never shrink - prevents jump when mobile toolbar hides/shows
+      if (newH > stableH) stableH = newH;
+      h = stableH;
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       canvas.style.width = w + 'px';
