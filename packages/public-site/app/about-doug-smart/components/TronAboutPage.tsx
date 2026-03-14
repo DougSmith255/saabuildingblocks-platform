@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { H1, H2, Tagline } from '@saa/shared/components/saa/headings';
 import { CTAButton } from '@saa/shared/components/saa/buttons';
 import { JoinAllianceCTA } from '@/components/shared/JoinAllianceCTA';
@@ -19,9 +19,9 @@ const SYSTEM_STATUS = `┌──────────────────
 │  > PLATFORM     ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ONLINE         │
 │  > API          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  114 ROUTES     │
 │  > PORTAL       ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  813KB SPA      │
-│  > CONTROLLER   ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  6 TABS         │
 │  > AUTOMATIONS  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  24/7           │
 │  > ANALYTICS    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  TRACKING       │
+│  > CDN          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  300+ NODES     │
 │                                                              │
 │  stack: next.js + react + typescript + supabase              │
 │  infra: cloudflare edge (300+ nodes) + vps + docker          │
@@ -31,6 +31,8 @@ const SYSTEM_STATUS = `┌──────────────────
 │  > status: all systems operational_                          │
 │                                                              │
 └──────────────────────────────────────────────────────────────┘`;
+
+const TERMINAL_LINES = SYSTEM_STATUS.split('\n');
 
 // ══════════════════════════════════════════════════════════════
 // CUSTOM TRON SVG ICONS - Stats
@@ -313,7 +315,11 @@ function FrequencyBars({ analyserRef }: { analyserRef: React.MutableRefObject<An
 export function TronAboutPage() {
   const { isPlaying, toggle, bandsRef, containerRef, analyserRef, initTimeRef } = useTronAudio(AUDIO_URL, AUDIO_START);
   const revealRef = useRef<HTMLElement>(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
+  const [terminalPhase, setTerminalPhase] = useState<'hidden' | 'typing' | 'live'>('hidden');
+  const [revealedLines, setRevealedLines] = useState(0);
 
+  // Scroll reveal (class-based for cross-browser reliability)
   useEffect(() => {
     const el = revealRef.current;
     if (!el) return;
@@ -321,7 +327,7 @@ export function TronAboutPage() {
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            (e.target as HTMLElement).style.animationPlayState = 'running';
+            (e.target as HTMLElement).classList.add('revealed');
             observer.unobserve(e.target);
           }
         });
@@ -331,6 +337,38 @@ export function TronAboutPage() {
     el.querySelectorAll('.tron-reveal').forEach((item) => observer.observe(item));
     return () => observer.disconnect();
   }, []);
+
+  // Terminal: trigger typing on scroll
+  useEffect(() => {
+    const el = terminalRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTerminalPhase('typing');
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Terminal: line-by-line typing animation
+  useEffect(() => {
+    if (terminalPhase !== 'typing') return;
+    let line = 0;
+    const interval = setInterval(() => {
+      line++;
+      setRevealedLines(line);
+      if (line >= TERMINAL_LINES.length) {
+        clearInterval(interval);
+        setTimeout(() => setTerminalPhase('live'), 400);
+      }
+    }, 80);
+    return () => clearInterval(interval);
+  }, [terminalPhase]);
 
   return (
     <div
@@ -391,19 +429,32 @@ export function TronAboutPage() {
 
         {/* ━━━ CRT TERMINAL ━━━ */}
         <section className="relative py-20 md:py-28 px-4">
-          <div className="tron-reveal tron-crt-monitor max-w-4xl mx-auto" style={{ '--reveal-delay': '0s' } as React.CSSProperties}>
+          <div
+            ref={terminalRef}
+            className="tron-crt-monitor max-w-4xl mx-auto"
+            style={{ opacity: terminalPhase === 'hidden' ? 0 : 1, transform: terminalPhase === 'hidden' ? 'translateY(20px)' : 'translateY(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' }}
+          >
             <div className="tron-crt-bezel">
-              {/* LED indicator */}
-              <div className="absolute top-[6px] right-[12px] w-[6px] h-[6px] rounded-full bg-[#00ff88]" style={{ boxShadow: '0 0 6px #00ff88, 0 0 12px #00ff8844' }} />
+              {/* LED indicator: gray=off, yellow=booting, green=live */}
+              <div
+                className="absolute top-[6px] right-[12px] w-[6px] h-[6px] rounded-full"
+                style={{
+                  backgroundColor: terminalPhase === 'live' ? '#00ff88' : terminalPhase === 'typing' ? '#ffd700' : '#333',
+                  boxShadow: terminalPhase === 'live' ? '0 0 6px #00ff88, 0 0 12px #00ff8844' : terminalPhase === 'typing' ? '0 0 6px #ffd700, 0 0 12px #ffd70044' : 'none',
+                  transition: 'all 0.3s',
+                }}
+              />
               <div className="tron-crt-screen">
                 <div className="tron-crt-scanlines" />
                 <div className="tron-crt-sweep" />
                 <div className="tron-crt-vignette" />
                 <div className="relative" style={{ zIndex: 5 }}>
-                  <div className="font-mono text-[0.6rem] sm:text-xs mb-4 tracking-wider" style={{ color: 'rgba(0,212,255,0.5)' }}>
-                    {'> SYSTEM DIAGNOSTIC'}
-                    <span className="tron-cursor">_</span>
-                  </div>
+                  {terminalPhase !== 'hidden' && (
+                    <div className="font-mono text-[0.6rem] sm:text-xs mb-4 tracking-wider" style={{ color: 'rgba(0,212,255,0.5)' }}>
+                      {'> SYSTEM DIAGNOSTIC'}
+                      <span className="tron-cursor">_</span>
+                    </div>
+                  )}
                   <div className="overflow-x-auto">
                     <pre
                       className="font-mono text-[0.5rem] sm:text-xs md:text-sm leading-relaxed mx-auto whitespace-pre"
@@ -413,7 +464,15 @@ export function TronAboutPage() {
                         width: 'fit-content',
                       }}
                     >
-                      {SYSTEM_STATUS}
+                      {TERMINAL_LINES.map((line, i) => (
+                        <span
+                          key={i}
+                          className={`block tron-term-line ${i < revealedLines ? 'tron-term-line-on' : ''} ${terminalPhase === 'live' && line.includes('\u2593') ? 'tron-bar-live' : ''}`}
+                          style={terminalPhase === 'live' && line.includes('\u2593') ? { animationDelay: `${(i % 3) * 0.4}s` } as React.CSSProperties : undefined}
+                        >
+                          {line || ' '}
+                        </span>
+                      ))}
                     </pre>
                   </div>
                 </div>
@@ -481,7 +540,7 @@ export function TronAboutPage() {
             <div className="lg:w-3/5">
               <div className="tron-reveal tron-bio-panel" style={{ '--reveal-delay': '0.1s' } as React.CSSProperties}>
                 <H2 theme="blue">The Builder</H2>
-                <div className="space-y-5 mt-6">
+                <div className="space-y-5 mt-3">
                   <p style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
                     Top 1% eXp team builder and the architect behind Smart Agent Alliance&apos;s
                     entire digital infrastructure. Every page on this site, every automation
@@ -559,12 +618,12 @@ export function TronAboutPage() {
         {/* ━━━ CTA ━━━ */}
         <section className="relative py-20 md:py-28 px-4">
           <div
-            className="max-w-3xl mx-auto mb-12 h-px"
+            className="max-w-5xl mx-auto mb-12 h-px"
             style={{ background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.5), transparent)', boxShadow: '0 0 8px rgba(0,212,255,0.2)' }}
           />
-          <div className="tron-reveal tron-cta-panel max-w-3xl mx-auto text-center" style={{ '--reveal-delay': '0s' } as React.CSSProperties}>
+          <div className="tron-reveal tron-cta-panel max-w-5xl mx-auto text-center" style={{ '--reveal-delay': '0s' } as React.CSSProperties}>
             <H2 theme="gold">Ready to Level Up?</H2>
-            <p className="mt-6 mb-10" style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
+            <p className="mt-3 mb-10" style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
               Join The Alliance and get access to the digital infrastructure
               that powers top-producing agents.
             </p>
@@ -797,11 +856,30 @@ export function TronAboutPage() {
           box-shadow: 0 0 30px rgba(0,0,0,0.4), 0 0 60px rgba(255,215,0,0.03);
         }
 
-        /* ── Scroll Reveal ── */
+        /* ── Terminal Line Typing ── */
+        .tron-term-line {
+          opacity: 0;
+          transform: translateX(-6px);
+          transition: opacity 0.12s ease, transform 0.12s ease;
+        }
+        .tron-term-line-on {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        .tron-bar-live {
+          animation: barPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes barPulse {
+          0%, 100% { filter: brightness(1); }
+          50% { filter: brightness(1.4) drop-shadow(0 0 4px rgba(0,212,255,0.3)); }
+        }
+
+        /* ── Scroll Reveal (class-based) ── */
         .tron-reveal {
           opacity: 0;
+        }
+        .tron-reveal.revealed {
           animation: tronGlitchIn 0.7s ease-out forwards;
-          animation-play-state: paused;
           animation-delay: var(--reveal-delay, 0s);
         }
         @keyframes tronGlitchIn {
@@ -829,15 +907,47 @@ export function TronAboutPage() {
           }
         }
 
+        /* ── Heading tightening (mobile) ── */
+        @media (max-width: 768px) {
+          .tron-bio-panel h2,
+          .tron-cta-panel h2 {
+            margin-bottom: 0.25rem !important;
+          }
+          .tron-system-card h3 {
+            margin-bottom: 0.125rem;
+          }
+        }
+
+        /* ── Mobile Performance ── */
+        @media (max-width: 768px) {
+          .tron-crt-screen { animation: none !important; }
+          .tron-crt-sweep { display: none; }
+          .tron-stat-shimmer { animation: none; opacity: 0; }
+          .tron-profile-halo { animation: none; }
+          .tron-bar-live { animation: none; }
+          .tron-reveal.revealed {
+            animation: tronFadeIn 0.5s ease-out forwards;
+            animation-delay: var(--reveal-delay, 0s);
+          }
+        }
+        @keyframes tronFadeIn {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
         /* ── Reduced Motion ── */
         @media (prefers-reduced-motion: reduce) {
-          .tron-crt-screen { animation: none; }
+          .tron-crt-screen { animation: none !important; }
           .tron-crt-sweep { animation: none; display: none; }
           .tron-cursor { animation: none; }
           .tron-stat-shimmer { animation: none; }
           .tron-profile-ring-spin { animation: none; }
           .tron-profile-halo { animation: none; }
+          .tron-bar-live { animation: none; }
           .tron-reveal {
+            opacity: 1 !important;
+          }
+          .tron-reveal.revealed {
             animation: none;
             opacity: 1;
             transform: none;
