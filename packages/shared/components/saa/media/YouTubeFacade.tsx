@@ -47,8 +47,9 @@ export function YouTubeFacade({
   fallbackImage,
 }: YouTubeFacadeProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  // 'pending' = checking maxres, 'maxres' = custom thumbnail found, 'fallback' = use fallbackImage, 'hq' = use hqdefault
-  const [thumbState, setThumbState] = useState<'pending' | 'maxres' | 'fallback' | 'hq'>('pending');
+  // 'pending' = checking maxres, 'maxres' = custom thumbnail found,
+  // 'sd' = maxres failed but sddefault has custom thumb, 'fallback' = use fallbackImage, 'hq' = use hqdefault
+  const [thumbState, setThumbState] = useState<'pending' | 'maxres' | 'sd' | 'fallback' | 'hq'>('pending');
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = useCallback(() => {
@@ -62,11 +63,14 @@ export function YouTubeFacade({
     }
   }, []);
 
-  // Determine thumbnail: maxresdefault (custom) > fallbackImage > hqdefault (auto-generated)
+  // Determine thumbnail: maxresdefault > sddefault > fallbackImage > hqdefault
   let thumbnailUrl: string;
   switch (thumbState) {
     case 'maxres':
       thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+      break;
+    case 'sd':
+      thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`;
       break;
     case 'fallback':
       thumbnailUrl = fallbackImage!;
@@ -80,11 +84,16 @@ export function YouTubeFacade({
     const img = new Image();
     img.onload = () => {
       // YouTube returns a 120x90 grey placeholder (valid JPEG, HTTP 404) when
-      // no custom thumbnail exists. Real custom thumbnails are >= 1280x720.
+      // maxresdefault isn't available. Real custom thumbnails are >= 1280x720.
       if (img.naturalWidth > 200) {
         setThumbState('maxres');
       } else {
-        setThumbState(fallbackImage ? 'fallback' : 'hq');
+        // maxresdefault failed - try sddefault (640x480), which YouTube serves
+        // reliably even when maxresdefault 404s. object-fit:cover crops letterboxing.
+        const sd = new Image();
+        sd.onload = () => setThumbState('sd');
+        sd.onerror = () => setThumbState(fallbackImage ? 'fallback' : 'hq');
+        sd.src = `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`;
       }
     };
     img.onerror = () => setThumbState(fallbackImage ? 'fallback' : 'hq');
