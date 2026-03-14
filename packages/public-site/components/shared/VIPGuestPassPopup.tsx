@@ -16,7 +16,6 @@ const HolographicGlobe = dynamic(
 );
 
 const STORAGE_KEY = 'saa_vip_pass_shown';
-const SCROLL_THRESHOLD = 0.70; // 70% scroll fallback
 
 const EXP_X_LOGO = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public';
 
@@ -41,7 +40,7 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose, disableAutoPopup }:
     setHasTriggered(true);
     setIsOpen(true);
     if (timerRef.current) clearTimeout(timerRef.current);
-    try { sessionStorage.setItem(STORAGE_KEY, 'true'); } catch {}
+    try { localStorage.setItem(STORAGE_KEY, 'true'); } catch {}
   }, []);
 
   // Helper: returns true when any other SlidePanel is currently open.
@@ -52,15 +51,12 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose, disableAutoPopup }:
   }, []);
 
   useEffect(() => {
-    // Migration: clear permanent localStorage key so existing devices aren't blocked forever
-    try { localStorage.removeItem(STORAGE_KEY); } catch {}
-
     // When auto-popup is disabled (e.g. blog pages with sidebar guest pass card),
     // skip all automatic triggers. The popup can still be opened via forceOpen.
     if (disableAutoPopup) return;
 
     try {
-      if (sessionStorage.getItem(STORAGE_KEY)) {
+      if (localStorage.getItem(STORAGE_KEY)) {
         hasTriggeredRef.current = true;
         setHasTriggered(true);
         return;
@@ -71,65 +67,22 @@ export function VIPGuestPassPopup({ forceOpen, onForceClose, disableAutoPopup }:
       return;
     }
 
-    // Exit-intent detection (primary trigger)
-    // Desktop: mouse moves toward top of viewport (likely leaving)
-    // Mobile: handled via scroll-up detection below
+    // Exit-intent only: mouse moves toward top of viewport (likely leaving)
     let lastMouseY = 0;
     const handleMouseMove = (e: MouseEvent) => {
       if (hasTriggeredRef.current) return;
       if (isPanelOpen()) return;
 
-      // Detect mouse moving upward toward browser UI (exit intent)
-      // Trigger when mouse is in top 10px and moving upward
       if (e.clientY < 10 && e.clientY < lastMouseY) {
         showPopup();
       }
       lastMouseY = e.clientY;
     };
 
-    // Mobile exit-intent: detect quick scroll up (user pulling to go back)
-    let lastScrollY = window.scrollY;
-    let scrollUpVelocity = 0;
-    let lastScrollTime = Date.now();
-
-    const handleScroll = () => {
-      if (hasTriggeredRef.current) return;
-      if (isPanelOpen()) return;
-
-      const currentScrollY = window.scrollY;
-      const currentTime = Date.now();
-      const timeDelta = currentTime - lastScrollTime;
-
-      // Calculate scroll velocity (negative = scrolling up)
-      if (timeDelta > 0) {
-        scrollUpVelocity = (lastScrollY - currentScrollY) / timeDelta;
-      }
-
-      // Mobile exit-intent: rapid scroll up near top of page
-      // Velocity > 2 means scrolling up fast (user likely trying to leave)
-      if (currentScrollY < 200 && scrollUpVelocity > 2) {
-        showPopup();
-        return;
-      }
-
-      // Fallback: 70% scroll depth for highly engaged users
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight > 0 && currentScrollY / docHeight >= SCROLL_THRESHOLD) {
-        showPopup();
-      }
-
-      lastScrollY = currentScrollY;
-      lastScrollTime = currentTime;
-    };
-
-    // Desktop: track mouse for exit-intent
     document.addEventListener('mousemove', handleMouseMove, { passive: true });
-    // Both: track scroll for mobile exit-intent + scroll fallback
-    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('scroll', handleScroll);
     };
   }, [showPopup, isPanelOpen]);
 
