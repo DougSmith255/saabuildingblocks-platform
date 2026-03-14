@@ -98,24 +98,47 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Update DB status to 'redirect'
+    // Update or insert DB record
+    const now = new Date().toISOString();
     if (id) {
       const { error: dbError } = await supabase
         .from('http_404_paths')
         .update({
           status: 'redirect',
           redirect_target: target,
-          reviewed_at: new Date().toISOString(),
+          reviewed_at: now,
           reviewed_by: 'admin',
         })
         .eq('id', id);
 
       if (dbError) {
         console.error('[deploy-redirect] DB update failed:', dbError);
-        // KV write succeeded but DB update failed - not ideal but redirect still works
         return NextResponse.json({
           success: true,
           warning: 'Redirect deployed to edge but database update failed',
+          details: dbError.message,
+        });
+      }
+    } else {
+      // Manual redirect creation - insert a new record so it appears in 404 Watch
+      const { error: dbError } = await supabase
+        .from('http_404_paths')
+        .upsert({
+          path,
+          status: 'redirect',
+          redirect_target: target,
+          hit_count: 0,
+          first_seen_at: now,
+          last_seen_at: now,
+          reviewed_at: now,
+          reviewed_by: 'admin',
+        }, { onConflict: 'path' });
+
+      if (dbError) {
+        console.error('[deploy-redirect] DB insert failed:', dbError);
+        return NextResponse.json({
+          success: true,
+          warning: 'Redirect deployed to edge but database record creation failed',
           details: dbError.message,
         });
       }

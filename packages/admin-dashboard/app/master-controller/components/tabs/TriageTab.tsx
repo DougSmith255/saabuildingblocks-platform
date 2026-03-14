@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { AlertTriangle, Search, RefreshCw, ExternalLink, Trash2, X, ArrowUpDown, ChevronLeft, ChevronRight, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { AlertTriangle, Search, RefreshCw, ExternalLink, Trash2, X, ArrowUpDown, ChevronLeft, ChevronRight, Eye, EyeOff, ArrowRight, Plus } from 'lucide-react';
 
 interface Path404 {
   id: number;
@@ -52,10 +52,16 @@ export function TriageTab() {
   // Selection
   const [selected, setSelected] = useState<Set<number>>(new Set());
 
-  // Redirect modal
+  // Redirect modal (existing 404 path)
   const [redirectModal, setRedirectModal] = useState<Path404 | null>(null);
   const [redirectTarget, setRedirectTarget] = useState('');
   const [deploying, setDeploying] = useState(false);
+
+  // Create redirect modal (manual)
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [createFrom, setCreateFrom] = useState('');
+  const [createTo, setCreateTo] = useState('');
+  const [creating, setCreating] = useState(false);
 
   const fetchStats = useCallback(async () => {
     try {
@@ -191,6 +197,37 @@ export function TriageTab() {
     }
   };
 
+  const handleCreateRedirect = async () => {
+    const from = createFrom.trim();
+    const to = createTo.trim();
+    if (!from || !to) return;
+
+    // Ensure path starts with /
+    const sourcePath = from.startsWith('/') ? from : '/' + from;
+
+    setCreating(true);
+    try {
+      const res = await fetch('/api/404-paths/deploy-redirect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: sourcePath, target: to }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Deploy failed');
+
+      setShowCreateModal(false);
+      setCreateFrom('');
+      setCreateTo('');
+      fetchPaths();
+      fetchStats();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to create redirect');
+    } finally {
+      setCreating(false);
+    }
+  };
+
   const toggleSelect = (id: number) => {
     setSelected(prev => {
       const next = new Set(prev);
@@ -232,14 +269,23 @@ export function TriageTab() {
             Triage 404 errors, deploy redirects to the edge instantly
           </p>
         </div>
-        <button
-          onClick={handleRefresh}
-          disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#404040]/30 border border-[#404040] text-[#dcdbd5] rounded-lg hover:border-[#ffd700]/30 transition-colors disabled:opacity-50"
-        >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-          Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#00ff88]/10 border border-[#00ff88]/30 text-[#00ff88] rounded-lg hover:bg-[#00ff88]/20 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Create Redirect
+          </button>
+          <button
+            onClick={handleRefresh}
+            disabled={loading}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#404040]/30 border border-[#404040] text-[#dcdbd5] rounded-lg hover:border-[#ffd700]/30 transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            Refresh
+          </button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -526,6 +572,73 @@ export function TriageTab() {
                   className="flex-1 px-4 py-2 bg-[#00ff88] text-[#191818] font-semibold rounded-lg hover:bg-[#ffd700] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {deploying ? 'Deploying...' : 'Deploy Redirect to Edge'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Create Redirect Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-[#191818] border border-[#404040] rounded-lg p-6 max-w-lg w-full">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-[#ffd700]">Create Redirect</h2>
+              <button
+                onClick={() => { setShowCreateModal(false); setCreateFrom(''); setCreateTo(''); }}
+                className="text-[#dcdbd5]/60 hover:text-[#dcdbd5] transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-[#dcdbd5] mb-2">From Path</label>
+                <input
+                  type="text"
+                  value={createFrom}
+                  onChange={(e) => setCreateFrom(e.target.value)}
+                  placeholder="/old-path"
+                  className="w-full px-4 py-2 bg-[#404040]/30 border border-[#404040] rounded-lg text-[#dcdbd5] font-mono text-sm placeholder-[#dcdbd5]/40 focus:border-[#ffd700] focus:outline-none"
+                  disabled={creating}
+                  autoFocus
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#dcdbd5] mb-2">Redirect To</label>
+                <input
+                  type="text"
+                  value={createTo}
+                  onChange={(e) => setCreateTo(e.target.value)}
+                  placeholder="/new-path or https://example.com/page"
+                  className="w-full px-4 py-2 bg-[#404040]/30 border border-[#404040] rounded-lg text-[#dcdbd5] placeholder-[#dcdbd5]/40 focus:border-[#ffd700] focus:outline-none"
+                  disabled={creating}
+                />
+              </div>
+
+              <div className="p-3 bg-[#00ff88]/5 border border-[#00ff88]/20 rounded-lg">
+                <p className="text-xs text-[#00ff88]/80">
+                  Deploys a 301 redirect to Cloudflare KV. Takes effect at all edge locations within ~60 seconds. No site deploy needed.
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => { setShowCreateModal(false); setCreateFrom(''); setCreateTo(''); }}
+                  className="flex-1 px-4 py-2 bg-[#404040]/30 border border-[#404040] text-[#dcdbd5] rounded-lg hover:border-[#dcdbd5]/30 transition-colors"
+                  disabled={creating}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleCreateRedirect}
+                  disabled={creating || !createFrom.trim() || !createTo.trim()}
+                  className="flex-1 px-4 py-2 bg-[#00ff88] text-[#191818] font-semibold rounded-lg hover:bg-[#ffd700] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {creating ? 'Deploying...' : 'Deploy Redirect to Edge'}
                 </button>
               </div>
             </div>
