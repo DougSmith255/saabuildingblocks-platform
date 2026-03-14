@@ -36,14 +36,16 @@ function categoryToSlug(category: string): string {
 }
 
 function getPostUrl(post: BlogPost): string {
-  const category = categoryToSlug(post.categories[0] || 'uncategorized');
-  const slug = post.slug;
+  const uri =
+    post.customUri ||
+    `${categoryToSlug(post.categories[0] || 'uncategorized')}/${post.slug}`;
 
-  if (STANDALONE_CATEGORIES.includes(category)) {
-    return `${SITE_URL}/${category}/${slug}`;
+  const firstSegment = uri.split('/')[0];
+  if (STANDALONE_CATEGORIES.includes(firstSegment)) {
+    return `${SITE_URL}/${uri}`;
   }
 
-  return `${SITE_URL}/blog/${category}/${slug}`;
+  return `${SITE_URL}/blog/${uri}`;
 }
 
 function escapeXml(str: string): string {

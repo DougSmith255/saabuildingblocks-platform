@@ -6,7 +6,7 @@ import { extractFAQs, generateFAQSchema, stripFAQSection } from '@/lib/faq-utils
 import { extractTables, generateTableSchemas } from '@/lib/table-utils';
 import { getCachedBlogPosts, findPostBySlug, getRelatedPosts } from '@/lib/blog-post-page';
 import { buildBlogPostingSchema, buildVideoSchema } from '@/lib/blog-schema';
-import { getPostUrl, categoryToSlug } from '@/lib/blog-post-urls';
+import { getPostUrl } from '@/lib/blog-post-urls';
 import type { Metadata } from 'next';
 
 /**
@@ -17,9 +17,9 @@ export async function generateStaticParams() {
   const posts = getCachedBlogPosts();
 
   return posts
-    .filter((post) => categoryToSlug(post.categories[0] || '') === 'about-exp-realty')
+    .filter((post) => post.customUri?.startsWith('about-exp-realty/'))
     .map((post) => ({
-      slug: post.slug,
+      slug: post.customUri!.split('/').pop()!,
     }));
 }
 

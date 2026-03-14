@@ -21,13 +21,15 @@ export function categoryToSlug(category: string): string {
  * all others get /blog/{category}/{slug}.
  */
 export function getPostUrl(post: BlogPost): string {
-  const category = categoryToSlug(post.categories[0] || 'uncategorized');
-  const slug = post.slug;
+  const uri =
+    post.customUri ||
+    `${categoryToSlug(post.categories[0] || 'uncategorized')}/${post.slug}`;
 
-  // Standalone categories live at /{category}/{slug} (no /blog/ prefix)
-  if (STANDALONE_CATEGORIES.includes(category)) {
-    return `/${category}/${slug}`;
+  // Check if the first segment is a standalone category
+  const firstSegment = uri.split('/')[0];
+  if (STANDALONE_CATEGORIES.includes(firstSegment)) {
+    return `/${uri}`;
   }
 
-  return `/blog/${category}/${slug}`;
+  return `/blog/${uri}`;
 }

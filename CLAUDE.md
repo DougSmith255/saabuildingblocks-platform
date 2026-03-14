@@ -441,7 +441,7 @@ npm run build && npx wrangler pages deploy out --project-name=saabuildingblocks
 - **URL:** https://wp.saabuildingblocks.com
 - **Path:** `/var/www/wordpress/` (NOT `/var/www/html/`)
 - **Version:** 6.9.1
-- **Active plugins:** Advanced Custom Fields, Rank Math SEO
+- **Active plugins:** Advanced Custom Fields, Permalink Manager, Rank Math SEO
 - **Must-use plugins:** allow-html-upload, expose-acf-rest, expose-permalink-uris-rest, expose-rankmath-rest, resend-smtp
 - **Apache config:** `wp-saabuildingblocks-le-ssl.conf`
 
@@ -453,16 +453,23 @@ wp core version --path=/var/www/wordpress/
 
 ### Blog Post URL Structure
 
-**URLs are derived automatically from WordPress category + post slug:**
+**CRITICAL: All blog post URLs follow this pattern:**
+```
+https://smartagentalliance.com/{custom_uri}
+```
 
-- **Most categories:** `https://smartagentalliance.com/blog/{category-slug}/{post-slug}`
-- **Two standalone categories (NO `/blog/` prefix):**
-  - `about-exp-realty` - URLs are `https://smartagentalliance.com/about-exp-realty/{slug}`
-  - `exp-realty-sponsor` - URLs are `https://smartagentalliance.com/exp-realty-sponsor/{slug}`
+- `custom_uri` comes from Permalink Manager plugin (stored in `wp_postmeta` with `meta_key = 'custom_uri'`)
+- There is **NO `/blog/` prefix** - the custom_uri IS the full path after the domain
+- **NEVER use WordPress `post_name`** - it is irrelevant and will produce wrong URLs
+- Example: custom_uri `about-exp/exp-realty-fees` - live URL is `https://smartagentalliance.com/about-exp/exp-realty-fees`
 
-The standalone categories are defined in `packages/public-site/lib/blog-post-urls.ts` as `STANDALONE_CATEGORIES`.
+```bash
+# Get a post's live URL
+wp db query "SELECT pm.meta_value AS custom_uri FROM wp_postmeta pm WHERE pm.post_id = <POST_ID> AND pm.meta_key = 'custom_uri'" --path=/var/www/wordpress/
 
-**Do NOT use Permalink Manager or `custom_uri` for blog URLs.** URLs are determined by the WordPress category assignment and the post's `post_name` slug. The `generateStaticParams` function builds pages at `/blog/{category}/{slug}` for standard categories and `/{category}/{slug}` for standalone categories.
+# Find posts by URL path
+wp db query "SELECT post_id FROM wp_postmeta WHERE meta_key = 'custom_uri' AND meta_value = '<path>'" --path=/var/www/wordpress/
+```
 
 ---
 
