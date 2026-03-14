@@ -335,7 +335,7 @@ export default function IncomeOwnershipSection() {
             <div className="io-panels-grid gap-4 md:gap-5">
               {/* Left panel: ICON + Stock (~45%) */}
               <div
-                className="io-panel-left rounded-2xl p-5 md:p-6 relative overflow-hidden"
+                className="io-panel-left rounded-2xl p-5 md:p-6 relative"
                 style={{
                   background: 'linear-gradient(180deg, rgba(12,14,20,0.95), rgba(8,10,16,0.98))',
                   border: '1px solid rgba(0,191,255,0.12)',
@@ -358,7 +358,7 @@ export default function IncomeOwnershipSection() {
 
               {/* Center panel: Revenue Share (~30%) */}
               <div
-                className="io-panel-center rounded-2xl p-5 md:p-6 relative overflow-hidden"
+                className="io-panel-center rounded-2xl p-5 md:p-6 relative"
                 style={{
                   background: 'linear-gradient(180deg, rgba(20,12,28,0.95), rgba(12,8,18,0.98))',
                   border: '1px solid rgba(153,51,255,0.15)',
@@ -376,7 +376,7 @@ export default function IncomeOwnershipSection() {
 
               {/* Right panel: Fee Comparison (~25%) */}
               <div
-                className="io-panel-right rounded-2xl p-5 md:p-6 relative overflow-hidden"
+                className="io-panel-right rounded-2xl p-5 md:p-6 relative"
                 style={{
                   background: 'linear-gradient(180deg, rgba(14,12,12,0.95), rgba(10,8,8,0.98))',
                   border: '1px solid rgba(255,80,80,0.1)',

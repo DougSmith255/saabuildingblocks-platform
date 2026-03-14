@@ -216,13 +216,6 @@ export default function WhereSAAFitsVersionA() {
                     >
                       {node.text}
                     </p>
-                    {node.highlight && (
-                      <div className="mt-4">
-                        <CTAButton href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('open-join-modal')); }}>
-                          Join the Alliance
-                        </CTAButton>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>

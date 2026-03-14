@@ -792,7 +792,7 @@ export default function HowExpIsBuilt() {
         /* ═══ Mobile ═══ */
         @media (max-width: 768px) {
           .how-exp-section { padding: 0 16px; }
-          .how-exp-heading { margin-bottom: 36px; }
+          .how-exp-heading { margin-bottom: 18px; }
 
           .how-exp-comparison {
             grid-template-columns: 1fr;
@@ -810,6 +810,14 @@ export default function HowExpIsBuilt() {
             top: 50%; bottom: auto; left: 0; right: 0;
             width: 100%; height: 1px; transform: none;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+          }
+          .how-exp-vs-badge {
+            position: relative;
+            top: auto;
+            left: auto;
+            transform: none;
+            margin: -28px auto -28px auto;
+            z-index: 5;
           }
 
           .how-exp-transition { padding: 0 16px; margin-bottom: 32px; }

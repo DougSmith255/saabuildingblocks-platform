@@ -230,9 +230,20 @@ function GaugeStat({ targetNumber, suffix, label, status, delay }: {
           textShadow: '-1px -1px 0 #80d4ff, 1px 1px 0 #3d8a9d, 2px 2px 0 #2d6a7d, 3px 3px 0 #1d4a5d, 4px 4px 0 #1d2a3d, 5px 5px 4px rgba(0,0,0,0.5)',
         }}
       >
-        <span ref={elementRef}>
-          {hasAnimated ? targetNumber.toLocaleString() : displayValue.toLocaleString()}
-        </span>
+        {targetNumber >= 1000 ? (
+          <>
+            <span className="si-full-number" ref={elementRef}>
+              {hasAnimated ? targetNumber.toLocaleString() : displayValue.toLocaleString()}
+            </span>
+            <span className="si-short-number">
+              {Math.round(targetNumber / 1000)}K
+            </span>
+          </>
+        ) : (
+          <span ref={elementRef}>
+            {hasAnimated ? targetNumber.toLocaleString() : displayValue.toLocaleString()}
+          </span>
+        )}
         <span style={{ fontSize: '0.7em', opacity: 0.7 }}>{suffix}</span>
       </p>
       <p className="text-xs uppercase tracking-wider mt-1" style={{ color: 'var(--color-body-text)', opacity: 0.8, fontFamily: 'monospace' }}>
@@ -435,6 +446,11 @@ export default function SupportInfrastructureSection() {
         @keyframes siPing {
           0% { r: 3; opacity: 0.5; }
           100% { r: 10; opacity: 0; }
+        }
+        .si-short-number { display: none; }
+        @media (max-width: 450px) {
+          .si-full-number { display: none; }
+          .si-short-number { display: inline; }
         }
       `}</style>
     </section>

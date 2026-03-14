@@ -340,6 +340,8 @@ export default function SpotlightConsole() {
     return () => clearTimeout(timer);
   }, []);
 
+  const mobileRailRef = useRef<HTMLDivElement>(null);
+
   const handleSelect = useCallback((index: number) => {
     setIsStopped(true);
     setDetailPhase('out');
@@ -347,6 +349,13 @@ export default function SpotlightConsole() {
       setActiveIndex(index);
       setDetailPhase('in');
     }, 200);
+    // Auto-center the clicked card on mobile
+    if (mobileRailRef.current) {
+      const buttons = mobileRailRef.current.querySelectorAll('button');
+      if (buttons[index]) {
+        buttons[index].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
   }, []);
 
   const activeFeature = FEATURES[activeIndex];
@@ -513,7 +522,7 @@ export default function SpotlightConsole() {
 
           {/* Mobile: Horizontal strip rail + detail below */}
           <div className="lg:hidden">
-            <div className="sc-mobile-rail flex gap-3 overflow-x-auto pb-4 -mx-4 px-4" style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none' }}>
+            <div ref={mobileRailRef} className="sc-mobile-rail flex gap-3 overflow-x-auto pb-4 -mx-4 px-4" style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none' }}>
               {FEATURES.map((f, i) => {
                 const isActive = activeIndex === i;
                 return (
@@ -562,16 +571,7 @@ export default function SpotlightConsole() {
                 border: '1px solid rgba(0,191,255,0.12)',
               }}
             >
-              <div
-                className="absolute right-2 top-2 pointer-events-none"
-                style={{
-                  opacity: detailPhase === 'out' ? 0 : 0.8,
-                  transform: 'scale(0.7)',
-                  transition: 'opacity 300ms ease',
-                }}
-              >
-                <DetailIllust />
-              </div>
+              {/* SVG illustration hidden on mobile for readability */}
               <div
                 className="relative z-10"
                 style={{
