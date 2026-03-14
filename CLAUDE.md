@@ -453,22 +453,26 @@ wp core version --path=/var/www/wordpress/
 
 ### Blog Post URL Structure
 
-**CRITICAL: All blog post URLs follow this pattern:**
-```
-https://smartagentalliance.com/{custom_uri}
-```
+**URLs are built from `custom_uri` (Permalink Manager) which stores `{category-slug}/{post-slug}`:**
 
-- `custom_uri` comes from Permalink Manager plugin (stored in `wp_postmeta` with `meta_key = 'custom_uri'`)
-- There is **NO `/blog/` prefix** - the custom_uri IS the full path after the domain
-- **NEVER use WordPress `post_name`** - it is irrelevant and will produce wrong URLs
-- Example: custom_uri `about-exp/exp-realty-fees` - live URL is `https://smartagentalliance.com/about-exp/exp-realty-fees`
+- **Two standalone categories (NO `/blog/` prefix):**
+  - `about-exp-realty/{slug}` - URL: `https://smartagentalliance.com/about-exp-realty/{slug}`
+  - `exp-realty-sponsor/{slug}` - URL: `https://smartagentalliance.com/exp-realty-sponsor/{slug}`
+- **All other categories get `/blog/` prefix:**
+  - `{category}/{slug}` - URL: `https://smartagentalliance.com/blog/{category}/{slug}`
+  - Example: `brokerage-comparison/exp-kw` - URL: `https://smartagentalliance.com/blog/brokerage-comparison/exp-kw`
+
+- Standalone categories defined in `packages/public-site/lib/blog-post-urls.ts` as `STANDALONE_CATEGORIES`
+- `custom_uri` format is always `{wp-category-slug}/{slug}` - the `/blog/` prefix is added by code, NOT stored in `custom_uri`
+- Permalink Manager is required because WordPress enforces globally unique slugs - without it, posts like `become-an-agent/california` and `real-estate-schools/california` would conflict
+- **Do NOT use WordPress `post_name`** for URLs - it may have `-2` suffixes due to slug conflicts
 
 ```bash
-# Get a post's live URL
-wp db query "SELECT pm.meta_value AS custom_uri FROM wp_postmeta pm WHERE pm.post_id = <POST_ID> AND pm.meta_key = 'custom_uri'" --path=/var/www/wordpress/
+# Get a post's custom_uri
+wp eval "echo get_post_meta(POST_ID, 'custom_uri', true);" --path=/var/www/wordpress
 
-# Find posts by URL path
-wp db query "SELECT post_id FROM wp_postmeta WHERE meta_key = 'custom_uri' AND meta_value = '<path>'" --path=/var/www/wordpress/
+# Find posts by slug
+wp eval "echo get_post_meta(POST_ID, 'custom_uri', true);" --path=/var/www/wordpress
 ```
 
 ---
