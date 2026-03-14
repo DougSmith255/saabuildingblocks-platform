@@ -23,7 +23,7 @@ const SYSTEM_STATUS = `┌──────────────────
 │  > ANALYTICS    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  TRACKING       │
 │  > CDN          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  300+ NODES     │
 │                                                              │
-│  stack: next.js + react + typescript + supabase              │
+│  stack: next.js + astro + react + typescript + supabase       │
 │  infra: cloudflare edge (300+ nodes) + vps + docker          │
 │  deploys: zero-downtime, ci/cd, global cdn                   │
 │                                                              │
@@ -390,7 +390,7 @@ export function TronAboutPage() {
       <main id="main-content" ref={revealRef} className="relative" style={{ zIndex: 2 }}>
 
         {/* ━━━ HERO (unchanged) ━━━ */}
-        <section className="relative min-h-[100dvh] flex flex-col px-4 pt-32 md:pt-40">
+        <section className="relative min-h-[100svh] flex flex-col px-4 pt-32 md:pt-40">
           <div className="flex-1 flex flex-col items-center justify-center text-center w-full">
             <H1 theme="cyan">DOUG SMART</H1>
             <Tagline style={{ fontSize: 'clamp(1rem, 2.2vw, 1.4rem)' }}>
@@ -529,7 +529,7 @@ export function TronAboutPage() {
                       alt="Doug Smart"
                       fill
                       className="object-cover"
-                      sizes="224px"
+                      sizes="(min-width: 1024px) 288px, 224px"
                     />
                   </div>
                 </div>
@@ -540,7 +540,7 @@ export function TronAboutPage() {
             <div className="lg:w-3/5">
               <div className="tron-reveal tron-bio-panel" style={{ '--reveal-delay': '0.1s' } as React.CSSProperties}>
                 <H2 theme="blue">The Builder</H2>
-                <div className="space-y-5 mt-3">
+                <div className="space-y-5 -mt-4">
                   <p style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
                     Top 1% eXp team builder and the architect behind Smart Agent Alliance&apos;s
                     entire digital infrastructure. Every page on this site, every automation
@@ -566,7 +566,7 @@ export function TronAboutPage() {
 
         {/* ━━━ SYSTEMS I BUILT ━━━ */}
         <section className="relative py-20 md:py-28 px-4">
-          <div className="text-center mb-12">
+          <div className="text-center mb-2">
             <H2 theme="blue">Systems I Built</H2>
           </div>
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6">
@@ -623,7 +623,7 @@ export function TronAboutPage() {
           />
           <div className="tron-reveal tron-cta-panel max-w-5xl mx-auto text-center" style={{ '--reveal-delay': '0s' } as React.CSSProperties}>
             <H2 theme="gold">Ready to Level Up?</H2>
-            <p className="mt-3 mb-10" style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
+            <p className="-mt-5 mb-10" style={{ color: '#dcdbd5', fontFamily: 'var(--font-amulya)' }}>
               Join The Alliance and get access to the digital infrastructure
               that powers top-producing agents.
             </p>
@@ -763,6 +763,12 @@ export function TronAboutPage() {
           border-radius: 50%;
           overflow: hidden;
         }
+        @media (min-width: 1024px) {
+          .tron-profile-ring {
+            width: 300px;
+            height: 300px;
+          }
+        }
         .tron-profile-ring-spin {
           position: absolute;
           top: -50%;
@@ -772,13 +778,14 @@ export function TronAboutPage() {
           background: conic-gradient(
             from 0deg,
             transparent 0%,
-            transparent 55%,
-            #00d4ff 70%,
-            #a050ff 82%,
-            #00ff88 92%,
+            transparent 50%,
+            #00d4ff 65%,
+            #a050ff 78%,
+            #00ff88 90%,
             transparent 100%
           );
           animation: tronRingSpin 3s linear infinite;
+          z-index: 0;
         }
         .tron-profile-ring-dash {
           position: absolute;
