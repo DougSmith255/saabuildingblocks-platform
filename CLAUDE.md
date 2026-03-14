@@ -616,6 +616,64 @@ free -h
 
 ---
 
+## External API Connections & Credentials
+
+All credentials are stored in `.env.local` files (not committed) unless otherwise noted.
+
+### Google Cloud / YouTube
+- **Service Account:** `saa-analytics-data-602@saa-analytics-487906.iam.gserviceaccount.com`
+- **Service Account JSON:** `/home/ubuntu/.config/gcloud/gsc-service-account.json`
+- **Drive OAuth Client:** `/home/ubuntu/.config/gcloud/drive-oauth-client.json`
+- **Project:** `saa-analytics-487906`
+- **gcloud CLI:** Installed, service account authenticated and active
+- **Python libraries:** `google-api-python-client`, `google-auth`, `google-auth-oauthlib` installed
+- **Google Sheets access:** Share sheet with service account email, then use Python or gcloud
+- **YouTube OAuth:** `YOUTUBE_CLIENT_ID`, `YOUTUBE_CLIENT_SECRET`, `YOUTUBE_ENCRYPTION_KEY` in admin-dashboard `.env.local`
+- **YouTube API routes:** 9 routes at `packages/admin-dashboard/app/api/youtube/`
+
+### Cloudflare
+- **API Token:** `CLOUDFLARE_API_TOKEN` (both packages)
+- **Management Token:** `CLOUDFLARE_TOKEN_MGMT` (admin-dashboard, Bulk Redirect Management)
+- **Account ID:** `CLOUDFLARE_ACCOUNT_ID`
+- **Images Hash:** `CLOUDFLARE_IMAGES_HASH`
+- **KV Namespaces:** `CLOUDFLARE_KV_NAMESPACE_ID`, `REDIRECT_OVERRIDES_KV_NAMESPACE_ID`
+- **Token cache:** `/home/ubuntu/.cloudflare-tokens.json`
+
+### GoHighLevel (CRM)
+- **API Key:** `GOHIGHLEVEL_API_KEY` (both packages)
+- **Location ID:** `GOHIGHLEVEL_LOCATION_ID`
+- **Webhook Secret:** `GHL_WEBHOOK_SECRET`
+
+### Email (Resend)
+- **API Key:** `RESEND_API_KEY`
+
+### Plausible Analytics
+- **API Key:** `PLAUSIBLE_API_KEY`
+- **API URL:** `PLAUSIBLE_API_URL`
+
+### GitHub
+- **Token:** `GITHUB_TOKEN`
+- **Deploy Token:** `GITHUB_DEPLOY_TOKEN`
+
+### Pexels (Stock Photos)
+- **API Key:** `PEXELS_API_KEY` (public-site)
+
+### Turnstile (CAPTCHA)
+- **Secret/Site Keys:** `TURNSTILE_SECRET_KEY`, `TURNSTILE_SITE_KEY`
+
+### eXp Realty (Okta)
+- **Credentials:** `EXP_OKTA_EMAIL`, `EXP_OKTA_PASSWORD`
+
+### dlvr.it (RSS Reposter)
+- **API Key:** `2b5ed6a1c23242d0bc8efcc560cb238a`
+- **RSS feed:** `https://wp.saabuildingblocks.com/feed/`
+
+### DebugBear (Performance Monitoring)
+- **API Key:** `rgc7WGVYC0EFCv3BDIk3Y00a6`
+- **Project ID:** 95429
+
+---
+
 ## Writing Style
 
 - **Never use em dashes.** Use a regular hyphen (-) instead. Em dashes are an AI writing tell.
