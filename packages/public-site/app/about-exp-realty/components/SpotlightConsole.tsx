@@ -351,9 +351,12 @@ export default function SpotlightConsole() {
     }, 200);
     // Auto-center the clicked card on mobile
     if (mobileRailRef.current) {
-      const buttons = mobileRailRef.current.querySelectorAll('button');
-      if (buttons[index]) {
-        buttons[index].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      const rail = mobileRailRef.current;
+      const buttons = rail.querySelectorAll('button');
+      const btn = buttons[index];
+      if (btn) {
+        const scrollLeft = (btn as HTMLElement).offsetLeft - (rail.offsetWidth / 2) + ((btn as HTMLElement).offsetWidth / 2);
+        rail.scrollTo({ left: scrollLeft, behavior: 'smooth' });
       }
     }
   }, []);

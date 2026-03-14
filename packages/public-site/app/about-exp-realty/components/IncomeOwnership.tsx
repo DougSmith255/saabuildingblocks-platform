@@ -120,7 +120,7 @@ function IconGaugeRing({ visible }: { visible: boolean }) {
   return (
     <div className="flex flex-col items-center">
       <div className="relative">
-        <svg width={size} height={size} className="transform -rotate-90">
+        <svg width={size} height={size} className="transform -rotate-90" style={{ overflow: 'visible' }}>
           <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(255,215,0,0.1)" strokeWidth={strokeWidth} />
           <circle
             cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#ffd700" strokeWidth={strokeWidth}

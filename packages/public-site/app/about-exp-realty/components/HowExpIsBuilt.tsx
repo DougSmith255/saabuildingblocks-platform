@@ -804,12 +804,7 @@ export default function HowExpIsBuilt() {
           .how-exp-comparison::before { border-radius: 20px; }
           .how-exp-comparison-side { padding: 36px 28px; }
           .how-exp-comparison-divider {
-            width: 100%; height: 1px;
-          }
-          .how-exp-comparison-divider::before {
-            top: 50%; bottom: auto; left: 0; right: 0;
-            width: 100%; height: 1px; transform: none;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            display: none;
           }
           .how-exp-vs-badge {
             position: relative;
