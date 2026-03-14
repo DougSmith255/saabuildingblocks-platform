@@ -50,29 +50,21 @@ const GLASS_STYLES: React.CSSProperties = {
 };
 
 // 3D Number Component
-function Number3D({ num, size = 'medium', dark = false, highlight = false }: { num: number; size?: 'small' | 'medium' | 'large'; dark?: boolean; highlight?: boolean }) {
+function Number3D({ num, size = 'medium' }: { num: number; size?: 'small' | 'medium' | 'large' }) {
   const sizeStyles = {
     small: { minWidth: '40px', height: '40px', fontSize: '24px' },
     medium: { minWidth: '56px', height: '56px', fontSize: '32px' },
     large: { minWidth: '72px', height: '72px', fontSize: '42px' },
   };
 
-  const style = sizeStyles[size];
-
-  // Highlight version uses lighter gray for contrast - brighter than the gray circle background
-  const highlightColor = '#9a9a9a';
-  const highlightFilter = 'drop-shadow(-1px -1px 0 #ccc) drop-shadow(1px 1px 0 #666) drop-shadow(2px 2px 0 #444) drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5))';
-
   return (
     <span
       className="inline-flex items-center justify-center font-bold"
       style={{
-        ...style,
-        color: dark ? '#111' : (highlight ? highlightColor : '#c4a94d'),
-        filter: dark
-          ? 'none'
-          : (highlight ? highlightFilter : 'drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))'),
-        transform: dark ? 'none' : 'perspective(500px) rotateX(8deg)',
+        ...sizeStyles[size],
+        color: '#c4a94d',
+        filter: 'drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))',
+        transform: 'perspective(500px) rotateX(8deg)',
       }}
     >
       {num}
@@ -199,33 +191,22 @@ export function WhyOnlyAtExp() {
                       scale = Math.max(0.88, 1 - stackPosition * 0.04);
                     }
 
-                    const mistyBackground = `
-                      radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
-                      radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
-                      radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
-                      radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
-                      radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
-                      linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
-                    `;
-                    // Grainy dark background matching GrainCard
-                    const darkBackground = `
-                      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-                      linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)
-                    `;
-                    const darkBackgroundBlendMode = 'overlay, normal';
+                    const cardNoiseSvg = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.5\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")';
+                    const darkBackground = `${cardNoiseSvg}, linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)`;
+                    const highlightBackground = `${cardNoiseSvg}, linear-gradient(135deg, rgba(25,25,20,0.95) 0%, rgba(15,15,10,0.98) 100%)`;
 
                     return (
                       <div
                         key={index}
                         className="absolute inset-0 rounded-2xl p-4 md:p-8 flex flex-col items-center justify-center text-center"
                         style={{
-                          background: step.highlight ? mistyBackground : darkBackground,
-                          backgroundBlendMode: step.highlight ? undefined : darkBackgroundBlendMode,
+                          background: step.highlight ? highlightBackground : darkBackground,
+                          backgroundBlendMode: 'overlay, normal',
                           border: step.highlight
-                            ? '2px solid rgba(180,150,50,0.5)'
+                            ? '2px solid rgba(255,215,0,0.35)'
                             : '1px solid rgba(255,255,255,0.06)',
                           boxShadow: step.highlight
-                            ? `0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25)`
+                            ? '0 0 30px 4px rgba(255,215,0,0.15), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)'
                             : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                           transform: `perspective(1200px) rotateX(${rotateX}deg) translate3d(0, ${translateY}px, ${translateZ}px) scale(${scale})`,
                           transformOrigin: 'center bottom',
@@ -236,32 +217,19 @@ export function WhyOnlyAtExp() {
                           transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                         }}
                       >
-                        {step.highlight ? (
-                          <div
-                            className="rounded-full flex items-center justify-center w-12 h-12 md:w-16 md:h-16 mb-3 md:mb-5"
-                            style={{
-                              backgroundColor: 'rgba(42,42,42,0.9)',
-                              border: '3px solid rgba(42,42,42,0.7)',
-                              boxShadow: '0 0 30px rgba(0,0,0,0.25), inset 0 0 20px rgba(0,0,0,0.15)',
-                            }}
-                          >
-                            <Number3D num={step.num} size="medium" highlight />
-                          </div>
-                        ) : (
-                          <div
-                            className="rounded-full flex items-center justify-center w-12 h-12 md:w-16 md:h-16 mb-3 md:mb-5"
-                            style={{
-                              background: 'rgba(255,255,255,0.08)',
-                              border: '2px solid rgba(255,255,255,0.15)',
-                            }}
-                          >
-                            <Number3D num={step.num} size="medium" />
-                          </div>
-                        )}
+                        <div
+                          className="rounded-full flex items-center justify-center w-12 h-12 md:w-16 md:h-16 mb-3 md:mb-5"
+                          style={step.highlight
+                            ? { background: 'rgba(255,215,0,0.1)', border: '2px solid rgba(255,215,0,0.3)' }
+                            : { background: 'rgba(255,255,255,0.08)', border: '2px solid rgba(255,255,255,0.15)' }
+                          }
+                        >
+                          <Number3D num={step.num} size="medium" />
+                        </div>
                         <p
                           className="font-heading font-bold leading-relaxed px-2"
                           style={{
-                            color: step.highlight ? '#2a2a2a' : '#e5e5e5',
+                            color: '#e5e4dd',
                             fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)',
                           }}
                         >

@@ -91,7 +91,7 @@ export function HomepageSections() {
           If you want to understand exactly how sponsorship works, what you keep, and what you never give up, see how Smart Agent Alliance fits inside eXp Realty.
         </p>
         <SecondaryButton href="/exp-realty-sponsor">
-          See SAA&apos;s Full Value Stack
+          See SAA&apos;s Value
         </SecondaryButton>
       </section>
     </>
