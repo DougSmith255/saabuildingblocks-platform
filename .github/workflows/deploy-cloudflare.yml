@@ -44,6 +44,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   NODE_VERSION: '20'
   CLOUDFLARE_PROJECT_NAME: 'saabuildingblocks'  # Static export project
   DEPLOYMENT_TIMEOUT: 900  # 15 minutes in seconds
