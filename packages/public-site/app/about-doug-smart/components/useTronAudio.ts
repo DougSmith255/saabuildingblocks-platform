@@ -47,7 +47,7 @@ export function useTronAudio(url: string, startAt = 0) {
         analyser.smoothingTimeConstant = 0.75;
         // Reduce volume to 40% - prevents being too loud on mobile
         const gain = ctx.createGain();
-        gain.gain.value = 0.4;
+        gain.gain.value = 0.7;
         source.connect(analyser);
         analyser.connect(gain);
         gain.connect(ctx.destination);
