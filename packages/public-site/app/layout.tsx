@@ -92,10 +92,7 @@ const synonym = localFont({
  */
 export const metadata: Metadata = {
   metadataBase: new URL('https://smartagentalliance.com'),
-  title: {
-    default: 'Smart Agent Alliance - For Agents Who Want More',
-    template: '%s - Smart Agent Alliance',
-  },
+  title: 'Smart Agent Alliance - For Agents Who Want More',
   icons: {
     icon: [
       { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
