@@ -44,6 +44,8 @@ export interface BlogPost {
     alt: string;
     title: string;
   } | null;
+  /** Override URL for non-WordPress entries (e.g., pillar pages shown in blog grid) */
+  pillarUrl?: string;
 }
 
 export interface WordPressPost {

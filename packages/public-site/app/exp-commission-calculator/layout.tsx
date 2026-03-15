@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: 'https://smartagentalliance.com/exp-commission-calculator/',
   },
   openGraph: {
-    title: 'eXp Commission Calculator | Smart Agent Alliance',
+    title: 'eXp Commission Calculator - Smart Agent Alliance',
     description:
       'Calculate your potential eXp Realty earnings. Compare commission splits, fees, and net income.',
     url: 'https://smartagentalliance.com/exp-commission-calculator/',

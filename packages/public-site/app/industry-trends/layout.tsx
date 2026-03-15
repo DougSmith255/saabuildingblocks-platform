@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Real Estate Industry Trends: What Agents Need to Know in 2026',
+  title: 'Real Estate Industry Trends (2026)',
   description:
     'Stay ahead of real estate industry changes. NAR settlement impacts, commission structure shifts, off-market listings, and market predictions.',
   alternates: {
     canonical: 'https://smartagentalliance.com/industry-trends/',
   },
   openGraph: {
-    title: 'Real Estate Industry Trends: What Agents Need to Know in 2026',
+    title: 'Real Estate Industry Trends (2026)',
     description:
       'Stay ahead of real estate industry changes. NAR settlement impacts, commission shifts, and market predictions.',
     url: 'https://smartagentalliance.com/industry-trends/',

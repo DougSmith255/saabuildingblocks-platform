@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Real Estate Agent Career Guide: Build a Successful Career in 2026',
+  title: 'Real Estate Career Guide (2026)',
   description:
     'Career guides for real estate agents. Expenses, hours, strategies, team structures, brokerage transitions, and professional development.',
   alternates: {
     canonical: 'https://smartagentalliance.com/agent-career-info/',
   },
   openGraph: {
-    title: 'Real Estate Agent Career Guide: Build a Successful Career in 2026',
+    title: 'Real Estate Career Guide (2026)',
     description:
       'Career guides for real estate agents. Expenses, hours, strategies, team structures, and professional development.',
     url: 'https://smartagentalliance.com/agent-career-info/',

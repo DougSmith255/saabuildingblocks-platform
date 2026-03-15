@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'How to Get a Real Estate License: State-by-State Guide 2026',
+  title: 'Get Your Real Estate License (2026)',
   description:
     'Step-by-step guides to getting your real estate license in 11 states. Requirements, costs, timelines, and exam tips for aspiring agents.',
   alternates: {
     canonical: 'https://smartagentalliance.com/become-an-agent/',
   },
   openGraph: {
-    title: 'How to Get a Real Estate License: State-by-State Guide 2026',
+    title: 'Get Your Real Estate License (2026) - Smart Agent Alliance',
     description:
       'Step-by-step guides to getting your real estate license in 11 states. Requirements, costs, timelines, and exam tips.',
     url: 'https://smartagentalliance.com/become-an-agent/',

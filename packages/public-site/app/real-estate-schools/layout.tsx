@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Best Online Real Estate Schools by State: 2026 Guide',
+  title: 'Best Real Estate Schools by State (2026)',
   description:
     'Find the best online real estate schools for your state. Pre-licensing courses, exam prep, and continuing education reviewed and compared for 11 states.',
   alternates: {
     canonical: 'https://smartagentalliance.com/real-estate-schools/',
   },
   openGraph: {
-    title: 'Best Online Real Estate Schools by State: 2026 Guide',
+    title: 'Best Real Estate Schools by State (2026) - Smart Agent Alliance',
     description:
       'Find the best online real estate schools for your state. Pre-licensing courses, exam prep, and CE reviewed for 11 states.',
     url: 'https://smartagentalliance.com/real-estate-schools/',

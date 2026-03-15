@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Fun for Real Estate Agents: Entertainment, Books & Lifestyle',
+  title: 'Fun for Real Estate Agents',
   description:
     'The lighter side of real estate. Best books for agents, top real estate movies and TV shows, gift ideas, and lifestyle content.',
   alternates: {
     canonical: 'https://smartagentalliance.com/fun-for-agents/',
   },
   openGraph: {
-    title: 'Fun for Real Estate Agents: Entertainment, Books & Lifestyle',
+    title: 'Fun for Real Estate Agents',
     description:
       'The lighter side of real estate. Best books for agents, top movies and TV shows, gift ideas, and lifestyle content.',
     url: 'https://smartagentalliance.com/fun-for-agents/',

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     canonical: 'https://smartagentalliance.com/privacy-policy/',
   },
   openGraph: {
-    title: 'Privacy Policy | Smart Agent Alliance',
+    title: 'Privacy Policy - Smart Agent Alliance',
     description: 'Learn how Smart Agent Alliance collects, uses, and protects your personal information.',
     url: 'https://smartagentalliance.com/privacy-policy/',
     images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],

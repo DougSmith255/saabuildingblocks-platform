@@ -94,7 +94,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://smartagentalliance.com'),
   title: {
     default: 'Smart Agent Alliance - For Agents Who Want More',
-    template: '%s | Smart Agent Alliance',
+    template: '%s - Smart Agent Alliance',
   },
   icons: {
     icon: [

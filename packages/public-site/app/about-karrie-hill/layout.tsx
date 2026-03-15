@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: 'https://smartagentalliance.com/about-karrie-hill/',
   },
   openGraph: {
-    title: 'About Karrie Hill | Smart Agent Alliance',
+    title: 'About Karrie Hill - Smart Agent Alliance',
     description:
       'Meet Karrie Hill, co-founder of the Smart Agent Alliance. Licensed REALTOR, certified negotiation expert, and eXp Realty leader.',
     url: 'https://smartagentalliance.com/about-karrie-hill/',

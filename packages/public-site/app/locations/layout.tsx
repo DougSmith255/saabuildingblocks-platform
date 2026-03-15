@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: 'https://smartagentalliance.com/locations/',
   },
   openGraph: {
-    title: 'eXp Realty Locations | Smart Agent Alliance',
+    title: 'eXp Realty Locations - Smart Agent Alliance',
     description:
       'eXp Realty operates in 29+ countries with 84,000+ agents worldwide. Explore the global presence.',
     url: 'https://smartagentalliance.com/locations/',

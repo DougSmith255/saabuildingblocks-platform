@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Real Estate Brokerage Comparison: The Complete Guide for Agents in 2026',
+  title: 'Real Estate Brokerage Comparison (2026)',
   description:
-    'Compare 15 real estate brokerages side by side. Commission splits, fees, revenue share, training, and financial stability - all in one place. 67 head-to-head matchups.',
+    'Compare 15 real estate brokerages side by side. Commission splits, fees, revenue share, and financial stability. 67 head-to-head matchups.',
   alternates: {
     canonical: 'https://smartagentalliance.com/best-real-estate-brokerage/',
   },
   openGraph: {
-    title: 'Real Estate Brokerage Comparison: The Complete Guide for Agents in 2026',
+    title: 'Real Estate Brokerage Comparison (2026) - Smart Agent Alliance',
     description:
       'Compare 15 real estate brokerages side by side. Commission splits, fees, revenue share, and 67 head-to-head matchups.',
     url: 'https://smartagentalliance.com/best-real-estate-brokerage/',

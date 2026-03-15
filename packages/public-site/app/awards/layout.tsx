@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: 'https://smartagentalliance.com/awards/',
   },
   openGraph: {
-    title: 'eXp Realty Awards & Recognition | Smart Agent Alliance',
+    title: 'eXp Realty Awards & Recognition - Smart Agent Alliance',
     description:
       "See eXp Realty's industry awards including Forbes, Glassdoor, and RealTrends rankings.",
     url: 'https://smartagentalliance.com/awards/',

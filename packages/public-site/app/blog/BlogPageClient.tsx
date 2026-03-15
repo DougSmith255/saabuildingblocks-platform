@@ -31,6 +31,136 @@ interface BlogPageClientProps {
   categories: CategoryData[];
 }
 
+/**
+ * Pillar page entries that appear as cards in the blog grid.
+ * These are Next.js pages (not WordPress posts) shown alongside blog posts.
+ * They appear first when their category filter is active, or on page 1 when unfiltered.
+ */
+const CF_IMG = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
+
+const PILLAR_PAGES: BlogPost[] = [
+  {
+    id: -1,
+    slug: 'best-real-estate-brokerage',
+    permalink: '/best-real-estate-brokerage/',
+    pillarUrl: '/best-real-estate-brokerage/',
+    title: 'Real Estate Brokerage Comparison',
+    content: '',
+    excerpt: 'Compare 15 real estate brokerages side by side. Commission splits, fees, revenue share, and 67 head-to-head matchups.',
+    metaDescription: 'Compare 15 real estate brokerages side by side. Commission splits, fees, revenue share, and 67 head-to-head matchups.',
+    date: '2026-01-01T00:00:00',
+    modified: '2026-03-15T00:00:00',
+    featuredImage: { url: `${CF_IMG}/pillar-brokerage-comparison/public`, alt: 'Real Estate Brokerage Comparison', width: 1000, height: 570 },
+    author: { name: 'Smart Agent Alliance' },
+    categories: ['Brokerage Comparison'],
+  },
+  {
+    id: -2,
+    slug: 'become-an-agent',
+    permalink: '/become-an-agent/',
+    pillarUrl: '/become-an-agent/',
+    title: 'How to Get a Real Estate License',
+    content: '',
+    excerpt: 'Step-by-step guides to getting your real estate license in 11 states. Requirements, costs, timelines, and exam tips.',
+    metaDescription: 'Step-by-step guides to getting your real estate license in 11 states. Requirements, costs, timelines, and exam tips.',
+    date: '2026-01-01T00:00:00',
+    modified: '2026-03-15T00:00:00',
+    featuredImage: { url: `${CF_IMG}/pillar-become-an-agent/public`, alt: 'How to Get a Real Estate License', width: 1000, height: 570 },
+    author: { name: 'Smart Agent Alliance' },
+    categories: ['Become an Agent'],
+  },
+  {
+    id: -3,
+    slug: 'real-estate-schools',
+    permalink: '/real-estate-schools/',
+    pillarUrl: '/real-estate-schools/',
+    title: 'Best Online Real Estate Schools by State',
+    content: '',
+    excerpt: 'Find the best online real estate schools for your state. Pre-licensing courses, exam prep, and CE reviewed for 11 states.',
+    metaDescription: 'Find the best online real estate schools for your state. Pre-licensing courses, exam prep, and CE reviewed for 11 states.',
+    date: '2026-01-01T00:00:00',
+    modified: '2026-03-15T00:00:00',
+    featuredImage: { url: `${CF_IMG}/pillar-real-estate-schools/public`, alt: 'Best Online Real Estate Schools by State', width: 1000, height: 570 },
+    author: { name: 'Smart Agent Alliance' },
+    categories: ['Real Estate Schools'],
+  },
+  {
+    id: -4,
+    slug: 'agent-career-info',
+    permalink: '/agent-career-info/',
+    pillarUrl: '/agent-career-info/',
+    title: 'Real Estate Agent Career Guide',
+    content: '',
+    excerpt: 'Career guides for real estate agents. Expenses, hours, strategies, team structures, and professional development.',
+    metaDescription: 'Career guides for real estate agents. Expenses, hours, strategies, team structures, and professional development.',
+    date: '2026-01-01T00:00:00',
+    modified: '2026-03-15T00:00:00',
+    featuredImage: { url: `${CF_IMG}/pillar-agent-career-info/public`, alt: 'Real Estate Agent Career Guide', width: 1000, height: 570 },
+    author: { name: 'Smart Agent Alliance' },
+    categories: ['Agent Career Info'],
+  },
+  {
+    id: -5,
+    slug: 'marketing-mastery',
+    permalink: '/marketing-mastery/',
+    pillarUrl: '/marketing-mastery/',
+    title: 'Real Estate Marketing Mastery',
+    content: '',
+    excerpt: 'Digital marketing strategies for real estate agents. Social media, Google Ads, YouTube, content marketing, and lead generation.',
+    metaDescription: 'Digital marketing strategies for real estate agents. Social media, Google Ads, YouTube, content marketing, and lead generation.',
+    date: '2026-01-01T00:00:00',
+    modified: '2026-03-15T00:00:00',
+    featuredImage: { url: `${CF_IMG}/pillar-marketing-mastery/public`, alt: 'Real Estate Marketing Mastery', width: 1000, height: 570 },
+    author: { name: 'Smart Agent Alliance' },
+    categories: ['Marketing Mastery'],
+  },
+  {
+    id: -6,
+    slug: 'winning-clients',
+    permalink: '/winning-clients/',
+    pillarUrl: '/winning-clients/',
+    title: 'Winning Real Estate Clients',
+    content: '',
+    excerpt: 'Strategies for attracting and converting real estate clients. Listing presentations, buyer consultations, and negotiation tactics.',
+    metaDescription: 'Strategies for attracting and converting real estate clients. Listing presentations, buyer consultations, and negotiation tactics.',
+    date: '2026-01-01T00:00:00',
+    modified: '2026-03-15T00:00:00',
+    featuredImage: { url: `${CF_IMG}/pillar-winning-clients/public`, alt: 'Winning Real Estate Clients', width: 1000, height: 570 },
+    author: { name: 'Smart Agent Alliance' },
+    categories: ['Winning Clients'],
+  },
+  {
+    id: -7,
+    slug: 'industry-trends',
+    permalink: '/industry-trends/',
+    pillarUrl: '/industry-trends/',
+    title: 'Real Estate Industry Trends',
+    content: '',
+    excerpt: 'Stay ahead of real estate industry changes. NAR settlement impacts, commission shifts, and market predictions.',
+    metaDescription: 'Stay ahead of real estate industry changes. NAR settlement impacts, commission shifts, and market predictions.',
+    date: '2026-01-01T00:00:00',
+    modified: '2026-03-15T00:00:00',
+    featuredImage: { url: `${CF_IMG}/pillar-industry-trends/public`, alt: 'Real Estate Industry Trends', width: 1000, height: 570 },
+    author: { name: 'Smart Agent Alliance' },
+    categories: ['Industry Trends'],
+  },
+  {
+    id: -8,
+    slug: 'fun-for-agents',
+    permalink: '/fun-for-agents/',
+    pillarUrl: '/fun-for-agents/',
+    title: 'Fun for Real Estate Agents',
+    content: '',
+    excerpt: 'The lighter side of real estate. Best books for agents, top movies and TV shows, gift ideas, and lifestyle content.',
+    metaDescription: 'The lighter side of real estate. Best books for agents, top movies and TV shows, gift ideas, and lifestyle content.',
+    date: '2026-01-01T00:00:00',
+    modified: '2026-03-15T00:00:00',
+    featuredImage: { url: `${CF_IMG}/pillar-fun-for-agents/public`, alt: 'Fun for Real Estate Agents', width: 1000, height: 570 },
+    author: { name: 'Smart Agent Alliance' },
+    categories: ['Fun for Agents'],
+  },
+];
+
 interface BlogIndex {
   posts: Array<{
     id: number;
@@ -200,6 +330,25 @@ export default function BlogPageClient({ categories }: BlogPageClientProps) {
     return posts;
   }, [loadedChunks, selectedCategories, currentPage]);
 
+  /**
+   * Get pillar pages matching current filters.
+   * When categories are selected, return only matching pillars.
+   * When unfiltered on page 1, return all pillars.
+   */
+  const matchingPillars = useMemo((): BlogPost[] => {
+    if (selectedCategories.length === 0) {
+      // Show all pillar pages on page 1 only (unfiltered view)
+      return currentPage === 1 ? PILLAR_PAGES : [];
+    }
+
+    // Show pillar pages matching selected categories
+    return PILLAR_PAGES.filter(pillar =>
+      pillar.categories.some(cat =>
+        selectedCategories.includes(categoryNameToSlug(cat))
+      )
+    );
+  }, [selectedCategories, currentPage]);
+
   // Client-side filtering using loaded chunks
   const filteredPosts = useMemo(() => {
     if (selectedCategories.length === 0) {
@@ -225,23 +374,35 @@ export default function BlogPageClient({ categories }: BlogPageClientProps) {
       return index.totalChunks; // Total pages available (23)
     }
 
-    // When categories selected, calculate from filtered posts
-    return Math.ceil(filteredPosts.length / postsPerPage);
-  }, [selectedCategories, index, filteredPosts.length, postsPerPage]);
+    // When categories selected, include pillar pages in total count
+    const totalItems = filteredPosts.length + matchingPillars.length;
+    return Math.ceil(totalItems / postsPerPage);
+  }, [selectedCategories, index, filteredPosts.length, matchingPillars.length, postsPerPage]);
 
-  // Determine which posts to display
+  // Determine which posts to display (pillar pages prepended to regular posts)
   const currentPosts = useMemo(() => {
-    // When no categories selected, we already have the correct chunk loaded
-    // No need for additional slicing - just return all posts from current chunk
     if (selectedCategories.length === 0) {
-      return filteredPosts; // Already contains only current page's 9 posts
+      // Unfiltered: prepend pillar pages on page 1, then regular chunk posts
+      if (currentPage === 1) {
+        return [...matchingPillars, ...filteredPosts];
+      }
+      return filteredPosts; // Already contains only current page's posts
     }
 
-    // When categories selected, do client-side pagination on filtered results
+    // Category filtered: prepend matching pillars, then paginate regular posts
     const startIndex = (currentPage - 1) * postsPerPage;
     const endIndex = startIndex + postsPerPage;
-    return filteredPosts.slice(startIndex, endIndex);
-  }, [selectedCategories, filteredPosts, currentPage, postsPerPage]);
+    if (currentPage === 1) {
+      // First page: pillars + fill remaining slots with regular posts
+      const regularSlots = postsPerPage - matchingPillars.length;
+      return [...matchingPillars, ...filteredPosts.slice(0, regularSlots)];
+    }
+    // Subsequent pages: offset accounts for pillar slots taken on page 1
+    const pillarOffset = matchingPillars.length;
+    const adjustedStart = startIndex - pillarOffset;
+    const adjustedEnd = adjustedStart + postsPerPage;
+    return filteredPosts.slice(adjustedStart, adjustedEnd);
+  }, [selectedCategories, filteredPosts, currentPage, postsPerPage, matchingPillars]);
 
   const handleFilterChange = useCallback((categories: string[]) => {
     // Force immediate state update to prevent stale data while waiting for hashchange

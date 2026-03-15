@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     'Access your Smart Agent Alliance tools, templates, team calls, courses, and resources. Members-only agent portal.',
   openGraph: {
-    title: 'Agent Portal | Smart Agent Alliance',
+    title: 'Agent Portal - Smart Agent Alliance',
     description:
       'Access your Smart Agent Alliance tools, templates, team calls, courses, and resources.',
   },

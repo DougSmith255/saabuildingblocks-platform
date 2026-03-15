@@ -270,7 +270,7 @@ export default function BestRealEstateBrokerage() {
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <AsteroidBeltEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
-            <H1>KNOW THE NUMBERS</H1>
+            <H1>BROKERAGE COMPARISON</H1>
             <Tagline className="mt-4">Facts over feelings</Tagline>
             <p className="text-body mt-6 max-w-2xl mx-auto">
               Choosing a brokerage shapes your income, your daily experience, and your long-term wealth. We break down the numbers across 15 brokerages so you can compare with facts, not sales pitches.

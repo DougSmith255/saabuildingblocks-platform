@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     canonical: 'https://smartagentalliance.com/terms-of-use/',
   },
   openGraph: {
-    title: 'Terms of Use | Smart Agent Alliance',
+    title: 'Terms of Use - Smart Agent Alliance',
     description: 'Read the terms and conditions governing the use of Smart Agent Alliance website and services.',
     url: 'https://smartagentalliance.com/terms-of-use/',
     images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }],

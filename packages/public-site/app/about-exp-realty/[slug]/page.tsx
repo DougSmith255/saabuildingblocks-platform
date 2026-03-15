@@ -33,7 +33,7 @@ export async function generateMetadata({
   const post = findPostBySlug(posts, slug, 'about-exp-realty');
 
   if (!post) {
-    return { title: 'Post Not Found | Smart Agent Alliance' };
+    return { title: 'Post Not Found - Smart Agent Alliance' };
   }
 
   const seoTitle = post.metaTitle || post.title;
@@ -49,7 +49,7 @@ export async function generateMetadata({
     : [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Smart Agent Alliance' }];
 
   return {
-    title: `${seoTitle} | Smart Agent Alliance`,
+    title: `${seoTitle} - Smart Agent Alliance`,
     description,
     keywords: post.categories,
     alternates: {

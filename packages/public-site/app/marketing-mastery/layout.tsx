@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Real Estate Marketing Mastery: Strategies for Agents in 2026',
+  title: 'Real Estate Marketing Guide (2026)',
   description:
     'Digital marketing strategies for real estate agents. Social media, Google Ads, YouTube, content marketing, and lead generation guides.',
   alternates: {
     canonical: 'https://smartagentalliance.com/marketing-mastery/',
   },
   openGraph: {
-    title: 'Real Estate Marketing Mastery: Strategies for Agents in 2026',
+    title: 'Real Estate Marketing Guide (2026)',
     description:
       'Digital marketing strategies for real estate agents. Social media, Google Ads, YouTube, content marketing, and lead generation.',
     url: 'https://smartagentalliance.com/marketing-mastery/',

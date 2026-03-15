@@ -32,8 +32,8 @@ export interface BlogCardProps {
 }
 
 function BlogCardComponent({ post, className = '' }: BlogCardProps) {
-  // Build URL using shared utility (handles standalone categories)
-  const postUrl = getPostUrl(post);
+  // Use pillarUrl for non-WordPress entries, otherwise build from post data
+  const postUrl = post.pillarUrl || getPostUrl(post);
 
   // Use shared IntersectionObserver for all blog cards (1 observer vs 20+)
   const [cardRef, isVisible] = useSharedVisibility<HTMLDivElement>();

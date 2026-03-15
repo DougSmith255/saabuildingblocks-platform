@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: 'https://smartagentalliance.com/sites-and-software/',
   },
   openGraph: {
-    title: 'Sites & Software for Real Estate Agents | Smart Agent Alliance',
+    title: 'Sites & Software for Real Estate Agents - Smart Agent Alliance',
     description:
       'Curated tool recommendations for real estate agents. CRM, hosting, SEO, AI, and more.',
     url: 'https://smartagentalliance.com/sites-and-software/',

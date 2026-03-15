@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: 'https://smartagentalliance.com/exp-realty-revenue-share-calculator/',
   },
   openGraph: {
-    title: 'eXp Revenue Share Calculator | Smart Agent Alliance',
+    title: 'eXp Revenue Share Calculator - Smart Agent Alliance',
     description:
       'Model your eXp Realty revenue share income across 7 tiers. See what building a team could earn you.',
     url: 'https://smartagentalliance.com/exp-realty-revenue-share-calculator/',

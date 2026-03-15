@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: 'https://smartagentalliance.com/about-doug-smart/',
   },
   openGraph: {
-    title: 'About Doug Smart | Smart Agent Alliance',
+    title: 'About Doug Smart - Smart Agent Alliance',
     description:
       'Meet Doug Smart - the developer who built every system, API endpoint, and automation powering the Smart Agent Alliance platform at eXp Realty.',
     url: 'https://smartagentalliance.com/about-doug-smart/',

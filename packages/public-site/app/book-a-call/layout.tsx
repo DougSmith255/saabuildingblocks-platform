@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: 'https://smartagentalliance.com/book-a-call/',
   },
   openGraph: {
-    title: 'Book a Call With Our Team | Smart Agent Alliance',
+    title: 'Book a Call With Our Team - Smart Agent Alliance',
     description:
       'Schedule a free consultation with the Smart Agent Alliance team about joining eXp Realty.',
     url: 'https://smartagentalliance.com/book-a-call/',

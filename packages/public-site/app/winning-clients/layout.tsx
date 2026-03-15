@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Winning Real Estate Clients: Proven Strategies for Agents in 2026',
+  title: 'Winning Real Estate Clients (2026)',
   description:
     'Strategies for attracting and converting real estate clients. Listing presentations, buyer consultations, negotiation tactics, and client retention.',
   alternates: {
     canonical: 'https://smartagentalliance.com/winning-clients/',
   },
   openGraph: {
-    title: 'Winning Real Estate Clients: Proven Strategies for Agents in 2026',
+    title: 'Winning Real Estate Clients (2026)',
     description:
       'Strategies for attracting and converting real estate clients. Listing presentations, buyer consultations, and negotiation tactics.',
     url: 'https://smartagentalliance.com/winning-clients/',
