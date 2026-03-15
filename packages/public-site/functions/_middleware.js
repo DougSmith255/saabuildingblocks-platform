@@ -166,6 +166,7 @@ const STATIC_REDIRECTS = new Map([
   ['/blog/real-estate-schools', '/real-estate-schools/'],
   ['/blog/become-an-agent', '/become-an-agent/'],
   // Retired generic parent posts - redirect to pillar pages
+  ['/how-to-get-a-real-estate-license', '/become-an-agent/'],
   ['/real-estate-schools/schools', '/real-estate-schools/'],
   ['/become-an-agent/license', '/become-an-agent/'],
   ['/blog/brokerage-comparison/real-estate-brokerage-comparison-the-complete-guide-for-agents-in-2026', '/best-real-estate-brokerage/'],
