@@ -165,6 +165,12 @@ const STATIC_REDIRECTS = new Map([
   ['/blog/industry-trends', '/blog#category=industry-trends'],
   ['/blog/real-estate-schools', '/real-estate-schools/'],
   ['/blog/become-an-agent', '/become-an-agent/'],
+  // Retired pillar pages - redirect to blog with category filter
+  ['/agent-career-info', '/blog#category=agent-career-info'],
+  ['/marketing-mastery', '/blog#category=marketing-mastery'],
+  ['/winning-clients', '/blog#category=winning-clients'],
+  ['/industry-trends', '/blog#category=industry-trends'],
+  ['/fun-for-agents', '/blog#category=fun-for-agents'],
   // Retired generic parent posts - redirect to pillar pages
   ['/how-to-get-a-real-estate-license', '/become-an-agent/'],
   ['/real-estate-schools/schools', '/real-estate-schools/'],
