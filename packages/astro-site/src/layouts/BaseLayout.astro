@@ -7,6 +7,7 @@
  */
 import '../styles/globals.css';
 import StarBackgroundIsland from '../islands/star-background';
+import DevToolbar from '../components/DevToolbar.astro';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -20,6 +21,7 @@ interface Props {
   description?: string;
   canonical?: string;
   ogImage?: string;
+  wpPostId?: number;
 }
 
 const {
@@ -27,6 +29,7 @@ const {
   description = 'Join the Smart Agent Alliance and eXp Realty to build your real estate career with industry-leading commission splits, revenue share, and mentorship from Doug Smart and Karrie Hill.',
   canonical,
   ogImage = '/og-image.jpg',
+  wpPostId,
 } = Astro.props;
 
 const siteUrl = 'https://smartagentalliance.com';
@@ -316,6 +319,8 @@ const canonicalUrl = canonical ? `${siteUrl}${canonical}` : siteUrl;
     >
       Skip to main content
     </a>
+
+    {import.meta.env.DEV && <DevToolbar wpPostId={wpPostId} />}
 
     <StarBackgroundIsland client:idle />
 

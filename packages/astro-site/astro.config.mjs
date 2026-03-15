@@ -129,6 +129,9 @@ export default defineConfig({
   vite: {
     plugins: [noopUtilityComponents(), stripInlineJsonLd(), styledJsxNeutralize(), tailwindcss()],
     define: loadPublicEnv(),
+    server: {
+      allowedHosts: ['dev.saabuildingblocks.com'],
+    },
     resolve: {
       alias: {
         // @/ in public-site components resolves to public-site root

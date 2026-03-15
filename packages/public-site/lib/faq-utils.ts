@@ -72,9 +72,9 @@ function extractRankMathFAQ(content: string): FAQItem[] {
 function extractPlainFAQ(content: string): FAQItem[] {
   const faqs: FAQItem[] = [];
 
-  // Find the FAQ heading (supports both <h2> tags and <p><strong>...FAQ...</strong></p>)
-  const faqHeadingMatch = content.match(/<h2[^>]*>[^<]*Frequently Asked Questions[^<]*<\/h2>/i)
-    || content.match(/<h2[^>]*><strong>[^<]*Frequently Asked Questions[^<]*<\/strong><\/h2>/i);
+  // Find the FAQ heading (supports "Frequently Asked Questions" and "Common Questions")
+  const faqHeadingMatch = content.match(/<h2[^>]*>[^<]*(?:Frequently Asked Questions|Common Questions)[^<]*<\/h2>/i)
+    || content.match(/<h2[^>]*><strong>[^<]*(?:Frequently Asked Questions|Common Questions)[^<]*<\/strong><\/h2>/i);
   if (!faqHeadingMatch) {
     return faqs;
   }
@@ -200,8 +200,8 @@ export function generateFAQSchema(faqs: FAQItem[]): object | null {
  */
 export function stripFAQSection(content: string): string {
   // Match FAQ heading in various formats
-  const faqHeadingMatch = content.match(/<h2[^>]*>[^<]*Frequently Asked Questions[^<]*<\/h2>/i)
-    || content.match(/<h2[^>]*><strong>[^<]*Frequently Asked Questions[^<]*<\/strong><\/h2>/i);
+  const faqHeadingMatch = content.match(/<h2[^>]*>[^<]*(?:Frequently Asked Questions|Common Questions)[^<]*<\/h2>/i)
+    || content.match(/<h2[^>]*><strong>[^<]*(?:Frequently Asked Questions|Common Questions)[^<]*<\/strong><\/h2>/i);
   if (!faqHeadingMatch) {
     return content;
   }

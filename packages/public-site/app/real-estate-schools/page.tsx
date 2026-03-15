@@ -43,25 +43,28 @@ export default function RealEstateSchools() {
         </section>
       </StickyHeroWrapper>
 
-      {/* General Guide */}
+      {/* What to Look For */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
           <div className="text-center mb-12">
-            <H2>Not Sure Where to Start?</H2>
+            <H2>What to Look for in a Real Estate School</H2>
             <p className="text-body mt-4 max-w-2xl mx-auto">
-              If you're still deciding which school is right for you, start with our comprehensive overview that compares the top online platforms across all states.
+              Not all online schools are equal. Before picking one, know what separates the good from the great.
             </p>
           </div>
 
-          <div className="max-w-xl mx-auto">
-            <a href="/real-estate-schools/schools" className="block group">
-              <GenericCard hover padding="lg">
-                <div className="text-link font-medium mb-1" style={{ fontSize: 'var(--font-size-caption)' }}>GENERAL GUIDE</div>
-                <h3 className="text-h5 mb-3">The Top 5 Real Estate Schools Online in 2026</h3>
-                <p className="text-body mb-4">A nationwide comparison of the best online real estate schools, including pricing, course formats, and what to look for.</p>
-                <span className="text-link group-hover:underline">Read the guide</span>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: 'State Approval', body: 'Make sure the school is approved by your state\'s real estate commission. Not all online schools are approved in every state.' },
+              { title: 'Exam Prep Quality', body: 'The best schools include practice exams, flashcards, and test-taking strategies. Strong exam prep can make the difference between passing and failing.' },
+              { title: 'Self-Paced vs Live', body: 'Most online schools offer self-paced courses, but some include live instructor sessions. Consider your learning style and schedule.' },
+              { title: 'Post-License Support', body: 'Some schools offer continuing education (CE) credits and career support. Look for schools that help beyond just passing the exam.' },
+            ].map((item, i) => (
+              <GenericCard key={i} padding="md" className="h-full">
+                <h3 className="text-h6 mb-2">{item.title}</h3>
+                <p className="text-body">{item.body}</p>
               </GenericCard>
-            </a>
+            ))}
           </div>
         </div>
       </section>
@@ -89,31 +92,6 @@ export default function RealEstateSchools() {
                     <span className="text-link group-hover:underline" style={{ fontSize: 'var(--font-size-caption)' }}>View best schools</span>
                   </GenericCard>
                 </a>
-              ))}
-            </div>
-          </div>
-        </section>
-      </LazySection>
-
-      {/* What to Look For */}
-      <LazySection height={400}>
-        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
-            <div className="text-center mb-12">
-              <H2>What to Look for in a Real Estate School</H2>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                { title: 'State Approval', body: 'Make sure the school is approved by your state\'s real estate commission. Not all online schools are approved in every state.' },
-                { title: 'Exam Prep Quality', body: 'The best schools include practice exams, flashcards, and test-taking strategies. Strong exam prep can make the difference between passing and failing.' },
-                { title: 'Self-Paced vs Live', body: 'Most online schools offer self-paced courses, but some include live instructor sessions. Consider your learning style and schedule.' },
-                { title: 'Post-License Support', body: 'Some schools offer continuing education (CE) credits and career support. Look for schools that help beyond just passing the exam.' },
-              ].map((item, i) => (
-                <GenericCard key={i} padding="md" className="h-full">
-                  <h3 className="text-h6 mb-2">{item.title}</h3>
-                  <p className="text-body">{item.body}</p>
-                </GenericCard>
               ))}
             </div>
           </div>

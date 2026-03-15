@@ -73,24 +73,6 @@ export default function BecomeAnAgent() {
         </div>
       </section>
 
-      {/* General Guide */}
-      <LazySection height={200}>
-        <section className="relative py-8 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
-            <div className="max-w-xl mx-auto">
-              <a href="/become-an-agent/license" className="block group">
-                <GenericCard hover padding="lg">
-                  <div className="text-link font-medium mb-1" style={{ fontSize: 'var(--font-size-caption)' }}>GENERAL GUIDE</div>
-                  <h3 className="text-h5 mb-3">How to Get a Real Estate License</h3>
-                  <p className="text-body mb-4">A comprehensive overview of the licensing process that applies to all states, including tips for choosing your path and common mistakes to avoid.</p>
-                  <span className="text-link group-hover:underline">Read the guide</span>
-                </GenericCard>
-              </a>
-            </div>
-          </div>
-        </section>
-      </LazySection>
-
       {/* State-by-State Guides */}
       <LazySection height={600}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">

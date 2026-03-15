@@ -82,6 +82,7 @@ const breadcrumbSchema = buildBreadcrumbSchema(postCategory, post.title);
   description={description}
   canonical={`/blog/${category}/${slug}/`}
   ogImage={ogImage}
+  wpPostId={post.id}
 >
   <!-- Preload LCP image (sidebar co-founder image is typically the LCP element) -->
   <link slot="head" rel="preload" as="image" href="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop" />

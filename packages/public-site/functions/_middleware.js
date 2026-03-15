@@ -165,6 +165,10 @@ const STATIC_REDIRECTS = new Map([
   ['/blog/industry-trends', '/blog#category=industry-trends'],
   ['/blog/real-estate-schools', '/real-estate-schools/'],
   ['/blog/become-an-agent', '/become-an-agent/'],
+  // Retired generic parent posts - redirect to pillar pages
+  ['/real-estate-schools/schools', '/real-estate-schools/'],
+  ['/become-an-agent/license', '/become-an-agent/'],
+  ['/blog/brokerage-comparison/real-estate-brokerage-comparison-the-complete-guide-for-agents-in-2026', '/best-real-estate-brokerage/'],
   ['/blog/about-exp-realty', '/blog#category=about-exp-realty'],
   ['/blog/exp-realty-sponsor', '/blog#category=exp-realty-sponsor'],
   // Old agent-tools exact matches

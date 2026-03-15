@@ -18,9 +18,11 @@
 @source "../../src/styles/island-safelist.html";
 
 /*
- * Targeted @source for pages whose components Vite can't trace:
- * - about-exp-realty: all 8 components loaded via next/dynamic (runtime import())
- * - about-doug-smart: static imports but alias resolution prevents detection
+ * @source for public-site components.
+ * Vite's module graph auto-detection misses classes in files imported via:
+ *   - next/dynamic shim (runtime import() in useEffect, not statically analyzable)
+ *   - @public-site/ alias resolution edge cases
+ * Scanning the full app/ and components/ dirs ensures all classes are generated.
  */
-@source "../../../public-site/app/about-exp-realty/";
-@source "../../../public-site/app/about-doug-smart/";
+@source "../../../public-site/app/";
+@source "../../../public-site/components/";

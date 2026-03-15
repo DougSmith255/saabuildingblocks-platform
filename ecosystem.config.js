@@ -29,6 +29,28 @@ module.exports = {
       kill_timeout: 5000,
       listen_timeout: 10000,
       shutdown_with_message: true
+    },
+    {
+      name: 'astro-dev',
+      script: '/home/ubuntu/saabuildingblocks-platform/node_modules/.bin/astro',
+      args: 'dev --port 4321 --host 127.0.0.1',
+      cwd: '/home/ubuntu/saabuildingblocks-platform/packages/astro-site',
+      instances: 1,
+      exec_mode: 'fork',
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '2G',
+      node_args: '--max-old-space-size=1536',
+      env: {
+        NODE_ENV: 'development'
+      },
+      error_file: '/home/ubuntu/saabuildingblocks-platform/.pm2/logs/astro-dev-error.log',
+      out_file: '/home/ubuntu/saabuildingblocks-platform/.pm2/logs/astro-dev-out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+      merge_logs: true,
+      min_uptime: '10s',
+      max_restarts: 10,
+      kill_timeout: 5000
     }
   ],
 
