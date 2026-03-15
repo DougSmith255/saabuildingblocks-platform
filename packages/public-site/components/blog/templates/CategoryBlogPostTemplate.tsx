@@ -278,7 +278,7 @@ export function CategoryBlogPostTemplate({
         {!isDarkMode && <CloudBackground />}
 
         <BlogPostHero
-          title={post.metaTitle || post.title}
+          title={post.title}
           category={primaryCategory}
           categorySlug={categorySlug}
           postTitle={post.title}
