@@ -45,8 +45,12 @@ export function useTronAudio(url: string, startAt = 0) {
         const analyser = ctx.createAnalyser();
         analyser.fftSize = 256;
         analyser.smoothingTimeConstant = 0.75;
+        // Reduce volume to 40% - prevents being too loud on mobile
+        const gain = ctx.createGain();
+        gain.gain.value = 0.4;
         source.connect(analyser);
-        analyser.connect(ctx.destination);
+        analyser.connect(gain);
+        gain.connect(ctx.destination);
         ctxRef.current = ctx;
         analyserRef.current = analyser;
       } catch {
