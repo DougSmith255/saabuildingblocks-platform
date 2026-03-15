@@ -253,6 +253,10 @@ let categoryCache: Map<number, WPCategory> = new Map();
 // Cache for Permalink Manager custom URIs (post ID -> "category/slug")
 let customUriCache: Map<number, string> = new Map();
 
+// Cache for Rank Math SEO meta (post ID -> { title, description })
+// Loaded via bulk SQL endpoint to bypass get_post() failures on high-ID posts
+let rankMathCache: Map<number, { title: string; description: string }> = new Map();
+
 /**
  * Fetch Permalink Manager custom URIs via REST API (works in CI and locally)
  * Falls back to WP-CLI if REST API is unreachable
@@ -290,6 +294,28 @@ async function loadCustomUris(): Promise<void> {
   } catch (error) {
     console.warn('⚠️  Could not load Permalink Manager URIs:', (error as Error).message);
     console.warn('   Blog paths will fall back to category/slug construction');
+  }
+}
+
+/**
+ * Load Rank Math SEO meta (title + description) for all posts via bulk endpoint.
+ * Uses direct SQL on the server to bypass get_post() failures on high-ID posts.
+ */
+async function loadRankMathMeta(): Promise<void> {
+  console.log('🔍 Fetching Rank Math SEO meta...');
+
+  try {
+    const response = await fetch('https://wp.saabuildingblocks.com/wp-json/saa/v1/rankmath-meta');
+    if (response.ok) {
+      const data: Record<string, { title: string; description: string }> = await response.json();
+      Object.entries(data).forEach(([id, meta]) => {
+        rankMathCache.set(parseInt(id, 10), meta);
+      });
+      console.log(`✅ Loaded Rank Math meta for ${rankMathCache.size} posts via REST API`);
+      return;
+    }
+  } catch (error) {
+    console.warn('⚠️  Rank Math REST endpoint unreachable, falling back to per-post meta');
   }
 }
 
@@ -654,12 +680,14 @@ function transformPost(wpPost: any): BlogPost {
     : '';
 
   // Extract SEO title from Rank Math (used for <title> tag and search results)
-  // Falls back to post title if Rank Math title isn't set
-  const metaTitle = decodeHtmlEntities(wpPost.meta?.rank_math_title || '');
+  // Prefer bulk cache (bypasses get_post() failures) over per-post meta
+  const rmCache = rankMathCache.get(wpPost.id);
+  const metaTitle = decodeHtmlEntities(rmCache?.title || wpPost.meta?.rank_math_title || '');
 
   // Extract meta description from Rank Math or Yoast if available
   const metaDescription = decodeHtmlEntities(
-    wpPost.meta?.rank_math_description
+    rmCache?.description
+    || wpPost.meta?.rank_math_description
     || wpPost.yoast_head_json?.description
     || wpPost.rank_math_description
     || excerpt.slice(0, 160)
@@ -727,6 +755,9 @@ async function generateBlogPostsJson() {
 
     // Load Permalink Manager custom URIs (source of truth for blog paths)
     await loadCustomUris();
+
+    // Load Rank Math SEO meta via bulk endpoint (bypasses WP get_post() bug)
+    await loadRankMathMeta();
 
     // Build slug-to-canonical-path map for cross-category link resolution
     buildSlugPathMap();
